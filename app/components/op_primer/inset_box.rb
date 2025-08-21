@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,48 +26,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module Shares
-  module ProjectQueries
-    class PublicFlagComponent < ApplicationComponent # rubocop:disable OpenProject/AddPreviewForViewComponent
-      include OpTurbo::Streamable
-      include OpPrimer::ComponentHelpers
+module OpPrimer
+  class InsetBox < Primer::Component
+    attr_reader :border, :system_arguments
 
-      def initialize(strategy:, modal_body_container:)
-        super
-
-        @strategy = strategy
-        @container = modal_body_container
-      end
-
-      private
-
-      attr_reader :strategy, :container
-
-      def toggle_public_flag_link
-        toggle_public_project_query_path(strategy.entity)
-      end
-
-      def published?
-        strategy.entity.public?
-      end
-
-      def can_publish?
-        User.current.allowed_globally?(:manage_public_project_queries)
-      end
-
-      def tooltip_message
-        return if can_publish?
-
-        I18n.t("sharing.project_queries.publishing_denied")
-      end
-
-      def tooltip_wrapper_classes
-        ["d-flex", "flex-column"].tap do |classlist|
-          classlist << "tooltip--bottom" unless can_publish?
-        end
-      end
+    def initialize(border: true, **system_arguments)
+      @border = border
+      @system_arguments = system_arguments
     end
   end
 end
