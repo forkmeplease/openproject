@@ -206,6 +206,7 @@ import {
 import { OpInviteUserModalAugmentService } from 'core-app/features/invite-user-modal/invite-user-modal-augment.service';
 import { TimeEntryTimerService } from 'core-app/shared/components/time_entries/services/time-entry-timer.service';
 import { MyPageComponent } from './features/my-page/my-page.component';
+import { OverviewComponent } from './features/overview/overview.component';
 
 export function initializeServices(injector:Injector) {
   return () => {
@@ -428,5 +429,6 @@ export class OpenProjectModule implements DoBootstrap {
     registerCustomElement('opce-colors-autocompleter', ColorsAutocompleterComponent, { injector });
 
     registerCustomElement('opce-my-page', MyPageComponent, { injector });
+    registerCustomElement('opce-overview', OverviewComponent, { injector });
   }
 }
