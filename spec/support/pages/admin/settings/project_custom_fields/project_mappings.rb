@@ -32,8 +32,8 @@ require "support/pages/custom_fields/project_mappings"
 
 module Pages
   module Admin
-    module CustomFields
-      module CustomFieldsProjects
+    module Settings
+      module ProjectCustomFields
         class ProjectMappings < ::Pages::CustomFields::ProjectMappings
           def path(project_custom_field)
             "/admin/settings/project_custom_fields/#{project_custom_field.id}/project_mappings"

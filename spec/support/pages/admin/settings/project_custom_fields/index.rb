@@ -32,8 +32,8 @@ require "support/pages/custom_fields/index_page"
 
 module Pages
   module Admin
-    module CustomFields
-      module CustomFieldsProjects
+    module Settings
+      module ProjectCustomFields
         class Index < ::Pages::CustomFields::IndexPage
           def path
             "/admin/settings/project_custom_fields"
