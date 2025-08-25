@@ -478,6 +478,11 @@ Rails.application.routes.draw do
             defaults: { workspace_type: "portfolio" },
             controller: "projects"
 
+  resources :programs,
+            only: %i[new],
+            defaults: { workspace_type: "program" },
+            controller: "projects"
+
   resources :project_phases, only: [] do
     member do
       get "/hover_card" => "project_phases/hover_card#show", as: "hover_card"

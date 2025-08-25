@@ -141,6 +141,14 @@ RSpec.describe ProjectsController do
 
       it_behaves_like "successful request"
     end
+
+    context "as a non-admin with global add_programs permission", with_flag: { portfolio_models: true } do
+      let(:parent) { nil }
+      let(:user) { create(:user, global_permissions: [:add_programs]) }
+      let(:template) { nil }
+
+      it_behaves_like "successful request"
+    end
   end
 
   describe "#create" do
@@ -212,6 +220,12 @@ RSpec.describe ProjectsController do
 
       context "as a non-admin with global add_portfolios permission", with_flag: { portfolio_models: true } do
         let(:user) { create(:user, global_permissions: [:add_portfolios]) }
+
+        it_behaves_like "successful create request"
+      end
+
+      context "as a non-admin with global add_programs permission", with_flag: { portfolio_models: true } do
+        let(:user) { create(:user, global_permissions: [:add_programs]) }
 
         it_behaves_like "successful create request"
       end

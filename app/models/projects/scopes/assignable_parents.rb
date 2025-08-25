@@ -34,7 +34,7 @@ module Projects::Scopes
 
     class_methods do
       def assignable_parents(user, project)
-        if project.portfolio?
+        if project.portfolio? || project.program?
           Project.none
         else
           Project

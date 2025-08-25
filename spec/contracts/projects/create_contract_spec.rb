@@ -45,7 +45,7 @@ RSpec.describe Projects::CreateContract do
                   templated: project_templated,
                   workspace_type: project_workspace_type)
     end
-    let(:global_permissions) { %i[add_project add_portfolios] }
+    let(:global_permissions) { %i[add_project add_portfolios add_programs] }
     let(:validated_contract) do
       contract.tap(&:validate)
     end
@@ -74,6 +74,20 @@ RSpec.describe Projects::CreateContract do
     context "when having the 'portfolio' workspace_type and lacking the add_portfolios permission" do
       let(:project_workspace_type) { "portfolio" }
       let(:global_permissions) { [] }
+
+      it_behaves_like "contract is invalid", base: %i(error_unauthorized)
+    end
+
+    context "when having the 'program' workspace_type and having the add_programs permission" do
+      let(:project_workspace_type) { "program" }
+      let(:global_permissions) { [:add_programs] }
+
+      it_behaves_like "contract is valid"
+    end
+
+    context "when having the 'program' workspace_type and lacking the add_programs permission" do
+      let(:project_workspace_type) { "program" }
+      let(:global_permissions) { [:add_portfolios] }
 
       it_behaves_like "contract is invalid", base: %i(error_unauthorized)
     end

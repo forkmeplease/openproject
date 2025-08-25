@@ -59,4 +59,15 @@ RSpec.describe Projects::Scopes::AssignableParents do
         .to be_empty
     end
   end
+
+  context "for a program" do
+    before do
+      subject_project.program!
+    end
+
+    it "is empty" do
+      expect(Project.assignable_parents(user, subject_project))
+        .to be_empty
+    end
+  end
 end

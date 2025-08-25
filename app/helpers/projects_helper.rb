@@ -94,6 +94,8 @@ module ProjectsHelper
       I18n.t(:label_project_new)
     elsif workspace.portfolio?
       I18n.t(:label_portfolio_new)
+    elsif workspace.program?
+      I18n.t(:label_program_new)
     end
   end
 end

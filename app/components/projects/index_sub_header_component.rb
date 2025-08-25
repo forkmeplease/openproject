@@ -77,6 +77,8 @@ module Projects
         new_project_path
       when Project.workspace_types[:portfolio]
         new_portfolio_path
+      when Project.workspace_types[:program]
+        new_program_path
       end
     end
 
@@ -90,6 +92,8 @@ module Projects
         :project
       when Project.workspace_types[:portfolio]
         :briefcase
+      when Project.workspace_types[:program]
+        :"project-roadmap"
       end
     end
 
@@ -97,6 +101,7 @@ module Projects
       allowed_types = []
       allowed_types << Project.workspace_types[:project] if @current_user.allowed_globally?(:add_project)
       allowed_types << Project.workspace_types[:portfolio] if @current_user.allowed_globally?(:add_portfolios) && OpenProject::FeatureDecisions.portfolio_models_active?
+      allowed_types << Project.workspace_types[:program] if @current_user.allowed_globally?(:add_programs) && OpenProject::FeatureDecisions.portfolio_models_active?
       allowed_types
     end
 

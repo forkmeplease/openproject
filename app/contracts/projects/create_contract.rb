@@ -74,11 +74,19 @@ module Projects
         validate_user_allowed_to_manage_projects
       elsif model.portfolio?
         validate_user_allowed_to_manage_portfolios
+      elsif model.program?
+        validate_user_allowed_to_manage_programs
       end
     end
 
     def validate_user_allowed_to_manage_portfolios
       unless user.allowed_globally?(:add_portfolios)
+        errors.add :base, :error_unauthorized
+      end
+    end
+
+    def validate_user_allowed_to_manage_programs
+      unless user.allowed_globally?(:add_programs)
         errors.add :base, :error_unauthorized
       end
     end

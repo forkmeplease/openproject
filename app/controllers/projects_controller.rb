@@ -42,7 +42,7 @@ class ProjectsController < ApplicationController
   before_action :not_authorized_on_feature_flag_inactive,
                 only: %i[new create],
                 if: -> {
-                  params[:workspace_type] == Project.workspace_types[:portfolio]
+                  params[:workspace_type].in?(Project.workspace_types.values_at(:program, :portfolio))
                 }
   before_action :find_optional_template, only: %i[new create]
   before_action :find_optional_parent, only: :new
