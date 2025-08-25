@@ -230,7 +230,7 @@ zh-TW:
         body: "會議 %{title} 已經被 %{actor} 重新安排。"
         old_date_time: "舊日期/時間"
         new_date_time: "新日期/時間"
-    label_mail_all_participants: "Send email invite to participants"
+    label_mail_all_participants: "發送電子郵件邀請參加者"
     types:
       one_time: "一次性"
       recurring: "重覆"
