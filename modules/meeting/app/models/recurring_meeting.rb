@@ -220,7 +220,7 @@ class RecurringMeeting < ApplicationRecord
   def reschedule_required?(previous: false)
     (previous ? previous_changes : changes)
       .keys
-      .intersect?(%w[frequency start_date start_time start_time_hour iterations interval end_after end_date])
+      .intersect?(%w[frequency start_date start_time start_time_hour iterations interval end_after end_date location])
   end
 
   def scheduled_occurrences(limit:)
