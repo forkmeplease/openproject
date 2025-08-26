@@ -26,36 +26,27 @@
  *
  * See COPYRIGHT and LICENSE files for more details.
  * ++
- *
  */
 
-import { Controller } from '@hotwired/stimulus';
-import { durationStringToSeconds, formattedHour } from 'core-stimulus/helpers/chronic-duration-helper';
+import {
+  parseChronicDuration,
+  outputChronicDuration,
+} from 'core-app/shared/helpers/chronic_duration';
 
-export default class ChronicDurationController extends Controller<HTMLInputElement> {
-  private processChangeFn = () => { this.onBlur(); };
-  private keyPressedFn = (evt:KeyboardEvent) => { this.onKeyPress(evt); };
+export function durationStringToSeconds(value:string):number {
+    // Make sure we also accept german decimal commas
+    const normalizedValue = value.replace(',', '.');
 
-  connect() {
-    this.element.addEventListener('blur', this.processChangeFn);
-    this.element.addEventListener('keypress', this.keyPressedFn);
+    return parseChronicDuration(normalizedValue, {
+      defaultUnit: 'hours',
+      ignoreSecondsWhenColonSeperated: true,
+    }) || 0;
   }
 
-  disconnect() {
-    super.disconnect();
-
-    this.element.removeEventListener('blur', this.processChangeFn);
-    this.element.removeEventListener('keypress', this.keyPressedFn);
+export function formattedHour(seconds:number):string {
+  if (isNaN(seconds) || seconds <= 0) {
+    return '';
   }
 
-  private onBlur() {
-    const parsedSeconds = durationStringToSeconds(this.element.value);
-    this.element.value = formattedHour(parsedSeconds);
-  }
-
-  private onKeyPress(evt:KeyboardEvent) {
-    if (evt.key === 'Enter' && evt.currentTarget === this.element) {
-      this.element.blur();
-    }
-  }
+return outputChronicDuration(seconds, { format: 'hours_only' }) ?? '';
 }
