@@ -28,14 +28,23 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  get "/session/logout_warning", to: "session#logout_warning"
+module OpenIDConnect
+  module Groups
+    class GroupMatchService
+      def initialize(matchers)
+        @matchers = matchers
+      end
 
-  scope :admin do
-    namespace :openid_connect do
-      resources :providers do
-        get :confirm_destroy, on: :member
-        post :match_groups, on: :collection
+      def call(group_name)
+        matcher = @matchers.find { |m| m.match?(group_name) }
+        return nil if matcher.nil?
+
+        match = matcher.match(group_name)
+        if match.size > 1
+          match[1..].join.presence
+        else
+          group_name
+        end
       end
     end
   end

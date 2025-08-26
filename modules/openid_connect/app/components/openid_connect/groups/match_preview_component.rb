@@ -28,15 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  get "/session/logout_warning", to: "session#logout_warning"
+module OpenIDConnect
+  module Groups
+    class MatchPreviewComponent < ApplicationComponent
+      include OpTurbo::Streamable
 
-  scope :admin do
-    namespace :openid_connect do
-      resources :providers do
-        get :confirm_destroy, on: :member
-        post :match_groups, on: :collection
-      end
+      def self.wrapper_key = :group_match_test_component
     end
   end
 end

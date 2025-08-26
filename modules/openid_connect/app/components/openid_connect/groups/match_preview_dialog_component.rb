@@ -28,15 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  get "/session/logout_warning", to: "session#logout_warning"
+module OpenIDConnect
+  module Groups
+    class MatchPreviewDialogComponent < ApplicationComponent
+      include OpTurbo::Streamable
+      include Redmine::I18n
 
-  scope :admin do
-    namespace :openid_connect do
-      resources :providers do
-        get :confirm_destroy, on: :member
-        post :match_groups, on: :collection
+      TEST_SELECTOR = "op-oidc-groups--match-preview-dialog"
+
+      def system_arguments
+        options.merge(
+          data: {
+            controller: "openid-connect--match-preview-dialog",
+            "openid-connect--match-preview-dialog-update-url-value": match_groups_openid_connect_providers_path
+          }
+        )
       end
+
+      def dialog_id = "openid-connect--group-match-preview-dialog"
     end
   end
 end
