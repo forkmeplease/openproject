@@ -4428,6 +4428,7 @@ en:
   status_invited: invited
   status_locked: locked
   status_registered: registered
+  status_deleted: deleted
 
   # Used in array.to_sentence.
   support:

@@ -37,7 +37,8 @@ class Principal < ApplicationRecord
     active: 1,
     registered: 2,
     locked: 3,
-    invited: 4
+    invited: 4,
+    deleted: 5
   }, scopes: false
 
   self.table_name = "#{table_name_prefix}users#{table_name_suffix}"
