@@ -276,7 +276,7 @@ module ApplicationHelper
     options.sort_by!(&:second)
 
     if blank && valid_languages.to_set == all_languages.to_set
-      options.unshift(["(auto)", ""])
+      options.unshift([I18n.t(:label_auto_option), ""])
     end
 
     options
