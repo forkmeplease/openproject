@@ -98,6 +98,25 @@ RSpec.describe "my", :js do
         expect(page).to have_select "Idioma", selected: "Español"
         expect(user.language).to eq "es"
       end
+
+      it "updates user language with change visible on navigating to other settings (regression #66951)" do
+        expect(user.language).to eq "en"
+
+        expect(page).to have_select "Language", selected: "English"
+        select "Português do brasil", from: "Language"
+        click_on "Save"
+
+        expect_and_dismiss_flash type: :success, message: "Conta foi atualizada com sucesso."
+
+        expect(page).to have_select "Idioma", selected: "Português do brasil"
+
+        within "#main-menu" do
+          click_on "Configurações de notificação"
+        end
+
+        expect(page).to have_heading "Configurações de notificação"
+        expect(page).to have_heading "Alertas de data"
+      end
     end
   end
 

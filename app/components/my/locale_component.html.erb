@@ -30,7 +30,8 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   settings_primer_form_with(
     model:,
-    url: { action: "update_settings" }
+    url: { action: "update_settings" },
+    data: { turbo: false }
   ) do |f|
     render My::LocaleForm.new(f)
   end
