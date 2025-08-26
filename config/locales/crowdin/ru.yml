@@ -3756,7 +3756,7 @@ ru:
   permission_view_user_email: "Просмотр почтовых адресов пользователей"
   permission_view_wiki_edits: "Просмотр истории wiki"
   permission_view_wiki_pages: "Просмотр wiki"
-  permission_work_package_assigned: "Назначиться/стать отвественным"
+  permission_work_package_assigned: "Становиться назначенным/ответственным"
   permission_work_package_assigned_explanation: "Пакеты работ могут быть привязаны к пользователям и группам в зависимости от этой роли в рамках соответствующего проекта"
   permission_view_project_activity: "Просмотр деятельности по проекту"
   permission_view_project_attributes: "Просмотр атрибутов проекта"
