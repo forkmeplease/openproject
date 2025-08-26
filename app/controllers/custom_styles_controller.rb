@@ -73,6 +73,7 @@ class CustomStylesController < ApplicationController
   end
 
   def update
+    flash.clear
     @custom_style = get_or_create_custom_style
     if @custom_style.update(custom_style_params)
       redirect_to custom_style_path

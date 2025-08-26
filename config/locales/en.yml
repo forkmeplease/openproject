@@ -69,6 +69,9 @@ en:
       tab_branding: "Branding"
       tab_pdf_export_styles: "PDF export styles"
       tab_pdf_export_font: "PDF export font"
+      fonts:
+        file_too_large: "is too large (maximum size is %{count} MB)."
+        file_is_invalid: "is not a valid TTF font file."
       colors:
         primary-button-color: "Primary button"
         accent-color: "Accent"
