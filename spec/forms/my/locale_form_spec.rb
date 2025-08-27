@@ -34,7 +34,7 @@ RSpec.describe My::LocaleForm, type: :forms do
   before do
     allow(Redmine::I18n)
       .to receive(:all_languages)
-      .and_return %w[en de es ja zh-CN]
+      .and_return %w[en de es ja nl zh-CN]
   end
 
   include_context "with rendered form"
@@ -49,8 +49,16 @@ RSpec.describe My::LocaleForm, type: :forms do
         expect(select).to have_element :option, value: "de", text: "Deutsch", lang: "de"
         expect(select).to have_element :option, value: "es", text: "Español", lang: "es"
         expect(select).to have_element :option, value: "ja", text: "日本語", lang: "ja"
+        expect(select).to have_element :option, value: "nl", text: "Nederlands", lang: "nl"
         expect(select).to have_element :option, value: "zh-CN", text: "简体中文", lang: "zh-CN"
       end
+    end
+
+    it "renders options sorted by CLDR name" do
+      options_text = page.find(:select, "Language").all("option").map(&:text) # Capy :options filter ignores order
+      expect(options_text).to eq [
+        "(auto)", "Deutsch", "English", "Español", "Nederlands", "日本語", "简体中文"
+      ]
     end
 
     it "renders options for available languages, if set", with_settings: { available_languages: %w[en es ja] } do
@@ -61,7 +69,7 @@ RSpec.describe My::LocaleForm, type: :forms do
       ]
     end
 
-    it "renders auto option if all languages available", with_settings: { available_languages: %w[en de es ja zh-CN] } do
+    it "renders auto option if all languages available", with_settings: { available_languages: %w[en de es ja nl zh-CN] } do
       expect(page).to have_select "Language", with_options: ["(auto)"]
     end
 

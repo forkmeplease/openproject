@@ -60,6 +60,6 @@ class My::LocaleForm < ApplicationForm
   def available_languages
     @available_languages ||= valid_languages
       .map { translate_language(it) }
-      .sort_by(&:last)
+      .sort_by(&:first)
   end
 end

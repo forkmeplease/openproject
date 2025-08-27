@@ -273,7 +273,7 @@ module ApplicationHelper
 
   def lang_options_for_select(blank = true)
     options = valid_languages.map { |lang| [*translate_language(lang), { lang: }] }
-    options.sort_by!(&:second)
+    options.sort_by!(&:first)
 
     if blank && valid_languages.to_set == all_languages.to_set
       options.unshift([I18n.t(:label_auto_option), ""])
@@ -285,7 +285,7 @@ module ApplicationHelper
   def all_lang_options_for_select
     all_languages
       .map { |lang| translate_language(lang) }
-      .sort_by(&:last)
+      .sort_by(&:first)
   end
 
   def theme_options_for_select
