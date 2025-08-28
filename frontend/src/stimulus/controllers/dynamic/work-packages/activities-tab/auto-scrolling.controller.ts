@@ -60,15 +60,16 @@ export default class AutoScrollingController extends BaseController {
     // in case of a setAnchor click, we can go for a direct scroll approach
     const scrollableContainer = this.scrollableContainer;
     const activityElement = this.getActivityAnchorElement(anchorName, activityId);
+    const locationHash = `#${anchorName}-${activityId}`;
 
     if (scrollableContainer && activityElement) {
+      this.brieflyHighlightAndResetUrl(activityElement, locationHash);
       scrollableContainer.scrollTo({
         top: activityElement.offsetTop - 90,
         behavior: 'smooth',
       });
     }
-
-    window.location.hash = `#${anchorName}-${activityId}`;
+    window.location.hash = locationHash;
   }
 
   performAutoScrollingOnStreamsUpdate(journalsContainerAtBottom = false) {
@@ -123,24 +124,25 @@ export default class AutoScrollingController extends BaseController {
     const activityIdMatch = window.location.hash.match(anchorTypeRegex); // Ex. [ "#comment-80", "comment", "80" ]
 
     if (activityIdMatch && activityIdMatch.length === 3) {
-      this.scrollToActivity(activityIdMatch[1] as AnchorType, activityIdMatch[2]);
+      const activityElement = this.getActivityAnchorElement(activityIdMatch[1] as AnchorType, activityIdMatch[2]);
+      this.brieflyHighlightAndResetUrl(activityElement, window.location.hash);
+      this.scrollToActivity(activityElement);
     } else if (this.indexOutlet.sortingAscending && (!this.isMobile() || this.isWithinNotificationCenter())) {
       this.scrollToBottom();
     }
   }
 
-  private scrollToActivity(activityAnchorName:AnchorType, activityId:string) {
+  private scrollToActivity(activityElement:HTMLElement|null) {
     const maxAttempts = 20; // wait max 20 seconds for the activity to be rendered
-    this.tryScroll(activityAnchorName, activityId, 0, maxAttempts);
+    this.tryScroll(activityElement, 0, maxAttempts);
   }
 
   private scrollToBottom() {
     this.tryScrollToBottom(0, 20, 'auto');
   }
 
-  private tryScroll(activityAnchorName:AnchorType, activityId:string, attempts:number, maxAttempts:number) {
+  private tryScroll(activityElement:HTMLElement|null, attempts:number, maxAttempts:number) {
     const scrollableContainer = this.scrollableContainer;
-    const activityElement = this.getActivityAnchorElement(activityAnchorName, activityId);
     const topPadding = 70;
 
     if (activityElement && scrollableContainer) {
@@ -194,6 +196,19 @@ export default class AutoScrollingController extends BaseController {
       subtree: true,
       attributes: true,
     });
+  }
+
+  private brieflyHighlightAndResetUrl(activityElement:HTMLElement|null, locationHash:string) {
+    if (activityElement) {
+      activityElement.classList.add('--anchor-highlighted');
+      setTimeout(() => {
+        document.addEventListener('click', () => {
+          activityElement.classList.remove('--anchor-highlighted');
+          const newLocation = window.location.href.replace(locationHash, '');
+          window.history.replaceState(null, 'Remove anchor', newLocation);
+        }, {once: true});
+      });
+    }
   }
 
   private getActivityAnchorElement(activityAnchorName:AnchorType, activityId:string):HTMLElement | null {
