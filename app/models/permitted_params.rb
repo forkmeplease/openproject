@@ -317,6 +317,7 @@ class PermittedParams
   def project_custom_field_project_mapping
     params.require(:project_custom_field_project_mapping)
       .permit(*self.class.permitted_attributes[:project_custom_field_project_mapping])
+      .merge(params.permit(:value))
   end
 
   def news
