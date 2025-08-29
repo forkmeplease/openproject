@@ -47,11 +47,31 @@ module OpenProject
         end
 
         def url_for(*items)
-          links.dig(*items, :href)
+          href = links.dig(*items, :href)
+
+          if docs_url?(href)
+            with_locale_param(href)
+          else
+            href
+          end
         end
 
         def has?(name)
           @links.key? name
+        end
+
+        def docs_url?(url)
+          url.start_with?(docs_url)
+        end
+
+        def docs_url
+          links[:openproject_docs][:href]
+        end
+
+        def with_locale_param(href)
+          url = Addressable::URI.parse(href)
+          url.query_values = (url.query_values || {}).merge(go_to_locale: I18n.locale)
+          url.to_s
         end
 
         private
