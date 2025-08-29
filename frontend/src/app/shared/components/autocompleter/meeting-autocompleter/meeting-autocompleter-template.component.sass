@@ -1,0 +1,67 @@
+@import '../../global_styles/openproject/variables'
+
+.op-autocompleter
+  &__meeting-option-grid
+    display: grid
+    grid-template-columns: 2fr 1fr 1fr
+    grid-template-rows: auto auto
+    column-gap: var(--stack-gap-condensed)
+    row-gap: calc(var(--stack-gap-condensed) / 2)
+    align-items: baseline
+    font-size: var(--font-size-small)
+
+  &__field--name
+    grid-row: 1
+    grid-column: 1
+    font-weight: 600
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__field--date
+    grid-row: 1
+    grid-column: 2
+    color: var(--fgColor-muted)
+
+  &__field--project-label
+    grid-row: 1
+    grid-column: 3
+    color: var(--fgColor-muted)
+    text-align: left
+
+  &__field--frequency
+    grid-row: 2
+    grid-column: 1
+    color: var(--fgColor-muted)
+    font-size: var(--font-size-small)
+
+  &__field--time
+    grid-row: 2
+    grid-column: 2
+    color: var(--fgColor-muted)
+
+  &__field--project
+    grid-row: 2
+    grid-column: 3
+    font-weight: 600
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  @media screen and (max-width: $breakpoint-sm)
+    &__option-grid
+      grid-template-columns: 1fr
+      grid-template-rows: auto
+      row-gap: calc(var(--stack-gap-condensed) / 2)
+
+    &__field--project-label,
+    &__field--frequency
+      display: none
+
+    &__field--name,
+    &__field--date,
+    &__field--project-label,
+    &__field--frequency,
+    &__field--time,
+    &__field--project
+      grid-column: 1
+      grid-row: auto

@@ -29,29 +29,24 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  OnInit,
+  OnInit, HostBinding, ViewEncapsulation,
 } from '@angular/core';
-import { ID } from '@datorama/akita';
 import { OpAutocompleterComponent } from 'core-app/shared/components/autocompleter/op-autocompleter/op-autocompleter.component';
 import { MeetingAutocompleterTemplateComponent } from 'core-app/shared/components/autocompleter/meeting-autocompleter/meeting-autocompleter-template.component';
 
 export const meetingsAutocompleterSelector = 'op-meeting-autocompleter';
 
-export interface IMeetingAutocompleteItem {
-  id:ID;
-  name:string;
-  email?:string|null;
-  href:string|null;
-  avatar?:string|null;
-}
-
 @Component({
   templateUrl: '../op-autocompleter/op-autocompleter.component.html',
+  styleUrls: ['./meeting-autocompleter.component.sass'],
+  encapsulation: ViewEncapsulation.None,
   selector: meetingsAutocompleterSelector,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class MeetingAutocompleterComponent extends OpAutocompleterComponent<IMeetingAutocompleteItem> implements OnInit {
+export class MeetingAutocompleterComponent extends OpAutocompleterComponent implements OnInit {
+  @HostBinding('class.op-meeting-autocompleter') public className = true;
+
   ngOnInit():void {
     super.ngOnInit();
 

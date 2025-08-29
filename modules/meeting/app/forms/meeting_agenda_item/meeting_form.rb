@@ -41,7 +41,7 @@ class MeetingAgendaItem::MeetingForm < ApplicationForm
         component: "opce-meeting-autocompleter",
         items: meeting_options,
         group_by: "group_label",
-        # Do not try to load data from API (it will look for a "resource")
+        focus_directly: true,
         defaultData: false,
         bindLabel: "name",
         bindValue: "id",

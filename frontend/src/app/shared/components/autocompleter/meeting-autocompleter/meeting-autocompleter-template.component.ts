@@ -33,6 +33,7 @@ import {
 
 @Component({
   templateUrl: './meeting-autocompleter-template.component.html',
+  styleUrls: ['./meeting-autocompleter-template.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })

@@ -1,8 +1,19 @@
-<ng-template #optionTemplate let-item>
-    <div>ID: {{ item.id }}</div>
-    <div>Name: {{ item.name }}</div>
-    <div>Project: {{ item.project }}</div>
-    <div>Time: {{ item.start_time }}</div>
-    <div>Date: {{ item.start_date }}</div>
-    <div *ngIf="item.frequency">Frequency: {{ item.frequency }}</div>
+<ng-template #optionTemplate let-item let-search="search">
+    <div class="op-autocompleter__meeting-option-grid">
+        <div class="op-autocompleter__field--name" [opSearchHighlight]="search">
+            {{ item.name }}
+        </div>
+        <div class="op-autocompleter__field--date">
+            {{ item.start_date }}
+        </div>
+        <div class="op-autocompleter__field--project-label">Project:</div>
+
+        <div class="op-autocompleter__field--frequency" *ngIf="item.frequency">
+            {{ item.frequency }}
+        </div>
+        <div class="op-autocompleter__field--time">
+            {{ item.start_time }}
+        </div>
+        <div class="op-autocompleter__field--project">{{ item.project }}</div>
+    </div>
 </ng-template>

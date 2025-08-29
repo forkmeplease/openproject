@@ -54,9 +54,6 @@ class GroupMeetingsService
                   .next_occurring(OpenProject::Internationalization::Date.beginning_of_week)
                   .beginning_of_day
     groups = Hash.new { |h, k| h[k] = [] }
-    groups[:later] = show_more_pagination(@all_meetings
-                                            .where(start_time: next_week..)
-                                            .order(start_time: :asc), limit: @limit)
 
     @all_meetings
       .where(start_time: ...next_week)
@@ -75,6 +72,11 @@ class GroupMeetingsService
 
       groups[group_key] << meeting
     end
+
+    # Order of groups here affects group ordering in autocompleter
+    groups[:later] = show_more_pagination(@all_meetings
+                                            .where(start_time: next_week..)
+                                            .order(start_time: :asc), limit: @limit)
 
     groups
   end
