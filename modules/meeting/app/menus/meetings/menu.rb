@@ -111,11 +111,14 @@ module Meetings
 
       [
         menu_item(title: I18n.t(:label_invitations),
-                  query_params: { filters: invitation_filter, sort: "start_time" }),
+                  query_params: { filters: invitation_filter, sort: "start_time" },
+                  selected: params[:filters].to_s.include?("invited_user_id")),
         menu_item(title: I18n.t(:label_attended),
-                  query_params: { filters: attendee_filter, upcoming: false }),
+                  query_params: { filters: attendee_filter, upcoming: false },
+                  selected: params[:filters].to_s.include?("attended_user_id")),
         menu_item(title: I18n.t(:label_created_by_me),
-                  query_params: { filters: author_filter })
+                  query_params: { filters: author_filter },
+                  selected: params[:filters].to_s.include?("author_id"))
       ]
     end
 
