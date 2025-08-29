@@ -699,7 +699,7 @@ tr:
     dark_high_contrast: "Dark high contrast"
     light: "Açık"
     light_high_contrast: "Yüksek kontrastlı açık"
-    sync_with_os: "Automatic (match OS colour mode)"
+    sync_with_os: "Automatic (match OS color mode)"
   types:
     index:
       no_results_title_text: Şu anda hiç tip yok.
@@ -1195,9 +1195,9 @@ tr:
         auto_hide_popups: "Başarı uyarılarını otomatik olarak gizle"
         auto_hide_popups_caption: "Etkinleştirildiğinde, yeşil başarı uyarıları 5 saniye sonra otomatik olarak kaybolacaktır."
         warn_on_leaving_unsaved: "İş paketlerinden ayrılırken kaydedilmemiş değişiklik olduğunda beni uyar"
-        theme: "Renk modu"
+        theme: "Color mode"
         time_zone: "Zaman dilimi"
-        mode_guideline: "Bazı modlar, erişilebilirlik ve okunabilirlik için özel tema renklerinin üzerine yazacaktır. Tam özel tema desteği için lütfen Açık modunu seçin."
+        mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
         daily_reminders: "Günlük hatırlatmalar"
         workdays: "İş Günleri"
       version:

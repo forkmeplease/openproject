@@ -698,7 +698,7 @@ es:
     dark_high_contrast: "Contraste alto oscuro"
     light: "Claro"
     light_high_contrast: "Contraste alto claro"
-    sync_with_os: "Automático (coincide con el modo de color del SO)"
+    sync_with_os: "Automatic (match OS color mode)"
   types:
     index:
       no_results_title_text: Actualmente no existen tipos.
@@ -1193,9 +1193,9 @@ es:
         auto_hide_popups: "Ocultar automáticamente los banners de éxito"
         auto_hide_popups_caption: "Si se habilitan, los banners verdes de éxito desaparecerán automáticamente al cabo de 5 segundos."
         warn_on_leaving_unsaved: "Avisarme cuando salga de un paquete de trabajo con cambios sin guardar"
-        theme: "Modo de color"
+        theme: "Color mode"
         time_zone: "Zona horaria"
-        mode_guideline: "Algunos modos sobrescribirán los colores de los temas personalizados por motivos de accesibilidad y legibilidad. Seleccione el modo Claro para obtener una compatibilidad total con los temas personalizados."
+        mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
         daily_reminders: "Recordatorios diarios"
         workdays: "Días laborables"
       version:

@@ -693,7 +693,7 @@ de:
     dark_high_contrast: "Dunkel (hoher Kontrast)"
     light: "Hell"
     light_high_contrast: "Hell (hoher Kontrast)"
-    sync_with_os: "Automatic (match OS colour mode)"
+    sync_with_os: "Automatic (match OS color mode)"
   types:
     index:
       no_results_title_text: Derzeit gibt es keine Typen.
@@ -1188,9 +1188,9 @@ de:
         auto_hide_popups: "Automatisches Ausblenden von Erfolgsbannern"
         auto_hide_popups_caption: "Wenn diese Funktion aktiviert ist, verschwinden die grünen Erfolgsbanner automatisch nach 5 Sekunden."
         warn_on_leaving_unsaved: "Beim Verlassen einer Arbeitspaket-Seite mit ungespeichertem Text warnen"
-        theme: "Farbmodus"
+        theme: "Color mode"
         time_zone: "Zeitzone"
-        mode_guideline: "Einige Modi überschreiben benutzerdefinierte Theme-Farben zur Verbesserung von Barrierefreiheit und Lesbarkeit. Bitte wählen Sie den Hellmodus für die vollständige Unterstützung Ihres benutzerdefinierten Themes."
+        mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
         daily_reminders: "Tägliche Erinnerungen"
         workdays: "Arbeitstage"
       version:

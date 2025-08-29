@@ -1187,9 +1187,9 @@ ja:
         auto_hide_popups: "サクセスバナーを自動的に隠す"
         auto_hide_popups_caption: "有効にすると、緑色のサクセスバナーは5秒後に自動的に消えます。"
         warn_on_leaving_unsaved: "変更を保存せずにワークパッケージから移動するときに警告"
-        theme: "カラーモード"
+        theme: "Color mode"
         time_zone: "タイムゾーン"
-        mode_guideline: "一部のモードでは、アクセシビリティと読みやすさのためにカスタムテーマの色を上書きします。完全なカスタムテーマサポートのためにライトモードを選択してください。"
+        mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
         daily_reminders: "毎日の通知"
         workdays: "営業時間"
       version:
