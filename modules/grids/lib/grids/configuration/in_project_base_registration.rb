@@ -4,6 +4,7 @@ module Grids::Configuration
             "work_packages_graph",
             "project_description",
             "project_status",
+            "project_status_beta",
             "subprojects",
             "work_packages_calendar",
             "work_packages_overview",
