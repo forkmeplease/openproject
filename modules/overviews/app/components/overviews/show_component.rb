@@ -69,7 +69,27 @@ module Overviews
 
     def render_sidebar_turbo_frame(*ids, src: nil, target: nil, **attributes)
       turbo_frame_tag(*ids, src:, target:, **attributes) do
-        image_tag("loading_indicator.svg")
+        render_skeleton
+      end
+    end
+
+    def render_skeleton
+      render(Primer::OpenProject::SidePanel.new(spacious: true)) do |panel|
+        panel.with_section do |section|
+          section.with_title(w: :full, classes: "SkeletonBox") { "" }
+
+          flex_layout do |flex|
+            3.times do
+              flex.with_row(mb: 1) do
+                render(Primer::OpenProject::SkeletonBox.new(width: "100%", height: "21px"))
+              end
+
+              flex.with_row(mb: 3) do
+                render(Primer::OpenProject::SkeletonBox.new(width: "100%", height: "21px"))
+              end
+            end
+          end
+        end
       end
     end
   end
