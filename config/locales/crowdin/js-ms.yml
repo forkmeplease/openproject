@@ -1209,7 +1209,7 @@ ms:
       selected_filter:
         all: "Semua projek"
         selected: "Hanya terpilih"
-      search_placeholder: "Cari projek..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Termasuk semua sub-projek"
       tooltip:

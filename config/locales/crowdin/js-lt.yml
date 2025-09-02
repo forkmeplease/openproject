@@ -1221,7 +1221,7 @@ lt:
       selected_filter:
         all: "Visi projektai"
         selected: "Tik pasirinktus"
-      search_placeholder: "Ieškoti projekte..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Įtraukti visus sub-projektus"
       tooltip:

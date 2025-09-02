@@ -1209,7 +1209,7 @@ zh-CN:
       selected_filter:
         all: "所有项目"
         selected: "仅限所选"
-      search_placeholder: "搜索项目…"
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "包含所有子项目"
       tooltip:

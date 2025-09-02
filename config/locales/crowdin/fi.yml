@@ -2962,7 +2962,7 @@ fi:
   label_journal_diff: "Kuvauksen vertailu"
   label_language: "Kieli"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Siirry projektiin..."
   label_keyword_plural: "Keywords"
   label_language_based: "Pohjautuen käyttäjän kieleen"

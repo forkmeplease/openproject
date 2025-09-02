@@ -1216,7 +1216,7 @@ ro:
       selected_filter:
         all: "Toate Proiectele"
         selected: "Numai selecția"
-      search_placeholder: "Caută proiect..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include toate subproiectele"
       tooltip:

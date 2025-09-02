@@ -2959,7 +2959,7 @@ ca:
   label_journal_diff: "Descripció de comparació"
   label_language: "Idioma"
   label_languages: "Idiomes"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Anar al projecte..."
   label_keyword_plural: "Paraules clau"
   label_language_based: "Basat en l'idioma de l'usuari"

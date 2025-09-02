@@ -1220,7 +1220,7 @@ sl:
       selected_filter:
         all: "Vsi projekti"
         selected: "Only selected"
-      search_placeholder: "Search project..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Include all sub-projects"
       tooltip:

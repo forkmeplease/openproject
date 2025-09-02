@@ -2962,7 +2962,7 @@ sv:
   label_journal_diff: "Jämför beskrivning"
   label_language: "Språk"
   label_languages: "Språk"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Hoppa till projekt..."
   label_keyword_plural: "Nyckelord"
   label_language_based: "Baserat på användarens språk"

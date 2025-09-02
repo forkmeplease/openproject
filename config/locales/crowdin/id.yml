@@ -2913,7 +2913,7 @@ id:
   label_journal_diff: "Deskripsi perbandingan"
   label_language: "Bahasa"
   label_languages: "Bahasa"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Lompat ke Project..."
   label_keyword_plural: "Kata kunci"
   label_language_based: "Berdasarkan bahasa user"

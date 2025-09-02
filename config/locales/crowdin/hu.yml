@@ -2961,7 +2961,7 @@ hu:
   label_journal_diff: "Leírás összehasonlítás"
   label_language: "Nyelv"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Ugrás a projekthez"
   label_keyword_plural: "Kulcsszavak"
   label_language_based: "A felhasználói nyelv alapján"

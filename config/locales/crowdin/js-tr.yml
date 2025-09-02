@@ -1213,7 +1213,7 @@ tr:
       selected_filter:
         all: "Tüm projeler"
         selected: "Sadece seçilen"
-      search_placeholder: "Proje ara..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Tüm alt projeleri dahil et"
       tooltip:

@@ -2958,7 +2958,7 @@ nl:
   label_journal_diff: "Beschrijving vergelijking"
   label_language: "Taal"
   label_languages: "Talen"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Ga naar een project..."
   label_keyword_plural: "Trefwoorden"
   label_language_based: "Op basis van de taal van gebruiker"

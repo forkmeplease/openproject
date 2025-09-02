@@ -3052,7 +3052,7 @@ sk:
   label_journal_diff: "Porovnanie popisu"
   label_language: "Jazyk"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Skok do projektu..."
   label_keyword_plural: "Kľúčové slová"
   label_language_based: "Založené na jazyku používateľa"

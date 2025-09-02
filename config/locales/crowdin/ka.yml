@@ -2962,7 +2962,7 @@ ka:
   label_journal_diff: "Description Comparison"
   label_language: "ენა"
   label_languages: "ენები"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Jump to a project..."
   label_keyword_plural: "საკვანძო სიტყვები"
   label_language_based: "Based on user's language"

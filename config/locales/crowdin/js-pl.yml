@@ -1221,7 +1221,7 @@ pl:
       selected_filter:
         all: "Wszystkie projekty"
         selected: "Tylko zaznaczone"
-      search_placeholder: "Wyszukaj projekt..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Uwzględnij wszystkie podprojekty"
       tooltip:

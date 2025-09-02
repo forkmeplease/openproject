@@ -3007,7 +3007,7 @@ ro:
   label_journal_diff: "Comparare descriere"
   label_language: "Limbă"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Salt la un proiect..."
   label_keyword_plural: "Cuvinte cheie"
   label_language_based: "Bazat pe limba utilizatorului"

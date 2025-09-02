@@ -2962,7 +2962,7 @@ eo:
   label_journal_diff: "Komparo de la priskribo"
   label_language: "Lingvo"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Iri al la projekto..."
   label_keyword_plural: "Ŝlosilvortoj"
   label_language_based: "Bazita sur la lingvo de la uzanto"

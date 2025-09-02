@@ -2915,7 +2915,7 @@ ms:
   label_journal_diff: "Perbandingan Deskripsi"
   label_language: "Bahasa"
   label_languages: "Bahasa-bahasa"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Lompat ke projek..."
   label_keyword_plural: "Kata kunci"
   label_language_based: "Berdasarkan bahasa pengguna"

@@ -2959,7 +2959,7 @@ it:
   label_journal_diff: "Confronto Descrizione"
   label_language: "Lingua"
   label_languages: "Lingue"
-  label_locale: "Lingua e regione"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Salta ad altro progetto..."
   label_keyword_plural: "Parole chiave"
   label_language_based: "Basato sulla lingua dell'utente"

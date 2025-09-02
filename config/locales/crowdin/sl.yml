@@ -3051,7 +3051,7 @@ sl:
   label_journal_diff: "Opisna Primerjava"
   label_language: "Jezik"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Skoči na projekt..."
   label_keyword_plural: "Ključne besede"
   label_language_based: "Glede na uporabnikov jezik"

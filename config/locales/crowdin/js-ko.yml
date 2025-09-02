@@ -1209,7 +1209,7 @@ ko:
       selected_filter:
         all: "모든 프로젝트"
         selected: "선택한 항목만"
-      search_placeholder: "프로젝트 검색..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "모든 하위 프로젝트 포함"
       tooltip:

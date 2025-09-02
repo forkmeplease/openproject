@@ -2958,7 +2958,7 @@ el:
   label_journal_diff: "Σύγκριση Περιγραφών"
   label_language: "Γλώσσα"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Μεταβείτε σε ένα έργο..."
   label_keyword_plural: "Λέξεις-κλειδιά"
   label_language_based: "Με βάση τη γλώσσα του χρήστη"

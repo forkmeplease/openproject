@@ -1220,7 +1220,7 @@ ru:
       selected_filter:
         all: "Все проекты"
         selected: "Только выбранные"
-      search_placeholder: "Поиск проекта..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Включить все подпроекты"
       tooltip:

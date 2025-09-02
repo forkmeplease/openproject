@@ -1221,7 +1221,7 @@ cs:
       selected_filter:
         all: "Všechny projekty"
         selected: "Pouze vybrané"
-      search_placeholder: "Hledat projekt..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Zahrnout všechny podprojekty"
       tooltip:

@@ -1213,7 +1213,7 @@ nl:
       selected_filter:
         all: "Alle projecten"
         selected: "Alleen geselecteerd"
-      search_placeholder: "Zoek project"
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Inclusief alle sub-projecten"
       tooltip:

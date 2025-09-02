@@ -2962,7 +2962,7 @@ bg:
   label_journal_diff: "Сравнение на описание"
   label_language: "Език"
   label_languages: "Езици"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Отиди на проект..."
   label_keyword_plural: "Ключови думи"
   label_language_based: "Въз основа на езика на потребителя"

@@ -2962,7 +2962,7 @@ si:
   label_journal_diff: "විස්තරය සංසන්දනය"
   label_language: " "
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "ව්යාපෘතියකට පනින්න..."
   label_keyword_plural: "මූල පද"
   label_language_based: "පරිශීලකයාගේ භාෂාව මත පදනම්ව"

@@ -2962,7 +2962,7 @@ et:
   label_journal_diff: "Kirjelduse võrdlus"
   label_language: "Keel"
   label_languages: "Keeled"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Mine projekti..."
   label_keyword_plural: "Märksõnad"
   label_language_based: "Põhineb kasutaja keelel"

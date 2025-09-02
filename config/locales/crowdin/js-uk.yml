@@ -1221,7 +1221,7 @@ uk:
       selected_filter:
         all: "Усі проєкти"
         selected: "Тільки вибране"
-      search_placeholder: "Пошук у проєкті…"
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Включити всі підпроєкти"
       tooltip:

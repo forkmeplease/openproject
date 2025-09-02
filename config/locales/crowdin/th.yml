@@ -2917,7 +2917,7 @@ th:
   label_journal_diff: "เปรียบเทียบคำอธิบาย"
   label_language: "ภาษา"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "ไปยังโครงการ..."
   label_keyword_plural: "Keywords"
   label_language_based: "ตามภาษาของผู้ใช้"

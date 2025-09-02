@@ -1213,7 +1213,7 @@
       selected_filter:
         all: "Alle prosjekter"
         selected: "Kun valgte"
-      search_placeholder: "Søk i prosjekt..."
+      search_placeholder: "Search projects..."
       search_placeholder_favorites: "Search favorites..."
       include_subprojects: "Inkluder alle underprosjekter"
       tooltip:

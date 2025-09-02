@@ -2960,7 +2960,7 @@ hi:
   label_journal_diff: "विवरण तुलना"
   label_language: "भाषा "
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "किसी प्रोजेक्ट पर जंप करें..."
   label_keyword_plural: "Keywords"
   label_language_based: "Based on user's language"

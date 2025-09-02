@@ -2960,7 +2960,7 @@ da:
   label_journal_diff: "Sammenligning af beskrivelser"
   label_language: "Sprog"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "Gå til et projekt..."
   label_keyword_plural: "Keywords"
   label_language_based: "Baseret på brugerens sprog"

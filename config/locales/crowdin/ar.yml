@@ -3142,7 +3142,7 @@ ar:
   label_journal_diff: "مقارنة التوصيف"
   label_language: "اللغة"
   label_languages: "Languages"
-  label_locale: "Language and Region"
+  label_locale: "Language and region"
   label_jump_to_a_project: "الانتقال بسرعة إلى مشروع..."
   label_keyword_plural: "Keywords"
   label_language_based: "استناداً إلى لغة المستخدم"
