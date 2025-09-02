@@ -28,7 +28,12 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-  render(OpPrimer::ConditionalLayoutComponent.new(condition: sidebar_enabled?)) do |component|
+  render(
+    OpPrimer::ConditionalLayoutComponent.new(
+      condition: sidebar_enabled?,
+      classes: "op-grid-page"
+    )
+  ) do |component|
     component.with_sidebar(width: :narrow, col_placement: :end) do
       if life_cycle_sidebar_enabled?
         concat(
