@@ -16,7 +16,7 @@
         [class.spot-link_inactive]="isMobile()"
         [attr.title]="workPackage.subject"
         uiSref="work-packages.show"
-        [uiParams]="{workPackageId: workPackage.id}"
+        [uiParams]="{workPackageId: workPackage.id, projects: null, projectPath: null}"
         [textContent]="'#' + workPackage.id"
       >
       </a>
