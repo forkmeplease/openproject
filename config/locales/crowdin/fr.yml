@@ -1574,7 +1574,8 @@ fr:
               cant_exceed_work: "ne peut être supérieur à Travail."
               must_be_set_when_work_is_set: "requis lorsque le Travail est défini."
               must_be_set_when_work_and_percent_complete_are_set: "requis lorsque le Travail et le % Complété sont définis."
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: '>- doit être égal à 0h lorsque le travail est défini et que le % d''achèvement est de 100%.'
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: >-
+                must be 0h when Work is set and % Complete is 100%.
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 doit être vide lorsque le Travail est vide et le % Complété est de 100 %.
           readonly_status: "Le lot de travaux est en lecture seule, ses attributs ne peuvent donc pas être changés."

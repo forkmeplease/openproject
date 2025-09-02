@@ -1563,7 +1563,8 @@ zh-CN:
               cant_exceed_work: "不能高于工时。"
               must_be_set_when_work_is_set: "设置“工时”时必填。"
               must_be_set_when_work_and_percent_complete_are_set: "设置“工时”和“完成%”时必填。"
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: '>- must be 0h when Work is set and % Complete is 100%.'
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: >-
+                must be 0h when Work is set and % Complete is 100%.
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 当“工时”为空，且“完成%”为 100% 时，必须为空。
           readonly_status: "工作包处于只读状态，因此无法更改其属性。"

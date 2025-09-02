@@ -1208,7 +1208,7 @@ zh-TW:
       selected_filter:
         all: "所有專案"
         selected: "僅所選專案"
-      search_placeholder: "Search projects..."
+      search_placeholder: "搜尋專案..."
       search_placeholder_favorites: "搜尋我的收藏..."
       include_subprojects: "包含子專案"
       tooltip:
