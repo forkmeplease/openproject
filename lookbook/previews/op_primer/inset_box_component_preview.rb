@@ -29,13 +29,13 @@
 #++
 
 module OpPrimer
-  class InsetBox < Primer::Component
-    attr_reader :border, :system_arguments
-
-    def initialize(border: true, **system_arguments)
-      super()
-      @border = border
-      @system_arguments = system_arguments
+  # @logical_path OpenProject/Primer
+  class InsetBoxComponentPreview < ViewComponent::Preview
+    # See the [component documentation](/lookbook/pages/components/inset_box) for more details.
+    def playground
+      render OpPrimer::InsetBox.new do
+        "I am a text inside InsetBox Component."
+      end
     end
   end
 end
