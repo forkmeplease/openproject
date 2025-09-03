@@ -31,7 +31,7 @@
 import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
 import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
-import { dummyBlockSpec, getDefaultOpenProjectSlashMenuItems, openProjectWorkPackageBlockSpec } from "op-blocknote-extensions";
+import { getDefaultOpenProjectSlashMenuItems, openProjectWorkPackageBlockSpec } from "op-blocknote-extensions";
 import { useEffect, useState } from "react";
 import { OpColorMode } from "core-app/core/setup/globals/theme-utils";
 import { HocuspocusProvider } from "@hocuspocus/provider";
@@ -56,7 +56,6 @@ const schema = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
     openProjectWorkPackage: openProjectWorkPackageBlockSpec,
-    dummy: dummyBlockSpec,
   },
 });
 
