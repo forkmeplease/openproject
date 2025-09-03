@@ -32,9 +32,10 @@ require "icalendar/tzinfo"
 
 module Meetings
   class IcalendarBuilder
-    attr_reader :timezone, :calendar, :all_times, :tzid
+    attr_reader :timezone, :calendar, :all_times, :tzid, :calendar_generated_for_user
 
-    def initialize(timezone:)
+    def initialize(timezone:, user: User.current)
+      @calendar_generated_for_user = user
       @timezone = timezone
       @tzid = timezone.tzinfo.canonical_identifier
       @calendar = build_icalendar
@@ -42,6 +43,11 @@ module Meetings
       @excluded_dates_cache = {}
       @instantiated_occurrences_cache = {}
       @series_cache_loaded = false
+      @action_needed_from_user_as_attendee = true
+    end
+
+    def treat_participations_from_user_as_accepted!
+      @action_needed_from_user_as_attendee = false
     end
 
     def add_single_meeting_event(meeting:, cancelled: false) # rubocop:disable Metrics/AbcSize
@@ -171,8 +177,8 @@ module Meetings
           {
             "CN" => user.name,
             "EMAIL" => user.mail,
-            "PARTSTAT" => "NEEDS-ACTION",
-            "RSVP" => "TRUE",
+            "PARTSTAT" => attendee_participation_status(user),
+            "RSVP" => attendee_rsvp_needed?(user) ? "TRUE" : "FALSE",
             "CUTYPE" => "INDIVIDUAL",
             "ROLE" => "REQ-PARTICIPANT"
           }
@@ -180,6 +186,18 @@ module Meetings
 
         event.append_attendee(address)
       end
+    end
+
+    def attendee_participation_status(user)
+      if calendar_generated_for_user == user && @action_needed_from_user_as_attendee
+        "NEEDS-ACTION"
+      else
+        "ACCEPTED" # until we handle RSVPs properly, we assume participants have accepted
+      end
+    end
+
+    def attendee_rsvp_needed?(user)
+      calendar_generated_for_user == user && @action_needed_from_user_as_attendee
     end
 
     def ical_datetime(time)
