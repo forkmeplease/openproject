@@ -1573,7 +1573,8 @@ pt-PT:
               cant_exceed_work: "não pode ser superior a Trabalho."
               must_be_set_when_work_is_set: "obrigatório quando o Trabalho está definido."
               must_be_set_when_work_and_percent_complete_are_set: "obrigatório quando o Trabalho e % de conclusão estão definidos."
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: '>- must be 0h when Work is set and % Complete is 100%.'
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: >-
+                must be 0h when Work is set and % Complete is 100%.
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 tem de estar vazio quando o Trabalho está vazio e % de conclusão é 100 %.
           readonly_status: "O pacote de trabalho está em estado de apenas leitura, por isso os seus atributos não podem ser alterados."

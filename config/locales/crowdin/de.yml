@@ -1568,7 +1568,8 @@ de:
               cant_exceed_work: "Kann nicht größer als der Aufwand sein."
               must_be_set_when_work_is_set: "Ist erforderlich, wenn Aufwand gesetzt ist."
               must_be_set_when_work_and_percent_complete_are_set: "ist erforderlich, wenn Aufwand und % abgeschlossen eingestellt sind."
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: muss 0h sein, wenn Aufwand gesetzt und % abgeschlossen 100% ist.
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: >-
+                muss 0h sein, wenn Aufwand gesetzt und % abgeschlossen 100% ist.
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 muss leer bleiben, wenn Aufwand gesetzt und % abgeschlossen 100% ist.
           readonly_status: "Das Arbeitspaket befindet sich in einem schreibgeschützten Status, so dass seine Attribute nicht geändert werden können."

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,33 +27,21 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-
-class MeetingAgendaItem::Notes < ApplicationForm
-  delegate :object, to: :@builder
-
-  form do |agenda_item_form|
-    agenda_item_form.rich_text_area(
-      name: :notes,
-      label: MeetingAgendaItem.human_attribute_name(:notes),
-      disabled: @disabled,
-      classes: "ck-editor-primer-adjusted",
-      rich_text_options: {
-        macros: "resource",
-        resource:,
-        storageKey: "meeting-#{object.meeting_id || 'new'}-agenda-item-#{object.id || 'new'}",
-        showAttachments: false
-      }
-    )
+class FixMissingMeetingsAttachments < ActiveRecord::Migration[8.0]
+  def up
+    execute <<-SQL.squish
+      UPDATE attachments
+      SET container_type = 'Meeting',
+          container_id = (
+            SELECT mc.meeting_id
+            FROM meeting_contents mc
+            WHERE mc.id = attachments.container_id
+          )
+      WHERE attachments.container_type = 'MeetingContent';
+    SQL
   end
 
-  def initialize(disabled: false)
-    @disabled = disabled
-  end
-
-  def resource
-    return unless object&.meeting
-
-    API::V3::Meetings::MeetingRepresenter
-      .new(object.meeting, current_user: User.current, embed_links: false)
+  def down
+    # Nothing to do
   end
 end
