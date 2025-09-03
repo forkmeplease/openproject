@@ -279,7 +279,7 @@ de:
           drive_id_exists: Laufwerk existiert
           drive_id_format: Laufwerks-ID-Format
           header: Konfiguration
-          host: Host URL
+          host: Host-URL
           host_url_accessible: Host-URL erreichbar
           storage_configured: Konfiguration abgeschlossen
           tenant_id: Tenant ID
