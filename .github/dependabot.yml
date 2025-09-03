@@ -1,4 +1,10 @@
 version: 2
+
+multi-ecosystem-groups:
+  primer:
+    schedule:
+      interval: "daily"
+
 updates:
   - package-ecosystem: "npm"
     directory: "/frontend"
@@ -26,7 +32,16 @@ updates:
     ignore:
       - dependency-name: "@angular*"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "@openproject/primer-view-components"
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    target-branch: "dev"
+    versioning-strategy: increase
+    patterns:
+      - "@openproject/primer-view-components"
+      - "@primer/*"
+    multi-ecosystem-group: "primer"
+
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
@@ -38,8 +53,15 @@ updates:
       aws-gems:
         patterns:
           - "aws-*"
-    ignore:
-      - dependency-name: "openproject-primer_view_components"
+
+  - package-ecosystem: "bundler"
+    directory: "/"
+    target-branch: "dev"
+    versioning-strategy: increase
+    patterns:
+      - "openproject-primer_view_components"
+    multi-ecosystem-group: "primer"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
