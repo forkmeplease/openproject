@@ -32,10 +32,10 @@ require "icalendar/tzinfo"
 
 module Meetings
   class IcalendarBuilder
-    attr_reader :timezone, :calendar, :all_times, :tzid, :current_user
+    attr_reader :timezone, :calendar, :all_times, :tzid, :calendar_generated_for_user
 
     def initialize(timezone:, user: User.current)
-      @current_user = user
+      @calendar_generated_for_user = user
       @timezone = timezone
       @tzid = timezone.tzinfo.canonical_identifier
       @calendar = build_icalendar
@@ -46,7 +46,7 @@ module Meetings
       @action_needed_from_user_as_attendee = true
     end
 
-    def mark_current_user_having_accepted_all_invitations!
+    def treat_participations_from_user_as_accepted!
       @action_needed_from_user_as_attendee = false
     end
 
@@ -189,7 +189,7 @@ module Meetings
     end
 
     def attendee_participation_status(user)
-      if current_user == user && @action_needed_from_user_as_attendee
+      if calendar_generated_for_user == user && @action_needed_from_user_as_attendee
         "NEEDS-ACTION"
       else
         "ACCEPTED" # until we handle RSVPs properly, we assume participants have accepted
@@ -197,7 +197,7 @@ module Meetings
     end
 
     def attendee_rsvp_needed?(user)
-      current_user == user && @action_needed_from_user_as_attendee
+      calendar_generated_for_user == user && @action_needed_from_user_as_attendee
     end
 
     def ical_datetime(time)

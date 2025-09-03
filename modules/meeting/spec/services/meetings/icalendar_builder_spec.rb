@@ -33,7 +33,7 @@ RSpec.describe Meetings::IcalendarBuilder,
 
     context "when current user has accepted all invitations" do
       subject(:builder) do
-        described_class.new(timezone:, user: meeting.author).tap(&:mark_current_user_having_accepted_all_invitations!)
+        described_class.new(timezone:, user: meeting.author).tap(&:treat_participations_from_user_as_accepted!)
       end
 
       let(:parsed_calendar) { Icalendar::Calendar.parse(builder.to_ical).first }
@@ -121,7 +121,7 @@ RSpec.describe Meetings::IcalendarBuilder,
 
       context "when current user has accepted all invitations" do
         subject(:builder) do
-          described_class.new(timezone:, user: user1).tap(&:mark_current_user_having_accepted_all_invitations!)
+          described_class.new(timezone:, user: user1).tap(&:treat_participations_from_user_as_accepted!)
         end
 
         let(:parsed_calendar) { Icalendar::Calendar.parse(builder.to_ical).first }
@@ -239,7 +239,7 @@ RSpec.describe Meetings::IcalendarBuilder,
 
     context "when current user has accepted all invitations" do
       subject(:builder) do
-        described_class.new(timezone:, user: user1).tap(&:mark_current_user_having_accepted_all_invitations!)
+        described_class.new(timezone:, user: user1).tap(&:treat_participations_from_user_as_accepted!)
       end
 
       let(:parsed_calendar) { Icalendar::Calendar.parse(builder.to_ical).first }
