@@ -3289,7 +3289,7 @@ hu:
   label_version_new: "Új verzió"
   label_version_edit: "Módosított verzió"
   label_version_plural: "Verzió"
-  label_version_sharing_descendants: "Az alprojektekkel rendelkező"
+  label_version_sharing_descendants: "Alprojektekkel"
   label_version_sharing_hierarchy: "A projekt hierarchiában"
   label_version_sharing_none: "Nem megosztott"
   label_version_sharing_system: "Az összes projekt"

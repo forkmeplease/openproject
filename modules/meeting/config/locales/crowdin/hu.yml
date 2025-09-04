@@ -139,7 +139,7 @@ hu:
   label_recurring_meeting_delete: "Elem törlése"
   label_recurring_meeting_restore: "Elem visszaállítása"
   label_recurring_meeting_schedule: "Ütem"
-  label_recurring_meeting_next_occurrence: "Next occurrence"
+  label_recurring_meeting_next_occurrence: "Következő esemény"
   label_recurring_meeting_no_end_date: "Több tervezett megbeszélés is van (%{schedule})."
   label_recurring_meeting_more:
     one: "There is one more scheduled meeting (%{schedule})."

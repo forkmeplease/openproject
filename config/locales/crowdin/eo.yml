@@ -1273,7 +1273,7 @@ eo:
         enterprise_plan_required: "requires at least the %{plan_name}."
         even: "must be even."
         exclusion: "rezervita."
-        feature_disabled: is not available.
+        feature_disabled: ne estas disponebla.
         file_too_large: "is too large (maximum size is %{count} Bytes)."
         filter_does_not_exist: "filter does not exist."
         format: "does not match the expected format '%{expected}'."
@@ -3970,7 +3970,7 @@ eo:
   setting_antivirus_scan_action: "Infected file action"
   setting_autofetch_changesets: "Autofetch repository changes"
   setting_autologin: "Autologin"
-  setting_available_languages: "Available languages"
+  setting_available_languages: "Disponeblaj lingvoj"
   setting_bcc_recipients: "Blind carbon copy recipients (bcc)"
   setting_brute_force_block_after_failed_logins: "Block user after this number of failed login attempts"
   setting_brute_force_block_minutes: "Time the user is blocked for"
