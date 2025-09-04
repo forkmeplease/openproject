@@ -1,7 +1,7 @@
 <%=
   component_wrapper do
     # TODO: validate paddings (InsetBox would probably overwrite "p" here, giving an unintended padding at the bottom)
-    render(OpPrimer::InsetBoxComponent.new(border: false, pt: 3, pl: 3, pr: 3, classes: "outcome-container")) do
+    render(OpPrimer::InsetBoxComponent.new(border: false, classes: "outcome-container")) do
       grid_layout("op-meeting-outcome-notes", tag: :div, id: "outcome-#{@meeting_outcome.id}") do |grid|
         grid.with_area(:title, tag: :span, classes: "title") do
           render(Primer::Beta::Heading.new(tag: :h5)) { t(:label_agenda_outcome) }
