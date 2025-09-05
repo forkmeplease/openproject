@@ -454,6 +454,12 @@
   text_meeting_agenda_open_are_you_sure: "Dette vil overskrive alle endringer i referatet! Vil du fortsette?"
   text_meeting_minutes_for_meeting: 'referat for møtet "%{meeting}"'
   text_notificiation_invited: "Denne e-posten inneholder ny informasjon for møtet nedenfor:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "Ditt møte er tomt"
   text_meeting_empty_description1: "Start ved å legge til sakspunkter nedenfor. Hvert punkt kan være like enkelt som en tittel, men du kan også legge til flere detaljer som for eksempel varighet og notater."
   text_meeting_empty_description2: 'Du kan også legge til referanser til eksisterende arbeidspakker. Når du gjør det, vil relaterte notater automatisk være synlige i arbeidspakkens fane "møter".'
@@ -567,7 +573,7 @@
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

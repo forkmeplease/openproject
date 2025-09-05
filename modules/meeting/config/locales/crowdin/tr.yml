@@ -454,6 +454,12 @@ tr:
   text_meeting_agenda_open_are_you_sure: "Bu, dakikalardaki tüm değişikliklerin üzerine yazacaktır! Devam etmek istiyor musun?"
   text_meeting_minutes_for_meeting: 'toplantı için dakikalar "%{meeting}"'
   text_notificiation_invited: "Bu posta, aşağıdaki toplantı için bir ics girişi içermektedir:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "Toplantınız boş"
   text_meeting_empty_description1: "Gündem maddelerini aşağıya ekleyerek başlayın. Her bir madde sadece başlık içerecek kadar basit olabilir ama toplantı süresi ve notları gibi ek detaylar da ekleyebilirsiniz."
   text_meeting_empty_description2: 'Ayrıca mevcut iş parçalarına referans ekleyebilirsiniz. Bu takdirde, ilişkili notlar iş parçacığının "Toplantılar" sekmesine eklenecektir.'
@@ -567,7 +573,7 @@ tr:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

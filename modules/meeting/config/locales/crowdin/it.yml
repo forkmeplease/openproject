@@ -454,6 +454,12 @@ it:
   text_meeting_agenda_open_are_you_sure: "Questo sovrascriverà tutte le modifiche nei verbali! Vuoi continuare?"
   text_meeting_minutes_for_meeting: 'verbali per l''incontro "%{meeting}"'
   text_notificiation_invited: "Questa mail contiene un elemento di riunione ics qui in seguito:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "La tua riunione è vuota"
   text_meeting_empty_description1: "Inizia con l'aggiunta di elementi dell'ordine del giorno qui sotto. Ogni elemento può essere semplice come solo un titolo, ma è anche possibile aggiungere ulteriori dettagli come durata e note."
   text_meeting_empty_description2: 'Puoi anche aggiungere riferimenti alle macro-attività esistenti. Quando lo fai, le note correlate saranno automaticamente visibili nella scheda "Riunioni" della macro-attività.'
@@ -567,7 +573,7 @@ it:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Nome del token"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

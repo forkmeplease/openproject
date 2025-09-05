@@ -454,6 +454,12 @@ hu:
   text_meeting_agenda_open_are_you_sure: "Ez minden változást felül fog írni. Biztosan folytani akarja?"
   text_meeting_minutes_for_meeting: 'a "%{meeting}" megbeszélés jegyzőkönyve'
   text_notificiation_invited: "Ez a levél alább egy ics bejegyzést tartalmaz a megbeszélésről:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "A megbeszélésed üres."
   text_meeting_empty_description1: "Kezdje az alábbi napirendi pontok hozzáadásával. Az egyes napirendi pontok lehetnek egyszerű címek, de további részleteket, például időtartamot és megjegyzéseket is hozzáadhat."
   text_meeting_empty_description2: 'A meglévő munkacsomagokhoz is hozzáadhat hivatkozásokat. Ilyenkor a kapcsolódó jegyzetek automatikusan láthatóvá válnak a munkacsomag "Megbeszélések" lapján.'
@@ -567,7 +573,7 @@ hu:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

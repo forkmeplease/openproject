@@ -239,8 +239,8 @@ es:
         body: "The meeting '%{title}' has been updated by %{actor}."
         old_date_time: "Fecha y hora anteriores"
         new_date_time: "Fecha y hora nuevas"
-        old_location: "Old location"
-        new_location: "New location"
+        old_location: "Ubicación antigua"
+        new_location: "Nueva ubicación"
     label_mail_all_participants: "Send email invite to participants"
     types:
       one_time: "Única"
@@ -454,6 +454,12 @@ es:
   text_meeting_agenda_open_are_you_sure: "Se sobrescribirán todos los cambios en las minutas. ¿Quiere continuar?"
   text_meeting_minutes_for_meeting: 'minutas para la reunión "%{meeting}"'
   text_notificiation_invited: "El correo electrónico contiene una entrada ics para la reunión siguiente:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "Su reunión está vacía"
   text_meeting_empty_description1: "Comience añadiendo puntos a la agenda a continuación. Cada punto puede ser tan sencillo como un título, pero también puede añadir detalles adicionales como duración y notas."
   text_meeting_empty_description2: 'También puede añadir referencias a los paquetes de trabajo existentes. Cuando lo haga, las notas relacionadas se verán automáticamente en la pestaña «Reuniones» del paquete de trabajo.'
@@ -567,7 +573,7 @@ es:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

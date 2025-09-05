@@ -66,7 +66,7 @@ es:
         description: This allows you to test your regular expression pattern against sample data to verify that the group names you want extracted are indeed extracted properly. You can modify your pattern here but the test string and matches themselves will not be saved with the configuration.
         group_names_label: Test group names
         group_names_description: Enter one group name per line as it would appear in the OIDC claim, to see how your regular expression patterns affect them.
-        show_button: Test pattern
+        show_button: Patrón de prueba
         title: Test regular expressions
     instructions:
       endpoint_url: La URL del terminal que le ha proporcionado el proveedor de OpenID Connect

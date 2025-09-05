@@ -468,6 +468,12 @@ cs:
   text_meeting_agenda_open_are_you_sure: "Toto přepíše všechny změny v zápisech! Chcete pokračovat?"
   text_meeting_minutes_for_meeting: 'zápis pro schůzku "%{meeting}"'
   text_notificiation_invited: "Tento e-mail obsahuje ics záznam pro následující setkání:"
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "Vaše schůzka je prázdná"
   text_meeting_empty_description1: "Začněte přidáním bodů programu schůzky níže. Každá položka může být tak jednoduchá jako jen název, ale můžete také přidat další podrobnosti jako doba trvání a poznámky."
   text_meeting_empty_description2: 'Můžete také přidat odkazy na existující pracovní balíčky. Pokud tak učiníte, související poznámky budou automaticky viditelné v záložce "Schůzky" pracovního balíčku.'
@@ -581,7 +587,7 @@ cs:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Název tokenu"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"

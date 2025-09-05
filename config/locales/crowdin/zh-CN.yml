@@ -59,10 +59,10 @@ zh-CN:
       tab_interface: "界面"
       tab_branding: "品牌"
       tab_pdf_export_styles: "PDF 导出样式"
-      tab_pdf_export_font: "PDF export font"
+      tab_pdf_export_font: "PDF 导出字体"
       fonts:
-        file_too_large: "is too large (maximum size is %{count} MB)."
-        file_is_invalid: "is not a valid TTF font file."
+        file_too_large: "太大 (最大大小为 %{count} MB)。"
+        file_is_invalid: "不是有效的 TTF 字体文件"
       colors:
         primary-button-color: "主按钮色"
         accent-color: "强调色"
@@ -298,7 +298,7 @@ zh-CN:
         placeholder:
           label: "项目标签"
           short: "短名"
-          score: "Score"
+          score: "分数"
       notice:
         remember_items_and_projects: "请记住，在相应的选项卡中为此自定义字段设置条目和项目。"
       hierarchy:
@@ -334,18 +334,18 @@ zh-CN:
     single: "或"
   dry_validation:
     errors:
-      defined: "must not be defined."
+      defined: "不得定义。"
       int?: "必须为整数"
-      decimal?: "must be a decimal."
+      decimal?: "必须是小数。"
       filled?: "必须填写"
-      key?: "is missing."
+      key?: "缺失。"
       greater_or_equal_zero: "必须大于或等于 0"
       not_found: "未找到"
       rules:
         copy_workflow_from:
           workflow_missing: "没有自己的工作流。"
         custom_field:
-          format_not_supported: "format '%{field_format}' is unsupported."
+          format_not_supported: "格式 '%{field_format}' 不受支持。"
         item:
           root_item: "不能为根项目"
           not_persisted: "必须是已存在的项目"
@@ -2488,8 +2488,8 @@ zh-CN:
             line_2: PDF export of project lists.
             line_3: Custom font for all PDF exports (Enterprise add-on).
             line_4: Improved meeting participants dialog.
-            line_5: Improved budget handling in project queries and budget planning.
-            line_6: Updated Home and Project overview page.
+            line_5: 改了进项目查询和预算规划中的预算处理。
+            line_6: 更新了主页和项目概览页面。
     links:
       upgrade_enterprise_edition: "升级到企业版"
       postgres_migration: "将您的安装迁移到 PostgreSQL"
@@ -2665,7 +2665,7 @@ zh-CN:
   label_api_access_key: "API 访问键"
   label_api_access_key_created_on: "API 访问密钥创建于 %{value} 前"
   label_api_access_key_type: "API"
-  label_auto_option: "(auto)"
+  label_auto_option: "（自动）"
   label_ical_access_key_type: "iCalendar"
   label_ical_access_key_description: 'iCalendar令牌"%{token_name}" 为"%{calendar_name}" 属于 "%{project_name}"'
   label_ical_access_key_not_present: "iCalendar 令牌不存在。"
@@ -2903,7 +2903,7 @@ zh-CN:
   label_invite_user: "邀请用户"
   label_item: "条目"
   label_item_plural: "条目"
-  label_scored_list: "Scored list"
+  label_scored_list: "评分列表 "
   label_share: "共享"
   label_share_project_list: "共享项目列表"
   label_share_work_package: "共享工作包"
@@ -2914,7 +2914,7 @@ zh-CN:
   label_journal_diff: "描述的对比"
   label_language: "语言"
   label_languages: "语言"
-  label_locale: "Language and region"
+  label_locale: "语言和地区"
   label_jump_to_a_project: "跳转到一个项目..."
   label_keyword_plural: "关键词"
   label_language_based: "基于用户的语言"
@@ -2934,18 +2934,18 @@ zh-CN:
   label_link_url: "链接（URL）"
   label_list: "列表"
   label_loading: "正在加载..."
-  label_locked: "locked"
+  label_locked: "已锁定"
   label_lock_user: "锁定用户"
   label_logged_as: "登录用户名"
   label_login: "登录"
   label_custom_logo: "自定义徽标"
   label_custom_export_logo: "自定义导出徽标"
   label_custom_export_cover: "自定义导出封面背景"
-  label_custom_export_footer: "Custom export footer image"
-  label_custom_export_font_regular: "Regular"
-  label_custom_export_font_bold: "Bold"
-  label_custom_export_font_italic: "Italic"
-  label_custom_export_font_bold_italic: "Bold Italic"
+  label_custom_export_footer: "自定义导出页脚图像"
+  label_custom_export_font_regular: "常规"
+  label_custom_export_font_bold: "粗体"
+  label_custom_export_font_italic: "斜体"
+  label_custom_export_font_bold_italic: "斜体加粗"
   label_custom_export_cover_overlay: "自定义导出封面背景叠加"
   label_custom_export_cover_text_color: "文本颜色"
   label_custom_pdf_export_settings: "自定义 PDF 导出设置"
@@ -3101,10 +3101,10 @@ zh-CN:
   label_project_view_all: "查看所有项目"
   label_project_show_details: "显示项目详细信息"
   label_project_hide_details: "隐藏项目详细信息"
-  label_portfolio: "Portfolio"
-  label_portfolio_new: "New portfolio"
-  label_program: "Program"
-  label_program_new: "New program"
+  label_portfolio: "专案集"
+  label_portfolio_new: "新专案集"
+  label_program: "程序"
+  label_program_new: "新规划"
   label_public_projects: "公开项目"
   label_query_new: "新的查询"
   label_query_plural: "自定义查询"
@@ -3597,8 +3597,8 @@ zh-CN:
   permission_add_work_packages: "添加工作包"
   permission_add_messages: "发布消息"
   permission_add_project: "创建项目"
-  permission_add_portfolios: "Create portfolios"
-  permission_add_programs: "Create programs"
+  permission_add_portfolios: "创建专案集"
+  permission_add_programs: "创建程序"
   permission_add_work_package_attachments: "添加附件"
   permission_add_work_package_attachments_explanation: "允许在没有编辑工作包权限的情况下添加附件"
   permission_add_internal_comments: "写内部评论"
@@ -3895,7 +3895,7 @@ zh-CN:
   setting_attachment_whitelist: "附件上传白名单"
   setting_email_delivery_method: "电子邮件发送方法"
   setting_emails_salutation: "电子邮件中的用户地址"
-  setting_oauth_allow_remapping_of_existing_users: "Allow remapping of existing users"
+  setting_oauth_allow_remapping_of_existing_users: "允许重新映射现有用户"
   setting_sendmail_location: "Sendmail 的执行位置"
   setting_smtp_enable_starttls_auto: "如果可用，自动使用 STARTTLS"
   setting_smtp_ssl: "使用 SSL 连接"
@@ -4172,7 +4172,7 @@ zh-CN:
   status_invited: 已邀请
   status_locked: 锁定
   status_registered: 已注册
-  status_deleted: deleted
+  status_deleted: 已删除
   #Used in array.to_sentence.
   support:
     array:
@@ -4208,17 +4208,17 @@ zh-CN:
   text_custom_export_cover_instructions: >
     这是在您的 PDF 导出的封面页面背景中显示的图像。 它需要是大约800像素宽度 × 500像素高度的 PNG 或 JPEG 图像文件。
   text_custom_export_footer_instructions: >
-    PDF exports will include a graphical element positioned to the left of the footer. This image must be a PNG or JPEG file with approximately 200 pixels in width.
+    PDF 导出将包含位于页脚左侧的图形元素。该图像必须是 PNG 或 JPEG 文件，宽度约为 200 像素。
   label_custom_export_font_instructions: >
-    Upload and manage custom TrueType (.ttf) fonts used in your PDF exports. For best results, use matching files from the same font family. If no font is provided, the default NotoSans font will be used.
+    上传并管理在您 PDF 导出中使用的自定义 TrueType (.ttf) 字体。为获得最佳效果，请使用同一字体族中的匹配文件。如果未提供字体，则将使用默认的 NotoSans 字体。
   label_custom_export_images_instructions: >
-    Upload and manage custom image files used in your PDF exports.
+    上传并管理在您 PDF 导出中使用的自定义图像文件。
   text_custom_export_font_regular_instructions: >
-    This is the font file for regular text. It needs to be in TTF format and is required.
+    这是用于常规文本的字体文件。该文件需为 TTF 格式，且必须提供。
   text_custom_export_font_bold_instructions: >
-    This is the font file for bold text. It needs to be in TTF format.
+    这是用于粗体文本的字体文件。该文件需为 TTF 格式。
   text_custom_export_font_italic_instructions: >
-    This is the font file for italic text. It needs to be in TTF format.
+    这是用于斜体文本的字体文件。该文件需为 TTF 格式。
   text_custom_export_font_bold_italic_instructions: >
     This is the font file for bold and italic text. It needs to be in TTF format.
   text_custom_favicon_instructions: >

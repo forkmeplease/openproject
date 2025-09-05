@@ -34,7 +34,7 @@ zh-TW:
           finished: '已完成'
           discontinued: '已中止'
         project_status_beta:
-          title: 'Project status (BETA)'
+          title: '專案狀態 (BETA)'
         subprojects:
           title: '子專案'
           no_results: '無子專案'

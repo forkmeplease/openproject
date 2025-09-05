@@ -447,6 +447,12 @@ ko:
   text_meeting_agenda_open_are_you_sure: "그러면 몇 분 내에 모든 변경 사항을 덮어씁니다. 계속하시겠습니까?"
   text_meeting_minutes_for_meeting: '미팅 "%{meeting}"에 대한 의사록'
   text_notificiation_invited: "이 메일에는 아래 모임에 대한 ics 항목이 포함되어 있습니다."
+  text_meeting_ics_description: >-
+    Link to meeting: %{url}
+  text_meeting_ics_meeting_series_description: >-
+    Link to meeting series: %{url}
+  text_meeting_occurrence_ics_description: >-
+    Link to meeting occurrence: %{url} Link to meeting series: %{series_url}
   text_meeting_empty_heading: "미팅이 비어 있습니다"
   text_meeting_empty_description1: "아래에 의제 항목을 추가하여 시작하세요. 각 항목은 제목처럼 간단할 수 있지만 기간, 메모 등 추가적인 세부 정보를 추가할 수도 있습니다."
   text_meeting_empty_description2: '기존 작업 패키지에 대한 참조를 추가할 수도 있습니다. 이렇게 하면 관련 메모가 작업 패키지의 "미팅" 탭에 자동으로 표시됩니다.'
@@ -560,7 +566,7 @@ ko:
           dialog_body: "This token will generate an iCal subscription URL that lets you view all your meetings in an external calendar application."
           create_button: "Create subscription"
           name_label: "Token name"
-          name_caption: 'You can name it after where you will use it, such as"My phone" or "Work computer.'
+          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
       created_dialog:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"
