@@ -2550,7 +2550,7 @@ de:
       shortcuts: "Tastenkürzel"
       blog: "OpenProject Blog"
       forums: "Community Forum"
-      security_alerts: "Security alerts"
+      security_alerts: "Sicherheitswarnungen"
       newsletter: "Newsletter"
   image_conversion:
     imagemagick: "ImageMagick"
