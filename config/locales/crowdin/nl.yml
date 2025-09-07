@@ -367,9 +367,9 @@ nl:
       blueprint: "Patroonblauwdruk"
   global_search:
     title:
-      all_projects: 'Search for "%{search_term}" in all projects'
-      current_project: 'Search for "%{search_term}" in %{project_name}'
-      project_and_subprojects: 'Search for "%{search_term}" in %{project_name} and all subprojects'
+      all_projects: 'Zoek naar "%{search_term}" in alle projecten'
+      current_project: 'Zoek naar "%{search_term}" in %{project_name}'
+      project_and_subprojects: 'Zoek naar "%{search_term}" in %{project_name} en alle subprojecten'
     placeholder: "Zoeken in %{app_title}"
     overwritten_tabs:
       all: "Alle"
@@ -451,8 +451,8 @@ nl:
         description: >
           Anyone who has access to this instance will be able to view and interact with this project depending on their role and authentication settings. Sub-projects are not affected and have their own settings.
       private_confirmation:
-        checkbox: "I understand that this will make the previously public content private."
-        title: "Make this project private?"
+        checkbox: "Ik begrijp dat dit de voorheen openbare inhoud privé maakt."
+        title: "Dit project privé maken?"
         description: >
           The project will only be visible to project members depending on their role and associated permissions. Sub-projects are not affected and have their own settings.
       change_identifier: Change identifier
