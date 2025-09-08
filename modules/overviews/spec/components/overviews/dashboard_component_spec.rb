@@ -59,7 +59,7 @@ RSpec.describe Overviews::DashboardComponent, type: :component do
   context "when user is allowed to manage" do
     before do
       mock_permissions_for(user) do |mock|
-        mock.allow_in_project(:manage_overview, project:)
+        mock.allow_in_project(:manage_dashboards, project:)
       end
     end
 

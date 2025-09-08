@@ -48,7 +48,7 @@ RSpec.describe "Dashboard page managing", :js do
   end
 
   let(:permissions) do
-    %i[manage_overview
+    %i[manage_dashboards
        view_members
        view_work_packages
        add_work_packages

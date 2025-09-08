@@ -53,7 +53,7 @@ RSpec.describe "Calendar Widget", :js, with_settings: { start_of_week: 1 } do
   shared_let(:current_user) do
     create(:user,
            member_with_permissions: {
-             project => %w[view_work_packages view_meetings edit_work_packages view_calendar manage_overview]
+             project => %w[view_work_packages view_meetings edit_work_packages view_calendar manage_dashboards]
            })
   end
 
@@ -82,7 +82,7 @@ RSpec.describe "Calendar Widget", :js, with_settings: { start_of_week: 1 } do
       create(:user,
              preferences: { time_zone: "Asia/Tokyo" },
              member_with_permissions: {
-               project => %w[view_work_packages view_meetings edit_work_packages view_calendar manage_overview]
+               project => %w[view_work_packages view_meetings edit_work_packages view_calendar manage_dashboards]
              })
     end
 

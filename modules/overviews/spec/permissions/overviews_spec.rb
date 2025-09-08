@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2010-2024 the OpenProject GmbH
+# Copyright (C) the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -26,29 +26,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module Overviews
-  class DashboardComponent < ApplicationComponent
-    include ApplicationHelper
-    include OpPrimer::ComponentHelpers
-    include OpTurbo::Streamable
-    include AngularHelper
-    include Turbo::FramesHelper
+require "spec_helper"
+require "support/permission_specs"
 
-    attr_reader :project, :current_user
+RSpec.describe Overviews::OverviewsController, "permissions", type: :controller do # rubocop:disable RSpec/EmptyExampleGroup,RSpec/SpecFilePathFormat
+  include PermissionSpecs
 
-    def initialize(project:, current_user:)
-      super()
-
-      @project = project
-      @current_user = current_user
-    end
-
-    private
-
-    def allowed_to_manage?
-      current_user.allowed_in_project?(:manage_dashboards, project)
-    end
-  end
+  check_permission_required_for("overviews/overviews#show", :view_project)
 end
