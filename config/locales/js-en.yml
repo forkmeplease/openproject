@@ -104,6 +104,8 @@ en:
     button_list_view: "List view"
     button_show_view: "Fullscreen view"
     button_log_time: "Log time"
+    button_start_timer: "Start timer"
+    button_stop_timer: "Stop timer"
     button_more: "More"
     button_open_details: "Open details view"
     button_close_details: "Close details view"

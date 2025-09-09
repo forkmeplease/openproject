@@ -16,6 +16,8 @@ import { WpDestroyModalComponent } from 'core-app/shared/components/modals/wp-de
 import { WorkPackageAuthorization } from 'core-app/features/work-packages/services/work-package-authorization.service';
 import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
+import { TimeEntryTimerService } from 'core-app/shared/components/time_entries/services/time-entry-timer.service';
+import { TimeEntryResource } from 'core-app/features/hal/resources/time-entry-resource';
 
 @Directive({
   selector: '[wpSingleContextMenu]',
@@ -23,6 +25,8 @@ import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 })
 export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger implements AfterViewInit, OnDestroy {
   @Input('wpSingleContextMenu-workPackage') public workPackage:WorkPackageResource;
+
+  private currentTimer:TimeEntryResource|null = null;
 
   constructor(
     readonly HookService:HookService,
@@ -35,6 +39,7 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
     readonly apiV3Service:ApiV3Service,
     readonly opContextMenuService:OPContextMenuService,
     readonly authorisationService:AuthorisationService,
+    readonly timeEntryService:TimeEntryTimerService,
     protected copyToClipboardService:CopyToClipboardService,
   ) {
     super(elementRef, opContextMenuService);
@@ -45,6 +50,10 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
   ngAfterViewInit():void {
     super.ngAfterViewInit();
     document.addEventListener('dialog:close', this.closeDialogHandler);
+
+    this.timeEntryService.activeTimer$.subscribe((timer) => {
+      this.currentTimer = timer;
+    });
   }
 
   ngOnDestroy():void {
@@ -70,7 +79,12 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
       case 'copy_to_other_project':
         window.location.href = `${this.PathHelper.staticBase}/work_packages/move/new?copy=true&ids[]=${this.workPackage.id as string}`;
         break;
-
+      case 'start_timer':
+        // do stuff
+        break;
+      case 'stop_timer':
+        // do stuff
+        break;
       case 'copy':
         this.$state.go('work-packages.copy', { copiedFromWorkPackageId: this.workPackage.id });
         break;
@@ -111,8 +125,47 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
     return position;
   }
 
+  private activeForWorkPackage(entry:TimeEntryResource | null):boolean {
+    return !!entry && entry.entity.href === this.workPackage.href;
+  }
+
+  private hasTimerPermission():boolean {
+    return Object.prototype.hasOwnProperty.call(this.workPackage, 'logTime');
+  }
+
+  private getTimerAction():string | null {
+    if (this.activeForWorkPackage(this.currentTimer)) {
+      return 'stop_timer';
+    } else {
+      return 'start_timer';
+    }
+  }
+
+  private removeTimerActions(actions:WorkPackageAction[]):WorkPackageAction[] {
+    return actions.filter((action) => action.key !== 'start_timer' && action.key !== 'stop_timer');
+  }
+
   private getPermittedActions(authorization:WorkPackageAuthorization) {
-    const actions:WorkPackageAction[] = authorization.permittedActionsWithLinks(PERMITTED_CONTEXT_MENU_ACTIONS);
+    let actions:WorkPackageAction[] = authorization.permittedActionsWithLinks(PERMITTED_CONTEXT_MENU_ACTIONS);
+
+    if (this.hasTimerPermission()) {
+      const requiredTimerAction = this.getTimerAction();
+      actions = actions.filter((action) => {
+        // Show one action
+        if (action.key === requiredTimerAction) {
+          return true;
+        }
+
+        // Hide the other
+        if (action.key === 'start_timer' || action.key === 'stop_timer') {
+          return false;
+        }
+
+        return true;
+      });
+    } else {
+      actions = this.removeTimerActions(actions);
+    }
 
     // Splice plugin actions onto the core actions
     _.each(this.getPermittedPluginActions(authorization), (action:WorkPackageAction) => {
