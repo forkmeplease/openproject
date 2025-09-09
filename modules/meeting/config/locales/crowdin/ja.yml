@@ -530,19 +530,19 @@ ja:
   label_meeting_in_progress_action: "会議を開始"
   text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
   text_meeting_closed_description: "この会議は終了しています。これ以上、議題項目の追加/削除はできません。"
-  text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
+  text_meeting_in_progress_description: "議題を変更したり、各項目のアウトカムを記録したり、参加者の出席を追跡することができます。 ミーティングが完了すると、ミーティングをクローズとしてマークしてロックできます。"
   text_meeting_open_dropdown_description: "既存の結果は残りますが、ユーザーは新しい結果を追加することはできません。"
   text_meeting_in_progress_dropdown_description: "会議中に取られた情報のニーズや意思決定などの成果を記録します。"
   text_meeting_closed_dropdown_description: "この会議は終了しました。これ以上、議題や結果を変更することはできません。"
   text_meeting_not_editable_anymore: "この会議はもう編集できません。"
   text_meeting_not_present_anymore: "この会議は削除されました。別の会議を選択してください。"
-  label_add_work_package_to_meeting_dialog_title: "Select meeting"
-  label_add_work_package_to_meeting_section_label: "Add to section"
+  label_add_work_package_to_meeting_dialog_title: "会議の選択"
+  label_add_work_package_to_meeting_section_label: "セクションに追加"
   label_add_work_package_to_meeting_dialog_button: "会議に追加"
-  label_meeting_selection_caption: "It is only possible to add this work package to an upcoming or an ongoing meeting."
+  label_meeting_selection_caption: "このワークパッケージは、今後の会議または進行中の会議にのみ追加可能です。"
   label_section_selection_caption: "Choose a particular section of the agenda or add it to the backlog."
   placeholder_section_select_meeting_first: "Meeting selection is required first"
-  text_add_work_package_to_meeting_form: "The work package will be added to the selected meeting or backlog as an agenda item."
+  text_add_work_package_to_meeting_form: "選択したミーティングまたは議題項目としてバックログにワークパッケージが追加されます。"
   text_add_work_package_to_meeting_description: "ワークパッケージは、議論のために1つまたは複数の会議に追加できます。それに関するメモもここで表示されます。"
   text_agenda_item_no_notes: "メモは提供されていません"
   text_agenda_item_not_editable_anymore: "この議題項目はもう編集できません。"
@@ -570,7 +570,7 @@ ja:
           dialog_body: "このトークンは、外部カレンダーアプリケーションですべてのミーティングを表示することができるiCalサブスクリプションURLを生成します。"
           create_button: "サブスクリプションを作成"
           name_label: "トークン名"
-          name_caption: 'You can name it after where you will use it, such as "My phone" or "Work computer".'
+          name_caption: '「マイフォン」や「ワークコンピュータ」など、どこで使用するかにちなんで名付けることができます。'
       created_dialog:
         token/ical_meeting:
           title: "iCalミーティング購読トークンが生成されました"
