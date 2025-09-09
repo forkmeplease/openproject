@@ -626,14 +626,14 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-apis-core (0.18.0)
-      addressable (~> 2.5, >= 2.5.1)
-      googleauth (~> 1.9)
-      httpclient (>= 2.8.3, < 3.a)
-      mini_mime (~> 1.0)
-      mutex_m
+    google-apis-core (1.0.1)
+      addressable (~> 2.8, >= 2.8.7)
+      faraday (~> 2.13)
+      faraday-follow_redirects (~> 0.3)
+      googleauth (~> 1.14)
+      mini_mime (~> 1.1)
       representable (~> 3.0)
-      retriable (>= 2.0, < 4.a)
+      retriable (~> 3.1)
     google-apis-gmail_v1 (0.45.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-env (2.3.1)
@@ -672,8 +672,6 @@ GEM
     htmlentities (4.3.4)
     http-2 (1.1.1)
     http_parser.rb (0.8.0)
-    httpclient (2.9.0)
-      mutex_m
     httpx (1.3.4)
       http-2 (>= 1.0.0)
     i18n (1.14.7)
@@ -798,7 +796,6 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.1.0)
       mustermann (>= 1.0.0)
-    mutex_m (0.3.0)
     net-http (0.6.0)
       uri
     net-imap (0.5.9)
@@ -1704,7 +1701,7 @@ CHECKSUMS
   glob (0.4.0) sha256=893dc9e2d24abe13dda907ce0cda576f680ff382f2a6cf9e543f98ecbe29238c
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
-  google-apis-core (0.18.0) sha256=96b057816feeeab448139ed5b5c78eab7fc2a9d8958f0fbc8217dedffad054ee
+  google-apis-core (1.0.1) sha256=5cd0fc24e33efe5e8d095374c0fef3d246eded243b751c861e95e3d16ad0d861
   google-apis-gmail_v1 (0.45.0) sha256=28b12356de6b78e136b5290976633978b23dc0013797b0d25f49bd36882cde78
   google-cloud-env (2.3.1) sha256=0faac01eb27be78c2591d64433663b1a114f8f7af55a4f819755426cac9178e7
   google-logging-utils (0.2.0) sha256=675462b4ea5affa825a3442694ca2d75d0069455a1d0956127207498fca3df7b
@@ -1724,7 +1721,6 @@ CHECKSUMS
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http-2 (1.1.1) sha256=1141a5a03c2f4e6b8d2fa62394de581e1ff6387711cd7ed577212e9d95562bba
   http_parser.rb (0.8.0) sha256=5a0932f1fa82ce08a8516a2685d5a86031c000560f89946913c555a0697544be
-  httpclient (2.9.0) sha256=4b645958e494b2f86c2f8a2f304c959baa273a310e77a2931ddb986d83e498c8
   httpx (1.3.4) sha256=d90bac25b909184479af1bd95e66b0a336a11d76076342caae5809ffd7d63799
   i18n (1.14.7) sha256=ceba573f8138ff2c0915427f1fc5bdf4aa3ab8ae88c8ce255eb3ecf0a11a5d0f
   i18n-js (4.2.3) sha256=ffb1a6d34afebd9ab2aff9bd86e8f2873191cbe8b9ac5c2c8efe4dfa1107ca3b
@@ -1774,7 +1770,6 @@ CHECKSUMS
   multi_json (1.17.0) sha256=76581f6c96aebf2e85f8a8b9854829e0988f335e8671cd1a56a1036eb75e4a1b
   mustermann (3.0.3) sha256=d1f8e9ba2ddaed47150ddf81f6a7ea046826b64c672fbc92d83bce6b70657e88
   mustermann-grape (1.1.0) sha256=8d258a986004c8f01ce4c023c0b037c168a9ed889cf5778068ad54398fa458c5
-  mutex_m (0.3.0) sha256=cfcb04ac16b69c4813777022fdceda24e9f798e48092a2b817eb4c0a782b0751
   my_page (1.0.0)
   net-http (0.6.0) sha256=9621b20c137898af9d890556848c93603716cab516dc2c89b01a38b894e259fb
   net-imap (0.5.9) sha256=d95905321e1bd9f294ffc7ff8697be218eee1ec96c8504c0960964d0a0be33fc
