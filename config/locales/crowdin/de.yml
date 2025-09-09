@@ -2975,7 +2975,7 @@ de:
   label_link_url: "Link (URL)"
   label_list: "Liste"
   label_loading: "Lade..."
-  label_locked: "gesperrt"
+  label_locked: "Gesperrt"
   label_lock_user: "Benutzer sperren"
   label_logged_as: "Angemeldet als"
   label_login: "Anmelden"
