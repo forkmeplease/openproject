@@ -43,8 +43,8 @@ RSpec.describe Projects::StatusBadgeComponent, type: :component do
   end
 
   context "when status code is not set" do
-    it "renders a label" do
-      expect(rendered_component).to have_primer_label "Not set"
+    it "renders nothing" do
+      expect(rendered_component.to_s).to be_empty
     end
   end
 

@@ -41,6 +41,8 @@ class Projects::StatusBadgeComponent < ApplicationComponent
   end
 
   def before_render
+    return unless @status
+
     @system_arguments[:classes] = class_names(
       @system_arguments[:classes],
       helpers.hl_background_class(:project_status, @status.id)
@@ -56,6 +58,6 @@ class Projects::StatusBadgeComponent < ApplicationComponent
   end
 
   def find_status(code)
-    Projects::Statuses::AVAILABLE.find(-> { Projects::Statuses::NOT_SET }) { it.code&.to_s == code }
+    Projects::Statuses::VALID.find { it.code&.to_s == code }
   end
 end
