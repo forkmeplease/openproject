@@ -124,7 +124,7 @@
     "@uirouter/core": "^6.1.0",
     "@uirouter/rx": "^1.0.0",
     "@w11k/ngx-componentdestroyed": "^5.0.2",
-    "@xeokit/xeokit-bim-viewer": "2.7.1",
+    "@xeokit/xeokit-bim-viewer": "2.5.1-beta-28",
     "autoprefixer": "^10.4.19",
     "byte-base64": "^1.1.0",
     "chart.js": "4.5.0",
