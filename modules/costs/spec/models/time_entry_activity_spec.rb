@@ -55,7 +55,7 @@ RSpec.describe TimeEntryActivity do
     end
   end
 
-  it_behaves_like "enumeration validation", false do
-    let(:enumeration) { build_stubbed(:time_entry_activity) }
+  it_behaves_like "enumeration#active handling", false do
+    let(:enumeration) { described_class.new(attributes_for(:time_entry_activity)) }
   end
 end

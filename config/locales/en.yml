@@ -1463,10 +1463,6 @@ en:
           only_one_trial: "Only one trial token can be active. Please delete the previous trial token before adding another."
           unreadable: "can't be read. Are you sure it is a support token?"
           already_added: "This token has already been added."
-        enumeration:
-          attributes:
-            active:
-              active_required: "needs the 'Active' property to be true."
         grids/grid:
           overlaps: "overlap."
           outside: "is outside of the grid."

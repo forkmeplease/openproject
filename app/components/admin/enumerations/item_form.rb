@@ -53,8 +53,8 @@ module Admin
         form.check_box(
           name: :active,
           label: object.class.human_attribute_name(:active),
-          data: { action: "admin--enumerations#lockstepDefault",
-                  "admin--enumerations-target": "active" }
+          disabled: object.is_default,
+          data: { "admin--enumerations-target": "active" }
         )
 
         if object.class.can_have_default_value?

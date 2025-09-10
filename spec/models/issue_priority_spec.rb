@@ -37,8 +37,8 @@ RSpec.describe IssuePriority do
 
   let(:stubbed_priority) { build_stubbed(:priority) }
 
-  it_behaves_like "enumeration validation", true do
-    let(:enumeration) { build_stubbed(:priority) }
+  it_behaves_like "enumeration#active handling", true do
+    let(:enumeration) { described_class.new(attributes_for(:priority)) }
   end
 
   describe ".ancestors" do

@@ -44,12 +44,9 @@ export default class EnumerationsController extends Controller {
   public lockstepActive() {
     if (this.defaultTarget.checked) {
       this.activeTarget.checked = true;
-    }
-  }
-
-  public lockstepDefault() {
-    if (!this.activeTarget.checked && this.hasDefaultTarget) {
-      this.defaultTarget.checked = false;
+      this.activeTarget.disabled = true;
+    } else {
+      this.activeTarget.disabled = false;
     }
   }
 }

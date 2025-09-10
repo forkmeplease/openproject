@@ -30,22 +30,37 @@
 
 require "spec_helper"
 
-RSpec.shared_context "enumeration validation" do |default_supported| # rubocop:disable RSpec/ContextWording
+RSpec.shared_context "enumeration#active handling" do |default_supported| # rubocop:disable RSpec/ContextWording
   let(:enumeration) do
     super()
   rescue NoMethodError
     raise "'enumeration' let needs to be set"
   end
 
-  describe "#valid?" do
+  describe "#active" do
     if default_supported
-      context "with the enumeration being inactive and default" do
-        it "is invalid", :aggregate_failures do
+      context "with the enumeration being inactive and default before saving" do
+        it "sets the enumeration to be active", :aggregate_failures do
           enumeration.active = false
           enumeration.is_default = true
 
-          expect(enumeration.valid?).to be false
-          expect(enumeration.errors.symbols_for(:is_default)).to contain_exactly(:active_required)
+          enumeration.save
+
+          expect(enumeration).to be_persisted
+          expect(enumeration.active).to be true
+        end
+      end
+
+      context "with the enumeration being inactive and not default before saving" do
+        it "keeps the value of active", :aggregate_failures do
+          enumeration.active = false
+          enumeration.is_default = false
+
+          enumeration.save
+
+          expect(enumeration).to be_persisted
+          expect(enumeration.active).to be false
+          expect(enumeration.is_default).to be false
         end
       end
     end

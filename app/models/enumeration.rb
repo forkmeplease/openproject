@@ -37,6 +37,7 @@ class Enumeration < ApplicationRecord
   acts_as_tree order: "position ASC"
 
   before_save :unmark_old_default_value, if: :became_default_value?
+  before_save :ensure_activated, if: -> { self.class.can_have_default_value? && is_default? }
   before_destroy :check_integrity
 
   validates :name, presence: true
@@ -44,7 +45,6 @@ class Enumeration < ApplicationRecord
             uniqueness: { scope: %i(type project_id),
                           case_sensitive: false }
   validates :name, length: { maximum: 256 }
-  validate :default_is_active, if: -> { self.class.can_have_default_value? }
 
   scope :shared, -> { where(project_id: nil) }
   scope :active, -> { where(active: true) }
@@ -175,9 +175,7 @@ class Enumeration < ApplicationRecord
     raise "Can't delete enumeration" if in_use?
   end
 
-  def default_is_active
-    if is_default? && !active?
-      errors.add(:is_default, :active_required)
-    end
+  def ensure_activated
+    self.active = true
   end
 end

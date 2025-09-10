@@ -61,7 +61,7 @@ RSpec.describe DocumentCategory do
     end.to change { old_default.is_default? }.from(true).to(false)
   end
 
-  it_behaves_like "enumeration validation", true do
-    let(:enumeration) { build_stubbed(:document_category) }
+  it_behaves_like "enumeration#active handling", true do
+    let(:enumeration) { described_class.new(attributes_for(:document_category)) }
   end
 end
