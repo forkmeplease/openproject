@@ -31,14 +31,13 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
     header.with_title { t("users.sessions.title") }
+    header.with_description { t("users.sessions.instructions") }
     header.with_breadcrumbs(
       [{ href: my_account_path, text: t(:label_my_account) },
        t("users.sessions.title")]
     )
   end
 %>
-
-<p><%= t("users.sessions.instructions") %></p>
 
 <%= render ::Users::Sessions::TableComponent.new(rows: @sessions, current_session: session) %>
 
