@@ -28,25 +28,43 @@
  * ++
  */
 
-declare module 'idiomorph/dist/idiomorph.cjs' {
+declare module 'idiomorph' {
+  interface ConfigHeadInternal {
+    style:'merge'|'append'|'morph'|'none';
+    block:boolean;
+    ignore:boolean;
+    shouldPreserve:(element:Element) => boolean;
+    shouldReAppend:(element:Element) => boolean;
+    shouldRemove:(element:Element) => boolean;
+    afterHeadMorphed:(oldHead:Element, options?:{ added?:Node[]; kept?:Element[]; removed?:Element[] }) => void;
+  }
+  interface ConfigCallbacksInternal {
+    beforeNodeAdded:(node:Node) => boolean;
+    afterNodeAdded:(node:Node) => void;
+    beforeNodeMorphed:(oldNode:Element, newNode:Node) => boolean;
+    afterNodeMorphed:(oldNode:Element, newNode:Node) => void;
+    beforeNodeRemoved:(node:Element) => boolean;
+    afterNodeRemoved:(node:Element) => void;
+    beforeAttributeUpdated:(attr:string, element:Element, updateType:'update'|'remove') => boolean;
+  }
+  interface ConfigBase<Head, Callbacks> {
+    morphStyle:'innerHTML'|'outerHTML';
+    ignoreActive:boolean;
+    ignoreActiveValue:boolean;
+    restoreFocus:boolean;
+    head:Head;
+    callbacks:Callbacks;
+  }
+
+  type ConfigInternal = ConfigBase<ConfigHeadInternal, ConfigCallbacksInternal>;
+  type ConfigHead = Partial<ConfigHeadInternal>;
+  type ConfigCallbacks = Partial<ConfigCallbacksInternal>;
+  type Config = Partial<ConfigInternal<ConfigHead, ConfigCallbacks>>;
+
   export const Idiomorph:{
-      morph(oldNode:Element|Document, newContent?:string|Element|Iterable<Element>|null, options?:{
-        morphStyle?:'innerHTML'|'outerHTML';
-        ignoreActive?:boolean;
-        ignoreActiveValue?:boolean;
-        head?:{
-          style?:'merge'|'append'|'morph'|'none';
-        };
-        callbacks?:{
-          beforeNodeAdded?:(node:ChildNode) => void|boolean;
-          afterNodeAdded?:(node:ChildNode) => void;
-          beforeNodeMorphed?:(oldNode:Element, newNode:Element) => void|boolean;
-          afterNodeMorphed?:(oldNode:Element, newNode:Element) => void;
-          beforeNodeRemoved?:(node:ChildNode) => void|boolean;
-          afterNodeRemoved?:(node:ChildNode) => void;
-        };
-      })
+    morph(ldNode:Element|Document, newContent?:Element|Node|HTMLCollection|Node[]|string|null, options?:Config);
+    defaults:ConfigInternal;
   };
 
-  export = Idiomorph;
+  export { Idiomorph };
 }
