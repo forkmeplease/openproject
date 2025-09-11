@@ -27,18 +27,28 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-module Projects::Exports
-  module Formatters
-    class Favored < ::Exports::Formatters::Default
-      def self.apply?(attribute, export_format)
-        export_format == :pdf && attribute.to_sym == :favored
-      end
 
-      ##
-      # Takes a project and returns yes/no depending on the favored attribute
-      def format(project, **)
-        project.favored_by?(User.current) ? I18n.t(:general_text_Yes) : I18n.t(:general_text_No)
-      end
+class FixWordingInSettingsEnabledProjectsColumnsValue < ActiveRecord::Migration[8.0]
+  def up
+    replace_setting_array_item("enabled_projects_columns", "favored", "favorited")
+  end
+
+  def down
+    replace_setting_array_item("enabled_projects_columns", "favorited", "favored")
+  end
+
+  private
+
+  def replace_setting_array_item(name, old_value, new_value)
+    replace_setting_array(name) do |entry|
+      entry == old_value ? new_value : entry
+    end
+  end
+
+  def replace_setting_array(name, &)
+    Setting.find_by(name:)&.tap do |setting|
+      setting.value = setting.value.map(&)
+      setting.save!
     end
   end
 end

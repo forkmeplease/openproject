@@ -43,8 +43,8 @@
       *ngIf="projects$ | async as projects"
     >
       <spot-text-field
-        *ngIf="displayMode !== 'favored' || (favorites$ | async)?.length > 0"
-        [placeholder]="displayMode === 'favored' ? text.search_favorites_placeholder : text.search_placeholder"
+        *ngIf="displayMode !== 'favorited' || (favorites$ | async)?.length > 0"
+        [placeholder]="displayMode === 'favorited' ? text.search_favorites_placeholder : text.search_placeholder"
         [(ngModel)]="searchableProjectListService.searchText"
         [ngModelOptions]="{standalone: true}"
         data-test-selector="op-header-project-select--search"
@@ -66,7 +66,7 @@
           class="spot-list_active"
           [projects]="projects"
           [displayMode]="displayMode"
-          [favored]="favorites$ | async"
+          [favorited]="favorites$ | async"
           [searchText]="searchableProjectListService.searchText"
           [root]="true"
           data-list-root="true"
@@ -74,7 +74,7 @@
         ></ul>
 
         <ng-template #noResultsTemplate>
-          <div *ngIf="displayMode === 'favored' && (favorites$ | async).length === 0"
+          <div *ngIf="displayMode === 'favorited' && (favorites$ | async).length === 0"
                class="op-header-project-select--no-favorites"
           >
             <svg
@@ -89,9 +89,9 @@
                     [textContent]="text.no_favorites_subtext"></span>
             </p>
           </div>
-          <span *ngIf="!(displayMode === 'favored' && (favorites$ | async).length === 0)"
+          <span *ngIf="!(displayMode === 'favorited' && (favorites$ | async).length === 0)"
                 class="op-project-list-modal--no-results">
-            {{ displayMode === 'favored' ? text.no_favorite_results : text.no_results }}
+            {{ displayMode === 'favorited' ? text.no_favorite_results : text.no_results }}
           </span>
         </ng-template>
       </ng-container>

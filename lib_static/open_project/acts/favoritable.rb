@@ -28,50 +28,50 @@
 
 module OpenProject
   module Acts
-    module Favorable
+    module Favoritable
       def self.included(base)
         base.extend ClassMethods
       end
 
       module ClassMethods
-        # Marks an ActiveRecord::Model as favorable
-        # A favorable model has association with users (watchers) that marked it as favorite.
+        # Marks an ActiveRecord::Model as favoritable
+        # A favoritable model has association with users (watchers) that marked it as favorite.
         #
-        # This also creates the routes necessary for favoring/unfavoring by
+        # This also creates the routes necessary for favoriting/unfavoriting by
         # adding the model's name to routes. This e.g leads to the following
         # routes when marking issues as watchable:
         #   POST:     projects/identifier/favorite
         #   DELETE:   projects/identifier/favorite
         #
-        # acts_as_favorable expects that the including module defines a +visible?(user)+ method,
+        # acts_as_favoritable expects that the including module defines a +visible?(user)+ method,
         # as it's used to identify whether a user can actually favorite the object.
-        def acts_as_favorable # rubocop:disable Metrics/AbcSize
+        def acts_as_favoritable # rubocop:disable Metrics/AbcSize
           return if included_modules.include?(InstanceMethods)
 
           class_eval do
             prepend InstanceMethods
 
-            has_many :favorites, as: :favored, dependent: :delete_all, validate: false
-            has_many :favoring_users, through: :favorites, source: :user, validate: false
+            has_many :favorites, as: :favorited, dependent: :delete_all, validate: false
+            has_many :favoriting_users, through: :favorites, source: :user, validate: false
 
-            scope :favored_by, ->(user_id) {
+            scope :favorited_by, ->(user_id) {
               includes(:favorites)
                 .where(favorites: { user_id: })
             }
 
-            scope :with_favored_by_user, ->(user) {
+            scope :with_favorited_by_user, ->(user) {
               favorite = ::Favorite.arel_table
 
               join = arel_table
                       .join(favorite, Arel::Nodes::OuterJoin)
                       .on(
-                        favorite[:favored_type].eq(base_class.name),
-                        favorite[:favored_id].eq(arel_table[:id]),
+                        favorite[:favorited_type].eq(base_class.name),
+                        favorite[:favorited_id].eq(arel_table[:id]),
                         favorite[:user_id].eq(user.id)
                       )
                       .join_sources
 
-              select(arel_table[Arel.star], "(favorites.id IS NOT NULL) AS favored").joins(join)
+              select(arel_table[Arel.star], "(favorites.id IS NOT NULL) AS favorited").joins(join)
             }
           end
 
@@ -80,21 +80,21 @@ module OpenProject
       end
 
       module InstanceMethods
-        def add_favoring_user(user)
+        def add_favoriting_user(user)
           return if favorites.exists?(user_id: user.id)
 
-          favorites << Favorite.new(user:, favored: self)
+          favorites << Favorite.new(user:, favorited: self)
         end
 
-        def remove_favoring_user(user)
+        def remove_favoriting_user(user)
           favorites.where(user:).delete_all
         end
 
-        def set_favored(user, favored: true)
-          favored ? add_favoring_user(user) : remove_favoring_user(user)
+        def set_favorited(user, favorited: true)
+          favorited ? add_favoriting_user(user) : remove_favoriting_user(user)
         end
 
-        def favored_by?(user)
+        def favorited_by?(user)
           favorites.exists?(user:)
         end
       end

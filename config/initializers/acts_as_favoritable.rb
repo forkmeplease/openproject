@@ -28,38 +28,14 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class FavoritesController < ApplicationController
-  before_action :find_favorited_by_object
-  before_action :require_login
-  no_authorization_required! :favorite, :unfavorite
+# Be sure to restart your server when you modify this file.
 
-  def favorite
-    if @favorited.visible?(User.current)
-      set_favorited(User.current, true)
-    else
-      render_403
-    end
-  end
-
-  def unfavorite
-    set_favorited(User.current, false)
-  end
-
-  private
-
-  def find_favorited_by_object
-    model_name = params[:object_type]
-    klass = ::OpenProject::Acts::Favoritable::Registry.instance(model_name)
-    @favorited = klass&.find(params[:object_id])
-    render_404 unless @favorited
-  end
-
-  def set_favorited(user, favorited)
-    @favorited.set_favorited(user, favorited:)
-
-    respond_to do |format|
-      format.html { redirect_back(fallback_location: home_url, status: 303) }
-      format.json { head :no_content }
-    end
-  end
+# For development and non-eager load mode, we need to load models using acts_as_favoritable manually
+# as no eager loading takes place
+Rails.application.config.to_prepare do
+  OpenProject::Acts::Favoritable::Registry.add(
+    Project,
+    ProjectQuery,
+    reset: true
+  )
 end

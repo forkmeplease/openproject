@@ -28,7 +28,7 @@
 
 module OpenProject
   module Acts
-    module Favorable
+    module Favoritable
       module RouteConstraint
         def self.matches?(request)
           params = request.path_parameters

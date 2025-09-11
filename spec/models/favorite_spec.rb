@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,12 +28,22 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpenProject
-  module Acts
-    module Favorable
-      module Registry
-        extend RegistryMethods
-      end
+require "rails_helper"
+
+RSpec.describe Favorite do
+  let(:user) { create(:user) }
+  let(:favorited) { create(:project) }
+
+  subject(:favorite) { create(:favorite, user:, favorited:) }
+
+  describe "validations" do
+    before do
+      favorite
+    end
+
+    it "validates uniqueness of favorited_id, scoped to favorited_type and user_id" do
+      expect { create(:favorite, user:, favorited:) }
+        .to raise_error(ActiveRecord::RecordInvalid, /Item has already been favorited/)
     end
   end
 end

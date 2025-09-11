@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe OpenProject::Acts::Favorable::RouteConstraint do
+RSpec.describe OpenProject::Acts::Favoritable::RouteConstraint do
   let(:request) { instance_double(ActionDispatch::Request, path_parameters:) }
   let(:path_parameters) { { object_id: id, object_type: type } }
 

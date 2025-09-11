@@ -28,40 +28,16 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-# rubocop:disable OpenProject/AddPreviewForViewComponent
-class Projects::ProjectsFiltersComponent < Filter::FilterComponent
-  # rubocop:enable OpenProject/AddPreviewForViewComponent
-  def allowed_filters
-    super
-      .select { |f| allowed_filter?(f) }
-      .sort_by(&:human_name)
+class Queries::Projects::Selects::Favorited < Queries::Selects::Base
+  def self.key
+    :favorited
   end
 
-  def turbo_requests?
+  def self.available?
     true
   end
 
-  private
-
-  def allowed_filter?(filter)
-    allowlist = [
-      Queries::Filters::Shared::CustomFields::Base,
-      Queries::Projects::Filters::ActiveFilter,
-      Queries::Projects::Filters::CreatedAtFilter,
-      Queries::Projects::Filters::FavoritedFilter,
-      Queries::Projects::Filters::IdFilter,
-      Queries::Projects::Filters::LatestActivityAtFilter,
-      Queries::Projects::Filters::ProjectPhaseAnyFilter,
-      Queries::Projects::Filters::ProjectPhaseGateFilter,
-      Queries::Projects::Filters::ProjectPhaseFilter,
-      Queries::Projects::Filters::MemberOfFilter,
-      Queries::Projects::Filters::NameAndIdentifierFilter,
-      Queries::Projects::Filters::ProjectStatusFilter,
-      Queries::Projects::Filters::PublicFilter,
-      Queries::Projects::Filters::TemplatedFilter,
-      Queries::Projects::Filters::TypeFilter
-    ]
-
-    allowlist.any? { |clazz| filter.is_a? clazz }
+  def caption
+    I18n.t(:label_favorite)
   end
 end

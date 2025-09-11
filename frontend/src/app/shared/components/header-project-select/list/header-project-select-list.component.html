@@ -26,7 +26,7 @@
         [textContent]="project.name"></span>
 
       <svg
-        *ngIf="favored?.includes(project.id.toString())"
+        *ngIf="favorited?.includes(project.id.toString())"
         star-fill-icon
         class="op-primer--star-icon"
         size="small"
@@ -61,7 +61,7 @@
     op-header-project-select-list
     [projects]="project.children"
     [displayMode]="displayMode"
-    [favored]="favored"
+    [favorited]="favorited"
     [selected]="selected"
     [searchText]="searchText"
   ></ul>
