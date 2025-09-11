@@ -31,5 +31,15 @@
 module Relations
   class DeleteContract < ::DeleteContract
     delete_permission -> { user.allowed_in_work_package?(:manage_work_package_relations, model.from) }
+
+    validate :validate_to_deletable
+
+    def validate_to_deletable
+      return unless user.allowed_in_work_package?(:manage_work_package_relations, model.from)
+
+      unless user.allowed_in_work_package?(:manage_work_package_relations, model.to)
+        errors.add :base, :error_not_deletable
+      end
+    end
   end
 end

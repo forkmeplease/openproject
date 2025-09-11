@@ -338,8 +338,8 @@ RSpec.describe "API v3 Relation resource", content_type: :json do
     context "without manage_work_package_relations" do
       let(:permissions) { [:view_work_packages] }
 
-      it "is forbidden" do
-        expect(last_response).to have_http_status :forbidden
+      it "returns 422" do
+        expect(last_response).to have_http_status :unprocessable_entity
       end
     end
 
@@ -347,7 +347,7 @@ RSpec.describe "API v3 Relation resource", content_type: :json do
     # This one is expected to fail (422) because the `to` work package
     # is in another project for which the user does not have permission to
     # view work packages.
-    context "without manage_work_package_relations" do
+    context "without manage_work_package_relations for 'to' work package" do
       let!(:to) { create(:work_package) }
 
       it "returns 422" do

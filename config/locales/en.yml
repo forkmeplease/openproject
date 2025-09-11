@@ -1568,12 +1568,17 @@ en:
           typed_dag:
             circular_dependency: "The relationship creates a circle of relationships."
           attributes:
+            base:
+              error_not_deletable: "This relation cannot be deleted because you do not have edit permissions for the selected work package."
+              error_not_editable: "This relation cannot be edited because you do not have edit permissions for the selected work package."
             to_id:
               format: "The selected work package %{message}"
+              error_not_found: "could not be found."
               error_readonly: "cannot be changed for existing relations."
               error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
             from_id:
               format: "The selected work package %{message}"
+              error_not_found: "could not be found."
               error_readonly: "cannot be changed for existing relations."
               error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
         repository:

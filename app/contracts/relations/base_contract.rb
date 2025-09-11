@@ -36,9 +36,9 @@ module Relations
     attribute :from
     attribute :to
 
-    validate :validate_user_allowed
     validate :validate_from_exists
     validate :validate_to_exists
+    validate :validate_user_allowed
     validate :validate_nodes_relatable
     validate :validate_accepted_type
 
@@ -76,7 +76,8 @@ module Relations
     end
 
     def validate_user_allowed
-      return if model.to_id.nil? || model.from_id.nil?
+      # Only check if the work packages exist and are visible
+      return if skip_validation?
 
       unless from_manageable?
         errors.add :from_id, :error_not_manageable
@@ -109,6 +110,10 @@ module Relations
 
     def to_manageable?
       user.allowed_in_work_package?(:manage_work_package_relations, model.to)
+    end
+
+    def skip_validation?
+      model.to_id.nil? || model.from_id.nil? || errors[:from_id].any? || errors[:to_id].any?
     end
   end
 end
