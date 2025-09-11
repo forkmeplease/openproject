@@ -4,10 +4,7 @@ import { ServerBlockNoteEditor } from "@blocknote/server-util";
 import {
   BlockNoteSchema,
   defaultBlockSpecs,
-  defaultInlineContentSpecs,
-  defaultStyleSpecs,
 } from "@blocknote/core";
-import * as Y from "yjs";
 
 const secret = process.env.SECRET;
 if (!secret) {
@@ -22,9 +19,9 @@ const verifyToken = createVerifier({
 
 const server = new Server({
   port: 1234,
-  quite: false,
+  quiet: false,
   extensions: [],
-  onConnect(data) {
+  async onConnect(data) {
     console.log('CONNECTED: documentName: %0, socketId %0', data.documentName, data.socketId);
   },
   async afterUnloadDocument(data) {
@@ -45,7 +42,6 @@ const server = new Server({
       return doc;
     }
   },
-
   async onAuthenticate(data) {
     const { token, documentName } = data;
     if (!token) {
