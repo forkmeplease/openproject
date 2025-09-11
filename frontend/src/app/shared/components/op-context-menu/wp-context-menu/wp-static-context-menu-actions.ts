@@ -13,16 +13,6 @@ export const PERMITTED_CONTEXT_MENU_ACTIONS:WorkPackageAction[] = [
     link: 'logTime',
   },
   {
-    key: 'start_timer',
-    icon: 'icon-time-tracking-start',
-    link: 'logTime'
-  },
-  {
-    key: 'stop_timer',
-    icon: 'icon-time-tracking-stop',
-    link: 'logTime'
-  },
-  {
     key: 'change_project',
     icon: 'icon-move',
     link: 'move',

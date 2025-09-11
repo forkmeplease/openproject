@@ -23,6 +23,7 @@ import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { TimeEntryTimerService } from 'core-app/shared/components/time_entries/services/time-entry-timer.service';
 import { TimeEntryResource } from 'core-app/features/hal/resources/time-entry-resource';
+import { action } from 'ts-action';
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
@@ -128,7 +129,7 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
     return position;
   }
 
-  private activeForWorkPackage(entry:TimeEntryResource | null):boolean {
+  private activeForWorkPackage(entry:TimeEntryResource|null):boolean {
     return !!entry && entry.entity.href === this.workPackage.href;
   }
 
@@ -136,7 +137,7 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
     return Object.prototype.hasOwnProperty.call(this.workPackage, 'logTime');
   }
 
-  private getTimerAction():string | null {
+  private getTimerAction():string {
     if (this.activeForWorkPackage(this.currentTimer)) {
       return 'stop_timer';
     } else {
@@ -147,8 +148,8 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
   private getPermittedActions(authorization:WorkPackageAuthorization) {
     let actions:WorkPackageAction[] = authorization.permittedActionsWithLinks(PERMITTED_CONTEXT_MENU_ACTIONS);
 
-    // Reduce the available actions on timers
-    actions = this.reduceTimerAction(actions);
+    // Add the available actions on timers
+    actions = this.addTimerAction(actions);
 
     // Splice plugin actions onto the core actions
     _.each(this.getPermittedPluginActions(authorization), (action:WorkPackageAction) => {
@@ -159,21 +160,18 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
     return actions;
   }
 
-  private reduceTimerAction(actions:WorkPackageAction[]) {
-    const requiredTimerAction = this.getTimerAction();
-    return actions.filter((action) => {
-      // Show one action
-      if (action.key === requiredTimerAction) {
-        return true;
-      }
+  private addTimerAction(actions:WorkPackageAction[]) {
+    const key = this.getTimerAction();
+    const action = {
+      key,
+      icon: 'icon-time-tracking-start',
+      link: 'logTime',
+    };
 
-      // Hide the other
-      if (action.key === 'start_timer' || action.key === 'stop_timer') {
-        return false;
-      }
+    const timeIndex = actions.findIndex((action) => action.key === 'log_time');
+    actions.splice(timeIndex + 1, 0, action);
 
-      return true;
-    });
+    return actions;
   }
 
   private getPermittedPluginActions(authorization:WorkPackageAuthorization) {
