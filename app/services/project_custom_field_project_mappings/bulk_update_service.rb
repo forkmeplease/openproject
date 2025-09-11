@@ -88,25 +88,23 @@ module ProjectCustomFieldProjectMappings
     end
 
     def disable_custom_fields(custom_field_ids)
-      ProjectCustomFieldProjectMapping
-        .where(project_id: @project.id, custom_field_id: custom_field_ids)
+      @project.project_custom_field_project_mappings
+        .where(custom_field_id: custom_field_ids)
         .delete_all
     end
 
     def existing_mappings(custom_field_ids)
-      ProjectCustomFieldProjectMapping
-        .where(project_id: @project.id, custom_field_id: custom_field_ids)
+      @project.project_custom_field_project_mappings
+        .where(custom_field_id: custom_field_ids)
         .pluck(:custom_field_id)
     end
 
     def create_mappings(custom_field_ids)
-      new_mappings = custom_field_ids.map do |id|
-        { project_id: @project.id, custom_field_id: id }
-      end
-      ProjectCustomFieldProjectMapping.insert_all(
-        new_mappings,
-        unique_by: %i[project_id custom_field_id]
-      )
+      @project.project_custom_field_project_mappings
+        .insert_all(
+          custom_field_ids.map { |id| { custom_field_id: id } },
+          unique_by: %i[project_id custom_field_id]
+        )
     end
   end
 end
