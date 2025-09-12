@@ -195,10 +195,9 @@ ja:
     ldap_auth_failed: "LDAPサーバーで認証できませんでした。"
     sync_failed: "LDAPとの同期に失敗しました： %{message}。"
     back_to_index: "ここをクリックして接続一覧に戻ります。"
-    technical_warning_html: |
-      このLDAPフォームを使用するには、LDAP / Active Directoryの設定に関する技術的な知識が必要です。
-      <br>
-      <a href="https://www.openproject.org/help/administration/manage-ldap-authentication/">詳細な手順については、ドキュメントをご覧ください</a>。
+    technical_warning: |
+      This LDAP form requires technical knowledge of your LDAP / Active Directory setup.
+      [Please visit our documentation for detailed instructions](docs_url).
     attribute_texts:
       name: LDAP接続の任意の名称
       host: LDAPのホスト名または IP アドレス
@@ -438,7 +437,7 @@ ja:
     lists:
       active: "アクティブなプロジェクト"
       my: "参加しているプロジェクト"
-      favored: "お気に入りプロジェクト"
+      favorited: "Favorite projects"
       archived: "アーカイブされたプロジェクト"
       shared: "共有されたプロジェクト"
       my_lists: "自分のプロジェクトリスト"
@@ -1016,6 +1015,8 @@ ja:
         active_user_count_restriction: "アクティブなユーザー"
       enterprise_trial:
         company: "会社"
+      favorite:
+        favorited: "Item"
       grids/grid:
         page: "ページ"
         row_count: "行数"
@@ -1375,6 +1376,8 @@ ja:
           only_one_trial: "有効なトライアルトークンは1つだけです。別のトライアルトークンを追加する前に、前のトライアルトークンを削除してください。"
           unreadable: "読み取りできません。サポート トークンですか?"
           already_added: "このトークンは既に追加されています。"
+        favorite:
+          already_favorited: "has already been favorited."
         grids/grid:
           overlaps: "オーバーラップ。"
           outside: "グリッドの外側です。"
@@ -1734,6 +1737,7 @@ ja:
     attachments: "添付ファイル"
     actor: "アクター"
     action: "操作"
+    api_key: "API key"
     author: "作成者"
     avatar: "アバター"
     base: "一般的なエラー:"
@@ -2606,7 +2610,7 @@ ja:
         static_token_name: "APIトークン"
       ical:
         title: "iCalendar"
-        text_hint: 'iCalendar トークンを使用すると、ユーザーは<a href="%{path}" target="_blank">OpenProject カレンダーにサブスクライブ</a>し、外部クライアントから最新の作業パッケージ情報を確認できます。'
+        text_hint_link: 'iCalendar tokens allow users to [subscribe to OpenProject calendars](docs_url) and view up-to-date work package information from external clients.'
         disabled_text: "iCalendar サブスクリプションは管理者によって有効になっていません。この機能を使用するには管理者に問い合わせてください。"
         empty_text_hint: "iCalendar トークンを追加するには、プロジェクトの Calendar モジュール内から新規または既存のカレンダーを購読します。 必要な権限が必要です。"
       oauth:
