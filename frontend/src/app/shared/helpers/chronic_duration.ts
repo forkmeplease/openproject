@@ -48,9 +48,27 @@ const HOURS_PER_DAY = 24;
 const DAYS_PER_MONTH = 30;
 
 const FLOAT_MATCHER = /[0-9]*\.?[0-9]+/g;
-const DURATION_UNITS_LIST = ['seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years'];
+const DURATION_UNITS_LIST = ['seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years'] as const;
+export type DurationUnit = typeof DURATION_UNITS_LIST[number];
+export type DurationFormat = 'micro'|'short'|'long'|'days_and_hours'|'hours_only'|'chrono'|'default';
 
-const MAPPINGS = {
+export interface ChronicDurationOptions {
+  hoursPerDay?:number;
+  daysPerMonth?:number;
+  defaultUnit?:DurationUnit;
+  raiseExceptions?:boolean;
+  ignoreSecondsWhenColonSeperated?:boolean;
+  keepZero?:boolean;
+  format?:DurationFormat;
+  joiner?:string;
+  limitToHours?:boolean;
+  weeks?:boolean;
+  units?:number;
+}
+
+type Dividers = Partial<Record<DurationUnit, string>> & { pluralize?:boolean; keepZero?:boolean};
+
+const MAPPINGS:Record<string, DurationUnit> = {
   seconds: 'seconds',
   second: 'seconds',
   secs: 'seconds',
@@ -88,13 +106,17 @@ const MAPPINGS = {
 
 const JOIN_WORDS = ['and', 'with', 'plus'];
 
-function convertToNumber(string) {
+function convertToNumber(string:string):number {
   const f = parseFloat(string);
   return f % 1 > 0 ? f : parseInt(string, 10);
 }
 
-function durationUnitsSecondsMultiplier(unit, opts) {
-  if (!DURATION_UNITS_LIST.includes(unit)) {
+function isDurationUnit(unit:string):unit is DurationUnit {
+  return (DURATION_UNITS_LIST as readonly string[]).includes(unit);
+}
+
+function durationUnitsSecondsMultiplier(unit:string, opts:ChronicDurationOptions):number {
+  if (!isDurationUnit(unit)) {
     return 0;
   }
 
@@ -122,9 +144,9 @@ function durationUnitsSecondsMultiplier(unit, opts) {
   }
 }
 
-function calculateFromWords(string, opts) {
+function calculateFromWords(string:string, opts:ChronicDurationOptions):number {
   let val = 0;
-  let lastExplicitUnit = null;
+  let lastExplicitUnit:DurationUnit|null = null;
   const words = string.split(' ');
 
   words.forEach((v, k) => {
@@ -132,10 +154,10 @@ function calculateFromWords(string, opts) {
       return;
     }
     if (v.search(FLOAT_MATCHER) >= 0) {
-      const nextWord = words[parseInt(k, 10) + 1];
-      let unit;
+      const nextWord = words[k + 1];
+      let unit:DurationUnit;
 
-      if (nextWord && DURATION_UNITS_LIST.includes(nextWord)) {
+      if (nextWord && isDurationUnit(nextWord)) {
         // Next word is a valid unit, use it and remember as last explicit unit
         unit = nextWord;
         lastExplicitUnit = nextWord;
@@ -162,7 +184,7 @@ function calculateFromWords(string, opts) {
 }
 
 // Parse 3:41:59 and return 3 hours 41 minutes 59 seconds
-function filterByType(string, opts) {
+function filterByType(string:string, opts:ChronicDurationOptions):string {
   const chronoUnitsList = DURATION_UNITS_LIST.filter(function (value) {
     if (value === 'weeks') { return false; }
     if (opts.ignoreSecondsWhenColonSeperated && value === 'seconds') { return false; }
@@ -175,7 +197,7 @@ function filterByType(string, opts) {
       .replace(/ +/g, '')
       .search(RegExp(`${FLOAT_MATCHER.source}(:${FLOAT_MATCHER.source})+`, 'g')) >= 0
   ) {
-    const res = [];
+    const res:string[] = [];
     string
       .replace(/ +/g, '')
       .split(':')
@@ -193,8 +215,8 @@ function filterByType(string, opts) {
 
 // Get rid of unknown words and map found
 // words to defined time units
-function filterThroughWhiteList(string, opts) {
-  const res = [];
+function filterThroughWhiteList(string:string, opts:ChronicDurationOptions):string {
+  const res:(string|number)[] = [];
   string.split(' ').forEach((word) => {
     if (word === '') {
       return;
@@ -213,13 +235,13 @@ function filterThroughWhiteList(string, opts) {
     }
   });
   // add '1' at front if string starts with something recognizable but not with a number, like 'day' or 'minute 30sec'
-  if (res.length > 0 && MAPPINGS[res[0]]) {
+  if (res.length > 0 && typeof res[0] === 'string' && MAPPINGS[res[0]]) {
     res.splice(0, 0, 1);
   }
   return res.join(' ');
 }
 
-function cleanup(string, opts) {
+function cleanup(string:string, opts:ChronicDurationOptions):string {
   let res = string.toLowerCase();
   res = filterByType(res, opts);
   res = res
@@ -229,7 +251,12 @@ function cleanup(string, opts) {
   return filterThroughWhiteList(res, opts);
 }
 
-function humanizeTimeUnit(number, unit, pluralize, keepZero) {
+function humanizeTimeUnit(
+  number:string,
+  unit:string|undefined,
+  pluralize?:boolean,
+  keepZero?:boolean
+):string|null {
   if (number === '0' && !keepZero) {
     return null;
   }
@@ -247,15 +274,15 @@ function humanizeTimeUnit(number, unit, pluralize, keepZero) {
 // Given a string representation of elapsed time,
 // return an integer (or float, if fractions of a
 // second are input)
-export function parseChronicDuration(string, opts = {}) {
+export function parseChronicDuration(string:string, opts:ChronicDurationOptions = {}):number|null {
   const result = calculateFromWords(cleanup(string, opts), opts);
   return !opts.keepZero && result === 0 ? null : result;
 }
 
 // Given an integer and an optional format,
 // returns a formatted string representing elapsed time
-export function outputChronicDuration(seconds, opts = {}) {
-  const units = {
+export function outputChronicDuration(seconds:number, opts:ChronicDurationOptions = {}):string|null {
+  const units:Record<DurationUnit, number> = {
     years: 0,
     months: 0,
     weeks: 0,
@@ -317,9 +344,9 @@ export function outputChronicDuration(seconds, opts = {}) {
   }
 
   let joiner = opts.joiner || ' ';
-  let process = null;
+  let process:((str:string) => string)|null = null;
 
-  let dividers;
+  let dividers:Dividers;
   switch (opts.format) {
     case 'micro':
       dividers = {
@@ -373,7 +400,7 @@ export function outputChronicDuration(seconds, opts = {}) {
       }
 
       units.hours += (((units.minutes * 60) + units.seconds) / 3600.0);
-      units.hours = parseFloat(Math.round(units.hours * 100)) / 100;
+      units.hours = parseFloat(Math.round(units.hours * 100) / 100 + '');
 
       break;
     case 'hours_only':
@@ -382,7 +409,7 @@ export function outputChronicDuration(seconds, opts = {}) {
         keepZero: true,
       };
 
-      units.hours = parseFloat(Math.round(units.hours * 100)) / 100;
+      units.hours = parseFloat(Math.round(units.hours * 100) / 100 + '');
 
       break;
     case 'chrono':
@@ -402,7 +429,7 @@ export function outputChronicDuration(seconds, opts = {}) {
         // Get rid of lead off zero
         // Get rid of trailing:
         const divider = ':';
-        const processed = [];
+        const processed:string[] = [];
         str.split(divider).forEach((n) => {
           if (n === '') {
             return;
@@ -411,8 +438,8 @@ export function outputChronicDuration(seconds, opts = {}) {
           if (n.search('\\.') >= 0) {
             processed.push(
               parseFloat(n)
-                .toFixed(decimalPlaces)
-                .padStart(3 + decimalPlaces, '0'),
+                .toFixed(decimalPlaces ?? 0)
+                .padStart(3 + (decimalPlaces ?? 0), '0'),
             );
           } else {
             processed.push(n.padStart(2, '0'));
@@ -440,19 +467,17 @@ export function outputChronicDuration(seconds, opts = {}) {
       break;
   }
 
-  let result = [];
-  ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].forEach((t) => {
+  let result:string[] = [];
+  [...DURATION_UNITS_LIST].reverse().forEach((t) => {
     if (t === 'weeks' && !opts.weeks) {
       return;
     }
     let num = units[t];
     if (t === 'seconds' && num % 0 !== 0) {
-      num = num.toFixed(decimalPlaces);
-    } else {
-      num = num.toString();
+      num = parseFloat(num.toFixed(decimalPlaces ?? 0));
     }
     const keepZero = !dividers.keepZero && t === 'seconds' ? opts.keepZero : dividers.keepZero;
-    const humanized = humanizeTimeUnit(num, dividers[t], dividers.pluralize, keepZero);
+    const humanized = humanizeTimeUnit(num.toString(), dividers[t], dividers.pluralize, keepZero);
     if (humanized !== null) {
       result.push(humanized);
     }
@@ -462,11 +487,11 @@ export function outputChronicDuration(seconds, opts = {}) {
     result = result.slice(0, opts.units);
   }
 
-  result = result.join(joiner);
+  let resultStr = result.join(joiner);
 
   if (process) {
-    result = process(result);
+    resultStr = process(resultStr);
   }
 
-  return result.length === 0 ? null : result;
+  return resultStr.length === 0 ? null : resultStr;
 }

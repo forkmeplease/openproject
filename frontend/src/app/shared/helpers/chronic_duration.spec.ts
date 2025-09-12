@@ -40,6 +40,7 @@ import {
   parseChronicDuration,
   outputChronicDuration,
   DurationParseError,
+  type DurationFormat,
 } from './chronic_duration';
 
 
@@ -273,18 +274,19 @@ describe('outputChronicDuration', () => {
       hours_only: '12960h',
       chrono: '18:00:00:00:00',
     },
-  };
+  } as const;
 
   Object.entries(EXEMPLARS).forEach(([k, v]) => {
     const kf = parseFloat(k);
-    Object.entries(v).forEach(([key, val]) => {
+    (Object.keys(v) as DurationFormat[]).forEach((key) => {
+      const val = v[key];
       it(`properly outputs a duration of ${kf} seconds as ${val} using the ${key} format option`, () => {
         expect(outputChronicDuration(kf, { format: key })).toBe(val);
       });
     });
   });
 
-  const KEEP_ZERO_EXEMPLARS = {
+  const KEEP_ZERO_EXEMPLARS:Record<string, Partial<Record<DurationFormat, string|null>>> = {
     true: {
       micro: '0s',
       short: '0s',
@@ -303,7 +305,8 @@ describe('outputChronicDuration', () => {
 
   Object.entries(KEEP_ZERO_EXEMPLARS).forEach(([k, v]) => {
     const kb = Boolean(k);
-    Object.entries(v).forEach(([key, val]) => {
+    (Object.keys(v) as Partial<DurationFormat>[]).forEach((key) => {
+      const val = v[key] ?? null;
       it(`should properly output a duration of 0 seconds as ${val} using the ${key} format option, if the .keepZero option is ${kb}`, () => {
         expect(outputChronicDuration(0, { format: key, keepZero: kb })).toBe(val);
       });
@@ -387,11 +390,11 @@ describe('outputChronicDuration', () => {
 
   Object.entries(EXEMPLARS).forEach(([seconds, formatSpec]) => {
     const secondsF = parseFloat(seconds);
-    Object.keys(formatSpec).forEach((format) => {
+    (Object.keys(formatSpec) as DurationFormat[]).forEach((format) => {
       if (format === 'days_and_hours' || format === 'hours_only') return;
 
       it(`outputs a duration for ${seconds} that parses back to the same thing when using the ${format} format`, () => {
-        expect(parseChronicDuration(outputChronicDuration(secondsF, { format }))).toBe(secondsF);
+        expect(parseChronicDuration(outputChronicDuration(secondsF, { format })!)).toBe(secondsF);
       });
     });
   });
