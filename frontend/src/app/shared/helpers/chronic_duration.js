@@ -35,7 +35,6 @@
  * lib/chronic_duration.rb.
  */
 
-/* eslint-disable */
 export class DurationParseError extends Error {
 }
 
@@ -165,10 +164,10 @@ function calculateFromWords(string, opts) {
 // Parse 3:41:59 and return 3 hours 41 minutes 59 seconds
 function filterByType(string, opts) {
   const chronoUnitsList = DURATION_UNITS_LIST.filter(function (value) {
-    if (value === "weeks") { return false }
-    if (opts.ignoreSecondsWhenColonSeperated && value === "seconds") { return false }
+    if (value === 'weeks') { return false; }
+    if (opts.ignoreSecondsWhenColonSeperated && value === 'seconds') { return false; }
 
-    return true
+    return true;
   });
 
   if (
@@ -347,7 +346,6 @@ export function outputChronicDuration(seconds, opts = {}) {
       break;
     case 'long':
       dividers = {
-        /* eslint-disable @gitlab/require-i18n-strings */
         years: ' year',
         months: ' month',
         weeks: ' week',
@@ -355,7 +353,6 @@ export function outputChronicDuration(seconds, opts = {}) {
         hours: ' hour',
         minutes: ' minute',
         seconds: ' second',
-        /* eslint-enable @gitlab/require-i18n-strings */
         pluralize: true,
       };
       break;
@@ -365,20 +362,20 @@ export function outputChronicDuration(seconds, opts = {}) {
         keepZero: true,
       };
 
-      units.days += units.weeks * daysPerWeek
-      units.weeks = 0
-      units.days += units.months * daysPerMonth
-      units.months = 0
-      units.days += Math.floor(units.years * SECONDS_PER_YEAR / 3600 / 24)
-      units.years = 0
+      units.days += units.weeks * daysPerWeek;
+      units.weeks = 0;
+      units.days += units.months * daysPerMonth;
+      units.months = 0;
+      units.days += Math.floor(units.years * SECONDS_PER_YEAR / 3600 / 24);
+      units.years = 0;
       if (units.days > 0) {
         dividers.days = 'd';
       }
 
-      units.hours += (((units.minutes * 60) + units.seconds) / 3600.0)
+      units.hours += (((units.minutes * 60) + units.seconds) / 3600.0);
       units.hours = parseFloat(Math.round(units.hours * 100)) / 100;
 
-      break
+      break;
     case 'hours_only':
       dividers = {
         hours: 'h',
@@ -387,7 +384,7 @@ export function outputChronicDuration(seconds, opts = {}) {
 
       units.hours = parseFloat(Math.round(units.hours * 100)) / 100;
 
-      break
+      break;
     case 'chrono':
       dividers = {
         years: ':',
@@ -431,7 +428,6 @@ export function outputChronicDuration(seconds, opts = {}) {
       break;
     default:
       dividers = {
-        /* eslint-disable @gitlab/require-i18n-strings */
         years: ' yr',
         months: ' mo',
         weeks: ' wk',
@@ -439,7 +435,6 @@ export function outputChronicDuration(seconds, opts = {}) {
         hours: ' hr',
         minutes: ' min',
         seconds: ' sec',
-        /* eslint-enable @gitlab/require-i18n-strings */
         pluralize: true,
       };
       break;
