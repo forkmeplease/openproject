@@ -194,34 +194,7 @@ RSpec.describe "Projects custom fields mapping via project settings", :js do
       end
     end
 
-    it "enables all mapping states of a section for a specific project when bulk action button clicked" do
-      visit project_settings_project_custom_fields_path(project)
-
-      within_custom_field_section_container(section_for_input_fields) do
-        page.find("[data-test-selector='enable-all-project-custom-field-mappings-#{section_for_input_fields.id}']").click
-
-        within_custom_field_container(boolean_project_custom_field) do
-          expect_checked_state
-        end
-        within_custom_field_container(string_project_custom_field) do
-          expect_checked_state
-        end
-      end
-
-      within_custom_field_section_container(section_for_select_fields) do
-        within_custom_field_container(list_project_custom_field) do
-          expect_unchecked_state
-        end
-      end
-
-      within_custom_field_section_container(section_for_multi_select_fields) do
-        within_custom_field_container(multi_list_project_custom_field) do
-          expect_unchecked_state
-        end
-      end
-    end
-
-    it "disables all mapping states of a section for a specific project when bulk action button clicked" do
+    it "enables and disables all mapping states of a section for a specific project when bulk action button clicked" do
       visit project_settings_project_custom_fields_path(project)
 
       within_custom_field_section_container(section_for_input_fields) do
