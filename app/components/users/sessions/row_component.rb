@@ -72,47 +72,28 @@ module Users
         end
       end
 
-      def actions
-        action_menu
-      end
-
       private
 
       def button_links
-        [action_menu]
+        [delete_button]
       end
 
-      def action_menu
-        render(Primer::Alpha::ActionMenu.new(anchor_align: :end)) do |menu|
-          menu.with_show_button(
-            icon: "kebab-horizontal",
-            "aria-label": t(:label_more),
-            scheme: :invisible,
-
-            data: { "test-selector": "more-button" }
-          )
-          delete_action(menu)
-        end
-      end
-
-      def delete_action(menu)
+      def delete_button
         return if current?
-
-        menu.with_item(
-          label: I18n.t(:button_delete),
-          scheme: :danger,
-          href: url_for({ controller: "/my/sessions", action: "destroy", id: session }),
-          tag: :button,
-          form_arguments: { method: :delete },
-          content_arguments: {
+        render(
+          Primer::Beta::IconButton.new(
+            icon: :x,
+            scheme: :invisible,
+            tag: :a,
+            href: url_for(controller: "/my/sessions", action: "destroy", id: session),
+            "aria-label": I18n.t(:button_revoke),
             data: {
+              method: :delete,
               confirm: I18n.t(:text_are_you_sure),
               disable_with: I18n.t(:label_loading)
             }
-          }
-        ) do |item|
-          item.with_leading_visual_icon(icon: :trash)
-        end
+          )
+        )
       end
     end
   end
