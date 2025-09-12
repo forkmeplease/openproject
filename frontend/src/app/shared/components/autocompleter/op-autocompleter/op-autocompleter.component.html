@@ -83,57 +83,60 @@
     (add)="added($event)"
     (remove)="removed($event)"
     >
-    <ng-template
-      ng-header-tmp
-      let-item="item"
-      let-index="index"
-      let-search="searchTerm"
-      *ngIf="headerTemplate || projectedHeaderTemplate"
+    @if (headerTemplate || projectedHeaderTemplate) {
+      <ng-template
+        ng-header-tmp
+        let-item="item"
+        let-index="index"
+        let-search="searchTerm"
       >
-      <ng-container
-        [ngTemplateOutlet]="headerTemplate || projectedHeaderTemplate"
-        [ngTemplateOutletContext]="{$implicit:item, search:search, index:index }"
-      ></ng-container>
-    </ng-template>
+        <ng-container
+          [ngTemplateOutlet]="headerTemplate || projectedHeaderTemplate"
+          [ngTemplateOutletContext]="{$implicit:item, search:search, index:index }"
+        ></ng-container>
+      </ng-template>
+    }
 
-    <ng-template
-      ng-label-tmp
-      let-item="item"
-      let-index="index"
-      let-search="searchTerm"
-      let-clear="clear"
-      *ngIf="labelRequired"
+    @if (labelRequired) {
+      <ng-template
+        ng-label-tmp
+        let-item="item"
+        let-index="index"
+        let-search="searchTerm"
+        let-clear="clear"
       >
-      <ng-container
-        [ngTemplateOutlet]="projectedLabelTemplate || labelTemplate || defaultLabel"
-        [ngTemplateOutletContext]="{$implicit:item, search:search, index:index, clear:clear }"
-      ></ng-container>
-    </ng-template>
+        <ng-container
+          [ngTemplateOutlet]="projectedLabelTemplate || labelTemplate || defaultLabel"
+          [ngTemplateOutletContext]="{$implicit:item, search:search, index:index, clear:clear }"
+        ></ng-container>
+      </ng-template>
+    }
 
     <ng-template
       ng-option-tmp
       let-item="item"
       let-index="index"
       let-search="searchTerm"
-      >
+    >
       <ng-container
         [ngTemplateOutlet]="projectedOptionTemplate || optionTemplate || defaultOption"
         [ngTemplateOutletContext]="{$implicit:item, search:search, index:index }"
       ></ng-container>
     </ng-template>
 
-    <ng-template
-      ng-footer-tmp
-      let-item="item"
-      let-index="index"
-      let-search="searchTerm"
-      *ngIf="footerTemplate || projectedFooterTemplate"
+    @if (footerTemplate || projectedFooterTemplate) {
+      <ng-template
+        ng-footer-tmp
+        let-item="item"
+        let-index="index"
+        let-search="searchTerm"
       >
-      <ng-container
-        [ngTemplateOutlet]="footerTemplate || projectedFooterTemplate"
-        [ngTemplateOutletContext]="{$implicit:item, search:search, index:index }"
-      ></ng-container>
-    </ng-template>
+        <ng-container
+          [ngTemplateOutlet]="footerTemplate || projectedFooterTemplate"
+          [ngTemplateOutletContext]="{$implicit:item, search:search, index:index }"
+        ></ng-container>
+      </ng-template>
+    }
   </ng-select>
 </div>
 
