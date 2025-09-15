@@ -29,53 +29,17 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   component_wrapper tag: :"turbo-frame" do
-    box_collection do |box|
-      if @newest.empty?
-        box.with_box do
-          render(Primer::Beta::Text.new(color: :subtle)) { t(:"js.grid.widgets.news.no_results") }
-        end
-      else
-        @newest.each_with_index do |news, i|
-          box.with_box(mt: 2, pb: 2, border: i == @newest.count - 1 ? false : :bottom) do
-            component_collection do |body|
-              body.with_component(
-                if @project
-                  render(
-                    Primer::Beta::Link.new(
-                      font_weight: :bold,
-                      underline: true,
-                      href: news_path(news)
-                    )
-                  ) { news.title }
-                else
-                  render(Primer::OpenProject::FlexLayout.new) do |layout|
-                    layout.with_column do
-                      render(
-                        Primer::Beta::Link.new(
-                          font_weight: :bold,
-                          scheme: :secondary,
-                          underline: false,
-                          href: project_path(news.project)
-                        )
-                      ) { "#{news.project.name}:" }
-                    end
-
-                    layout.with_column do
-                      render(Primer::Beta::Link.new(ml: 1, font_weight: :bold, underline: true, href: news_path(news))) { news.title }
-                    end
-                  end
-
-                end
-              )
-              body.with_component(
-                render(Primer::Beta::Text.new(tag: :p, color: :subtle)) { helpers.authoring_at(format_time(news.created_at), news.author) }
-              )
-              body.with_component(
-                render(Primer::Beta::Text.new) { news.summary }
-              )
-            end
-          end
-        end
+    if @newest.empty?
+      render(Primer::Beta::Text.new(color: :subtle)) { t(:"js.grid.widgets.news.no_results") }
+    else
+      render(OpPrimer::ListComponent.new(m: 0)) do
+        render(
+          ItemComponent.with_collection(
+            @newest,
+            project:,
+            spacer_component: OpPrimer::ListComponent::Divider.new(border: :bottom)
+          )
+        )
       end
     end
   end

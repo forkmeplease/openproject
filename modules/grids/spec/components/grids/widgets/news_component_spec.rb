@@ -59,11 +59,12 @@ RSpec.describe Grids::Widgets::NewsComponent, type: :component do
 
     context "with news" do
       let(:author) { create(:user) }
-      let!(:news) { create_list(:news, 3, author:) }
+      let!(:news) { create_list(:news, 2, author:) }
 
       it "renders news items", :aggregate_failures do
-        expect(rendered_component).to have_css(".mt-2", count: 3)
-        expect(rendered_component).to have_css(".mt-2:last-of-type") do |item|
+        expect(rendered_component).to have_list_item(count: 3)
+        expect(rendered_component).to have_list_item(count: 1, aria: { hidden: true }) # dividers
+        expect(rendered_component).to have_list_item(position: 3) do |item|
           expect(item).to have_link href: news_path(news.first)
           expect(item).to have_content /Added by .+ on \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} [AP]M/
           expect(item).to have_link href: user_path(author)
@@ -86,8 +87,9 @@ RSpec.describe Grids::Widgets::NewsComponent, type: :component do
       let!(:news) { create_list(:news, 3, project:, author:) }
 
       it "renders news items", :aggregate_failures do
-        expect(rendered_component).to have_css(".mt-2", count: 3)
-        expect(rendered_component).to have_css(".mt-2:last-of-type") do |item|
+        expect(rendered_component).to have_list_item(count: 5)
+        expect(rendered_component).to have_list_item(count: 2, aria: { hidden: true }) # dividers
+        expect(rendered_component).to have_list_item(position: 5) do |item|
           expect(item).to have_link href: news_path(news.first)
           expect(item).to have_content /Added by .+ on \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} [AP]M/
           expect(item).to have_link href: user_path(author)
