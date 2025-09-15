@@ -1,10 +1,11 @@
 @if (resource) {
   <div class=op-tab-content--header>
-    <svg
-      class="op-tab-content--header-icon op-files-tab--icon op-files-tab--icon_primary"
-      cloud-icon
-      size="small"
-    ></svg>
+    @if ((storage | async)?._links.type.href === nextcloud) {
+      <svg class="op-tab-content--header-icon op-files-tab--icon" op-mark-nextcloud-icon size="small"></svg>
+    } @else {
+      <svg class="op-tab-content--header-icon op-files-tab--icon" cloud-icon size="small"></svg>
+    }
+
     <span class="op-tab-content--header-text" [textContent]="(storage | async)?.name"></span>
 
     @if (openStorageLink) {
@@ -38,16 +39,17 @@
         }"
         data-test-selector="file-list"
       >
-        <li
-          *ngFor="let fileLink of fileLinks | async; let i = index;"
-          class="spot-list--item op-file-list--item"
-          data-test-selector="file-list--item"
-          op-file-link-list-item
-          [fileLink]="fileLink"
-          [disabled]="disabled | async"
-          [allowEditing]="allowLinking"
-          (removeFileLink)="removeFileLink(fileLink)"
-        ></li>
+        @for (fileLink of fileLinks | async; track fileLink.id) {
+          <li
+            class="spot-list--item op-file-list--item"
+            data-test-selector="file-list--item"
+            op-file-link-list-item
+            [fileLink]="fileLink"
+            [disabled]="disabled | async"
+            [allowEditing]="allowLinking"
+            (removeFileLink)="removeFileLink(fileLink)"
+          ></li>
+        }
       </ul>
     }
 

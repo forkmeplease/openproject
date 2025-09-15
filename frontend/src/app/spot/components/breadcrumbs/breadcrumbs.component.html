@@ -16,27 +16,27 @@
         (click)="crumb.navigate()"
       >
         @if (crumb.icon) {
-          <ng-container [ngTemplateOutlet]="storageIcon" [ngTemplateOutletContext]="{icon:crumb.icon}"></ng-container>
+          <ng-container [ngTemplateOutlet]="crumbIcon" [ngTemplateOutletContext]="{icon:crumb.icon}"></ng-container>
         }
 
         <span [textContent]="crumb.text" class="spot-breadcrumbs--crumb-action-item-text"></span>
         <span class="spot-breadcrumbs--crumb-action-item-dots"></span>
       </button>
 
-      <span class="spot-breadcrumbs--crumb-divider spot-icon spot-icon_arrow-right5"></span>
+      <svg triangle-right-icon size="small" class="spot-breadcrumbs--crumb-divider"></svg>
     </div>
   }
 
   @if (i === 1 && content.crumbs.length > 4) {
     <div class="spot-breadcrumbs--crumb spot-breadcrumbs--crumb_collapsed">
-      <span class="spot-breadcrumbs--crumb-divider spot-icon spot-icon_arrow-right5"></span>
+      <svg triangle-right-icon size="small" class="spot-breadcrumbs--crumb-divider"></svg>
     </div>
   }
 
   @if (last) {
     <div class="spot-breadcrumbs--crumb spot-breadcrumbs--crumb_last" data-test-selector="op-breadcrumb">
       @if (crumb.icon) {
-        <ng-container [ngTemplateOutlet]="storageIcon" [ngTemplateOutletContext]="{icon:crumb.icon}"></ng-container>
+        <ng-container [ngTemplateOutlet]="crumbIcon" [ngTemplateOutletContext]="{icon:crumb.icon}"></ng-container>
       }
 
       <span class="spot-breadcrumbs--crumb-action-item-text" [textContent]="crumb.text"></span>
@@ -44,13 +44,13 @@
   }
 }
 
-<ng-template #storageIcon let-iconClass="icon">
+<ng-template #crumbIcon let-iconClass="icon">
   @switch (iconClass) {
     @case ('nextcloud-circle') {
-      <svg op-mark-nextcloud-icon size="small" class="octicon"></svg>
+      <svg op-mark-nextcloud-icon size="small"></svg>
     }
     @default {
-      <svg cloud-icon size="small" class="octicon"></svg>
+      <svg cloud-icon size="small"></svg>
     }
   }
 </ng-template>
