@@ -52,6 +52,8 @@ export default class AutoThemeSwitcher extends Controller {
   declare readonly desktopLightHighContrastLogoClass:string;
   declare readonly mobileWhiteLogoClass:string;
 
+  private colorModeContrastPreferences:Record<OpColorMode, boolean>;
+
   connect() {
     if (this.themeValue === 'sync_with_os') {
       this.syncWithOS();
@@ -61,6 +63,11 @@ export default class AutoThemeSwitcher extends Controller {
   }
 
   syncWithOS():void {
+    this.colorModeContrastPreferences = {
+      light: this.enableAutoLightThemeContrastValue,
+      dark: this.enableAutoDarkThemeContrastValue,
+    };
+
     useMatchMedia(this, {
       mediaQueries: {
         lightMode: '(prefers-color-scheme: light)',
@@ -99,10 +106,4 @@ export default class AutoThemeSwitcher extends Controller {
     this.mobileLogoTarget.classList.toggle(this.mobileWhiteLogoClass, !isLightHighContrast);
   }
 
-  private get colorModeContrastPreferences():Record<OpColorMode, boolean> {
-    return {
-      light: this.enableAutoLightThemeContrastValue,
-      dark: this.enableAutoDarkThemeContrastValue,
-    };
-  }
 }
