@@ -72,8 +72,10 @@ module Users
       end
 
       def updated_at
-        if (session? && record.current?(current_session)) || (token? && record == current_token)
+        if session? && record.current?(current_session)
           I18n.t("users.sessions.current")
+        elsif token?
+          helpers.format_time(record.created_at)
         else
           record.respond_to?(:updated_at) ? helpers.format_time(record.updated_at) : "-"
         end
@@ -114,7 +116,11 @@ module Users
       end
 
       def token_expires_at
-        record.expires_on || (record.created_at + Setting.autologin.days)
+        if token?
+          record.expires_on
+        else
+          (record.created_at + Setting.autologin.days)
+        end
       end
 
       def format_expires(time)
