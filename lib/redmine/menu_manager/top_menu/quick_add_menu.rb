@@ -66,7 +66,7 @@ module Redmine::MenuManager::TopMenu::QuickAddMenu
       menu.with_item(
         href: item.url.present? ? allowed_node_url(item, @project) : "#",
         content_arguments: {
-          target: "_top",
+          target: html_options.fetch(:target, "_top"),
           **html_options,
           test_selector: "quick-add-menu-item"
         },

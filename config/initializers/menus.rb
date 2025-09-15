@@ -116,6 +116,7 @@ Redmine::MenuManager.map :quick_add_menu do |menu|
             caption: :label_invite_user,
             icon: "person-add",
             html: {
+              target: nil,
               data: {
                 turbo_stream: true
               }
