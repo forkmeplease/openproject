@@ -29,12 +29,9 @@
 #++
 
 require "spec_helper"
-require_relative "support/theme_matchers"
 
 RSpec.describe "My account Interface settings",
                :js, :selenium do
-  include ThemeTestHelpers
-
   let(:user) { create(:user) }
 
   before do
@@ -52,7 +49,7 @@ RSpec.describe "My account Interface settings",
     expect(page).to have_theme("dark")
 
     select_theme "Automatic (match OS color mode)"
-    expect(page).to have_auto_theme_config({})
+    expect(page).to have_auto_theme_config
   end
 
   it "allows user to increase contrast for single theme modes" do
@@ -65,11 +62,11 @@ RSpec.describe "My account Interface settings",
     expect(page).to have_no_field("Force high-contrast when in Dark mode")
 
     enable_contrast_for_single_theme
-    expect(page).to have_theme("light", high_contrast: true)
+    expect(page).to have_theme("light", contrast: true)
 
     select "Dark", from: "Color mode"
     enable_contrast_for_single_theme
-    expect(page).to have_theme("dark", high_contrast: true)
+    expect(page).to have_theme("dark", contrast: true)
   end
 
   it "shows appropriate contrast options based on theme selection" do
@@ -115,5 +112,25 @@ RSpec.describe "My account Interface settings",
         expect(page).to have_theme("dark")
       end
     end
+  end
+
+  def select_theme(theme)
+    select theme, from: "Color mode"
+    click_on "Update look and feel"
+  end
+
+  def enable_contrast_for_single_theme
+    check "Increase contrast"
+    click_on "Update look and feel"
+  end
+
+  def configure_auto_contrast(light: false, dark: false)
+    check "Force high-contrast when in Light mode" if light
+    check "Force high-contrast when in Dark mode" if dark
+    click_on "Update look and feel"
+  end
+
+  def navigate_to_interface_settings
+    click_on "Interface"
   end
 end
