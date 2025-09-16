@@ -50,18 +50,15 @@ class My::LookAndFeelForm < ApplicationForm
     f.check_box_group(data: { my__look_and_feel_target: "autoThemeContrast" }) do |group|
       group.check_box name: :force_light_theme_contrast,
                       label: attribute_name(:force_light_theme_contrast),
-                      checked: user_preference.force_light_theme_contrast?,
                       caption: attribute_name(:force_light_theme_contrast_caption)
       group.check_box name: :force_dark_theme_contrast,
                       label: attribute_name(:force_dark_theme_contrast),
-                      checked: user_preference.force_dark_theme_contrast?,
                       caption: attribute_name(:force_dark_theme_contrast_caption)
     end
 
     f.check_box_group(data: { my__look_and_feel_target: "singleThemeContrast" }) do |group|
       group.check_box name: :increase_theme_contrast,
                       label: attribute_name(:increase_contrast),
-                      checked: user_preference.increase_theme_contrast?,
                       caption: attribute_name(:increase_contrast_caption)
     end
 
@@ -85,10 +82,6 @@ class My::LookAndFeelForm < ApplicationForm
   end
 
   private
-
-  def user_preference
-    User.current.pref
-  end
 
   def disable_keyboard_shortcuts_caption
     attribute_name(:disable_keyboard_shortcuts_caption_html,
