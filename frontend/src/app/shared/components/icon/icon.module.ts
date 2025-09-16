@@ -240,7 +240,6 @@ import {
     UnlinkIconComponent,
     XIconComponent,
 
-
     OpGitlabIssueOpenIconComponent,
     OpGitlabIssueClosedIconComponent,
     OpGitlabLabelsIconComponent,
@@ -270,5 +269,5 @@ import {
     PlusIconComponent,
   ],
 })
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+
 export class IconModule {}

@@ -66,5 +66,5 @@ import { SpotDropModalPortalComponent } from './components/drop-modal/drop-modal
     SpotSelectorFieldComponent,
   ],
 })
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+
 export class OpSpotModule {}

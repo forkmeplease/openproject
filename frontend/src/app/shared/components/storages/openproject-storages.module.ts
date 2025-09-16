@@ -92,5 +92,5 @@ import {
     StorageInformationService,
   ],
 })
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+
 export class OpenprojectStoragesModule {}
