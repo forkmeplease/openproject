@@ -50,7 +50,7 @@ RSpec.describe "API v3 Project favorite resource", content_type: :json do
 
     it "responds with 204 No Content and marks as favorite", :aggregate_failures do
       expect(last_response).to have_http_status(204)
-      expect(project.favored_by?(user)).to be true
+      expect(project.favorited_by?(user)).to be true
     end
 
     context "when project is already favorited" do
@@ -61,7 +61,7 @@ RSpec.describe "API v3 Project favorite resource", content_type: :json do
 
       it "responds with 204 No Content and keeps project as is", :aggregate_failures do
         expect(last_response).to have_http_status(204)
-        expect(project.favored_by?(user)).to be true
+        expect(project.favorited_by?(user)).to be true
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.describe "API v3 Project favorite resource", content_type: :json do
 
     it "responds with 204 No Content and removes favorite", :aggregate_failures do
       expect(last_response).to have_http_status(204)
-      expect(project.favored_by?(user)).to be false
+      expect(project.favorited_by?(user)).to be false
     end
 
     context "when project is not favorited" do
@@ -122,7 +122,7 @@ RSpec.describe "API v3 Project favorite resource", content_type: :json do
 
       it "responds with 204 No Content, and keeps the project as is", :aggregate_failures do
         expect(last_response).to have_http_status(204)
-        expect(project.favored_by?(user)).to be false
+        expect(project.favorited_by?(user)).to be false
       end
     end
 
