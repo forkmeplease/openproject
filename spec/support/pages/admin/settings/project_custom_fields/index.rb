@@ -69,7 +69,7 @@ module Pages
             click_on type
           end
 
-          def expect_having_create_item(type)
+          def expect_having_create_item(type, enterprise_icon:)
             wait_for_network_idle
 
             click_button "Add"
@@ -77,6 +77,12 @@ module Pages
             click_button "Project attribute"
 
             expect(page).to have_link(type)
+
+            if enterprise_icon
+              expect(page.find(:link, type)).to have_css(".octicon-op-enterprise-addons.upsell-colored")
+            else
+              expect(page.find(:link, type)).to have_no_css(".octicon-op-enterprise-addons.upsell-colored")
+            end
           end
 
           def expect_not_having_create_item(type)

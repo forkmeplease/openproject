@@ -29,12 +29,14 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   component_wrapper do
-    settings_primer_form_with(
-      model:,
-      scope: :custom_field,
-      id: "custom_field_form",
-      url: form_url,
-      method: form_method
-    ) { |form| render CustomFields::CalculatedValues::DetailsForm.new(form) }
+    with_enterprise_banner_guard(:calculated_values, variant: :large, video: "enterprise/calculated-values.mp4") do
+      settings_primer_form_with(
+        model:,
+        scope: :custom_field,
+        id: "custom_field_form",
+        url: form_url,
+        method: form_method
+      ) { |form| render CustomFields::CalculatedValues::DetailsForm.new(form) }
+    end
   end
 %>
