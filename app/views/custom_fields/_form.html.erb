@@ -33,7 +33,7 @@ See COPYRIGHT and LICENSE files for more details.
   class="form--section"
   id="custom_field_form">
 
-  <%= f.hidden_field :field_format %>
+  <%= f.hidden_field :field_format if @custom_field.new_record? %>
 
   <div class="form--field -required" id="custom_field_name_attributes">
     <%= f.text_field :name,
