@@ -27,6 +27,7 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+require_relative "../../lib_static/open_project/opentelemetry"
 
 Rails.application.configure do
   if OpenProject::Configuration.opentelemetry_enabled?
@@ -34,7 +35,6 @@ Rails.application.configure do
     require "opentelemetry/sdk"
     require "opentelemetry-exporter-otlp"
     require "opentelemetry-instrumentation-all"
-    require_relative "../../lib_static/open_project/opentelemetry"
 
     # add log tags for log correlation
     config.log_tags += [
@@ -54,7 +54,7 @@ Rails.application.configure do
           "deployment.environment" => Rails.env,
           "service.namespace" => "openproject",
           "service.instance.id" => Socket.gethostname
-        }
+        }.transform_values(&:to_s)
       )
 
       c.use_all

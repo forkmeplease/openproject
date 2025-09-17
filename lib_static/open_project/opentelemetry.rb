@@ -89,17 +89,6 @@ module OpenProject
     end
 
     ##
-    # Create a new span with attributes
-    # @param name The span name
-    # @param attributes Hash of attributes to set on the span
-    def with_span(name, attributes = {}, &)
-      return yield unless enabled?
-
-      tracer = ::OpenTelemetry.tracer_provider.tracer("openproject")
-      tracer.in_span(name, attributes: attributes, &)
-    end
-
-    ##
     # Add attributes to the current span
     # @param attributes Hash of attributes to add
     def add_attributes(attributes)
@@ -129,7 +118,7 @@ module OpenProject
     # OpenTelemetry uses set_attribute (singular) not set_attributes (plural)
     def set_span_attributes(span, attributes)
       attributes.each do |key, value|
-        span.set_attribute(key, value)
+        span.set_attribute(key.to_s, value.to_s)
       end
     end
   end
