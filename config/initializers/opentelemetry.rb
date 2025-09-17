@@ -42,7 +42,14 @@ Rails.application.configure do
       ->(*) { "span_id=#{OpenTelemetry::Trace.current_span.context.hex_span_id}" }
     ]
 
-    OpenTelemetry::SDK.configure(&:use_all)
+    OpenTelemetry::SDK.configure do |c|
+      c.add_span_processor(
+        OpenTelemetry::SDK::Trace::Export::BatchSpanProcessor.new(
+          OpenTelemetry::Exporter::OTLP::Exporter.new
+        )
+      )
+      c.use_all
+    end
 
     # Extend the core log delegator
     handler = OpenProject::OpenTelemetry.method(:exception_handler)
