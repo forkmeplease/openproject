@@ -874,8 +874,8 @@ fr:
       parent: "Parent"
       parent_description: "Fait du lot de travaux lié un parent du lot de travaux actuel (enfant)"
       label_closest: "Le plus proche"
-      label_blocks_singular: "blocs"
-      label_blocks_plural: "blocs"
+      label_blocks_singular: "bloque"
+      label_blocks_plural: "blocages"
       blocks_description: "Le lot de travaux associé ne peut pas être fermé avant que celui-ci soit fermé en premier"
       label_blocked_singular: "bloqué par"
       label_blocked_plural: "bloqués par"
@@ -2521,7 +2521,7 @@ fr:
     blocks:
       community: "Communauté OpenProject"
       upsell:
-        title: "Passer à la version Entreprise"
+        title: "Passer à la version Enterprise"
       new_features:
         header: "Découvrez les nouvelles fonctionnalités et les mises à jour des produits."
         learn_about: "En savoir plus sur les nouvelles fonctionnalités"
