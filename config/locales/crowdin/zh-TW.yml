@@ -1930,7 +1930,7 @@ zh-TW:
   button_save: "儲存"
   button_save_as: "另存為"
   button_save_back: "儲存並返回"
-  button_select: "Select"
+  button_select: "選擇"
   button_set_reminder: "設定提醒"
   button_show: "顯示"
   button_sort: "排序"
@@ -2764,7 +2764,7 @@ zh-TW:
   label_required_disk_storage: "所使用的磁碟空間"
   label_send_invitation: 發送邀請
   label_calculated_value: "計算值"
-  label_change_parent: "Change parent"
+  label_change_parent: "變更父項"
   label_change_plural: "更改"
   label_change_properties: "更改屬性"
   label_change_status: "更改狀態"
