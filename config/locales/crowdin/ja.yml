@@ -3353,7 +3353,7 @@ ja:
       including_mention_plural: "%{number_mentioned} のメンションを含む"
       unread_notification_singular: "1通の未読通知"
       unread_notification_plural: "%{number_unread} 未読の通知"
-      you_have: "持っている"
+      you_have: "あなたへの"
     logo_alt_text: "ロゴ"
     mention:
       subject: "%{user_name} さんが #%{id} - %{subject} であなたをメンションしました"
@@ -3361,7 +3361,7 @@ ja:
       center: "通知センターへ"
       see_in_center: "通知センターにコメントを表示"
       settings: "メール設定の変更"
-    salutation: "こんにちは %{user}"
+    salutation: "%{user}さん，こんにちは"
     salutation_full_name: "フルネーム"
     work_packages:
       created_at: "%{timestamp} で %{user} によって作成されました "
