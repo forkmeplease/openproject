@@ -89,13 +89,14 @@ module Exports::PDF::Common::Attachments
   def attachment_by_api_content_src(src)
     return nil if src.empty?
 
-    # we only accept absolute paths containing /attachments/:id/
-    # to prevent accessing hot-linked attachments from other hosts e.g. https://example.com/attachments/1/somefile.png
-    # we only accept sources like
-    # /api/v3/attachments/:id/content (our default api path)
-    # /attachments/:id/filename.ext (inserted by drag and drop from the files tab)
+    # we accept absolut linked images
+    # (but not hot-linked from elsewhere: https://example.com/another_api/attachments/1/somefile.png)
+    #
+    # #{api_url_helpers.root_path}api/v3/attachments/:id/content (our default api path)
+    # #{api_url_helpers.root_path}attachments/:id/filename.ext (e.g. inserted by drag and drop from the files tab)
+
     attachment_regex = %r{/attachments/(\d+)/}
-    return nil unless src.start_with?("/") && src.match?(attachment_regex)
+    return nil unless src.start_with?(api_url_helpers.root_path) && src.match?(attachment_regex)
 
     attachments_id = src.scan(attachment_regex).first.first
     attachment = Attachment.find_by(id: attachments_id.to_i)
