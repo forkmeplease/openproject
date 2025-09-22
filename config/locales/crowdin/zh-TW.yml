@@ -4228,7 +4228,7 @@ zh-TW:
   text_access_token_hint: "存取令牌(Token)讓你能夠允許外部程式存取專案內的資源。"
   text_analyze: "進一步分析: %{subject}"
   text_are_you_sure: "是否確定？"
-  open_link_in_a_new_tab: "Open link in a new tab"
+  open_link_in_a_new_tab: "在新分頁中開啟連結"
   text_are_you_sure_continue: "你要繼續嗎?"
   text_are_you_sure_with_children: "刪除工作套件以及所有子工作套件？"
   text_are_you_sure_with_project_custom_fields: "刪除該屬性也會刪除其在所有項目中的值。您確定要這樣做嗎？"
