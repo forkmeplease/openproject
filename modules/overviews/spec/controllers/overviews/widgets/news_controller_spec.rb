@@ -28,5 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Grids::Widgets::NewsController < Grids::WidgetController
+require "rails_helper"
+
+RSpec.describe Overviews::Widgets::NewsController do
+  shared_let(:project) { create(:project) }
+  shared_let(:user) { create(:user, member_with_permissions: { project => %i[view_news] }) }
+  current_user { user }
+
+  describe "GET #show" do
+    context "for root" do
+      before do
+        get :show
+      end
+
+      it "renders show template", :aggregate_failures do
+        expect(response).to be_successful
+        expect(response).to render_template "show"
+      end
+    end
+
+    context "with project" do
+      before do
+        get :show, params: { project_id: project }
+      end
+
+      it "renders show template", :aggregate_failures do
+        expect(response).to be_successful
+        expect(response).to render_template "show"
+      end
+    end
+  end
 end
