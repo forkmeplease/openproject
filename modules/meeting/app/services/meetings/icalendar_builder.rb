@@ -108,9 +108,13 @@ module Meetings
         add_attendees(event: e, meeting: recurring_meeting.template)
 
         # Add all occurence dates to the dates set, so that we bake in all timezone rules correcly
-        all_times[recurring_meeting.time_zone].push(
-          recurring_meeting.schedule.all_occurrences.max.in_time_zone(recurring_meeting.time_zone)
-        )
+        if recurring_meeting.end_after_never?
+          all_times[recurring_meeting.time_zone].push(5.years.from_now.in_time_zone(recurring_meeting.time_zone))
+        else
+          all_times[recurring_meeting.time_zone].push(
+            recurring_meeting.schedule.all_occurrences.max.in_time_zone(recurring_meeting.time_zone)
+          )
+        end
 
         # Add exceptions for all cancelled recurrences
         set_excluded_recurrence_dates(event: e, recurring_meeting: recurring_meeting)
