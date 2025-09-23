@@ -28,23 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.configure do
-  config.after_initialize do
-    ActiveSupport::Notifications.subscribe("openproject_grape_logger") do |_, _, _, _, payload|
-      # Have attributes somewhat in the same order as lograge does with
-      # processed controller action to ease later grok parsing.
-      # See `Lograge::LogSubscribers::ActionController#initial_data`
-      attributes = {
-        method: payload[:method],
-        path: payload[:path],
-        duration: payload[:time][:total],
-        db: payload[:time][:db],
-        view: payload[:time][:view],
-        **payload.except(:method, :path, :time)
-      }
+module API
+  module Utilities
+    module Loggers
+      class EndpointName < GrapeLogging::Loggers::Base
+        def parameters(request, _response)
+          name = endpoint_name(request.env["api.endpoint"])
+          name ? { endpoint_name: name } : {}
+        end
 
-      extended = OpenProject::Logging.extend_payload!(attributes, {})
-      Rails.logger.info OpenProject::Logging.formatter.call(extended)
+        private
+
+        def endpoint_name(endpoint)
+          endpoint&.options && endpoint.options[:for].to_s
+        end
+      end
     end
   end
 end
