@@ -287,10 +287,8 @@ RSpec.describe EnterpriseEdition::BannerComponent, type: :component do
     end
   end
 
-  context "with a trial token" do
-    before do
-      allow(EnterpriseToken).to receive(:trialling?).and_return(true)
-    end
+  context "with a trial token", :with_ee_trial, with_ee: [:some_enterprise_feature] do
+    current_user { build(:admin) }
 
     it_behaves_like "renders the component"
 
@@ -303,10 +301,8 @@ RSpec.describe EnterpriseEdition::BannerComponent, type: :component do
       expect(component[:class]).not_to include("op-enterprise-banner_medium")
       expect(component[:class]).not_to include("op-enterprise-banner_large")
 
-      within(component) do
-        expect(page).to have_css(".op-enterprise-banner--close_icon")
-        expect(page).to have_content("Buy now")
-      end
+      expect(component).to have_css(".op-enterprise-banner--dismiss")
+      expect(component).to have_content("Buy now")
     end
   end
 end
