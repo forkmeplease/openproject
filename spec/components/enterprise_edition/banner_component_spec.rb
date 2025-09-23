@@ -273,16 +273,44 @@ RSpec.describe EnterpriseEdition::BannerComponent, type: :component do
         component = find_test_selector(component_test_selector)
 
         expect(component[:class]).to include("op-enterprise-banner_large")
+
+        expect(component).to have_css('video[src$="/enterprise/date-alert-notifications.mp4"]')
       end
     end
 
-    context "without video parameter" do
+    context "with image parameter" do
+      let(:component_args) { { variant: :large, image: "enterprise/homescreen.png" } }
+
+      it_behaves_like "renders the component"
+
+      it "renders with large variant class" do
+        render_component_in_mo
+
+        component = find_test_selector(component_test_selector)
+
+        expect(component[:class]).to include("op-enterprise-banner_large")
+
+        expect(component).to have_css('img[src$="/enterprise/homescreen.png"]')
+      end
+    end
+
+    context "with video and image parameters" do
+      let(:component_args) do
+        { variant: :large, video: "enterprise/date-alert-notifications.mp4", image: "enterprise/homescreen.png" }
+      end
+
+      it "raises an error" do
+        expect { render_component_in_mo }
+          .to raise_error(ArgumentError, "Only one of 'image' and 'video' parameters can be specified for variant :large")
+      end
+    end
+
+    context "without video and image parameters" do
       let(:component_args) { { variant: :large } }
 
       it "raises an error" do
-        expect do
-          render_component_in_mo
-        end.to raise_error(ArgumentError, "The 'video' parameter is required when the variant is :large.")
+        expect { render_component_in_mo }
+          .to raise_error(ArgumentError, "Either 'image' or 'video' parameter is required for variant :large")
       end
     end
   end
