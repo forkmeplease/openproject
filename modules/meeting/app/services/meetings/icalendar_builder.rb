@@ -198,6 +198,7 @@ module Meetings
     def build_icalendar
       ::Icalendar::Calendar.new.tap do |calendar|
         calendar.prodid = "-//OpenProject GmbH//#{OpenProject::VERSION}//Meeting//EN"
+        calendar.refresh_interval = "PT6H"
       end
     end
 

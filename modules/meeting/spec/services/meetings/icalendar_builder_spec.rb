@@ -34,19 +34,24 @@ RSpec.describe Meetings::IcalendarBuilder,
                with_settings: { mail_from: "openproject@example.org", app_title: "OpenProject Testing" } do
   let(:timezone) { ActiveSupport::TimeZone["Europe/Berlin"] }
 
-  it "sets the PRODID parameter to the correct value" do
-    builder = described_class.new(timezone:)
+  context "without any meetings" do
+    subject(:builder) { described_class.new(timezone:) }
 
-    calendar = Icalendar::Calendar.parse(builder.to_ical).first
-    expect(calendar.prodid).to eq("-//OpenProject GmbH//#{OpenProject::VERSION}//Meeting//EN")
-  end
+    let(:parsed_calendar) { Icalendar::Calendar.parse(builder.to_ical).first }
 
-  it "allows setting a custom calendar title" do
-    builder = described_class.new(timezone:)
-    builder.calendar_title = "Custom Title"
+    it "sets the calendar properties" do
+      expect(parsed_calendar.prodid).to eq("-//OpenProject GmbH//#{OpenProject::VERSION}//Meeting//EN")
+      expect(parsed_calendar.version).to eq("2.0")
+      expect(parsed_calendar.calscale).to eq("GREGORIAN")
+      expect(parsed_calendar.refresh_interval.value_ical).to eq("PT6H")
+    end
 
-    calendar = Icalendar::Calendar.parse(builder.to_ical).first
-    expect(calendar.x_wr_calname.first).to eq("Custom Title")
+    it "allows setting a custom calendar title" do
+      builder.calendar_title = "Custom Title"
+
+      calendar = Icalendar::Calendar.parse(builder.to_ical).first
+      expect(calendar.x_wr_calname.first).to eq("Custom Title")
+    end
   end
 
   context "with a single meeting" do
