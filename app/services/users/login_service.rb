@@ -63,7 +63,7 @@ module Users
       return unless Setting::Autologin.enabled?
 
       # generate a key and set cookie if autologin
-      token = Token::AutoLogin.create(user:, data: token_session_information)
+      token = Token::AutoLogin.create!(user:, data: token_session_information)
       cookie_options = {
         value: token.plain_value,
         # The autologin expiry is checked on validating the token
@@ -81,7 +81,7 @@ module Users
 
     def assign_autologin_session(token_id)
       session_id = ::Sessions::UserSession.where(session_id: session.id.private_id).pick(:id)
-      ::Sessions::AutologinSessionLink.create(token_id:, session_id:)
+      ::Sessions::AutologinSessionLink.create!(token_id:, session_id:)
     end
 
     def successful_login
