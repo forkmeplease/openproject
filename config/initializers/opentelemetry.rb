@@ -35,6 +35,9 @@ Rails.application.configure do
     require "opentelemetry/sdk"
     require "opentelemetry-exporter-otlp"
     require "opentelemetry-instrumentation-all"
+    require "opentelemetry/semconv/incubating/deployment"
+    require "opentelemetry/semconv/incubating/host"
+    require "opentelemetry/semconv/incubating/service"
 
     # add log tags for log correlation
     if config.log_tags
