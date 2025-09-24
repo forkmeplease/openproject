@@ -40,7 +40,7 @@ See COPYRIGHT and LICENSE files for more details.
 %>
 
 <%= render ::Users::Sessions::TableComponent.new(
-      rows: @autologin_tokens + @unmapped_sessions,
+      rows: @unmapped_sessions + @autologin_tokens,
       current_session: session,
       current_token: @current_token
     ) %>
