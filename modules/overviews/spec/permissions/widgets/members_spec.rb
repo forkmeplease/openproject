@@ -34,5 +34,5 @@ require "support/permission_specs"
 RSpec.describe Overviews::Widgets::MembersController, "permissions", type: :controller do # rubocop:disable RSpec/EmptyExampleGroup,RSpec/SpecFilePathFormat
   include PermissionSpecs
 
-  check_permission_required_for("overviews/widgets/members#show", :view_member)
+  check_permission_required_for("overviews/widgets/members#show", :view_members)
 end

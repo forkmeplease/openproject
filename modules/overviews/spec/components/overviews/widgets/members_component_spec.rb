@@ -51,8 +51,8 @@ RSpec.describe Overviews::Widgets::MembersComponent, type: :component do
     let(:user) { create(:admin) }
 
     context "with no members" do
-      it "does not render" do
-        expect(rendered_component).not_to have_element "#overviews-widgets-members-component-box"
+      it "does render" do
+        expect(rendered_component).to have_content I18n.t(:"js.grid.widgets.members.no_results")
       end
     end
 

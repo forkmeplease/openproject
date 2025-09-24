@@ -126,7 +126,7 @@ class Member < ApplicationRecord
   end
 
   def self.newest_first
-    order "#{table_name}.created_at DESC"
+    order(created_at: :desc)
   end
 
   protected

@@ -33,19 +33,15 @@ module Overviews
     class MembersComponent < Grids::WidgetComponent
       MEMBERS_LIMIT = 5
 
-      attr_reader :project, :current_user
+      param :project
 
-      def initialize(project)
-        super()
+      def initialize(*)
+        super
 
-        @project = project
-        @current_user = current_user
-        @members =
-          if project
-            project.members.visible(current_user).newest_first
-          end
-
-        @newest_members = @members.limit(MEMBERS_LIMIT).to_a
+        if project
+          @members = project.members.visible(current_user).newest_first
+          @newest_members = @members.limit(MEMBERS_LIMIT).to_a
+        end
       end
 
       def title
@@ -53,7 +49,7 @@ module Overviews
       end
 
       def render?
-        current_user.allowed_in_project?(:view_members, project) && @newest_members.present?
+        current_user.allowed_in_project?(:view_members, project)
       end
     end
   end

@@ -30,9 +30,9 @@
 
 require "rails_helper"
 
-RSpec.describe Overviews::Widgets::Members do
+RSpec.describe Overviews::Widgets::MembersController do
   shared_let(:project) { create(:project) }
-  shared_let(:user) { create(:user, member_with_permissions: { project => %i[view_member] }) }
+  shared_let(:user) { create(:user, member_with_permissions: { project => %i[view_members] }) }
   current_user { user }
 
   describe "GET #show" do

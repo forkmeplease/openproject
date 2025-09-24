@@ -33,17 +33,11 @@ module Overviews
     class NewsComponent < Grids::WidgetComponent
       NEWS_LIMIT = 5
 
-      include ApplicationHelper
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
+      param :project, optional: true
 
-      attr_reader :project, :current_user
+      def initialize(*)
+        super
 
-      def initialize(project)
-        super()
-
-        @project = project
-        @current_user = current_user
         @news =
           if project
             project.news.visible(current_user).newest_first
