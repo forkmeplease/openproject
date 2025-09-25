@@ -1221,7 +1221,7 @@ ru:
         all: "Все проекты"
         selected: "Только выбранные"
       search_placeholder: "Search projects..."
-      search_placeholder_favorites: "Search favorites..."
+      search_placeholder_favorites: "Поиск в избранном..."
       include_subprojects: "Включить все подпроекты"
       tooltip:
         include_all_selected: "Проект уже включен, поскольку разрешено включение всех подпроектов."

@@ -403,7 +403,7 @@ ru:
       setting_up_storages_non_admin: Администраторы могут настроить файловые хранилища в Администрирование / Файловые хранилища.
       sharepoint:
         application_link_text: SharePoint site
-        integration: SharePoint Administration / OpenProject
+        integration: Администрирование SharePoint / OpenProject
         oauth_configuration: Скопируйте эти значения из желаемого приложения в %{application_link_text}.
         provider_configuration: Перед установкой убедитесь, что у вас есть права администрирования в %{application_link_text} или обратитесь к администратору Microsoft. На портале вам также нужно зарегистрировать приложение Azure или использовать существующее для аутентификации.
       type: 'Перед установкой убедитесь, что у вас есть права администрирования в вашем экземпляре Nextcloud и что перед установкой установлено следующее приложение:'
