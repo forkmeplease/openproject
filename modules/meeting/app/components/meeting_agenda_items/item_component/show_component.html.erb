@@ -78,21 +78,24 @@
           with_item_group(menu) do
             if editable?
               menu.with_sub_menu_item(label: "Move") do |submenu|
-                with_item_group(submenu) { move_actions(submenu) } unless first? && last?
-
-                with_item_group(submenu) do
-                  if !in_template? || in_backlog?
-                    if in_backlog?
-                      move_to_current_meeting_action_item(submenu) if !visible_sections?
-                    else
-                      move_to_backlog_action_item(submenu)
-                    end
-                    move_to_section_action_item(submenu) if visible_sections?
-                  end
+                unless first? && last?
+                  move_actions(submenu)
                 end
 
-                with_item_group(submenu) do
-                  move_to_next_meeting_action_item(submenu) if move_to_next_meeting_enabled?
+                submenu.with_divider if move_to_different_section_or_meeting_action_added? && !(first? && last?)
+
+                if !in_template? || in_backlog?
+                  if in_backlog?
+                    move_to_current_meeting_action_item(submenu)
+                  else
+                    move_to_backlog_action_item(submenu)
+                  end
+                  move_to_section_action_item(submenu)
+                end
+
+                if move_to_next_meeting_enabled?
+                  submenu.with_divider
+                  move_to_next_meeting_action_item(submenu)
                 end
               end
             end
