@@ -55,8 +55,10 @@ module MemberHelper
 
   def invite_new_user(id, send_notification: true) # rubocop:disable Metrics/PerceivedComplexity
     if id.present? && (id.to_i == 0 || EmailValidator.valid?(id)) # we've got an email - invite that user
-      # Only users with the create_user permission can add users.
-      if current_user.allowed_globally?(:create_user) && enterprise_allow_new_users?
+      # Users with create_user permission or invite_members_by_email permission can add users.
+      if (current_user.allowed_globally?(:create_user) ||
+            current_user.allowed_in_project?(:invite_members_by_email, @project)) &&
+           enterprise_allow_new_users?
         # The invitation can pretty much only fail due to the user already
         # having been invited. So look them up if it does.
         user = UserInvitation.invite_new_user(email: id, send_notification:) || User.find_by_mail(id) # rubocop:disable Rails/DynamicFindBy
