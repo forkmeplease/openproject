@@ -184,7 +184,6 @@ module Storages
                            .new(user: User.current, model: @storage)
                            .call
 
-        # rubocop:disable Rails/ActionControllerFlashBeforeRender
         service_result.on_failure do
           flash[:error] = service_result.errors.full_messages
         end
@@ -192,8 +191,6 @@ module Storages
         service_result.on_success do
           flash[:notice] = I18n.t(:notice_successful_delete)
         end
-        # rubocop:enable Rails/ActionControllerFlashBeforeRender
-
         redirect_to admin_settings_storages_path
       end
 
