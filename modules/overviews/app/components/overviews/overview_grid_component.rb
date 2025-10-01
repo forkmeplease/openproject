@@ -38,5 +38,9 @@ module Overviews
 
       @project = project
     end
+
+    def show_news_widget?
+      @project.workspace_type == "project"
+    end
   end
 end

@@ -33,6 +33,8 @@ See COPYRIGHT and LICENSE files for more details.
     grid.with_widget(Overviews::Widgets::ProjectStatusComponent, @project)
     grid.with_widget(Overviews::Widgets::SubitemsComponent, @project)
     grid.with_widget(Overviews::Widgets::MembersComponent, @project)
-    grid.with_widget(Overviews::Widgets::NewsComponent, @project)
+    if show_news_widget?
+      grid.with_widget(Overviews::Widgets::NewsComponent, @project)
+    end
   end
 %>
