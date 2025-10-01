@@ -1031,7 +1031,7 @@ ko:
       enterprise_trial:
         company: "회사"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "페이지"
         row_count: "행 수"

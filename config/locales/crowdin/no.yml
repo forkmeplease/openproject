@@ -1038,7 +1038,7 @@
       enterprise_trial:
         company: "Firma"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Side"
         row_count: "Antall rader"

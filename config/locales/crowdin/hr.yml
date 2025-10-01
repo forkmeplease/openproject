@@ -1047,7 +1047,7 @@ hr:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Page"
         row_count: "Number of rows"

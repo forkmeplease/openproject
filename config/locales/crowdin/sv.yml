@@ -1039,7 +1039,7 @@ sv:
       enterprise_trial:
         company: "Företag"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Sida"
         row_count: "Antal rader"

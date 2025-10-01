@@ -1039,7 +1039,7 @@ fi:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "sivu"
         row_count: "Number of rows"

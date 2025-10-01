@@ -1036,7 +1036,7 @@ pt-BR:
       enterprise_trial:
         company: "Empresa"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Página"
         row_count: "Número de linhas"

@@ -1039,7 +1039,7 @@ ka:
       enterprise_trial:
         company: "კომპანია"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "გვერდი"
         row_count: "მწკრივების რაოდენობა"

@@ -1052,7 +1052,7 @@ lt:
       enterprise_trial:
         company: "Kompanija"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Puslapis"
         row_count: "Eilučių skaičius"

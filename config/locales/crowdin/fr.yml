@@ -1037,7 +1037,7 @@ fr:
       enterprise_trial:
         company: "Entreprise"
       favorite:
-        favorited: "Favorited"
+        favorited: "Objet"
       grids/grid:
         page: "Page"
         row_count: "Nombre de lignes"

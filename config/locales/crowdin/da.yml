@@ -1037,7 +1037,7 @@ da:
       enterprise_trial:
         company: "Virksomhed"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Page"
         row_count: "Number of rows"

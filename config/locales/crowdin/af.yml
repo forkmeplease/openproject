@@ -1039,7 +1039,7 @@ af:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Bladsy"
         row_count: "Aantal rye"

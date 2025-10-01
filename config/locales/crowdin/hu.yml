@@ -1038,7 +1038,7 @@ hu:
       enterprise_trial:
         company: "Cég"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Oldal"
         row_count: "Sorok száma"

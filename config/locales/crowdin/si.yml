@@ -1039,7 +1039,7 @@ si:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "පිටුව"
         row_count: "පේළි ගණන"

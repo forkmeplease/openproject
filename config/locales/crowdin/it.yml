@@ -1036,7 +1036,7 @@ it:
       enterprise_trial:
         company: "Azienda"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Pagina"
         row_count: "Numero di righe"

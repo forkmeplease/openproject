@@ -1051,7 +1051,7 @@ pl:
       enterprise_trial:
         company: "Firma"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Strona"
         row_count: "Liczba wierszy"

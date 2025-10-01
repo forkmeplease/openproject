@@ -1039,7 +1039,7 @@ tr:
       enterprise_trial:
         company: "Şirket"
       favorite:
-        favorited: "Favorited"
+        favorited: "Öğe"
       grids/grid:
         page: "Sayfa"
         row_count: "Satır sayısı"

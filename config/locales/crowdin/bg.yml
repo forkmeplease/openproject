@@ -1039,7 +1039,7 @@ bg:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Страница"
         row_count: "Брой редове"

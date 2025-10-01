@@ -188,13 +188,16 @@ RSpec.describe("Activation of storages in projects",
 
     page.find(".icon.icon-delete").click
 
+    expect(page).to have_css(".form--section-title", text: "DELETE FILE STORAGE")
+
     # Approve Confirmation
     page.fill_in "delete_confirmation", with: storage.name
+    expect(page).to have_button("Delete", disabled: false)
     page.click_on("Delete")
 
     # List of ProjectStorages empty again
     expect(page).to have_current_path external_file_storages_project_settings_project_storages_path(project)
-    expect(page).to have_text(I18n.t("storages.no_results"))
+    expect(page).to have_content(I18n.t("storages.no_results"))
   end
 
   describe "automatic project folder mode" do

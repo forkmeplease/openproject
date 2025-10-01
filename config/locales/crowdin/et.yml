@@ -1039,7 +1039,7 @@ et:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Lehekülg"
         row_count: "Ridade arv"

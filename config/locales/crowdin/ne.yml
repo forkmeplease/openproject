@@ -1039,7 +1039,7 @@ ne:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "पृष्ठ"
         row_count: "पङ्क्तिहरूको संख्या"

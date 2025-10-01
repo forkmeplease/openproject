@@ -1071,7 +1071,7 @@ ar:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "الصفحة "
         row_count: "عدد الصفوف"

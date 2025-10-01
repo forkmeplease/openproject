@@ -1035,7 +1035,7 @@ el:
       enterprise_trial:
         company: "Εταιρεία"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Σελίδα"
         row_count: "Πλήθος γραμμών"

@@ -1053,7 +1053,7 @@ ru:
       enterprise_trial:
         company: "Компания"
       favorite:
-        favorited: "Favorited"
+        favorited: "Элемент"
       grids/grid:
         page: "Страница"
         row_count: "Количество строк"

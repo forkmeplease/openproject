@@ -1029,7 +1029,7 @@ ms:
       enterprise_trial:
         company: "Syarikat"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Halaman"
         row_count: "Bilangan baris"

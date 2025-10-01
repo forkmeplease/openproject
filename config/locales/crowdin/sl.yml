@@ -1054,7 +1054,7 @@ sl:
       enterprise_trial:
         company: "Podjetje"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Stran"
         row_count: "Število vrstic"
@@ -2140,8 +2140,8 @@ sl:
       - "avgust"
       - "september"
       - "oktober"
-      - "november"
-      - "december"
+      - "November"
+      - "December"
     order:
       - :leto
       - :mesec

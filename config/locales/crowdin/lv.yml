@@ -1047,7 +1047,7 @@ lv:
       enterprise_trial:
         company: "Company"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Lapa"
         row_count: "Rindu skaits"

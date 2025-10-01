@@ -1035,7 +1035,7 @@ nl:
       enterprise_trial:
         company: "Bedrijfsnaam"
       favorite:
-        favorited: "Favorited"
+        favorited: "Item"
       grids/grid:
         page: "Pagina"
         row_count: "Aantal rijen"
