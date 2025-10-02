@@ -334,12 +334,12 @@ fr:
       no_results_content_text: Créer un nouveau champ personnalisé
   calculated_values:
     error_dialog:
-      title: "Error with Calculated Value"
+      title: "Erreur avec la valeur calculée"
     errors:
-      unknown: "An unknown error occurred. Please review the formula for this Calculated Value."
-      mathematical: "A mathematical error occurred during calculation."
-      missing_value: The attribute "%{custom_field_name}" is required by this Calculated Value but is empty.
-      disabled_value: The attribute "%{custom_field_name}" is required by this Calculated Value but is disabled for the project.
+      unknown: "Une erreur inconnue s'est produite. Veuillez revoir la formule de cette valeur calculée."
+      mathematical: "Une erreur mathématique s'est produite lors du calcul."
+      missing_value: L'attribut "%{custom_field_name}" est requis par cette valeur calculée mais il est vide.
+      disabled_value: L'attribut "%{custom_field_name}" est requis par cette valeur calculée mais est désactivé pour le projet.
   concatenation:
     single: "ou"
   op_dry_validation:
@@ -632,18 +632,18 @@ fr:
     sessions:
       session_name: "%{browser_name} %{browser_version} sur %{os_name}"
       browser: "Navigateur"
-      expires: "Expires"
-      last_connection: "Last connection"
+      expires: "Expire"
+      last_connection: "Dernière connexion"
       device: "Dispositif/système d'exploitation"
       unknown_browser: "navigateur inconnu"
       unknown_os: "système d'exploitation inconnu"
-      unknown: "(unknown)"
-      browser_session: "(Browser session)"
-      current: "Current (this device)"
+      unknown: "(inconnu)"
+      browser_session: "(Session du navigateur)"
+      current: "Courant (ce dispositif)"
       title: "Gestion de session"
-      instructions: "You are logged in to your account through the following devices. Revoke sessions that you do not recognise or from devices you do not control."
+      instructions: "Vous êtes connecté à votre compte via les appareils suivants. Révoquez les sessions que vous ne reconnaissez pas ou qui proviennent d'appareils que vous ne contrôlez pas."
       may_not_delete_current: "Vous ne pouvez pas supprimer votre session actuelle."
-      deletion_warning: "Are you sure you want to revoke this session? You will be logged out on this device."
+      deletion_warning: "Êtes-vous sûr de vouloir révoquer cette session ? Vous serez déconnecté sur cet appareil."
     groups:
       member_in_these_groups: "Cet utilisateur est actuellement membre des groupes suivants :"
       no_results_title_text: Cet utilisateur n'est actuellement membre d'aucun groupe.
@@ -982,10 +982,10 @@ fr:
       auth_provider:
         scim_clients: "Clients SCIM"
       calculated_value_error:
-        error_code: "Error code"
-        customized: "Customized"
-        customized_id: "Customized ID"
-        customized_type: "Customized type"
+        error_code: "Code d’erreur"
+        customized: "Personnalisé"
+        customized_id: "ID personnalisé"
+        customized_type: "Type personnalisé"
       capability:
         context: "Contexte"
       changeset:
@@ -1293,7 +1293,7 @@ fr:
         confirmation: "ne correspond pas à %{attribute}."
         could_not_be_copied: "%{dependency} n'a pas pu être copié (entièrement)."
         does_not_exist: "n'existe pas."
-        error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition."
+        error_enterprise_only: "%{action} n'est disponible que dans l'édition OpenProject Enterprise."
         error_unauthorized: "est interdit d'accès."
         error_readonly: "a tenté d'être écrit mais n'est pas accessible en écriture."
         error_conflict: "Cette information a été mise a jour par au moin un autre utilisateur pendant la même session"
@@ -2196,7 +2196,7 @@ fr:
     features:
       baseline_comparison: Comparaisons de référence
       board_view: Tableaux avancés
-      calculated_values: Calculated Values
+      calculated_values: Valeurs calculées
       conditional_highlighting: Mise en surbrillance conditionnelle
       internal_comments: Commentaires internes
       custom_actions: Actions personnalisées
@@ -2270,7 +2270,7 @@ fr:
       project_list_sharing:
         description: "Partagez les listes de projets avec des utilisateurs individuels."
       calculated_values:
-        description: "Calculated Values allow you to create a mathematical formula based attribute using numeric values and other project attributes and custom fields."
+        description: "Les valeurs calculées vous permettent de créer un attribut basé sur une formule mathématique en utilisant des valeurs numériques et d'autres attributs de projet et champs personnalisés."
       define_custom_style:
         title: "Thème de couleur et logo personnalisés"
         more_info: "Remarque : le logo utilisé sera accessible publiquement."
@@ -2367,7 +2367,7 @@ fr:
   error_invalid_selected_value: "Valeur sélectionnée invalide."
   error_journal_attribute_not_present: "Le journal ne contient pas l’attribut %{attribute}."
   error_pdf_export_too_many_columns: "Trop de colonnes sélectionnées pour l’exportation PDF. Veuillez réduire le nombre de colonnes."
-  error_pdf_date_range_too_long: "The selected work package date range exceeds the allowable PDF export limit. Please condense the range to a maximum of %{years} years."
+  error_pdf_date_range_too_long: "L'intervalle de dates du lot de travail sélectionné dépasse la limite d'exportation PDF autorisée. Veuillez condenser la plage à un maximum de %{years} années."
   error_pdf_failed_to_export: "L'export PDF n'a pas pu être enregistré: %{error}"
   error_token_authenticity: "Impossible de vérifier le jeton de Cross-Site Request Forgery. Avez-vous essayé d'envoyer des données sur plusieurs navigateurs ou onglets ? Veuillez fermer tous les onglets et réessayer."
   error_reminder_not_found: "Le rappel n'a pas été trouvé ou a déjà été notifié."
@@ -2584,11 +2584,11 @@ fr:
           new_features_title: >
             Cette version contient plusieurs nouvelles fonctionnalités et améliorations, telles que :
           new_features_list:
-            line_0: Add work packages to a meeting section in the Meetings tab.
-            line_1: Choose color mode more conveniently with “Increase contrast” checkboxes.
-            line_2: Filter projects by last update.
-            line_3: Jump to highlighted target elements from deep links.
-            line_4: Confirm critical actions with more accessible danger dialogs.
+            line_0: Ajoutez des lots de travail à une section de réunion dans l'onglet Réunions.
+            line_1: Choisissez le mode de couleur plus facilement grâce aux cases à cocher "Augmenter le contraste".
+            line_2: Filtrez les projets en fonction de leur dernière mise à jour.
+            line_3: Sauter aux éléments cibles mis en évidence à partir de liens profonds.
+            line_4: Confirmez les actions critiques à l'aide de boîtes de dialogue sur les dangers plus accessibles.
     links:
       upgrade_enterprise_edition: "Passer à la version Entreprise"
       postgres_migration: "Migration de votre installation vers PostgreSQL"
@@ -2823,7 +2823,7 @@ fr:
   label_select_main_menu_item: Sélectionner nouvel élément de menu principal
   label_required_disk_storage: "Espace disque requis"
   label_send_invitation: Envoyer une invitation
-  label_calculated_value: "Calculated Value"
+  label_calculated_value: "Valeur calculée"
   label_change_parent: "Changer de parent"
   label_change_plural: "Changements"
   label_change_properties: "Modifier les propriétés"
@@ -3000,7 +3000,7 @@ fr:
   label_integer: "Nombre entier"
   label_interface: "Interface"
   label_internal: "Interne"
-  label_introduction_video: "Getting started video"
+  label_introduction_video: "Vidéo de démarrage"
   label_invite_user: "Inviter utilisateur"
   label_item: "Élément"
   label_item_plural: "Éléments"
@@ -3650,7 +3650,7 @@ fr:
   notice_password_confirmation_failed: "Votre mot de passe est incorrect. Impossible de continuer."
   notice_principals_found_multiple: "Il y a %{number} résultats trouvés. Tabulation pour sélectionner le premier résultat."
   notice_principals_found_single: "Il y a un seul résultat. Tabulation pour le sélectionner."
-  notice_parent_item_not_found: "Parent item not found."
+  notice_parent_item_not_found: "L'élément parent n'a pas été trouvé."
   notice_project_not_deleted: "Le projet n'a pas été supprimé."
   notice_project_not_found: "Projet introuvable."
   notice_successful_connection: "Connection réussie."
