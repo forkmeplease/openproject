@@ -86,6 +86,11 @@ RSpec.describe "Delete ProjectStorage with FileLinks", :js, :webmock do
 
     page.find(".icon.icon-delete").click
 
+    # wait for danger zone form to be somewhat "ready" (not sure why, but
+    # without it the input field filled on next line may be cleared out due to a
+    # race condition I do not understand)
+    sleep(0.2)
+
     # Approve Confirmation
     page.fill_in "delete_confirmation", with: storage.name
     page.click_button("Delete")

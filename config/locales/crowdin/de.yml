@@ -331,11 +331,11 @@ de:
       no_results_content_text: Neues benutzerdefiniertes Feld anlegen
   calculated_values:
     error_dialog:
-      title: "Fehler in Berechnetem Wert"
+      title: "Fehler in berechnetem Wert"
     errors:
-      unknown: "Ein unbekannter Fehler ist aufgetreten. Bitte überprüfen Sie die Formel für diesen Berechneten Wert."
+      unknown: "Ein unbekannter Fehler ist aufgetreten. Bitte überprüfen Sie die Formel für diesen berechneten Wert."
       mathematical: "Bei der Berechnung ist ein mathematischer Fehler aufgetreten."
-      missing_value: Das Attribut "%{custom_field_name}" wird für diesen Berechneten Wert benötigt, ist aber leer.
+      missing_value: Das Attribut "%{custom_field_name}" wird für diesen berechneten Wert benötigt, ist aber leer.
       disabled_value: Das Attribut "%{custom_field_name}" wird für diesen berechneten Wert benötigt, ist aber leer.
   concatenation:
     single: "oder"
@@ -640,6 +640,7 @@ de:
       title: "Sitzungsverwaltung"
       instructions: "Sie sind über die folgenden Geräte bei Ihrem Konto angemeldet. Widerrufen Sie Sitzungen, die Sie nicht kennen oder von Geräten, die Sie nicht kontrollieren."
       may_not_delete_current: "Sie können Ihre aktuelle Sitzung nicht löschen."
+      deletion_warning: "Sind Sie sicher, dass Sie diese Sitzung widerrufen möchten? Sie werden auf diesem Gerät abgemeldet."
     groups:
       member_in_these_groups: "Dieser Benutzer ist Mitglied der folgenden Gruppen:"
       no_results_title_text: Dieser Benutzer ist derzeit kein Mitglied in einer Gruppe.
@@ -1030,7 +1031,7 @@ de:
       enterprise_trial:
         company: "Unternehmen"
       favorite:
-        favorited: "Item"
+        favorited: "Favorisiert"
       grids/grid:
         page: "Seite"
         row_count: "Anzahl der Zeilen"
@@ -1217,8 +1218,8 @@ de:
         increase_contrast_caption: "Aktiviere hohen Kontrast für den gewählten Farbmodus."
         force_light_theme_contrast: "Erzwinge hohen Kontrast im Hell-Modus"
         force_dark_theme_contrast: "Erzwinge hohen Kontrast im Dunkel-Modus"
-        force_light_theme_contrast_caption: "Uses the high-contrast version of Light mode when automatic color mode is selected."
-        force_dark_theme_contrast_caption: "Uses the high-contrast version of Dark mode when automatic color mode is selected."
+        force_light_theme_contrast_caption: "Verwendet die kontrastreiche Version des Hell-Modus, wenn der automatische Farbmodus ausgewählt ist."
+        force_dark_theme_contrast_caption: "Verwendet die kontrastreiche Version des Dunkel-Modus, wenn der automatische Farbmodus ausgewählt ist."
         theme: "Farbmodus"
         time_zone: "Zeitzone"
         mode_guideline: "Einige Modi überschreiben benutzerdefinierte Theme-Farben zur Verbesserung von Barrierefreiheit und Lesbarkeit. Bitte wählen Sie den Hellmodus für die vollständige Unterstützung Ihres benutzerdefinierten Themes."
@@ -1286,7 +1287,7 @@ de:
         confirmation: "stimmt nicht mit %{attribute} überein."
         could_not_be_copied: "%{dependency} konnte nicht (vollständig) kopiert werden."
         does_not_exist: "existiert nicht."
-        error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition."
+        error_enterprise_only: "%{action} ist nur in der OpenProject Enterprise Edition verfügbar."
         error_unauthorized: "kann nicht zugegriffen werden."
         error_readonly: "wurde versucht zu beschreiben, ist aber nicht beschreibbar."
         error_conflict: "Die Informationen wurde zwischenzeitlich durch andere Benutzer geändert."
@@ -1500,10 +1501,10 @@ de:
               error_not_deletable: "Diese Beziehung kann nicht gelöscht werden, da Sie keine Bearbeitungsberechtigung für das ausgewählte Arbeitspaket haben."
               error_not_editable: "Diese Beziehung kann nicht bearbeitet werden, da Sie keine Bearbeitungsrechte für das ausgewählte Arbeitspaket haben."
             to_id:
-              format: "The selected work package %{message}"
+              format: "Das ausgewählte Arbeitspaket %{message}"
               error_not_found: "konnte nicht gefunden werden."
               error_readonly: "kann für bestehende Beziehungen nicht geändert werden."
-              error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
+              error_not_manageable: "kann nicht hinzugefügt werden, da Sie keine Bearbeitungsberechtigung für das ausgewählte Arbeitspaket haben."
             from_id:
               format: "Das ausgewählte Arbeitspaket %{message}"
               error_not_found: "konnte nicht gefunden werden."
@@ -2224,7 +2225,7 @@ de:
         Haben Sie bereits ein Token? Fügen Sie es über den Button unten hinzu, um zum gebuchten Enterprise-Plan zu wechseln.
       hide_banner: "Dieses Banner ausblenden"
       homescreen_description: >
-        Enterprise plans extend the Community edition of OpenProject with additional [Enterprise add-ons](enterprise_url) and professional support, ideal for organizations running OpenProject in a mission-critical environment.
+        Enterprise-Pläne erweitern die Community-Edition von OpenProject um zusätzliche [Enterprise Add-Ons](enterprise_url) und professionellen Support, ideal für Unternehmen, die OpenProject in einer geschäftskritischen Umgebung einsetzen.
       homescreen_subline: Durch ein Upgrade unterstützen Sie zudem ein Open-Source-Projekt.
       baseline_comparison:
         description: An dieser Liste vorgenommene Änderungen seit einem beliebigen Zeitpunkt in der Vergangenheit hervorheben.
@@ -2263,7 +2264,7 @@ de:
       project_list_sharing:
         description: "Projektlisten mit einzelnen Benutzern und Gruppen teilen."
       calculated_values:
-        description: "Calculated Values allow you to create a mathematical formula based attribute using numeric values and other project attributes and custom fields."
+        description: "Mit berechneten Werten können Sie ein auf einer mathematischen Formel basierendes Attribut erstellen, in das numerische Werte und anderen Projektattributen und benutzerdefinierten Feldern einfließen."
       define_custom_style:
         title: "Selbstdefiniertes Farbthema und Logo"
         more_info: "Hinweis: Das verwendete Logo wird öffentlich zugänglich sein."
@@ -2573,22 +2574,15 @@ de:
         header: "Lesen Sie über neue Funktionen und Updates."
         learn_about: "Erfahren Sie mehr über die neuen Funktionen"
         #We need to include the version to invalidate outdated translations in other locales
-        "16_4":
-          new_features_title: >
-            Dieses Release enthält verschiedene neue Funktionen und Verbesserungen, wie z. B:
-          new_features_list:
-            line_0: Option zur automatischen Synchronisierung von Systemfarbschema und Kontrastmodus.
-            line_1: Hochkontrastmodus im Dark Mode für bessere Zugänglichkeit.
-            line_2: PDF-Export von Projektlisten.
-            line_3: Benutzerdefinierte Schriftart für alle PDF-Exporte (Enterprise Add-on).
-            line_4: Verbesserter Dialog zum Verwalten von Teilnehmern an Besprechungen.
-            line_5: Verbesserte Budgetplanung und -verwaltung bei Projektabfragen.
-            line_6: Aktualisierte Startseite und Projektübersicht.
         "16_5":
           new_features_title: >
             Dieses Release enthält verschiedene neue Funktionen und Verbesserungen, wie z. B:
           new_features_list:
-            line_0: Weitere Funktionen und Verbesserungen folgen in Kürze. Schauen Sie immer wieder vorbei!
+            line_0: Fügen Sie Arbeitspakete zu einem Besprechungsabschnitt auf der Registerkarte Besprechungen hinzu.
+            line_1: Wählen Sie den Farbmodus bequemer mit den Kontrollkästchen "Kontrast erhöhen".
+            line_2: Filtern Sie Projekte nach letzter Aktualisierung.
+            line_3: Springen Sie von Deep Links zu markierten Zielelementen.
+            line_4: Bestätigen Sie kritische Aktionen mit besser zugänglichen Gefahrendialogen.
     links:
       upgrade_enterprise_edition: "Auf Enterprise Edition upgraden"
       postgres_migration: "Migration Ihrer Installation zu PostgreSQL"

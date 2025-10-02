@@ -82,7 +82,7 @@ gem "htmldiff"
 gem "stringex", "~> 2.8.5"
 
 # CommonMark markdown parser with GFM extension
-gem "commonmarker", "~> 2.4.0"
+gem "commonmarker", "~> 2.4.1"
 
 # HTML pipeline for transformations on text formatter output
 # such as sanitization or additional features
@@ -240,11 +240,11 @@ gem "factory_bot", "~> 6.5.0", require: false
 gem "factory_bot_rails", "~> 6.5.0", require: false
 
 gem "turbo_power", "~> 0.7.0"
-gem "turbo-rails", "~> 2.0.0"
+gem "turbo-rails", "~> 2.0.17"
 
 # There is a problem with version 1.4.0. Do not update until you're sure there is no infinite hang
 # happenning in failing tests when WebMock or VCR stub cannot be found.
-gem "httpx", "~> 1.6.1"
+gem "httpx", "~> 1.6.2"
 
 # Brings actual deep freezing to most ruby objects
 gem "ice_nine"
@@ -371,7 +371,7 @@ group :development, :test do
   gem "i18n-tasks", "~> 1.0.13", require: false
 
   # Active Record Doctor helps to keep the database in good shape.
-  gem "active_record_doctor", "~> 2.0.0"
+  gem "active_record_doctor", "~> 2.0.1"
 end
 
 gem "bootsnap", "~> 1.18.0", require: false
@@ -419,4 +419,4 @@ end
 
 gem "openproject-octicons", "~>19.29.0"
 gem "openproject-octicons_helper", "~>19.29.0"
-gem "openproject-primer_view_components", "~>0.73.0"
+gem "openproject-primer_view_components", "~>0.74.1"

@@ -1,15 +1,15 @@
 fr:
   overviews:
-    label_home: "%{workspace_type} home"
-    label_dashboard: "Dashboard"
-    label_overview: 'Overview'
+    label_home: "Accueil %{workspace_type}"
+    label_dashboard: "Tableau de bord"
+    label_overview: 'Vue globale'
     widgets:
       subitems:
-        in_this_portfolio: "In this portfolio"
-        in_this_program: "In this program"
-        in_this_project: "In this project"
-        no_visible_children: "There are no visible children."
+        in_this_portfolio: "Dans ce portefeuille"
+        in_this_program: "Dans ce programme"
+        in_this_project: "Dans ce projet"
+        no_visible_children: "Il n'y a pas d'enfants visibles."
       members:
-        title: "Latest members"
-        view_all_members: "View all members"
+        title: "Derniers membres"
+        view_all_members: "Afficher tous les membres"
   permission_manage_overview: 'Gérer la page d''aperçu'

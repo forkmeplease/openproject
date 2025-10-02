@@ -184,8 +184,6 @@ de:
           not_found: Der Zielordner %{folder} konnte nicht auf %{storage_name} gefunden werden.
   storages:
     buttons:
-      complete_without_setup: Ohne fortfahren
-      done_complete_setup: Fertig, Einrichtung abgeschlossen
       done_continue: Fertig, Fortfahren
       open_storage: Dateispeicher öffnen
       replace_oauth_application: OpenProject OAuth ersetzen
