@@ -62,7 +62,7 @@ RSpec.describe "Work Packages", "index view", :js do
       visit project_path(project)
 
       within("#content") do
-        expect(page).to have_content("Overview")
+        expect(page).to have_heading "Overview"
       end
 
       within("#main-menu") do
