@@ -31,8 +31,8 @@ require "open3"
 
 module OpenProject
   module VERSION # :nodoc:
-    MAJOR = 17
-    MINOR = 0
+    MAJOR = 16
+    MINOR = 6
     PATCH = 0
 
     class << self
