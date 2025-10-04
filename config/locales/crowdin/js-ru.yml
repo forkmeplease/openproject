@@ -822,7 +822,7 @@ ru:
       bulk_actions:
         edit: "Массовое изменение"
         delete: "Массовое удаление"
-        duplicate: "Групповое дублирование"
+        duplicate: "Массовое дублирование"
         move: "Массовое изменение проекта"
       button_clear: "Очистить"
       comment_added: "Комментарий успешно добавлен."
@@ -1024,7 +1024,7 @@ ru:
         files: Файлы
       time_relative:
         days: "дней"
-        weeks: "недели"
+        weeks: "недель"
         months: "месяцев"
     toolbar:
       settings:
