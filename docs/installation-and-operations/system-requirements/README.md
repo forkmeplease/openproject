@@ -150,7 +150,7 @@ For high-availability setups, distribute traffic across multiple servers and ava
 
 > [!IMPORTANT]
 >
-> Some features we plan for the future will only be shipped with Docker-based installations. We also don't plan to provide packaged-based installations for more recent Linux versions, e.g. Ubuntu 24.04.  
+> Some features we plan for the future will only be shipped with Docker-based installations. We also don't plan to provide packaged-based installations for more recent Linux versions, e.g. Ubuntu 24.04.
 
 ### Docker-based installation (recommendation)
 
@@ -229,9 +229,9 @@ If you want to use the feature of [automatically managed project folders](../../
 
 ### Keycloak token exchange
 
-OpenProject will be tested against the following versions:
+OpenProject is tested against the following version:
 
-* [Keycloak 26.2.4](https://github.com/keycloak/keycloak/releases/tag/26.2.4)
+* [Keycloak 26.4.0](https://github.com/keycloak/keycloak/releases/tag/26.4.0)
 
 ## Frequently asked questions (FAQ)
 
