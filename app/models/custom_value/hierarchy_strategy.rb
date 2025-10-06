@@ -34,7 +34,7 @@ class CustomValue::HierarchyStrategy < CustomValue::ARObjectStrategy
 
     if item.nil?
       "#{value} #{I18n.t(:label_not_found)}"
-    elsif item.short.present?
+    elsif item.short?
       "#{item.label} (#{item.short})"
     else
       item.label
