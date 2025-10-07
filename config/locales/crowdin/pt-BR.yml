@@ -196,8 +196,8 @@ pt-BR:
     sync_failed: "Não foi possível sincronizar do LDAP: %{message}."
     back_to_index: "Clique aqui para voltar para a lista de conexão."
     technical_warning: |
-      This LDAP form requires technical knowledge of your LDAP / Active Directory setup.
-      [Please visit our documentation for detailed instructions](docs_url).
+      Este formulário LDAP requer conhecimento técnico da sua configuração LDAP / Active Directory.
+      [Consulte nossa documentação para obter instruções detalhadas](docs_url).
     attribute_texts:
       name: Nome arbitrário da conexão LDAP
       host: Nome ou endereço IP do host LDAP
@@ -333,58 +333,58 @@ pt-BR:
       no_results_content_text: Criar um novo campo personalizado
   calculated_values:
     error_dialog:
-      title: "Error with Calculated Value"
+      title: "Erro com o Valor calculado"
     errors:
-      unknown: "An unknown error occurred. Please review the formula for this Calculated Value."
-      mathematical: "A mathematical error occurred during calculation."
-      missing_value: The attribute "%{custom_field_name}" is required by this Calculated Value but is empty.
-      disabled_value: The attribute "%{custom_field_name}" is required by this Calculated Value but is disabled for the project.
+      unknown: "Ocorreu um erro desconhecido. Revise a fórmula deste Valor calculado."
+      mathematical: "Ocorreu um erro de matemática durante o cálculo."
+      missing_value: O atributo “%{custom_field_name}” é obrigatório para este Valor calculado, mas está vazio.
+      disabled_value: O atributo “%{custom_field_name}” é obrigatório para este Valor calculado, mas está desativado para o projeto.
   concatenation:
     single: "ou"
   op_dry_validation:
-    or: "or"
+    or: "ou"
     errors:
-      array?: "must be an array."
-      decimal?: "must be a decimal."
-      defined: "must not be defined."
-      eql?: "must be equal to %{left}."
-      filled?: "must be filled."
-      greater_or_equal_zero: "must be greater or equal to 0."
-      gteq?: "must be greater than or equal to %{num}."
-      hash?: "must be a hash."
+      array?: "deve ser um array."
+      decimal?: "deve ser um número decimal."
+      defined: "não deve ser definido."
+      eql?: "deve ser igual a %{left}."
+      filled?: "deve ser preenchido."
+      greater_or_equal_zero: "deve ser maior ou igual a 0."
+      gteq?: "deve ser maior ou igual a %{num}."
+      hash?: "deve ser um hash."
       included_in?:
         arg:
-          default: "must be one of: %{list}."
-          range: "must be one of: %{list_left} - %{list_right}."
-      int?: "must be an integer."
-      key?: "is missing."
-      not_found: "not found."
+          default: "dave ser um dos: %{list}."
+          range: "deve ser um dos seguintes: %{list_left} - %{list_right}."
+      int?: "deve ser um número inteiro."
+      key?: "está faltando."
+      not_found: "não encontrado."
       rules:
         copy_workflow_from:
-          workflow_missing: "has no own workflow."
+          workflow_missing: "não possui fluxo de trabalho próprio."
         custom_field:
-          format_not_supported: "format '%{field_format}' is unsupported."
+          format_not_supported: "o formato \"%{field_format}\" não é compatível."
         item:
-          root_item: "cannot be a root item."
-          not_persisted: "must be an already existing item."
+          root_item: "não pode ser um item raiz."
+          not_persisted: "deve ser um item já existente."
         label:
-          not_unique: "must be unique within the same hierarchy level."
+          not_unique: "deve ser único dentro do mesmo nível hierárquico."
         short:
-          not_unique: "must be unique within the same hierarchy level."
+          not_unique: "deve ser único dentro do mesmo nível hierárquico."
         parent:
-          not_descendant: "must be a descendant of the hierarchy root."
+          not_descendant: "deve ser um descendente da raiz da hierarquia."
       str?: "must be a string."
       type?: "must be %{type}."
     rules:
-      copy_workflow_from: "Type for workflow copy"
-      enabled: "Enabled"
-      depth: "Depth"
+      copy_workflow_from: "Tipo de cópia do fluxo de trabalho"
+      enabled: "Habilitado"
+      depth: "Profundidade"
       item: "Item"
-      label: "Label"
-      score: "Score"
-      short: "Short name"
-      parent: "Parent"
-      blueprint: "Pattern blueprint"
+      label: "Rótulo"
+      score: "Pontuação"
+      short: "Nome abreviado"
+      parent: "Pai"
+      blueprint: "Esquema de padrão"
   global_search:
     title:
       all_projects: 'Pesquisar por “%{search_term}” em todos os projetos'
@@ -446,7 +446,7 @@ pt-BR:
     lists:
       active: "Projetos ativos"
       my: "Meus projetos"
-      favorited: "Favorite projects"
+      favorited: "Projetos favoritos"
       archived: "Projetos arquivados"
       shared: "Listas de projetos compartilhados"
       my_lists: "Minhas listas de projetos"
@@ -631,12 +631,12 @@ pt-BR:
     sessions:
       session_name: "%{browser_name} %{browser_version} em %{os_name}"
       browser: "Navegador"
-      expires: "Expires"
-      last_connection: "Last connection"
+      expires: "Expira"
+      last_connection: "Último acesso"
       device: "Dispositivo / OS"
       unknown_browser: "Navegador desconhecido"
       unknown_os: "Sistema operacional desconhecido"
-      unknown: "(unknown)"
+      unknown: "(desconhecido)"
       browser_session: "(Browser session)"
       current: "Current (this device)"
       title: "Gerenciamento de sessão"
@@ -981,10 +981,10 @@ pt-BR:
       auth_provider:
         scim_clients: "Clientes SCIM"
       calculated_value_error:
-        error_code: "Error code"
-        customized: "Customized"
-        customized_id: "Customized ID"
-        customized_type: "Customized type"
+        error_code: "Código de erro"
+        customized: "Personalizado"
+        customized_id: "ID personalizado"
+        customized_type: "Tipo personalizado"
       capability:
         context: "Contexto"
       changeset:
@@ -1219,7 +1219,7 @@ pt-BR:
         auto_hide_popups_caption: "Quando habilitado, as notificações verdes de sucesso desaparecem automaticamente após 5 segundos."
         warn_on_leaving_unsaved: "Alertar-me ao sair de um pacote de trabalho sem salvar as alterações"
         increase_theme_contrast: "Increase theme contrast"
-        increase_contrast: "Increase contrast"
+        increase_contrast: "Aumentar contraste"
         increase_contrast_caption: "Enables high-contrast mode for the chosen colour mode."
         force_light_theme_contrast: "Force high-contrast when in Light mode"
         force_dark_theme_contrast: "Force high-contrast when in Dark mode"
@@ -1292,7 +1292,7 @@ pt-BR:
         confirmation: "não coincide com %{attribute}."
         could_not_be_copied: "%{dependency} não pôde ser copiado (completamente)."
         does_not_exist: "não existe."
-        error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition."
+        error_enterprise_only: "%{action} só está disponível na edição OpenProject Enterprise."
         error_unauthorized: "não pode ser acessado."
         error_readonly: "tentou escrever, mas não é gravável."
         error_conflict: "As informações foram atualizadas por pelo menos um outro usuário nesse meio tempo."
@@ -1405,7 +1405,7 @@ pt-BR:
           unreadable: "não pode ser lido. Tem certeza que é um token de suporte?"
           already_added: "Este token já foi adicionado."
         favorite:
-          already_favorited: "has already been favorited."
+          already_favorited: "já foi adicionado aos favoritos."
         grids/grid:
           overlaps: "sobreposição."
           outside: "está fora da grade."
@@ -1512,7 +1512,7 @@ pt-BR:
               error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
             from_id:
               format: "The selected work package %{message}"
-              error_not_found: "could not be found."
+              error_not_found: "não pôde ser encontrado."
               error_readonly: "não pode ser alterado para relações existentes."
               error_not_manageable: "cannot be added because you do not have edit permissions for the selected work package."
         repository:
@@ -1789,7 +1789,7 @@ pt-BR:
     attachments: "Anexos"
     actor: "Ator"
     action: "Ação"
-    api_key: "API key"
+    api_key: "Chave API"
     author: "Autor"
     avatar: "Avatar"
     base: "Erro geral:"
@@ -1971,7 +1971,7 @@ pt-BR:
   button_save: "Salvar"
   button_save_as: "Salvar como"
   button_save_back: "Salvar e voltar"
-  button_select: "Select"
+  button_select: "Selecionar"
   button_set_reminder: "Definir lembrete"
   button_show: "Mostrar"
   button_sort: "Ordenar"
@@ -2195,7 +2195,7 @@ pt-BR:
     features:
       baseline_comparison: Comparações de linha base
       board_view: Quadros avançados
-      calculated_values: Calculated Values
+      calculated_values: Valores calculados
       conditional_highlighting: Realce condicional
       internal_comments: Comentários internos
       custom_actions: Ações Personalizadas
@@ -2822,8 +2822,8 @@ pt-BR:
   label_select_main_menu_item: Selecione novo item do menu principal
   label_required_disk_storage: "Armazenamento em disco necessário"
   label_send_invitation: Enviar Convite
-  label_calculated_value: "Calculated Value"
-  label_change_parent: "Change parent"
+  label_calculated_value: "Valor calculado"
+  label_change_parent: "Alterar pai"
   label_change_plural: "Mudanças"
   label_change_properties: "Alterar propriedades"
   label_change_status: "Alterar situação"
@@ -3648,7 +3648,7 @@ pt-BR:
   notice_password_confirmation_failed: "Sua senha não está correta. Não é possível continuar."
   notice_principals_found_multiple: "Existe(m) %{number} resultado(s) encontrado(s).\nTecle tab para ir ao primeiro resultado."
   notice_principals_found_single: "Existe um resultado. Tecle tab para ir para ele."
-  notice_parent_item_not_found: "Parent item not found."
+  notice_parent_item_not_found: "Item pai não encontrado."
   notice_project_not_deleted: "O projeto não foi excluído."
   notice_project_not_found: "Projeto não encontrado."
   notice_successful_connection: "Conectado com sucesso."
@@ -4291,7 +4291,7 @@ pt-BR:
   text_access_token_hint: "Tokens de acesso permitem que você conceda acesso de aplicativos externos a recursos no OpenProject."
   text_analyze: "Analisar mais: %{subject}"
   text_are_you_sure: "Você tem certeza?"
-  open_link_in_a_new_tab: "Open link in a new tab"
+  open_link_in_a_new_tab: "Abrir link em uma nova aba"
   text_are_you_sure_continue: "Tem certeza de que deseja continuar?"
   text_are_you_sure_with_children: "Excluir o pacote de trabalho e todos os pacotes de trabalho filhos?"
   text_are_you_sure_with_project_custom_fields: "Ao excluir este atributo, os valores associados a ele serão removidos de todos os projetos. Tem certeza de que deseja continuar?"

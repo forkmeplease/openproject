@@ -32,7 +32,7 @@ pt-BR:
         drive: Drive ID
         host: Servidor
         name: Nome
-        password: Application password
+        password: Senha do aplicativo
         provider_type: Tipo de provedor
         tenant: ID do diretório (cliente)
     errors:
