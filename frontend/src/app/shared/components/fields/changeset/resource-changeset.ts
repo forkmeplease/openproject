@@ -406,7 +406,7 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
 
     // Validate all custom fields if the flag is set
     if (this.validateCustomFields) {
-      plainPayload.validateCustomFields = true;
+      (plainPayload as Record<string, unknown>).validateCustomFields = true;
     }
 
     return plainPayload;
