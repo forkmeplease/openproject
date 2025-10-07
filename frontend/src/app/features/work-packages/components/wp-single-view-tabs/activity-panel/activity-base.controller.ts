@@ -64,14 +64,14 @@ export class ActivityPanelBaseController extends UntilDestroyedMixin implements 
   }
 
   protected buildTurboFrameSrc():string {
-    const baseUrl = `${this.pathHelper.staticBase}/work_packages/${this.workPackageId}/activities`;
+    const baseUrl = window.location.origin;
+    const url = new URL(`${this.pathHelper.staticBase}/work_packages/${this.workPackageId}/activities`, baseUrl);
     const anchorInfo = UrlHelpers.extractActivityAnchor(window.location.hash);
 
     if (anchorInfo) {
-      const anchor = `${anchorInfo.type}-${anchorInfo.id}`;
-      return `${baseUrl}?anchor=${encodeURIComponent(anchor)}`;
+      url.searchParams.set('anchor', `${anchorInfo.type}-${anchorInfo.id}`);
     }
 
-    return baseUrl;
+    return url.toString();
   }
 }
