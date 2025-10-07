@@ -36,6 +36,7 @@ import { WpSingleViewService } from 'core-app/features/work-packages/routing/wp-
 import { BrowserDetector } from 'core-app/core/browser/browser-detector.service';
 import { DeviceService } from 'core-app/core/browser/device.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { UrlHelpers } from 'core-stimulus/controllers/dynamic/work-packages/activities-tab/services/url-helpers';
 
 @Directive()
 export class ActivityPanelBaseController extends UntilDestroyedMixin implements OnInit {
@@ -62,17 +63,13 @@ export class ActivityPanelBaseController extends UntilDestroyedMixin implements 
     this.turboFrameSrc = this.buildTurboFrameSrc();
   }
 
-  protected buildTurboFrameSrc(): string {
+  protected buildTurboFrameSrc():string {
     const baseUrl = `${this.pathHelper.staticBase}/work_packages/${this.workPackageId}/activities`;
-    const hash = window.location.hash;
+    const anchorInfo = UrlHelpers.extractActivityAnchor(window.location.hash);
 
-    if (hash) {
-      // Extract anchor (e.g., "#comment-123" or "#activity-456")
-      const anchorMatch = hash.match(/^#(comment|activity)-(\d+)$/i);
-      if (anchorMatch && anchorMatch.length === 3) {
-        const anchor = hash.slice(1); // Remove # prefix
-        return `${baseUrl}?anchor=${encodeURIComponent(anchor)}`;
-      }
+    if (anchorInfo) {
+      const anchor = `${anchorInfo.type}-${anchorInfo.id}`;
+      return `${baseUrl}?anchor=${encodeURIComponent(anchor)}`;
     }
 
     return baseUrl;
