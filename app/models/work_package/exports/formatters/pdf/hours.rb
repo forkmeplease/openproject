@@ -27,17 +27,17 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-module Projects::Exports
+module WorkPackage::Exports
   module Formatters
-    class Active < ::Exports::Formatters::Default
-      def self.apply?(attribute, export_format)
-        export_format == :pdf && attribute.to_sym == :active
-      end
+    module PDF
+      class Hours < ::Exports::Formatters::Default
+        def self.apply?(name, export_format)
+          name.to_sym == :spent_hours && export_format == :pdf
+        end
 
-      ##
-      # Takes a project and returns yes/no depending on the active attribute
-      def format(project, **)
-        project.active? ? I18n.t(:general_text_Yes) : I18n.t(:general_text_No)
+        def format_value(value, _options)
+          DurationConverter.output(value)
+        end
       end
     end
   end

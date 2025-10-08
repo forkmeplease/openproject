@@ -29,22 +29,24 @@
 #++
 module WorkPackage::Exports
   module Formatters
-    class Costs < ::Exports::Formatters::Default
-      def self.apply?(name, export_format)
-        %i[material_costs labor_costs overall_costs].include?(name.to_sym) && export_format == :csv
-      end
+    module XLS
+      class Costs < ::Exports::Formatters::Default
+        def self.apply?(name, export_format)
+          %i[material_costs labor_costs overall_costs].include?(name.to_sym) && export_format == :csv
+        end
 
-      def format_options
-        { number_format: number_format_string }
-      end
+        def format_options
+          { number_format: number_format_string }
+        end
 
-      def number_format_string
-        # [$CUR] makes sure we have an actually working currency format with arbitrary currencies
-        curr = "[$CUR]".gsub "CUR", ERB::Util.h(Setting.costs_currency)
-        format = ERB::Util.h Setting.costs_currency_format
-        number = "#,##0.00"
+        def number_format_string
+          # [$CUR] makes sure we have an actually working currency format with arbitrary currencies
+          curr = "[$CUR]".gsub "CUR", ERB::Util.h(Setting.costs_currency)
+          format = ERB::Util.h Setting.costs_currency_format
+          number = "#,##0.00"
 
-        format.gsub("%n", number).gsub("%u", curr)
+          format.gsub("%n", number).gsub("%u", curr)
+        end
       end
     end
   end

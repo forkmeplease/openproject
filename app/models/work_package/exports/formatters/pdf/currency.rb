@@ -29,19 +29,15 @@
 #++
 module WorkPackage::Exports
   module Formatters
-    class DoneRatio < ::Exports::Formatters::Default
-      def self.apply?(name, export_format)
-        name.to_sym.in?(%i[done_ratio derived_done_ratio]) && export_format != :pdf
-      end
+    module PDF
+      class Currency < ::Exports::Formatters::Default
+        def self.apply?(name, export_format)
+          %i[material_costs labor_costs overall_costs].include?(name.to_sym) && export_format == :pdf
+        end
 
-      def format_value(value, _options = {})
-        return if value.nil?
-
-        (value.to_f / 100).ceil(2)
-      end
-
-      def format_options
-        { number_format: percentage_format }
+        def format_value(value, _options)
+          value.nil? || value.zero? ? "" : number_to_currency(value)
+        end
       end
     end
   end

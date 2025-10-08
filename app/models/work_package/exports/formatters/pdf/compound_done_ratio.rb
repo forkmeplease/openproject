@@ -29,15 +29,23 @@
 #++
 module WorkPackage::Exports
   module Formatters
-    class Date < ::Exports::Formatters::Default
-      include WorkPackagesHelper
+    module PDF
+      class CompoundDoneRatio < ::Exports::Formatters::Default
+        def self.apply?(name, export_format)
+          name.to_sym == :done_ratio && export_format == :pdf
+        end
 
-      def self.apply?(name, export_format)
-        name.to_sym == :date && export_format == :pdf
-      end
+        def format(work_package, **)
+          derived_done_ratio = work_package.derived_done_ratio
+          derived = derived_done_ratio&.positive? ? " · Σ #{format_value(derived_done_ratio)}" : ""
+          "#{format_value(work_package.done_ratio)}#{derived}"
+        end
 
-      def format(work_package, **)
-        work_package_formatted_dates(work_package)
+        def format_value(value, _options = {})
+          return "" if value.nil?
+
+          "#{value}%"
+        end
       end
     end
   end

@@ -29,13 +29,28 @@
 #++
 module WorkPackage::Exports
   module Formatters
-    class Currency < ::Exports::Formatters::Default
-      def self.apply?(name, export_format)
-        %i[material_costs labor_costs overall_costs].include?(name.to_sym) && export_format == :pdf
-      end
+    module PDF
+      class CompoundHours < ::Exports::Formatters::Default
+        def self.apply?(name, export_format)
+          name.to_sym.in?(%i[estimated_hours remaining_hours]) && export_format == :pdf
+        end
 
-      def format_value(value, _options)
-        value.nil? || value.zero? ? "" : number_to_currency(value)
+        def format(work_package, **)
+          hours = format_value(work_package.public_send(attribute))
+          derived_hours = total_prefix(format_value(work_package.public_send(:"derived_#{attribute}")))
+
+          [hours, derived_hours].compact.join(" ").presence
+        end
+
+        def format_value(value, _options = nil)
+          DurationConverter.output(value)
+        end
+
+        private
+
+        def total_prefix(value)
+          value && "· Σ #{value}"
+        end
       end
     end
   end

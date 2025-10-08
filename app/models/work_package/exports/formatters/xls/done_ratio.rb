@@ -29,21 +29,21 @@
 #++
 module WorkPackage::Exports
   module Formatters
-    class CompoundDoneRatio < ::Exports::Formatters::Default
-      def self.apply?(name, export_format)
-        name.to_sym == :done_ratio && export_format == :pdf
-      end
+    module XLS
+      class DoneRatio < ::Exports::Formatters::Default
+        def self.apply?(name, export_format)
+          name.to_sym.in?(%i[done_ratio derived_done_ratio]) && export_format == :csv
+        end
 
-      def format(work_package, **)
-        derived_done_ratio = work_package.derived_done_ratio
-        derived = derived_done_ratio&.positive? ? " · Σ #{format_value(derived_done_ratio)}" : ""
-        "#{format_value(work_package.done_ratio)}#{derived}"
-      end
+        def format_value(value, _options = {})
+          return if value.nil?
 
-      def format_value(value, _options = {})
-        return "" if value.nil?
+          (value.to_f / 100).ceil(2)
+        end
 
-        "#{value}%"
+        def format_options
+          { number_format: percentage_format }
+        end
       end
     end
   end

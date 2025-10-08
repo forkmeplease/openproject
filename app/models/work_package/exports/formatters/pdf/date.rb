@@ -27,17 +27,19 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-module Projects::Exports
+module WorkPackage::Exports
   module Formatters
-    class Favorited < ::Exports::Formatters::Default
-      def self.apply?(attribute, export_format)
-        export_format == :pdf && attribute.to_sym == :favorited
-      end
+    module PDF
+      class Date < ::Exports::Formatters::Default
+        include WorkPackagesHelper
 
-      ##
-      # Takes a project and returns yes/no depending on the favorited attribute
-      def format(project, **)
-        project.favorited_by?(User.current) ? I18n.t(:general_text_Yes) : I18n.t(:general_text_No)
+        def self.apply?(name, export_format)
+          name.to_sym == :date && export_format == :pdf
+        end
+
+        def format(work_package, **)
+          work_package_formatted_dates(work_package)
+        end
       end
     end
   end

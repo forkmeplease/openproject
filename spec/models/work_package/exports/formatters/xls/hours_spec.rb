@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe WorkPackage::Exports::Formatters::HoursXls do
+RSpec.describe WorkPackage::Exports::Formatters::XLS::Hours do
   let(:formatter_instance) { described_class.new(:estimated_hours) }
 
   describe ".apply?" do

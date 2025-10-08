@@ -27,24 +27,19 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-
-module WorkPackage::Exports
+module Projects::Exports
   module Formatters
-    class HoursXls < ::Exports::Formatters::Default
-      HOUR_FIELDS = %i[estimated_hours derived_estimated_hours remaining_hours derived_remaining_hours spent_hours]
+    module PDF
+      class Active < ::Exports::Formatters::Default
+        def self.apply?(attribute, export_format)
+          export_format == :pdf && attribute.to_sym == :active
+        end
 
-      def self.apply?(name, export_format)
-        HOUR_FIELDS.include?(name.to_sym) && export_format == :csv
-      end
-
-      def format_value(value, _options)
-        # Note: Keep the value as a float, without converting it to a string. Otherwise the formatting
-        # decimal formatting will be ignored and the column will be exported as string.
-        value
-      end
-
-      def format_options
-        { number_format: "#{number_format}\"h\"" } # 0.00"h"
+        ##
+        # Takes a project and returns yes/no depending on the active attribute
+        def format(project, **)
+          project.active? ? I18n.t(:general_text_Yes) : I18n.t(:general_text_No)
+        end
       end
     end
   end
