@@ -65,7 +65,7 @@ export function addTurboGlobalListeners() {
     activateFlashError();
   };
   document.addEventListener('turbo:render', runOnRenderAndLoad);
-  document.addEventListener('turbo:load', runOnRenderAndLoad);
+  document.addEventListener('DOMContentLoaded', runOnRenderAndLoad);
 
   document.addEventListener('turbo:before-morph-element', (event) => {
     const element = event.target as HTMLElement;
