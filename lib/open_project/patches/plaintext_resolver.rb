@@ -28,7 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-config_file = Rails.root.join("config/plaintext.yml")
-if config_file.file? && config_file.readable?
-  Plaintext::Configuration.load(config_file.read)
+module OpenProject::Patches::PlaintextResolverPatch
+  # identical to the original implementation but with a mutable copy of the text
+  # if it's frozen.
+  def text
+    if handler = find_handler and
+        text = handler.text(@file, max_size: max_plaintext_bytes)
+
+      # Handle frozen strings by creating a mutable copy
+      text = text.dup if text.frozen?
+      text.gsub!(/\s+/m, " ")
+      text.strip!
+      text.mb_chars.compose.limit(max_plaintext_bytes).to_s
+    end
+  end
 end
+
+Plaintext::Resolver.prepend(OpenProject::Patches::PlaintextResolverPatch)
