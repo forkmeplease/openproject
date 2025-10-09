@@ -38,47 +38,5 @@ module Users::Invitation::PrincipalStep
     def wrapper_key
       Users::Invitation::DialogComponent::FOOTER_ID
     end
-
-    def call
-      component_wrapper(style: "flex: 1") do
-        flex_layout(align_items: :stretch) do |modal_footer|
-          modal_footer.with_column(flex: 1) do
-            retain_params = model.to_h.slice(:project_id, :principal_type)
-            render(
-              Primer::Beta::Button.new(
-                tag: :a,
-                href: invite_step_users_path(step: :project, user_invitation: retain_params),
-                data: {
-                  turbo_method: :post
-                }
-              )) do
-              I18n.t(:button_back)
-            end
-          end
-
-          modal_footer.with_column do
-            component_collection do |buttons|
-              buttons.with_component(
-                Primer::Beta::Button.new(
-                  data: { "close-dialog-id": Users::Invitation::DialogComponent::DIALOG_ID },
-                )
-              ) do
-                I18n.t(:button_cancel)
-              end
-
-              buttons.with_component(
-                Primer::Beta::Button.new(
-                  scheme: :primary,
-                  form: Users::Invitation::DialogComponent::FORM_ID,
-                  type: :submit
-                )
-              ) do
-                I18n.t(:button_continue)
-              end
-            end
-          end
-        end
-      end
-    end
   end
 end

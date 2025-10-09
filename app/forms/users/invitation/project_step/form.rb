@@ -58,14 +58,17 @@ module Users::Invitation::ProjectStep
         visually_hide_label: true
       ) do |radio_group|
         radio_group.radio_button(value: "User",
+                                 checked: model.principal_type.nil? || model.principal_type == "User",
                                  label: User.model_name.human,
                                  caption: I18n.t("users.invite_user_modal.type.user.description"))
         radio_group.radio_button(value: "Group",
+                                 checked: model.principal_type == "Group",
                                  label: Group.model_name.human,
                                  caption: I18n.t("users.invite_user_modal.type.group.description"))
         radio_group.radio_button(value: "PlaceholderUser",
+                                 checked: model.principal_type == "PlaceholderUser",
                                  label: PlaceholderUser.model_name.human,
-                                 caption: I18n.t("users.invite_user_modal.type.placeholder.description"))
+                                 caption: I18n.t("users.invite_user_modal.type.placeholder_user.description"))
       end
     end
   end

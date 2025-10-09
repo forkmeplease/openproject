@@ -39,12 +39,12 @@ module Users::Invitation::PrincipalStep
 
       f.autocompleter(
         name: :id_or_email,
-        label: TimeEntry.human_attribute_name(:user),
+        label: name_label,
         required: true,
         autocomplete_options: {
           defaultData: true,
           component: "opce-members-autocompleter",
-          url: autocomplete_for_member_project_members_path(model.project_id) + ".json",
+          url: autocomplete_for_member_project_members_path(model.project_id, format: :json, type: model.principal_type),
           focusDirectly: false,
           multiple: false,
           clearable: false,
@@ -52,13 +52,21 @@ module Users::Invitation::PrincipalStep
         }
       )
 
-      f.select_list(
-        name: "role_id",
-        label: "Role",
+      f.autocompleter(
+        name: :role_id,
+        required: true,
+        include_blank: false,
+        input_width: :meidum,
+        label: Role.model_name.human,
         caption: link_translate("users.invite_user_modal.role.description",
                                 links: { docs_link: %i[sysadmin_docs roles_and_permissions] }),
-        include_blank: false,
-        required: true
+        autocomplete_options: {
+          multiple: false,
+          decorated: true,
+          clearable: false,
+          focusDirectly: false,
+          appendTo: "##{Users::Invitation::DialogComponent::DIALOG_ID}"
+        }
       ) do |role_list|
         ProjectRole
           .givable
@@ -66,6 +74,24 @@ module Users::Invitation::PrincipalStep
           .find_each do |role|
           role_list.option(label: role.name, value: role.id)
         end
+      end
+
+
+      f.text_area(
+        name: :message,
+        label: I18n.t("users.invite_user_modal.message.label"),
+        caption: I18n.t("users.invite_user_modal.message.description"),
+        rows: 5,
+        style: "resize: none"
+      )
+    end
+
+
+    def name_label
+      if model.principal_type == "User"
+        I18n.t("activerecord.attributes.users/invitation/form_model.id_or_email")
+      else
+        User.human_attribute_name(:name)
       end
     end
   end

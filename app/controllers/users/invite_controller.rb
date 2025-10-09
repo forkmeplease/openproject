@@ -32,6 +32,7 @@ class Users::InviteController < ApplicationController
   include MemberHelper
 
   authorize_with_permission :manage_members, global: true
+  before_action :invite_user, only: :step, if: -> { params[:step] == "principal" }
 
   def start_dialog
     respond_with_dialog(
@@ -40,7 +41,7 @@ class Users::InviteController < ApplicationController
   end
 
   def step
-    if form_model.valid?
+    if form_model.valid?(validation_context) || params[:step] == "initial"
       respond_with_next_step
     else
       handle_errors_in_step
@@ -62,9 +63,16 @@ class Users::InviteController < ApplicationController
     end
   end
 
-  def respond_with_next_step
+  def respond_with_next_step # rubocop:disable Metrics/AbcSize
     case params[:step]
+    when "initial"
+      update_dialog_title_via_turbo_stream(Users::Invitation::DialogComponent::DIALOG_ID,
+                                           new_title: I18n.t("users.invite_user_modal.title.invite"))
+      replace_via_turbo_stream(component: Users::Invitation::ProjectStep::FormComponent.new(form_model))
+      replace_via_turbo_stream(component: Users::Invitation::ProjectStep::FooterComponent.new(form_model))
+      respond_with_turbo_streams
     when "project"
+      update_dialog_title_via_turbo_stream(Users::Invitation::DialogComponent::DIALOG_ID, new_title: dialog_title)
       replace_via_turbo_stream(component: Users::Invitation::PrincipalStep::FormComponent.new(form_model))
       replace_via_turbo_stream(component: Users::Invitation::PrincipalStep::FooterComponent.new(form_model))
       respond_with_turbo_streams
@@ -79,6 +87,10 @@ class Users::InviteController < ApplicationController
     call = create_member_call
 
     if call.success?
+      render_success_flash_message_via_turbo_stream(
+        message: I18n.t("users.invite_user_modal.success_message.#{form_model.principal_type.underscore}",
+                        project: form_model.project.name)
+      )
       close_dialog_via_turbo_stream("##{Users::Invitation::DialogComponent::DIALOG_ID}",
                                     additional: {})
     else
@@ -89,26 +101,36 @@ class Users::InviteController < ApplicationController
   end
 
   def create_member_call
-    # Invite new user by email if needed, or use existing user ID
-    user_id = invite_new_user(form_model.id_or_email, send_notification: true)
+    Members::CreateService
+      .new(user: current_user)
+      .call(
+        project_id: form_model.project_id,
+        user_id: form_model.id_or_email,
+        role_ids: [form_model.role_id],
+        notification_message: form_model.message
+      )
+  end
 
-    # Create member for the user
-    if user_id.present?
-      Members::CreateService
-        .new(user: current_user)
-        .call(
-          project_id: form_model.project_id,
-          user_id:,
-          role_ids: [form_model.role_id],
-          notification_message: form_model.message
-        )
+  def invite_user
+    # Invite new user by email if needed, or use existing user ID
+    form_model.id_or_email = invite_new_user(form_model.id_or_email, send_notification: true)
+  end
+
+  def validation_context
+    if params[:step] == "project"
+      :project_step
     else
-      render_error_flash_message_via_turbo_stream(message: I18n.t("activerecord.errors.models.member.principal_blank"))
+      %i[project_step principal_step]
     end
   end
 
   def form_model
     @form_model ||= Users::Invitation::FormModel.new(form_model_params)
+  end
+
+  def dialog_title
+    I18n.t("users.invite_user_modal.type.#{form_model.principal_type.underscore}.title",
+           project_name: form_model.project_name)
   end
 
   def form_model_params

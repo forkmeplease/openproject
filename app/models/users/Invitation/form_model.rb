@@ -32,15 +32,22 @@ module Users::Invitation
   class FormModel < ApplicationRecord
     include Tableless
 
+    belongs_to :project
     attribute :project_id, :integer, default: nil
     attribute :role_id, :integer, default: nil
     attribute :principal_type, :text, default: nil
     attribute :id_or_email, :text, default: nil
     attribute :message, :text, default: nil
 
-    validates :project_id, presence: true
-    validates :role_id, presence: true, if: -> { role_id_changed? }
-    validates :principal_type, inclusion: { in: %w[User PlaceholderUser Group] }
+    validates :project_id, presence: true, on: :project_step
+    validates :principal_type, inclusion: { in: %w[User PlaceholderUser Group] }, on: :project_step
+
+    validates :id_or_email, presence: true, on: :principal_step
+    validates :role_id, presence: true, on: :principal_step
+
+    def project_name
+      project&.name || project_id
+    end
 
     def to_h
       {

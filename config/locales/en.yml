@@ -724,29 +724,26 @@ en:
       type:
         required: "Please select the type to be invited"
         user:
-          title: "User"
+          title: "Invite user to %{project_name}"
           description: "Permissions based on the assigned role in the selected project"
         group:
-          title: "Group"
+          title: "Invite group to %{project_name}"
           description: "Permissions based on the assigned role in the selected project"
-        placeholder:
-          title: "Placeholder user"
+        placeholder_user:
+          title: "Add placeholder user to %{project_name}"
           title_no_ee: "Placeholder user (Enterprise edition only add-on)"
           description: "Has no access to the project and no emails are sent out."
           description_no_ee: 'Has no access to the project and no emails are sent out.
             <br>Check out the <a href="%{eeHref}" target="_blank">Enterprise edition</a>'
 
-      principal:
-        label:
-          name_or_email: "Name or email address"
-          name: "Name"
         already_member_message: "Already a member of %{project}"
+      principal:
         no_results_user: "No users were found"
         invite_user: "Invite:"
         no_results_placeholder: "No placeholders were found"
         create_new_placeholder: "Create new placeholder:"
         no_results_group: "No groups were found"
-        next_button: "Next"
+        invite_to_project: "Invite to %{project_name}"
         required:
           user: "Please select a user"
           placeholder: "Please select a placeholder"
@@ -759,23 +756,18 @@ en:
           This is the role that the user will receive when they join your project. The role defines which actions they are allowed to take and which information they are allowed to see.
           [Learn more about roles and permissions.](docs_url)
         required: "Please select a role"
-        next_button: "Next"
 
       message:
         label: "Invitation message"
         description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
-        next_button: "Next"
 
       summary:
         next_button: "Send invitation"
 
-      success:
-        title: "%{principal} was invited!"
-        description:
+      success_message:
           user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
+          placeholder_user: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
           group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
-        next_button: "Continue"
   page:
     text: "Text"
   placeholder_users:
@@ -1392,6 +1384,7 @@ en:
         workdays: "Working days"
       users/invitation/form_model:
         principal_type: "Invitation type"
+        id_or_email: "Name or email address"
       version:
         effective_date: "Finish date"
         sharing: "Sharing"
