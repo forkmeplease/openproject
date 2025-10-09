@@ -31,17 +31,20 @@
 require "rails_helper"
 
 RSpec.describe Overviews::Widgets::SubitemsComponent, type: :component do
+  include Rails.application.routes.url_helpers
+
   def render_component(...)
     render_inline(described_class.new(...))
   end
 
   let(:project) { build_stubbed(:project) }
   let(:user) { build_stubbed(:user) }
+  let(:params) { {} }
 
   current_user { user }
 
   subject(:rendered_component) do
-    render_component(project)
+    render_component(project, current_user:, **params)
   end
 
   context "with no children" do
@@ -57,9 +60,38 @@ RSpec.describe Overviews::Widgets::SubitemsComponent, type: :component do
     context "when visible to user" do
       let(:user) { create(:admin) }
 
-      it "renders the children" do
-        expect(rendered_component).to have_list "In this project" do |list|
-          expect(list).to have_list_item count: 3, text: /My Project No. \d+/
+      context "and a limit greater than the number of all subitems (default: 10)" do
+        it "renders all subitems, without a 'view all' item", :aggregate_failures do
+          expect(rendered_component).to have_list "In this project" do |list|
+            expect(list).to have_list_item count: 3, text: /My Project No. \d+/
+            expect(list).to have_no_list_item text: "View all subitems"
+          end
+        end
+
+        it "does not render 'view all' link" do
+          expect(rendered_component).to have_no_link "View all subitems"
+        end
+      end
+
+      context "and a limit less than the number of all subitems" do
+        let(:params) { { limit: 2 } }
+
+        it "renders specified subitems, along with a 'view all' item", :aggregate_failures do
+          expect(rendered_component).to have_list "In this project" do |list|
+            expect(list).to have_list_item count: 2, text: /My Project No. \d+/
+            expect(list).to have_list_item text: "View all subitems"
+          end
+        end
+
+        it "renders 'view all' link to projects with parent filter", :aggregate_failures do
+          expect(rendered_component).to have_link "View all subitems" do |link|
+            uri = Addressable::URI.parse(link[:href])
+            expect(uri.path).to eq projects_path
+            expect(uri.query_values["filters"]).to be_json_eql %{[
+              {"active":{"operator":"=","values":["t"]}},
+              {"parent":{"operator":"=","values":["#{project.id}"]}}
+            ]}
+          end
         end
       end
     end

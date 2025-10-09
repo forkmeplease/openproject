@@ -10,6 +10,7 @@ en:
         in_this_program: "In this program"
         in_this_project: "In this project"
         no_visible_children: "There are no visible children."
+        view_all_subitems: "View all subitems"
       members:
         title: "Latest members"
         view_all_members: "View all members"
