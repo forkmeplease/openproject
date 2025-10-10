@@ -102,8 +102,8 @@ export default class LazyPageController extends BaseController {
       const insertTargetId = this.insertTargetIdValue;
 
       if (scrollContainer && insertTargetId && stream.target.includes(insertTargetId)) {
-        const isPrepend = stream.action === 'prepend';
-        void DomHelpers.keepScroll(scrollContainer, isPrepend, () => {
+        const isPrepending = this.indexOutlet.sortingAscending; // Newest at the bottom sorting order
+        void DomHelpers.keepScroll(scrollContainer, isPrepending, () => {
           event.detail.render(stream);
           return Promise.resolve();
         });

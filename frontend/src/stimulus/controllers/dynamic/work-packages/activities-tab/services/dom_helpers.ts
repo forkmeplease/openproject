@@ -62,10 +62,10 @@ export namespace DomHelpers {
    * jump to a different part of the content.
    *
    * @param {HTMLElement} container - The scrollable container
-   * @param {boolean} top - Whether content is being added at the top (prepend)
-   *                         true: adjust scroll for prepended content
-   *                         false: maintain position for appended content
-   * @param {Function} fn - Async function that performs the DOM manipulation
+   * @param {boolean} isPrepending - Whether content is being added at the top (prepend)
+   *                                  true: adjust scroll for prepended content
+   *                                  false: maintain position for appended content
+   * @param {Function} renderFn - Async function that performs the DOM manipulation
    *
    * Algorithm:
    * - Capture current scroll position and total height BEFORE DOM changes
@@ -75,15 +75,15 @@ export namespace DomHelpers {
    * For prepend: scrollTop + heightDifference (push view down by added content height)
    * For append: maintain original scrollTop (new content below doesn't affect view)
    */
-  export async function keepScroll(container:HTMLElement, top:boolean, fn:() => Promise<void>) {
+  export async function keepScroll(container:HTMLElement, isPrepending:boolean, renderFn:() => Promise<void>) {
     pauseInertiaScroll(container);
 
     const scrollTop = container.scrollTop;
     const scrollHeight = container.scrollHeight;
 
-    await fn();
+    await renderFn();
 
-    if (top) {
+    if (isPrepending) {
       container.scrollTop = scrollTop + (container.scrollHeight - scrollHeight);
     } else {
       container.scrollTop = scrollTop;
