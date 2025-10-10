@@ -124,12 +124,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
     describe "project_id in array (Arel::Nodes::HomogeneousIn)" do
       let(:relation) { WorkPackage.where(project_id: [project.id, 1, 2, 3]) }
 
-      describe "#to_sql" do
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include "\"work_package_journals\".\"project_id\" IN (#{project.id}, 1, 2, 3)"
-        end
-      end
-
       describe "#to_a" do
         it "returns the requested work package" do
           expect(subject.to_a).to include work_package
@@ -139,12 +133,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
 
     describe "project_id not in array (Arel::Nodes::HomogeneousIn)" do
       let(:relation) { WorkPackage.where.not(project_id: [9999, 999]) }
-
-      describe "#to_sql" do
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include "\"work_package_journals\".\"project_id\" NOT IN (9999, 999)"
-        end
-      end
 
       describe "#to_a" do
         it "returns the requested work package" do
@@ -156,12 +144,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
     describe "id in array (Arel::Nodes::HomogeneousIn)" do
       let(:relation) { WorkPackage.where(id: [work_package.id, 999, 9999]) }
 
-      describe "#to_sql" do
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include "\"journals\".\"journable_id\" IN (#{work_package.id}, 999, 9999)"
-        end
-      end
-
       describe "#to_a" do
         it "returns the requested work package" do
           expect(subject.to_a).to include work_package
@@ -171,12 +153,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
 
     describe "id in subquery (Arel::Nodes::In)" do
       let(:relation) { WorkPackage.where(id: [work_package.id, 99, 999, 9999]) }
-
-      describe "#to_sql" do
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include "\"journals\".\"journable_id\" IN (#{work_package.id}, 99, 999, 9999)"
-        end
-      end
 
       describe "#to_a" do
         it "returns the requested work package" do
@@ -188,10 +164,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
     describe "sql string (as used by Query#statement)" do
       let(:relation) { WorkPackage.where("(work_packages.description ILIKE '%been on Wednesday%')") }
 
-      it "transforms the table name" do
-        expect(subject.to_sql).to include "work_package_journals.description ILIKE"
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
@@ -199,10 +171,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
       describe "when the sql where statement includes work_package.id" do
         # This is used, for example, in 'follows' relations.
         let(:relation) { WorkPackage.where("(work_packages.id IN (#{work_package.id}))") }
-
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include "journals.journable_id IN (#{work_package.id})"
-        end
 
         it "returns the requested work package" do
           expect(subject).to include work_package
@@ -212,10 +180,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
       describe "when the sql where statement includes \"work_package\".\"id\"" do
         # This is used in the manual-sorting feature.
         let(:relation) { WorkPackage.where("(\"work_packages\".\"id\" IN (#{work_package.id}))") }
-
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include "\"journals\".\"journable_id\" IN (#{work_package.id})"
-        end
 
         it "returns the requested work package" do
           expect(subject).to include work_package
@@ -266,7 +230,7 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
               expect(subject_sql)
                 .to include <<~SQL.squish
                   JOIN customizable_journals ON
-                  customizable_journals.journal_id = journals.id
+                  customizable_journals.journal_id = work_packages.journal_id
                   AND customizable_journals.custom_field_id = #{custom_field.id}
                 SQL
               expect(subject_sql).to include "customizable_journals.value ILIKE '%Wednesday\\_CV%'"
@@ -399,12 +363,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
         )
       end
 
-      it "transforms the expression to query the correct table" do
-        expect(subject.to_sql).to include \
-          "\"work_package_journals\".\"subject\" = 'Foo' OR " \
-          "\"work_package_journals\".\"description\" = 'The work package as it has been on Wednesday'"
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
@@ -414,22 +372,12 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
       # as used by spec/features/work_packages/timeline/timeline_dates_spec.rb
       let(:relation) { WorkPackage.where("work_packages.updated_at > '2022-01-01'") }
 
-      it "transforms the expression to query the correct table" do
-        expect(subject.to_sql).to include \
-          "journals.updated_at > '2022-01-01'"
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
 
       describe "when using quotation marks" do
         let(:relation) { WorkPackage.where("\"work_packages\".\"updated_at\" > '2022-01-01'") }
-
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include \
-            "\"journals\".\"updated_at\" > '2022-01-01'"
-        end
 
         it "returns the requested work package" do
           expect(subject).to include work_package
@@ -438,11 +386,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
 
       describe "when using a hash" do
         let(:relation) { WorkPackage.where(work_packages: { updated_at: ("2022-01-01".to_datetime).. }) }
-
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include \
-            "\"journals\".\"updated_at\" >= '2022-01-01"
-        end
 
         it "returns the requested work package" do
           expect(subject).to include work_package
@@ -454,22 +397,12 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
       # as used by spec/features/work_packages/table/queries/filter_spec.rb
       let(:relation) { WorkPackage.where("work_packages.created_at > '2022-01-01'") }
 
-      it "transforms the expression to query the correct table" do
-        expect(subject.to_sql).to include \
-          "journables.created_at > '2022-01-01'"
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
 
       describe "when using quotation marks" do
         let(:relation) { WorkPackage.where("\"work_packages\".\"created_at\" > '2022-01-01'") }
-
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include \
-            "\"journables\".\"created_at\" > '2022-01-01'"
-        end
 
         it "returns the requested work package" do
           expect(subject).to include work_package
@@ -478,11 +411,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
 
       describe "when using a hash" do
         let(:relation) { WorkPackage.where(work_packages: { created_at: ("2022-01-01".to_datetime).. }) }
-
-        it "transforms the expression to query the correct table" do
-          expect(subject.to_sql).to include \
-            "\"journables\".\"created_at\" >= '2022-01-01"
-        end
 
         it "returns the requested work package" do
           expect(subject).to include work_package
@@ -494,20 +422,12 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
   describe "#order" do
     let(:relation) { WorkPackage.order(description: :desc) }
 
-    it "transforms the table name" do
-      expect(subject.to_sql).to include "\"work_package_journals\".\"description\" DESC"
-    end
-
     it "returns the requested work package" do
       expect(subject).to include work_package
     end
 
     describe "manual order clause" do
       let(:relation) { WorkPackage.order("work_packages.description DESC") }
-
-      it "transforms the table name" do
-        expect(subject.to_sql).to include "work_package_journals.description DESC"
-      end
 
       it "returns the requested work package" do
         expect(subject).to include work_package
@@ -518,10 +438,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
       # This is used in the manual-sorting feature.
       let(:relation) { WorkPackage.order("work_packages.id DESC") }
 
-      it "transforms the table name" do
-        expect(subject.to_sql).to include "journals.journable_id DESC"
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
@@ -530,10 +446,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
     describe "order clause with work_packages.id" do
       let(:relation) { WorkPackage.order(id: :desc) }
 
-      it "transforms the table name" do
-        expect(subject.to_sql).to include "\"journals\".\"journable_id\" DESC"
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
@@ -541,11 +453,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
 
     describe "several order clauses" do
       let(:relation) { WorkPackage.order(subject: :asc, id: :desc) }
-
-      it "transforms the table name" do
-        expect(subject.to_sql).to include "\"work_package_journals\".\"subject\" ASC"
-        expect(subject.to_sql).to include "\"journals\".\"journable_id\" DESC"
-      end
 
       it "returns the requested work package" do
         expect(subject).to include work_package
@@ -559,14 +466,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
 
       before { work_package.time_entries << create(:time_entry) }
 
-      it "transforms the table name" do
-        expect(subject.to_sql).to include <<~SQL.squish
-          INNER JOIN "time_entries"
-            ON "time_entries"."entity_type" = 'WorkPackage'
-            AND "time_entries"."entity_id" = "journals"."journable_id"
-        SQL
-      end
-
       it "returns the requested work package" do
         expect(subject).to include work_package
       end
@@ -577,11 +476,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
       let(:relation) do
         WorkPackage
           .joins("LEFT OUTER JOIN ordered_work_packages ON ordered_work_packages.work_package_id = work_packages.id")
-      end
-
-      it "transforms the table name" do
-        expect(subject.to_sql).to include \
-          "LEFT OUTER JOIN ordered_work_packages ON ordered_work_packages.work_package_id = journals.journable_id"
       end
 
       it "returns the requested work package" do
@@ -595,14 +489,6 @@ RSpec.describe Journable::HistoricActiveRecordRelation do
         WorkPackage
           .includes(:project)
           .where(projects: { id: project.id })
-      end
-
-      it "joins the projects table" do
-        sql = subject.to_sql.tr('"', "")
-        expect(sql).to include \
-          "LEFT OUTER JOIN projects ON projects.id = work_package_journals.project_id"
-        expect(sql).to include \
-          "WHERE projects.id = #{project.id}"
       end
 
       it "returns the requested work package" do

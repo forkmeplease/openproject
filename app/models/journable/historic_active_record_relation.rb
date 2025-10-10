@@ -65,36 +65,68 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
 
     self.timestamp = Array(timestamp)
     readonly!
-    instance_variable_set :@table, model.journal_class.arel_table
   end
 
-  # We need to patch the `pluck` method of an active-record relation that
-  # queries historic data (i.e. journal data). Otherwise, `pluck(:id)`
-  # would return the `id` of the journal table rather than the `id` of the
-  # journable table, which would be expected from the syntax:
-  #
-  #     WorkPackage.where(assigned_to_id: 123).at_timestamp(1.year.ago).pluck(:id)
-  #
+  def add_wp_cte(arel)
+    # TODO: turn wp agnostic
+    # Add interval check into here
+    # Remove
+
+    relation = Journal
+                 .joins(<<-SQL.squish)
+                   INNER JOIN #{model.journal_class.table_name}
+                   ON "journals"."data_type" = '#{model.journal_class.name}'
+                   AND "journals"."data_id" = "#{model.journal_class.table_name}"."id"
+                 SQL
+                 .joins(<<-SQL.squish)
+                   INNER JOIN #{model.table_name}
+                   ON #{model.table_name}.id = "#{Journal.table_name}"."journable_id"
+                 SQL
+                  .select(
+                    "journals.journable_id AS id",
+                    "journals.id AS journal_id",
+                    "#{model.table_name}.created_at",
+                    "journals.updated_at",
+                    "CASE #{timestamp_case_when_statements} END as timestamp",
+                    *model.journal_class.column_names
+                          .reject { it == "id" }
+                          .map { |c| "#{model.journal_class.table_name}.#{c}" },
+                    *model.column_names_missing_in_journal.map do |missing_column_name|
+                      "null as #{missing_column_name}"
+                    end
+                  )
+
+    relation = add_timestamp_condition(relation)
+
+    work_packages_cte = Arel::Table.new(model.table_name)
+    work_packages_cte = Arel::Nodes::As.new(work_packages_cte, relation.arel)
+
+    if arel.ast.with
+      arel.ast.with.expr.unshift(work_packages_cte)
+    else
+      arel.ast.with = Arel::Nodes::With.new([work_packages_cte])
+    end
+
+    arel
+  end
+
+  def add_custom_values_cte(arel)
+    arel
+  end
+
+  # Patch the `pluck` method of an active-record relation
+  # so that columns callers might expect but that do not exist on the journals table are ignored.
   def pluck(*column_names)
     column_names.map! do |column_name|
-      case column_name
-      when :id, "id"
-        "journals.journable_id"
-      when :created_at, "created_at"
-        "journables.created_at"
-      when :updated_at, "updated_at"
-        "journals.updated_at"
+      if model.column_names_missing_in_journal.include?(column_name.to_s)
+        Rails.logger.warn "Cannot pluck column `#{column_name}` because this attribute is not journalized," \
+                          "i.e. it is missing in the #{journal_class.table_name} table."
+        "null as #{column_name}"
       else
-        if model.column_names_missing_in_journal.include?(column_name.to_s)
-          Rails.logger.warn "Cannot pluck column `#{column_name}` because this attribute is not journalized," \
-                            "i.e. it is missing in the #{journal_class.table_name} table."
-          "null as #{column_name}"
-        else
-          column_name
-        end
+        column_name
       end
     end
-    arel
+
     super
   end
 
@@ -106,28 +138,35 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   def build_arel(connection, aliases = nil)
     relation = self
 
-    relation = switch_to_journals_database_table(relation)
+    # binding.pry
+
+    # relation = switch_to_journals_database_table(relation)
     relation = substitute_join_tables_in_where_clause(relation)
-    relation = substitute_database_table_in_where_clause(relation)
-    relation = add_timestamp_condition(relation)
-    relation = add_join_on_journables_table_with_created_at_column(relation)
-    relation = add_join_projects_on_work_package_journals(relation)
-    relation = select_columns_from_the_appropriate_tables(relation)
+    # relation = substitute_database_table_in_where_clause(relation)
+    # relation = add_timestamp_condition(relation)
+    # relation = add_join_on_journables_table_with_created_at_column(relation)
+    # relation = add_join_projects_on_work_package_journals(relation)
+    # relation = select_columns_from_the_appropriate_tables(relation)
 
     # Based on the previous modifications, build the algebra object.
     arel = relation.call_original_build_arel(connection, aliases)
-    arel = modify_where_clauses(arel)
-    arel = modify_order_clauses(arel)
-    modify_joins(arel)
+
+    add_wp_cte(arel)
+    add_custom_values_cte(arel)
+    # binding.pry
+
+    # arel = modify_where_clauses(arel)
+    # arel = modify_order_clauses(arel)
+    # modify_joins(arel)
   end
 
   def call_original_build_arel(connection, aliases = nil)
     original_build_arel(connection, aliases)
   end
 
-  def eager_loading?
-    false
-  end
+  # def eager_loading?
+  #  false
+  # end
 
   private
 
@@ -227,14 +266,17 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
       predicate.gsub! /JOIN (?<!_)#{CustomValue.table_name}/, "JOIN #{Journal::CustomizableJournal.table_name}"
       predicate.gsub! "JOIN \"#{CustomValue.table_name}\"", "JOIN \"#{Journal::CustomizableJournal.table_name}\""
 
-      customized_type = /custom_values.customized_type = 'WorkPackage'/
-      customized_id   = /custom_values.customized_id = work_packages.id/
+      customized_type = /custom_values.customized_type = '#{model.name}'/
+      customized_id   = /custom_values.customized_id = #{model.table_name}.id/
 
       # The customizable_journals table has no direct relation to the work_packages table,
       # but it has to the journals table. We join it to the journals table instead.
-      journal_id = "customizable_journals.journal_id = journals.id"
+      journal_id = "customizable_journals.journal_id = #{model.table_name}.journal_id"
 
       predicate.gsub! /#{customized_type}\s*AND #{customized_id}/m, journal_id
+
+      predicate.gsub! "AND custom_values.custom_field_id =", "AND customizable_journals.custom_field_id ="
+      predicate.gsub! "WHERE custom_values.value", "WHERE customizable_journals.value"
     end
   end
 
@@ -242,8 +284,6 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   # current ones at the given timestamp.
   #
   def add_timestamp_condition(relation)
-    relation.joins_values = [journals_join_statement] + relation.joins_values
-
     timestamp_condition = timestamp.map do |t|
       Journal.where(journable_type: model.name).at_timestamp(t)
     end.reduce(&:or)
@@ -478,14 +518,14 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   #     "custom_values.*"      => "customizable_journals.*"
   #
   def gsub_table_names_in_sql_string!(sql_string)
-    sql_string.gsub! /(?<!_)#{model.table_name}\.updated_at/, "journals.updated_at"
-    sql_string.gsub! "\"#{model.table_name}\".\"updated_at\"", "\"journals\".\"updated_at\""
-    sql_string.gsub! /(?<!_)#{model.table_name}\.created_at/, "journables.created_at"
-    sql_string.gsub! "\"#{model.table_name}\".\"created_at\"", "\"journables\".\"created_at\""
-    sql_string.gsub! /(?<!_)#{model.table_name}\.id/, "journals.journable_id"
-    sql_string.gsub! "\"#{model.table_name}\".\"id\"", "\"journals\".\"journable_id\""
-    sql_string.gsub! /(?<!_)#{model.table_name}\./, "#{model.journal_class.table_name}."
-    sql_string.gsub! "\"#{model.table_name}\".", "\"#{model.journal_class.table_name}\"."
+    # sql_string.gsub! /(?<!_)#{model.table_name}\.updated_at/, "journals.updated_at"
+    # sql_string.gsub! "\"#{model.table_name}\".\"updated_at\"", "\"journals\".\"updated_at\""
+    # sql_string.gsub! /(?<!_)#{model.table_name}\.created_at/, "journables.created_at"
+    # sql_string.gsub! "\"#{model.table_name}\".\"created_at\"", "\"journables\".\"created_at\""
+    # sql_string.gsub! /(?<!_)#{model.table_name}\.id/, "journals.journable_id"
+    # sql_string.gsub! "\"#{model.table_name}\".\"id\"", "\"journals\".\"journable_id\""
+    # sql_string.gsub! /(?<!_)#{model.table_name}\./, "#{model.journal_class.table_name}."
+    # sql_string.gsub! "\"#{model.table_name}\".", "\"#{model.journal_class.table_name}\"."
     sql_string.gsub! /(?<!_)#{CustomValue.table_name}\./, "#{Journal::CustomizableJournal.table_name}."
     sql_string.gsub! "\"#{CustomValue.table_name}\".", "\"#{Journal::CustomizableJournal.table_name}\"."
   end
