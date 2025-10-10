@@ -1727,6 +1727,7 @@ pl:
         few: "Priorytety"
         many: "Priorytety"
         other: "Priorytety"
+      meeting_participant: "Uczestnik spotkania"
       member: "Członek"
       news: "Aktualności"
       notification:

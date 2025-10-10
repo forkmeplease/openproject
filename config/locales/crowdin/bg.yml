@@ -1703,6 +1703,7 @@ bg:
       issue_priority:
         one: "Приоритет"
         other: "Priorities"
+      meeting_participant: "Meeting participant"
       member: "Член"
       news: "Новини"
       notification:

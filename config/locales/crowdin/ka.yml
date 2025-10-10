@@ -1703,6 +1703,7 @@ ka:
       issue_priority:
         one: "პრიორიტეტი"
         other: "Priorities"
+      meeting_participant: "Meeting participant"
       member: "წევრი"
       news: "სიახლეები"
       notification:

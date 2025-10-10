@@ -1700,6 +1700,7 @@ pt-PT:
       issue_priority:
         one: "Prioridade"
         other: "Prioridades"
+      meeting_participant: "Participante na reunião"
       member: "Membro"
       news: "Noticias"
       notification:

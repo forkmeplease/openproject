@@ -1703,6 +1703,7 @@ af:
       issue_priority:
         one: "Prioriteit"
         other: "Priorities"
+      meeting_participant: "Meeting participant"
       member: "Lid"
       news: "Nuus"
       notification:

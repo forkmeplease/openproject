@@ -1703,6 +1703,7 @@ tr:
       issue_priority:
         one: "Öncelik"
         other: "Öncelik"
+      meeting_participant: "Meeting participant"
       member: "Üye"
       news: "Haberler"
       notification:
