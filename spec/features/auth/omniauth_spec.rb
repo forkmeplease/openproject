@@ -96,7 +96,7 @@ RSpec.describe "Omniauth authentication" do
     end
 
     context "with direct login",
-            with_config: { omniauth_direct_login_provider: "developer" } do
+            with_settings: { omniauth_direct_login_provider: "developer" } do
       it "goes directly to the developer sign in and then redirect to the back url" do
         visit my_account_path
         # requires login, redirects to developer login which is why we see the login form now
@@ -116,7 +116,7 @@ RSpec.describe "Omniauth authentication" do
   end
 
   describe "sign out a user with direct login and login required",
-           with_config: { omniauth_direct_login_provider: "developer", login_required: true } do
+           with_settings: { omniauth_direct_login_provider: "developer", login_required: true } do
     it "shows a notice that the user has been logged out" do
       visit signout_path
 
@@ -195,7 +195,7 @@ RSpec.describe "Omniauth authentication" do
     end
 
     context "with password login disabled",
-            with_config: { disable_password_login: "true" } do
+            with_settings: { disable_password_login: "true" } do
       it_behaves_like "omniauth user registration"
     end
   end
@@ -223,7 +223,7 @@ RSpec.describe "Omniauth authentication" do
     end
 
     context "with direct login enabled and login required",
-            with_config: { omniauth_direct_login_provider: "developer" } do
+            with_settings: { omniauth_direct_login_provider: "developer" } do
       before do
         allow(Setting).to receive(:login_required?).and_return(true)
       end
@@ -261,7 +261,7 @@ RSpec.describe "Omniauth authentication" do
     end
 
     context "with direct login and login required",
-            with_config: { omniauth_direct_login_provider: "developer" } do
+            with_settings: { omniauth_direct_login_provider: "developer" } do
       before do
         allow(Setting).to receive(:login_required?).and_return(true)
       end

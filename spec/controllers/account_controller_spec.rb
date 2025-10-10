@@ -105,7 +105,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
   describe "GET #internal_login" do
     shared_let(:admin) { create(:admin) }
 
-    context "when direct login enabled", with_config: { omniauth_direct_login_provider: "some_provider" } do
+    context "when direct login enabled", with_settings: { omniauth_direct_login_provider: "some_provider" } do
       it "allows to login internally using a special route" do
         get :internal_login
 
@@ -339,7 +339,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
           end
 
           context "with direct login and redirecting callback",
-                  with_config: { omniauth_direct_login_provider: "foo" }, with_settings: { login_required?: true } do
+                  with_settings: { omniauth_direct_login_provider: "foo", login_required?: true } do
             it "stills call the callback" do
               # Set the previous session
               session[:foo] = "bar"
@@ -421,7 +421,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
   end
 
   describe "#login with omniauth_direct_login enabled",
-           with_config: { omniauth_direct_login_provider: "some_provider" } do
+           with_settings: { omniauth_direct_login_provider: "some_provider" } do
     describe "GET" do
       it "redirects to some_provider" do
         get :login
@@ -441,7 +441,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
   end
 
   describe "#login with omniauth_direct_login_provider set but empty",
-           with_config: { omniauth_direct_login_provider: "" } do
+           with_settings: { omniauth_direct_login_provider: "" } do
     describe "GET" do
       it "does not redirect to some_provider" do
         get :login

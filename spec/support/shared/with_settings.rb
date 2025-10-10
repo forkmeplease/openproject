@@ -108,7 +108,12 @@ RSpec.configure do |config|
   config.include_context "with settings reset", :settings_reset
 
   config.before do |example|
-    settings = example.metadata[:with_settings]
+    settings = example.metadata[:with_settings] || {}
+
+    # Check if this setting breaks other code
+    # TODO: remove before merging.
+    settings.reverse_merge!(large_instance_wp_allowed_to_sql: true)
+
     if settings.present?
       settings = aggregate_mocked_settings(example, settings)
       with_settings(settings)
