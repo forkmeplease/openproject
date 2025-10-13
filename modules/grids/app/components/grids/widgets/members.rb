@@ -41,10 +41,8 @@ module Grids
       def initialize(...)
         super
 
-        if project
-          @members = project.members.visible(current_user).newest_first
-          @newest_members = @members.limit(limit).to_a
-        end
+        @members = project.members.visible(current_user).newest_first
+        @newest_members = @members.limit(limit).to_a
       end
 
       def title
