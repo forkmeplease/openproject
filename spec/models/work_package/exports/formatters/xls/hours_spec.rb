@@ -72,7 +72,7 @@ RSpec.describe WorkPackage::Exports::Formatters::XLS::Hours do
 
   describe "#format_options" do
     it "returns number format for hours" do
-      expect(formatter_instance.format_options).to eq({ number_format: '0.00"h"' })
+      expect(formatter_instance.format_options).to eq({ number_format: '0.00 "h"' })
     end
   end
 end

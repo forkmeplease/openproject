@@ -51,7 +51,7 @@ module WorkPackage::Exports
         end
 
         def format_options
-          { number_format: "#{number_format}\"h\"" } # 0.00"h"
+          { number_format: "#{number_format} \"h\"" } # 0.00 "h"
         end
       end
     end
