@@ -81,7 +81,7 @@ RSpec.describe Grids::Widgets::Members, type: :component do
     let(:user) { create(:anonymous) }
 
     it "does not render" do
-      expect(rendered_component).not_to have_element "#grids-widgets-members-box"
+      expect(rendered_component).not_to have_element id: "grids-widgets-members-box"
     end
   end
 end
