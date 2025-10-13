@@ -28,16 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+module Grids
+  module Widgets
+    class ProjectStatusComponent < Grids::WidgetComponent
+      include ApplicationHelper
+      include OpTurbo::Streamable
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+      param :project
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+      def title
+        Project.human_attribute_name(:status_code)
+      end
     end
   end
 end

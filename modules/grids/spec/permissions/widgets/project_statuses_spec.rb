@@ -28,16 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+require "spec_helper"
+require "support/permission_specs"
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+RSpec.describe Grids::Widgets::ProjectStatusesController, "permissions", type: :controller do # rubocop:disable RSpec/EmptyExampleGroup,RSpec/SpecFilePathFormat
+  include PermissionSpecs
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
-    end
-  end
+  check_permission_required_for("grids/widgets/project_statuses#show", :view_project)
+  check_permission_required_for("grids/widgets/project_statuses#update", :edit_project)
 end

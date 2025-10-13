@@ -28,16 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+module Grids
+  module Widgets
+    class NewsComponent < Grids::WidgetComponent
+      param :project, optional: true
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+      def initialize(*, news_limit: 5)
+        super
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+        @news =
+          if project
+            project.news.visible(current_user).newest_first
+          else
+            News
+              .visible(current_user)
+              .newest_first
+              .includes(:project)
+          end
+
+        @newest = @news.limit(news_limit).to_a
+      end
+
+      def title
+        Project.human_attribute_name(:news)
+      end
+
+      def render?
+        project.nil? || project.module_enabled?("news")
+      end
     end
   end
 end

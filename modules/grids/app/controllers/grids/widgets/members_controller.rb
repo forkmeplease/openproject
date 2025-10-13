@@ -28,16 +28,5 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
-
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
-
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
-    end
-  end
+class Grids::Widgets::MembersController < Grids::WidgetController
 end

@@ -28,16 +28,29 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+module Grids
+  module Widgets
+    class MembersComponent < Grids::WidgetComponent
+      MEMBERS_LIMIT = 5
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+      param :project
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+      def initialize(*)
+        super
+
+        if project
+          @members = project.members.visible(current_user).newest_first
+          @newest_members = @members.limit(MEMBERS_LIMIT).to_a
+        end
+      end
+
+      def title
+        t(:"grids.widgets.members.title")
+      end
+
+      def render?
+        current_user.allowed_in_project?(:view_members, project)
+      end
     end
   end
 end

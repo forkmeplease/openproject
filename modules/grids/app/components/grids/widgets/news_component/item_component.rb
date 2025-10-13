@@ -28,16 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+module Grids
+  module Widgets
+    class NewsComponent < Grids::WidgetComponent
+      class ItemComponent < ApplicationComponent
+        include ApplicationHelper
+        include OpPrimer::ComponentHelpers
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+        attr_reader :item, :project, :current_user
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+        def initialize(item:, project:, current_user: User.current, **system_arguments)
+          super()
+
+          @item = item
+          @project = project
+          @current_user = current_user
+          @system_arguments = system_arguments
+        end
+      end
     end
   end
 end

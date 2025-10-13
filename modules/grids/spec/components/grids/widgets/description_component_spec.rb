@@ -28,16 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+require "rails_helper"
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+RSpec.describe Grids::Widgets::DescriptionComponent, type: :component do
+  def render_component(...)
+    render_inline(described_class.new(...))
+  end
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
-    end
+  let(:project) { build_stubbed(:project, description: "**This project is awesome**") }
+
+  subject(:rendered_component) do
+    render_component(project)
+  end
+
+  it "renders description text" do
+    expect(rendered_component).to have_css "strong", text: "This project is awesome"
   end
 end
