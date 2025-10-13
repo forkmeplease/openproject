@@ -31,9 +31,14 @@
 module Grids
   module Widgets
     class News < Grids::WidgetComponent
+      NEWS_LIMIT = 5
+      private_constant :NEWS_LIMIT
+
       param :project, optional: true
 
-      def initialize(*, news_limit: 5)
+      option :limit, default: -> { NEWS_LIMIT }
+
+      def initialize(...)
         super
 
         @news =
@@ -46,7 +51,7 @@ module Grids
               .includes(:project)
           end
 
-        @newest = @news.limit(news_limit).to_a
+        @newest = @news.limit(limit).to_a
       end
 
       def title
