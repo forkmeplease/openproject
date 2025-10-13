@@ -76,8 +76,6 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
     super
   end
 
-  alias_method :original_build_arel, :build_arel
-
   # Patch the arel object, which is used to construct the sql query, in order
   # to modify the query to search for historic data.
   #
@@ -104,18 +102,11 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   # SELECT * from work_packages
 
   def build_arel(connection, aliases = nil)
-    relation = self
+    substitute_join_tables_in_where_clause(self)
 
-    relation = substitute_join_tables_in_where_clause(relation)
-
-    # Based on the previous modifications, build the algebra object.
-    arel = relation.call_original_build_arel(connection, aliases)
-
-    add_historic_model_cte(arel)
-  end
-
-  def call_original_build_arel(connection, aliases = nil)
-    original_build_arel(connection, aliases)
+    # Based on the previous modifications, build the algebra object and prepend
+    # the journals CTE.
+    add_historic_model_cte(super)
   end
 
   private
