@@ -28,7 +28,7 @@
  * ++
  */
 
-import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from '@blocknote/core';
+import { BlockNoteEditorOptions, BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from '@blocknote/core';
 import { User } from '@blocknote/core/comments';
 import { BlockNoteView } from '@blocknote/mantine';
 import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
@@ -43,7 +43,6 @@ export interface OpBlockNoteContainerProps {
   inputText?:string;
   hocuspocusUrl:string;
   hocuspocusAccessToken:string;
-  users:User[];
   activeUser:User;
   documentName:string;
   documentId:string;
@@ -63,7 +62,6 @@ export default function OpBlockNoteContainer({ inputField,
                                                inputText,
                                                hocuspocusUrl,
                                                hocuspocusAccessToken,
-                                               users,
                                                activeUser,
                                                documentName,
                                                openProjectUrl }:OpBlockNoteContainerProps) {
@@ -76,7 +74,8 @@ export default function OpBlockNoteContainer({ inputField,
   const collaborationEnabled = Boolean(hocuspocusUrl && documentName && hocuspocusAccessToken && activeUser);
   let hocuspocusProvider:HocuspocusProvider | null = null;
 
-  let editorParams:any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let editorParams:Partial<BlockNoteEditorOptions<any, any, any>>;
   if(collaborationEnabled) {
     hocuspocusProvider = new HocuspocusProvider({
       url: hocuspocusUrl,
@@ -87,7 +86,6 @@ export default function OpBlockNoteContainer({ inputField,
 
     editorParams = {
       schema,
-      resolveUsers: async (userIds:string[]) => users.filter((user) => userIds.includes(user.id)),
       collaboration: {
         provider: hocuspocusProvider,
         fragment: doc.getXmlFragment('document-store'),
@@ -112,7 +110,12 @@ export default function OpBlockNoteContainer({ inputField,
     editorParams = {
       schema,
       collaboration: {
+        provider: null,
         fragment: doc.getXmlFragment('document-store'),
+        user: {
+          name: activeUser.username,
+          color: '#333333',
+        },
       },
     };
   }
@@ -121,36 +124,34 @@ export default function OpBlockNoteContainer({ inputField,
   type EditorType = typeof editor;
 
   const getCustomSlashMenuItems = (editor:EditorType) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return [
       ...getDefaultReactSlashMenuItems(editor),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ...getDefaultOpenProjectSlashMenuItems(editor),
     ];
   };
 
   useEffect(() => {
-    async function prepareEditor() {
-      if(collaborationEnabled && hocuspocusProvider) {
-        hocuspocusProvider.on('synced', async () => {
-          console.log('BlockNote collaboration synced');
-          setIsLoading(false);
-        });
-        hocuspocusProvider.on('disconnect', () => {
-          console.error('BlockNote collaboration disconnected');
-          setIsLoading(true);
-        });
-      } else {
-        doc.on('update', () => {
-          const update = Y.encodeStateAsUpdate(doc);
-          const b64 = btoa(String.fromCharCode(...update));
-          inputField.value = b64;
-        });
-        setIsLoading(false);
-      }
+    const updateInput = () => {
+      const update = Y.encodeStateAsUpdate(doc);
+      const b64 = btoa(String.fromCharCode(...update));
+      inputField.value = b64;
+    };
+
+    if(collaborationEnabled && hocuspocusProvider) {
+      hocuspocusProvider.on('synced', () => setIsLoading(false));
+      hocuspocusProvider.on('disconnect', () => setIsLoading(true));
+    } else {
+      doc.on('update', updateInput);
+      setIsLoading(false);
     }
-    prepareEditor();
+
     return () => {
-      if (hocuspocusProvider) {
+      if (collaborationEnabled && hocuspocusProvider) {
         hocuspocusProvider.destroy();
+      } else {
+        doc.off('update', updateInput);
       }
     };
   }, []);
@@ -166,7 +167,7 @@ export default function OpBlockNoteContainer({ inputField,
         >
           <SuggestionMenuController
             triggerCharacter="/"
-            getItems={async (query:string) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)}
+            getItems={async (query:string) => Promise.resolve(filterSuggestionItems(getCustomSlashMenuItems(editor), query))}
           />
         </BlockNoteView>
       }

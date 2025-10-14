@@ -42,7 +42,6 @@ export default class extends Controller {
 
   static values = {
     inputText: String,
-    users: Array,
     activeUser: Object,
     hocuspocusUrl: String,
     hocuspocusAccessToken: String,
@@ -54,7 +53,6 @@ export default class extends Controller {
   declare readonly blockNoteEditorTarget:HTMLElement;
   declare readonly blockNoteInputFieldTarget:HTMLInputElement;
   declare readonly inputTextValue:string;
-  declare readonly usersValue:User[];
   declare readonly activeUserValue:User;
   declare readonly hocuspocusUrlValue:string;
   declare readonly hocuspocusAccessTokenValue:string;
@@ -73,7 +71,6 @@ export default class extends Controller {
       inputText: this.inputTextValue,
       hocuspocusUrl: this.hocuspocusUrlValue,
       hocuspocusAccessToken: this.hocuspocusAccessTokenValue,
-      users: this.usersValue,
       activeUser: this.activeUserValue,
       documentName: this.documentNameValue,
       documentId: this.documentIdValue,

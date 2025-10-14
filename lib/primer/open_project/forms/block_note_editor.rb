@@ -37,7 +37,6 @@ module Primer
 
         attr_reader :input,
                     :value,
-                    :users,
                     :active_user,
                     :hocuspocus_url,
                     :hocuspocus_access_token,
@@ -47,16 +46,10 @@ module Primer
 
         delegate :name, to: :@input
 
-        def initialize(input:, value:, document_name:, document_id:) # rubocop:disable Metrics/AbcSize
+        def initialize(input:, value:, document_name:, document_id:)
           super()
           @input = input
           @value = value
-          @users = User.active.map do |user|
-            {
-              id: user.id,
-              username: user.name
-            }
-          end
           @active_user = {
             id: User.current.id,
             username: User.current.name
