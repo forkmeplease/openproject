@@ -153,12 +153,14 @@ module MeetingAgendaItems
 
       menu.with_item(
         label: t(:label_agenda_item_move_to_next),
-        href: move_to_next_dialog_meeting_agenda_item_path(@meeting_agenda_item.meeting,
-                                                           @meeting_agenda_item,
-                                                           datetime: next_date.iso8601),
-        content_arguments: {
-          data: { controller: "async-dialog" }
-        }
+        tag: :button,
+        content_arguments: { data: {
+          action: "click->meetings--submit#intercept",
+          href: move_to_next_dialog_meeting_agenda_item_path(@meeting_agenda_item.meeting,
+                                                             @meeting_agenda_item,
+                                                             datetime: next_date.iso8601),
+          method: "GET"
+        } }
       ) do |item|
         item.with_leading_visual_icon(icon: "arrow-right")
       end
