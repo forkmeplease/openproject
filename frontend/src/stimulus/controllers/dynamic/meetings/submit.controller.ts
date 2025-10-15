@@ -31,72 +31,78 @@
 import { ApplicationController, useMeta } from 'stimulus-use';
 import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
 import { BeforeunloadController } from '../../beforeunload.controller';
+import { appendCollapsedState } from '../../../helpers/meetings-helpers';
+import { hasUnsavedChanges } from '../../../helpers/meetings-helpers';
 
 export default class extends ApplicationController {
   private turboRequests:TurboRequestsService;
   private beforeUnloadController:BeforeunloadController;
   private boundBeforeUnloadHandler = this.beforeUnloadHandler.bind(this);
 
-  static values = { unsavedChangesConfirmationMessage: String };
-
-  declare unsavedChangesConfirmationMessageValue:string;
-
   static metaNames = ['csrf-token'];
 
   declare readonly csrfToken:string;
 
-  async connect():Promise<void> {
+  connect():void {
     useMeta(this, { suffix: false });
 
     window.addEventListener('beforeunload', this.boundBeforeUnloadHandler);
+    this.beforeUnloadController = this.application.getControllerForElementAndIdentifier(document.body, 'beforeunload') as BeforeunloadController;
 
+    void this.initializeTurboRequests();
+  }
+
+  private async initializeTurboRequests():Promise<void> {
     const context = await window.OpenProject.getPluginContext();
     this.turboRequests = context.services.turboRequests;
-    this.beforeUnloadController = this.application.getControllerForElementAndIdentifier(document.body, 'beforeunload') as BeforeunloadController;
   }
 
-  disconnect():void {
-    window.removeEventListener('beforeunload', this.boundBeforeUnloadHandler);
-  }
-
-  handleClick(event:Event):void {
+  intercept(event:Event):void {
     event.preventDefault();
 
     const target = event.currentTarget as HTMLElement;
-    const url = target.dataset.href;
 
-    if (!url) return;
+    const confirmMessage = target.dataset.confirmMessage;
+    if (confirmMessage && !window.confirm(confirmMessage)) {
+      return;
+    }
 
-    if (this.hasUnsavedChanges()) {
-      // eslint-disable-next-line no-alert
-      if (window.confirm(this.unsavedChangesConfirmationMessageValue)) {
-        this.sendRequest(url);
+    const url = new URL(target.dataset.href!, window.location.origin);
+    const method = target.dataset.method! || 'PUT';
+
+    appendCollapsedState(url.searchParams);
+
+    this.handleClick(url.toString(), method);
+  }
+
+  private handleClick(url:string, method:string):void {
+    if (hasUnsavedChanges()) {
+      if (window.confirm(I18n.t('js.text_are_you_sure_to_cancel'))) {
+        this.sendRequest(url, method);
       }
     } else {
-      this.sendRequest(url);
+      this.sendRequest(url, method);
     }
   }
 
-  private hasUnsavedChanges():boolean {
-    const textInputs = Array.from(document.querySelectorAll('input[type="text"], input[type="number"]'));
-    const allTextSaved = textInputs.every((input) => (input as HTMLInputElement).value.trim().length === 0);
-
-    return !allTextSaved || window.OpenProject.pageWasEdited;
-  }
-
   private beforeUnloadHandler(event:BeforeUnloadEvent):void {
-    if (this.hasUnsavedChanges()) {
+    if (hasUnsavedChanges()) {
       event.preventDefault();
     }
   }
 
-  private sendRequest(url:string):void {
+  private sendRequest(url:string, method:string):void {
     void this.turboRequests.request(url, {
-      method: 'PUT',
+      method: method,
       headers: {
         'X-CSRF-Token': this.csrfToken,
         Accept: 'text/vnd.turbo-stream.html',
       },
     });
+  }
+
+  disconnect():void {
+    window.removeEventListener('beforeunload', this.boundBeforeUnloadHandler);
+    super.disconnect();
   }
 }
