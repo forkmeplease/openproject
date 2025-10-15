@@ -114,6 +114,12 @@ module Components
                             results_selector: "#user-invitation-dialog .ng-dropdown-panel")
       end
 
+      def project_search(query)
+        search_autocomplete(modal_element.find("opce-project-autocompleter"),
+                            query:,
+                            results_selector: "#user-invitation-dialog .ng-dropdown-panel")
+      end
+
       def role_step(next_step: true)
         autocomplete "opce-autocompleter", role.name
 
@@ -184,8 +190,7 @@ module Components
 
       def expect_error_displayed(message)
         within_modal do
-          expect(page)
-            .to have_css(".spot-form-field--error", text: message)
+          expect(page).to have_text(message)
         end
       end
 

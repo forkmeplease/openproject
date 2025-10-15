@@ -76,7 +76,6 @@ module Users::Invitation::PrincipalStep
         end
       end
 
-
       f.text_area(
         name: :message,
         label: I18n.t("users.invite_user_modal.message.label"),
@@ -85,7 +84,6 @@ module Users::Invitation::PrincipalStep
         style: "resize: none"
       )
     end
-
 
     def name_label
       if model.principal_type == "User"

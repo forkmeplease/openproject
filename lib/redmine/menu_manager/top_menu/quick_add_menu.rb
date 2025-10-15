@@ -58,7 +58,7 @@ module Redmine::MenuManager::TopMenu::QuickAddMenu
     end
   end
 
-  def add_first_level_items(menu)
+  def add_first_level_items(menu) # rubocop:disable Metrics/AbcSize
     first_level_menu_items_for(:quick_add_menu, @project).each do |item|
       html_options = item.html_options
       html_options[:aria] = { labelledby: id_for_name(item.caption) } if html_options[:aria].blank?

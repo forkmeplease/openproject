@@ -32,11 +32,12 @@ class Users::InviteController < ApplicationController
   include MemberHelper
 
   authorize_with_permission :manage_members, global: true
+  before_action :set_project, only: :start_dialog
   before_action :invite_user, only: :step, if: -> { params[:step] == "principal" }
 
   def start_dialog
     respond_with_dialog(
-      Users::Invitation::DialogComponent.new(form_model)
+      Users::Invitation::DialogComponent.new(form_model, project: @project)
     )
   end
 
@@ -125,7 +126,13 @@ class Users::InviteController < ApplicationController
   end
 
   def form_model
-    @form_model ||= Users::Invitation::FormModel.new(form_model_params)
+    @form_model ||= Users::Invitation::FormModel.new(form_model_params).tap do |model|
+      model.project = @project if @project && current_user.allowed_in_project?(:manage_members, @project)
+    end
+  end
+
+  def set_project
+    @project = Project.find(params[:project_id]) if params[:project_id].present?
   end
 
   def dialog_title

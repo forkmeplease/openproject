@@ -38,5 +38,10 @@ module Users::Invitation
     include OpenProject::FormTagHelper
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
+
+    def initialize(model, project: nil)
+      super
+      @project = project
+    end
   end
 end

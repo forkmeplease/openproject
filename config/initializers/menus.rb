@@ -113,7 +113,7 @@ Redmine::MenuManager.map :quick_add_menu do |menu|
 
   menu.push :invite_user,
             ->(project) {
-              { controller: "/users/invite", action: :start_dialog, "user_invitation[project_id]": project&.id }
+              { controller: "/users/invite", action: :start_dialog, project_id: project&.id }
             },
             caption: :label_invite_user,
             icon: "person-add",
