@@ -40,10 +40,20 @@ module Users::Invitation
     attribute :message, :text, default: nil
 
     validates :project_id, presence: true, on: :project_step
-    validates :principal_type, inclusion: { in: %w[User PlaceholderUser Group] }, on: :project_step
+    validates :principal_type,
+              inclusion: { in: ->(*) { available_principal_types } },
+              on: :project_step
 
     validates :id_or_email, presence: true, on: :principal_step
     validates :role_id, presence: true, on: :principal_step
+
+    def self.available_principal_types
+      if EnterpriseToken.allows_to?(:placeholder_users)
+        %w[User PlaceholderUser Group]
+      else
+        %w[User Group]
+      end
+    end
 
     def project_name
       project&.name || project_id

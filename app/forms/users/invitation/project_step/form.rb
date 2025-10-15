@@ -57,18 +57,34 @@ module Users::Invitation::ProjectStep
         name: :principal_type,
         visually_hide_label: true
       ) do |radio_group|
-        radio_group.radio_button(value: "User",
-                                 checked: model.principal_type.nil? || model.principal_type == "User",
-                                 label: User.model_name.human,
-                                 caption: I18n.t("users.invite_user_modal.type.user.description"))
-        radio_group.radio_button(value: "Group",
-                                 checked: model.principal_type == "Group",
-                                 label: Group.model_name.human,
-                                 caption: I18n.t("users.invite_user_modal.type.group.description"))
-        radio_group.radio_button(value: "PlaceholderUser",
-                                 checked: model.principal_type == "PlaceholderUser",
-                                 label: PlaceholderUser.model_name.human,
-                                 caption: I18n.t("users.invite_user_modal.type.placeholder_user.description"))
+        radio_group.radio_button(
+          value: "User",
+          checked: model.principal_type.nil? || model.principal_type == "User",
+          label: User.model_name.human,
+          caption: I18n.t("users.invite_user_modal.type.user.description")
+        )
+        radio_group.radio_button(
+          value: "Group",
+          checked: model.principal_type == "Group",
+          label: Group.model_name.human,
+          caption: I18n.t("users.invite_user_modal.type.group.description")
+        )
+
+        radio_group.radio_button(
+          value: "PlaceholderUser",
+          disabled: !EnterpriseToken.allows_to?(:placeholder_users),
+          checked: model.principal_type == "PlaceholderUser",
+          label: PlaceholderUser.model_name.human,
+          caption: I18n.t("users.invite_user_modal.type.placeholder_user.description")
+        )
+      end
+
+      unless EnterpriseToken.allows_to?(:placeholder_users)
+        f.html_content do
+          render(EnterpriseEdition::BannerComponent.new(:placeholder_users,
+                                                        dismissable: true,
+                                                        dismiss_key: "invitation_placeholder_users"))
+        end
       end
     end
   end
