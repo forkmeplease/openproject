@@ -29,11 +29,11 @@
 import { ApplicationController } from 'stimulus-use';
 import { useMutation } from 'stimulus-use';
 
-const BLANK_LINK_QUERY = 'a[target="_blank"]';
+const EXTERNAL_LINK_QUERY = 'a[href^="http"]';
 const BLANK_LINK_DESCRIPTION_ID = 'open-blank-target-link-description';
 
 const isElement = (node:Node):node is Element => node.nodeType === Node.ELEMENT_NODE;
-const isBlankLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(BLANK_LINK_QUERY);
+const isExternalLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(EXTERNAL_LINK_QUERY) && (elem as HTMLAnchorElement).hostname !== window.location.hostname;
 
 /**
  * Dynamically observes all links in the page, including those added later via Turbo frames or DOM mutations.
@@ -52,19 +52,14 @@ const isBlankLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(BLA
  */
 export default class ExternalLinksController extends ApplicationController {
   connect() {
-    useMutation(this, { attributes: true, childList: true, subtree: true, attributeFilter: ['target'] });
+    useMutation(this, { attributes: true, childList: true, subtree: true, attributeFilter: ['href'] });
 
     // Initial pass: handle existing blank links (accessibility)
-    document.querySelectorAll(BLANK_LINK_QUERY).forEach(applyLinkDescription);
-
-    // Handle _top links that lead to a different domain
-    updateExternalTopLinks(document);
-
-    // Watch for dynamically added links
-    const observer = new MutationObserver(() => {
-      updateExternalTopLinks(document);
+    document.querySelectorAll<HTMLAnchorElement>(EXTERNAL_LINK_QUERY).forEach((link)=>{
+      if (link.hostname !== window.location.hostname) {
+        updateExternalLink(link);
+      }
     });
-    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   mutate(mutations:MutationRecord[]) {
@@ -72,10 +67,14 @@ export default class ExternalLinksController extends ApplicationController {
       mutation.addedNodes.forEach((node) => {
         if (isElement(node)) {
           // Added element itself is a blank link
-          if (isBlankLink(node)) applyLinkDescription(node);
+          if (isExternalLink(node)) updateExternalLink(node);
 
           // Added sub-trees
-          node.querySelectorAll(BLANK_LINK_QUERY).forEach(applyLinkDescription);
+          node.querySelectorAll<HTMLAnchorElement>(EXTERNAL_LINK_QUERY).forEach((link)=>{
+            if (link.hostname !== window.location.hostname) {
+              updateExternalLink(link);
+            }
+          });
         }
       });
 
@@ -84,35 +83,22 @@ export default class ExternalLinksController extends ApplicationController {
         mutation.type === 'attributes' &&
         mutation.attributeName === 'target' &&
         isElement(mutation.target) &&
-        isBlankLink(mutation.target)
+        isExternalLink(mutation.target)
       ) {
-        applyLinkDescription(mutation.target);
+        updateExternalLink(mutation.target);
       }
     });
   }
 }
 
-function applyLinkDescription(link:HTMLAnchorElement) {
+function updateExternalLink(link:HTMLAnchorElement) {
   const existingValue = link.getAttribute('aria-describedby');
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+
   if (!existingValue) {
     link.setAttribute('aria-describedby', BLANK_LINK_DESCRIPTION_ID);
   } else if (!existingValue.split(/\s+/).includes(BLANK_LINK_DESCRIPTION_ID)) {
     link.setAttribute('aria-describedby', `${existingValue} ${BLANK_LINK_DESCRIPTION_ID}`);
   }
-}
-
-// Only change links that have target="_top" and go to another domain
-function updateExternalTopLinks(root:Document | Element) {
-  const topLinks = root.querySelectorAll<HTMLAnchorElement>('a[target="_top"]');
-  topLinks.forEach((link) => {
-    try {
-      const isExternal = link.hostname && link.hostname !== window.location.hostname;
-      if (isExternal) {
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-      }
-    } catch {
-      // ignore malformed URLs
-    }
-  });
 }
