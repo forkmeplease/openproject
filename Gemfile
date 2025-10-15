@@ -134,7 +134,7 @@ gem "rack-protection", "~> 3.2.0"
 # It allows whitelisting, blacklisting, throttling, and tracking based
 # on arbitrary properties of the request.
 # https://github.com/kickstarter/rack-attack
-gem "rack-attack", "~> 6.7.0"
+gem "rack-attack", "~> 6.8.0"
 
 # Browser detection for incompatibility checks
 gem "browser", "~> 6.2.0"
