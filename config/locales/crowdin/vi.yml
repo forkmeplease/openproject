@@ -1689,6 +1689,7 @@ vi:
       group: "Nhóm"
       issue_priority:
         other: "Priorities"
+      meeting_participant: "Meeting participant"
       member: "Thành viên"
       news: "Tin tức"
       notification:
@@ -2514,6 +2515,9 @@ vi:
       selected: "Selected"
     include_sub_items: "Include sub-items"
     no_results_text: "No results"
+  toggle_switch:
+    label_on: "On"
+    label_off: "Off"
   general_csv_decimal_separator: "."
   general_csv_encoding: "UTF-8"
   general_csv_separator: ","
@@ -2913,7 +2917,7 @@ vi:
   label_filter_add: "Thêm bộ lọc"
   label_filter_by: "Filter by"
   label_filter_any_name_attribute: "Name attributes"
-  label_filter_plural: "Các bộ lọc"
+  label_filter_plural: "Bộ lọc"
   label_filters_toggle: "Hiển thị/ẩn bộ lọc"
   label_float: "Số thực"
   label_folder: "Thư mục"

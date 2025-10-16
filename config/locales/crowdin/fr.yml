@@ -1701,6 +1701,7 @@ fr:
       issue_priority:
         one: "Priorité"
         other: "Priorités"
+      meeting_participant: "Participant à la réunion"
       member: "Membre"
       news: "Actualités"
       notification:
@@ -2557,6 +2558,9 @@ fr:
       selected: "Sélectionné"
     include_sub_items: "Inclure les sous-projets"
     no_results_text: "Aucun résultat"
+  toggle_switch:
+    label_on: "Activé"
+    label_off: "Désactiver"
   general_csv_decimal_separator: ","
   general_csv_encoding: "UTF-8"
   general_csv_separator: "."
