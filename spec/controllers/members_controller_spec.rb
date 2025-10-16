@@ -290,8 +290,8 @@ RSpec.describe MembersController do
 
       it "adds the existing user as a member instead of creating a new invitation" do
         expect { post :create, params: }
-          .to not_change(User, :count).by(0)
-          .and change(Member, :count).by(1)
+          .to change(Member, :count).by(1)
+          .and change(User, :count).by(0)
 
         expect(response).to redirect_to "/projects/pet_project/members?status=all"
 

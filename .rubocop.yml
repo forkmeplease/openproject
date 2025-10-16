@@ -279,6 +279,11 @@ RSpec/LeadingSubject:
 RSpec/NamedSubject:
   Enabled: false
 
+# expect not_to change is not working as expected
+# if you chain it with multiple expected changes
+RSpec/ChangeByZero:
+  Enabled: false
+
 RSpec/ContextWording:
   Prefixes:
     - and
