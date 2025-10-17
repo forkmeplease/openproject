@@ -162,6 +162,11 @@ zh-CN:
         expired: "已于 %{date} 到期"
         revoked: "已于 %{date} 撤销"
         title: "访问令牌表"
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "登录和注册"
   announcements:

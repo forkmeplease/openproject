@@ -162,6 +162,11 @@ zh-TW:
         expired: "於 %{date} 過期"
         revoked: "於 %{date} 撤銷"
         title: "存取令牌列表"
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "登入及註冊"
   announcements:

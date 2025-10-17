@@ -162,6 +162,11 @@ ru:
         expired: "Истекает %{date}"
         revoked: "Отменено %{date}"
         title: "Таблица токенов доступа"
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "Войти и зарегистрироваться"
   announcements:
@@ -882,7 +887,7 @@ ru:
     label_edit_x: "Редактировать %{x}"
     label_add_description: "Добавить описание"
     lag:
-      subject: "Задержка"
+      subject: "Отставание"
       caption: |-
         Минимальное количество рабочих дней, которое должно быть между двумя пакетами работ.
         Оно также может быть отрицательным.
@@ -1160,7 +1165,7 @@ ru:
         include_subprojects: "Включить подпроекты"
         results: "Результаты"
       relation:
-        lag: "Задержка"
+        lag: "Отставание"
         from: "Похожий пакет работ"
         to: "Похожий пакет работ"
         relation_type: "Тип отношения"

@@ -162,6 +162,11 @@ uk:
         expired: "Термін дії минув %{date}"
         revoked: "Анульовано %{date}"
         title: "Таблиця маркерів доступу"
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "Вхід і реєстрація"
   announcements:

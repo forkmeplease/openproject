@@ -162,6 +162,11 @@ ko:
         expired: "%{date}에 만료됨"
         revoked: "%{date}에 취소됨"
         title: "액세스 토큰 테이블"
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "로그인 및 등록"
   announcements:

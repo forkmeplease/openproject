@@ -162,6 +162,11 @@ it:
         expired: "Scaduto il %{date}"
         revoked: "Revocato il %{date}"
         title: "Tabella dei token di accesso"
+    workflows:
+      tabs:
+        default_transitions: "Default transitions"
+        user_author: "User is author"
+        user_assignee: "User is assignee"
   authentication:
     login_and_registration: "Accesso e registrazione"
   announcements:
