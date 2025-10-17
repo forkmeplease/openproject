@@ -107,7 +107,7 @@
     "@mantine/core": "^8.3.5",
     "@mantine/hooks": "^8.3.5",
     "@mantine/utils": "^6.0.22",
-    "@ng-select/ng-option-highlight": "^20.3.0",
+    "@ng-select/ng-option-highlight": "^20.3.1",
     "@ng-select/ng-select": "^20.1.0",
     "@ngneat/content-loader": "^7.0.0",
     "@ngx-formly/core": "^6.1.4",
