@@ -56,7 +56,10 @@ export default class ProjectCustomFieldEditController extends Controller {
     // Check if the element is or is inside an interactive element.
     let current = element;
     while (current && current !== this.element) {
-      if (current.matches('button, a')) {
+      // Mark dialogs as interactive elements so that they can be ignored.
+      // They can be rendered inside the project custom field edit container,
+      // as part of the attribute component.
+      if (current.matches('button, a, dialog')) {
         return true;
       }
       current = current.parentElement!;
