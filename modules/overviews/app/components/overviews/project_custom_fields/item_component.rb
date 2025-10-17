@@ -62,20 +62,43 @@ module Overviews
           User.current.allowed_in_project?(:edit_project_attributes, @project)
       end
 
-      def authorized_edit_link
+      def authorized_edit_wrapper
         if allowed_to_edit?
-          Primer::Beta::Link.new(
-            href: edit_project_custom_field_path(project_id: @project.id, id: @project_custom_field.id),
-            classes: "hover-input",
-            data: { controller: "async-dialog" },
-            aria: { label: I18n.t(:label_edit) },
+          Primer::Beta::Text.new(
+            tag: :div,
+            classes: "project-custom-field-clickable",
+            data: {
+              controller: "project-custom-field-edit async-dialog",
+              "project-custom-field-edit-url-value": edit_project_custom_field_path(project_id: @project.id,
+                                                                                    id: @project_custom_field.id),
+              action: "click->project-custom-field-edit#openEditDialog " \
+                      "keydown.enter->project-custom-field-edit#openEditDialog " \
+                      "keydown.space->project-custom-field-edit#openEditDialog " \
+                      "project-custom-field-edit:open-dialog->async-dialog#handleOpenDialog"
+            },
+            aria: {
+              label: [
+                I18n.t(:label_edit_x, x: @project_custom_field.name),
+                I18n.t(:label_value_x, x: accessible_value_text)
+              ].join(", ")
+            },
+            role: "button",
+            tabindex: 0,
             test_selector: "project-custom-field-edit-button-#{@project_custom_field.id}"
           )
         else
           Primer::Beta::Text.new(
             tag: :div,
             id: @tooltip_id,
-            classes: "project-custom-field-non-editable"
+            classes: "project-custom-field-non-editable",
+            aria: {
+              disabled: true,
+              label: [
+                @project_custom_field.name,
+                I18n.t(:label_value_x, x: accessible_value_text)
+              ].join(", ")
+            },
+            tabindex: 0
           )
         end
       end
@@ -157,6 +180,14 @@ module Overviews
         render(Primer::Beta::Link.new(href:, rel: "noopener noreferrer", target:)) do
           href
         end
+      end
+
+      def accessible_value_text
+        return I18n.t("placeholders.default") if not_set?
+
+        @project_custom_field_values.map do |cf_value|
+          format_value(cf_value.value, @project_custom_field)
+        end.join(", ")
       end
     end
   end

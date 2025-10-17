@@ -3482,6 +3482,7 @@ en:
   label_user_search: "Search for user"
   label_user_settings: "User settings"
   label_users_settings: "Users settings"
+  label_value_x: "Value: %{x}"
   label_version_new: "New version"
   label_version_edit: "Edit version"
   label_version_plural: "Versions"
