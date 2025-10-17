@@ -33,7 +33,7 @@ import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class OpInviteUserDialogService implements OnDestroy {
   public close = new EventEmitter<HalResource|HalResource[]>();
 

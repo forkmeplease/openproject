@@ -1211,6 +1211,7 @@ en:
 
     invite_user_modal:
       invite: "Invite"
+      placeholder_add_tag: "Create placeholder user"
 
     exclusion_info:
       modal:

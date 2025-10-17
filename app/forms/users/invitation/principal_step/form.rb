@@ -44,6 +44,7 @@ module Users::Invitation::PrincipalStep
         autocomplete_options: {
           defaultData: true,
           component: "opce-members-autocompleter",
+          principalType: model.principal_type.underscore,
           model: selected_principal,
           url: autocomplete_for_member_project_members_path(model.project_id, format: :json, type: model.principal_type),
           focusDirectly: false,
@@ -57,7 +58,6 @@ module Users::Invitation::PrincipalStep
         name: :role_id,
         required: true,
         include_blank: false,
-        input_width: :medium,
         label: Role.model_name.human,
         caption: link_translate("users.invite_user_modal.role.description",
                                 links: { docs_url: %i[sysadmin_docs roles_and_permissions] }),

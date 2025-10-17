@@ -8,7 +8,7 @@
     )
   ) do |dialog|
     dialog.with_header(variant: :large)
-    dialog.with_body do
+    dialog.with_body(classes: "Overlay-body_autocomplete_height") do
       component_collection do |body|
         if @project && !User.current.allowed_in_project?(:manage_members, @project)
           body.with_component(
