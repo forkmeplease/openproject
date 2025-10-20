@@ -37,7 +37,7 @@ import { OpColorMode } from 'core-app/core/setup/globals/theme-utils';
 import { getDefaultOpenProjectSlashMenuItems, initOpenProjectApi, openProjectWorkPackageBlockSpec } from 'op-blocknote-extensions';
 import { useEffect, useState } from 'react';
 import * as Y from 'yjs';
-import { uploadFileToServer, uploadFileToStorage } from './blocknote/file_uploads';
+import { IUploadFile } from 'core-app/core/upload/upload.service';
 
 export interface OpBlockNoteContainerProps {
   inputField:HTMLInputElement;
@@ -133,15 +133,17 @@ export default function OpBlockNoteContainer({ inputField,
   const editor = useCreateBlockNote(editorParams, [activeUser]);
   type EditorType = typeof editor;
 
-  async function uploadFile(file: File) {
-    let newAttachmentUrl = '';
-    if (attachmentsUploadUrl.endsWith('prepare')) {
-      newAttachmentUrl = await uploadFileToStorage(file, attachmentsUploadUrl);
-    } else {
-      newAttachmentUrl = await uploadFileToServer(file, attachmentsUploadUrl);
-    }
+  const fileToIUploadFile = (file:File):IUploadFile => ({
+    file: file
+  });
 
-    return (newAttachmentUrl);
+  async function uploadFile(file:File) {
+    const pluginContext = await window.OpenProject.getPluginContext();
+    const service = pluginContext.services.attachmentsResourceService;
+    const iUploadFile = fileToIUploadFile(file);
+    const result = await service.addAttachments('documents', attachmentsUploadUrl, [iUploadFile]).toPromise();
+
+    return result?.[0]._links.downloadLocation.href ?? '';
   }
 
   const getCustomSlashMenuItems = (editor:EditorType) => {
