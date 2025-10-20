@@ -84,11 +84,10 @@ RSpec.describe "Meetings CRUD",
     end
 
     meetings_page.click_create
+    expect_and_dismiss_flash(type: :success, message: I18n.t(:notice_successful_create))
   end
 
   it "can create a meeting and add agenda items" do
-    expect_and_dismiss_flash(type: :success, message: "Successful creation")
-
     # Can add and edit a single item
     show_page.add_agenda_item do
       fill_in "Title", with: "My agenda item"
@@ -166,37 +165,33 @@ RSpec.describe "Meetings CRUD",
     show_page.expect_item_edit_field_error(wp_item, "Work package can't be blank.")
     show_page.cancel_edit_form(wp_item)
 
-    # Keeping the editing state of an agenda item while modifying other items
+    # Shows a confirmation dialog when trying to reorder while editing an agenda item
+    show_page.assert_agenda_order! "Updated title", "Second", "Important task"
+
     show_page.edit_agenda_item(second, save: false) do
       fill_in "Title", with: "Second edited"
     end
 
-    show_page.select_action(item, I18n.t(:label_sort_lowest))
-    show_page.assert_agenda_order! "Important task", "Updated title"
-
-    show_page.add_agenda_item do
-      fill_in "Title", with: "My agenda item"
-      fill_in "Duration", with: "25"
+    dismiss_confirm do
+      show_page.select_action(wp_item, I18n.t(:label_sort_highest))
     end
 
-    show_page.expect_agenda_item title: "My agenda item"
-    my_item = MeetingAgendaItem.find_by!(title: "My agenda item")
+    show_page.assert_agenda_order! "Updated title", "Important task"
+    show_page.expect_item_edit_form(second, visible: true)
 
-    show_page.edit_agenda_item(my_item) do
-      fill_in "Title", with: "My agenda item edited"
+    # Accepting the confirmation reorders items and closes the edit state
+    accept_confirm do
+      show_page.select_action(wp_item, I18n.t(:label_sort_highest))
     end
 
-    show_page.remove_agenda_item my_item
-
-    show_page.expect_item_edit_form(second)
-    show_page.expect_item_edit_title(second, "Second edited")
-    show_page.cancel_edit_form(second)
+    show_page.assert_agenda_order! "Important task", "Updated title", "Second"
+    show_page.expect_item_edit_form(second, visible: false)
 
     # user can see actions
     expect(page).to have_css("#meeting-agenda-items-new-button-component")
     expect(page).to have_test_selector("op-meeting-agenda-actions", count: 3)
 
-    # other_use can view and copy links, but not edit
+    # other_use can view and copy links, but not edit or move
     login_as other_user
     show_page.visit!
 
@@ -262,8 +257,6 @@ RSpec.describe "Meetings CRUD",
   end
 
   it "shows an error toast trying to update an outdated item" do
-    expect_flash(type: :success, message: "Successful creation")
-
     # Can add and edit a single item
     show_page.add_agenda_item do
       fill_in "Title", with: "My agenda item"
@@ -285,8 +278,6 @@ RSpec.describe "Meetings CRUD",
   end
 
   it "can copy the meeting via the dialog form" do
-    expect_flash(type: :success, message: "Successful creation")
-
     show_page.add_agenda_item do
       fill_in "Title", with: "My agenda item"
       fill_in "Duration", with: "25"
@@ -312,7 +303,7 @@ RSpec.describe "Meetings CRUD",
       click_on("op-meetings-header-action-trigger")
       click_on "Copy"
       # dynamically wait for the modal to be loaded
-      expect(page).to have_text("Copy meeting")
+      show_page.expect_modal("Copy meeting")
     end
 
     fill_in "Title", with: ""
@@ -322,6 +313,7 @@ RSpec.describe "Meetings CRUD",
     expect(page).to have_content "Title can't be blank."
     fill_in "Title", with: "Some title"
     click_on "Create meeting"
+    expect_and_dismiss_flash(type: :success, message: I18n.t(:notice_successful_create))
 
     new_meeting = Meeting.last
     copied_meeting_page = Pages::Meetings::Show.new(new_meeting)
@@ -372,8 +364,6 @@ RSpec.describe "Meetings CRUD",
 
     context "when starting with empty sections" do
       it "can add, edit and delete sections" do
-        expect_flash(type: :success, message: "Successful creation")
-
         # create the first section
         show_page.add_section do
           fill_in "Title", with: "First section"

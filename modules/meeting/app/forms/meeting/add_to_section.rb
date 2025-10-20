@@ -33,16 +33,16 @@ class Meeting::AddToSection < ApplicationForm
     meeting_form.autocompleter(
       name: :meeting_section_id,
       label: I18n.t("label_add_work_package_to_meeting_section_label"),
-      caption: I18n.t("label_section_selection_caption"),
-      input_width: :large,
+      caption:,
+      input_width:,
       autocomplete_options: {
         decorated: true,
         defaultData: false,
         multiple: false,
-        focus_directly: false,
         disabled: meeting.blank?,
         placeholder: placeholder_text,
-        append_to: append_to_container
+        append_to: append_to_container,
+        openDirectly: @open_directly
       }
     ) do |select|
       items.each do |item|
@@ -55,10 +55,13 @@ class Meeting::AddToSection < ApplicationForm
     end
   end
 
-  def initialize(wrapper_id: nil)
+  def initialize(wrapper_id: nil, occurrence: nil, item: nil, open_directly: false)
     super()
 
     @wrapper_id = wrapper_id
+    @occurrence = occurrence
+    @selected_section = item&.meeting_section
+    @open_directly = open_directly
   end
 
   private
@@ -69,10 +72,12 @@ class Meeting::AddToSection < ApplicationForm
     @wrapper_id.nil? ? "body" : "##{@wrapper_id}"
   end
 
-  def items
+  def items # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     items = []
-    items.concat(meeting.sections) unless meeting.blank? || any_non_backlog_sections?
-    items.push(meeting.backlog) if meeting.present?
+    items.concat(meeting.sections) if meeting.present? && !meeting.templated?
+    items.concat(@occurrence.sections) if @occurrence.present? && @occurrence != meeting
+    items.push(meeting.backlog) if meeting.present? && meeting.backlog.present?
+    items.reject! { |i| i == @selected_section } if @selected_section.present?
 
     items
   end
@@ -97,10 +102,18 @@ class Meeting::AddToSection < ApplicationForm
   end
 
   def any_non_backlog_sections?
-    meeting.sections.none? || (meeting.sections.one? && meeting.sections.first.title.blank?)
+    meeting.sections.none? || (meeting.sections.many? && meeting.sections.first.title.blank?)
   end
 
   def placeholder_text
     I18n.t("placeholder_section_select_meeting_first") if meeting.blank?
+  end
+
+  def caption
+    I18n.t("label_section_selection_caption") if @occurrence.nil?
+  end
+
+  def input_width
+    @occurrence.present? ? nil : :large
   end
 end

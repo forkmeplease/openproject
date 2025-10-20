@@ -31,6 +31,60 @@
 require "rails_helper"
 
 RSpec.describe Grids::WidgetController do
+  describe "project_status routing" do
+    describe "GET #show" do
+      it do
+        expect(get("/projects/my-project/widgets/project_status"))
+          .to route_to(
+            controller: "grids/widgets/project_statuses", action: "show", project_id: "my-project"
+          )
+      end
+    end
+
+    describe "PUT/PATCH #update" do
+      it do
+        expect(put("/projects/my-project/widgets/project_status"))
+          .to route_to(
+            controller: "grids/widgets/project_statuses", action: "update", project_id: "my-project"
+          )
+      end
+
+      it do
+        expect(patch("/projects/my-project/widgets/project_status"))
+          .to route_to(
+            controller: "grids/widgets/project_statuses", action: "update", project_id: "my-project"
+          )
+      end
+    end
+  end
+
+  describe "project_status named routing" do
+    describe "GET #show" do
+      it do
+        expect(get(project_widgets_project_status_path("my-project")))
+          .to route_to(
+            controller: "grids/widgets/project_statuses", action: "show", project_id: "my-project"
+          )
+      end
+    end
+
+    describe "PUT/PATCH #update" do
+      it do
+        expect(put(project_widgets_project_status_path("my-project")))
+          .to route_to(
+            controller: "grids/widgets/project_statuses", action: "update", project_id: "my-project"
+          )
+      end
+
+      it do
+        expect(patch(project_widgets_project_status_path("my-project")))
+          .to route_to(
+            controller: "grids/widgets/project_statuses", action: "update", project_id: "my-project"
+          )
+      end
+    end
+  end
+
   describe "news routing" do
     describe "GET #show" do
       context "for root" do
@@ -63,6 +117,42 @@ RSpec.describe Grids::WidgetController do
           expect(get(project_widgets_news_path("my-project")))
             .to route_to(controller: "grids/widgets/news", action: "show", project_id: "my-project")
         end
+      end
+    end
+  end
+
+  describe "subitems routing" do
+    describe "GET #show" do
+      it do
+        expect(get("/projects/my-project/widgets/subitems"))
+          .to route_to(controller: "grids/widgets/subitems", action: "show", project_id: "my-project")
+      end
+    end
+  end
+
+  describe "subitems named routing" do
+    describe "GET #show" do
+      it do
+        expect(get(project_widgets_subitems_path("my-project")))
+          .to route_to(controller: "grids/widgets/subitems", action: "show", project_id: "my-project")
+      end
+    end
+  end
+
+  describe "members routing" do
+    describe "GET #show" do
+      it do
+        expect(get("/projects/my-project/widgets/members"))
+          .to route_to(controller: "grids/widgets/members", action: "show", project_id: "my-project")
+      end
+    end
+  end
+
+  describe "members named routing" do
+    describe "GET #show" do
+      it do
+        expect(get(project_widgets_members_path("my-project")))
+          .to route_to(controller: "grids/widgets/members", action: "show", project_id: "my-project")
       end
     end
   end
