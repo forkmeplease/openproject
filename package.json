@@ -24,8 +24,6 @@
     "@blocknote/server-util": "^0.37.0",
     "@hocuspocus/extension-sqlite": "^3.2.3",
     "@hocuspocus/server": "^3.2.3",
-    "dotenv": "^17.2.2",
-    "fast-jwt": "^6.0.2",
     "tsx": "^4.20.5"
   },
   "devDependencies": {
