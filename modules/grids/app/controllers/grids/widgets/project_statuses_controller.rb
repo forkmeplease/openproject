@@ -28,16 +28,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+class Grids::Widgets::ProjectStatusesController < Grids::WidgetController
+  def update
+    call = Projects::UpdateService
+      .new(model: @project, user: current_user)
+      .call(permitted_params.project_status)
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
-
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+    if call.success?
+      @project = call.result
+      update_via_turbo_stream(component: Grids::Widgets::ProjectStatus.new(@project, current_user:))
+      render_success_flash_message_via_turbo_stream(message: t(:notice_successful_update))
+      respond_with_turbo_streams
+    else
+      respond_with_flash_error(message: t(:notice_unsuccessful_update_with_reason, reason: call.message))
     end
   end
 end

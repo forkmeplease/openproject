@@ -28,16 +28,23 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+require "rails_helper"
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+RSpec.describe Grids::Widgets::SubitemsController do
+  shared_let(:project) { create(:project) }
+  shared_let(:user) { create(:user, member_with_permissions: { project => %i[view_project] }) }
+  current_user { user }
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+  describe "GET #show" do
+    context "with project" do
+      before do
+        get :show, params: { project_id: project }
+      end
+
+      it "renders show template", :aggregate_failures do
+        expect(response).to be_successful
+        expect(response).to render_template "show"
+      end
     end
   end
 end

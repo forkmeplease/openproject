@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,18 +26,62 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module Constraints
-  class ProjectIdentifier
-    REGEX = /(?!#{Regexp.union(Project::RESERVED_IDENTIFIERS)}\z)[\w-]+/
+module Grids
+  module Widgets
+    class Subitems < Grids::WidgetComponent
+      include OpPrimer::ComponentHelpers
+      include Rails.application.routes.url_helpers
 
-    REGEX_ANCHORED = /\A#{REGEX}\z/
-    private_constant :REGEX_ANCHORED
+      SUBITEMS_LIMIT = 10
+      private_constant :SUBITEMS_LIMIT
 
-    def self.matches?(request)
-      project_id = request.path_parameters[:project_id] || request.params[:project_id]
-      REGEX_ANCHORED === project_id
+      param :project
+
+      option :limit, default: -> { SUBITEMS_LIMIT }
+
+      def title
+        t(".title")
+      end
+
+      def displayed_subitems
+        subitems_with_more.first
+      end
+
+      def has_more_subitems?
+        subitems_with_more.last
+      end
+
+      def has_no_subitems?
+        displayed_subitems.empty?
+      end
+
+      def wrapper_arguments
+        { full_width: true }
+      end
+
+      private
+
+      def subitems_with_more
+        @subitems_with_more ||= project.children
+          .visible(current_user)
+          .unscope(:order)
+          .newest
+          .extending(FinderMethods::WithMore)
+          .first_with_more(limit)
+      end
+
+      def view_all_subitems_path
+        @view_all_subitems_path ||= projects_path(filters: project_query_filters)
+      end
+
+      def project_query_filters
+        [
+          { active: { operator: "=", values: ["t"] } },
+          { parent_id: { operator: "=", values: [project.id] } }
+        ].to_json
+      end
     end
   end
 end
