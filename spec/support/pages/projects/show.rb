@@ -81,11 +81,19 @@ module Pages
         within_project_attributes_sidebar do
           scroll_to_element(page.find("[data-test-selector='project-custom-field-#{custom_field.id}']"))
           within_custom_field_container(custom_field) do
-            page.find("[data-test-selector='project-custom-field-edit-button-#{custom_field.id}']").click
+            # Link and user type custom fields might contain a clickable link inside the edit container.
+            # Use JavaScript to directly trigger the click event on the container to avoid nested links.
+            # Once we create the project custom field inline editing, this can be reverted to a normal
+            # capybara click method call.
+            page.execute_script(
+              "document.querySelector('[data-test-selector=\"project-custom-field-edit-button-#{custom_field.id}\"]').click()"
+            )
           end
         end
 
         wait_for_size_animation_completion("[data-test-selector='async-dialog-content']")
+
+        Components::Projects::ProjectCustomFields::EditDialog.new(project, custom_field)
       end
 
       def open_edit_dialog_for_life_cycle(life_cycle, wait_angular: false)

@@ -1,7 +1,7 @@
 <%=
   render(
     Primer::Alpha::Dialog.new(
-      title: @project_custom_field.name,
+      title: t("label_edit_attribute"),
       size: :medium_portrait,
       id: "edit-project-custom-field-dialog-#{@project_custom_field.id}"
     )
