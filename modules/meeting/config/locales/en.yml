@@ -593,6 +593,7 @@ en:
   label_meeting_details_edit: "Edit meeting details"
 
   label_meeting_state: "Meeting status"
+  label_meeting_state_draft: "Draft"
   label_meeting_state_open: "Open"
   label_meeting_state_closed: "Closed"
   label_meeting_state_agenda_created: "Agenda created"
@@ -603,6 +604,8 @@ en:
   label_meeting_reopen_action: "Reopen meeting"
   label_meeting_close_action: "Close meeting"
   label_meeting_in_progress_action: "Start meeting"
+  label_meeting_open_action: "Open meeting"
+  text_meeting_draft_description: "Prepare your agenda in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
   text_meeting_open_description: "You can add/remove agenda items and participants. Once the agenda is ready, mark it as in progress to document outcomes."
   text_meeting_closed_description: "This meeting is closed. You cannot add/remove agenda items anymore."
   text_meeting_in_progress_description: "You can modify the agenda, document outcomes for each item and track attendance for participants. Once the meeting is complete, you can mark it as closed to lock it."
