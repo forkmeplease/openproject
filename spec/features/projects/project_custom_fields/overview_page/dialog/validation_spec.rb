@@ -89,21 +89,21 @@ RSpec.describe "Edit project custom fields on project overview page", :js, :sele
 
         context "with select fields" do
           context "with version selected" do
-            let(:invalid_custom_field) { list_project_custom_field }
+            let(:invalid_custom_field) { version_project_custom_field }
             let(:invalid_field) { FormFields::Primerized::AutocompleteField.new(invalid_custom_field) }
 
             it_behaves_like "keeps the cleared value"
           end
 
           context "with user selected" do
-            let(:invalid_custom_field) { list_project_custom_field }
+            let(:invalid_custom_field) { user_project_custom_field }
             let(:invalid_field) { FormFields::Primerized::AutocompleteField.new(invalid_custom_field) }
 
             it_behaves_like "keeps the cleared value"
           end
 
           context "with list selected" do
-            let(:invalid_custom_field) { user_project_custom_field }
+            let(:invalid_custom_field) { list_project_custom_field }
             let(:invalid_field) { FormFields::Primerized::AutocompleteField.new(invalid_custom_field) }
 
             it_behaves_like "keeps the cleared value"
@@ -112,21 +112,21 @@ RSpec.describe "Edit project custom fields on project overview page", :js, :sele
 
         context "with multi select fields" do
           context "with multi version selected" do
-            let(:invalid_custom_field) { multi_list_project_custom_field }
+            let(:invalid_custom_field) { multi_version_project_custom_field }
             let(:invalid_field) { FormFields::Primerized::AutocompleteField.new(invalid_custom_field) }
 
             it_behaves_like "keeps the cleared value"
           end
 
           context "with multi user selected" do
-            let(:invalid_custom_field) { multi_list_project_custom_field }
+            let(:invalid_custom_field) { multi_user_project_custom_field }
             let(:invalid_field) { FormFields::Primerized::AutocompleteField.new(invalid_custom_field) }
 
             it_behaves_like "keeps the cleared value"
           end
 
           context "with multi list selected" do
-            let(:invalid_custom_field) { multi_user_project_custom_field }
+            let(:invalid_custom_field) { multi_list_project_custom_field }
             let(:invalid_field) { FormFields::Primerized::AutocompleteField.new(invalid_custom_field) }
 
             it_behaves_like "keeps the cleared value"
