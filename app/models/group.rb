@@ -71,11 +71,7 @@ class Group < Principal
                :create_preference,
                :create_preference!
 
-  scopes :visible
-
-  def self.containing_user(user = User.current)
-    joins(:group_users).where(group_users: { user_id: user.id })
-  end
+  scopes :visible, :containing_user
 
   # Columns required for formatting the group's name.
   def self.columns_for_name(_formatter = nil)
