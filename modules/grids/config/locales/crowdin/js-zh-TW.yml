@@ -44,10 +44,10 @@ zh-TW:
           title: '收藏的專案'
           no_results: '您目前沒有收藏的專案。點擊項目儀表板中的星形圖示將其新增到您的收藏夾中。'
         time_entries_current_user:
-          title: '我的耗時'
+          title: '我的工時'
           displayed_days: '小工具顯示天數'
         time_entries_list:
-          title: '耗時（最近7天）'
+          title: '工時（最近7天）'
           no_results: '過去7天沒有時間記錄。'
         work_packages_accountable:
           title: "我負責的工作套件"
