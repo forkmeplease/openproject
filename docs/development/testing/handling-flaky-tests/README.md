@@ -123,7 +123,7 @@ If switching a lot between branches during development and migrating databases e
 
 Reset the test database to its pristine state:
 ```shell
-rails db:drop db:create db:migrate RAILS_ENV=test
+bin/rails db:drop db:create db:migrate RAILS_ENV=test
 ```
 
 The test database can be safely reset because it does not contain any data.
@@ -182,7 +182,7 @@ export DISABLE_SPRING=1
 CI does not run a frontend proxy: it precompiles assets. While differences are rare, it is closer to CI to precompile assets as well.
 
 ```shell
-rails assets:clobber openproject:plugins:register_frontend assets:precompile
+bin/rails assets:clobber openproject:plugins:register_frontend assets:precompile
 export OPENPROJECT_DISABLE_DEV_ASSET_PROXY=1
 ```
 
