@@ -4,7 +4,11 @@
     render(OpPrimer::InsetBoxComponent.new(border: false, classes: "outcome-container")) do
       grid_layout("op-meeting-outcome-notes", tag: :div, id: "outcome-#{@meeting_outcome.id}") do |grid|
         grid.with_area(:title, tag: :span, classes: "title") do
-          render(Primer::Beta::Heading.new(tag: :h5)) { t(:label_agenda_outcome) }
+          if multiple_outcomes?
+            render(Primer::Beta::Heading.new(tag: :h5)) { "#{t(:label_agenda_outcome)} #{@index + 1}" }
+          else
+            render(Primer::Beta::Heading.new(tag: :h5)) { t(:label_agenda_outcome) }
+          end
         end
 
         grid.with_area(:content, tag: :div) do

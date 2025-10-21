@@ -44,7 +44,7 @@ module MeetingAgendaItems::Outcomes
     end
 
     def wrapper_uniq_by
-      @meeting_outcome.persisted? ? @meeting_outcome.id : "new"
+      @meeting_outcome.persisted? ? @meeting_outcome.id : "new-for-#{@meeting_agenda_item.id}"
     end
 
     private

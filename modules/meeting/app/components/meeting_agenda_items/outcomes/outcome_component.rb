@@ -28,37 +28,48 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module MeetingAgendaItems
-  class Outcomes::ShowNotesComponent < ApplicationComponent
+module MeetingAgendaItems::Outcomes
+  class OutcomeComponent < ApplicationComponent
     include ApplicationHelper
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    def initialize(meeting_outcome:)
+    attr_reader :meeting_outcome, :agenda_item, :meeting, :index
+
+    def initialize(meeting_outcome:, index:)
       super
 
       @meeting_outcome = meeting_outcome
       @agenda_item = meeting_outcome.meeting_agenda_item
       @meeting = @agenda_item.meeting
+      @index = index
     end
 
     private
 
+    def wrapper_uniq_by
+      @meeting_outcome.id
+    end
+
+    def multiple_outcomes?
+      agenda_item.outcomes.size > 1
+    end
+
     def edit_enabled?
-      @meeting.in_progress? &&
-        User.current.allowed_in_project?(:manage_outcomes, @meeting.project) &&
-        !@agenda_item.in_backlog?
+      meeting.in_progress? &&
+        User.current.allowed_in_project?(:manage_outcomes, meeting.project) &&
+        !agenda_item.in_backlog?
     end
 
     def in_backlog?
-      @agenda_item.meeting_section.backlog?
+      agenda_item.meeting_section.backlog?
     end
 
     def edit_action_item(menu)
       return unless edit_enabled?
 
       menu.with_item(label: t("label_agenda_outcome_edit"),
-                     href: edit_meeting_outcome_path(@meeting, @meeting_outcome),
+                     href: edit_meeting_outcome_path(meeting, meeting_outcome),
                      content_arguments: {
                        data: { "turbo-stream": true }
                      }) do |item|
@@ -69,7 +80,7 @@ module MeetingAgendaItems
     def copy_action_item(menu)
       return if in_backlog?
 
-      url = meeting_url(@meeting, anchor: "outcome-#{@meeting_outcome.id}")
+      url = meeting_url(meeting, anchor: "outcome-#{meeting_outcome.id}")
       menu.with_item(label: t("button_copy_link_to_clipboard"),
                      tag: :"clipboard-copy",
                      content_arguments: { value: url }) do |item|
@@ -82,7 +93,7 @@ module MeetingAgendaItems
 
       menu.with_item(label: t("label_agenda_outcome_delete"),
                      scheme: :danger,
-                     href: meeting_outcome_path(@meeting, @meeting_outcome),
+                     href: meeting_outcome_path(meeting, meeting_outcome),
                      form_arguments: {
                        method: :delete,
                        data: {
