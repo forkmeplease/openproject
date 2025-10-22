@@ -28,15 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module CustomActions::Actions::Strategies::CustomField
-  def apply(work_package)
-    if work_package.respond_to?(custom_field.attribute_setter)
-      set_custom_field_value(work_package)
-      validate_custom_field(work_package)
+module API
+  module V3
+    module WorkPackages
+      class WorkPackageMetaRepresenter < ::API::Decorators::Single
+        property :validate_custom_fields,
+                 exec_context: :decorator,
+                 getter: ->(*) do
+                   # Default to nil (use existing behavior)
+                   represented.validate_custom_fields
+                 end,
+                 setter: ->(fragment:, **) do
+                   represented.validate_custom_fields = fragment
+                 end
+
+        def model_required?
+          false
+        end
+      end
     end
   end
-
-  delegate :required?, to: :custom_field
-
-  delegate :multi_value?, to: :custom_field
 end

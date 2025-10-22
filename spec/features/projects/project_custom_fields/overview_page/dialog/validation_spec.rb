@@ -283,6 +283,61 @@ RSpec.describe "Edit project custom fields on project overview page", :js, :sele
 
         field.expect_error(I18n.t("activerecord.errors.messages.blank"))
       end
+
+      context "with required custom fields in different sections" do
+        let(:string_field) { FormFields::Primerized::InputField.new(string_project_custom_field) }
+        let(:list_field) { FormFields::Primerized::AutocompleteField.new(list_project_custom_field) }
+        let(:multi_list_field) { FormFields::Primerized::AutocompleteField.new(multi_list_project_custom_field) }
+
+        before do
+          # Make both custom fields required
+          string_project_custom_field.update!(is_required: true)
+          list_project_custom_field.update!(is_required: true)
+
+          # Clear existing values
+          string_project_custom_field.custom_values.destroy_all
+          list_project_custom_field.custom_values.destroy_all
+        end
+
+        it "validates required fields only within their respective sections" do
+          # Test 1: Multi-select section can be saved even when other sections have invalid required fields
+          overview_page.open_edit_dialog_for_section(section_for_multi_select_fields)
+          multi_select_fields_dialog =
+            Components::Projects::ProjectCustomFields::EditDialog.new(project, section_for_multi_select_fields)
+          multi_select_fields_dialog.submit
+          multi_select_fields_dialog.expect_closed
+
+          # Test 2: Edit input fields section - string field is required in this section
+          overview_page.open_edit_dialog_for_section(section_for_input_fields)
+
+          # Submit without filling required string field - should show error
+          input_fields_dialog.submit
+          string_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+          input_fields_dialog.close
+
+          # Test 3: Edit select fields section - list field is required in this section
+          overview_page.open_edit_dialog_for_section(section_for_select_fields)
+
+          # Submit without filling required list field - should show error
+          select_fields_dialog.submit
+          list_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+
+          # Test 4: Fill required field and submit successfully
+          list_field.select_option("Option 1")
+          select_fields_dialog.submit
+          select_fields_dialog.expect_closed
+
+          # Test 5: Input fields dialog still fails validation when required field is empty
+          overview_page.open_edit_dialog_for_section(section_for_input_fields)
+          input_fields_dialog.submit
+          string_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+
+          # Test 6: Complete the required string field and expect to pass validation
+          string_field.fill_in(with: "Test value")
+          input_fields_dialog.submit
+          input_fields_dialog.expect_closed
+        end
+      end
     end
 
     describe "with input fields" do
@@ -299,6 +354,19 @@ RSpec.describe "Edit project custom fields on project overview page", :js, :sele
           dialog.submit
 
           field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+        end
+      end
+
+      shared_examples "a calculated custom field input" do
+        it "allows saving the dialog even if the calculated custom field is invalid" do
+          custom_field.update!(is_required: true)
+          custom_field.custom_values.destroy_all
+
+          overview_page.open_edit_dialog_for_section(section)
+
+          dialog.submit
+
+          dialog.expect_closed
         end
       end
 
@@ -349,14 +417,14 @@ RSpec.describe "Edit project custom fields on project overview page", :js, :sele
           let(:custom_field) { calculated_from_int_project_custom_field }
           let(:field) { FormFields::Primerized::InputField.new(custom_field) }
 
-          it_behaves_like "a custom field input"
+          it_behaves_like "a calculated custom field input"
         end
 
         describe "using int and float" do
           let(:custom_field) { calculated_from_int_and_float_project_custom_field }
           let(:field) { FormFields::Primerized::InputField.new(custom_field) }
 
-          it_behaves_like "a custom field input"
+          it_behaves_like "a calculated custom field input"
         end
       end
     end
