@@ -23,7 +23,7 @@ To make `_blank` links accessible, we rely on:
 We implemented a stimulus controller called `external-links` which automatically applies an `aria-describedby` attribute to all links that set `target='_blank'`. Therefore, we included a single hidden element in the `base.html` which all `_blank` links can reference:
 
 ```erb
-<span id="open-blank-target-link-description" class="sr-only">
+<span id="open-external-link-description" class="sr-only">
   <%= I18n.t("open_link_in_a_new_tab") %>
 </span>
 ```

@@ -30,22 +30,26 @@ import { ApplicationController } from 'stimulus-use';
 import { useMutation } from 'stimulus-use';
 
 const EXTERNAL_LINK_QUERY = 'a[href^="http"]';
-const BLANK_LINK_DESCRIPTION_ID = 'open-blank-target-link-description';
-
+const EXTERNAL_LINK_DESCRIPTION_ID = 'open-external-link-description';
+const isLinkExternal = (link:HTMLAnchorElement) => {
+  try {
+    const linkUrl = new URL(link.href, window.location.origin);
+    return linkUrl.origin !== window.location.origin;
+  } catch {
+    // Do nothing if the url is invalid.
+    return false;
+  }
+};
 const isElement = (node:Node):node is Element => node.nodeType === Node.ELEMENT_NODE;
-const isExternalLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(EXTERNAL_LINK_QUERY) && (elem as HTMLAnchorElement).hostname !== window.location.hostname;
-
+const isExternalLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(EXTERNAL_LINK_QUERY) && isLinkExternal(elem as HTMLAnchorElement);
 /**
  * Dynamically observes all links in the page, including those added later via Turbo frames or DOM mutations.
  *
  * For external links (pointing to a different domain than the current page):
  *   - Sets `target="_blank"` to open in a new tab.
  *   - Sets `rel="noopener noreferrer"` for security and performance.
- *   - Adds `aria-describedby` pointing to a description element (`BLANK_LINK_DESCRIPTION_ID`) to inform
+ *   - Adds `aria-describedby` pointing to a description element (`EXTERNAL_LINK_DESCRIPTION_ID`) to inform
  *     users of assistive technologies that the link opens in a new tab.
- *
- * For internal links (same domain):
- *   - Ensures `target="_top"` and removes the `rel` attribute to keep default behavior.
  *
  * This ensures accessibility, security, and consistent behavior for all links, including dynamically
  * loaded content.
@@ -54,9 +58,9 @@ export default class ExternalLinksController extends ApplicationController {
   connect() {
     useMutation(this, { attributes: true, childList: true, subtree: true, attributeFilter: ['href'] });
 
-    // Initial pass: handle existing blank links (accessibility)
+    // Initial pass: handle existing external links (accessibility)
     document.querySelectorAll<HTMLAnchorElement>(EXTERNAL_LINK_QUERY).forEach((link)=>{
-      if (link.hostname !== window.location.hostname) {
+      if (isLinkExternal(link)) {
         updateExternalLink(link);
       }
     });
@@ -66,12 +70,12 @@ export default class ExternalLinksController extends ApplicationController {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
         if (isElement(node)) {
-          // Added element itself is a blank link
+          // Added element itself is a external link
           if (isExternalLink(node)) updateExternalLink(node);
 
           // Added sub-trees
           node.querySelectorAll<HTMLAnchorElement>(EXTERNAL_LINK_QUERY).forEach((link)=>{
-            if (link.hostname !== window.location.hostname) {
+            if (isLinkExternal(link)) {
               updateExternalLink(link);
             }
           });
@@ -81,7 +85,7 @@ export default class ExternalLinksController extends ApplicationController {
       // Attribute changes
       if (
         mutation.type === 'attributes' &&
-        mutation.attributeName === 'target' &&
+        mutation.attributeName === 'href' &&
         isElement(mutation.target) &&
         isExternalLink(mutation.target)
       ) {
@@ -92,21 +96,22 @@ export default class ExternalLinksController extends ApplicationController {
 }
 
 function updateExternalLink(link:HTMLAnchorElement) {
-  // If the link has an invalid or empty hostname, skip modifications
-  try {
-    const url = new URL(link.href);
-    if (!url.hostname) return;
-  } catch {
-    return; // skip if cannot parse
-  }
-
-  const existingValue = link.getAttribute('aria-describedby');
+  // Ensure external link behavior
   link.target = '_blank';
-  link.rel = 'noopener noreferrer';
 
-  if (!existingValue) {
-    link.setAttribute('aria-describedby', BLANK_LINK_DESCRIPTION_ID);
-  } else if (!existingValue.split(/\s+/).includes(BLANK_LINK_DESCRIPTION_ID)) {
-    link.setAttribute('aria-describedby', `${existingValue} ${BLANK_LINK_DESCRIPTION_ID}`);
+  // Merge rel attributes safely
+  const relValues = new Set([
+    ...((link.getAttribute('rel')?.split(/\s+/) ?? [])),
+    'noopener',
+    'noreferrer',
+  ]);
+  link.setAttribute('rel', Array.from(relValues).join(' '));
+
+  // Ensure accessibility description
+  const describedBy = link.getAttribute('aria-describedby');
+  if (!describedBy) {
+    link.setAttribute('aria-describedby', EXTERNAL_LINK_DESCRIPTION_ID);
+  } else if (!describedBy.split(/\s+/).includes(EXTERNAL_LINK_DESCRIPTION_ID)) {
+    link.setAttribute('aria-describedby', `${describedBy} ${EXTERNAL_LINK_DESCRIPTION_ID}`);
   }
 }

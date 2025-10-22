@@ -44,14 +44,12 @@ RSpec.describe "External links", :js do
     expect(page.all(:link, target: "_blank")).to all match_selector(:link, described_by: "Open link in a new tab")
   end
 
-  it "updates external links with target='_top' to open in a new tab" do
+  it "updates external links to open in a new tab" do
     visit "/"
 
-    # Inject a link to an external domain with target="_top"
     page.execute_script <<~JS
       const link = document.createElement('a');
       link.href = 'https://example.com';
-      link.target = '_top';
       link.textContent = 'External Example';
       document.body.appendChild(link);
     JS
