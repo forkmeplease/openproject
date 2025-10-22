@@ -35,17 +35,9 @@
       header.with_breadcrumbs(breadcrumb_items)
       header.with_description(underlined_links: false) { render(Meetings::HeaderInfolineComponent.new(@meeting)) }
       if finish_setup_enabled?
-        header.with_action_button(
-          tag: :a,
-          scheme: :primary,
-          mobile_label: I18n.t("recurring_meeting.template.button_finalize"),
-          mobile_icon: :check,
-          size: :medium,
-          data: { "turbo-method": :post },
-          href: template_completed_project_recurring_meeting_path(@project, @meeting.recurring_meeting)
-        ) do |button|
+        header.with_action_button(**action_button_params) do |button|
           button.with_leading_visual_icon(icon: :check)
-          I18n.t("recurring_meeting.template.button_finalize")
+          action_button_label
         end
       end
 

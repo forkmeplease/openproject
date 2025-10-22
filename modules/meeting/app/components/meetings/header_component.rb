@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -68,9 +69,39 @@ module Meetings
     end
 
     def finish_setup_enabled?
-      @meeting.template? &&
+      (@meeting.template? &&
         User.current.allowed_in_project?(:create_meetings, @meeting.project) &&
-        @series.scheduled_meetings.none?
+        @series.scheduled_meetings.none?) || @meeting.draft?
+    end
+
+    def action_button_params
+      {
+        tag: :button,
+        scheme: :primary,
+        mobile_label: action_button_label,
+        mobile_icon: :check,
+        size: :medium,
+        data: {
+          action: "click->meetings--submit#intercept",
+          href: action_button_href,
+          method: @meeting.recurring? ? "POST" : "PUT"
+        }
+      }
+    end
+
+    def action_button_label
+      @meeting.recurring? ? I18n.t("recurring_meeting.template.button_finalize") : I18n.t("label_meeting_open_action")
+    end
+
+    def action_button_href
+      if @meeting.recurring?
+        template_completed_project_recurring_meeting_path(@project,
+                                                          @meeting.recurring_meeting)
+      else
+        change_state_project_meeting_path(
+          @project, @meeting, state: "open"
+        )
+      end
     end
 
     def send_emails?

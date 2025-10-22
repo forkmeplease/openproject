@@ -45,7 +45,7 @@ module Meetings
       model.change_by_system do
         model.author = user
         model.duration ||= 1
-        model.state = "draft"
+        model.state = "draft" unless model.recurring?
       end
     end
 
