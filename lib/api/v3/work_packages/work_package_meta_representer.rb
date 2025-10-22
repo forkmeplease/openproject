@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -29,11 +31,19 @@
 module API
   module V3
     module WorkPackages
-      module WorkPackagesSharedHelpers
-        extend Grape::API::Helpers
+      class WorkPackageMetaRepresenter < ::API::Decorators::Single
+        property :validate_custom_fields,
+                 exec_context: :decorator,
+                 getter: ->(*) do
+                   # Default to nil (use existing behavior)
+                   represented.validate_custom_fields
+                 end,
+                 setter: ->(fragment:, **) do
+                   represented.validate_custom_fields = fragment
+                 end
 
-        def notify_according_to_params
-          params[:notify] != "false"
+        def model_required?
+          false
         end
       end
     end
