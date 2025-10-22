@@ -43,8 +43,8 @@ class MeetingParticipant < ApplicationRecord
     declined: "declined",
     tentative: "tentative",
     delegated: "delegated",
-    unknown: "unknown" # this is the default in the DB for all old entries
-  }, default: :needs_action
+    unknown: "unknown" # this status is used for existing participants when introducing the field
+  }
 
   def name
     user.present? ? user.name : I18n.t("user.deleted")
