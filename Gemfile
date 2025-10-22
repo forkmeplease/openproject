@@ -393,7 +393,7 @@ gem "googleauth", require: false
 gem "disposable", "~> 0.6.2"
 
 # Used for formula evaluation of calculated values
-gem "dentaku", "~> 3.5", ">= 3.5.5"
+gem "dentaku", "~> 3.5"
 
 group :postgres do
   gem "pg", "~> 1.6.2"
