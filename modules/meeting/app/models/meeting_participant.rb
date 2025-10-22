@@ -29,7 +29,7 @@
 #++
 
 class MeetingParticipant < ApplicationRecord
-  belongs_to :meeting
+  belongs_to :meeting, inverse_of: :participants
   belongs_to :user
 
   validates :user, :meeting, presence: true
