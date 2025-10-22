@@ -172,7 +172,6 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
     relation.where_clause.instance_variable_get(:@predicates).each do |predicate|
       substitute_custom_values_join_in_predicate(predicate)
     end
-    relation
   end
 
   # For simplicity's sake we replace the "custom_values" join only when the predicate is a String.
