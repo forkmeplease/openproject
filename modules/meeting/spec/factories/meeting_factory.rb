@@ -40,7 +40,7 @@ FactoryBot.define do
 
     trait :author_participates do
       after(:build) do |meeting|
-        build(:meeting_participant, meeting: meeting, user: meeting.author, invited: true)
+        meeting.participants << build(:meeting_participant, meeting: meeting, user: meeting.author, invited: true)
       end
     end
 
