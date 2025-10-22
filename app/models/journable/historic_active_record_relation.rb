@@ -136,8 +136,8 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   def historic_models_data_journals_join
     <<-SQL.squish
       INNER JOIN #{model.journal_class.table_name}
-      ON "journals"."data_type" = '#{model.journal_class.name}'
-      AND "journals"."data_id" = "#{model.journal_class.table_name}"."id"
+      ON "#{Journal.table_name}"."data_type" = '#{model.journal_class.name}'
+      AND "#{Journal.table_name}"."data_id" = "#{model.journal_class.table_name}"."id"
     SQL
   end
 
@@ -149,10 +149,12 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   end
 
   def historic_models_selects
-    ["journals.journable_id AS id",
-     "journals.id AS journal_id",
+    journals = Journal.table_name
+
+    ["#{journals}.journable_id AS id",
+     "#{journals}.id AS journal_id",
      "#{model.table_name}.created_at",
-     "journals.updated_at",
+     "#{journals}.updated_at",
      "CASE #{timestamp_case_when_statements} END as timestamp",
      *model.journal_class.column_names
            .reject { it == "id" }
@@ -179,22 +181,25 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
   # method. If we ever change that method to use Arel, we will need to implement the substitution
   # for Arel objects as well.
   def substitute_custom_values_join_in_predicate(predicate)
-    if predicate.is_a? String
-      predicate.gsub! /JOIN (?<!_)#{CustomValue.table_name}/, "JOIN #{Journal::CustomizableJournal.table_name}"
-      predicate.gsub! "JOIN \"#{CustomValue.table_name}\"", "JOIN \"#{Journal::CustomizableJournal.table_name}\""
+    return unless predicate.is_a? String
 
-      customized_type = /custom_values.customized_type = '#{model.name}'/
-      customized_id   = /custom_values.customized_id = #{model.table_name}.id/
+    customizable_journals = Journal::CustomizableJournal.table_name
+    custom_values = CustomValue.table_name
+    models = model.table_name
 
-      # The customizable_journals table has no direct relation to the work_packages table,
-      # but it has to the journals table. We join it to the journals table instead.
-      journal_id = "customizable_journals.journal_id = #{model.table_name}.journal_id"
+    predicate.gsub! /JOIN (?<!_)#{custom_values}/,
+                    "JOIN #{customizable_journals}"
+    predicate.gsub! "JOIN \"#{custom_values}\"",
+                    "JOIN \"#{customizable_journals}\""
 
-      predicate.gsub! /#{customized_type}\s*AND #{customized_id}/m, journal_id
+    # The customizable_journals table has no direct relation to the work_packages table,
+    # but it has to the journals table. We join it to the journals table instead.
+    predicate.gsub! /#{custom_values}.customized_type = '#{model.name}'\s*AND #{custom_values}.customized_id = #{models}.id/m,
+                    "#{customizable_journals}.journal_id = #{models}.journal_id"
 
-      predicate.gsub! "AND custom_values.custom_field_id =", "AND customizable_journals.custom_field_id ="
-      predicate.gsub! "WHERE custom_values.value", "WHERE customizable_journals.value"
-    end
+    predicate.gsub! "AND #{custom_values}.custom_field_id =",
+                    "AND #{customizable_journals}.custom_field_id ="
+    predicate.gsub! "WHERE #{custom_values}.value", "WHERE #{customizable_journals}.value"
   end
 
   # Add a timestamp condition: Select the work package journals that are the
@@ -220,7 +225,7 @@ class Journable::HistoricActiveRecordRelation < ActiveRecord::Relation
                           raise NoMethodError, "Unknown timestamp type: #{timestamp.class}"
                         end
 
-      "WHEN \"journals\".\"validity_period\" @> timestamp with time zone '#{comparison_time}' THEN '#{timestamp}'"
+      "WHEN \"#{Journal.table_name}\".\"validity_period\" @> timestamp with time zone '#{comparison_time}' THEN '#{timestamp}'"
     end
       .join(" ")
   end
