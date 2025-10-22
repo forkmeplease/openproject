@@ -27,7 +27,7 @@
 //++
 
 import { setupServerResponse } from 'core-app/core/setup/globals/global-listeners/setup-server-response';
-import { openExternalLinksInNewTab, performAnchorHijacking } from './global-listeners/link-hijacking';
+import { performAnchorHijacking } from './global-listeners/link-hijacking';
 
 /**
  * A set of listeners that are relevant on every page to set sensible defaults
@@ -56,22 +56,11 @@ export function initializeGlobalListeners():void {
         return;
       }
 
-      const callbacks = [
-        openExternalLinksInNewTab,
-        performAnchorHijacking,
-      ];
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const fn of callbacks) {
-        if (fn.call(linkElement, evt, linkElement)) {
-          evt.preventDefault();
-          break;
-        }
-      }
-
       // Prevent angular handling clicks on href="#..." links from other libraries
       // (especially jquery-ui and its datepicker) from routing to <base url>/#
-      performAnchorHijacking(evt, linkElement);
+      if (performAnchorHijacking(evt, linkElement)) {
+        evt.preventDefault();
+      }
     });
 
   // Listen for 'zenModeToggled' event to toggle Zen Mode styling on the body.
