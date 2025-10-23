@@ -29,8 +29,10 @@
 import { ApplicationController } from 'stimulus-use';
 import { useMutation } from 'stimulus-use';
 
-const EXTERNAL_LINK_QUERY = 'a[href^="http"]';
-const EXTERNAL_LINK_DESCRIPTION_ID = 'open-external-link-description';
+const BLANK_LINK_DESCRIPTION_ID = 'open-blank-target-link-description';
+const LINK_QUERY = 'a[href]';
+
+const isLinkBlank = (link:HTMLAnchorElement) => link.target === '_blank';
 const isLinkExternal = (link:HTMLAnchorElement) => {
   try {
     const linkUrl = new URL(link.href, window.location.origin);
@@ -41,28 +43,33 @@ const isLinkExternal = (link:HTMLAnchorElement) => {
   }
 };
 const isElement = (node:Node):node is Element => node.nodeType === Node.ELEMENT_NODE;
-const isExternalLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(EXTERNAL_LINK_QUERY) && isLinkExternal(elem as HTMLAnchorElement);
+const isLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(LINK_QUERY);
+
 /**
- * Dynamically observes all links in the page, including those added later via Turbo frames or DOM mutations.
+ * Dynamically observes and processes all links on the page, including those added later via Turbo
+ * frames or DOM mutations.
  *
- * For external links (pointing to a different domain than the current page):
+ * Part A) for links with `target="_blank"`
+ *   - Adds `aria-describedby` pointing to a description element (`BLANK_LINK_DESCRIPTION_ID`) to
+ *     inform users of assistive technologies that the link opens in a new tab.
+ *
+ * Part B) for external links (pointing to a different domain than the current page):
  *   - Sets `target="_blank"` to open in a new tab.
  *   - Sets `rel="noopener noreferrer"` for security and performance.
- *   - Adds `aria-describedby` pointing to a description element (`EXTERNAL_LINK_DESCRIPTION_ID`) to inform
- *     users of assistive technologies that the link opens in a new tab.
+ *   - and by virtue of setting `target="_blank"`, should be processed as in Part A.
  *
- * This ensures accessibility, security, and consistent behavior for all links, including dynamically
- * loaded content.
+ * This ensures accessibility, security, and consistent behavior for all links, including
+ * dynamically loaded content.
  */
 export default class ExternalLinksController extends ApplicationController {
   connect() {
-    useMutation(this, { attributes: true, childList: true, subtree: true, attributeFilter: ['href'] });
+    useMutation(this, { attributes: true, childList: true, subtree: true, attributeFilter: ['target', 'href'] });
 
     // Initial pass: handle existing external links (accessibility)
-    document.querySelectorAll<HTMLAnchorElement>(EXTERNAL_LINK_QUERY).forEach((link)=>{
-      if (isLinkExternal(link)) {
-        updateExternalLink(link);
-      }
+    document.querySelectorAll<HTMLAnchorElement>(LINK_QUERY).forEach((link)=>{
+      if (isLinkBlank(link)) updateBlankLink(link);
+
+      if (isLinkExternal(link)) updateExternalLink(link);
     });
   }
 
@@ -70,14 +77,16 @@ export default class ExternalLinksController extends ApplicationController {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
         if (isElement(node)) {
-          // Added element itself is a external link
-          if (isExternalLink(node)) updateExternalLink(node);
+          // Added element itself is an external link
+          if (isLink(node) && isLinkBlank(node)) updateBlankLink(node);
+
+          if (isLink(node) && isLinkExternal(node)) updateExternalLink(node);
 
           // Added sub-trees
-          node.querySelectorAll<HTMLAnchorElement>(EXTERNAL_LINK_QUERY).forEach((link)=>{
-            if (isLinkExternal(link)) {
-              updateExternalLink(link);
-            }
+          node.querySelectorAll<HTMLAnchorElement>(LINK_QUERY).forEach((link)=>{
+            if (isLinkBlank(link)) updateBlankLink(link);
+
+            if (isLinkExternal(link)) updateExternalLink(link);
           });
         }
       });
@@ -85,13 +94,34 @@ export default class ExternalLinksController extends ApplicationController {
       // Attribute changes
       if (
         mutation.type === 'attributes' &&
+        mutation.attributeName === 'target' &&
+        isElement(mutation.target) &&
+        isLink(mutation.target) &&
+        isLinkBlank(mutation.target)
+      ) {
+        updateBlankLink(mutation.target);
+      }
+
+      if (
+        mutation.type === 'attributes' &&
         mutation.attributeName === 'href' &&
         isElement(mutation.target) &&
-        isExternalLink(mutation.target)
+        isLink(mutation.target) &&
+        isLinkExternal(mutation.target)
       ) {
         updateExternalLink(mutation.target);
       }
     });
+  }
+}
+
+function updateBlankLink(link:HTMLAnchorElement) {
+  // Ensure accessibility description
+  const describedBy = link.getAttribute('aria-describedby');
+  if (!describedBy) {
+    link.setAttribute('aria-describedby', BLANK_LINK_DESCRIPTION_ID);
+  } else if (!describedBy.split(/\s+/).includes(BLANK_LINK_DESCRIPTION_ID)) {
+    link.setAttribute('aria-describedby', `${describedBy} ${BLANK_LINK_DESCRIPTION_ID}`);
   }
 }
 
@@ -106,12 +136,4 @@ function updateExternalLink(link:HTMLAnchorElement) {
     'noreferrer',
   ]);
   link.setAttribute('rel', Array.from(relValues).join(' '));
-
-  // Ensure accessibility description
-  const describedBy = link.getAttribute('aria-describedby');
-  if (!describedBy) {
-    link.setAttribute('aria-describedby', EXTERNAL_LINK_DESCRIPTION_ID);
-  } else if (!describedBy.split(/\s+/).includes(EXTERNAL_LINK_DESCRIPTION_ID)) {
-    link.setAttribute('aria-describedby', `${describedBy} ${EXTERNAL_LINK_DESCRIPTION_ID}`);
-  }
 }
