@@ -28,46 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "../../flash/expectations"
+module Users::Invitation::ProjectStep
+  class FooterComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpenProject::FormTagHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-module Components
-  module Common
-    class Modal
-      include Capybara::DSL
-      include Capybara::RSpecMatchers
-      include Flash::Expectations
-      include RSpec::Matchers
+    def wrapper_key
+      Users::Invitation::DialogComponent::FOOTER_ID
+    end
 
-      def expect_title(text)
-        expect(page).to have_modal(text)
-      end
+    def call
+      component_wrapper do
+        component_collection do |modal_footer|
+          modal_footer.with_component(
+            Primer::Beta::Button.new(
+              data: { "close-dialog-id": Users::Invitation::DialogComponent::DIALOG_ID }
+            )
+          ) do
+            I18n.t(:button_cancel)
+          end
 
-      def expect_open
-        expect(page).to have_modal(wait: 40)
-      end
-
-      def expect_closed
-        expect(page).not_to have_modal
-      end
-
-      def expect_text(text)
-        within_modal do
-          expect(page).to have_text(text)
+          modal_footer.with_component(
+            Primer::Beta::Button.new(
+              scheme: :primary,
+              form: Users::Invitation::DialogComponent::FORM_ID,
+              type: :submit
+            )
+          ) do
+            I18n.t(:button_continue)
+          end
         end
-      end
-
-      def click_modal_button(text)
-        within_modal do
-          click_button text
-        end
-      end
-
-      def within_modal(name = nil, **, &)
-        super
-      end
-
-      def modal_element
-        find(:modal)
       end
     end
   end

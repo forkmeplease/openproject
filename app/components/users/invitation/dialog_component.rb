@@ -28,47 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "../../flash/expectations"
+module Users::Invitation
+  class DialogComponent < ApplicationComponent
+    DIALOG_ID = "user-invitation-dialog"
+    FORM_ID = "user-invitation-dialog-form"
+    FOOTER_ID = "user-invitation-dialog-footer"
 
-module Components
-  module Common
-    class Modal
-      include Capybara::DSL
-      include Capybara::RSpecMatchers
-      include Flash::Expectations
-      include RSpec::Matchers
+    include ApplicationHelper
+    include OpenProject::FormTagHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-      def expect_title(text)
-        expect(page).to have_modal(text)
-      end
-
-      def expect_open
-        expect(page).to have_modal(wait: 40)
-      end
-
-      def expect_closed
-        expect(page).not_to have_modal
-      end
-
-      def expect_text(text)
-        within_modal do
-          expect(page).to have_text(text)
-        end
-      end
-
-      def click_modal_button(text)
-        within_modal do
-          click_button text
-        end
-      end
-
-      def within_modal(name = nil, **, &)
-        super
-      end
-
-      def modal_element
-        find(:modal)
-      end
+    def initialize(model, project: nil)
+      super
+      @project = project
     end
   end
 end

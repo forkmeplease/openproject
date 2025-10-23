@@ -28,47 +28,45 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "../../flash/expectations"
+module Users::Invitation
+  class FormModel < ApplicationRecord
+    include Tableless
 
-module Components
-  module Common
-    class Modal
-      include Capybara::DSL
-      include Capybara::RSpecMatchers
-      include Flash::Expectations
-      include RSpec::Matchers
+    belongs_to :project
+    attribute :project_id, :integer, default: nil
+    attribute :role_id, :integer, default: nil
+    attribute :principal_type, :text, default: nil
+    attribute :id_or_email, :text, default: nil
+    attribute :message, :text, default: nil
 
-      def expect_title(text)
-        expect(page).to have_modal(text)
+    validates :project_id, presence: true, on: :project_step
+    validates :principal_type,
+              inclusion: { in: ->(*) { available_principal_types } },
+              on: :project_step
+
+    validates :id_or_email, presence: true, on: :principal_step
+    validates :role_id, presence: true, on: :principal_step
+
+    def self.available_principal_types
+      if EnterpriseToken.allows_to?(:placeholder_users)
+        %w[User PlaceholderUser Group]
+      else
+        %w[User Group]
       end
+    end
 
-      def expect_open
-        expect(page).to have_modal(wait: 40)
-      end
+    def project_name
+      project&.name || project_id
+    end
 
-      def expect_closed
-        expect(page).not_to have_modal
-      end
-
-      def expect_text(text)
-        within_modal do
-          expect(page).to have_text(text)
-        end
-      end
-
-      def click_modal_button(text)
-        within_modal do
-          click_button text
-        end
-      end
-
-      def within_modal(name = nil, **, &)
-        super
-      end
-
-      def modal_element
-        find(:modal)
-      end
+    def to_h
+      {
+        project_id:,
+        role_id:,
+        principal_type:,
+        id_or_email:,
+        message:
+      }
     end
   end
 end

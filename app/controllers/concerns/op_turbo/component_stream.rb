@@ -131,6 +131,14 @@ module OpTurbo
         .render_in(view_context)
     end
 
+    def update_dialog_title_via_turbo_stream(dialog_id, new_title:)
+      turbo_streams << OpTurbo::StreamComponent
+        .new(action: :update,
+             target: "#{dialog_id}-title",
+             template: new_title)
+        .render_in(view_context)
+    end
+
     def reload_page_via_turbo_stream
       turbo_streams << OpTurbo::StreamComponent.new(action: :reloadPage, target: nil).render_in(view_context)
     end

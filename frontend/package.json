@@ -110,7 +110,6 @@
     "@ng-select/ng-option-highlight": "^20.4.1",
     "@ng-select/ng-select": "^20.1.0",
     "@ngneat/content-loader": "^7.0.0",
-    "@ngx-formly/core": "^6.1.4",
     "@openproject/octicons-angular": "^19.29.0",
     "@openproject/primer-view-components": "^0.75.2",
     "@openproject/reactivestates": "^3.0.1",

@@ -115,31 +115,54 @@ RSpec.describe "Invite user modal", :js do
       page.find_test_selector("quick-add-menu-item", text: "Invite user", wait: 5).click
     end
 
-    it "does show you all users email address" do
-      modal.expect_open
-      modal.project_step
-      select = modal.open_select_in_step "op-ium-principal-search", ""
-
-      # Mail address of other users is visible to us
-      expect(select).to have_text(principal.firstname)
-      expect(select).to have_text(principal.mail)
-    end
-
     context "without permission" do
       let!(:standard) { create(:empty_global_role) }
 
       it "does not show you the email address of other users" do
         modal.expect_open
         modal.project_step
-        select = modal.open_select_in_step "op-ium-principal-search", ""
+        select = modal.principal_search ""
 
-        # Our own mail address is visible
         expect(select).to have_text(current_user.firstname)
-        expect(select).to have_text(current_user.mail)
-
-        # But the mail address of another user is not visible to us
         expect(select).to have_text(principal.firstname)
         expect(select).to have_no_text(principal.mail)
+      end
+    end
+
+    context "when not selecting the role" do
+      it "keeps the principal selected" do
+        modal.expect_open
+        modal.project_step
+        modal.principal_autocomplete
+
+        modal.click_continue(label: "Invite")
+        modal.expect_error_displayed "Role can't be blank."
+
+        modal.role_autocomplete
+        modal.click_continue(label: "Invite")
+        modal.expect_invited_successfully
+      end
+
+      context "with invite permission, but not selecting the role" do
+        let(:global_permissions) { %i[create_user] }
+
+        it "does not yet invite the user" do
+          modal.expect_open
+          modal.project_step
+          modal.principal_autocomplete "foobar@example.com"
+
+          modal.click_continue(label: "Invite")
+          modal.expect_error_displayed "Role can't be blank."
+
+          expect(User.find_by_mail("foobar@example.com")).to be_nil
+
+          modal.role_autocomplete
+          modal.click_continue(label: "Invite")
+          modal.expect_invited_successfully
+
+          user = User.find_by_mail("foobar@example.com")
+          expect(user).to be_invited
+        end
       end
     end
   end
@@ -316,8 +339,8 @@ RSpec.describe "Invite user modal", :js do
 
           it "does not show the invite user option" do
             modal.project_step
-            ngselect = modal.open_select_in_step "op-ium-principal-search", query: principal.mail
-            expect(ngselect).to have_text "No users were found"
+            ngselect = modal.principal_search principal.mail
+            expect(ngselect).to have_text "No items found"
             expect(ngselect).to have_no_text "Invite: #{principal.mail}"
           end
         end
@@ -339,9 +362,10 @@ RSpec.describe "Invite user modal", :js do
                    roles: [role_no_permissions])
           end
 
-          it "disables projects for which you do not have rights", :js, :selenium do
-            ngselect = modal.open_select_in_step ".ng-select-container"
-            expect(ngselect).to have_text "#{project_no_permissions.name}\nYou are not allowed to invite members to this project"
+          it "hides projects you are not allowed to access" do
+            dropdown = modal.project_search project_no_permissions.name
+            expect(dropdown).to have_text "No items found"
+            expect(dropdown).to have_no_text project_no_permissions.name
           end
         end
 
@@ -350,7 +374,7 @@ RSpec.describe "Invite user modal", :js do
           # Use admin to ensure all projects are visible
           let(:current_user) { create(:admin) }
 
-          it "disables projects for which you do not have rights", :js do
+          it "does not show that project" do
             ngselect = modal.open_select_in_step ".ng-select-container"
             expect(ngselect).to have_no_text archived_project
           end
@@ -360,29 +384,27 @@ RSpec.describe "Invite user modal", :js do
       describe "inviting placeholders" do
         let(:principal) { build(:placeholder_user, name: "MY NEW PLACEHOLDER") }
 
-        context "an enterprise system", with_ee: %i[placeholder_users] do
+        context "when in an enterprise system", with_ee: %i[placeholder_users] do
           let(:permissions) { %i[view_work_packages edit_work_packages manage_members work_package_assigned] }
 
-          describe "create a new placeholder" do
-            context "with permissions to manage placeholders" do
-              let(:global_permissions) { %i[manage_placeholder_user] }
+          context "without permissions to manage placeholders" do
+            it "does not allow to invite a new placeholder" do
+              modal.project_step
 
-              it_behaves_like "invites the principal to the project" do
-                let(:added_principal) { PlaceholderUser.find_by!(name: "MY NEW PLACEHOLDER") }
-                # Placeholders get no invite mail
-                let(:mail_membership_recipients) { [] }
-              end
+              dropdown = modal.principal_search "SOME NEW PLACEHOLDER"
+
+              expect(dropdown).to have_text("No items found")
+              expect(dropdown).to have_no_text("SOME NEW PLACEHOLDER")
             end
+          end
 
-            context "without permissions to manage placeholders" do
-              it "does not allow to invite a new placeholder" do
-                modal.project_step
+          context "with permissions to manage placeholders" do
+            let(:global_permissions) { %i[manage_placeholder_user] }
 
-                modal.open_select_in_step "op-ium-principal-search", query: "SOME NEW PLACEHOLDER"
-
-                expect(page)
-                  .to have_text I18n.t("js.invite_user_modal.principal.no_results_placeholder")
-              end
+            it_behaves_like "invites the principal to the project" do
+              let(:added_principal) { PlaceholderUser.find_by!(name: "MY NEW PLACEHOLDER") }
+              # Placeholders get no invite mail
+              let(:mail_membership_recipients) { [] }
             end
           end
 
