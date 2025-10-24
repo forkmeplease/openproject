@@ -198,7 +198,6 @@ export class BoardPartitionedPageComponent extends UntilDestroyedMixin {
 
   breadcrumbItems() {
     return [
-      { href: this.pathHelperService.homePath(), text: this.titleService.appTitle },
       { href: this.pathHelperService.projectPath(this.currentProject.identifier as string), text: (this.currentProject.name) },
       { href: this.pathHelperService.boardsPath(this.currentProject.identifier as string), text: this.I18n.t('js.label_board_plural') },
       this.selectedTitle?? '',
