@@ -144,7 +144,8 @@ en:
   label_meeting_date_time: "Date/Time"
   label_meeting_date_and_time: "Date and time"
   label_meeting_diff: "Diff"
-  label_meeting_send_updates: "Send email calendar updates"
+  label_meeting_send_updates: "Send email calendar invite and updates"
+  label_meeting_send_updates_caption: "Send out email invites to all participants of this meeting"
   label_recurring_meeting: "Recurring meeting"
   label_recurring_meeting_part_of: "Part of a meeting series"
   label_recurring_meeting_new: "New recurring meeting"
@@ -356,9 +357,9 @@ en:
             Email calendar updates are disabled. Participants will not receive an email informing them when you add or remove participants.
         onetime:
           enabled: >
-            All participants will receive updated calendar invites via email informing them of your changes.
+            All participants will receive updated calendar invites via email when you add or remove participants.
           disabled: >
-            Email calendar updates are disabled. Participants will not receive an email informing them of your changes.
+            Participants will not receive an email informing them of changes to meeting date, time or participants.
         occurrence:
           enabled: >
             Email calendar updates are enabled for the meeting series.
@@ -614,6 +615,9 @@ en:
   text_meeting_closed_dropdown_description: "This meeting is closed. You cannot modify agenda items or outcomes anymore."
 
   text_meeting_draft_banner: "You are currently in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
+  text_exit_draft_mode_dialog_title: "Open this meeting and send invites?"
+  text_exit_draft_mode_dialog_subtitle: "You cannot return to draft mode once you schedule a meeting."
+
 
   text_meeting_not_editable_anymore: "This meeting is not editable anymore."
   text_meeting_not_present_anymore: "This meeting was deleted. Please select another meeting."

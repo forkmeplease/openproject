@@ -31,7 +31,7 @@ See COPYRIGHT and LICENSE files for more details.
   render(
     Primer::Alpha::Dialog.new(
       id:,
-      title: "Open meeting",
+      title:,
       size: :medium_portrait
     )
   ) do |dialog|
@@ -42,10 +42,10 @@ See COPYRIGHT and LICENSE files for more details.
     dialog.with_body do
       flex_layout(align_items: :center, justify_content: :space_between) do |flex|
         flex.with_row do
-          render(Primer::Beta::Text.new(font_weight: :bold)) { "Open this meeting and send invites?" }
+          render(Primer::Beta::Text.new(font_weight: :bold)) { title }
         end
         flex.with_row do
-          render(Primer::Beta::Text.new) { "You cannot return to draft mode once you schedule a meeting." }
+          render(Primer::Beta::Text.new) { subtitle }
         end
         flex.with_row do
           render(Meetings::ExitDraftModeFormComponent.new(meeting: @meeting))

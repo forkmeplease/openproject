@@ -44,45 +44,7 @@ module Meetings
     private
 
     def id = "exit-draft-mode-dialog"
-
-    # def title
-    #   if recurring_meeting.present?
-    #     I18n.t("meeting.delete_dialog.occurrence.title")
-    #   else
-    #     I18n.t("meeting.delete_dialog.one_time.title")
-    #   end
-    # end
-    #
-    # def heading
-    #   if recurring_meeting.present?
-    #     I18n.t("meeting.delete_dialog.occurrence.heading")
-    #   else
-    #     I18n.t("meeting.delete_dialog.one_time.heading")
-    #   end
-    # end
-    #
-    # def confirmation_message
-    #   if recurring_meeting.present?
-    #     t("meeting.delete_dialog.occurrence.confirmation_message_html")
-    #   else
-    #     t("meeting.delete_dialog.one_time.confirmation_message_html")
-    #   end
-    # end
-    #
-    # def confirm_button_text
-    #   if recurring_meeting.present?
-    #     I18n.t("meeting.delete_dialog.occurrence.confirm_button")
-    #   else
-    #     I18n.t("button_delete")
-    #   end
-    # end
-    #
-    # def cancel_button_text
-    #   if recurring_meeting.present?
-    #     I18n.t("button_close")
-    #   else
-    #     I18n.t("button_cancel")
-    #   end
-    # end
+    def title = I18n.t("text_exit_draft_mode_dialog_title")
+    def subtitle = I18n.t("text_exit_draft_mode_dialog_subtitle")
   end
 end

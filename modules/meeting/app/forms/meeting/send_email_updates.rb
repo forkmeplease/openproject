@@ -33,7 +33,7 @@ class Meeting::SendEmailUpdates < ApplicationForm
     meeting_form.check_box(
       name: "notify",
       label: I18n.t("label_meeting_send_updates"),
-      caption: "All participants will receive updated calendar invites via email informing them of changes.",
+      caption: I18n.t("label_meeting_send_updates_caption"),
       checked: true,
       data: {
         "show-when-checked-target": "cause",
