@@ -17,10 +17,13 @@
           if edit_enabled?
             section.with_footer_button(
               color: :accent,
-              tag: :a,
-              href: href("open"),
+              tag: :button,
               classes: "hide-when-print",
-              data: button_data_attributes(href("open"))
+              data: {
+                action: "click->meetings--submit#intercept",
+                href: exit_draft_mode_dialog_project_meeting_path(@project, @meeting),
+                method: "GET"
+              }
             ) do |button|
               button.with_leading_visual_icon(icon: :"issue-opened")
               t("label_meeting_open_action")

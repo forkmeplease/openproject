@@ -28,23 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Meeting::SendEmailUpdates < ApplicationForm
-  form do |meeting_form|
-    meeting_form.check_box(
-      name: "notify",
-      label: I18n.t("label_meeting_send_updates"),
-      caption: "All participants will receive updated calendar invites via email informing them of changes.",
-      checked: true,
-      data: {
-        "show-when-checked-target": "cause",
-        "target-name": "notification-banner"
-      }
-    )
-  end
+module Meetings
+  class ExitDraftModeFormComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-  def initialize(meeting:)
-    super()
+    def initialize(meeting:)
+      super
 
-    @meeting = meeting
+      @meeting = meeting
+      @project = meeting.project
+    end
   end
 end

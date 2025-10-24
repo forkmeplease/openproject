@@ -46,6 +46,7 @@ module Meetings
         model.author = user
         model.duration ||= 1
         model.state = "draft" unless model.recurring?
+        model.notify = false
       end
     end
 

@@ -51,6 +51,8 @@ Rails.application.routes.draw do
         get :generate_pdf_dialog
         get :toggle_notifications_dialog
         post :toggle_notifications
+        get :exit_draft_mode_dialog
+        post :exit_draft_mode
       end
     end
 

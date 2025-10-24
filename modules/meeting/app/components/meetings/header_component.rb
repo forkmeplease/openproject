@@ -84,7 +84,7 @@ module Meetings
         data: {
           action: "click->meetings--submit#intercept",
           href: action_button_href,
-          method: @meeting.recurring? ? "POST" : "PUT"
+          method: @meeting.recurring? ? "POST" : "GET"
         }
       }
     end
@@ -98,9 +98,7 @@ module Meetings
         template_completed_project_recurring_meeting_path(@project,
                                                           @meeting.recurring_meeting)
       else
-        change_state_project_meeting_path(
-          @project, @meeting, state: "open"
-        )
+        exit_draft_mode_dialog_project_meeting_path(@project, @meeting)
       end
     end
 
