@@ -3,11 +3,6 @@
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
     header.with_title { t("my_page.label") }
-    header.with_breadcrumbs(
-      [
-        t("my_page.label")
-      ]
-    )
   end
 %>
 
