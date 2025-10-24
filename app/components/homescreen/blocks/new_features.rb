@@ -65,7 +65,7 @@ module Homescreen
       end
 
       def has_image?
-        Rails.application.assets.find_asset(feature_teaser_image) != nil
+        Rails.application.assets_manifest.assets.has_key?(feature_teaser_image)
       end
 
       private
