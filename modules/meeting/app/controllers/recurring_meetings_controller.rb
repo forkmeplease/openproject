@@ -166,7 +166,7 @@ class RecurringMeetingsController < ApplicationController
     end
   end
 
-  def template_completed
+  def template_completed # rubocop:disable Metrics/AbcSize
     call = ::RecurringMeetings::InitOccurrenceService
       .new(user: current_user, recurring_meeting: @recurring_meeting)
       .call(start_time: @first_occurrence)
@@ -180,7 +180,11 @@ class RecurringMeetingsController < ApplicationController
       flash[:error] = call.message
     end
 
-    redirect_to action: :show, id: @recurring_meeting, status: :see_other
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.redirect_to(project_recurring_meeting_path(@project, @recurring_meeting))
+      end
+    end
   end
 
   def delete_scheduled_dialog
