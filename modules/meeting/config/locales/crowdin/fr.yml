@@ -62,6 +62,7 @@ fr:
       meeting_participant:
         invited: "Invité"
         attended: "Participations"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

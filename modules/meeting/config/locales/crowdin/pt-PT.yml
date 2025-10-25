@@ -62,6 +62,7 @@ pt-PT:
       meeting_participant:
         invited: "Convidados"
         attended: "Participou"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

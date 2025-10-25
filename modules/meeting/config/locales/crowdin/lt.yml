@@ -64,6 +64,7 @@ lt:
       meeting_participant:
         invited: "Pakviesti"
         attended: "Attended"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

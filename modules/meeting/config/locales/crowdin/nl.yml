@@ -62,6 +62,7 @@ nl:
       meeting_participant:
         invited: "Uitgenodigd"
         attended: "Deelgenomen"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

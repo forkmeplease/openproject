@@ -64,6 +64,7 @@ uk:
       meeting_participant:
         invited: "Запрошені"
         attended: "Відвідано"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

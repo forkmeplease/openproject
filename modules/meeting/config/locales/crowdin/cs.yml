@@ -64,6 +64,7 @@ cs:
       meeting_participant:
         invited: "Pozvané"
         attended: "Zúčastnil se"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

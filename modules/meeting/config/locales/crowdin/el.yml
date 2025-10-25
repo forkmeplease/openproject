@@ -62,6 +62,7 @@ el:
       meeting_participant:
         invited: "Καλεσμένος/η"
         attended: "Παρευρέθηκε"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:

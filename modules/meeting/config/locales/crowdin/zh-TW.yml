@@ -61,6 +61,7 @@ zh-TW:
       meeting_participant:
         invited: "已邀請"
         attended: "已出席"
+        participation_status: "Participation status"
     errors:
       models:
         meeting_participant:
