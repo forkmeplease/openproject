@@ -190,20 +190,20 @@ zh-TW:
           attributes:
             create_folder:
               conflict: The %{folder_name} already exists on %{parent_location}.
-              not_found: "%{parent_location} wasn't found."
+              not_found: "%{parent_location} 沒有找到。"
             hide_inactive_folders:
-              permission_not_set: could not set permissions on %{path}.
+              permission_not_set: 無法在 %{path} 上設定權限。
             rename_project_folder:
-              conflict: OpenProject could not rename the folder %{current_path} to %{project_folder_name} as a folder with the same name already exists
-              forbidden: OpenProject does not have access to %{current_path} in order to rename it.
-              not_found: "%{current_path} wasn't found."
+              conflict: OpenProject 無法將資料夾 %{current_path} 重新命名為 %{project_folder_name} ，因為已存在相同名稱的資料夾
+              forbidden: OpenProject 沒有存取 %{current_path} 的權限，因此無法重新命名它。
+              not_found: "%{current_path} 沒有找到。"
             set_folders_permissions:
-              permission_not_set: could not set permissions on %{path}.
-          error: An unexpected error occurred. Please ensure that OneDrive is reachable and check OpenProject worker logs for more information
-          not_allowed: OpenProject wasn't allowed to access your OneDrive drive. Please check the permissions set on the Azure Application.
-          not_found: OpenProject could not access your library %{drive_name}. Please check you Sharepoint site document libraries.
-          unauthorized: OpenProject could not sync with OneDrive. Please check your storage and Azure Application configuration.
-          user_does_not_exist: "%{user} does not exist in Nextcloud."
+              permission_not_set: 無法在 %{path}上設定權限。
+          error: 發生意外錯誤。請確保 OneDrive/SharePoint 可以存取，並檢查 OpenProject Worker 日誌以取得更多資訊
+          not_allowed: OpenProject 不允許存取您的 OneDrive 磁碟。請檢查 Azure 應用程式上設定的權限。
+          not_found: OpenProject 無法存取您的資料庫 %{drive_name}。請檢查您的 Sharepoint 網站文件庫。
+          unauthorized: OpenProject 無法與 OneDrive 同步。請檢查您的儲存空間和 Azure 應用程式設定。
+          user_does_not_exist: "%{user} 在 Nextcloud 中不存在。"
         upload_link_service:
           not_found: 在 %{storage_name} 上找不到目標資料夾 %{folder}。
   storages:

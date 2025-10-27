@@ -658,16 +658,16 @@ zh-TW:
       no_results_title_text: 這個使用者目前不是任何專案的成員
     open_profile: "開啟個人資料"
     invite_user_modal:
-      invite: "Invite"
+      invite: "邀請"
       title:
-        invite: "Invite user"
-        invite_to_project: "Invite %{type} to %{project}"
-        invite_principal_to_project: "Invite %{principal} to %{project}"
+        invite: "邀請使用者"
+        invite_to_project: "邀請 %{type} 到 %{project}"
+        invite_principal_to_project: "邀請 %{principal} 到 %{project}"
       project:
-        label: "Project"
-        required: "Please select a project"
-        next_button: "Next"
-        no_results: "No projects were found"
+        label: "專案"
+        required: "請選擇一個專案"
+        next_button: "下一步"
+        no_results: "找不到專案"
         no_invite_rights: "You are not allowed to invite members to this project"
       type:
         required: "Please select the type to be invited"

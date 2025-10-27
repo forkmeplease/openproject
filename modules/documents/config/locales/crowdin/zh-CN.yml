@@ -29,7 +29,7 @@ zh-CN:
     attributes:
       document:
         content_binary: "Content binary"
-        title: "Title"
+        title: "标题"
   activity:
     filter:
       document: "文档"
