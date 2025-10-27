@@ -29,6 +29,7 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
     header.with_title { organization_name }
+    header.with_breadcrumbs(nil)
   end
 %>
 
