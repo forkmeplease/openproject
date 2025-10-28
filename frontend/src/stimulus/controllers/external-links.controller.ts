@@ -30,7 +30,7 @@ import { ApplicationController } from 'stimulus-use';
 import { useMutation } from 'stimulus-use';
 
 const BLANK_LINK_DESCRIPTION_ID = 'open-blank-target-link-description';
-const LINK_QUERY = 'a[href]';
+const LINK_QUERY = 'a[target="_blank"], a[href^="http://"], a[href^="https://"]';
 
 const isLinkBlank = (link:HTMLAnchorElement) => link.target === '_blank';
 const isLinkExternal = (link:HTMLAnchorElement) => {
@@ -44,6 +44,12 @@ const isLinkExternal = (link:HTMLAnchorElement) => {
 };
 const isElement = (node:Node):node is Element => node.nodeType === Node.ELEMENT_NODE;
 const isLink = (elem:Element):elem is HTMLAnchorElement => elem.matches(LINK_QUERY);
+const shouldProcessLink = (link:HTMLAnchorElement) => {
+  const href = link.href || '';
+  // Skip links with empty href or with download attribute
+  if (href === '' || link.hasAttribute('download')) return false;
+  return true;
+};
 
 /**
  * Dynamically observes and processes all links on the page, including those added later via Turbo
@@ -67,6 +73,8 @@ export default class ExternalLinksController extends ApplicationController {
 
     // Initial pass: handle existing external links (accessibility)
     document.querySelectorAll<HTMLAnchorElement>(LINK_QUERY).forEach((link)=>{
+      if (!shouldProcessLink(link)) return;
+
       if (isLinkBlank(link)) updateBlankLink(link);
 
       if (isLinkExternal(link)) updateExternalLink(link);
@@ -78,12 +86,14 @@ export default class ExternalLinksController extends ApplicationController {
       mutation.addedNodes.forEach((node) => {
         if (isElement(node)) {
           // Added element itself is an external link
-          if (isLink(node) && isLinkBlank(node)) updateBlankLink(node);
+          if (isLink(node) && shouldProcessLink(node)) {
+            if (isLinkBlank(node)) updateBlankLink(node);
+            if (isLinkExternal(node)) updateExternalLink(node);
+          }
 
-          if (isLink(node) && isLinkExternal(node)) updateExternalLink(node);
-
-          // Added sub-trees
           node.querySelectorAll<HTMLAnchorElement>(LINK_QUERY).forEach((link)=>{
+            if (!shouldProcessLink(link)) return;
+
             if (isLinkBlank(link)) updateBlankLink(link);
 
             if (isLinkExternal(link)) updateExternalLink(link);
@@ -94,22 +104,12 @@ export default class ExternalLinksController extends ApplicationController {
       // Attribute changes
       if (
         mutation.type === 'attributes' &&
-        mutation.attributeName === 'target' &&
         isElement(mutation.target) &&
         isLink(mutation.target) &&
-        isLinkBlank(mutation.target)
+        shouldProcessLink(mutation.target)
       ) {
-        updateBlankLink(mutation.target);
-      }
-
-      if (
-        mutation.type === 'attributes' &&
-        mutation.attributeName === 'href' &&
-        isElement(mutation.target) &&
-        isLink(mutation.target) &&
-        isLinkExternal(mutation.target)
-      ) {
-        updateExternalLink(mutation.target);
+        if (mutation.attributeName === 'target' && isLinkBlank(mutation.target)) updateBlankLink(mutation.target);
+        if (mutation.attributeName === 'href' && isLinkExternal(mutation.target)) updateExternalLink(mutation.target);
       }
     });
   }
@@ -131,7 +131,7 @@ function updateExternalLink(link:HTMLAnchorElement) {
 
   // Merge rel attributes safely
   const relValues = new Set([
-    ...((link.getAttribute('rel')?.split(/\s+/) ?? [])),
+    ...(link.getAttribute('rel')?.split(/\s+/) ?? []),
     'noopener',
     'noreferrer',
   ]);
