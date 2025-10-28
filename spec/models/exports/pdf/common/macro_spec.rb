@@ -328,19 +328,44 @@ RSpec.describe Exports::PDF::Common::Macro do
       end
     end
 
-    describe "with formatted custom field" do
-      let(:markdown) { 'workPackageValue:"Custom Formatted Field"' }
+    describe "with nested formatted custom field" do
+      before do
+        work_package.custom_field_values[1].value = "a complicated **formatted** _text_ with <table></table>"
+        work_package.save
+      end
 
-      it "outputs an error message for rich text" do
-        expect(formatted).to include(I18n.t("export.macro.rich_text_unsupported"))
+      describe "with relative work package" do
+        let(:markdown) { '<table><tr><td>workPackageValue:"Custom Formatted Field"</td></tr></table>' }
+
+        it "outputs an error message for rich text" do
+          expect(formatted).to include(I18n.t("export.macro.nested_rich_text_unsupported"))
+        end
+      end
+
+      describe "with specific work package ID" do
+        let(:markdown) { "<table><tr><td>workPackageValue:#{work_package.id}:\"Custom Formatted Field\"</td></tr></table>" }
+
+        it "outputs an error message for rich text" do
+          expect(formatted).to include(I18n.t("export.macro.nested_rich_text_unsupported"))
+        end
       end
     end
 
-    describe "with specific work package ID and formatted custom field" do
-      let(:markdown) { "workPackageValue:#{work_package.id}:\"Custom Formatted Field\"" }
+    describe "with formatted custom field" do
+      describe "with relative work package" do
+        let(:markdown) { 'workPackageValue:"Custom Formatted Field"' }
 
-      it "outputs an error message for rich text" do
-        expect(formatted).to include(I18n.t("export.macro.rich_text_unsupported"))
+        it "outputs an error message for rich text" do
+          expect(formatted).to eq("**Formatted** _text_ content")
+        end
+      end
+
+      describe "with specific work package ID" do
+        let(:markdown) { "workPackageValue:#{work_package.id}:\"Custom Formatted Field\"" }
+
+        it "outputs an error message for rich text" do
+          expect(formatted).to eq("**Formatted** _text_ content")
+        end
       end
     end
 

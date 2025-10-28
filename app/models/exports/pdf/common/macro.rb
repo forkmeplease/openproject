@@ -30,6 +30,10 @@
 
 module Exports::PDF::Common::Macro
   PREFORMATTED_BLOCKS = %w(pre code).freeze
+  # tables & images & markdown code blocks are not supported in nested rich text
+  UNSUPPORTED_NESTED = %w[<table <img ```].freeze
+  # markdown quotes are not supported in nested rich text
+  UNSUPPORTED_NESTED_REGEX = [/^\s>/].freeze
 
   def apply_markdown_field_macros(markdown, context)
     return markdown if markdown.blank?
@@ -72,7 +76,7 @@ module Exports::PDF::Common::Macro
   end
 
   def apply_macros_node_text(node, context)
-    formatted = apply_macro_text(node.string_content, context)
+    formatted = apply_macro_text(node.string_content, false, context)
     return if formatted == node.string_content
 
     fragment = Markly::Node.new(:inline_html)
@@ -89,16 +93,41 @@ module Exports::PDF::Common::Macro
     macros.any? { |macro| macro.applicable?(content) }
   end
 
-  def apply_macro_text(text, context)
+  def apply_macro_text(text, in_html, context)
     applicable_macros = macros.select { |macro| macro.applicable?(text) }
     return text if applicable_macros.empty?
 
     applicable_macros.each do |macro|
       text = text.gsub(macro.regexp) do |matched_string|
-        macro.process_match(Regexp.last_match, matched_string, context)
+        replacement, is_rich_text = macro.process_match(Regexp.last_match, matched_string, context)
+        in_html && is_rich_text ? build_html_replacement(replacement) : replacement
       end
     end
     text
+  end
+
+  def build_html_replacement(markdown)
+    if contains_nested_richtext?(markdown)
+      "[#{I18n.t('export.macro.nested_rich_text_unsupported')}] "
+    elsif markdown.strip.empty?
+      " "
+    else
+      markdown_to_html(markdown)
+    end
+  end
+
+  def markdown_to_html(markdown)
+    document = Markly.parse(
+      markdown,
+      flags: Markly::SMART | Markly::STRIKETHROUGH_DOUBLE_TILDE | Markly::UNSAFE | Markly::VALIDATE_UTF8,
+      extensions: %i[autolink strikethrough table tagfilter tasklist]
+    )
+    document.to_html
+  end
+
+  def contains_nested_richtext?(markdown)
+    UNSUPPORTED_NESTED.any? { |entry| markdown.include?(entry) } ||
+      UNSUPPORTED_NESTED_REGEX.any? { |regex| markdown.match?(regex) }
   end
 
   def apply_macro_html(html, context)
@@ -111,7 +140,7 @@ module Exports::PDF::Common::Macro
 
   def apply_macro_html_node(node, context)
     if node.text?
-      formatted = apply_macro_text(node.content, context)
+      formatted = apply_macro_text(node.content, true, context)
       node.replace(formatted) if formatted != node.content
     elsif PREFORMATTED_BLOCKS.exclude?(node.name)
       node.children.each { |child| apply_macro_html_node(child, context) }
