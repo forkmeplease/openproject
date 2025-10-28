@@ -1,0 +1,72 @@
+@import 'helpers'
+
+.op-meeting-presentation
+  height: 100vh
+  width: 60vw
+  margin: 0 auto
+  overflow: hidden
+  display: flex
+  flex-direction: column
+  padding: 50px
+
+  &--content
+    flex: 1 1 auto
+    min-height: 0
+    overflow-y: auto
+    padding: var(--base-size-6)
+    display: flex
+    flex-direction: column
+    align-items: center
+
+  &--item
+    width: 100%
+    max-width: 1200px
+    font-size: 2rem
+    line-height: 1.4
+
+  &--item-title
+    margin-bottom: var(--base-size-2)
+    font-size: 2.5rem
+
+  &--item-notes
+    margin-top: var(--base-size-4)
+
+  &--outcomes
+    margin-top: var(--base-size-6)
+    width: 100%
+
+  &--outcome
+    padding: var(--base-size-2)
+    margin-bottom: var(--base-size-2)
+    border-radius: var(--borderRadius-medium)
+    border: 1px solid var(--borderColor-default)
+
+  &--footer
+    flex-shrink: 0
+    padding-top: var(--base-size-16)
+    background: var(--bgColor-default)
+    display: grid
+    grid-template-columns: 1fr auto 1fr
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--footer-left,
+  &--footer-right
+    display: flex
+    align-items: center
+
+  &--footer-right
+    justify-content: flex-end
+
+  &--progress
+    text-align: center
+
+  @media screen and (max-width: $breakpoint-lg)
+    height: 100vh
+    width: 100vw
+    padding: 25px
+
+  @media screen and (max-width: $breakpoint-xl)
+    height: 100vh
+    width: 100vw
+    padding: 50px

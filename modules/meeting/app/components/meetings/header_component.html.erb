@@ -41,6 +41,18 @@
         end
       end
 
+      header.with_action_button(
+        tag: :a,
+        scheme: :secondary,
+        mobile_label: I18n.t("meeting.presentation_mode.button_present"),
+        mobile_icon: :play,
+        size: :medium,
+        href: presentation_project_meeting_path(@project, @meeting)
+      ) do |button|
+        button.with_leading_visual_icon(icon: :play)
+        I18n.t("meeting.presentation_mode.button_present")
+      end
+
       header.with_action_menu(
         menu_arguments: {},
         button_arguments: { icon: "kebab-horizontal",

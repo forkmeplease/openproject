@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         post :toggle_notifications
         get :exit_draft_mode_dialog
         post :exit_draft_mode
+        get :presentation
       end
     end
 

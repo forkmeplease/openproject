@@ -374,6 +374,15 @@ en:
           disabled: >
             Email calendar updates are disabled for the meeting series.
             Participants will not receive an email informing them of your changes to this template or to individual occurrences.
+    presentation_mode:
+      title: "Presentation Mode"
+      button_present: "Present"
+      exit: "Exit presentation"
+      current_item: "Current item"
+      total_items: "%{current} of %{total}"
+      previous: "Previous"
+      next: "Next"
+      no_items: "No agenda items"
 
   meeting_section:
     untitled_title: "Untitled section"

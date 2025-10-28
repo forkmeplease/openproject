@@ -36,7 +36,10 @@ module MeetingAgendaItems
     include OpPrimer::ComponentHelpers
     include Redmine::I18n
 
-    def initialize(meeting_agenda_item:, first_and_last: [], current_occurrence: nil)
+    def initialize(meeting_agenda_item:,
+                   first_and_last: [],
+                   current_occurrence: nil,
+                   single_mode: false)
       super
 
       @meeting_agenda_item = meeting_agenda_item
@@ -44,6 +47,7 @@ module MeetingAgendaItems
       @series = @meeting.recurring_meeting
       @first_and_last = first_and_last
       @current_occurrence = current_occurrence
+      @single_mode = single_mode
     end
 
     def wrapper_uniq_by
@@ -52,7 +56,13 @@ module MeetingAgendaItems
 
     private
 
+    def single_mode?
+      @single_mode
+    end
+
     def drag_and_drop_enabled?
+      return false if single_mode?
+
       !@meeting.closed? && User.current.allowed_in_project?(:manage_agendas, @meeting.project)
     end
 
@@ -182,6 +192,7 @@ module MeetingAgendaItems
 
     def delete_action_item(menu)
       return unless editable?
+      return if single_mode?
 
       label = @meeting_agenda_item.work_package_id.present? ? wp_agenda_item_delete_label : t(:text_destroy)
       menu.with_item(label:,
