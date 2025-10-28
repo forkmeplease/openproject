@@ -236,7 +236,7 @@ gem "view_component", "~> 4.1.0"
 gem "lookbook", "2.3.13"
 
 # Require factory_bot for usage with openproject plugins testing
-gem "factory_bot", "~> 6.5.0", require: false
+gem "factory_bot", "~> 6.5.6", require: false
 # require factory_bot_rails for convenience in core development
 gem "factory_bot_rails", "~> 6.5.0", require: false
 
