@@ -150,7 +150,7 @@ For work packages and users, typing `#` or `@` will open an autocomplete dropdow
 > These macros will only be expanded in the frontend. For each individual user, the correct permissions will be checked and
 > the macro will result in an error if the user is not allowed to view the respective resource.
 
-> [!INFO]
+> [!NOTE]
 > In the [PDF Export](../work-packages/exporting/#pdf-export), embedding of rich text attributes (e.g. work package description) is limited for some cases.
 > Simple text formatting or embedding outside of table cells is supported.
 
