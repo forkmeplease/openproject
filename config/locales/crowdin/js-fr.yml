@@ -1136,7 +1136,7 @@ fr:
       timeline: "Gantt"
     invite_user_modal:
       invite: "invite"
-      placeholder_add_tag: "Create placeholder user"
+      placeholder_add_tag: "Créer un utilisateur fictif"
     exclusion_info:
       modal:
         title: "Statut exclu des totaux de la hiérarchie"

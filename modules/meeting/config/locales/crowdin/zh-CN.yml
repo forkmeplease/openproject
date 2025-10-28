@@ -61,7 +61,7 @@ zh-CN:
       meeting_participant:
         invited: "已邀请"
         attended: "已参加"
-        participation_status: "Participation status"
+        participation_status: "参与状态"
     errors:
       models:
         meeting_participant:
@@ -492,7 +492,7 @@ zh-CN:
   label_agenda_item_work_package: "议程项目工作包"
   label_section_rename: "重命名章节"
   label_agenda_outcome: "成果"
-  label_agenda_new_outcome: "New outcome"
+  label_agenda_new_outcome: "新的结果"
   label_agenda_outcome_actions: "议程成果行动"
   label_agenda_outcome_edit: "编辑成果"
   label_agenda_outcome_delete: "删除成果"
@@ -540,7 +540,7 @@ zh-CN:
   text_meeting_not_editable_anymore: "本次会议已不可编辑。"
   text_meeting_not_present_anymore: "此次会议已被删除。请选择另一次会议。"
   label_add_work_package_to_meeting_dialog_title: "选择会议"
-  label_add_work_package_to_meeting_section_label: "Section"
+  label_add_work_package_to_meeting_section_label: "节"
   label_add_work_package_to_meeting_dialog_button: "添加到会议"
   label_meeting_selection_caption: "只能将此工作包添加到一个即将举行或正在举行的公开会议。"
   label_section_selection_caption: "选择议程的某个部分，或将其添加到待办事项中。"
