@@ -48,15 +48,14 @@ See COPYRIGHT and LICENSE files for more details.
           disabled_fn = lambda { |item| current_fn.call(item) || item.id == @hierarchy_item.parent.id }
           expanded_fn = lambda { |item| hierarchy_service.descendant_of?(item: @hierarchy_item, parent: item).success? }
 
-          opts = {
-            show_root: true,
+          item_options = {
             select_variant: :single,
             expanded_fn:,
             current_fn:,
             disabled_fn:
           }
 
-          render_tree(@custom_field, tree_view, opts)
+          populate_tree_view(tree_view, @custom_field, show_root: true, item_options:)
         end
       end
     end

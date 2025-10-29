@@ -36,6 +36,6 @@ See COPYRIGHT and LICENSE files for more details.
       item == @active_item || @hierarchy_service.descendant_of?(item: @active_item, parent: item).success?
     end
 
-    render_tree(@custom_field, tree_view, { show_root: false, expanded_fn:, href_fn:, current_fn: })
+    populate_tree_view(tree_view, @custom_field, item_options: { expanded_fn:, href_fn:, current_fn: })
   end
 %>

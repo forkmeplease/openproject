@@ -16,26 +16,16 @@
             filter_mode_control_arguments: { hidden: true }
           )
         ) do |tree_view|
-          current_value = @project.custom_value_for(@project_custom_field)
-          checked_fn = lambda do |item|
-            case current_value
-            when Array
-              current_value.map(&:value).include?(item.id.to_s)
-            when CustomValue
-              current_value.value == item.id.to_s
-            else
-              false
-            end
-          end
+          current_values = Array(@project.custom_value_for(@project_custom_field)).map(&:value)
+          checked_fn = lambda { |item| current_values.include?(item.id.to_s) }
 
-          opts = {
-            show_root: false,
+          item_options = {
             expanded_fn: ->(*) { true },
             checked_fn:,
             select_variant: @project_custom_field.multi_value? ? :multiple : :single
           }
 
-          render_tree(@project_custom_field, tree_view, opts)
+          populate_tree_view(tree_view, @project_custom_field, item_options:)
         end
       else
         render(

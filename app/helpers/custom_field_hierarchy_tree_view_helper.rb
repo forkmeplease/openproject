@@ -29,35 +29,35 @@
 #++
 
 module CustomFieldHierarchyTreeViewHelper
-  def render_tree(custom_field, tree_view, options = {})
+  def populate_tree_view(tree_view, custom_field, show_root: false, item_options: {})
     hierarchy_hash = custom_field.hierarchy_root.hash_tree
 
-    return {} if hierarchy_hash.nil?
+    return if hierarchy_hash.nil?
 
-    if options[:show_root]
+    if show_root
       hierarchy_hash.keys.first.label = custom_field.name
     else
       hierarchy_hash = hierarchy_hash.first[1]
     end
 
-    add_sub_tree(tree_view, hierarchy_hash, options)
+    add_sub_tree(tree_view, hierarchy_hash, item_options)
   end
 
   private
 
-  def add_sub_tree(tree, hierarchy_hash, options)
+  def add_sub_tree(tree, hierarchy_hash, item_options)
     hierarchy_hash.each do |item, child_hash|
       if child_hash.empty?
-        tree.with_leaf(**item_options(item, options))
+        tree.with_leaf(**item_attributes(item, item_options))
       else
-        tree.with_sub_tree(**item_options(item, options)) do |sub_tree|
-          add_sub_tree(sub_tree, child_hash, options)
+        tree.with_sub_tree(**item_attributes(item, item_options)) do |sub_tree|
+          add_sub_tree(sub_tree, child_hash, item_options)
         end
       end
     end
   end
 
-  def item_options(item, options) # rubocop:disable Metrics/PerceivedComplexity
+  def item_attributes(item, options) # rubocop:disable Metrics/PerceivedComplexity
     {
       label: item.label,
       value: item.id,
