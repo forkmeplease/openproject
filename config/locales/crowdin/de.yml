@@ -3689,7 +3689,7 @@ de:
   #Default format for numbers
   number:
     format:
-      delimiter: ","
+      delimiter: "."
       precision: 2
       separator: ","
     human:
