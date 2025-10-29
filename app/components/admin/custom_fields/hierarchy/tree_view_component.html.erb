@@ -31,10 +31,11 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   render(Primer::Alpha::TreeView.new(node_variant: :anchor)) do |tree_view|
     href_fn = lambda { |item| custom_field_item_path(@custom_field, item) }
+    current_fn = lambda { |item| item == @active_item }
     expanded_fn = lambda do |item|
       item == @active_item || @hierarchy_service.descendant_of?(item: @active_item, parent: item).success?
     end
 
-    render_tree(@custom_field, tree_view, { show_root: false, expanded_fn:, href_fn: })
+    render_tree(@custom_field, tree_view, { show_root: false, expanded_fn:, href_fn:, current_fn: })
   end
 %>
