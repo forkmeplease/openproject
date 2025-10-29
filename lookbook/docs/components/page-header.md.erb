@@ -28,6 +28,25 @@ There are minor adjustments on how the composition of this component is defined 
 - A special behaviour occurs when the page can be saved (or saved as) as one of the PageHeader actions will be used to display an informational text and a link to perform the action.
 - Work packages details are the only exceptional case, where the breadcrumb will be used to display the parent work package instead of the navigational hierarchy.
 
+## **Breadcrumb usage**
+
+The PageHeader always expects a breadcrumb, however, there are a few exceptional cases where the PageHeader can be rendered without breadcrumbs.
+This should only be done in some specific cases for example entry pages like project overview. In case of doubt, please consult with the Dream team and designers.
+
+```html
+  &lt;%=
+    render(Primer::OpenProject::PageHeader.new) do |header|
+      header.with_title { "Hello" }
+      header.with_breadcrumbs(nil)
+      header.with_description { "This PageHeader does not have any breadcrumbs." }
+      header.with_action_button(mobile_icon: "star", mobile_label: "Star") do |button|
+        button.with_leading_visual_icon(icon: "star")
+        "Star"
+      end
+    end
+  %&gt;
+```
+
 ## Best practices
 
 **Do**
