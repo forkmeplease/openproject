@@ -170,6 +170,7 @@ RSpec.describe "Meetings CRUD",
 
     show_page.edit_agenda_item(second, save: false) do
       fill_in "Title", with: "Second edited"
+      fill_in_rich_text "Notes", with: "Notes for the agenda item"
     end
 
     dismiss_confirm do
@@ -186,6 +187,13 @@ RSpec.describe "Meetings CRUD",
 
     show_page.assert_agenda_order! "Important task", "Updated title", "Second"
     show_page.expect_item_edit_form(second, visible: false)
+
+    # After accepting the confirmation dialog, subsequent reordering should not show the dialog again
+    expect do
+      accept_confirm do
+        show_page.select_action(second, I18n.t(:label_sort_highest))
+      end
+    end.to raise_error(Capybara::ModalNotFound)
 
     # user can see actions
     expect(page).to have_css("#meeting-agenda-items-new-button-component")
