@@ -62,7 +62,7 @@ class WorkPackages::UpdateService < BaseServices::Update
   def update_related_work_packages(service_call)
     work_package = service_call.result
     changed_attributes = work_package.changed_attribute_keys_before_last_save
-    update_ancestors([work_package], changed_attributes).each do |ancestor_service_call|
+    update_ancestors(work_package, changed_attributes).tap do |ancestor_service_call|
       ancestor_service_call.dependent_results.each do |ancestor_dependent_service_call|
         service_call.add_dependent!(ancestor_dependent_service_call)
       end
