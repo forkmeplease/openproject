@@ -2,6 +2,9 @@ import type { onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPaylo
 import { Extension } from "@hocuspocus/server";
 import * as Y from "yjs";
 import type { ApiResponseDocument } from "../types";
+import { ServerBlockNoteEditor } from "@blocknote/server-util";
+
+const editor = ServerBlockNoteEditor.create();
 
 export class OpenProjectApi implements Extension {
   /**
@@ -101,10 +104,22 @@ export class OpenProjectApi implements Extension {
   async onStoreDocument(data: onStoreDocumentPayload): Promise<void> {
     const { documentId, opBasePath } = data.context;
 
+    if (!documentId || !opBasePath) {
+      console.warn("Missing documentId or opBasePath in context. Skipping store.");
+      return;
+    }
+
     const targetUrl = `${opBasePath}/api/v3/documents/${documentId}`;
     console.log(`PATCH ${targetUrl}`);
 
     const base64Data = Buffer.from(Y.encodeStateAsUpdate(data.document)).toString("base64");
+
+    // Create a copy of the document to avoid side effects
+    const tempYdoc = new Y.Doc();
+    Y.applyUpdate(tempYdoc, Y.encodeStateAsUpdate(data.document));
+    const tempFragment = tempYdoc.getXmlFragment("document-store");
+    const editorData = editor.yXmlFragmentToBlocks(tempFragment);
+    const markdownData = await editor.blocksToMarkdownLossy(editorData);
 
     const response = await fetch(targetUrl, {
       method: "PATCH",
@@ -113,7 +128,8 @@ export class OpenProjectApi implements Extension {
         "Authorization": `Bearer ${data.context.token}`,
       },
       body: JSON.stringify({
-        content_binary: base64Data
+        content_binary: base64Data,
+        description: markdownData,
       }),
     });
 
