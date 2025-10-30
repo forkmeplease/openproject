@@ -80,16 +80,17 @@ module Meetings::PDF::Common::Agenda
     end
   end
 
-  def write_outcome(agenda_item)
-    return unless agenda_item.outcomes.exists?
-
-    outcome = agenda_item.outcomes.information_kind.last
-    return if outcome.notes.blank?
-
-    pdf.indent(styles.outcome_indent) do
-      write_optional_page_break
-      write_outcome_title
-      write_outcome_notes(outcome.notes)
+  def write_outcomes(agenda_item)
+    agenda_item
+      .outcomes
+      .all
+      .reject { |outcome| outcome.notes.blank? }
+      .each do |outcome|
+      pdf.indent(styles.outcome_indent) do
+        write_optional_page_break
+        write_outcome_title
+        write_outcome_notes(outcome.notes)
+      end
     end
   end
 
