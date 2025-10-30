@@ -29,9 +29,13 @@ There are minor adjustments on how the composition of this component is defined 
 - Work packages details are the only exceptional case, where the breadcrumb will be used to display the parent work package instead of the navigational hierarchy.
 
 ## **Breadcrumb usage**
+By default, every PageHeader should include breadcrumbs. They are a core part of the global navigation in OpenProject and must be present on almost all pages.
 
-The PageHeader always expects a breadcrumb, however, there are a few exceptional cases where the PageHeader can be rendered without breadcrumbs.
-This should only be done in some specific cases for example entry pages like project overview. In case of doubt, please consult with the Dream team and designers.
+There are a few exceptional cases where the PageHeader may be rendered without breadcrumbs (e.g., my page and the project overview page).
+Only use this variant if there is a strong UX reason.
+When in doubt, please consult the Dream team and designers first.
+
+**To intentionally render a PageHeader without breadcrumbs, always pass nil explicitly**
 
 ```html
   &lt;%=
