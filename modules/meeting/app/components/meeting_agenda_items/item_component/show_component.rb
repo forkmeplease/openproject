@@ -115,8 +115,8 @@ module MeetingAgendaItems
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
                        href: edit_meeting_agenda_item_path(@meeting_agenda_item.meeting,
-                                                         @meeting_agenda_item,
-                                                         presentation_mode: @presentation_mode,
+                                                           @meeting_agenda_item,
+                                                           presentation_mode: @presentation_mode,
                                                            current_occurrence: @current_occurrence),
                        method: "GET"
                      } }) do |item|

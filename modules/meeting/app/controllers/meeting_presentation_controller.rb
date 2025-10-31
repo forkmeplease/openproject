@@ -58,7 +58,14 @@ class MeetingPresentationController < ApplicationController
       "reference-value",
       @meeting_agenda_item.updated_at.iso8601
     )
-    update_item_via_turbo_stream(current_occurrence: @meeting, presentation_mode: true)
+
+    update_via_turbo_stream(
+      component: MeetingAgendaItems::ItemComponent::ShowComponent.new(
+        meeting_agenda_item: @meeting_agenda_item,
+        current_occurrence: @meeting,
+        presentation_mode: true
+      )
+    )
 
     respond_with_turbo_streams
   end
