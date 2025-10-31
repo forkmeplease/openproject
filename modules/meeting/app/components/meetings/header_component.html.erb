@@ -41,7 +41,7 @@
         end
       end
 
-      if OpenProject::FeatureDecisions.meetings_presentation_mode_active?
+      if OpenProject::FeatureDecisions.meetings_presentation_mode_active? && @meeting.agenda_items.any?
         header.with_action_button(
           tag: :a,
           scheme: :secondary,

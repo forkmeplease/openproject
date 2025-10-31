@@ -38,7 +38,6 @@ RSpec.describe "Meeting Presentation Mode",
   shared_let(:project) { create(:project, enabled_module_names: %w[meetings]) }
   shared_let(:user) do
     create :user,
-           lastname: "Presenter",
            preferences: { time_zone: "Etc/UTC" },
            member_with_permissions: { project => %i[view_meetings manage_agendas manage_outcomes] }
   end
@@ -74,7 +73,10 @@ RSpec.describe "Meeting Presentation Mode",
     expect(page).to have_text("First Item")
     expect(page).to have_text("Second Item")
 
-    click_link_or_button "Present"
+    within("#meetings-header-component") do
+      expect(page).to have_link("Present")
+      click_link_or_button "Present"
+    end
 
     # Verify we're in presentation mode
     expect(page).to have_current_path(project_meeting_presentation_path(project, meeting), ignore_query: true)
@@ -150,5 +152,29 @@ RSpec.describe "Meeting Presentation Mode",
 
     # Verify we're back on the show page
     expect(page).to have_current_path(project_meeting_path(project, meeting), ignore_query: true)
+  end
+
+  context "with an empty meeting" do
+    let(:meeting) do
+      create :meeting,
+             project:,
+             title: "Empty meeting",
+             start_time: "2025-10-31T10:00:00Z",
+             state: :in_progress,
+             author: user
+    end
+
+    it "does not show the present button" do
+      show_page.visit!
+
+      within("#meetings-header-component") do
+        expect(page).to have_no_link("Present")
+      end
+
+      # When visiting the presentation mode directly
+      visit project_meeting_presentation_path(project, meeting)
+
+      expect_flash(type: :warning, message: "There are no agenda items to present.")
+    end
   end
 end

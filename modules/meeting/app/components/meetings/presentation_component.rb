@@ -50,6 +50,10 @@ module Meetings
       5_000
     end
 
+    def render?
+      @agenda_item_ids.any?
+    end
+
     def current_item
       return nil if @current_item.nil?
 

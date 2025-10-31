@@ -35,6 +35,7 @@ class MeetingPresentationController < ApplicationController
   before_action :check_feature_flag
 
   before_action :find_meeting
+  before_action :check_presentable
   before_action :find_agenda_item, only: [:check_for_updates]
 
   load_and_authorize_with_permission_in_optional_project :view_meetings
@@ -76,6 +77,14 @@ class MeetingPresentationController < ApplicationController
   def check_feature_flag
     unless OpenProject::FeatureDecisions.meetings_presentation_mode_active?
       render_404
+    end
+  end
+
+  def check_presentable
+    if @meeting.agenda_items.empty?
+      flash[:warning] = t("meeting.presentation_mode.no_items_flash")
+      redirect_to project_meeting_path(@meeting.project, @meeting),
+                  status: :see_other
     end
   end
 
