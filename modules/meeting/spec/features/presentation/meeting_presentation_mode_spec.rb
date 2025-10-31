@@ -177,4 +177,17 @@ RSpec.describe "Meeting Presentation Mode",
       expect_flash(type: :warning, message: "There are no agenda items to present.")
     end
   end
+
+  context "with a templated meeting" do
+    let!(:series) { create(:recurring_meeting, project:) }
+    let(:meeting) { series.template }
+
+    it "does not show the present button" do
+      show_page.visit!
+
+      within("#meetings-header-component") do
+        expect(page).to have_no_link("Present")
+      end
+    end
+  end
 end
