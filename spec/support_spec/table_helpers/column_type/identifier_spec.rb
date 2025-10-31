@@ -28,31 +28,29 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ProjectCustomFieldProjectMappings
-  class DeleteService < ::BaseServices::Delete
-    protected
+require "spec_helper"
 
-    def after_perform(service_result)
-      super.tap do
-        recalculate_values(service_result)
+module TableHelpers::ColumnType
+  RSpec.describe Identifier do
+    subject(:column_type) { described_class.new }
+
+    describe "#extract_data" do
+      it "extracts the identifier metadata without any attributes" do
+        attribute = :identifier
+        raw_header = "  identifier       "
+        work_packages_data =
+          [
+            {
+              index: 0,
+              row: { raw_header => "  work_package_42  " }
+            }
+          ]
+        work_package_data = work_packages_data.first
+
+        expect(column_type.extract_data(attribute, raw_header, work_package_data, work_packages_data))
+          .to eq({ attributes: {},
+                   identifier: :work_package42 })
       end
-    end
-
-    def recalculate_values(service_result)
-      mapping = service_result.result
-      project = mapping.project
-
-      affected_cfs = project.all_available_custom_fields.affected_calculated_fields([mapping.custom_field_id])
-
-      project.calculate_custom_fields(affected_cfs)
-
-      project.save if project.changed_for_autosave?
-    end
-
-    # Mappings have custom deletion rules that are similar to the update rules all derived from the base contract
-    # Reuse the update contract to ensure that the deletion rules are consistent with the update rules
-    def default_contract_class
-      ProjectCustomFieldProjectMappings::UpdateContract
     end
   end
 end

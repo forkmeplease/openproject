@@ -28,44 +28,45 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module CustomFields
-    module Hierarchy
-      class ChangeItemParentDialogComponent < ApplicationComponent
-        include OpTurbo::Streamable
-        include CustomFieldHierarchyTreeViewHelper
+module CustomFieldHierarchyTreeViewHelper
+  def populate_tree_view(tree_view, custom_field, show_root: false, item_options: {})
+    hierarchy_hash = custom_field.hierarchy_root.hash_tree
 
-        TEST_SELECTOR = "op-custom-fields--change-item-parent-dialog"
+    return if hierarchy_hash.nil?
 
-        def initialize(custom_field:, hierarchy_item:)
-          super
-          @custom_field = custom_field
-          @hierarchy_item = hierarchy_item
-        end
+    if show_root
+      hierarchy_hash.keys.first.label = custom_field.name
+    else
+      hierarchy_hash = hierarchy_hash.first[1]
+    end
 
-        def dialog_id = "custom-fields--change-item-parent-dialog"
+    add_sub_tree(tree_view, hierarchy_hash, item_options)
+  end
 
-        def form_id = "custom-fields--change-item-parent-form"
+  private
 
-        def form_arguments
-          {
-            id: form_id,
-            url: change_parent_custom_field_item_path(custom_field_id: @custom_field.id, id: @hierarchy_item.id),
-            model: form_model,
-            method: :post
-          }
-        end
-
-        def hierarchy_service
-          @hierarchy_service ||= ::CustomFields::Hierarchy::HierarchicalItemService.new
-        end
-
-        private
-
-        def form_model
-          CustomField::Hierarchy::Forms::NewParentFormModel.new(new_parent: [])
+  def add_sub_tree(tree, hierarchy_hash, item_options)
+    hierarchy_hash.each do |item, child_hash|
+      if child_hash.empty?
+        tree.with_leaf(**item_attributes(item, item_options))
+      else
+        tree.with_sub_tree(**item_attributes(item, item_options)) do |sub_tree|
+          add_sub_tree(sub_tree, child_hash, item_options)
         end
       end
     end
+  end
+
+  def item_attributes(item, options) # rubocop:disable Metrics/PerceivedComplexity
+    {
+      label: item.label,
+      value: item.id,
+      select_variant: options[:select_variant] || :none,
+      checked: options[:checked_fn]&.call(item) || false,
+      current: options[:current_fn]&.call(item) || false,
+      disabled: options[:disabled_fn]&.call(item) || false,
+      expanded: options[:expanded_fn]&.call(item) || false,
+      href: options[:href_fn]&.call(item)
+    }
   end
 end
