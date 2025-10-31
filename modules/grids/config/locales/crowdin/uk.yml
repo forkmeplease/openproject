@@ -3,9 +3,9 @@ uk:
     label_widget_in_grid: "Віджет, що міститься в сітці %{grid_name}"
     widgets:
       subitems:
-        title: "Subitems"
+        title: "Піделементи"
         no_results: "Немає видимих дочірніх об’єктів."
-        view_all_subitems: "View all subitems"
+        view_all_subitems: "Переглянути всі піделементи"
       members:
         title: "Останні учасники"
         no_results: "Немає видимих учасників."

@@ -30,7 +30,7 @@ it:
         project_status_beta:
           title: 'Stato del progetto (BETA)'
         subprojects:
-          title: 'Subitems'
+          title: 'Sottoelementi'
         project_favorites:
           title: 'Progetti preferiti'
           no_results: 'Al momento non hai progetti preferiti. Clicca sull''icona della stella nella dashboard del progetto per aggiungerne uno ai tuoi preferiti.'

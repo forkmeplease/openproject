@@ -249,10 +249,10 @@ de:
         ampf_configuration:
           client_folder_creation: Automatische Ordnererstellung
           client_folder_removal: Automatische Ordnerlöschung
-          drive_contents: Drive content
+          drive_contents: Speicherinhalt
           files_request: Gruppenordnerdateien werden abgerufen
           group_folder_app: 'Abhängigkeit: Gruppenordner'
-          group_folder_contents: Group folder content
+          group_folder_contents: Inhalt des Gruppenordners
           group_folder_presence: Gruppenordner existiert
           header: Automatisch verwaltete Projektordner
           userless_access: Serverseitige Anfrageauthentifizierung
@@ -513,7 +513,7 @@ de:
         label: Das beim Benutzer-Login erhaltene Access Token verwenden
       manual:
         helptext: OpenProject tauscht ein Token mit dem Identity Provider für die angegebene Audience aus.
-        label: Manually specify audience for which to exchange access token (Recommended)
+        label: Manuell die Audience angeben, für die das Access Token eingetauscht werden soll (Empfohlen)
     storage_list_blank_slate:
       description: Fügen Sie einen Dateispeicher hinzu, um ihn hier zu sehen.
       heading: Sie haben noch keine Dateispeicher.

@@ -164,9 +164,9 @@ uk:
         title: "Таблиця маркерів доступу"
     workflows:
       tabs:
-        default_transitions: "Default transitions"
-        user_author: "User is author"
-        user_assignee: "User is assignee"
+        default_transitions: "Стандартні переходи"
+        user_author: "Користувач є автором"
+        user_assignee: "Користувач є призначеною особою"
   authentication:
     login_and_registration: "Вхід і реєстрація"
   announcements:
@@ -319,7 +319,7 @@ uk:
     reorder_alphabetical: "Перевпорядкувати значення за алфавітом"
     reorder_confirmation: "Увага! Поточний порядок доступних значень буде втрачено. Продовжити?"
     placeholder_version_select: "Спочатку потрібно вибрати пакет робіт або проєкт"
-    calculated_field_not_editable: "Non-editable attribute. This value is calculated automatically."
+    calculated_field_not_editable: "Атрибут не підлягає редагуванню. Його значення обчислюється автоматично."
     instructions:
       is_required: "Позначте користувацьке поле як обов’язкове. Так його потрібно буде заповнювати під час створення нових або оновлення наявних ресурсів."
       is_required_for_project: "Установіть прапорець, щоб увімкнути цей атрибут і зробити його обов’язковим в усіх проєктах. Його не можна деактивувати для окремих проєктів."
@@ -346,8 +346,8 @@ uk:
   concatenation:
     single: "або"
   danger_dialog:
-    confirmation_live_message_checked: "The button to proceed is now active."
-    confirmation_live_message_unchecked: "The button to proceed is now inactive. You need to tick the checkbox to continue."
+    confirmation_live_message_checked: "Кнопка для продовження активна."
+    confirmation_live_message_unchecked: "Кнопка для продовження зараз неактивна. Щоб продовжити, поставте прапорець."
   op_dry_validation:
     or: "або"
     errors:
@@ -527,7 +527,7 @@ uk:
         no_results_title_text: Наразі не існує версій для проекту.
         no_results_content_text: Створіть нову версію
         work_packages_graph: Графік робочих пакетів
-        show_work_packages: Show work packages
+        show_work_packages: Показати пакети робіт
       storage:
         no_results_title_text: Цей проєкт не потребує додаткового дискового простору.
       work_package_priorities:
@@ -2653,8 +2653,8 @@ uk:
     include_sub_items: "Включити піделементи"
     no_results_text: "Немає результатів"
   toggle_switch:
-    label_on: "On"
-    label_off: "Off"
+    label_on: "Увімкнено"
+    label_off: "Вимкнено"
   general_csv_decimal_separator: "."
   general_csv_encoding: "UTF-8"
   general_csv_separator: ","
@@ -2685,11 +2685,11 @@ uk:
           new_features_title: >
             Випуск включає різноманітні нові функції і покращення, такі як:
           new_features_list:
-            line_0: Calculated values for project evaluation and scoring (Enterprise add-on).
-            line_1: Project attributes type hierarchy.
-            line_2: Performance updates with great impact.
-            line_3: New index page for Documents module.
-            line_4: Possibility to change parent of a custom field item.
+            line_0: Обчислені значення для оцінки проєктів і підрахунку балів (доповнення версії Enterprise).
+            line_1: Ієрархія типів атрибутів проєкту.
+            line_2: Значні покращення продуктивності.
+            line_3: Нова індексна сторінка модуля «Документи».
+            line_4: Можливість змінити батьківський об’єкт елемента користувацького поля.
     links:
       upgrade_enterprise_edition: "Оновлення до версії Enterprise"
       postgres_migration: "Міграція інсталяції в PostgreSQL"
@@ -3014,7 +3014,7 @@ uk:
   label_duplicate: "Дублювати"
   label_duplicates: "Дублікати"
   label_edit: "Редагувати"
-  label_edit_attribute: "Edit attribute"
+  label_edit_attribute: "Редагувати атрибут"
   label_edit_x: "Редагувати: %{x}"
   label_enable_multi_select: "Перемкнути мультиселекцію"
   label_enabled_project_custom_fields: "Увімкнено спеціальні поля"
@@ -3441,7 +3441,7 @@ uk:
   label_user_search: "Знайти користувача:"
   label_user_settings: "Налаштування користувача"
   label_users_settings: "Налаштування користувачів"
-  label_value_x: "Value: %{x}"
+  label_value_x: "Значення: %{x}"
   label_version_new: "Нова версія"
   label_version_edit: "Редагувати версію"
   label_version_plural: "Версії"

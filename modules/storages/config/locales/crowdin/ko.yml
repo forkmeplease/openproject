@@ -511,7 +511,7 @@ ko:
         label: 사용자 로그인 시 얻은 액세스 토큰을 사용하세요
       manual:
         helptext: OpenProject는 지정된 오디언스에 대한 ID 공급자와 토큰을 교환합니다.
-        label: Manually specify audience for which to exchange access token (Recommended)
+        label: 액세스 토큰을 교환할 오디언스를 수동으로 지정하세요(권장)
     storage_list_blank_slate:
       description: 여기에서 보려면 저장소를 추가합니다.
       heading: 아직 저장소가 없습니다.

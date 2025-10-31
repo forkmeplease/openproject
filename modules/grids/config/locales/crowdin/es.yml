@@ -3,9 +3,9 @@ es:
     label_widget_in_grid: "Widget contenido en la cuadrícula %{grid_name}"
     widgets:
       subitems:
-        title: "Subitems"
+        title: "Subelementos"
         no_results: "No hay subelementos visibles."
-        view_all_subitems: "View all subitems"
+        view_all_subitems: "Ver todos los subelementos"
       members:
         title: "Nuevos miembros"
         no_results: "No hay miembros visibles."
