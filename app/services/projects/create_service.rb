@@ -34,9 +34,7 @@ module Projects
 
     def after_perform(service_call)
       super.tap do |call|
-        new_project = call.result
-        update_calculated_value_custom_fields(new_project)
-        new_project.save if new_project.changed_for_autosave?
+        update_calculated_value_custom_fields(call.result)
       end
     end
   end

@@ -240,6 +240,22 @@ RSpec.describe(
             expect(calculated_cv.value).to eq "10"
           end
 
+          it "recalculates values when referenced custom field is changed during copy" do
+            target_project_params[:custom_field_values] = { integer_custom_field.id => 8 }
+
+            expect(subject).to be_success
+
+            expect(project_copy.project_custom_fields).to contain_exactly(integer_custom_field, calculated_custom_field)
+
+            integer_cv = project_copy.custom_values.reload.find_by(custom_field: integer_custom_field)
+            expect(integer_cv).to be_present
+            expect(integer_cv.value).to eq "8"
+
+            calculated_cv = project_copy.custom_values.reload.find_by(custom_field: calculated_custom_field)
+            expect(calculated_cv).to be_present
+            expect(calculated_cv.value).to eq "16"
+          end
+
           context "with calculation errors", with_flag: { calculated_value_project_attribute: true } do
             let(:calculated_custom_field) do
               create(:calculated_value_project_custom_field, :skip_validations,

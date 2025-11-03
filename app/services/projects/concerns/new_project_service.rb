@@ -128,6 +128,8 @@ module Projects::Concerns
       affected_cfs = model.available_custom_fields.unscope(where: :admin_only).affected_calculated_fields(changed_cf_ids)
 
       model.calculate_custom_fields(affected_cfs)
+
+      model.save if model.persisted? && model.changed_for_autosave?
     end
   end
 end
