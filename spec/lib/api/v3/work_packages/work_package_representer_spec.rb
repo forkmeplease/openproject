@@ -1252,7 +1252,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
               .insert_item(contract_class:, parent: custom_field.hierarchy_root, label: "TIE Fighter", weight: 16.7)
               .value!
           end
-          let(:value) { wighted_item.id }
+          let(:value) { weighted_item.id }
 
           it_behaves_like "has a titled link" do
             let(:link) { "customField#{custom_field.id}" }

@@ -296,7 +296,7 @@ RSpec.describe API::V3::Utilities::CustomFieldInjector do
 
     {
       hierarchy: { with_ee: [:custom_field_hierarchies] },
-      weighted_item_list: {}
+      weighted_item_list: { with_ee: [:weighted_item_lists] }
     }.each do |format, tags|
       describe "#{format} custom field", **tags do
         let(:custom_field) do

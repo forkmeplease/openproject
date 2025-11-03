@@ -311,7 +311,9 @@ RSpec.describe Projects::SetAttributesService, type: :model do
         end
       end
 
-      describe "calculated custom fields", with_flag: { calculated_value_project_attribute: true } do
+      describe "calculated custom fields",
+               with_ee: %i[calculated_values],
+               with_flag: { calculated_value_project_attribute: true } do
         shared_let(:project) { create(:project) }
 
         before do

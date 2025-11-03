@@ -55,9 +55,9 @@ module CustomFields
     def enterprise_addon
       @enterprise_addon ||= case custom_field.field_format
                             when "hierarchy"
-                              { key: :custom_field_hierarchies, image: "enterprise/homescreen.png" }
+                              { key: :custom_field_hierarchies, image: "enterprise/hierarchies.png" }
                             when "weighted_item_list"
-                              { key: :weighted_item_lists, image: "enterprise/homescreen.png" }
+                              { key: :weighted_item_lists, image: "enterprise/weighted_item_lists.png" }
                             else
                               {}
                             end
