@@ -101,13 +101,13 @@ export class EditableToolbarTitleComponent implements OnInit, OnChanges {
   ngOnInit():void {
     this.text.input_title = `${this.text.click_to_edit} ${this.text.press_enter_to_save}`;
 
-    this.elementRef.nativeElement.addEventListener(triggerEditingEvent, (evt:Event, val = '') => {
+    this.elementRef.nativeElement.addEventListener(triggerEditingEvent, (evt:CustomEvent<string|undefined>) => {
       // In case we're not editable, ignore request
       if (!this.inputField) {
         return;
       }
 
-      this.selectedTitle = val;
+      this.selectedTitle = evt.detail ?? '';
       setTimeout(() => {
         const field:HTMLInputElement = this.inputField!.nativeElement;
         field.focus();

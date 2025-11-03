@@ -39,7 +39,7 @@ import { BoardConfigurationModalComponent } from 'core-app/features/boards/board
 import { BoardService } from 'core-app/features/boards/board/board.service';
 import { StateService } from '@uirouter/core';
 import { ToastService } from 'core-app/shared/components/toaster/toast.service';
-import { triggerEditingEvent } from 'core-app/shared/components/editable-toolbar-title/editable-toolbar-title.component';
+import { selectableTitleIdentifier, triggerEditingEvent } from 'core-app/shared/components/editable-toolbar-title/editable-toolbar-title.component';
 
 @Directive({
   selector: '[boardsToolbarMenu]',
@@ -93,7 +93,7 @@ export class BoardsToolbarMenuDirective extends OpContextMenuTrigger {
         icon: 'icon-edit',
         onClick: () => {
           if (this.board.grid.updateImmediately) {
-            document.querySelector('.toolbar-container .editable-toolbar-title--input')?.dispatchEvent(new CustomEvent(triggerEditingEvent));
+            document.querySelector(selectableTitleIdentifier)?.dispatchEvent(new CustomEvent(triggerEditingEvent));
           }
 
           return true;
