@@ -29,7 +29,23 @@
 #++
 
 class RenameItemScoreToWeight < ActiveRecord::Migration[8.0]
-  def change
+  def up
     rename_column :hierarchical_items, :score, :weight
+
+    execute <<~SQL.squish
+      UPDATE custom_fields
+      SET field_format = 'weighted_item_list'
+      WHERE field_format = 'scored_list';
+    SQL
+  end
+
+  def down
+    rename_column :hierarchical_items, :weight, :score
+
+    execute <<~SQL.squish
+      UPDATE custom_fields
+      SET field_format = 'scored_list'
+      WHERE field_format = 'weighted_item_list';
+    SQL
   end
 end

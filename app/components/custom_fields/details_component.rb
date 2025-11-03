@@ -31,6 +31,7 @@
 module CustomFields
   class DetailsComponent < ApplicationComponent
     include ApplicationHelper
+    include EnterpriseHelper
     include OpPrimer::ComponentHelpers
     include OpTurbo::Streamable
 
@@ -49,6 +50,17 @@ module CustomFields
 
     def form_method
       model.new_record? ? :post : :put
+    end
+
+    def enterprise_addon
+      @enterprise_addon ||= case custom_field.field_format
+                            when "hierarchy"
+                              { key: :custom_field_hierarchies, image: "enterprise/homescreen.png" }
+                            when "weighted_item_list"
+                              { key: :weighted_item_lists, image: "enterprise/homescreen.png" }
+                            else
+                              {}
+                            end
     end
   end
 end

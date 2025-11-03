@@ -95,6 +95,7 @@ OpenProject::CustomFieldFormat.map do |fields|
                                                      label: :label_weighted_item_list,
                                                      only: %w(Project WorkPackage),
                                                      order: 13,
+                                                     enterprise_feature: :weighted_item_lists,
                                                      formatter: "CustomValue::WeightedItemListStrategy")
 
   fields.register OpenProject::CustomFieldFormat.new("calculated_value",
@@ -104,5 +105,6 @@ OpenProject::CustomFieldFormat.map do |fields|
                                                      enabled: lambda do
                                                        OpenProject::FeatureDecisions.calculated_value_project_attribute_active?
                                                      end,
+                                                     enterprise_feature: :calculated_values,
                                                      formatter: "CustomValue::CalculatedValueStrategy")
 end
