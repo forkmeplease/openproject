@@ -270,10 +270,11 @@ RSpec.describe Projects::UpdateService, type: :model do
         end
 
         before do
-          create(:custom_value, customized: project, custom_field: cf_static, value: -5)
-          create(:custom_value, customized: project, custom_field: cf_calculated1, value: -6)
-          create(:custom_value, customized: project, custom_field: cf_calculated2, value: -6)
-          create(:custom_value, customized: project, custom_field: cf_calculated3, value: -6)
+          # using update_columns to prevent auto enabling for the project
+          create(:custom_value, customized: project, custom_field: cf_static).update_columns(value: -5)
+          [cf_calculated1, cf_calculated2, cf_calculated3].each do |custom_field|
+            create(:custom_value, customized: project, custom_field:).update_columns(value: -6)
+          end
         end
 
         it "calculates only accessible values" do
