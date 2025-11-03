@@ -30,7 +30,7 @@ require "spec_helper"
 
 require_relative "../support/pages/dashboard"
 
-RSpec.describe "Project description widget", :js, with_flag: { new_project_overview: true } do
+RSpec.describe "Project description widget", :js do
   let!(:type) { create(:type) }
   let!(:portfolio) { create(:portfolio, description: "") }
   let!(:open_status) { create(:default_status) }

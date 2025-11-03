@@ -63,10 +63,6 @@ OpenProject::FeatureDecisions.add :portfolio_models,
                                   description: "Enables the creation and management of portfolio and program work spaces.",
                                   force_active: true
 
-OpenProject::FeatureDecisions.add :new_project_overview,
-                                  description: "Enables the new project overview experience.",
-                                  force_active: true
-
 OpenProject::FeatureDecisions.add :wp_activity_tab_lazy_pagination,
                                   description: "Enables lazy pagination for the activity tab."
 
