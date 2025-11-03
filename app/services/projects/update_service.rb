@@ -47,7 +47,7 @@ module Projects
     end
 
     def before_perform(service_call)
-      super.tap do |super_call|
+      super.tap do
         update_calculated_value_custom_fields
       end
     end
