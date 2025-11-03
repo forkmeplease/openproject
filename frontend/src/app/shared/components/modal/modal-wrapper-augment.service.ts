@@ -60,13 +60,13 @@ export class OpModalWrapperAugmentService {
   public wrapElement(element:HTMLElement) {
     // Find activation link
     const activationSelector = element.dataset.activationSelector || '.modal-delivery-element--activation-link';
-    const activationLink = document.querySelector(activationSelector)!;
+    const activationLink = document.querySelector(activationSelector);
     const initializeNow = element.dataset.modalInitializeNow;
 
     if (initializeNow) {
       this.show(element);
     } else {
-      activationLink.addEventListener('click', (evt) => {
+      activationLink?.addEventListener('click', (evt) => {
         this.show(element);
         evt.preventDefault();
       });
