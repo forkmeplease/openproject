@@ -26,14 +26,37 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { WorkPackageCopyController } from 'core-app/features/work-packages/components/wp-copy/wp-copy.controller';
+import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/core';
+import {
+  WorkPackageIsolatedQuerySpaceDirective,
+} from 'core-app/features/work-packages/directives/query-space/wp-isolated-query-space.directive';
+import { populateInputsFromDataset } from 'core-app/shared/components/dataset-inputs';
 
+/**
+ * An entry component to be rendered by Rails which opens an isolated query space
+ * for the work package split view
+ */
 @Component({
-  selector: 'wp-copy-split-view',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: '../wp-new/wp-new-split-view.html',
+  hostDirectives: [WorkPackageIsolatedQuerySpaceDirective],
   standalone: false,
+  template: `
+    <wp-copy-full-view
+      [stateParams]="{ type: type, parent_id: parentId, projectPath: projectIdentifier, copiedFromWorkPackageId: copiedFromWorkPackageId }"
+      [routedFromAngular]="routedFromAngular"
+    ></wp-copy-full-view>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkPackageCopySplitViewComponent extends WorkPackageCopyController {
+export class WorkPackageFullCopyEntryComponent {
+  @Input() type:string;
+  @Input() copiedFromWorkPackageId:string;
+  @Input() parentId?:string;
+  @Input() projectIdentifier?:string;
+  @Input() routedFromAngular:boolean;
+
+  constructor(readonly elementRef:ElementRef) {
+    populateInputsFromDataset(this);
+
+    document.body.classList.add('router--work-packages-full-create');
+  }
 }
