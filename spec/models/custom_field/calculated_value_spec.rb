@@ -584,7 +584,7 @@ RSpec.describe CustomField::CalculatedValue,
     let(:formula) { "" }
 
     context "with an empty formula" do
-      it_behaves_like "invalid formula", "can't be blank."
+      it_behaves_like "invalid formula", "Formula can't be blank."
     end
 
     context "with a formula containing only allowed characters" do
@@ -614,25 +614,27 @@ RSpec.describe CustomField::CalculatedValue,
     context "when omitting trailing decimals after a decimal point" do
       let(:formula) { "1.5 + 1. - 3.25" }
 
-      it_behaves_like "invalid formula", "is invalid."
+      it_behaves_like "invalid formula", "Formula is invalid."
     end
 
     context "with a formula containing forbidden characters" do
       let(:formula) { "abc + 2" }
 
-      it_behaves_like "invalid formula", "contains invalid characters."
+      it_behaves_like "invalid formula",
+                      "Only numeric values, project factors, calculated values and mathematical operators are allowed."
     end
 
     context "with a formula containing references to custom fields without pattern-mustaches" do
       let(:formula) { "100 * cf_3" }
 
-      it_behaves_like "invalid formula", "contains invalid characters."
+      it_behaves_like "invalid formula",
+                      "Only numeric values, project factors, calculated values and mathematical operators are allowed."
     end
 
     context "with a formula that is not a valid equation" do
       let(:formula) { "1 / + - 3" }
 
-      it_behaves_like "invalid formula", "is invalid."
+      it_behaves_like "invalid formula", "Formula is invalid."
     end
 
     context "with a formula that contains custom fields that are not visible to the user" do
@@ -654,7 +656,8 @@ RSpec.describe CustomField::CalculatedValue,
 
       current_user { user }
 
-      it_behaves_like "invalid formula", /contains custom fields that are not allowed: (int, float|float, int)./
+      it_behaves_like "invalid formula",
+                      /The attribute (int, float|float, int) cannot be used because it leads to a circular reference/
     end
   end
 end
