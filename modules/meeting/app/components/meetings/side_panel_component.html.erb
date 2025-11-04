@@ -7,7 +7,7 @@
         panel.with_section(email_updates_mode_selector)
       end
 
-      unless @meeting.template?
+      unless @meeting.template? && !@meeting.draft?
         panel.with_section(Meetings::SidePanel::StateComponent.new(meeting: @meeting))
       end
 

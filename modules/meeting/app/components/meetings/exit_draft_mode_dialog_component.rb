@@ -44,7 +44,21 @@ module Meetings
     private
 
     def id = "exit-draft-mode-dialog"
-    def title = I18n.t("text_exit_draft_mode_dialog_title")
-    def subtitle = I18n.t("text_exit_draft_mode_dialog_subtitle")
+
+    def title
+      if @meeting.recurring?
+        I18n.t("text_exit_draft_mode_dialog_template_title")
+      else
+        I18n.t("text_exit_draft_mode_dialog_title")
+      end
+    end
+
+    def subtitle
+      if @meeting.recurring?
+        I18n.t("text_exit_draft_mode_dialog_template_subtitle")
+      else
+        I18n.t("text_exit_draft_mode_dialog_subtitle")
+      end
+    end
   end
 end

@@ -412,7 +412,8 @@ en:
       banner_html: >
         You are currently editing a template of a meeting series: %{link}.
         Every new occurrence of a meeting in the series will use this template.
-        Changes will not affect past or already created meetings.
+        Changes will not affect past or already-created meetings.
+        No email invites will be sent in this current draft mode until you open the first meeting.
     frequency:
       x_daily:
         one: "Every day"
@@ -617,7 +618,8 @@ en:
   text_meeting_draft_banner: "You are currently in draft mode. This meeting will not send out any calendar updates or invites, even if you change meeting details or add/remove participants."
   text_exit_draft_mode_dialog_title: "Open this meeting and send invites?"
   text_exit_draft_mode_dialog_subtitle: "You cannot return to draft mode once you schedule a meeting."
-
+  text_exit_draft_mode_dialog_template_title: "Open the first occurrence of this meeting series?"
+  text_exit_draft_mode_dialog_template_subtitle: "You cannot return to draft mode after this."
 
   text_meeting_not_editable_anymore: "This meeting is not editable anymore."
   text_meeting_not_present_anymore: "This meeting was deleted. Please select another meeting."

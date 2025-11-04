@@ -69,9 +69,8 @@ module Meetings
     end
 
     def finish_setup_enabled?
-      (@meeting.template? &&
-        User.current.allowed_in_project?(:create_meetings, @meeting.project) &&
-        @series.scheduled_meetings.none?) || @meeting.draft?
+      @meeting.draft? &&
+        User.current.allowed_in_project?(:create_meetings, @meeting.project)
     end
 
     def action_button_params
@@ -84,7 +83,7 @@ module Meetings
         data: {
           action: "click->meetings--submit#intercept",
           href: action_button_href,
-          method: @meeting.recurring? ? "POST" : "GET"
+          method: "GET"
         }
       }
     end
@@ -94,12 +93,7 @@ module Meetings
     end
 
     def action_button_href
-      if @meeting.recurring?
-        template_completed_project_recurring_meeting_path(@project,
-                                                          @meeting.recurring_meeting)
-      else
-        exit_draft_mode_dialog_project_meeting_path(@project, @meeting)
-      end
+      exit_draft_mode_dialog_project_meeting_path(@project, @meeting)
     end
 
     def send_emails?

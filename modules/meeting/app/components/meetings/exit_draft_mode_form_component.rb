@@ -40,5 +40,15 @@ module Meetings
       @meeting = meeting
       @project = meeting.project
     end
+
+    private
+
+    def url
+      if @meeting.recurring?
+        template_completed_project_recurring_meeting_path(@project, @meeting.recurring_meeting)
+      else
+        exit_draft_mode_project_meeting_path(@project, @meeting)
+      end
+    end
   end
 end
