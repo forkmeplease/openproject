@@ -31,6 +31,7 @@ See COPYRIGHT and LICENSE files for more details.
   widget_wrapper do
     if members_by_role.any?
       flex_layout(style: "gap: var(--base-size-8, 8px)") do |flex|
+        spacer_component = Primer::Beta::Text.new(mr: 1).with_content(", ")
 
         members_by_role.each_with_index do |role_data, i|
           flex.with_row do
@@ -38,7 +39,6 @@ See COPYRIGHT and LICENSE files for more details.
           end
 
           flex.with_row(mb: 2) do
-            spacer_component = Primer::Beta::Text.new(mr: 1).with_content(", ")
             concat render(
                      Users::AvatarComponent
                        .with_collection(
