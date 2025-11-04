@@ -39,4 +39,8 @@ class DocumentType < ApplicationRecord
   normalizes :name, with: ->(name) { name.strip.capitalize }
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+
+  def self.default
+    where(is_default: true).first || first
+  end
 end

@@ -67,13 +67,13 @@ class Document < ApplicationRecord
       .references(:attachments)
   }
 
-  after_initialize :set_default_category
+  after_initialize :set_default_type
 
   def visible?(user = User.current)
     !user.nil? && user.allowed_in_project?(:view_documents, project)
   end
 
-  def set_default_category
-    self.category ||= DocumentCategory.default if new_record?
+  def set_default_type
+    self.type ||= DocumentType.default if new_record?
   end
 end

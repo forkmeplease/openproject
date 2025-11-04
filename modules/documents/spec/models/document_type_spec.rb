@@ -52,4 +52,20 @@ RSpec.describe DocumentType do
   describe "Database constraints" do
     it { is_expected.to have_db_index(:name).unique(true) }
   end
+
+  describe ".default" do
+    it "returns the default document type when one is marked as default" do
+      default_type = create(:document_type, is_default: true)
+      create(:document_type, is_default: false)
+
+      expect(described_class.default).to eq default_type
+    end
+
+    it "returns the first document type when none is marked as default" do
+      first_type = create(:document_type, is_default: false)
+      create(:document_type, is_default: false)
+
+      expect(described_class.default).to eq first_type
+    end
+  end
 end

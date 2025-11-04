@@ -79,13 +79,11 @@ RSpec.describe Document do
       end.to change(described_class, :count).by 1
     end
 
-    it "sets a default-category, if none is given" do
-      default_category = create(:document_category, name: "Technical documentation", is_default: true)
+    it "sets a default type, if none is given" do
+      default_type = create(:document_type, name: "Technical documentation", is_default: true)
       document = described_class.new(project:, title: "New Document")
-      expect(document.category).to eql default_category
-      expect do
-        document.save
-      end.to change(described_class, :count).by 1
+      expect(document.type).to eql default_type
+      expect { document.save }.to change(described_class, :count).by 1
     end
 
     it "with attachments should change the updated_at-date on the document to the attachment's date" do
