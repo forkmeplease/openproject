@@ -20,7 +20,7 @@
                   data: {
                     controller: "meetings--submit",
                     poll_for_changes_target: "reference",
-                    reference_value: current_item.updated_at.iso8601
+                    reference_value: @meeting.changed_hash
                   } do %>
     <div class="op-meeting-presentation--header">
       <div class="op-meeting-presentation--header-title">
@@ -42,7 +42,6 @@
     meeting: @meeting,
     sorted_agenda_item_ids: @agenda_item_ids,
     current_item: current_item,
-    started_at: started_at_param
+    started_at: @started_at
   ) %>
 <% end %>
-

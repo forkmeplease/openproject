@@ -31,11 +31,13 @@
 class MeetingPresentationController < ApplicationController
   include OpTurbo::ComponentStream
   include Meetings::AgendaComponentStreams
+  include Meetings::PresentationComponentStreams
 
   before_action :check_feature_flag
 
   before_action :find_meeting
   before_action :check_presentable
+  before_action :set_started_at
   before_action :find_agenda_item, only: [:check_for_updates]
 
   load_and_authorize_with_permission_in_optional_project :view_meetings
@@ -43,31 +45,18 @@ class MeetingPresentationController < ApplicationController
   layout "meetings/presentation"
 
   def show
-    @started_at = params[:started_at].present? ? Time.zone.parse(params[:started_at]) : Time.current
     @current_id = determine_current_id
   end
 
   def check_for_updates
-    if params[:reference] == @meeting_agenda_item.updated_at.iso8601
+    current_reference = @meeting.changed_hash
+    if params[:reference] == current_reference
       head :no_content
       return
     end
 
-    turbo_streams << turbo_stream.set_dataset_attribute(
-      "#op-meeting-presentation-content",
-      "reference-value",
-      @meeting_agenda_item.updated_at.iso8601
-    )
-
-    update_via_turbo_stream(
-      component: MeetingAgendaItems::ItemComponent::ShowComponent.new(
-        meeting_agenda_item: @meeting_agenda_item,
-        current_occurrence: @meeting,
-        presentation_mode: true
-      )
-    )
-
-    respond_with_turbo_streams
+    update_reference_value(current_reference)
+    update_content_via_turbo_stream
   end
 
   private
@@ -85,6 +74,10 @@ class MeetingPresentationController < ApplicationController
     unless OpenProject::FeatureDecisions.meetings_presentation_mode_active?
       render_404
     end
+  end
+
+  def set_started_at
+    @started_at = params[:started_at].present? ? Time.zone.parse(params[:started_at]) : Time.current
   end
 
   def check_presentable

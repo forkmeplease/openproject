@@ -40,7 +40,7 @@ module Meetings
         @meeting = meeting
         @project = meeting.project
         @current_item = current_item
-        @started_at = started_at
+        @started_at = started_at.iso8601
         @agenda_item_ids = sorted_agenda_item_ids
         @current_index = sorted_agenda_item_ids.index(current_item.id)
       end
@@ -68,18 +68,22 @@ module Meetings
       def next_item
         return nil unless has_next?
 
-        @next_item ||= begin
+        if defined?(@next_item)
+          @next_item
+        else
           next_id = @agenda_item_ids[@current_index + 1]
-          @meeting.agenda_items.find_by(id: next_id)
+          @next_item = @meeting.agenda_items.find_by(id: next_id)
         end
       end
 
       def previous_item
         return nil unless has_previous?
 
-        @previous_item ||= begin
+        if defined?(@previous_item)
+          @previous_item
+        else
           previous_id = @agenda_item_ids[@current_index - 1]
-          @meeting.agenda_items.find_by(id: previous_id)
+          @previous_item = @meeting.agenda_items.find_by(id: previous_id)
         end
       end
 

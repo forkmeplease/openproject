@@ -1,4 +1,4 @@
-<div class="op-meeting-presentation--footer">
+<%= component_wrapper(class: "op-meeting-presentation--footer") do %>
   <div class="op-meeting-presentation--footer-left">
     <%= render(Primer::Beta::Button.new(
       tag: :a,
@@ -49,5 +49,4 @@
       <% end %>
     </div>
   </div>
-</div>
-
+<% end %>
