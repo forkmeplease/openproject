@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,52 +26,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class Projects::ArchiveController < ApplicationController
-  include OpTurbo::ComponentStream
+module Projects
+  class ArchiveDialogComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpTurbo::Streamable
 
-  before_action :find_project_by_project_id
-  before_action :authorize, only: %i[create dialog]
-  before_action :require_admin, only: [:destroy]
+    attr_reader :project
 
-  def create
-    change_status_action(:archive)
-  end
+    def initialize(project:)
+      super
 
-  def destroy
-    change_status_action(:unarchive)
-  end
-
-  def dialog
-    respond_with_dialog Projects::ArchiveDialogComponent.new(project: @project)
-  end
-
-  private
-
-  def change_status_action(status)
-    service_call = change_status(status)
-
-    if service_call.success?
-      redirect_to(projects_path, status: :see_other)
-    else
-      flash[:error] = t(:"error_can_not_#{status}_project",
-                        errors: service_call.errors.full_messages.join(", "))
-      redirect_back fallback_location: projects_path,
-                    status: :see_other
+      @project = project
     end
-  end
 
-  def change_status(status)
-    service_class(status)
-      .new(user: current_user, model: @project)
-      .call
-  end
+    private
 
-  def service_class(status)
-    case status
-    when :archive then Projects::ArchiveService
-    when :unarchive then Projects::UnarchiveService
-    end
+    def id = "archive-project-dialog"
   end
 end

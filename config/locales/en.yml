@@ -3979,6 +3979,7 @@ en:
 
   project:
     archive:
+      title: "Archive project"
       are_you_sure: "Are you sure you want to archive the project '%{name}'?"
       archived: "Archived"
     count:
