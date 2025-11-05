@@ -28,8 +28,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class CustomValue::ScoredListStrategy < CustomValue::HierarchyStrategy
-  def typed_value
-    cached_ar_object&.score
+class DocumentType < ApplicationRecord
+  default_scope { order(:position) }
+  acts_as_list
+
+  has_many :documents, foreign_key: :type_id,
+                       dependent: :nullify,
+                       inverse_of: :type
+
+  normalizes :name, with: ->(name) { name.strip.capitalize }
+
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
+
+  def self.default
+    where(is_default: true).first || first
   end
 end
