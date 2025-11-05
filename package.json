@@ -24,9 +24,11 @@
   "dependencies": {
     "@blocknote/server-util": "^0.41.1",
     "@hocuspocus/server": "^3.2.3",
+    "op-blocknote-extensions": "https://github.com/opf/op-blocknote-extensions/releases/download/v0.0.9/op-blocknote-extensions-0.0.9.tgz",
     "tsx": "^4.20.5"
   },
   "devDependencies": {
+    "@blocknote/core": "^0.41.1",
     "@eslint/js": "^9.35.0",
     "@eslint/json": "^0.13.2",
     "@stylistic/eslint-plugin": "^5.3.1",

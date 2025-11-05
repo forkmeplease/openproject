@@ -3,8 +3,14 @@ import { Extension } from "@hocuspocus/server";
 import * as Y from "yjs";
 import type { ApiResponseDocument } from "../types";
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
+import { BlockNoteSchema } from "@blocknote/core";
+import { openProjectWorkPackageStaticBlockSpec } from "op-blocknote-extensions";
 
-const editor = ServerBlockNoteEditor.create();
+const schema = BlockNoteSchema.create().extend({
+  blockSpecs: {
+    "openProjectWorkPackage": openProjectWorkPackageStaticBlockSpec(),
+  },
+});
 
 export class OpenProjectApi implements Extension {
   /**
@@ -115,10 +121,12 @@ export class OpenProjectApi implements Extension {
     const base64Data = Buffer.from(Y.encodeStateAsUpdate(data.document)).toString("base64");
 
     // Create a copy of the document to avoid side effects
+    const editor = ServerBlockNoteEditor.create({ schema });
     const tempYdoc = new Y.Doc();
     Y.applyUpdate(tempYdoc, Y.encodeStateAsUpdate(data.document));
     const tempFragment = tempYdoc.getXmlFragment("document-store");
     const editorData = editor.yXmlFragmentToBlocks(tempFragment);
+    // @ts-expect-error BlockNote types are complicated
     const markdownData = await editor.blocksToMarkdownLossy(editorData);
 
     const response = await fetch(targetUrl, {
