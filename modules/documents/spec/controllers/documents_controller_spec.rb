@@ -133,7 +133,7 @@ RSpec.describe DocumentsController do
 
   describe "show" do
     before do
-      document
+      document.update(kind: :classic)
       get :show, params: { id: document.id }
     end
 
