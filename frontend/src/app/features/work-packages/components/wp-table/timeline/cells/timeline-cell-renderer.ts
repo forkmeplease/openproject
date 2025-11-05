@@ -116,8 +116,8 @@ export class TimelineCellRenderer {
     labels:WorkPackageCellLabels,
     dates:CellDateMovement,
   ):void {
-    this.assignDate(change, 'startDate', dates.startDate as Moment);
-    this.assignDate(change, 'dueDate', dates.dueDate as Moment);
+    this.assignDate(change, 'startDate', dates.startDate!);
+    this.assignDate(change, 'dueDate', dates.dueDate!);
 
     this.updateLabels(true, labels, change);
   }

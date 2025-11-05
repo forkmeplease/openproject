@@ -29,7 +29,7 @@ import { Directive, ElementRef, OnInit } from '@angular/core';
 
 declare global {
   interface GlobalEventHandlersEventMap {
-    'op:dragscroll': CustomEvent<{x: number, y:number}>;
+    'op:dragscroll':CustomEvent<{x:number, y:number}>;
   }
 }
 

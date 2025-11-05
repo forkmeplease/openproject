@@ -71,11 +71,11 @@ export class SelectEditFieldComponent extends EditFieldComponent implements OnIn
 
   public availableOptions:any[];
 
-  public text:{ [key:string]:string };
+  public text:Record<string, string>;
 
   public appendTo:any = null;
 
-  public referenceOutputs:{ [key:string]:Function } = {
+  public referenceOutputs:Record<string, Function> = {
     onCreate: (newElement:HalResource) => this.onCreate(newElement),
     onChange: (value:HalResource) => this.onChange(value),
     onAddNew: (value:HalResource) => this.onNewValueAdded(value),
@@ -95,7 +95,7 @@ export class SelectEditFieldComponent extends EditFieldComponent implements OnIn
 
     // Special case 'null' value, which angular
     // only understands in ng-options as an empty string.
-    if (option && option.href === '') {
+    if (option?.href === '') {
       option.href = null;
     }
 

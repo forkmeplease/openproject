@@ -61,7 +61,7 @@ export class CKEditorSetupService {
     const editorClass = type === 'constrained' ? window.OPConstrainedEditor : window.OPClassicEditor;
     wrapper.classList.add(`ckeditor-type-${type}`);
 
-    const toolbarWrapper = wrapper.querySelector('.document-editor__toolbar') as HTMLElement;
+    const toolbarWrapper = wrapper.querySelector('.document-editor__toolbar')!;
     const contentWrapper = wrapper.querySelector('.document-editor__editable') as HTMLElement;
     const config = this.createConfig(context, initialData);
 
@@ -92,7 +92,7 @@ export class CKEditorSetupService {
 
   private createConfig(context:ICKEditorContext, initialData:string|null) {
     const uiLocale = this.loadedLocale;
-    const contentLanguage = context.options && context.options.rtl ? 'ar' : 'en';
+    const contentLanguage = context.options?.rtl ? 'ar' : 'en';
 
     const config = {
       openProject: this.createContext(context),

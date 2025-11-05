@@ -73,10 +73,10 @@ export abstract class EditFieldHandler extends UntilDestroyedMixin {
   public onDestroy = new Subject<void>();
 
   // OnSubmit callbacks that may register from fields
-  protected _onSubmitHandlers:Array<() => Promise<void>> = [];
+  protected _onSubmitHandlers:(() => Promise<void>)[] = [];
 
   // OnPreSubmit callbacks that may register from fields
-  protected _onBeforeSubmitHandlers:Array<() => void> = [];
+  protected _onBeforeSubmitHandlers:(() => void)[] = [];
 
   /**
    * Call field submission callback handlers

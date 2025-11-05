@@ -106,7 +106,7 @@ export class WorkPackageTimelineTableController extends UntilDestroyedMixin impl
 
   public workPackageIdOrder:RenderedWorkPackage[] = [];
 
-  private renderers:{ [name:string]:(vp:TimelineViewParameters) => void } = {};
+  private renderers:Record<string, (vp:TimelineViewParameters) => void> = {};
 
   private cellsRenderer = new WorkPackageTimelineCellsRenderer(this.injector, this);
 

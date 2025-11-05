@@ -406,7 +406,7 @@ export class WorkPackageSingleViewComponent extends UntilDestroyedMixin implemen
     const schema = this.schema(workPackage);
 
     let schemaHref:string|null;
-    const projectHref:string|null = workPackage.project && workPackage.project.href;
+    const projectHref:string|null = workPackage.project?.href;
 
     if (schema.baseSchema) {
       schemaHref = schema.baseSchema.href;

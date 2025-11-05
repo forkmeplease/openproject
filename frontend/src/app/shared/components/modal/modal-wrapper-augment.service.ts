@@ -79,7 +79,7 @@ export class OpModalWrapperAugmentService {
 
     // Set template from wrapped element
     const wrappedElement = element.querySelector<HTMLElement>('.modal-delivery-element')!;
-    let modalBody = wrappedElement.innerHTML;
+    const modalBody = wrappedElement.innerHTML;
 
     this.opModalService.show(
       DynamicContentModalComponent,

@@ -53,7 +53,7 @@ export class WpResizerComponent extends UntilDestroyedMixin implements OnInit, A
 
   @Input() localStorageKey:string;
 
-  @Input() variableName:string = '--split-screen-width';
+  @Input() variableName = '--split-screen-width';
 
   private resizingElement:HTMLElement|null;
 

@@ -37,7 +37,7 @@ import {
   NgZone,
   OnInit,
   Output,
-  ViewEncapsulation,
+  ViewEncapsulation, OnDestroy,
 } from '@angular/core';
 import { QueryResource } from 'core-app/features/hal/resources/query-resource';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
@@ -82,7 +82,7 @@ export interface WorkPackageFocusContext {
   selector: 'wp-table',
   standalone: false,
 })
-export class WorkPackagesTableComponent extends UntilDestroyedMixin implements OnInit, TableEventComponent {
+export class WorkPackagesTableComponent extends UntilDestroyedMixin implements OnInit, TableEventComponent, OnDestroy {
   @Input() projectIdentifier:string;
 
   @Input('configuration') configurationObject:WorkPackageTableConfigurationObject;

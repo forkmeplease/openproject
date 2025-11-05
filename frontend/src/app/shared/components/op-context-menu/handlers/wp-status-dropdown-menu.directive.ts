@@ -49,7 +49,7 @@ import {
   WorkPackageNotificationService
 } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
 import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
-import { HalError } from "core-app/features/hal/services/hal-error";
+import { HalError } from 'core-app/features/hal/services/hal-error';
 
 @Directive({
   selector: '[wpStatusDropdown]',

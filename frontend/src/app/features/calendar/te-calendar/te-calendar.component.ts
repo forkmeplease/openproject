@@ -304,7 +304,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
   }
 
   private buildTimeEntryEntries(entries:TimeEntryResource[]):EventInput[] {
-    const hoursDistribution:{ [key:string]:Moment } = {};
+    const hoursDistribution:Record<string, Moment> = {};
 
     return entries.map((entry) => {
       let start:Moment;
@@ -344,8 +344,8 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
     return calendarEntries;
   }
 
-  private calculateDateSums(entries:TimeEntryResource[]):{ [p:string]:number; } {
-    const dateSums:{ [key:string]:number } = {};
+  private calculateDateSums(entries:TimeEntryResource[]):Record<string, number> {
+    const dateSums:Record<string, number> = {};
 
     entries.forEach((entry) => {
       const hours = this.timezone.toHours(entry.hours as string);
@@ -410,7 +410,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  protected dmFilters(start:Moment, end:Moment):Array<[string, FilterOperator, string[]]> {
+  protected dmFilters(start:Moment, end:Moment):[string, FilterOperator, string[]][] {
     const startDate = start.format('YYYY-MM-DD');
     const endDate = end.subtract(1, 'd').format('YYYY-MM-DD');
     return [
@@ -429,7 +429,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
 
   private editEvent(entry:TimeEntryResource):void {
     void this.turboRequests.request(
-      `${this.pathHelper.timeEntryEditDialog(entry.id as string)}?onlyMe=true`,
+      `${this.pathHelper.timeEntryEditDialog(entry.id!)}?onlyMe=true`,
       { method: 'GET' },
     );
   }
@@ -675,7 +675,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
         }
         return null;
       })
-      .filter((value) => value !== null) as number[];
+      .filter((value) => value !== null);
   }
 
   private handleDialogClose(event:CustomEvent):void {

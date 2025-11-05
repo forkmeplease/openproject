@@ -219,7 +219,6 @@ export class DomAutoscrollService {
     if (el === window) {
       window.scrollTo(el.pageXOffset, el.pageYOffset + amount);
     } else {
-      // eslint-disable-next-line no-param-reassign
       (el as Element).scrollTop += amount;
     }
   }
@@ -228,7 +227,6 @@ export class DomAutoscrollService {
     if (el === window) {
       window.scrollTo(el.pageXOffset + amount, el.pageYOffset);
     } else {
-      // eslint-disable-next-line no-param-reassign
       (el as Element).scrollLeft += amount;
     }
   }

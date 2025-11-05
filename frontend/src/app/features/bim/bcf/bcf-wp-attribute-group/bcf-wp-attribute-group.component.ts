@@ -294,12 +294,10 @@ export class BcfWpAttributeGroupComponent extends UntilDestroyedMixin implements
     ];
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public galleryPreviewOpen():void {
     document.querySelector('.op-app-header')?.classList.add('-no-z-index');
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public galleryPreviewClose():void {
     document.querySelector('.op-app-header')?.classList.remove('-no-z-index');
   }

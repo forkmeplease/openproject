@@ -37,7 +37,7 @@ import { EditFormComponent } from 'core-app/shared/components/fields/edit/edit-f
   standalone: false,
 })
 export class WorkPackageReplacementLabelComponent implements OnInit {
-  @Input('fieldName') public fieldName:string;
+  @Input() public fieldName:string;
 
   private element:HTMLElement;
 

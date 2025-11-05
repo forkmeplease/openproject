@@ -77,7 +77,7 @@ export class WorkPackageRelationRowComponent extends UntilDestroyedMixin impleme
   }
 
   ngOnInit() {
-    this.relation = this.relatedWorkPackage.relatedBy as RelationResource;
+    this.relation = this.relatedWorkPackage.relatedBy!;
 
     this.userInputs.newRelationText = this.relation.description || '';
     this.availableRelationTypes = RelationResource.LOCALIZED_RELATION_TYPES(false);

@@ -72,7 +72,7 @@ export class EditableAttributeFieldComponent extends UntilDestroyedMixin impleme
 
   @Input() public wrapperClasses?:string;
 
-  @Input() public displayFieldOptions:{ [key:string]:unknown } = {};
+  @Input() public displayFieldOptions:Record<string, unknown> = {};
 
   @Input() public isDropTarget?:boolean = false;
 

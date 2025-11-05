@@ -32,7 +32,7 @@ import { OPContextMenuService } from 'core-app/shared/components/op-context-menu
 import {
   Directive,
   ElementRef,
-  Input,
+  Input, AfterViewInit,
 } from '@angular/core';
 import { isClickedWithModifier } from 'core-app/shared/helpers/link-handling/link-handling';
 import { OpContextMenuTrigger } from 'core-app/shared/components/op-context-menu/handlers/op-context-menu-trigger.directive';
@@ -47,14 +47,14 @@ import { extendSearchParams } from 'core-stimulus/helpers/url-helpers';
   selector: '[opTypesCreateDropdown]',
   standalone: false,
 })
-export class OpTypesContextMenuDirective extends OpContextMenuTrigger {
-  @Input('projectIdentifier') public projectIdentifier:string|null|undefined;
+export class OpTypesContextMenuDirective extends OpContextMenuTrigger implements AfterViewInit {
+  @Input() public projectIdentifier:string|null|undefined;
 
-  @Input('stateName') public stateName:string;
+  @Input() public stateName:string;
 
   @Input('dropdownActive') active:boolean;
 
-  @Input() routedFromAngular:boolean = true;
+  @Input() routedFromAngular = true;
 
   public isOpen = false;
 
@@ -93,7 +93,7 @@ export class OpTypesContextMenuDirective extends OpContextMenuTrigger {
     }
   }
 
-  onClose(focus:boolean = false) {
+  onClose(focus = false) {
     this.isOpen = false;
     super.onClose(focus);
   }

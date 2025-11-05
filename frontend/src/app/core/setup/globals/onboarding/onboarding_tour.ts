@@ -27,7 +27,7 @@ declare global {
   }
 }
 
-export type OnboardingStep = {
+export interface OnboardingStep {
   [key:string]:string|unknown,
   event?:string,
   description?:string,
@@ -41,7 +41,7 @@ export type OnboardingStep = {
   condition?:() => boolean,
   onNext?:() => void,
   onBeforeStart?:() => void,
-};
+}
 
 function initializeTour(storageValue:string) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment

@@ -64,7 +64,7 @@ export class DynamicContentModalComponent extends OpModalComponent implements On
     wrapper.classList.add(...classes.split(' '));
     wrapper.innerHTML = this.locals.modalBody as string;
 
-    const modal = document.querySelector('.spot-modal') as HTMLElement;
+    const modal = document.querySelector('.spot-modal')!;
     const closeButton = modal.querySelector<HTMLButtonElement>('[dynamic-content-modal-close-button]');
     closeButton?.addEventListener('click', () => this.closeMe());
   }

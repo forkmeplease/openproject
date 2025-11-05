@@ -79,7 +79,6 @@ export class OpHeaderProjectSelectListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes:SimpleChanges) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (changes.displayMode || changes.projects || changes.favorited) {
       this.updateProjectFilter();
     }

@@ -117,7 +117,7 @@ export function registerWorkPackageMouseHandler(this:void,
 
   function createMouseMoveFn(direction:MouseDirection) {
     return (ev:MouseEvent) => {
-      const days = getCursorOffsetInDaysFromLeft(ev) - (mouseDownStartDay as number);
+      const days = getCursorOffsetInDaysFromLeft(ev) - (mouseDownStartDay!);
       const offsetDayCurrent = Math.floor(ev.offsetX / renderInfo.viewParams.pixelPerDay);
       const dayUnderCursor = renderInfo.viewParams.dateDisplayStart.clone().add(offsetDayCurrent, 'days');
 

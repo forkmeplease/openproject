@@ -78,7 +78,7 @@ export class WorkPackageViewContextMenu extends OpContextMenuHandler {
     protected workPackageId:string,
     protected element:HTMLElement,
     additionalPositionArgs:PositionArgs = {},
-    protected allowSplitScreenActions:boolean = true,
+    protected allowSplitScreenActions = true,
   ) {
     super(injector.get(OPContextMenuService));
     this.copyToClipboardService = injector.get(CopyToClipboardService);
@@ -101,7 +101,7 @@ export class WorkPackageViewContextMenu extends OpContextMenuHandler {
 
   public triggerContextMenuAction(action:WorkPackageAction) {
     const { link } = action;
-    const id = this.workPackage.id as string;
+    const id = this.workPackage.id!;
 
     switch (action.key) {
       case 'delete':
@@ -177,7 +177,7 @@ export class WorkPackageViewContextMenu extends OpContextMenuHandler {
   }
 
   private logTimeForSelectedWorkPackage() {
-    void this.turboRequests.request(this.pathHelper.timeEntryWorkPackageDialog(this.workPackage.id as string), { method: 'GET' });
+    void this.turboRequests.request(this.pathHelper.timeEntryWorkPackageDialog(this.workPackage.id!), { method: 'GET' });
   }
 
   private getSelectedWorkPackages() {
@@ -187,7 +187,7 @@ export class WorkPackageViewContextMenu extends OpContextMenuHandler {
       return [this.workPackage];
     }
 
-    if (selectedWorkPackages.indexOf(this.workPackage) === -1) {
+    if (!selectedWorkPackages.includes(this.workPackage)) {
       selectedWorkPackages.push(this.workPackage);
     }
 

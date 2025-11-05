@@ -52,8 +52,7 @@ const accessibleListSelector = 'table.keyboard-accessible-list';
 })
 export class KeyboardShortcutService {
   // maybe move it to a .constant
-  private shortcuts:{ [name:string]:() => void } = {
-    /* eslint-disable quote-props */
+  private shortcuts:Record<string, () => void> = {
     '?': () => this.showHelpModal(),
     'g m': this.globalAction('myPagePath'),
     'g o': this.projectScoped('projectPath'),
@@ -72,7 +71,6 @@ export class KeyboardShortcutService {
     's': this.accessKey('quickSearch'),
     'k': () => this.focusPrevItem(),
     'j': () => this.focusNextItem(),
-    /* eslint-enable quote-props */
   };
 
   constructor(
@@ -125,7 +123,6 @@ export class KeyboardShortcutService {
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this
   clickLink(link:HTMLAnchorElement):void {
     const event = new MouseEvent('click', {
       view: window,

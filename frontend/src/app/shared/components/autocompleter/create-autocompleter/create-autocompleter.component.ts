@@ -112,7 +112,7 @@ export class CreateAutocompleterComponent extends UntilDestroyedMixin implements
 
   public groupByFn = (_item:HalResource):string | null => null;
 
-  public text:{ [key:string]:string } = {};
+  public text:Record<string, string> = {};
 
   public createAllowed:boolean|AddTagFn = false;
 

@@ -26,7 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { Directive, ElementRef, Injector, Input } from '@angular/core';
+import { Directive, ElementRef, Injector, Input, AfterViewInit } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { AuthorisationService } from 'core-app/core/model-auth/model-auth.service';
 import {
@@ -66,7 +66,7 @@ import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service
   selector: '[opSettingsContextMenu]',
   standalone: false,
 })
-export class OpSettingsMenuDirective extends OpContextMenuTrigger {
+export class OpSettingsMenuDirective extends OpContextMenuTrigger implements AfterViewInit {
   @Input('opSettingsContextMenu-query') public query:QueryResource;
 
   @Input() public hideTableOptions:boolean;
@@ -164,8 +164,8 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger {
   }
 
   private buildExportDialogHref(query:QueryResource):string {
-    const params: Partial<QueryRequestParams> & { title: string } = this.urlParamsHelper
-      .buildV3GetQueryFromQueryResource(query) as Partial<QueryRequestParams> & { title: string };
+    const params:Partial<QueryRequestParams> & { title:string } = this.urlParamsHelper
+      .buildV3GetQueryFromQueryResource(query) as Partial<QueryRequestParams> & { title:string };
     params['columns[]'] = this.wpTableColumns.getColumns().map((column) => column.id);
     params.title = this.queryTitle(query);
     const url = new URL(window.location.href);
@@ -356,8 +356,8 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger {
       {
         // Settings modal
         hidden: !this.query.results.customFields || this.hideTableOptions,
-        href: this.query.results.customFields && this.query.results.customFields.href,
-        linkText: this.query.results.customFields && this.query.results.customFields.name,
+        href: this.query.results.customFields?.href,
+        linkText: this.query.results.customFields?.name,
         icon: 'icon-custom-fields',
         onClick: () => false,
       },

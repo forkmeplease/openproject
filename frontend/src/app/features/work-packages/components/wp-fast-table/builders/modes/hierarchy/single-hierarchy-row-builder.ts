@@ -25,7 +25,7 @@ export class SingleHierarchyRowBuilder extends SingleRowBuilder {
 
   // Retain a map of hierarchy elements present in the table
   // with at least a visible child
-  public parentsWithVisibleChildren:{ [id:string]:boolean };
+  public parentsWithVisibleChildren:Record<string, boolean>;
 
   public text:{
     leaf:(level:number) => string;

@@ -108,11 +108,13 @@ describe('wpTablePagination Directive', () => {
         app.pagination = new PaginationInstance(1, 0, 10);
         app.update();
         fixture.detectChanges();
+
         expect(pageString(element)).toEqual('');
 
         app.pagination = new PaginationInstance(1, 11, 10);
         app.update();
         fixture.detectChanges();
+
         expect(pageString(element)).toEqual('(1 - 10/11)');
       }));
 
@@ -129,8 +131,10 @@ describe('wpTablePagination Directive', () => {
           fixture.detectChanges();
 
           const liWithNextLink = element.querySelector('.op-pagination--item-link_next')?.parentElement;
+
           expect(liWithNextLink?.matches('li')).toBeTrue();
           const attrHidden = liWithNextLink.getAttribute('hidden');
+
           expect(attrHidden).toBeDefined();
         }));
     });
@@ -149,16 +153,19 @@ describe('wpTablePagination Directive', () => {
         app.pagination = new PaginationInstance(1, 1, 10);
         app.update();
         fixture.detectChanges();
+
         expect(numberOfPageNumberLinks()).toEqual(1);
 
         app.pagination = new PaginationInstance(1, 11, 10);
         app.update();
         fixture.detectChanges();
+
         expect(numberOfPageNumberLinks()).toEqual(2);
 
         app.pagination = new PaginationInstance(1, 59, 10);
         app.update();
         fixture.detectChanges();
+
         expect(numberOfPageNumberLinks()).toEqual(6);
       }));
   });

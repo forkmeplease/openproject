@@ -59,7 +59,7 @@ export class WpTableConfigurationModalComponent extends OpModalComponent impleme
 
   public onDataUpdated = new EventEmitter<void>();
 
-  public selectedColumnMap:{ [id:string]:boolean } = {};
+  public selectedColumnMap:Record<string, boolean> = {};
 
   // Get the view child we'll use as the portal host
   @ViewChild('tabContentOutlet', { static: true }) tabContentOutlet:ElementRef;

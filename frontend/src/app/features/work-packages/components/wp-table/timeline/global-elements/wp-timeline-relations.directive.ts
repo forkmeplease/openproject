@@ -87,7 +87,7 @@ export class WorkPackageTableTimelineRelations extends UntilDestroyedMixin imple
 
   private container:HTMLElement;
 
-  private workPackagesWithRelations:{ [workPackageId:string]:RelationsStateValue } = {};
+  private workPackagesWithRelations:Record<string, RelationsStateValue> = {};
 
   constructor(public readonly injector:Injector,
               public elementRef:ElementRef,

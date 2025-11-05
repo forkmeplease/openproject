@@ -83,7 +83,6 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
 
     switch (key) {
       case 'copy_to_other_project':
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         window.location.href = `${this.PathHelper.staticBase}/work_packages/move/new?copy=true&ids[]=${this.workPackage.id!}`;
         break;
       case 'start_timer':
@@ -101,10 +100,10 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
         this.opModalService.show(WpDestroyModalComponent, this.injector, { workPackages: [this.workPackage] });
         break;
       case 'log_time':
-        void this.turboRequests.request(this.PathHelper.timeEntryWorkPackageDialog(this.workPackage.id as string), { method: 'GET' });
+        void this.turboRequests.request(this.PathHelper.timeEntryWorkPackageDialog(this.workPackage.id!), { method: 'GET' });
         break;
       case 'generate_pdf':
-        void this.turboRequests.requestStream(link as string);
+        void this.turboRequests.requestStream(link!);
         break;
       case 'copy_link_to_clipboard': {
         const url = new URL(String(link), window.location.origin);

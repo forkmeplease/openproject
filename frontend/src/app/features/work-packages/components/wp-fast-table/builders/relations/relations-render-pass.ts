@@ -66,7 +66,7 @@ export class RelationsRenderPass {
 
       // If the work package has no relations, ignore
       const { workPackage } = row;
-      const state = this.wpRelations.state(workPackage.id as string);
+      const state = this.wpRelations.state(workPackage.id!);
       if (!state.hasValue() || _.size(state.value) === 0) {
         return;
       }
@@ -114,7 +114,7 @@ export class RelationsRenderPass {
     // Insert into table
     this.tablePass.spliceRow(
       relationRow,
-      `.${this.relationRowBuilder.classIdentifier(from)},.${relationGroupClass(from.id as string)}`,
+      `.${this.relationRowBuilder.classIdentifier(from)},.${relationGroupClass(from.id!)}`,
       {
         classIdentifier: this.relationRowBuilder.relationClassIdentifier(from, to),
         additionalClasses: row.additionalClasses.concat(['wp-table--relations-additional-row']),

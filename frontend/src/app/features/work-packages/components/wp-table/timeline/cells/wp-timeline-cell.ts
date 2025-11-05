@@ -183,7 +183,7 @@ export class WorkPackageTimelineCell {
       .then(() => {
         // Render the upgrade from renderInfo
         const shouldBeDisplayed = renderer.update(
-          this.wpElement as HTMLDivElement,
+          this.wpElement!,
           this.labels,
           renderInfo,
         );

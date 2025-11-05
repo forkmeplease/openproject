@@ -33,12 +33,12 @@ export class DisplayFieldRenderer<T extends HalResource = HalResource> {
   @InjectField() I18n!:I18nService;
 
   /** We cache the previously used fields to avoid reinitialization */
-  private fieldCache:{ [key:string]:DisplayField } = {};
+  private fieldCache:Record<string, DisplayField> = {};
 
   constructor(
     public readonly injector:Injector,
     public readonly container:'table'|'single-view'|'timeline',
-    public readonly options:{ [key:string]:unknown } = {},
+    public readonly options:Record<string, unknown> = {},
   ) {
   }
 
@@ -96,7 +96,6 @@ export class DisplayFieldRenderer<T extends HalResource = HalResource> {
     let field = this.fieldCache[attributeName];
 
     if (!field) {
-      // eslint-disable-next-line no-multi-assign
       field = this.fieldCache[attributeName] = this.getFieldForCurrentContext(resource, attributeName, fieldSchema);
     }
 

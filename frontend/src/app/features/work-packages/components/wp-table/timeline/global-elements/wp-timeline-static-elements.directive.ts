@@ -62,7 +62,7 @@ export class WorkPackageTableTimelineStaticElements implements OnInit {
   }
 
   ngOnInit() {
-    this.container = this.element.querySelector('.wp-table-timeline--static-elements') as HTMLElement;
+    this.container = this.element.querySelector('.wp-table-timeline--static-elements')!;
     this.workPackageTimelineTableController
       .onRefreshRequested('static elements', (vp:TimelineViewParameters) => this.update(vp));
   }
@@ -85,7 +85,7 @@ export class WorkPackageTableTimelineStaticElements implements OnInit {
     }
     const timelineSide = document.querySelector('.work-packages-tabletimeline--timeline-side');
     if (timelineSide !== null && vp.settings.zoomLevel !== 'auto') {
-      const visibleMomentBeforeToday = vp.now.clone().subtract(vp.settings.visibleBeforeTodayInZoomLevel, vp.settings.zoomLevel)
+      const visibleMomentBeforeToday = vp.now.clone().subtract(vp.settings.visibleBeforeTodayInZoomLevel, vp.settings.zoomLevel);
       const visibleDaysBeforeToday = visibleMomentBeforeToday.diff(vp.dateDisplayStart, 'days');
       const visibleDaysBeforeTodayPositionPixels = calculatePositionValueForDayCountingPx(vp, visibleDaysBeforeToday);
       timelineSide.scrollLeft = visibleDaysBeforeTodayPositionPixels;

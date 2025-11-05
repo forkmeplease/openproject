@@ -311,7 +311,7 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
 
   private boardListActionColorClass(value?:HalResource):string {
     const attribute = this.board.actionAttribute!;
-    if (value && value.id) {
+    if (value?.id) {
       return Highlighting.backgroundClass(attribute, value.id);
     }
     return '';
@@ -356,7 +356,6 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
     }
 
     // Load the resource
-    // eslint-disable-next-line consistent-return
     return actionService
       .getLoadedActionValue(query)
       .then(async (resource) => {

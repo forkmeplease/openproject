@@ -70,7 +70,7 @@ export class HierarchyTransformer {
 
     // Mark which rows were hidden by some other hierarchy group
     // (e.g., by a collapsed parent)
-    const collapsed:{ [index:number]:boolean } = {};
+    const collapsed:Record<number, boolean> = {};
 
     // Hide all collapsed hierarchies
     _.each(state.collapsed, (isCollapsed:boolean, wpId:string) => {

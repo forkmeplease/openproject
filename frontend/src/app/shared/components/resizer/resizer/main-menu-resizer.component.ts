@@ -62,7 +62,7 @@ import {
 export class MainMenuResizerComponent extends UntilDestroyedMixin implements OnInit {
   public toggleTitle:string;
 
-  private resizeEvent:string = 'main-menu-resize';
+  private resizeEvent = 'main-menu-resize';
 
   private elementWidth:number;
 

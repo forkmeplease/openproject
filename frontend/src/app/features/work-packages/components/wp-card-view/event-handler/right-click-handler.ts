@@ -27,7 +27,7 @@ export class CardRightClickHandler implements CardEventHandler {
   }
 
   public get SELECTOR() {
-    return `[data-test-selector="op-wp-single-card"]`;
+    return '[data-test-selector="op-wp-single-card"]';
   }
 
   public eventScope(card:WorkPackageCardViewComponent) {

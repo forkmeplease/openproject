@@ -164,7 +164,7 @@ public readonly injector:Injector,
     target.parentNode!.insertBefore(row, target.nextSibling);
 
     // Splice the renderedOrder at this exact location
-    const index = getNodeIndex(target!);
+    const index = getNodeIndex(target);
     this.renderedOrder.splice(index + 1, 0, renderedInfo);
   }
 
