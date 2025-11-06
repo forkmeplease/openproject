@@ -32,11 +32,30 @@ module Portfolios
   class PreviewComponent < ApplicationComponent
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
+    include WorkspaceHelper
 
     def initialize(portfolio:, current_user:)
       super
       @portfolio = portfolio
       @current_user = current_user
+    end
+
+    def currently_favorited?
+      false
+    end
+
+    def program_count_label
+      count = @portfolio.children.program.count
+      I18n.t("program.count", count: count)
+    end
+
+    def project_count_label
+      count = @portfolio.children.project.count
+      I18n.t("project.count", count: count)
+    end
+
+    def budget_label
+      "34,000 EUR budget - 12,000 EUR spent"
     end
   end
 end
