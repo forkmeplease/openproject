@@ -26,46 +26,38 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+import { Controller } from '@hotwired/stimulus';
+import { useDebounce, useMutation } from 'stimulus-use';
+
 /**
- * Moved from app/assets/javascripts/colors.js
+ * A simple controller to allow <select> elements automatically grow to fit
+ * their options.
  *
- * Make this a component instead of modifying it the next time
- * this needs changes
+ * Use `data-select-autosize-size-limit-value` to specify a size limit.
  */
-export function makeColorPreviews() {
-  document.querySelectorAll<HTMLElement>('.color--preview').forEach(function (preview) {
-    let input:HTMLInputElement|null = null;
-    const target = preview.dataset.target;
+export default class SelectAutosizeController extends Controller<HTMLSelectElement> {
+  static values = {
+    sizeLimit: { type: Number, default: 10 }
+  };
 
-    if (target) {
-      input = document.querySelector<HTMLInputElement>(target);
-    } else {
-      const next = preview.nextElementSibling;
-      if (next && next instanceof HTMLInputElement) {
-        input = next;
-      }
+  static debounces = ['updateSize'];
+
+  declare sizeLimitValue:number;
+
+  connect() {
+    useMutation(this, { childList: true });
+    useDebounce(this, { wait: 100 });
+
+    this.updateSize();
+  }
+
+  mutate(mutations:MutationRecord[]) {
+    if (mutations.some(m => m.type === 'childList')) {
+      this.updateSize();
     }
+  }
 
-    if (input === null) {
-      return;
-    }
-
-    const listener = function () {
-      let previewColor = '';
-
-      if (input.value && input.value.length > 0) {
-        previewColor = input.value;
-      } else if (input.getAttribute('placeholder')
-        && input.getAttribute('placeholder')!.length > 0) {
-        previewColor = input.getAttribute('placeholder')!;
-      }
-
-      preview.style.backgroundColor = previewColor;
-    };
-
-    input.addEventListener('keyup', listener);
-    input.addEventListener('change', listener);
-    input.addEventListener('focus', listener);
-    listener();
-  });
+  private updateSize() {
+    this.element.size = Math.min(this.element.options.length, this.sizeLimitValue);
+  }
 }

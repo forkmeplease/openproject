@@ -26,6 +26,8 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+export const getNodeIndex = (element:Element) => Array.from(element.parentNode!.children).indexOf(element);
+
 /**
  * Toggles the visibility of an HTMLElement using `hidden` property.
  *
@@ -40,6 +42,10 @@ export function toggleElement(element:HTMLElement, value?:boolean) {
     element.hidden = !value;
   }
 };
+
+export const showElement = (element:HTMLElement) => toggleElement(element, true);
+
+export const hideElement = (element:HTMLElement) => toggleElement(element, false);
 
 /**
  * Toggles the visibility of an Element using a CSS class.
@@ -69,3 +75,24 @@ export function toggleElementByVisibility(element:HTMLElement, value?:boolean) {
   value ??= element.style.getPropertyValue('visibility') !== 'visible';
   element.style.setProperty('visibility', value ? 'visible' : 'hidden');
 };
+
+/**
+ * Mimics jQuery(':visible')
+ */
+export function isVisible(elem:HTMLElement|null) {
+  if (!elem) return false;
+
+  // Check if element is in the DOM
+  if (!document.contains(elem)) return false;
+
+  // Check if dimensions are visible
+  return !!(
+    elem.offsetWidth
+    || elem.offsetHeight
+    || elem.getClientRects().length
+  );
+}
+
+export function queryVisible<T extends HTMLElement = HTMLElement>(selector:string, node:Element|Document = document) {
+  return Array.from(node.querySelectorAll<T>(selector)).filter(isVisible);
+}
