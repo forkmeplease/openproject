@@ -207,7 +207,8 @@ module Projects::Exports::PDFExport
       with_margin(styles.project_markdown_margins) do
         write_markdown!(
           apply_markdown_field_macros(value, { project:, user: User.current }),
-          styles.project_markdown_styling_yml)
+          styles.project_markdown_styling_yml
+        )
       end
     end
 
