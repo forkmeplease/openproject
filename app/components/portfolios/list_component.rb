@@ -41,7 +41,7 @@ module Portfolios
     end
 
     def portfolios
-      @query.results
+      @query.results.portfolio
     end
   end
 end
