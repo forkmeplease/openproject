@@ -47,7 +47,6 @@ module Meetings
           "reference-value",
           new_reference
         )
-
       end
 
       def update_header_via_turbo_stream

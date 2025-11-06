@@ -47,15 +47,34 @@ RSpec.describe "Meeting Presentation Mode",
            title: "Sprint Planning",
            start_time: "2025-10-31T10:00:00Z",
            duration: 1.5,
-           state: :in_progress,
+           state: :open,
            author: user
   end
 
   shared_let(:first_meeting_section) { create(:meeting_section, meeting:, title: "Blockers", position: 1) }
   shared_let(:second_meeting_section) { create(:meeting_section, meeting:, title: "Other topics", position: 2) }
-  shared_let(:first_agenda_item) { create(:meeting_agenda_item, meeting:, meeting_section: first_meeting_section, title: "First Item", position: 1) }
-  shared_let(:second_agenda_item) { create(:meeting_agenda_item, meeting:, meeting_section: first_meeting_section, title: "Second Item", position: 2) }
-  shared_let(:third_agenda_item) { create(:meeting_agenda_item, meeting:, meeting_section: second_meeting_section, title: "Third Item", position: 1) }
+  shared_let(:first_agenda_item) do
+    create(:meeting_agenda_item,
+           meeting:,
+           meeting_section: first_meeting_section,
+           title: "First Item",
+           position: 1)
+  end
+  shared_let(:second_agenda_item) do
+    create(:meeting_agenda_item,
+           meeting:,
+           meeting_section: first_meeting_section,
+           title: "Second Item",
+           position: 2)
+  end
+
+  shared_let(:third_agenda_item) do
+    create(:meeting_agenda_item,
+           meeting:,
+           meeting_section: second_meeting_section,
+           title: "Third Item",
+           position: 1)
+  end
 
   let(:show_page) { Pages::Meetings::Show.new(meeting) }
   let(:editor) { Components::WysiwygEditor.new "#op-meeting-presentation-content", "opce-ckeditor-augmented-textarea" }
@@ -88,6 +107,10 @@ RSpec.describe "Meeting Presentation Mode",
     expect(page).to have_link("Next")
     expect(page).to have_button("Previous", disabled: true)
     expect(page).to have_text("1 of 3")
+
+    # Presenting puts the meeting in 'in_progress' state
+    meeting.reload
+    expect(meeting.state).to eq("in_progress")
 
     within_test_selector("meeting-presentation-header") do
       expect(page).to have_text("Blockers")

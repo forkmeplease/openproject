@@ -37,6 +37,7 @@ class MeetingPresentationController < ApplicationController
 
   before_action :find_meeting
   before_action :check_presentable
+  before_action :determine_current_id
   before_action :set_started_at
   before_action :find_agenda_item, only: [:check_for_updates]
 
@@ -44,9 +45,12 @@ class MeetingPresentationController < ApplicationController
 
   layout "meetings/presentation"
 
-  def show
-    @current_id = determine_current_id
+  def start
+    @meeting.update(state: :in_progress) if @meeting.open?
+    redirect_to action: :show
   end
+
+  def show; end
 
   def check_for_updates
     current_reference = @meeting.changed_hash
@@ -91,10 +95,11 @@ class MeetingPresentationController < ApplicationController
   def determine_current_id
     return nil if params[:current_id].blank?
 
-    current_id = params[:current_id].to_i
-    return current_id if params[:action_type].blank?
+    @current_id = params[:current_id].to_i
+    return if params[:action_type].blank?
 
-    navigate_from_current_id(current_id)
+    # In case we have a navigation action, determine the new current id
+    @current_id = navigate_from_current_id(@current_id)
   end
 
   def navigate_from_current_id(current_id)
@@ -121,10 +126,10 @@ class MeetingPresentationController < ApplicationController
 
   def sorted_agenda_item_ids
     @sorted_agenda_item_ids ||= @meeting.sections
-            .includes(:agenda_items)
-            .order(:position)
-            .flat_map { |section| section.agenda_items.order(:position).pluck(:id) }
+                                        .includes(:agenda_items)
+                                        .order(:position)
+                                        .flat_map { |section| section.agenda_items.order(:position).pluck(:id) }
   end
-  helper_method :sorted_agenda_item_ids
 
+  helper_method :sorted_agenda_item_ids
 end
