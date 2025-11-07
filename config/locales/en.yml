@@ -1463,7 +1463,7 @@ en:
               minimum: "need to include at least one filter for principal, context or id with the '=' operator."
         custom_field:
           at_least_one_custom_option: "At least one option needs to be available."
-          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet."
+          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet, please try again in a few minutes."
           referenced_in_other_fields_html:
             one: "%{name} is used in project attribute calculation %{links}."
             other: "%{name} is used in project attribute calculations: %{links}."

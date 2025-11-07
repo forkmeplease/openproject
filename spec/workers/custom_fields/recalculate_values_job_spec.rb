@@ -37,11 +37,11 @@ RSpec.describe CustomFields::RecalculateValuesJob, type: :model do
     using CustomFieldFormulaReferencing
 
     shared_let(:user) { create(:admin) }
-    let(:project1) { create(:project) }
-    let(:project2) { create(:project) }
-    let(:project3) { create(:project) }
-    let(:project4) { create(:project) }
-    let!(:projects) { [project1, project2, project3, project4] }
+    shared_let(:project1) { create(:project) }
+    shared_let(:project2) { create(:project) }
+    shared_let(:project3) { create(:project) }
+    shared_let(:project4) { create(:project) }
+    shared_let(:projects) { [project1, project2, project3, project4] }
 
     current_user { user }
     subject { described_class.perform_now(user:, custom_field_id:) }
