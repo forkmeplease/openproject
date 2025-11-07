@@ -19,7 +19,7 @@ jobs:
           echo "DOCKER_TAG=${{ github.ref_name }}-$SHORT_SHA" >> $GITHUB_ENV
 
           # also include SHA in version string
-          sed -ri 's/"version": "(.*)"/"version": "\1-$SHORT_SHA"/g' package.json
+          sed -ri "s/\"version\": \"(.*)\"/\"version\": \"\1-$SHORT_SHA\"/g" package.json
 
           ls -lisah
 
@@ -37,6 +37,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
           tags: |
             openproject/hocuspocus:latest
