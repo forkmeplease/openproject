@@ -45,13 +45,15 @@ module Portfolios
     end
 
     def program_count_label
-      count = @portfolio.children.program.count
-      I18n.t("program.count", count: count)
+      program_count = all_descendants(@portfolio).filter { it.workspace_type == "program" }.count
+
+      I18n.t("program.count", count: program_count)
     end
 
     def project_count_label
-      count = @portfolio.children.project.count
-      I18n.t("project.count", count: count)
+      project_count = all_descendants(@portfolio).filter { it.workspace_type == "project" }.count
+
+      I18n.t("project.count", count: project_count)
     end
 
     def budget_label
@@ -60,6 +62,24 @@ module Portfolios
 
     def updated_at_label
       I18n.t(:label_updated_time, value: distance_of_time_in_words(Time.current, @portfolio.updated_at))
+    end
+
+    private
+
+    def all_descendants(project = @portfolio)
+      return @descendants if defined?(@descendants)
+
+      @descendants = Set.new
+      stack = [project]
+
+      until stack.empty?
+        current = stack.pop
+        current.descendants.each { stack.push(it) }
+
+        @descendants.add(current) unless current == project
+      end
+
+      @descendants
     end
   end
 end
