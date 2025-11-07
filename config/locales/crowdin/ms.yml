@@ -2533,7 +2533,7 @@ ms:
       attribute_not_found: "atribut tidak ditemui: %{attribute}"
       model_not_found: "model atribut tidak sah: %{model}"
       resource_not_found: "sumber tidak ditemui: %{resource}"
-      rich_text_unsupported: "Penyematan teks kaya tidak disokong bagi eksport buat masa ini"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: j
       days: h

@@ -2534,7 +2534,7 @@ ja:
       attribute_not_found: "属性が見つかりません: %{attribute}"
       model_not_found: "不正な属性モデル: %{model}"
       resource_not_found: "リソースが見つかりません: %{resource}"
-      rich_text_unsupported: "リッチテキスト埋め込みは現在エクスポートではサポートされていません"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: 時間
       days: 日

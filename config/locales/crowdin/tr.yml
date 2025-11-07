@@ -2580,7 +2580,7 @@ tr:
       attribute_not_found: "öznitelik bulunamadı: %{attribute}"
       model_not_found: "geçersiz öznitelik modeli: %{model}"
       resource_not_found: "kaynak bulunamadı: %{resource}"
-      rich_text_unsupported: "Zengin metin yerleştirme şu anda dışa aktarmada desteklenmiyor"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: sa
       days: g

@@ -2577,7 +2577,7 @@ it:
       attribute_not_found: "attributo non trovato: %{attribute}"
       model_not_found: "modello di attributo non valido: %{model}"
       resource_not_found: "risorsa non trovata: %{resource}"
-      rich_text_unsupported: "L'incorporazione di Rich text attualmente non è supportata nell'esportazione"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: o
       days: g

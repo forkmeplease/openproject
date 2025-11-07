@@ -2664,7 +2664,7 @@ uk:
       attribute_not_found: "атрибут не знайдено: %{attribute}"
       model_not_found: "недійсна модель атрибута: %{model}"
       resource_not_found: "ресурс не знайдено: %{resource}"
-      rich_text_unsupported: "Вбудовування розширеного тексту наразі не підтримується у файлі експорту"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: г
       days: д

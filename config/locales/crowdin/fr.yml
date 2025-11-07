@@ -2578,7 +2578,7 @@ fr:
       attribute_not_found: "attribut non trouvé : %{attribute}"
       model_not_found: "modèle d'attribut non valide : %{model}"
       resource_not_found: "ressource non trouvée : %{resource}"
-      rich_text_unsupported: "L'intégration de texte enrichi n'est actuellement pas prise en charge dans l'exportation"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: h
       days: j

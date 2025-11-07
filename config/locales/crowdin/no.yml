@@ -2579,7 +2579,7 @@
       attribute_not_found: "attributtet ble ikke funnet: %{attribute}"
       model_not_found: "ugyldig attributtmodell: %{model}"
       resource_not_found: "ressurs ikke funnet: %{resource}"
-      rich_text_unsupported: "Rik tekstinnebygging støttes ikke for eksport"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: t
       days: d

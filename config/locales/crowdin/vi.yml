@@ -2535,7 +2535,7 @@ vi:
       attribute_not_found: "thuộc tính không tìm thấy: %{attribute}"
       model_not_found: "mô hình thuộc tính không hợp lệ: %{model}"
       resource_not_found: "tài nguyên không tìm thấy: %{resource}"
-      rich_text_unsupported: "Nhúng văn bản phong phú hiện không được hỗ trợ trong xuất khẩu"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: h
       days: d

@@ -2535,7 +2535,7 @@ ko:
       attribute_not_found: "특성을 찾을 수 없음: %{attribute}"
       model_not_found: "잘못된 특성 모델: %{model}"
       resource_not_found: "리소스를 찾을 수 없음: %{resource}"
-      rich_text_unsupported: "서식 있는 텍스트 임베딩은 내보내기에서 현재 지원되지 않음"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: 시간
       days: 일

@@ -2666,7 +2666,7 @@ pl:
       attribute_not_found: "nie znaleziono atrybutu: %{attribute}"
       model_not_found: "nieprawidłowy model atrybutu: %{model}"
       resource_not_found: "nie znaleziono zasobu: %{resource}"
-      rich_text_unsupported: "Osadzanie tekstu sformatowanego nie jest obecnie obsługiwane w eksporcie"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: h
       days: d

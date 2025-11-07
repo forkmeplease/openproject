@@ -14,14 +14,14 @@ zh-CN:
           name: 其他
       document_types:
         item_0:
-          name: Note
+          name: 笔记
         item_1:
-          name: Idea
+          name: 创意
         item_2:
-          name: Proposal
+          name: 提案
         item_3:
-          name: Specification
+          name: 说明
         item_4:
-          name: Report
+          name: 报告
         item_5:
-          name: Documentation
+          name: 文档

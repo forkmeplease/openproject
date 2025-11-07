@@ -2668,7 +2668,7 @@ ru:
       attribute_not_found: "атрибут не найден: %{attribute}"
       model_not_found: "неверная модель атрибута: %{model}"
       resource_not_found: "ресурс не найден: %{resource}"
-      rich_text_unsupported: "Встраивание форматированного текста в настоящее время не поддерживается при экспорте."
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: ч
       days: д
