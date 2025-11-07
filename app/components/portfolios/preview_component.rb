@@ -34,6 +34,8 @@ module Portfolios
     include OpPrimer::ComponentHelpers
     include WorkspaceHelper
 
+    attr_reader :current_user, :portfolio
+
     def initialize(portfolio:, current_user:)
       super
       @portfolio = portfolio
@@ -41,19 +43,15 @@ module Portfolios
     end
 
     def currently_favorited?
-      false
+      @currently_favorited ||= favorited_project_ids.include?(portfolio.id)
     end
 
     def program_count_label
-      program_count = all_descendants(@portfolio).filter { it.workspace_type == "program" }.count
-
-      I18n.t("program.count", count: program_count)
+      I18n.t("program.count", count: all_subprograms.count)
     end
 
     def project_count_label
-      project_count = all_descendants(@portfolio).filter { it.workspace_type == "project" }.count
-
-      I18n.t("project.count", count: project_count)
+      I18n.t("project.count", count: all_subprojects.count)
     end
 
     def budget_label
@@ -61,12 +59,16 @@ module Portfolios
     end
 
     def updated_at_label
-      I18n.t(:label_updated_time, value: distance_of_time_in_words(Time.current, @portfolio.updated_at))
+      I18n.t(:label_updated_time, value: distance_of_time_in_words(Time.current, portfolio.updated_at))
     end
 
     private
 
-    def all_descendants(project = @portfolio)
+    def favorited_project_ids
+      @favorited_project_ids ||= Favorite.where(user: current_user, favorited_type: "Project").pluck(:favorited_id)
+    end
+
+    def all_descendants(project = portfolio)
       return @descendants if defined?(@descendants)
 
       @descendants = Set.new
@@ -80,6 +82,14 @@ module Portfolios
       end
 
       @descendants
+    end
+
+    def all_subprograms
+      all_descendants.filter { it.workspace_type == "program" }
+    end
+
+    def all_subprojects
+      all_descendants.filter { it.workspace_type == "project" }
     end
   end
 end
