@@ -10,6 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
       - name: Set SHORT_SHA
         run: |
           SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`
