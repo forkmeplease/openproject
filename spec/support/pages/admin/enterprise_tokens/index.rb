@@ -28,53 +28,39 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require_relative "../../flash/expectations"
+require "support/pages/page"
 
-module Components
-  module Common
-    class Modal
-      include Capybara::DSL
-      include Capybara::RSpecMatchers
-      include Flash::Expectations
-      include RSpec::Matchers
-      include WaitHelpers
-
-      def expect_modal(title, wait: Capybara.default_max_wait_time)
-        expect_title(title, wait:)
-        modal = find(:modal, title, wait:)
-        wait_for_size_animation_completion(modal)
-      end
-
-      def expect_title(text, wait: Capybara.default_max_wait_time)
-        expect(page).to have_modal(text, wait:)
-      end
-
-      def expect_open
-        expect(page).to have_modal(wait: 40)
-      end
-
-      def expect_closed
-        expect(page).not_to have_modal
-      end
-
-      def expect_text(text)
-        within_modal do
-          expect(page).to have_text(text)
+module Pages
+  module Admin
+    module EnterpriseTokens
+      class Index < ::Pages::Page
+        def path
+          enterprise_tokens_path
         end
-      end
 
-      def click_modal_button(text)
-        within_modal do
-          click_button text
+        def add_enterprise_token(token_text)
+          click_button "Add Enterprise token"
+          modals.expect_modal("Add Enterprise token")
+          fill_in "Type support token text", with: token_text
+          click_button "Add"
         end
-      end
 
-      def within_modal(name = nil, **, &)
-        super
-      end
+        def close_welcome_video_modal
+          modals.expect_modal("Quick feature overview")
+          expect(page).to have_css("#enterprise-trial-welcome-dialog video")
+          page.find('[data-close-dialog-id="enterprise-trial-welcome-dialog"]').click
+        end
 
-      def modal_element
-        find(:modal)
+        def expect_add_token_validation_error(message)
+          expect(page).to have_dialog("Add Enterprise token")
+          expect(page).to have_field("Type support token text", validation_error: message)
+        end
+
+        private
+
+        def modals
+          Components::Common::Modal.new
+        end
       end
     end
   end

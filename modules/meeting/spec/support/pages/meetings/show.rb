@@ -126,9 +126,7 @@ module Pages::Meetings
     end
 
     def expect_modal(...)
-      expect(page).to have_modal(...)
-      modal = find(:modal, ...)
-      wait_for_size_animation_completion(modal)
+      Components::Common::Modal.new.expect_modal(...)
     end
 
     def expect_no_add_form
