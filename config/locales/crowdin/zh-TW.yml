@@ -1424,7 +1424,7 @@ zh-TW:
               minimum: "需要為主體、上下文或 id 至少包含一個帶有“=”運算符的過濾器"
         custom_field:
           at_least_one_custom_option: "需要至少一個選項可用。"
-          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet, please try again in a few minutes."
+          previous_custom_field_recalculation_unprocessed: "尚未套用此自訂欄位先前變更的重新計算，請過幾分鐘再試一次。"
           referenced_in_other_fields_html:
             other: "%{name} 用於專案屬性計算： %{links}。"
           attributes:
@@ -2532,7 +2532,7 @@ zh-TW:
       attribute_not_found: "屬性未找到： %{attribute}"
       model_not_found: "屬性模型無效： %{model}"
       resource_not_found: "未找到資源： %{resource}"
-      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
+      nested_rich_text_unsupported: "目前匯出功能不支援巢狀豐富文字內嵌"
     units:
       hours: 小時
       days: 日
