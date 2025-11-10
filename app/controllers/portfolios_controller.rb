@@ -39,9 +39,9 @@ class PortfoliosController < ApplicationController
   # FIXME: remove
   no_authorization_required! :index
 
-  # Must be called before `load_query_or_deny_access`
-  before_action :set_default_query, only: %i[index]
+  before_action :set_default_query, only: %i[index] # Must be called before `load_query_or_deny_access`
   before_action :load_query_or_deny_access, only: %i[index]
+  before_action :not_authorized_on_feature_flag_inactive
 
   current_menu_item :index do
     :portfolios
@@ -82,5 +82,9 @@ class PortfoliosController < ApplicationController
 
   def set_default_query
     params[:query_id] ||= ProjectQueries::Static::ACTIVE_PORTFOLIOS
+  end
+
+  def not_authorized_on_feature_flag_inactive
+    render_403 unless OpenProject::FeatureDecisions.portfolio_models_active?
   end
 end
