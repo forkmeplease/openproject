@@ -101,7 +101,7 @@ module Portfolios
     end
 
     def modification_params?
-      params.values_at(:filters, :columns, :sortBy).any?
+      params.values_at(:filters, :sortBy).any?
     end
   end
 end

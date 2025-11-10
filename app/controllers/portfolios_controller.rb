@@ -64,7 +64,7 @@ class PortfoliosController < ApplicationController
         )
         replace_via_turbo_stream(component: Portfolios::ListComponent.new(query: @query, current_user:))
 
-        current_url = url_for(params.permit(:controller, :action, :query_id, :filters, :columns, :sortBy, :page, :per_page))
+        current_url = url_for(params.permit(:controller, :action, :query_id, :filters, :sortBy, :page, :per_page))
         turbo_streams << turbo_stream.push_state(current_url)
         turbo_streams << turbo_stream.turbo_frame_set_src(
           "portfolios_sidemenu",
