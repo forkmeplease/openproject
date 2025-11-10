@@ -1,7 +1,7 @@
 <%= component_wrapper(tag: "turbo-frame") do %>
   <%=
     render(Primer::OpenProject::PageHeader.new(state: @state)) do |header|
-      header.with_title(data: { "test-selector": "portfolio-query-name" }) do |title|
+      header.with_title(data: { "test-selector": "portfolio-query-name" }) do |_title|
         page_title
       end
       header.with_breadcrumbs(breadcrumb_items, selected_item_font_weight: current_breadcrumb_element == page_title ? :bold : :normal)
@@ -16,24 +16,25 @@
           data: { "test-selector": "portfolio-more-dropdown-menu" }
         }
       ) do |menu|
-        # TODO: use Sort By menu item instead:
-        menu.with_item(
-          tag: :a,
-          label: t(:"queries.configure_view.heading"),
-          href: configure_view_modal_project_queries_path(projects_query_params),
-          content_arguments: { data: { controller: "async-dialog" }, rel: "nofollow" }
-        ) do |item|
-          item.with_leading_visual_icon(icon: :gear)
-        end
+        # TODO: WP-68900 Sort By
+        # menu.with_item(
+        #   tag: :a,
+        #   label: t(:"queries.configure_view.heading"),
+        #   href: configure_view_modal_project_queries_path(projects_query_params),
+        #   content_arguments: { data: { controller: "async-dialog" }, rel: "nofollow" }
+        # ) do |item|
+        #   item.with_leading_visual_icon(icon: :gear)
+        # end
 
-        menu.with_item(
-          tag: :a,
-          label: t("js.label_export"),
-          href: export_list_modal_projects_path(projects_query_params),
-          content_arguments: { data: { controller: "async-dialog" }, rel: "nofollow" }
-        ) do |item|
-          item.with_leading_visual_icon(icon: "sign-out")
-        end
+        # TODO: WP-68901 Export
+        # menu.with_item(
+        #   tag: :a,
+        #   label: t("js.label_export"),
+        #   href: export_list_modal_projects_path(projects_query_params),
+        #   content_arguments: { data: { controller: "async-dialog" }, rel: "nofollow" }
+        # ) do |item|
+        #   item.with_leading_visual_icon(icon: "sign-out")
+        # end
 
         menu.with_item(
           tag: :button,
