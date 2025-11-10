@@ -28,24 +28,39 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Meetings
-  module Statuses
-    RECORD = Struct.new(:id, :color, keyword_init: true)
+module RecurringMeetings
+  class TemplateCompletedService < ::BaseServices::BaseCallable
+    def initialize(user:, recurring_meeting:)
+      super()
 
-    DRAFT = RECORD.new(id: "draft", color: Color.new(hexcode: "#BF3989"))
-    OPEN = RECORD.new(id: "open", color: Color.new(hexcode: "#006edb"))
-    IN_PROGRESS = RECORD.new(id: "in_progress", color: Color.new(hexcode: "#894ceb"))
-    CLOSED = RECORD.new(id: "closed", color: Color.new(hexcode: "#25292e"))
+      @user = user
+      @recurring_meeting = recurring_meeting
+    end
 
-    AVAILABLE = [
-      DRAFT,
-      OPEN,
-      IN_PROGRESS,
-      CLOSED
-    ].freeze
+    protected
 
-    def self.find_by_id(id)
-      AVAILABLE.find { |status| status.id == id }
+    def perform
+      notify = params.fetch(:notify)
+      first_occurrence = params.fetch(:first_occurrence)
+
+      call = update_template(notify)
+      init_first_occurrence(call, first_occurrence) if call.success?
+
+      call
+    end
+
+    def update_template(notify)
+      ::Meetings::UpdateService
+        .new(user: @user, model: @recurring_meeting.template)
+        .call({ state: "open", notify: })
+    end
+
+    def init_first_occurrence(call, first_occurrence)
+      init_call = ::RecurringMeetings::InitOccurrenceService
+                    .new(user: @user, recurring_meeting: @recurring_meeting)
+                    .call(start_time: first_occurrence)
+
+      call.merge!(init_call)
     end
   end
 end

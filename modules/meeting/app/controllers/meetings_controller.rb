@@ -345,6 +345,26 @@ class MeetingsController < ApplicationController
     respond_with_turbo_streams
   end
 
+  def exit_draft_mode_dialog
+    respond_with_dialog Meetings::ExitDraftModeDialogComponent.new(meeting: @meeting)
+  end
+
+  def exit_draft_mode
+    call = ::Meetings::UpdateService
+             .new(user: current_user, model: @meeting)
+             .call({ state: "open", notify: meeting_params[:notify] == "1" })
+
+    if call.success?
+      update_all_via_turbo_stream
+      update_backlog_via_turbo_stream(collapsed: nil)
+
+      respond_with_turbo_streams
+    else
+      @meeting = call.result
+      render action: :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_query

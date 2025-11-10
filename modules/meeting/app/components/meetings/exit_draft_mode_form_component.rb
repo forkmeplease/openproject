@@ -29,23 +29,26 @@
 #++
 
 module Meetings
-  module Statuses
-    RECORD = Struct.new(:id, :color, keyword_init: true)
+  class ExitDraftModeFormComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-    DRAFT = RECORD.new(id: "draft", color: Color.new(hexcode: "#BF3989"))
-    OPEN = RECORD.new(id: "open", color: Color.new(hexcode: "#006edb"))
-    IN_PROGRESS = RECORD.new(id: "in_progress", color: Color.new(hexcode: "#894ceb"))
-    CLOSED = RECORD.new(id: "closed", color: Color.new(hexcode: "#25292e"))
+    def initialize(meeting:)
+      super
 
-    AVAILABLE = [
-      DRAFT,
-      OPEN,
-      IN_PROGRESS,
-      CLOSED
-    ].freeze
+      @meeting = meeting
+      @project = meeting.project
+    end
 
-    def self.find_by_id(id)
-      AVAILABLE.find { |status| status.id == id }
+    private
+
+    def url
+      if @meeting.recurring?
+        template_completed_project_recurring_meeting_path(@project, @meeting.recurring_meeting)
+      else
+        exit_draft_mode_project_meeting_path(@project, @meeting)
+      end
     end
   end
 end

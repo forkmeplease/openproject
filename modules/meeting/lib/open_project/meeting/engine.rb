@@ -88,7 +88,7 @@ module OpenProject::Meeting
                    require: :member
         permission :manage_agendas,
                    {
-                     meetings: %i[change_state],
+                     meetings: %i[change_state exit_draft_mode_dialog exit_draft_mode],
                      meeting_agenda_items: %i[new cancel_new create edit cancel_edit update destroy drop move
                                               move_to_next_meeting move_to_next_meeting_dialog
                                               move_to_section move_to_section_dialog],
