@@ -1,4 +1,8 @@
-<%= component_wrapper(data: { "test-selector": "meeting-presentation-header" }) do %>
+<%=
+  component_wrapper(
+    class: "op-meeting-presentation--header-container",
+    data: { "test-selector": "meeting-presentation-header" }
+  ) do %>
   <%=
     render Primer::OpenProject::PageHeader.new(classes: "op-meeting-presentation-header") do |header|
       header.with_breadcrumbs([])

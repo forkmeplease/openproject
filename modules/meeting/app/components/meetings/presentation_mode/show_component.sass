@@ -9,6 +9,12 @@
   flex-direction: column
   padding: 50px
 
+  &--header-container
+    position: sticky
+    top: 0
+    z-index: 1000
+    background: var(--bgColor-default)
+
   &--header
     display: flex
     margin-bottom: var(--base-size-24)
@@ -20,7 +26,6 @@
     flex: 1 1 auto
     min-height: 0
     overflow-y: auto
-    padding: var(--base-size-6)
 
   &--item
     width: 100%
