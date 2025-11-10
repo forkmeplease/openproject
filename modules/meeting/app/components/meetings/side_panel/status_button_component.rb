@@ -47,8 +47,8 @@ module Meetings
         OpPrimer::StatusButtonComponent.new(
           current_status: current_status,
           items: [open_status, in_progress_status, closed_status],
-          readonly: !edit_enabled? || @meeting.state == "draft",
-          disabled: !edit_enabled? || @meeting.state == "draft",
+          readonly: !edit_enabled? || @meeting.draft?,
+          disabled: !edit_enabled? || @meeting.draft?,
           button_arguments: {
             title: t("label_meeting_state"),
             size: @size
@@ -83,12 +83,7 @@ module Meetings
                                        color_ref: Meetings::Statuses::DRAFT.id,
                                        color_namespace: :meeting_status,
                                        icon: :"issue-draft",
-                                       tag: :a,
-                                       href: "fdfdf",
-                                       description: "fsdfds",
-                                       content_arguments: {
-                                         data: data_attributes("fdfds")
-                                       })
+                                       tag: :a)
     end
 
     def open_status
