@@ -307,7 +307,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
   }
 
   private buildTimeEntryEntries(entries:TimeEntryResource[]):EventInput[] {
-    const hoursDistribution:{ [key:string]:Moment } = {};
+    const hoursDistribution:Record<string, Moment> = {};
 
     return entries.map((entry) => {
       let start:Moment;
@@ -347,8 +347,8 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
     return calendarEntries;
   }
 
-  private calculateDateSums(entries:TimeEntryResource[]):{ [p:string]:number; } {
-    const dateSums:{ [key:string]:number } = {};
+  private calculateDateSums(entries:TimeEntryResource[]):Record<string, number> {
+    const dateSums:Record<string, number> = {};
 
     entries.forEach((entry) => {
       const hours = this.timezone.toHours(entry.hours as string);
@@ -413,7 +413,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  protected dmFilters(start:Moment, end:Moment):Array<[string, FilterOperator, string[]]> {
+  protected dmFilters(start:Moment, end:Moment):[string, FilterOperator, string[]][] {
     const startDate = start.format('YYYY-MM-DD');
     const endDate = end.subtract(1, 'd').format('YYYY-MM-DD');
     return [
@@ -432,7 +432,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
 
   private editEvent(entry:TimeEntryResource):void {
     void this.turboRequests.request(
-      `${this.pathHelper.timeEntryEditDialog(entry.id as string)}?onlyMe=true`,
+      `${this.pathHelper.timeEntryEditDialog(entry.id!)}?onlyMe=true`,
       { method: 'GET' },
     );
   }
@@ -629,7 +629,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
       name += ` - ${this.entityName(entry)}`;
     }
 
-    return name || '-';
+    return name ?? '-';
   }
 
   private entityName(entry:TimeEntryResource):string {
@@ -671,7 +671,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
               </li>
               <li>
                 <span class="text-bold">${schema.activity.name}:</span>
-                <span>${this.sanitizedValue(entry.activity?.name || '')}</span>
+                <span>${this.sanitizedValue(entry.activity?.name ?? '')}</span>
               </li>
               <li>
                 <span class="text-bold">${schema.hours.name}:</span>
@@ -679,7 +679,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
               </li>
               <li>
                 <span class="text-bold">${schema.comment.name}:</span>
-                <span>${this.sanitizedValue(entry.comment.raw || this.i18n.t('js.placeholders.default'))}</span>
+                <span>${this.sanitizedValue(entry.comment.raw ?? this.i18n.t('js.placeholders.default'))}</span>
               </li>
             </ul>
           </div>
@@ -688,7 +688,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
   }
 
   private sanitizedValue(value:string):string {
-    return this.sanitizer.sanitize(SecurityContext.HTML, value) || '';
+    return this.sanitizer.sanitize(SecurityContext.HTML, value) ?? '';
   }
 
   protected formatNumber(value:number):string {
@@ -715,7 +715,7 @@ export class TimeEntryCalendarComponent implements AfterViewInit, OnDestroy {
         }
         return null;
       })
-      .filter((value) => value !== null) as number[];
+      .filter((value) => value !== null);
   }
 
   private handleDialogClose(event:CustomEvent):void {
