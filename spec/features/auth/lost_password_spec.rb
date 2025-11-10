@@ -52,10 +52,14 @@ RSpec.describe "Lost password" do
 
     perform_enqueued_jobs
     expect(ActionMailer::Base.deliveries.size).to be 1
+    mail = ActionMailer::Base.deliveries.first
+    expect(mail.subject).to eq I18n.t("mail_subject_lost_password", value: Setting.app_title)
 
     # mimic the user clicking on the link in the mail
     token = Token::Recovery.first
-    visit account_lost_password_path(token: token.value)
+    mail_body = mail.body.parts.find { |p| p.mime_type == "text/html" }.body.to_s
+    mail_document = Capybara::Node::Simple.new(mail_body)
+    visit mail_document.find("a")["href"]
 
     fill_in "New password", with: new_password
     fill_in "Confirmation", with: new_password
