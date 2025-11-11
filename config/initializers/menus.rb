@@ -39,7 +39,7 @@ Redmine::MenuManager.map :top_menu do |menu|
             if: ->(_) {
               OpenProject::FeatureDecisions.portfolio_models_active? &&
                 (User.current.logged? || !Setting.login_required?) &&
-                (User.current.allowed_globally?(:add_project) ||
+                (User.current.allowed_globally?(:add_portfolios) ||
                   Project.active.portfolio.allowed_to(User.current, :view_project).any?)
             }
 
@@ -198,7 +198,7 @@ Redmine::MenuManager.map :global_menu do |menu|
             if: ->(_) {
               OpenProject::FeatureDecisions.portfolio_models_active? &&
                 (User.current.logged? || !Setting.login_required?) &&
-                (User.current.allowed_globally?(:add_project) ||
+                (User.current.allowed_globally?(:add_portfolios) ||
                   Project.active.portfolio.allowed_to(User.current, :view_project).any?)
             }
 
