@@ -33,10 +33,8 @@
       if allowed_to_archive?
         menu.with_item(
           label: t(:label_archive_project),
-          href: helpers.project_archive_path(project, status: "", name: project.name),
-          content_arguments: {
-            data: { turbo_method: :post, confirm: t("project.archive.are_you_sure", name: project.name) }
-          }
+          href: helpers.dialog_project_archive_path(project),
+          content_arguments: { data: { turbo_stream: true } }
         ) do |item|
           item.with_leading_visual_icon(icon: :lock)
         end
@@ -54,7 +52,7 @@
           t.with_text { I18n.t("overviews.label_overview") }
         end
 
-        if current_user.allowed_in_project?(:manage_dashboards, project)
+        if current_user.allowed_in_project?(:view_project, project)
           tab_nav.with_tab(
             test_selector: "project-dashboard-tab",
             selected: current_page?(dashboard_project_overview_path),
