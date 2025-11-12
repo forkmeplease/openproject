@@ -31,9 +31,13 @@ There are minor adjustments on how the composition of this component is defined 
 ## **Breadcrumb usage**
 By default, every PageHeader should include breadcrumbs. They are a core part of the global navigation in OpenProject and must be present on almost all pages.
 
-There are a few exceptional cases where the PageHeader may be rendered without breadcrumbs (e.g., my page and the project overview page).
-Only use this variant if there is a strong UX reason.
-When in doubt, please consult the Dream team and designers first.
+Breadcrumbs should not include the instance name, because users can already return to the instance home page by clicking the instance logo or using the waffle menu.
+
+There are a few exceptional cases where the PageHeader may be rendered without breadcrumbs — for example, My Page and the Project Overview page.
+Since the instance name has been removed from the breadcrumbs, these pages would only display their own name in the breadcrumb, which provides no additional navigational value.
+Therefore, omitting the breadcrumb on these pages ensures a cleaner and more meaningful user experience.
+
+If you are unsure whether breadcrumbs should be omitted on a particular page, please consult the Dream team or designers before proceeding.
 
 **To intentionally render a PageHeader without breadcrumbs, always pass nil explicitly**
 
