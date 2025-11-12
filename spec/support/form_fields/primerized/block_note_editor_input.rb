@@ -19,6 +19,10 @@ module FormFields
         editor = find_editor
         editor.send_keys(content)
       end
+
+      def find_editor
+        page.find("div[role='textbox']")
+      end
     end
   end
 end
