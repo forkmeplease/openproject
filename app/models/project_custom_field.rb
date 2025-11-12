@@ -39,12 +39,12 @@ class ProjectCustomField < CustomField
 
   after_save :activate_required_field_in_all_projects, if: :required?
 
+  validates :custom_field_section_id, presence: true
+
   # Relevant for user fields to allow membership assignment
   has_one :custom_fields_role, foreign_key: :custom_field_id, dependent: :destroy, inverse_of: :custom_field
   has_one :role, through: :custom_fields_role
   accepts_nested_attributes_for :custom_fields_role, allow_destroy: true
-
-  validates :custom_field_section_id, presence: true
 
   class << self
     def visible(user = User.current, project: nil)
@@ -76,6 +76,19 @@ class ProjectCustomField < CustomField
 
   def type_name
     :label_project_plural
+  end
+
+  def role_id
+    role&.id
+  end
+
+  def role_id=(role_id)
+    if role_id.present?
+      build_custom_fields_role unless custom_fields_role
+      custom_fields_role.role_id = role_id
+    else
+      custom_fields_role&.mark_for_destruction
+    end
   end
 
   def activate_required_field_in_all_projects
