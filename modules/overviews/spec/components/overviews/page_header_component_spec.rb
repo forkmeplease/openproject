@@ -138,8 +138,9 @@ RSpec.describe Overviews::PageHeaderComponent, type: :component do
     context "without manage permissions" do
       it "renders action menu items", :aggregate_failures do
         expect(rendered_component).to have_menu do |menu|
-          expect(menu).to have_selector :menuitem, count: 1
+          expect(menu).to have_selector :menuitem, count: 2
           expect(menu).to have_selector :menuitem, text: "Add to favorites"
+          expect(menu).to have_selector :menuitem, text: "Export PDF"
         end
       end
     end
@@ -149,9 +150,10 @@ RSpec.describe Overviews::PageHeaderComponent, type: :component do
 
       it "renders action menu items", :aggregate_failures do
         expect(rendered_component).to have_menu do |menu|
-          expect(menu).to have_selector :menuitem, count: 3
+          expect(menu).to have_selector :menuitem, count: 4
           expect(menu).to have_selector :menuitem, text: "Add to favorites"
           expect(menu).to have_selector :menuitem, text: "Manage project attributes"
+          expect(menu).to have_selector :menuitem, text: "Export PDF"
           expect(menu).to have_selector :menuitem, text: "Archive project"
         end
       end
