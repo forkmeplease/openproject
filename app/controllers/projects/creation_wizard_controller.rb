@@ -37,7 +37,7 @@ class Projects::CreationWizardController < ApplicationController
   before_action :find_current_section, only: %i[show update]
 
   def show
-    render layout: "only_logo"
+    render layout: "no_menu", locals: { menu_name: :none }
   end
 
   def help_text
