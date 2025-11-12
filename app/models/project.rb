@@ -108,6 +108,7 @@ class Project < ApplicationRecord
 
   store_attribute :settings, :deactivate_work_package_attachments, :boolean
   store_attribute :settings, :enabled_internal_comments, :boolean
+  store_attribute :settings, :project_wizard_enabled, :boolean
 
   acts_as_favoritable
 
