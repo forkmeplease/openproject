@@ -2,6 +2,8 @@ import { OpenProjectModule } from 'core-app/app.module';
 import { enableProdMode } from '@angular/core';
 
 import 'core-app/core/setup/init-jquery';
+
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { initializeLocale } from 'core-app/core/setup/init-locale';
 import { environment } from './environments/environment';
 import { configureErrorReporter } from 'core-app/core/errors/configure-reporter';
@@ -12,7 +14,6 @@ import 'core-app/core/setup/init-vendors';
 import 'core-app/core/setup/init-globals';
 import './stimulus/setup';
 import './turbo/setup';
-import { platformBrowser } from '@angular/platform-browser';
 
 // Ensure we set the correct dynamic frontend path
 // based on the RAILS_RELATIVE_URL_ROOT setting
@@ -42,6 +43,5 @@ void initializeLocale()
   .then(() => {
     initializeGlobalListeners();
 
-    // Due to the behaviour of the Edge browser we need to wait for 'DOM ready'
-    void platformBrowser().bootstrapModule(OpenProjectModule);
+    void platformBrowserDynamic().bootstrapModule(OpenProjectModule);
   });
