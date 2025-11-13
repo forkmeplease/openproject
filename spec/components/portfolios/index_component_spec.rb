@@ -44,7 +44,7 @@ RSpec.describe Portfolios::IndexComponent, type: :component do
     end
   end
   let(:query_result) do
-    double(portfolio: [portfolio_a, portfolio_b]) # rubocop:disable RSpec/VerifiedDoubles
+    double(portfolio: [portfolio_a, portfolio_b])
   end
 
   let(:user) { build_stubbed(:user) }
