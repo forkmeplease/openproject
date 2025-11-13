@@ -27,29 +27,36 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+#
 
-Rails.application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: %i[create new index] do
-      collection do
-        get :menu, to: "documents/menus#show"
-        get :search
-      end
-    end
-  end
+module Documents
+  module ShowEditView
+    module PageHeader
+      class InfoLineComponent < ApplicationComponent
+        include OpPrimer::ComponentHelpers
+        include OpPrimer::FormHelpers
+        include OpTurbo::Streamable
+        include Redmine::I18n
 
-  resources :documents, except: %i[create new index] do
-    member do
-      put :update_type, defaults: { format: :turbo_stream }
-    end
-  end
+        alias_method :document, :model
 
-  namespace :admin do
-    namespace :settings do
-      resources :document_categories, except: [:show] do
-        member do
-          put :move
-          get :reassign
+        def last_updated_at_content
+          safe_join [
+            I18n.t("documents.last_updated_at", time: updated_at_time).html_safe
+          ]
+        end
+
+        def updated_at_time
+          OpPrimer::RelativeTimeComponent.new(
+            datetime: in_user_zone(document.updated_at),
+            month: :long
+          ).render_in(view_context)
+        end
+
+        private
+
+        def other_document_types
+          DocumentType.where.not(id: document.type_id).pluck(:name, :id)
         end
       end
     end

@@ -28,30 +28,42 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: %i[create new index] do
-      collection do
-        get :menu, to: "documents/menus#show"
-        get :search
+module Documents
+  class BlockNoteEditorForm < ApplicationForm
+    form do |f|
+      f.block_note_editor(
+        name: :content_binary,
+        label: I18n.t("label_document_description"),
+        visually_hide_label: true,
+        classes: "document-form--long-description",
+        value: model.content_binary,
+        document_id: model.id,
+        document_name: model.title,
+        oauth_token: @oauth_token,
+        attachments_upload_url:,
+        attachments_collection_key:
+      )
+    end
+
+    attr_reader :oauth_token
+
+    def initialize(oauth_token: nil)
+      super()
+      @oauth_token = oauth_token
+    end
+
+    private
+
+    def attachments_upload_url
+      if OpenProject::Configuration.direct_uploads?
+        ::API::V3::Utilities::PathHelper::ApiV3Path.prepare_attachments_by_document(model.id)
+      else
+        ::API::V3::Utilities::PathHelper::ApiV3Path.attachments_by_document(model.id)
       end
     end
-  end
 
-  resources :documents, except: %i[create new index] do
-    member do
-      put :update_type, defaults: { format: :turbo_stream }
-    end
-  end
-
-  namespace :admin do
-    namespace :settings do
-      resources :document_categories, except: [:show] do
-        member do
-          put :move
-          get :reassign
-        end
-      end
+    def attachments_collection_key
+      ::API::V3::Utilities::PathHelper::ApiV3Path.attachments_by_document(model.id)
     end
   end
 end

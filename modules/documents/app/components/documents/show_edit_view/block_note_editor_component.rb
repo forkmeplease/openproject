@@ -27,30 +27,24 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+#
 
-Rails.application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: %i[create new index] do
-      collection do
-        get :menu, to: "documents/menus#show"
-        get :search
-      end
-    end
-  end
+module Documents
+  module ShowEditView
+    class BlockNoteEditorComponent < ApplicationComponent
+      include AngularHelper
+      include AttachmentsHelper
+      include DocumentsHelper
+      include OpPrimer::ComponentHelpers
 
-  resources :documents, except: %i[create new index] do
-    member do
-      put :update_type, defaults: { format: :turbo_stream }
-    end
-  end
+      alias_method :document, :model
 
-  namespace :admin do
-    namespace :settings do
-      resources :document_categories, except: [:show] do
-        member do
-          put :move
-          get :reassign
-        end
+      options :project, :oauth_token
+
+      private
+
+      def current_user
+        User.current
       end
     end
   end

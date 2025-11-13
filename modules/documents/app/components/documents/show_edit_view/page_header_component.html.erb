@@ -29,8 +29,20 @@
   ++#
 %>
 
-<% if @document.collaborative? %>
-  <%= render Documents::ShowEditView::BlockNoteEditorComponent.new(@document, project: @project, oauth_token: @oauth_token) %>
-<% else %>
-  <%= render partial: "classic_show", locals: { document: @document, project: @project, attachments: @attachments } %>
-<% end %>
+<%=
+  render Primer::OpenProject::PageHeader.new do |header|
+    header.with_title { document.title }
+    header.with_description { render(Documents::ShowEditView::PageHeader::InfoLineComponent.new(document)) }
+    header.with_breadcrumbs(breadcrumbs_items)
+
+    header.with_action_menu(**action_menu_options) do |menu|
+      menu.with_item(
+        label: I18n.t("button_copy_link_to_clipboard"),
+        tag: :"clipboard-copy",
+        content_arguments: { value: document_url(document) }
+      ) do |item|
+        item.with_leading_visual_icon(icon: :copy)
+      end
+    end
+  end
+%>

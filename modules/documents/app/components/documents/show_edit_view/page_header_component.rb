@@ -27,30 +27,31 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+#
 
-Rails.application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: %i[create new index] do
-      collection do
-        get :menu, to: "documents/menus#show"
-        get :search
+module Documents
+  module ShowEditView
+    class PageHeaderComponent < ApplicationComponent
+      alias_method :document, :model
+
+      options :project
+
+      def action_menu_options
+        {
+          menu_arguments: { anchor_align: :end },
+          button_arguments: {
+            icon: "kebab-horizontal",
+            "aria-label": t("documents.page_header.action_menu.document_actions")
+          }
+        }
       end
-    end
-  end
 
-  resources :documents, except: %i[create new index] do
-    member do
-      put :update_type, defaults: { format: :turbo_stream }
-    end
-  end
+      private
 
-  namespace :admin do
-    namespace :settings do
-      resources :document_categories, except: [:show] do
-        member do
-          put :move
-          get :reassign
-        end
+      def breadcrumbs_items
+        [{ href: project_overview_path(project.id), text: project.name },
+         { href: project_documents_path(project), text: I18n.t(:label_document_plural) },
+         document.title]
       end
     end
   end
