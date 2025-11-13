@@ -5,7 +5,8 @@
       controller: "projects--wizard",
       action: "focusin->projects--wizard#handleFieldFocus"
     }
-  ) do %>
+  ) do
+%>
   <%=
     render(Primer::OpenProject::PageHeader.new) do |header|
       header.with_title { I18n.t("projects.wizard.title") }
@@ -25,32 +26,42 @@
     end
   %>
 
-  <div class="op-projects-wizard-grid">
-    <div class="op-projects-wizard-grid--sidebar">
-      <%= render(Projects::Wizard::SidebarComponent.new(
-        project:,
-        custom_fields_by_section:,
-        current_section:
-      )) %>
-    </div>
+  <%=
+    grid_layout("op-projects-wizard", tag: :div) do |page|
+      page.with_area("sidebar") do
+        render(
+          Projects::Wizard::SidebarComponent.new(
+            project:,
+            custom_fields_by_section:,
+            current_section:
+          )
+        )
+      end
 
-    <div class="op-projects-wizard-grid--main">
-      <%= render(Projects::Wizard::FormComponent.new(
-        project:,
-        section: current_section,
-        custom_fields: custom_fields_by_section[current_section]
-      )) %>
-    </div>
+      page.with_area("main") do
+        render(
+          Projects::Wizard::FormComponent.new(
+            project:,
+            section: current_section,
+            custom_fields: custom_fields_by_section[current_section]
+          )
+        )
+      end
 
-    <div class="op-projects-wizard-grid--help">
-      <% first_custom_field = custom_fields_by_section[current_section].first %>
-      <%= render(Projects::Wizard::HelpTextComponent.new(first_custom_field)) %>
-    </div>
-  </div>
+      page.with_area("help") do
+        first_custom_field = custom_fields_by_section[current_section].first
+        render(Projects::Wizard::HelpTextComponent.new(first_custom_field))
+      end
 
-  <%= render(Projects::Wizard::FooterComponent.new(
-    project:,
-    custom_fields_by_section:,
-    current_section:
-  )) %>
+      page.with_area("footer") do
+        render(
+          Projects::Wizard::FooterComponent.new(
+            project:,
+            custom_fields_by_section:,
+            current_section:
+          )
+        )
+      end
+    end
+  %>
 <% end %>

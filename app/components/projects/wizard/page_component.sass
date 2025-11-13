@@ -27,17 +27,36 @@
 // ++
 
 .op-projects-wizard-page
+  display: flex
+  flex-direction: column
   height: 100%
-  padding: var(--base-size-16)
+  overflow: hidden
 
-.op-projects-wizard-grid
+.op-projects-wizard
   display: grid
+  height: 100%
+  grid-template-areas: "sidebar main help" "footer footer footer"
   grid-template-columns: 300px 1fr 350px
+  grid-template-rows: 1fr 70px
   gap: var(--base-size-16, 1rem)
-  height: calc(100% - 8rem - 70px) // Adjust for fixed footer height
 
   &--sidebar,
   &--help
     border: var(--borderWidth-thin, 1px) solid var(--borderColor-default)
     padding: var(--base-size-16)
     border-radius: var(--borderRadius-medium)
+
+  &--sidebar,
+  &--help,
+  &--main
+    overflow: auto
+
+  @media screen and (max-width: $breakpoint-lg)
+    grid-template-areas: "sidebar main" "footer footer"
+    grid-template-columns: 250px 1fr
+
+    &--help
+      display: none
+
+  @media screen and (max-width: $breakpoint-md)
+    grid-template-columns: 170px 1fr

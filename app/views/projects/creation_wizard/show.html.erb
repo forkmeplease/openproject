@@ -27,8 +27,12 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%= render(Projects::Wizard::PageComponent.new(
-  project: @project,
-  custom_fields_by_section: @custom_fields_by_section,
-  current_section: @current_section
-)) %>
+<% html_title I18n.t("projects.wizard.title") %>
+
+<%= render(
+      Projects::Wizard::PageComponent.new(
+        project: @project,
+        custom_fields_by_section: @custom_fields_by_section,
+        current_section: @current_section
+      )
+    ) %>
