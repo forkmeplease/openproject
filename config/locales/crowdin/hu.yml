@@ -2916,7 +2916,7 @@ hu:
   label_checked: "Ellenőrzött"
   label_check_uncheck_all_in_column: "Megjelöl/Jelölést töröl minden oszlopban"
   label_check_uncheck_all_in_row: "Megjelöl/Jelölést töröl minden sorban"
-  label_child_element: "Gyermek alkotó"
+  label_child_element: "Gyermek elem"
   label_choices: "Choices"
   label_close_versions: "Lezárja a befejezett változatokat"
   label_closed_work_packages: "lezárt"
