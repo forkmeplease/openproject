@@ -250,7 +250,7 @@ module Redmine
         # Build the changes hash similar to ActiveRecord::Base#changes,
         # but for the custom field values that have been changed.
         def custom_field_changes # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
-          all_fields_grouped = custom_field_values(all: true).group_by(&:custom_field)
+          all_fields_grouped = custom_field_values.group_by(&:custom_field)
 
           all_fields_grouped.each_with_object({}) do |(custom_field, new_custom_field_values), changes|
             old_value = custom_value_was_for(custom_field)
