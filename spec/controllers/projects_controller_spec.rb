@@ -283,7 +283,7 @@ RSpec.describe ProjectsController do
 
         allow(copy_service)
           .to receive(:call)
-              .with(target_project_params: { "name" => name }, only: [], send_notifications: false)
+              .with(target_project_params: { "name" => name, "template" => template }, only: [], send_notifications: false)
               .and_return(service_result)
 
         post :create, params: {
