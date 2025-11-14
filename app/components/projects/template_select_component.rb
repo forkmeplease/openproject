@@ -30,11 +30,14 @@
 
 module Projects
   class TemplateSelectComponent < ApplicationComponent
+    extend Dry::Initializer[undefined: false]
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
     include OpTurbo::Streamable
 
-    options :template, :parent
+    option :template
+    option :parent, optional: true
+    option :current_user, default: -> { User.current }
 
     private
 

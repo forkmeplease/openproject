@@ -2217,6 +2217,12 @@ en:
     template_label: "Use template"
     copy_options:
       dependencies_label: "Copy from template"
+    blank_template:
+      label: "Blank project"
+      description_html: >
+        Start from scratch. Manually add project attributes, members and modules.
+    blank_description_html: >
+      No description provided.
 
   create_wiki_page: "Create new wiki page"
   create_wiki_page_button: "Wiki page"

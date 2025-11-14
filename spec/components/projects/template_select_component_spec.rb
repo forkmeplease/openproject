@@ -31,26 +31,28 @@
 require "rails_helper"
 
 RSpec.describe Projects::TemplateSelectComponent, type: :component do
-  let(:template) { build_stubbed(:template_project) }
-
-  def render_component(**params)
-    render_inline(described_class.new(template:, **params))
-    page
+  def render_component(...)
+    render_inline(described_class.new(...))
   end
+
+  let(:template) { build_stubbed(:template_project) }
+  let(:current_user) { build_stubbed(:user) }
+
+  subject(:rendered_component) { render_component(template:, current_user:) }
 
   it "renders form" do
-    expect(render_component).to have_css "form"
+    expect(rendered_component).to have_element :form, method: "get"
   end
 
-  it "renders project autocompleter" do
-    expect(render_component).to have_element "opce-project-autocompleter", "data-input-name": "\"template_id\"" do |element|
-      expect(element["data-input-value"]).to eq template.id.to_s
+  it "registers Stimulus controller" do
+    expect(rendered_component).to have_element :form do |form|
+      expect(form["data-controller"]).to include "auto-submit"
     end
   end
 
   it "connects Stimulus controller actions" do
-    expect(render_component).to have_element "opce-project-autocompleter", "data-input-name": "\"template_id\"" do |element|
-      expect(element["data-action"]).to include "change->auto-submit#submit"
+    expect(rendered_component).to have_selector :fieldset, "Use template" do |fieldset|
+      expect(fieldset["data-action"]).to include "change->auto-submit#submit"
     end
   end
 end
