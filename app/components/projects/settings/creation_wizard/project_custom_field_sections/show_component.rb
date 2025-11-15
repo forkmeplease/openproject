@@ -28,43 +28,31 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Projects::Settings::CreationWizardController < Projects::SettingsController
-  include OpTurbo::ComponentStream
+module Projects
+  module Settings
+    module CreationWizard
+      module ProjectCustomFieldSections
+        class ShowComponent < ApplicationComponent
+          include ApplicationHelper
+          include OpPrimer::ComponentHelpers
+          include OpTurbo::Streamable
 
-  menu_item :settings_creation_wizard
+          def initialize(project:, project_custom_field_section:)
+            super
 
-  before_action :check_feature_flag
+            @project = project
+            @project_custom_field_section = project_custom_field_section
+            enabled_custom_field_ids = project.enabled_custom_field_ids
+            @project_custom_fields = project_custom_field_section.custom_fields.where(id: enabled_custom_field_ids)
+          end
 
-  def show; end
+          private
 
-  def disable_dialog
-    respond_with_dialog Projects::Settings::CreationWizard::DisableDialogComponent.new(
-      project: @project
-    )
-  end
-
-  def toggle
-    @project.update(project_creation_wizard_enabled: !@project.project_creation_wizard_enabled)
-    redirect_to project_settings_creation_wizard_path(@project, tab: params[:tab]), status: :see_other
-  end
-
-  def toggle_project_custom_field
-    mapping = ProjectCustomFieldProjectMapping.find_by(
-      project_id: permitted_params.project_custom_field_project_mapping[:project_id],
-      custom_field_id: permitted_params.project_custom_field_project_mapping[:custom_field_id]
-    )
-    if mapping&.update(creation_wizard: !mapping.creation_wizard)
-      render json: {}, status: :ok
-    else
-      render json: {}, status: :unprocessable_entity
-    end
-  end
-
-  private
-
-  def check_feature_flag
-    unless OpenProject::FeatureDecisions.project_initiation_active?
-      render_404
+          def wrapper_uniq_by
+            @project_custom_field_section.id
+          end
+        end
+      end
     end
   end
 end

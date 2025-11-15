@@ -28,43 +28,43 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Projects::Settings::CreationWizardController < Projects::SettingsController
-  include OpTurbo::ComponentStream
+module Projects
+  module Settings
+    module CreationWizard
+      module ProjectCustomFieldSections
+        class CustomFieldRowComponent < ::Projects::Settings::ProjectCustomFieldSections::CustomFieldRowComponent
+          private
 
-  menu_item :settings_creation_wizard
+          def toggle_path
+            toggle_project_custom_field_project_settings_creation_wizard_path(
+              project_custom_field_project_mapping: {
+                project_id: @project.id,
+                custom_field_id: @project_custom_field.id
+              }
+            )
+          end
 
-  before_action :check_feature_flag
+          def toggle_checked?
+            mapping = @project_custom_field_project_mappings.find do |m|
+              m.custom_field_id == @project_custom_field.id
+            end
 
-  def show; end
+            # Default to true if no mapping exists, otherwise use the mapping's value
+            if mapping
+              mapping.creation_wizard.nil? ? true : mapping.creation_wizard
+            else
+              true
+            end
+          end
 
-  def disable_dialog
-    respond_with_dialog Projects::Settings::CreationWizard::DisableDialogComponent.new(
-      project: @project
-    )
-  end
-
-  def toggle
-    @project.update(project_creation_wizard_enabled: !@project.project_creation_wizard_enabled)
-    redirect_to project_settings_creation_wizard_path(@project, tab: params[:tab]), status: :see_other
-  end
-
-  def toggle_project_custom_field
-    mapping = ProjectCustomFieldProjectMapping.find_by(
-      project_id: permitted_params.project_custom_field_project_mapping[:project_id],
-      custom_field_id: permitted_params.project_custom_field_project_mapping[:custom_field_id]
-    )
-    if mapping&.update(creation_wizard: !mapping.creation_wizard)
-      render json: {}, status: :ok
-    else
-      render json: {}, status: :unprocessable_entity
-    end
-  end
-
-  private
-
-  def check_feature_flag
-    unless OpenProject::FeatureDecisions.project_initiation_active?
-      render_404
+          def toggle_data_attributes
+            {
+              "turbo-method": :post,
+              test_selector: "toggle-creation-wizard-project-custom-field-#{@project_custom_field.id}"
+            }
+          end
+        end
+      end
     end
   end
 end
