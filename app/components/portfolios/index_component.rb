@@ -41,7 +41,7 @@ module Portfolios
     end
 
     def portfolios
-      @query.results.portfolio
+      @query.results.portfolio.with_favorited_by_user(@current_user)
     end
   end
 end

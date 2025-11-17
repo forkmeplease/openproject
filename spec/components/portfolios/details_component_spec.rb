@@ -66,6 +66,10 @@ RSpec.describe Portfolios::DetailsComponent, type: :component do
     render_component(portfolio:, current_user: user)
   end
 
+  before do
+    portfolio.define_singleton_method(:favorited?) { false }
+  end
+
   describe "portfolio" do
     it "renders the title as a link" do
       expect(subject).to have_element("a", text: portfolio.name) do |link|

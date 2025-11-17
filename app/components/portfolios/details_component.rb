@@ -43,7 +43,7 @@ module Portfolios
     end
 
     def currently_favorited?
-      @currently_favorited ||= favorited_project_ids.include?(portfolio.id)
+      @currently_favorited ||= portfolio.favorited?
     end
 
     def all_subprograms
@@ -55,10 +55,6 @@ module Portfolios
     end
 
     private
-
-    def favorited_project_ids
-      @favorited_project_ids ||= Favorite.where(user: current_user, favorited_type: "Project").pluck(:favorited_id)
-    end
 
     def all_descendants
       @all_descendants ||= portfolio.descendants.visible
