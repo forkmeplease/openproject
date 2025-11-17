@@ -35,10 +35,12 @@
 .op-projects-wizard
   display: grid
   height: 100%
+  min-height: 0
   grid-template-areas: "sidebar main help" "footer footer footer"
   grid-template-columns: 300px 1fr 350px
   grid-template-rows: 1fr 70px
   gap: var(--base-size-16, 1rem)
+  overflow: hidden
 
   &--sidebar,
   &--help
@@ -50,6 +52,7 @@
   &--help,
   &--main
     overflow: auto
+    min-height: 0
 
   @media screen and (max-width: $breakpoint-lg)
     grid-template-areas: "sidebar main" "footer footer"
