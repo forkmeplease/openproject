@@ -51,7 +51,7 @@ module Projects
 
             # Default to true if no mapping exists, otherwise use the mapping's value
             if mapping
-              mapping.creation_wizard.nil? ? true : mapping.creation_wizard
+              mapping.creation_wizard.nil? || mapping.creation_wizard
             else
               true
             end
