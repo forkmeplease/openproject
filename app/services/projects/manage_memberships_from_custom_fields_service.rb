@@ -29,14 +29,33 @@
 #++
 
 module Projects
-  class CreateService < ::BaseServices::Create
-    include Projects::Concerns::NewProjectService
-    include Projects::Concerns::ManageMembershipsFromCustomFields
+  class ManageMembershipsFromCustomFieldsService < ::BaseServices::BaseCallable
+    attr_reader :project, :user, :custom_field
 
-    def after_perform(service_call)
-      super.tap do |call|
-        update_calculated_value_custom_fields(call.result)
-      end
+    def initialize(user:, project:, custom_field:)
+      super
+
+      @custom_field = custom_field
+      @user = user
+      @project = project
+    end
+
+    private
+
+    def perform
+      pp({ custom_field: custom_field, project: project, **params })
+      #       # Assuming the members are loaded anyway
+      #       user_member = new_project.members.detect { |m| m.principal == user }
+      #
+      #       if user_member
+      #         Members::UpdateService
+      #           .new(user:, model: user_member, contract_class: EmptyContract)
+      #           .call(role_ids: user_member.role_ids + [role.id])
+      #       else
+      #         Members::CreateService
+      #           .new(user:, contract_class: EmptyContract)
+      #           .call(roles: [role], project: new_project, principal: user)
+      #       end
     end
   end
 end

@@ -28,14 +28,39 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects
-  class CreateService < ::BaseServices::Create
-    include Projects::Concerns::NewProjectService
-    include Projects::Concerns::ManageMembershipsFromCustomFields
+module Projects::Concerns
+  module ManageMembershipsFromCustomFields
+    private
 
-    def after_perform(service_call)
-      super.tap do |call|
-        update_calculated_value_custom_fields(call.result)
+    def before_perform(service_call)
+      super.tap do |super_call|
+        # Because custom field changes are reset after save, we have to store them here
+        @custom_field_changes = super_call.result.custom_field_changes
+      end
+    end
+
+    def after_perform(attributes_call)
+      project = attributes_call.result
+
+      assign_roles_for_user_custom_fields(project)
+
+      super
+    end
+
+    def assign_roles_for_user_custom_fields(project)
+      return unless project.persisted?
+      return if @custom_field_changes.blank?
+      return if project.available_custom_fields.user_field_with_assigned_role.none?
+
+      user_fields_with_roles = project.available_custom_fields.user_field_with_assigned_role
+      user_fields_with_roles.select do |cf|
+        next unless @custom_field_changes.key?(cf.attribute_name)
+
+        old_value, new_value = @custom_field_changes[cf.attribute_name]
+
+        Projects::ManageMembershipsFromCustomFieldsService
+          .new(user: user, project: project, custom_field: cf)
+          .call(old_value: old_value, new_value: new_value)
       end
     end
   end
