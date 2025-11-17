@@ -54,10 +54,13 @@ module Documents
         end
       end
 
-      def expect_blank_slate
+      def expect_blank_slate(can_create: false)
         within_test_selector("documents-list-blank-slate") do
           expect(page).to have_text("There are no documents yet")
-          expect(page).to have_text("There are no documents in this view. You can click the button below to add one.")
+
+          if can_create
+            expect(page).to have_text("There are no documents in this view. You can click the button below to add one.")
+          end
         end
       end
 
