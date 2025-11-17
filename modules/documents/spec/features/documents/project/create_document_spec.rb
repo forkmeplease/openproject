@@ -88,9 +88,7 @@ RSpec.describe "Create Document",
       click_on "Create"
       expect(page).to have_current_path(project_documents_path(project))
 
-      created_document = Document.last
-      expect(created_document).to be_a_classic
-      index_page.expect_documents_listed([created_document])
+      expect(page).to have_list_item("My classic document") & have_test_selector("label-legacy", text: "Legacy")
     end
   end
 
