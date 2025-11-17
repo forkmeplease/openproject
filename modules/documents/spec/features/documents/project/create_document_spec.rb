@@ -47,9 +47,11 @@ RSpec.describe "Create Document",
 
   current_user { manager }
 
-  context "with block note feature active", with_flag: { block_note_editor: true } do
-    it "creates a new collaborative document" do
+  context "for collaborative documents" do
+    it "creates a new document via +Document buttons" do
       index_page.visit!
+
+      index_page.expect_blank_slate_with_primary_action
 
       aggregate_failures "pre-filled document title" do
         within_test_selector("documents-sub-header") do
@@ -70,6 +72,25 @@ RSpec.describe "Create Document",
           expect(page).to have_content("My collaborative document")
         end
       end
+    end
+  end
+
+  context "for classic documents" do
+    let(:editor) { Components::WysiwygEditor.new }
+
+    it "creates a new document via `/projeects/:id/documents/new` route" do
+      visit new_project_document_path(project)
+
+      select document_types.second.name, from: "Type"
+      fill_in "Title", with: "My classic document"
+      editor.editor_element.send_keys("This is a classic document.")
+
+      click_on "Create"
+      expect(page).to have_current_path(project_documents_path(project))
+
+      created_document = Document.last
+      expect(created_document).to be_a_classic
+      index_page.expect_documents_listed([created_document])
     end
   end
 
