@@ -33,11 +33,18 @@ require "spec_helper"
 RSpec.describe Projects::Settings::RelationsForm, type: :forms do
   include_context "with rendered form"
 
-  let(:model) { build_stubbed(:project, parent:) }
+  let(:model) { build_stubbed(:project, parent:, workspace_type:) }
   let(:parent) { nil }
+  let(:workspace_type) { :project }
 
-  it "renders field" do
-    expect(page).to have_element "opce-project-autocompleter", "data-input-name": "\"project[parent_id]\""
+  %i[portfolio program project].each do |workspace_type|
+    context "for workspace type #{workspace_type}" do
+      let(:workspace_type) { workspace_type }
+
+      it "renders field" do
+        expect(page).to have_element "opce-project-autocompleter", "data-input-name": "\"project[parent_id]\""
+      end
+    end
   end
 
   context "without parent" do
