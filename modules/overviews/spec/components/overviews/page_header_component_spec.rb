@@ -36,7 +36,7 @@ RSpec.describe Overviews::PageHeaderComponent, type: :component do
   end
 
   let(:workspace_type) { :project }
-  let(:project) { build_stubbed(:project, name: "Too big to fail", workspace_type:) }
+  let(:project) { build_stubbed(:project, name: "Too big to fail", workspace_type:, project_creation_wizard_enabled: true) }
   let(:user) { build_stubbed(:admin) }
 
   current_user { user }
@@ -145,15 +145,14 @@ RSpec.describe Overviews::PageHeaderComponent, type: :component do
       end
     end
 
-    context "with manage permissions" do
+    context "with manage permissions", with_flag: { project_initiation: false } do
       let(:user) { build_stubbed(:admin) }
 
       it "renders action menu items", :aggregate_failures do
         expect(rendered_component).to have_menu do |menu|
-          expect(menu).to have_selector :menuitem, count: 4
+          expect(menu).to have_selector :menuitem, count: 3
           expect(menu).to have_selector :menuitem, text: "Add to favorites"
           expect(menu).to have_selector :menuitem, text: "Manage project attributes"
-          expect(menu).to have_selector :menuitem, text: "Export PDF"
           expect(menu).to have_selector :menuitem, text: "Archive project"
         end
       end
