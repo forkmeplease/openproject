@@ -577,6 +577,9 @@ en:
         no_results_title_text: There is no additional recorded disk space consumed by this project.
       work_package_priorities:
         new_label: "New priority"
+      creation_wizard:
+        label_request_submission: "Request submission"
+        label_artefact_export: "Artifact export"
     status:
       button_edit: Edit project status
   lists:
@@ -2117,9 +2120,11 @@ en:
   button_delete_permanently: "Delete permanently"
   button_delete_watcher: "Delete watcher %{name}"
   button_download: "Download"
+  button_disable: "Disable"
   button_duplicate: "Duplicate"
   button_duplicate_and_follow: "Duplicate and follow"
   button_edit: "Edit"
+  button_enable: "Enable"
   button_edit_associated_wikipage: "Edit associated wiki page: %{page_title}"
   button_expand_all: "Expand all"
   button_favorite: "Add to favorites"
@@ -2996,7 +3001,7 @@ en:
   label_add_column: "Add column"
   label_applied_status: "Applied status"
   label_archive_project: "Archive project"
-  label_project_initiation_pdf: "Export PDF for project initiation request"
+  label_artefact_export: "Artefact export"
   label_ascending: "Ascending"
   label_assigned_to_me_work_packages: "Work packages assigned to me"
   label_associated_revisions: "Associated revisions"
@@ -3407,6 +3412,7 @@ en:
   label_project_attribute_manage_link: "Manage project attributes"
   label_project_count: "Total number of projects"
   label_project_copy_notifications: "Send email notifications during the project copy"
+  label_project_initiation_pdf: "Export PDF for project initiation request"
   label_project_latest: "Latest projects"
   label_project_default_type: "Allow empty type"
   label_project_hierarchy: "Project hierarchy"
@@ -3425,6 +3431,7 @@ en:
   label_project_view_all: "View all projects"
   label_project_show_details: "Show project details"
   label_project_hide_details: "Hide project details"
+  label_project_initiation_request: "Project initiation request"
   label_portfolio: "Portfolio"
   label_portfolio_new: "New portfolio"
   label_program: "Program"
@@ -3461,6 +3468,7 @@ en:
   label_repository_remove: "Remove repository"
   label_repository_root: "Repository root"
   label_repository_plural: "Repositories"
+  label_request_submission: "Request submission"
   label_required: "required"
   label_requires: "requires"
   label_result_plural: "Results"
@@ -4561,6 +4569,15 @@ en:
       new:
         heading: "New attribute"
         description: "Changes to this project attribute will be reflected in all projects where it is enabled. Required attributes cannot be disabled on a per-project basis."
+    project_initiation_request:
+      blankslate:
+        title: "Initiation request not enabled"
+        description: "OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can chose which project attributes should be included and what to do with the output document. Enable it here to start configuring the wizard."
+      disable_dialog:
+        title: "Disable project initiation request"
+        heading: "Disable this project initiation request?"
+        confirmation_message: "The initiation request wizard will no longer be available to new projects based on this template. Project managers and project owners will need to manually configure and fill out the relevant information in the Project overview."
+        checkbox_message: "I understand that this action is not reversible"
     project_phase_definitions:
       heading: "Project life cycle"
       heading_description: "Project life cycle define the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
