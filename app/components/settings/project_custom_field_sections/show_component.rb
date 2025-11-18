@@ -44,6 +44,10 @@ module Settings
         @first_and_last = first_and_last
       end
 
+      def custom_field_row_component_class
+        Settings::ProjectCustomFieldSections::CustomFieldRowComponent
+      end
+
       private
 
       def wrapper_uniq_by

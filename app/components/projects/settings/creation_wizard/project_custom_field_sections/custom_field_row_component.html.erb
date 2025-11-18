@@ -24,12 +24,7 @@
           end
         end
       end
-      # py: 1 quick fix: prevents the row from bouncing as the toggle switch currently changes height while toggling
       custom_field_container.with_column(py: 1, mr: 2) do
-        # buggy currently:
-        # small variant +  status_label_position: :start leads to a small bounce while toggling
-        # behavior can be seen on primer's viewbook as well -> https://view-components-storybook.eastus.cloudapp.azure.com/view-components/lookbook/inspect/primer/alpha/toggle_switch/small
-        # quick fix: don't display loading indicator which is causing the bounce
         render(
           Primer::Alpha::ToggleSwitch.new(
             src: toggle_path,
@@ -46,3 +41,4 @@
     end
   end
 %>
+

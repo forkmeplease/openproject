@@ -73,7 +73,7 @@
             data: draggable_item_config(project_custom_field)
           ) do
             render(
-              ::Settings::ProjectCustomFieldSections::CustomFieldRowComponent.new(
+              custom_field_row_component_class.new(
                 project_custom_field:,
                 first_and_last:
               )

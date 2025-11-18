@@ -288,6 +288,88 @@ RSpec.describe "Project creation wizard",
     expect(project.typed_custom_value_for(string_custom_field)&.value).to be_nil
   end
 
+  context "when a custom field is disabled in the creation wizard" do
+    let!(:disabled_custom_field) do
+      create(:string_project_custom_field,
+             name: "Disabled Field",
+             project_custom_field_section: section1)
+    end
+
+    let!(:disabled_mapping) do
+      create(:project_custom_field_project_mapping,
+             project:,
+             project_custom_field: disabled_custom_field,
+             creation_wizard: false)
+    end
+
+    it "does not show the disabled custom field in the wizard" do
+      visit wizard_path
+
+      # Should show the enabled fields in section 1
+      expect(page).to have_css("h3", text: "Basic Information")
+      expect(page).to have_text("Project Description")
+      expect(page).to have_text("Project Code")
+
+      # Should NOT show the disabled field
+      expect(page).to have_no_text("Disabled Field")
+      expect(page).to have_no_field("Disabled Field")
+    end
+
+    it "still allows editing the project and does not affect enabled fields" do
+      visit wizard_path
+
+      # Fill in enabled fields
+      text_field_editor.set_markdown "Test description"
+      fill_in "Project Code", with: "TEST-ENABLED"
+
+      click_button "Continue"
+      click_link "Project Details"
+
+      select_autocomplete page.find("[data-custom-field-id='#{list_custom_field.id}']"),
+                          results_selector: "body",
+                          query: "Internal"
+      fill_in "Team Size", with: "3"
+
+      click_button "Complete"
+
+      expect(page).to have_current_path("/projects/#{project.identifier}")
+      expect(page).to have_text("Project attributes have been saved successfully.")
+
+      project.reload
+      expect(project.typed_custom_value_for(text_custom_field)).to eq("Test description")
+      expect(project.typed_custom_value_for(string_custom_field)).to eq("TEST-ENABLED")
+      expect(project.typed_custom_value_for(list_custom_field)).to eq("Internal")
+      expect(project.typed_custom_value_for(int_custom_field)).to eq(3)
+    end
+  end
+
+  context "when all fields in a section are disabled in the creation wizard" do
+    before do
+      ProjectCustomFieldProjectMapping
+        .where(project:, custom_field_id: [list_custom_field.id, int_custom_field.id])
+        .update_all(creation_wizard: false)
+    end
+
+    it "does not show the section with all disabled fields" do
+      visit wizard_path
+
+      # Should only show section 1
+      expect(page).to have_css("h3", text: "Basic Information")
+      expect(page).to have_text("Project Description")
+      expect(page).to have_text("Project Code")
+
+      # Should not show section 2 in the sidebar
+      within(".op-projects-wizard--sidebar") do
+        expect(page).to have_link("Basic Information")
+        expect(page).to have_no_link("Project Details")
+      end
+
+      expect(page).to have_text("1 of 1")
+      expect(page).to have_button("Complete")
+      expect(page).to have_no_button("Continue")
+    end
+  end
+
   context "when user does not have edit_project_attributes permission" do
     current_user do
       create(:user, member_with_permissions: { project => %i[view_user] })

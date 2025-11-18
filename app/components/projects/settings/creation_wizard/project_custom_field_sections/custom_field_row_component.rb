@@ -28,48 +28,42 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Settings
-  module ProjectCustomFieldSections
-    class IndexComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
+module Projects
+  module Settings
+    module CreationWizard
+      module ProjectCustomFieldSections
+        class CustomFieldRowComponent < ::Projects::Settings::ProjectCustomFieldSections::CustomFieldRowComponent
+          private
 
-      def initialize(project_custom_field_sections:)
-        super
+          def toggle_path
+            toggle_project_custom_field_project_settings_creation_wizard_path(
+              project_custom_field_project_mapping: {
+                project_id: @project.id,
+                custom_field_id: @project_custom_field.id
+              }
+            )
+          end
 
-        @project_custom_field_sections = project_custom_field_sections
-      end
+          def toggle_checked?
+            mapping = @project_custom_field_project_mappings.find do |m|
+              m.custom_field_id == @project_custom_field.id
+            end
 
-      def row_component_class
-        Settings::ProjectCustomFieldSections::ShowComponent
-      end
+            # Default to true if no mapping exists, otherwise use the mapping's value
+            if mapping
+              mapping.creation_wizard.nil? || mapping.creation_wizard
+            else
+              true
+            end
+          end
 
-      def first_and_last
-        [@project_custom_field_sections.first, @project_custom_field_sections.last]
-      end
-
-      private
-
-      def wrapper_data_attributes
-        {
-          controller: "generic-drag-and-drop"
-        }
-      end
-
-      def drop_target_config
-        {
-          "is-drag-and-drop-target": true,
-          "target-allowed-drag-type": "section" # the type of dragged items which are allowed to be dropped in this target
-        }
-      end
-
-      def draggable_item_config(section)
-        {
-          "draggable-id": section.id,
-          "draggable-type": "section",
-          "drop-url": drop_admin_settings_project_custom_field_section_path(section)
-        }
+          def toggle_data_attributes
+            {
+              "turbo-method": :post,
+              test_selector: "toggle-creation-wizard-project-custom-field-#{@project_custom_field.id}"
+            }
+          end
+        end
       end
     end
   end

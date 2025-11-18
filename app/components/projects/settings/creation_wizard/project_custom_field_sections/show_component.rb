@@ -28,48 +28,30 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Settings
-  module ProjectCustomFieldSections
-    class IndexComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
+module Projects
+  module Settings
+    module CreationWizard
+      module ProjectCustomFieldSections
+        class ShowComponent < ApplicationComponent
+          include ApplicationHelper
+          include OpPrimer::ComponentHelpers
+          include OpTurbo::Streamable
 
-      def initialize(project_custom_field_sections:)
-        super
+          def initialize(project:, project_custom_field_section:)
+            super
 
-        @project_custom_field_sections = project_custom_field_sections
-      end
+            @project = project
+            @project_custom_field_section = project_custom_field_section
+            enabled_custom_field_ids = project.enabled_custom_field_ids
+            @project_custom_fields = project_custom_field_section.custom_fields.where(id: enabled_custom_field_ids)
+          end
 
-      def row_component_class
-        Settings::ProjectCustomFieldSections::ShowComponent
-      end
+          private
 
-      def first_and_last
-        [@project_custom_field_sections.first, @project_custom_field_sections.last]
-      end
-
-      private
-
-      def wrapper_data_attributes
-        {
-          controller: "generic-drag-and-drop"
-        }
-      end
-
-      def drop_target_config
-        {
-          "is-drag-and-drop-target": true,
-          "target-allowed-drag-type": "section" # the type of dragged items which are allowed to be dropped in this target
-        }
-      end
-
-      def draggable_item_config(section)
-        {
-          "draggable-id": section.id,
-          "draggable-type": "section",
-          "drop-url": drop_admin_settings_project_custom_field_section_path(section)
-        }
+          def wrapper_uniq_by
+            @project_custom_field_section.id
+          end
+        end
       end
     end
   end
