@@ -140,10 +140,14 @@ class DocumentsController < ApplicationController
   end
 
   def destroy
-    if @document.destroy
+    service_call = Documents::DeleteService
+      .new(user: current_user, model: @document)
+      .call
+
+    if service_call.success?
       flash[:notice] = I18n.t(:notice_successful_delete)
     else
-      flash[:error] = join_flash_messages(@document.errors.full_messages)
+      flash[:error] = join_flash_messages(service_call.errors.full_messages)
     end
 
     redirect_to project_documents_path(@project), status: :see_other
