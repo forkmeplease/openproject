@@ -139,6 +139,10 @@ class DocumentsController < ApplicationController
     respond_with_turbo_streams
   end
 
+  def delete_dialog
+    respond_with_dialog Documents::DeleteDialogComponent.new(@document)
+  end
+
   def destroy
     service_call = Documents::DeleteService
       .new(user: current_user, model: @document)
