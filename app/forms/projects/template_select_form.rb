@@ -58,7 +58,6 @@ module Projects
           label: blank_template_label,
           id: "template_id_blank",
           caption: blank_template_caption,
-          icon: blank_image,
           checked: template_id.blank?
         )
 
@@ -67,7 +66,6 @@ module Projects
             value: template.id,
             label: template.name,
             caption: format_caption(template.description),
-            icon: agile_image, # TODO: support customizable icons (OP #69068)
             checked: template.id == template_id
           )
         end
@@ -77,9 +75,6 @@ module Projects
     end
 
     private
-
-    def blank_image = "templates/blank_project.svg"
-    def agile_image = "templates/agile_project.svg"
 
     def available_templates
       @available_templates ||= Project
