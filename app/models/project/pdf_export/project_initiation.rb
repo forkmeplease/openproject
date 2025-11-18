@@ -163,8 +163,7 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
   def collect_base_data
     [
       { caption: I18n.t(:label_project),
-        fields: %i[name description].map { |key| { key:, caption: Project.human_attribute_name(key) } }
-      }
+        fields: %i[name description].map { |key| { key:, caption: Project.human_attribute_name(key) } } }
     ]
   end
 
