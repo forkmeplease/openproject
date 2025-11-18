@@ -150,6 +150,13 @@ Rails.application.reloader.to_prepare do
                      permissible_on: :project,
                      dependencies: :view_project
 
+      map.permission :export_projects,
+                     {
+                       projects: %i[export_list_modal]
+                     },
+                     permissible_on: :project,
+                     dependencies: :view_project
+
       map.permission :edit_project_attributes,
                      {
                        "projects/creation_wizard": %i[show update help_text]
