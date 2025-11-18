@@ -63,9 +63,11 @@ module Projects
       user_member = project.members.find_by(principal: user)
 
       if user_member
+        new_role_ids = (user_member.role_ids + [custom_field.role.id]).uniq
+
         Members::UpdateService
           .new(user:, model: user_member, contract_class: EmptyContract)
-          .call(role_ids: user_member.role_ids + [custom_field.role.id])
+          .call(role_ids: new_role_ids)
       else
         Members::CreateService
           .new(user:, contract_class: EmptyContract)
@@ -82,8 +84,8 @@ module Projects
 
       if new_role_ids.empty?
         Members::DeleteService
-          .new(user:)
-          .call(user_member)
+          .new(user:, model: user_member, contract_class: EmptyContract)
+          .call
       else
         Members::UpdateService
           .new(user:, model: user_member, contract_class: EmptyContract)
