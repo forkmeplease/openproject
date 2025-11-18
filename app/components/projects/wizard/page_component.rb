@@ -28,36 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
+module Projects
+  module Wizard
+    class PageComponent < ApplicationComponent
+      include OpPrimer::ComponentHelpers
+      include OpTurbo::Streamable
+      include ApplicationHelper
 
-RSpec.describe Documents::SetAttributesService do
-  shared_let(:user) { create(:admin) }
-  shared_let(:project) { create(:project) }
-  shared_let(:doc_type) { create(:document_type) }
+      def initialize(project:, custom_fields_by_section:, current_section:)
+        super
 
-  current_user { user }
-
-  subject(:set_attributes_service) do
-    described_class.new(
-      user:,
-      model: Document.new,
-      contract_class: Documents::BaseContract
-    ).call(type_id: doc_type.id, title: "A Document", project:)
-  end
-
-  describe "#call" do
-    context "with block note editor feature active", with_flag: { block_note_editor: true } do
-      it "sets the document kind to 'collaborative'" do
-        expect(set_attributes_service).to be_success
-        expect(set_attributes_service.result).to be_collaborative
+        @project = project
+        @custom_fields_by_section = custom_fields_by_section
+        @current_section = current_section
       end
-    end
 
-    context "with block note editor feature inactive", with_flag: { block_note_editor: false } do
-      it "sets the document kind to 'classic'" do
-        expect(set_attributes_service).to be_success
-        expect(set_attributes_service.result).to be_classic
-      end
+      private
+
+      attr_reader :project, :custom_fields_by_section, :current_section
     end
   end
 end
