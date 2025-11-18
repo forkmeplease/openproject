@@ -96,6 +96,14 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
     write_footers!
   end
 
+  def export_datetime
+    @export_datetime = Time.zone.now
+  end
+
+  def footer_date
+    format_time(export_datetime)
+  end
+
   def cover_page_dates
     nil
   end
@@ -154,9 +162,9 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
 
   def collect_base_data
     [
-      # { caption: I18n.t(:label_project),
-      #   fields: %i[name description].map { |key| { key:, caption: Project.human_attribute_name(key) } }
-      # }
+      { caption: I18n.t(:label_project),
+        fields: %i[name description].map { |key| { key:, caption: Project.human_attribute_name(key) } }
+      }
     ]
   end
 

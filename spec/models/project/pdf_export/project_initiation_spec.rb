@@ -41,7 +41,7 @@ RSpec.describe Project::PDFExport::ProjectInitiation do
   let(:exporter) { described_class.new(project) }
   let(:current_user) { create(:user, member_with_permissions: { project => %i[view_projects view_project_attributes] }) }
   let(:export_time) { DateTime.new(2025, 11, 13, 13, 37) }
-  let(:export_time_formatted) { format_date(export_time.to_date) }
+  let(:export_time_formatted) { format_time(export_time) }
   let(:section_a) { create(:project_custom_field_section, name: "Section A") }
   let(:section_b) { create(:project_custom_field_section, name: "Section B") }
   let(:unset_string_cf) { create(:string_project_custom_field, projects: [project]) }
@@ -79,6 +79,10 @@ RSpec.describe Project::PDFExport::ProjectInitiation do
       project.name, heading, export_time_formatted, # cover page
 
       heading,
+
+      "Project",
+      "Name", project.name,
+      "Description", "The description of the project",
 
       "Section A",
       link_cf.name, "https://www.example.com",
