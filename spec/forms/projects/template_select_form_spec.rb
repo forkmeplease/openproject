@@ -54,7 +54,7 @@ RSpec.describe Projects::TemplateSelectForm, type: :forms do
           expect(rendered_form).to have_field type: :radio, count: 1, fieldset: "Use template"
           expect(rendered_form).to have_field "Blank #{workspace_type}",
                                               type: :radio,
-                                              described_by: /^Start from scratch.*#{workspace_type}/
+                                              accessible_description: /^Start from scratch.*#{workspace_type}/
         end
       end
     end
@@ -73,16 +73,16 @@ RSpec.describe Projects::TemplateSelectForm, type: :forms do
       expect(rendered_form).to have_field type: :radio, count: 4, fieldset: "Use template"
       expect(rendered_form).to have_field "Blank project",
                                           type: :radio,
-                                          described_by: /^Start from scratch.*project/
+                                          accessible_description: /^Start from scratch.*project/
       expect(rendered_form).to have_field "Agile",
                                           type: :radio,
-                                          described_by: /^Great for beginners\.$/
+                                          accessible_description: /^Great for beginners\.$/
       expect(rendered_form).to have_field "SAF€",
                                           type: :radio,
-                                          described_by: /^No description provided\.$/
+                                          accessible_description: /^No description provided\.$/
       expect(rendered_form).to have_field "PRINCE",
                                           type: :radio,
-                                          described_by: /^His Majesty's Choice\.$/
+                                          accessible_description: /^His Majesty's Choice\.$/
     end
 
     context "when template_id is nil" do
