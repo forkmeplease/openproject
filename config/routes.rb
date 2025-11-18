@@ -270,10 +270,10 @@ Rails.application.routes.draw do
   # Extracted from the resources definition right below so that the
   # default parameters can be defined.
   resources :projects,
-            only: %i[new],
+            only: %i[new create],
             defaults: { workspace_type: "project" }
 
-  resources :projects, except: %i[new show edit update] do
+  resources :projects, except: %i[new create show edit update] do
     scope module: "projects" do
       namespace "settings" do
         resource :general, only: %i[show update], controller: "general" do
@@ -503,7 +503,7 @@ Rails.application.routes.draw do
   # Portfolio and program creation is handled by the projects controller
   %w[portfolio program].each do |workspace_type|
     resources workspace_type.pluralize,
-              only: %i[new],
+              only: %i[new create],
               defaults: { workspace_type: },
               controller: "projects"
   end
