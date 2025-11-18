@@ -41,7 +41,7 @@ zh-TW:
       heading: "所有文件"
       action_menu:
         document_actions: "文件操作"
-        edit_title: "Edit title"
+        edit_title: "編輯標題"
     subheader:
       filter:
         label: "文件名篩選器"
