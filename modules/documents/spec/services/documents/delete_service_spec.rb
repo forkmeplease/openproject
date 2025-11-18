@@ -28,34 +28,11 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: %i[create new index] do
-      collection do
-        get :menu, to: "documents/menus#show"
-        get :search
-      end
-    end
-  end
+require "spec_helper"
+require "services/base_services/behaves_like_delete_service"
 
-  resources :documents, except: %i[create new index] do
-    member do
-      get :edit_title, defaults: { format: :turbo_stream }
-      put :update_title, defaults: { format: :turbo_stream }
-      get :cancel_title_edit, defaults: { format: :turbo_stream }
-      put :update_type, defaults: { format: :turbo_stream }
-      get :delete_dialog
-    end
-  end
-
-  namespace :admin do
-    namespace :settings do
-      resources :document_categories, except: [:show] do
-        member do
-          put :move
-          get :reassign
-        end
-      end
-    end
+RSpec.describe Documents::DeleteService, type: :model do
+  it_behaves_like "BaseServices delete service" do
+    let(:factory) { :document }
   end
 end

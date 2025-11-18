@@ -28,34 +28,18 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  resources :projects, only: [] do
-    resources :documents, only: %i[create new index] do
-      collection do
-        get :menu, to: "documents/menus#show"
-        get :search
-      end
-    end
-  end
+module Documents
+  class DeleteDialogComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpTurbo::Streamable
 
-  resources :documents, except: %i[create new index] do
-    member do
-      get :edit_title, defaults: { format: :turbo_stream }
-      put :update_title, defaults: { format: :turbo_stream }
-      get :cancel_title_edit, defaults: { format: :turbo_stream }
-      put :update_type, defaults: { format: :turbo_stream }
-      get :delete_dialog
-    end
-  end
+    alias_method :document, :model
 
-  namespace :admin do
-    namespace :settings do
-      resources :document_categories, except: [:show] do
-        member do
-          put :move
-          get :reassign
-        end
-      end
-    end
+    private
+
+    def id = "delete-document-dialog"
+    def title = I18n.t("documents.delete_dialog.title")
+    def heading = I18n.t("documents.delete_dialog.heading")
+    def confirmation_message = I18n.t("documents.delete_dialog.confirmation_message_html")
   end
 end
