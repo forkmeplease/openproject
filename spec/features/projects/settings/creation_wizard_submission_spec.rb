@@ -100,7 +100,7 @@ RSpec.describe "Project creation wizard submission settings", :js,
       project.reload
       expect(project.submission_work_package_type_id).to eq(type.id)
       expect(project.submission_status_when_submitted_id).to eq(status2.id)
-      expect(project.submission_assignee_id).to eq(user_custom_field.id)
+      expect(project.submission_assignee_custom_field_id).to eq(user_custom_field.id)
       expect(project.submission_work_package_comment).to include("A project initiation request has been submitted.")
       expect(project.submission_send_confirmation_email).to be true
       expect(project.submission_notification_text).to include("Thank you for submitting your project request.")

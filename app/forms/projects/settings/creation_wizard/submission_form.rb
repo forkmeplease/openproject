@@ -75,21 +75,22 @@ module Projects
           end
 
           f.autocompleter(
-            name: :submission_assignee_id,
+            name: :submission_assignee_custom_field_id,
             label: I18n.t("settings.project_initiation_request.submission.assignee"),
             caption: I18n.t("settings.project_initiation_request.submission.assignee_caption"),
             required: true,
             input_width: :large,
             autocomplete_options: {
               component: "opce-autocompleter",
-              decorated: true
+              decorated: true,
+              focus_directly: false
             }
           ) do |list|
             model.available_custom_fields.where(field_format: "user", multi_value: false).order(:name).each do |custom_field|
               list.option(
                 value: custom_field.id,
                 label: custom_field.name,
-                selected: custom_field.id == model.submission_assignee_id
+                selected: custom_field.id == model.submission_assignee_custom_field_id
               )
             end
           end

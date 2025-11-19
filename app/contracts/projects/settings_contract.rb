@@ -48,9 +48,8 @@ module Projects
     def validate_submission_assignee
       return unless model.project_creation_wizard_enabled == true
 
-      if model.submission_assignee_id.blank?
-        errors.add :submission_assignee_id,
-                   I18n.t("activerecord.errors.messages.blank")
+      if model.submission_assignee_custom_field_id.blank?
+        errors.add :submission_assignee_custom_field_id, :blank
       end
     end
 
