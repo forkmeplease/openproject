@@ -85,8 +85,6 @@ export default function OpBlockNoteContainer({ inputField,
 
   let editorParams:Partial<BlockNoteEditorOptions<typeof schema.blockSchema, typeof schema.inlineContentSchema, typeof schema.styleSchema>>;
   if(hocuspocusProvider) {
-    hocuspocusProvider = LiveCollaborationManager.yjsProvider;
-
     editorParams = {
       schema,
       collaboration: {
