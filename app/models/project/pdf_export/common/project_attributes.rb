@@ -34,23 +34,46 @@ module Project::PDFExport::Common::ProjectAttributes
   def write_project_detail_content(project, export_fields)
     return if export_fields.empty?
 
-    entries = []
-    export_fields.each do |field|
-      entries = process_field(project, field, entries)
+    write_groups = collect_field_groups(project, export_fields)
+    write_groups.each do |non_formattable_fields, formattable_field|
+      write_project_fields(project, non_formattable_fields)
+      write_project_markdown(project, formattable_field[:value], formattable_field[:caption]) if formattable_field
     end
-    write_table_entries(entries) unless entries.empty?
   end
 
-  def process_field(project, field, entries)
-    if field[:custom_field]
-      process_custom_attribute_field(project, field, entries)
-    elsif project_phase?(field)
-      process_project_phase_field(project, field, entries)
-    elsif can_view_attribute?(project, field[:key])
-      process_attribute_field(project, field, entries)
-    else
-      entries
+  def collect_field_groups(project, export_fields)
+    field_groups = []
+    non_formattable_fields_at_end = export_fields.inject([]) do |non_formattable_field_stack, field|
+      write_field = process_field(project, field)
+      if write_field.nil?
+        non_formattable_field_stack
+      elsif write_field[:formattable]
+        field_groups.push([non_formattable_field_stack, write_field])
+        []
+      else
+        non_formattable_field_stack + [write_field]
+      end
     end
+    field_groups << [non_formattable_fields_at_end, nil]
+    field_groups
+  end
+
+  def process_field(project, field)
+    if field[:custom_field]
+      process_custom_attribute_field(project, field)
+    elsif project_phase?(field)
+      process_project_phase_field(project, field)
+    elsif can_view_attribute?(project, field[:key])
+      process_attribute_field(project, field)
+    end
+  end
+
+  def write_project_fields(project, fields)
+    table_entries = fields.filter_map do |field|
+      table_entry(project, field[:caption], field[:key], field[:value])
+    end
+
+    write_table_entries(table_entries) if table_entries.any?
   end
 
   def write_table_entries(row_entries)
@@ -71,17 +94,20 @@ module Project::PDFExport::Common::ProjectAttributes
     )
   end
 
-  def process_project_phase_field(project, field, entries)
-    entry = user_can_view_project_phases?(project) ? table_entry_project_phase(project, field) : nil
-    entries.push(entry) if entry
-    entries
+  def process_project_phase_field(project, field)
+    return unless user_can_view_project_phases?(project)
+
+    value = project_phase_value(project, field)
+    return if value.nil?
+
+    field.merge(value:)
   end
 
   def user_can_view_project_phases?(project)
     User.current.allowed_in_project?(:view_project_phases, project) && project.phases.active.any?
   end
 
-  def table_entry_project_phase(project, field)
+  def project_phase_value(project, field)
     project_phase_definition = Project::PhaseDefinition
                                  .find_by(id: field[:key][/\Aproject_phase_(\d+)\z/, 1])
     return nil if project_phase_definition.nil?
@@ -89,10 +115,7 @@ module Project::PDFExport::Common::ProjectAttributes
     phase = project.phases.active.find_by(definition: project_phase_definition)
     return nil if phase.nil?
 
-    [
-      { content: field[:caption] }.merge(styles.project_attributes_table_label_cell),
-      format_phase_value(phase)
-    ]
+    format_phase_value(phase)
   end
 
   def format_phase_value(phase)
@@ -111,28 +134,17 @@ module Project::PDFExport::Common::ProjectAttributes
     "#{start} - #{finish}"
   end
 
-  def process_custom_attribute_field(project, field, entries)
+  def process_custom_attribute_field(project, field)
     if field[:custom_field].formattable?
-      write_table_entries(entries) unless entries.empty?
-      write_formattable_custom_field(project, field[:custom_field])
-      []
+      custom_value = project.custom_value_for(field[:custom_field])
+      field.merge(value: custom_value&.value, formattable: true)
     else
-      entry = table_entry(project, field[:key], field[:caption])
-      entries.push(entry) if entry
-      entries
+      field.merge(value: format_attribute(project, field[:key], :pdf))
     end
   end
 
-  def process_attribute_field(project, field, entries)
-    if attribute_formattable?(field[:key])
-      write_table_entries(entries) unless entries.empty?
-      write_formattable_attribute(project, field[:key], field[:caption])
-      []
-    else
-      entry = table_entry(project, field[:key], field[:caption])
-      entries.push(entry) if entry
-      entries
-    end
+  def process_attribute_field(project, field)
+    field.merge(value: format_attribute(project, field[:key], :pdf), formattable: attribute_formattable?(field[:key]))
   end
 
   def attribute_formattable?(attribute)
@@ -189,8 +201,7 @@ module Project::PDFExport::Common::ProjectAttributes
     widths.map { |w| w * ratio }
   end
 
-  def table_entry(project, value_name, caption)
-    value = format_attribute(project, value_name, :pdf)
+  def table_entry(project, caption, value_key, value)
     if value.blank?
       return nil if hide_empty_attributes?
 
@@ -199,7 +210,7 @@ module Project::PDFExport::Common::ProjectAttributes
 
     if value.is_a?(::Exports::Formatters::LinkFormatter)
       value = get_cf_link_cell(value)
-    elsif value_name == :id
+    elsif value_key == :id
       value = make_link_href_cell(url_helpers.project_url(project), value)
     end
     [
