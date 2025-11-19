@@ -48,6 +48,32 @@ class Projects::Settings::CreationWizardController < Projects::SettingsControlle
     redirect_to project_settings_creation_wizard_path(@project, tab: params[:tab]), status: :see_other
   end
 
+  def update_submission_settings
+    call = Projects::UpdateService
+      .new(model: @project, user: current_user, contract_class: Projects::SettingsContract)
+      .call(submission_settings_params)
+
+    @project = call.result
+
+    if call.success?
+      flash[:notice] = I18n.t(:notice_successful_update)
+      redirect_to project_settings_creation_wizard_path(@project, tab: "submission")
+    else
+      params[:tab] = "submission"
+      render action: :show, status: :unprocessable_entity
+    end
+  end
+
+  def refresh_submission_form
+    @project.assign_attributes(submission_settings_params)
+
+    update_via_turbo_stream(
+      component: Projects::Settings::CreationWizard::SubmissionFormComponent.new(project: @project)
+    )
+
+    respond_with_turbo_streams
+  end
+
   def toggle_project_custom_field
     mapping = ProjectCustomFieldProjectMapping.find_by(
       project_id: permitted_params.project_custom_field_project_mapping[:project_id],
@@ -90,5 +116,16 @@ class Projects::Settings::CreationWizardController < Projects::SettingsControlle
     unless OpenProject::FeatureDecisions.project_initiation_active?
       render_404
     end
+  end
+
+  def submission_settings_params
+    params.expect(
+      project: %i[submission_work_package_type_id
+                  submission_status_when_submitted_id
+                  submission_send_confirmation_email
+                  submission_notification_text
+                  submission_assignee_custom_field_id
+                  submission_work_package_comment]
+    )
   end
 end

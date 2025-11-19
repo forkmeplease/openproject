@@ -284,6 +284,8 @@ Rails.application.routes.draw do
         resource :creation_wizard, controller: "creation_wizard", only: %i[show] do
           get :disable_dialog
           post :toggle
+          post :update_submission_settings
+          get :refresh_submission_form
           post :toggle_project_custom_field
           put :enable_all_of_section
           put :disable_all_of_section

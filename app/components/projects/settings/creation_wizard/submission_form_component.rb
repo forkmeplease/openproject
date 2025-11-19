@@ -29,34 +29,19 @@
 #++
 
 module Projects
-  class SettingsContract < ::BaseContract
-    attribute :settings
+  module Settings
+    module CreationWizard
+      class SubmissionFormComponent < ApplicationComponent
+        include ApplicationHelper
+        include OpTurbo::Streamable
+        include OpPrimer::ComponentHelpers
 
-    validate :validate_settings
-    validate :validate_submission_assignee
+        def initialize(project:)
+          super
 
-    protected
-
-    def validate_settings
-      unauthorized_settings_change =
-        has_changed_setting?("deactivate_work_package_attachments") &&
-          !user.allowed_in_project?(:manage_files_in_project, model)
-
-      errors.add :base, :error_unauthorized if unauthorized_settings_change
-    end
-
-    def validate_submission_assignee
-      return unless model.project_creation_wizard_enabled == true
-
-      if model.submission_assignee_custom_field_id.blank?
-        errors.add :submission_assignee_custom_field_id, :blank
+          @project = project
+        end
       end
-    end
-
-    private
-
-    def has_changed_setting?(key)
-      model.settings_changed? && model.settings_change.any? { |setting| setting.key?(key) }
     end
   end
 end
