@@ -51,6 +51,7 @@ RSpec.shared_examples_for "adapter create_folder_command: successful folder crea
     expect(response).to be_a(Storages::Adapters::Results::StorageFile)
     expect(response.name).to eq(folder_name)
     expect(response.location).to eq(path)
+    expect(response.mime_type).to eq("application/x-op-directory")
   ensure
     delete_created_folder(response)
   end
