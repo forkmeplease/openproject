@@ -348,6 +348,7 @@ en:
     reorder_confirmation: "Warning: The current order of available values will be lost. Continue?"
     placeholder_version_select: "Work package or project selection is required first"
     calculated_field_not_editable: "Non-editable attribute. This value is calculated automatically."
+    no_role_assigment: "No role assignment"
     instructions:
       is_required: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
       is_required_for_project: "Check to enable this attribute and make it required in all projects. It cannot be deactived for individual projects. Existing projects will not require a value when being updated."
@@ -788,9 +789,9 @@ en:
         next_button: "Send invitation"
 
       success_message:
-          user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          placeholder_user: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
-          group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
+        user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
+        placeholder_user: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
+        group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
   page:
     text: "Text"
   placeholder_users:
@@ -1801,7 +1802,8 @@ en:
               cant_exceed_work: "cannot be higher than Work."
               must_be_set_when_work_is_set: "required when Work is set."
               must_be_set_when_work_and_percent_complete_are_set: "required when Work and % Complete are set."
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: >-
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p:
+                >-
                 must be 0h when Work is set and % Complete is 100%.
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 must be empty when Work is empty and % Complete is 100%.
@@ -2942,7 +2944,7 @@ en:
         static_token_name: "API token"
       ical:
         title: "iCalendar"
-        text_hint_link: 'iCalendar tokens allow users to [subscribe to OpenProject calendars](docs_url) and view up-to-date work package information from external clients.'
+        text_hint_link: "iCalendar tokens allow users to [subscribe to OpenProject calendars](docs_url) and view up-to-date work package information from external clients."
         disabled_text: "iCalendar subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
         empty_text_hint: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
       oauth:
@@ -3263,6 +3265,7 @@ en:
   label_installation_guides: "Installation guides"
   label_integer: "Integer"
   label_interface: "Interface"
+  label_interlinked_role_assignment: "Interlinked Role Assignment"
   label_internal: "Internal"
   label_introduction_video: "Getting started video"
   label_invite_user: "Invite user"
@@ -4957,6 +4960,10 @@ en:
   warning_user_limit_reached_instructions: >
     You reached your user limit (%{current}/%{max} active users).
     Please contact sales@openproject.com to upgrade your Enterprise edition plan and add additional users.
+  warning_interlinking_custom_field_with_role_html: >
+    <strong>Warning:</strong> You are about to link a custom field with a role. This will give users with the "Edit Project Attributes" permission to add members to the project and they will be assigned
+    the linked role. This may lead to privilege escalation because users can assign themselves higher privileges than intended.
+    Please make sure you understand the implications of this action.
   warning_protocol_mismatch_html: >
 
   warning_bar:

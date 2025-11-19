@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,17 +26,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module Projects
-  class CreateService < ::BaseServices::Create
-    include Projects::Concerns::NewProjectService
-    include Projects::Concerns::ManageMembershipsFromCustomFields
+# Join table between to store the work package custom fields active in a project.
+class CustomFieldsRole < ApplicationRecord
+  belongs_to :role
+  belongs_to :custom_field
 
-    def after_perform(service_call)
-      super.tap do |call|
-        update_calculated_value_custom_fields(call.result)
-      end
-    end
-  end
+  validates :custom_field_id, uniqueness: true
 end

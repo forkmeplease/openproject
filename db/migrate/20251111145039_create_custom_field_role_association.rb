@@ -28,15 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects
-  class CreateService < ::BaseServices::Create
-    include Projects::Concerns::NewProjectService
-    include Projects::Concerns::ManageMembershipsFromCustomFields
-
-    def after_perform(service_call)
-      super.tap do |call|
-        update_calculated_value_custom_fields(call.result)
-      end
+class CreateCustomFieldRoleAssociation < ActiveRecord::Migration[8.0]
+  def change
+    create_table :custom_fields_roles do |t|
+      t.references :custom_field, null: false, foreign_key: true, index: { unique: true }
+      t.references :role, null: false, foreign_key: true, index: true
+      t.timestamps
     end
   end
 end
