@@ -611,7 +611,7 @@ RSpec.describe CustomField do
   describe "#cast_value" do
     describe "handling all registered formats" do
       before do
-        allow(User).to receive(:find_by).with(id: 1).and_return(build(:user))
+        allow(Principal).to receive(:find_by).with(id: 1).and_return(build(:user))
         allow(Version).to receive(:find_by).with(id: 1).and_return(build(:version))
         allow(CustomField::Hierarchy::Item).to receive(:find_by).with(id: 1).and_return(build(:hierarchy_item))
       end
