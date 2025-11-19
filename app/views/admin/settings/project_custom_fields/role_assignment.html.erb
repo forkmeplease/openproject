@@ -51,7 +51,7 @@ See COPYRIGHT and LICENSE files for more details.
 <section class="form--section pt-3">
   <div class="form--field">
     <%= f.select :role_id,
-                 ProjectRole.order(:name).collect { |s| [s.name, s.id] },
+                 @assignable_roles.collect { |s| [s.name, s.id] },
                  { include_blank: t("custom_fields.no_role_assigment"), container_class: "-slim" } %>
     </div>
 </section>
