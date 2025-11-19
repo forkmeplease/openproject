@@ -2614,6 +2614,8 @@ de:
     units:
       hours: h
       days: d
+    project_initiation:
+      title: "Projektinitiierungsantrag"
   pdf_generator:
     page_nr_footer: "Seite %{page} von %{total}"
     template_attributes:

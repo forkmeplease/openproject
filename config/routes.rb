@@ -337,6 +337,8 @@ Rails.application.routes.draw do
     member do
       get "settings", to: redirect("projects/%{id}/settings/general/")
 
+      get "export_project_initiation", to: "projects#export_project_initiation_pdf"
+
       get :copy, to: "projects#copy_form"
       post :copy
 

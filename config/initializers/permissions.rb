@@ -112,7 +112,7 @@ Rails.application.reloader.to_prepare do
                      require: :loggedin
 
       map.permission :view_project,
-                     { projects: [:show] },
+                     { projects: %i[show export_project_initiation_pdf] },
                      permissible_on: :project,
                      public: true
 

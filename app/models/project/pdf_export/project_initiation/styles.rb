@@ -28,63 +28,32 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects::Exports::PDFExport::Styles
+module Project::PDFExport::ProjectInitiation::Styles
   class PDFStyles
     include MarkdownToPDF::Common
     include MarkdownToPDF::StyleHelper
     include Exports::PDF::Common::Styles
     include Exports::PDF::Components::PageStyles
     include Exports::PDF::Components::CoverStyles
-    include Exports::PDF::Components::WpTableStyles
-    include WorkPackage::PDFExport::Common::AttributesTableStyles
     include Project::PDFExport::Common::ProjectAttributesStyles
 
-    def project_title
-      resolve_font(@styles.dig(:project, :title))
+    def section_title
+      resolve_font(@styles.dig(:section, :title))
     end
 
-    def project_title_margins
-      resolve_margin(@styles.dig(:project, :title))
+    def section_title_hr
+      {
+        color: @styles.dig(:section, :title, :hr, :color),
+        height: resolve_pt(@styles.dig(:section, :title, :hr, :height), 1)
+      }
     end
 
-    def project_margins
-      resolve_margin(@styles[:project])
+    def section_title_margins
+      resolve_margin(@styles.dig(:section, :title))
     end
 
-    def toc_title
-      resolve_font(@styles.dig(:toc, :title))
-    end
-
-    def toc_title_margins
-      resolve_margin(@styles.dig(:toc, :title))
-    end
-
-    def toc_max_depth
-      @styles.dig(:toc, :max_depth) || 4
-    end
-
-    def toc_margins
-      resolve_margin(@styles[:toc])
-    end
-
-    def toc_indent_mode
-      @styles.dig(:toc, :indent_mode)
-    end
-
-    def toc_item(level)
-      resolve_font(@styles.dig(:toc, :item)).merge(
-        resolve_font(@styles.dig(:toc, :"item_level_#{level}"))
-      )
-    end
-
-    def toc_item_subject_indent
-      resolve_pt(@styles.dig(:toc, :subject_indent), 4)
-    end
-
-    def toc_item_margins(level)
-      resolve_margin(@styles.dig(:toc, :item)).merge(
-        resolve_margin(@styles.dig(:toc, :"item_level_#{level}"))
-      )
+    def section_margins
+      resolve_margin(@styles[:section])
     end
   end
 
