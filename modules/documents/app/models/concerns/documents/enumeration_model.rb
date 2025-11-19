@@ -28,21 +28,42 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class DocumentType < ApplicationRecord
-  include ::Documents::EnumerationModel
+module Documents
+  # Concern to be included in enumeration-like models within the documents module.
+  module EnumerationModel
+    extend ActiveSupport::Concern
 
-  default_scope { order(:position) }
-  acts_as_list
+    included do
+      before_save :unmark_old_default_values, if: :became_default_value?
+      before_save :ensure_activated, if: -> { self.class.can_have_default_value? && is_default? }
+    end
 
-  has_many :documents, foreign_key: :type_id,
-                       dependent: :nullify,
-                       inverse_of: :type
+    class_methods do
+      def can_have_default_value?
+        true
+      end
+    end
 
-  normalizes :name, with: ->(name) { name.strip.capitalize }
+    def colored?
+      false
+    end
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+    def became_default_value?
+      is_default? && is_default_changed?
+    end
 
-  def self.default
-    where(is_default: true).first || first
+    def unmark_old_default_values
+      self.class.update_all(is_default: false)
+    end
+
+    def in_use?
+      Document.exists?(type_id: id)
+    end
+
+    private
+
+    def ensure_activated
+      self.active = true
+    end
   end
 end

@@ -38,6 +38,15 @@ RSpec.describe DocumentType do
         .dependent(:nullify)
         .with_foreign_key(:type_id)
     end
+
+    context "for documents" do
+      let(:document_type) { create(:document_type) }
+
+      it "maintains documents counter cache" do
+        expect { create(:document, type: document_type) }
+          .to change { document_type.reload.documents_count }.by(1)
+      end
+    end
   end
 
   describe "Normalizations" do
