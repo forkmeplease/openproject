@@ -54,6 +54,7 @@ export interface OpBlockNoteContainerProps {
   openProjectUrl:string;
   attachmentsUploadUrl:string;
   attachmentsCollectionKey:string;
+  hocuspocusProvider?:HocuspocusProvider;
 }
 
 const schema = BlockNoteSchema.create().extend({
@@ -69,7 +70,8 @@ export default function OpBlockNoteContainer({ inputField,
                                                activeUser,
                                                openProjectUrl,
                                                attachmentsUploadUrl,
-                                               attachmentsCollectionKey }:OpBlockNoteContainerProps) {
+                                               attachmentsCollectionKey,
+                                               hocuspocusProvider }:OpBlockNoteContainerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState<OpColorMode>(detectTheme());
 
@@ -81,12 +83,8 @@ export default function OpBlockNoteContainer({ inputField,
 
   let doc = LiveCollaborationManager.ydoc;
 
-  // this should come from a system setting;
-  const collaborationEnabled = true;
-  let hocuspocusProvider:HocuspocusProvider | null = null;
-
   let editorParams:Partial<BlockNoteEditorOptions<typeof schema.blockSchema, typeof schema.inlineContentSchema, typeof schema.styleSchema>>;
-  if(collaborationEnabled) {
+  if(hocuspocusProvider) {
     hocuspocusProvider = LiveCollaborationManager.yjsProvider;
 
     editorParams = {
@@ -179,7 +177,8 @@ export default function OpBlockNoteContainer({ inputField,
       inputField.value = b64;
     };
 
-    if(collaborationEnabled && hocuspocusProvider) {
+    if(hocuspocusProvider) {
+      if (hocuspocusProvider.synced) { setIsLoading(false); }
       hocuspocusProvider.on('synced', () => setIsLoading(false));
       hocuspocusProvider.on('disconnect', () => setIsLoading(true));
     } else {
@@ -188,14 +187,14 @@ export default function OpBlockNoteContainer({ inputField,
     }
 
     return () => {
-      if (collaborationEnabled && hocuspocusProvider) {
+      if (hocuspocusProvider) {
         hocuspocusProvider.destroy();
       } else {
         // disable Yjs update listener. Opposite of doc.on('update', ...);
         doc.off('update', updateInput);
       }
     };
-  }, []);
+  }, [hocuspocusProvider]);
 
   useEffect(() => {
     const handleThemeChange = () => {

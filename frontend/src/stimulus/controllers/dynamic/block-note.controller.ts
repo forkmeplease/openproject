@@ -28,11 +28,13 @@
  * ++
  */
 
+import { User } from '@blocknote/core/comments';
+import type { HocuspocusProvider } from '@hocuspocus/provider';
 import { Controller } from '@hotwired/stimulus';
+import { LiveCollaborationManager } from 'core-stimulus/helpers/live-collaboration-helpers';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import OpBlockNoteContainer from '../../../react/OpBlockNoteContainer';
-import { User } from '@blocknote/core/comments';
 
 export default class extends Controller {
   static targets = [
@@ -58,10 +60,19 @@ export default class extends Controller {
 
   connect() {
     const root = createRoot(this.blockNoteEditorTarget);
-    root.render(this.BlockNoteReactContainer());
+
+    // this should be a system wide configuration
+    const collaborationEnabled = true;
+    if (collaborationEnabled) {
+      LiveCollaborationManager.onReady((hocuspocusProvider) => {
+        root.render(this.BlockNoteReactContainer(hocuspocusProvider));
+      });
+    } else {
+      root.render(this.BlockNoteReactContainer());
+    }
   }
 
-  BlockNoteReactContainer() {
+  BlockNoteReactContainer(hocuspocusProvider?:HocuspocusProvider) {
     return React.createElement(OpBlockNoteContainer, {
       inputField: this.blockNoteInputFieldTarget,
       inputText: this.inputTextValue,
@@ -69,6 +80,7 @@ export default class extends Controller {
       openProjectUrl: this.openProjectUrlValue,
       attachmentsUploadUrl: this.attachmentsUploadUrlValue,
       attachmentsCollectionKey: this.attachmentsCollectionKeyValue,
+      hocuspocusProvider: hocuspocusProvider,
     });
   }
 }

@@ -42,19 +42,21 @@ export default class extends ApplicationController {
   declare readonly usersTarget:HTMLElement;
   declare readonly popoverTarget:HTMLElement;
 
-  private provider:HocuspocusProvider;
+  private provider:HocuspocusProvider|undefined;
   private currentUsers = new Map<number, LiveUser>();
 
   connect() {
-    this.provider = LiveCollaborationManager.yjsProvider;
-    this.provider.on('awarenessUpdate', this.onAwarenessUpdate);
+    LiveCollaborationManager.onReady((provider:HocuspocusProvider) => {
+      this.provider = provider;
+      this.provider.on('awarenessUpdate', this.onAwarenessUpdate);
+    });
 
-    useDebounce(this, { wait: 5000 });
+    useDebounce(this, { wait: 1000 });
   }
 
   disconnect() {
     this.currentUsers.clear();
-    this.provider.off('awarenessUpdate', this.onAwarenessUpdate);
+    this.provider?.off('awarenessUpdate', this.onAwarenessUpdate);
   }
 
   toggle_popover() {

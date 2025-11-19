@@ -32,9 +32,13 @@ import { HocuspocusProvider } from '@hocuspocus/provider';
 import type { Doc } from 'yjs';
 import * as Y from 'yjs';
 
+type Listener = (provider:HocuspocusProvider) => void;
+
 class LiveCollaborationManagerClass {
   ydocInstance:Doc|null = null;
   yjsProviderInstance:HocuspocusProvider|null = null;
+  
+  private listeners:Listener[] = [];
 
   /**
    * Initializes the YJS Provider
@@ -43,6 +47,7 @@ class LiveCollaborationManagerClass {
    */
   initializeYjsProvider(provider:HocuspocusProvider) {
     this.yjsProviderInstance = provider;
+    this.listeners.forEach((listener) => listener(this.yjsProviderInstance!));
   }
   
   /**
@@ -63,6 +68,13 @@ class LiveCollaborationManagerClass {
       throw new Error('No YJS Provider configured');
     }
     return this.yjsProviderInstance;
+  }
+
+  onReady(listener:Listener) {
+    this.listeners.push(listener);
+    if (this.yjsProviderInstance) {
+      listener(this.yjsProviderInstance);
+    }
   }
 }
 
