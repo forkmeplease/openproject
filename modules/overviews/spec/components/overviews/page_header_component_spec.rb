@@ -120,14 +120,47 @@ RSpec.describe Overviews::PageHeaderComponent, type: :component do
       expect(rendered_component).to have_element "action-menu", "data-select-variant": "none"
     end
 
-    context "without view project permissions", with_flag: { project_initiation_active: true } do
+    context "without manage project permissions", with_flag: { project_initiation_active: true } do
       let(:user) { create(:user) }
+      let(:role) { create(:project_role, permissions: %i[view_project export_projects]) }
+
+      before do
+        create(:member, project:, principal: user, roles: [role])
+      end
 
       it "renders action menu items", :aggregate_failures do
         expect(rendered_component).to have_menu do |menu|
           expect(menu).to have_selector :menuitem, count: 2
           expect(menu).to have_selector :menuitem, text: "Add to favorites"
           expect(menu).to have_selector :menuitem, text: "Export PDF"
+        end
+      end
+    end
+
+    context "without export project permissions", with_flag: { project_initiation_active: true } do
+      let(:user) { create(:user) }
+      let(:role) { create(:project_role, permissions: %i[view_project edit_project_attributes]) }
+
+      before do
+        create(:member, project:, principal: user, roles: [role])
+      end
+
+      it "renders action menu items", :aggregate_failures do
+        expect(rendered_component).to have_menu do |menu|
+          expect(menu).to have_selector :menuitem, count: 2
+          expect(menu).to have_selector :menuitem, text: "Add to favorites"
+          expect(menu).to have_selector :menuitem, text: "Manage project attributes"
+        end
+      end
+    end
+
+    context "without manage and export project permissions", with_flag: { project_initiation_active: true } do
+      let(:user) { create(:user) }
+
+      it "renders action menu items", :aggregate_failures do
+        expect(rendered_component).to have_menu do |menu|
+          expect(menu).to have_selector :menuitem, count: 1
+          expect(menu).to have_selector :menuitem, text: "Add to favorites"
         end
       end
     end
