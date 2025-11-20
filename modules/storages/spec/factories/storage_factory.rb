@@ -173,7 +173,7 @@ FactoryBot.define do
     trait :as_automatically_managed do
       automatic_management_enabled { true }
       username { "OpenProject" }
-      password { ENV.fetch("NEXTCLOUD_LOCAL_GROUP_USER_PASSWORD", "AMPF_PASSWORD_NOT_SET") }
+      password { ENV.fetch("NEXTCLOUD_LOCAL_AMPF_PASSWORD", "AMPF_PASSWORD_NOT_SET") }
     end
   end
 
