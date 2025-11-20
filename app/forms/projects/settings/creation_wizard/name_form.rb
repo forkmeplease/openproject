@@ -40,11 +40,13 @@ module Projects
             required: true,
             input_width: :large
           ) do |list|
-            list.option(
-              value: I18n.t("label_project_initiation_request"),
-              label: I18n.t("label_project_initiation_request"),
-              selected: I18n.t("label_project_initiation_request")
-            )
+            options.each do |id|
+              list.option(
+                value: id,
+                label: I18n.t("settings.project_initiation_request.name.options.#{id}"),
+                selected: id == model.name_artefact_name
+              )
+            end
           end
 
           f.submit(
@@ -52,6 +54,12 @@ module Projects
             label: I18n.t("button_save"),
             scheme: :primary
           )
+        end
+
+        private
+
+        def options
+          %i[project_initiation_request project_creation_wizard project_mandate]
         end
       end
     end

@@ -4629,6 +4629,10 @@ en:
       name:
         artefact_name: "Artefact name"
         artefact_name_caption: "Choose the name for this artefact that your project management framework recommends."
+        options:
+          project_initiation_request: "Project initiation request"
+          project_creation_wizard: "Project creation wizard"
+          project_mandate: "Project mandate"
       submission:
         work_package_type: "Work package type"
         work_package_type_caption: "The work package type that should be used to store the completed artefact."
