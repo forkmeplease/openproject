@@ -52,7 +52,7 @@ RSpec.describe "Project creation wizard name settings", :js,
       expect_and_dismiss_flash(message: "Successful update.")
 
       project.reload
-      expect(project.name_artefact_name).to eq("project_initiation_request")
+      expect(project.project_creation_wizard_artifact_name).to eq("project_initiation_request")
     end
   end
 end
