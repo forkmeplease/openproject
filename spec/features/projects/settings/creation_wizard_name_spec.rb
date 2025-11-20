@@ -23,26 +23,36 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects::CreationWizard
-  extend ActiveSupport::Concern
+require "spec_helper"
 
-  included do
-    store_attribute :settings, :project_creation_wizard_enabled, :boolean
+RSpec.describe "Project creation wizard name settings", :js,
+               with_flag: { project_initiation_active: true } do
+  shared_let(:admin) { create(:admin) }
 
-    store_attribute :settings, :name_artefact_name, :string
+  let!(:project) { create(:project, project_creation_wizard_enabled: true) }
+  let(:name_page) { Pages::Projects::Settings::CreationWizard.new(project, tab: "name") }
 
-    store_attribute :settings, :submission_work_package_type_id, :integer
-    store_attribute :settings, :submission_status_when_submitted_id, :integer
-    store_attribute :settings, :submission_send_confirmation_email, :boolean
-    store_attribute :settings, :submission_assignee_custom_field_id, :integer
-    store_attribute :settings, :submission_notification_text, :string
-    store_attribute :settings, :submission_work_package_comment, :string
-    store_attribute :settings, :project_creation_wizard_pdf_export_type, :string, default: "attachment"
-    store_attribute :settings, :project_creation_wizard_pdf_export_storage, :string
+  current_user { admin }
+
+  describe "configuring name settings" do
+    it "allows admin to configure artefact name" do
+      name_page.visit!
+
+      expect(page).to have_select("Artefact name")
+      expect(page).to have_text("Choose the name for this artefact that your project management framework recommends.")
+
+      select "Project initiation request", from: "Artefact name"
+      click_button "Save"
+
+      expect_and_dismiss_flash(message: "Successful update.")
+
+      project.reload
+      expect(project.name_artefact_name).to eq("project_initiation_request")
+    end
   end
 end

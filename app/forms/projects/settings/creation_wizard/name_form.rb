@@ -28,21 +28,40 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects::CreationWizard
-  extend ActiveSupport::Concern
+module Projects
+  module Settings
+    module CreationWizard
+      class NameForm < ApplicationForm
+        form do |f|
+          f.select_list(
+            name: :name_artefact_name,
+            label: I18n.t("settings.project_initiation_request.name.artefact_name"),
+            caption: I18n.t("settings.project_initiation_request.name.artefact_name_caption"),
+            required: true,
+            input_width: :large
+          ) do |list|
+            options.each do |id|
+              list.option(
+                value: id,
+                label: I18n.t("settings.project_initiation_request.name.options.#{id}"),
+                selected: id == model.name_artefact_name
+              )
+            end
+          end
 
-  included do
-    store_attribute :settings, :project_creation_wizard_enabled, :boolean
+          f.submit(
+            name: :submit,
+            label: I18n.t("button_save"),
+            scheme: :primary
+          )
+        end
 
-    store_attribute :settings, :name_artefact_name, :string
+        private
 
-    store_attribute :settings, :submission_work_package_type_id, :integer
-    store_attribute :settings, :submission_status_when_submitted_id, :integer
-    store_attribute :settings, :submission_send_confirmation_email, :boolean
-    store_attribute :settings, :submission_assignee_custom_field_id, :integer
-    store_attribute :settings, :submission_notification_text, :string
-    store_attribute :settings, :submission_work_package_comment, :string
-    store_attribute :settings, :project_creation_wizard_pdf_export_type, :string, default: "attachment"
-    store_attribute :settings, :project_creation_wizard_pdf_export_storage, :string
+        def options
+          %i[project_initiation_request project_creation_wizard project_mandate]
+        end
+      end
+    end
   end
 end
