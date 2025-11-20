@@ -123,14 +123,14 @@ module Storages
               let(:file_id) { "not_existent" }
               let(:error_source) { described_class }
 
-              it_behaves_like "adapter file_info_query: not found"
+              it_behaves_like "storage adapter: error response", :not_found
             end
 
             context "with integration app disabled", vcr: "nextcloud/file_info_query_app_disabled" do
               let(:file_id) { "56" }
               let(:error_source) { described_class }
 
-              it_behaves_like "adapter file_info_query: error"
+              it_behaves_like "storage adapter: error response", :error
             end
           end
         end

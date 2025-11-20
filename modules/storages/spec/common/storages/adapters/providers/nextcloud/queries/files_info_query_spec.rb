@@ -121,7 +121,7 @@ module Storages
               let(:file_ids) { %w[50 53] }
               let(:error_source) { described_class }
 
-              it_behaves_like "adapter files_info_query: error"
+              it_behaves_like "storage adapter: error response", :error
             end
           end
         end
