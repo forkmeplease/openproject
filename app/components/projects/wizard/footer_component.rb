@@ -30,42 +30,55 @@
 
 module Projects
   module Wizard
-    class FooterComponent < StepWizard::FooterComponent
+    class FooterComponent < ApplicationComponent
       include OpPrimer::ComponentHelpers
 
       def initialize(form_identifier:, project:, custom_fields_by_section:, current_step_index:)
+        @form_identifier = form_identifier
         @project = project
         @custom_fields_by_section = custom_fields_by_section
         @current_step_index = current_step_index
 
-        super(form_identifier:, total_steps: sections.count, current_step_index:)
+        super
+      end
+
+      def call
+        render(StepWizard::FooterComponent.new(form_identifier:, total_steps:, current_step_index:)) do |footer|
+          footer.with_back_button(href: back_button_href)
+          footer.with_cancel_button(href: cancel_button_href)
+          footer.with_continue_button(**continue_button_args)
+          footer.with_submit_button(**submit_button_args)
+          footer.with_progress_bar
+        end
       end
 
       private
 
-      attr_reader :project, :custom_fields_by_section
+      attr_reader :form_identifier, :project, :custom_fields_by_section, :current_step_index
 
       def sections
         @sections ||= custom_fields_by_section.keys
       end
 
-      def back_button_args
-        {
-          href: project_creation_wizard_path(project, section: sections[previous_step].id)
-        }
+      def total_steps
+        sections.count
       end
 
-      def cancel_button_args
-        {
-          href: project_path(project)
-        }
+      def back_button_href
+        if previous_step
+          project_creation_wizard_path(project, section: sections[previous_step].id)
+        end
+      end
+
+      def cancel_button_href
+        project_path(project)
       end
 
       def continue_button_args
         {
           form: form_identifier,
           name: "next_section",
-          value: sections[next_step].id
+          value: next_step ? sections[next_step].id : nil
         }
       end
 
@@ -75,6 +88,18 @@ module Projects
           name: "finish",
           value: "true"
         }
+      end
+
+      def next_step
+        return nil if current_step_index >= total_steps - 1
+
+        current_step_index + 1
+      end
+
+      def previous_step
+        return nil if current_step_index.zero?
+
+        current_step_index - 1
       end
     end
   end

@@ -30,64 +30,33 @@ See COPYRIGHT and LICENSE files for more details.
 <div class="op-step-wizard-footer">
   <div class="op-step-wizard-footer--actions-left">
     <% unless first_step? %>
-      <%= render(
-            Primer::Beta::Button.new(
-              scheme: :invisible,
-              color: :muted,
-              tag: :a,
-              **back_button_args
-            )
-          ) do |button| %>
-        <% button.with_leading_visual_icon(icon: :"arrow-left") %>
-        <%= I18n.t("button_back") %>
-      <% end %>
+      <%= back_button %>
     <% end %>
   </div>
 
-  <%= render(Primer::BaseComponent.new(tag: :div, classes: "op-step-wizard-footer--progress", **progress_bar_args)) do %>
-    <%=
-      flex_layout(justify_content: :center, align_items: :center) do |progress_wrapper|
-        progress_wrapper.with_column(classes: "op-step-wizard-footer--progress-bar") do
-          render(Primer::Beta::ProgressBar.new(size: :small)) do |progress_bar|
-            progress_bar.with_item(percentage: progress_percentage)
-          end
-        end
+  <%= render(Primer::BaseComponent.new(tag: :div, classes: "op-step-wizard-footer--progress")) do %>
+    <% if progress_bar.present? %>
+      <%= flex_layout(justify_content: :center, align_items: :center) do |progress_wrapper| %>
+        <%= progress_wrapper.with_column(classes: "op-step-wizard-footer--progress-bar") do %>
+          <%= progress_bar %>
+        <% end %>
 
-        progress_wrapper.with_column(ml: 2) do
-          render(Primer::Beta::Text.new(tag: :div, font_size: :small, color: :muted)) do
-            I18n.t("projects.wizard.progress_label", current: current_step_index + 1, total: total_steps)
-          end
-        end
-      end
-    %>
+        <%= progress_wrapper.with_column(ml: 2) do %>
+          <%= render(Primer::Beta::Text.new(tag: :div, font_size: :small, color: :muted)) do %>
+            <%= I18n.t("projects.wizard.progress_label", current: current_step_index + 1, total: total_steps) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
 
   <div class="op-step-wizard-footer--actions-right">
-    <%= render(
-          Primer::Beta::Button.new(
-            tag: :a,
-            **cancel_button_args
-          )
-        ) do %>
-      <%= I18n.t("button_cancel") %>
-    <% end %>
+    <%= cancel_button %>
 
     <% if last_step? %>
-      <%= render(
-            Primer::Beta::Button.new(
-              scheme: :primary,
-              type: :submit,
-              **submit_button_args
-            )
-          ) { I18n.t(:button_complete) } %>
+      <%= submit_button %>
     <% else %>
-      <%= render(
-            Primer::Beta::Button.new(
-              scheme: :primary,
-              type: :submit,
-              **continue_button_args
-            )
-          ) { I18n.t(:button_continue) } %>
+      <%= continue_button %>
     <% end %>
   </div>
 </div>

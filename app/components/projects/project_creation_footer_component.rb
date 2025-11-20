@@ -29,27 +29,34 @@
 #++
 
 module Projects
-  class ProjectCreationFooterComponent < StepWizard::FooterComponent
+  class ProjectCreationFooterComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
+
+    def initialize(form_identifier:, total_steps:, current_step_index:)
+      @form_identifier = form_identifier
+      @total_steps = total_steps
+      @current_step_index = current_step_index
+
+      super
+    end
+
+    def call
+      render(StepWizard::FooterComponent.new(form_identifier:, total_steps:, current_step_index:)) do |footer|
+        footer.with_cancel_button(href: projects_path)
+        footer.with_continue_button(**continue_button_args)
+        footer.with_submit_button(**submit_button_args)
+        if show_progress_bar?
+          footer.with_progress_bar
+        end
+      end
+    end
+
+    attr_reader :form_identifier, :total_steps, :current_step_index
 
     private
 
-    def progress_bar_args
-      {
-        visibility: current_step_index === 0 ? :hidden : :visible
-      }
-    end
-
-    def back_button_args
-      {
-        hidden: true
-      }
-    end
-
-    def cancel_button_args
-      {
-        href: projects_path
-      }
+    def show_progress_bar?
+      !current_step_index.zero?
     end
 
     def continue_button_args
