@@ -121,7 +121,10 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
   end
 
   def heading
-    I18n.t(:"export.project_initiation.title")
+    @heading ||= I18n.t(
+      "settings.project_initiation_request.name.options.#{project.name_artefact_name || 'invalid_key'}",
+      default: I18n.t(:"label_project_initiation_request")
+    )
   end
 
   def footer_title
