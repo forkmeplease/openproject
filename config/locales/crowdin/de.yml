@@ -4349,11 +4349,11 @@ de:
   text_custom_export_font_regular_instructions: >
     Dies ist die Schriftartdatei für normalen Text. Sie muss im TTF-Format vorliegen und ist erforderlich.
   text_custom_export_font_bold_instructions: >
-    Dies ist die Schriftdatei für fetten Text. Sie ist optional, und muss wenn angegeben im TTF-Format vorliegen.
+    Dies ist die Schriftdatei für fetten Text. Sie ist optional. Wenn angegeben, muss sie im TTF-Format vorliegen.
   text_custom_export_font_italic_instructions: >
-    Dies ist die Schriftdatei für kursiven Text. Sie ist optional, und muss wenn angegeben im TTF-Format vorliegen.
+    Dies ist die Schriftdatei für kursiven Text. Sie ist optional. Wenn angegeben, muss sie im TTF-Format vorliegen.
   text_custom_export_font_bold_italic_instructions: >
-    Dies ist die Schriftdatei für fett-kursiven Text. Sie ist optional, und muss wenn angegeben im TTF-Format vorliegen.
+    Dies ist die Schriftdatei für fett-kursiven Text. Sie ist optional. Wenn angegeben, muss sie im TTF-Format vorliegen.
   text_custom_favicon_instructions: >
     Dies ist das kleine Symbol, das in Ihrem Browser-Fenster/Tab neben dem Seitentitel angezeigt wird. Es muss ein quadratisches 32 x 32 Pixel großes PNG mit transparentem Hintergrund sein.
   text_custom_touch_icon_instructions: >
