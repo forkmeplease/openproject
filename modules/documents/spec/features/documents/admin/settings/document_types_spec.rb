@@ -34,76 +34,153 @@ RSpec.describe "Document types admin", :js do
   include Flash::Expectations
 
   current_user { create(:admin) }
-  let!(:default_document_type) { create(:document_type, is_default: true, name: "Note") }
 
   def within_enumeration_item(type, &)
     page.within("#documents-admin-document-types-item-component-#{type.id}", &)
   end
 
-  it "can be managed (created, updated, deleted)" do
-    visit admin_settings_document_types_path
+  context "when managing document types" do
+    let!(:default_document_type) { create(:document_type, is_default: true, name: "Note") }
 
-    within_enumeration_item(default_document_type) do
-      expect(page).to have_content("Note")
-      expect(page).to have_content("Default")
+    it "can be managed (created, updated, deleted)" do
+      visit admin_settings_document_types_path
+
+      within_enumeration_item(default_document_type) do
+        expect(page).to have_content("Note")
+        expect(page).to have_content("Default")
+      end
+
+      within_test_selector("admin-document-types-subheader") do
+        click_on "Add"
+      end
+
+      fill_in "Name", with: "Documentation"
+      check "Default"
+      click_on("Save")
+
+      expect_and_dismiss_flash(message: "Successful update.")
+
+      # we are redirected back to the index page
+      expect(page).to have_current_path(admin_settings_document_types_path)
+
+      new_document_type = DocumentType.last
+
+      # The new document type is shown in the list as the default document type
+      within_enumeration_item(new_document_type) do
+        expect(page).to have_content("Documentation")
+        expect(page).to have_content("Default")
+      end
+
+      # Since the new document type is now the default, the former default looses that flag
+      within_enumeration_item(default_document_type) do
+        expect(page).to have_content("Note")
+        expect(page).to have_no_content("Default")
+      end
+
+      click_link "Documentation"
+
+      fill_in "Name", with: "Report"
+      click_on("Save")
+
+      expect_and_dismiss_flash(message: "Successful update.")
+
+      within_enumeration_item(new_document_type) do
+        expect(page).to have_content("Report")
+        expect(page).to have_content("Default")
+      end
+
+      expect(DocumentType).to exist(name: "Report")
+      expect(DocumentType).not_to exist(name: "Documentation")
+
+      # It allows deleting document types
+      within_enumeration_item(new_document_type) do
+        click_on accessible_name: "Document type actions"
+        click_on("Delete")
+      end
+
+      within_dialog("Delete document type") do
+        expect(page).to have_heading "Delete this document type?"
+        expect(page).to have_content 'The type "Report" is currently unused. ' \
+                                     "Deleting this type will have no effect on existing documents."
+
+        click_on "Delete permanently"
+      end
+
+      expect_and_dismiss_flash(message: "Successful deletion.")
+
+      expect(page).to have_no_content("Report")
+
+      # Since the old default is deleted another is now the default.
+      within_enumeration_item(default_document_type) do
+        expect(page).to have_content("Note")
+        expect(page).to have_no_content("Default")
+      end
     end
+  end
 
-    within_test_selector("admin-document-types-subheader") do
-      click_on "Add"
-    end
+  context "with multiple types having documents" do
+    let!(:type_with_documents) { create(:document_type, name: "Type with documents") }
+    let!(:another_type) { create(:document_type, name: "Another type") }
+    let!(:unused_type) { create(:document_type, name: "Unused type") }
+    let!(:document) { create(:document, type: type_with_documents) }
 
-    fill_in "Name", with: "Documentation"
-    check "Default"
-    click_on("Save")
+    it "reassigns documents when deleting a document type" do
+      visit admin_settings_document_types_path
 
-    expect_and_dismiss_flash(message: "Successful update.")
+      within_enumeration_item(type_with_documents) do
+        click_on accessible_name: "Document type actions"
+        click_on("Delete")
+      end
 
-    # we are redirected back to the index page
-    expect(page).to have_current_path(admin_settings_document_types_path)
+      within_dialog("Delete document type") do
+        expect(page).to have_heading "Delete this document type?"
+        expect(page).to have_content 'The type "Type with documents" is currently being used in 1 document. ' \
+                                     "Please select which type to reassign them to."
 
-    new_document_type = DocumentType.last
+        select another_type.name, from: "Reassign documents to"
+        click_on "Delete permanently"
+      end
 
-    # The new document type is shown in the list as the default document type
-    within_enumeration_item(new_document_type) do
-      expect(page).to have_content("Documentation")
-      expect(page).to have_content("Default")
-    end
+      expect_and_dismiss_flash(message: "Successful deletion.")
 
-    # Since the new document type is now the default, the former default looses that flag
-    within_enumeration_item(default_document_type) do
-      expect(page).to have_content("Note")
-      expect(page).to have_no_content("Default")
-    end
+      expect(DocumentType).not_to exist(name: "Type with documents")
+      expect(document.reload.type).to eq another_type
 
-    click_link "Documentation"
+      within_enumeration_item(another_type) do
+        expect(page).to have_test_selector("documents-count", text: "1")
+      end
 
-    fill_in "Name", with: "Report"
-    click_on("Save")
+      # It allows deleting unused document types
+      within_enumeration_item(unused_type) do
+        click_on accessible_name: "Document type actions"
+        click_on("Delete")
+      end
 
-    expect_and_dismiss_flash(message: "Successful update.")
+      within_dialog("Delete document type") do
+        expect(page).to have_heading "Delete this document type?"
+        expect(page).to have_content 'The type "Unused type" is currently unused. ' \
+                                     "Deleting this type will have no effect on existing documents."
 
-    within_enumeration_item(new_document_type) do
-      expect(page).to have_content("Report")
-      expect(page).to have_content("Default")
-    end
+        click_on "Delete permanently"
+      end
 
-    expect(DocumentType).to exist(name: "Report")
-    expect(DocumentType).not_to exist(name: "Documentation")
+      expect_and_dismiss_flash(message: "Successful deletion.")
 
-    # It allows deleting document types
-    within_enumeration_item(new_document_type) do
-      click_on accessible_name: "Document type actions"
-      click_button("Delete")
-    end
+      expect(DocumentType).not_to exist(name: "Unused type")
 
-    expect_and_dismiss_flash(message: "Successful deletion.")
+      # Last remaining type cannot be deleted
+      within_enumeration_item(another_type) do
+        click_on accessible_name: "Document type actions"
+        click_on("Delete")
+      end
 
-    expect(page).to have_no_content("Report")
+      within_dialog("Cannot delete document type") do
+        expect(page).to have_heading "Cannot delete the last document type"
+        expect(page).to have_content "There must always be at least one document type configured. " \
+                                     "Create another one first if you want to delete this one."
 
-    # Since the old default is deleted another is now the default.
-    within_enumeration_item(default_document_type) do
-      expect(page).to have_content("Note")
-      expect(page).to have_no_content("Default")
+        click_on "Close"
+      end
     end
   end
 end

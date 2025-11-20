@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2010-2024 the OpenProject GmbH
+# Copyright (C) the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -26,30 +26,31 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
 module Documents
   module Admin
     module DocumentTypes
-      class ItemComponent < ::Admin::Enumerations::ItemComponent
-        alias_method :document_type, :enumeration
+      class SelectReassignToForm < ApplicationForm
+        attr_reader :other_document_types
 
-        def deletion_enumeration(menu)
-          menu.with_item(
-            label: I18n.t(:button_delete),
-            scheme: :danger,
-            tag: :a,
-            content_arguments: {
-              data: { controller: "async-dialog" }
-            },
-            href: delete_dialog_admin_settings_document_type_path(document_type)
-          ) do |item|
-            item.with_leading_visual_icon(icon: :trash)
-          end
+        def initialize(other_document_types:)
+          super()
+
+          @other_document_types = other_document_types
         end
 
-        def colored?
-          false
+        form do |form|
+          form.select_list(
+            name: :reassign_to_id,
+            label: I18n.t(:"documents.delete_document_type_dialog.select_reassign_to_label"),
+            required: true,
+            input_width: :large
+          ) do |select|
+            other_document_types.each do |document_type|
+              select.option(value: document_type.id, label: document_type.name)
+            end
+          end
         end
       end
     end

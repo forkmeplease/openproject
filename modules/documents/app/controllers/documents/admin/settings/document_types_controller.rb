@@ -34,6 +34,17 @@ module Documents
       class DocumentTypesController < ::Admin::Settings::EnumerationsControllerBase
         menu_item :document_types
 
+        def delete_dialog
+          find_enumeration
+          respond_with_dialog(
+            if @enumeration.only_remaining_record?
+              Documents::Admin::DocumentTypes::CannotDeleteLastDialogComponent.new
+            else
+              Documents::Admin::DocumentTypes::DeleteDialogComponent.new(@enumeration)
+            end
+          )
+        end
+
         private
 
         def enumeration_class

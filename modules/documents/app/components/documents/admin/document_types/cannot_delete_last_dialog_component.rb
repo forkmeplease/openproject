@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2010-2024 the OpenProject GmbH
+# Copyright (C) the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -26,31 +26,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
 module Documents
   module Admin
     module DocumentTypes
-      class ItemComponent < ::Admin::Enumerations::ItemComponent
-        alias_method :document_type, :enumeration
-
-        def deletion_enumeration(menu)
-          menu.with_item(
-            label: I18n.t(:button_delete),
-            scheme: :danger,
-            tag: :a,
-            content_arguments: {
-              data: { controller: "async-dialog" }
-            },
-            href: delete_dialog_admin_settings_document_type_path(document_type)
-          ) do |item|
-            item.with_leading_visual_icon(icon: :trash)
-          end
-        end
-
-        def colored?
-          false
-        end
+      class CannotDeleteLastDialogComponent < ApplicationComponent
+        include OpTurbo::Streamable
       end
     end
   end

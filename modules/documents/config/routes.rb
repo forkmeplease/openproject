@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         resources :document_types, except: [:show] do
           member do
             put :move
+            get :delete_dialog, defaults: { format: :turbo_stream }
           end
         end
       end
