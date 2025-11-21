@@ -71,7 +71,7 @@ The Home Dashboard consists of **modular widgets** that provide snapshots of you
 *   Shows a list of **recently edited work packages**.
 *   Allows **fast navigation** back to items that are work in progress.
 
-![Home dashboard work packages recently edited widget](mobile_app_homewidget_recentlyedited.png)
+![Home dashboard displaying "work packages recently edited" widget in the OpenProject mobile app](mobile_app_homewidget_recentlyedited.png)
 
 ## Customizing the Dashboard
 
