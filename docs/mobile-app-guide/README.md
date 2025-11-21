@@ -96,5 +96,5 @@ To access and use the **OpenProject Mobile App (Beta)**, you’ll need the follo
 
 ## Disclaimer
 
-> [!NOTE]
+> [!IMPORTANT]
 > This is a **Beta Release**, which means the app may contain incomplete features and occasional bugs. We recommend using it alongside the **OpenProject web application** for the full experience.
