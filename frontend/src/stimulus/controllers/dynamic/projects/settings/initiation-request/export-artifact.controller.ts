@@ -38,10 +38,6 @@ export default class ExportArtifactController extends Controller {
 
   declare readonly projectStoragesSelectListTarget:HTMLSelectElement;
 
-  connect():void {
-    this.hideProjectStoragesSelectList();
-  }
-
   protected updateForm(evt:InputEvent):void {
     if (!this.isInputElement(evt.target)) {
       return;

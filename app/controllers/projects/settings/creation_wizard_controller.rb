@@ -149,8 +149,8 @@ class Projects::Settings::CreationWizardController < Projects::SettingsControlle
 
   def artifact_export_settings_params
     params.expect(
-      project: %i[artifact_export_type
-                  artifact_export_storage]
+      project: %i[project_creation_wizard_artifact_export_type
+                  project_creation_wizard_artifact_export_storage]
     )
   end
 end

@@ -33,7 +33,7 @@ module Projects
       class ExportForm < ApplicationForm
         form do |f|
           f.radio_button_group(
-            name: :artifact_export_type,
+            name: :project_creation_wizard_artifact_export_type,
             label: I18n.t("projects.settings.creation_wizard.export.pdf_file_storage")
           ) do |group|
             group.radio_button(
@@ -54,12 +54,12 @@ module Projects
           end
 
           if file_storages.any?
-            f.group(display: :none,
+            f.group(display: show_file_storage_select_list_initially? ? :block : :none,
                     data: {
                       "projects--settings--initiation-request--export-artifact-target": "projectStoragesSelectList"
                     }) do |storage_select|
               storage_select.select_list(
-                name: :artifact_export_storage,
+                name: :project_creation_wizard_artifact_export_storage,
                 label: I18n.t("projects.settings.creation_wizard.export.external_file_storage"),
                 caption: I18n.t("projects.settings.creation_wizard.export.description_file_storage_selection")
               ) do |list|
@@ -80,7 +80,7 @@ module Projects
         end
 
         def checked?(value)
-          value == (model.artifact_export_type&.to_sym || :attachment)
+          value == (model.project_creation_wizard_artifact_export_type&.to_sym || :attachment)
         end
 
         def file_link_label
@@ -97,6 +97,10 @@ module Projects
                                   .automatic
                                   .includes(:storage)
                                   .filter { |project_storages| project_storages.storage.provider_type_nextcloud? }
+        end
+
+        def show_file_storage_select_list_initially?
+          model.project_creation_wizard_artifact_export_type&.to_sym == :file_link
         end
       end
     end
