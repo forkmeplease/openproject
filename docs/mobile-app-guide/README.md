@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Mobile app guide (Beta)
   priority: 972
 description: User guide for the OpenProject Mobile application.
-keywords: Mobile app guide
+keywords: Mobile app guide, mobile, mobile application, iOS, android, app store, appstore, app-store, google play
 ---
 # Mobile app guide (Beta)
 
