@@ -75,7 +75,7 @@ The Home Dashboard consists of **modular widgets** that provide snapshots of you
 
 ## Customizing the Dashboard
 
-While the mobile dashboard is designed for simplicity, the **order and visibility of widgets** can be customized by using the edit widgets button on the top navigation bar, you are allowed to:
+While the mobile dashboard is designed for simplicity, the **order and visibility of widgets** can be customized by using the **edit widgets button** on the right side of the top navigation bar. Clicking the icon allows you to:
 
 *   Activate and deactivate widgets
 *   Reorder widgets
