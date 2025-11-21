@@ -32,7 +32,7 @@ describe("OpenProjectApi", () => {
     test("when the opBasePath is not present throw an error", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "validToken",
+          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
           requestParameters: new URLSearchParams({ document_id: "121" }),
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Base URL missing.");
@@ -43,7 +43,7 @@ describe("OpenProjectApi", () => {
 
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "validToken",
+          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
           requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: No allowed domains configured.");
@@ -52,7 +52,7 @@ describe("OpenProjectApi", () => {
     test("when opBasePath has invalid format throw an error", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "validToken",
+          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
           requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "not-a-valid-url" }),
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Invalid base URL format.");
@@ -61,7 +61,7 @@ describe("OpenProjectApi", () => {
     test("when opBasePath domain is not in ALLOWED_DOMAINS throw an error", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "validToken",
+          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
           requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://malicious.com" }),
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Invalid base URL domain.");
@@ -77,7 +77,7 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "validToken",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         documentName: "TheDocName",
         requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://subdomain.test.api" }),
       } as unknown as onAuthenticatePayload;
@@ -87,7 +87,18 @@ describe("OpenProjectApi", () => {
       expect(data.context.opBasePath).toEqual("https://subdomain.test.api");
     });
 
-    test("when the token is invalid throw an error", async () => {
+    test("when the token is invalid", async () => {
+      await expect(() =>
+        new OpenProjectApi().onAuthenticate({
+          // Invalid token, generated with a different secret
+          token: "5Sm4blMLhP8PFS67xw==--br8L/7YDX3rbTLpT--HHEi+SnNdmHmH90N3mHY9A==",
+          documentName: "TheDocName",
+          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
+        } as unknown as onAuthenticatePayload)
+      ).rejects.toThrowError("Unsupported state or unable to authenticate data");
+    });
+
+    test("when the server does not authorize the request throw an error", async () => {
       fetchMock.mockResolvedValueOnce({
         ok: false,
         status: 401,
@@ -95,7 +106,7 @@ describe("OpenProjectApi", () => {
 
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "invalidToken",
+          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
           documentName: "TheDocName",
           requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
         } as unknown as onAuthenticatePayload)
@@ -107,7 +118,7 @@ describe("OpenProjectApi", () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer invalidToken",
+            "Authorization": "Bearer valid_token",
           },
         }
       );
@@ -122,7 +133,7 @@ describe("OpenProjectApi", () => {
 
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "validToken",
+          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
           documentName: "TheDocName",
           requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
         } as unknown as onAuthenticatePayload)
@@ -139,7 +150,7 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "validToken",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         documentName: "TheDocName",
         requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
       } as unknown as onAuthenticatePayload;
@@ -147,7 +158,7 @@ describe("OpenProjectApi", () => {
       await new OpenProjectApi().onAuthenticate(data);
 
       expect(data.context.documentId).toEqual("121");
-      expect(data.context.token).toEqual("validToken");
+      expect(data.context.token).toEqual("valid_token");
       expect(data.context.opBasePath).toEqual("https://test.api");
       expect(data.documentName).toEqual("TheDocName");
     });
@@ -167,7 +178,7 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "validToken",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         documentName: "TheDocName",
         requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
       } as unknown as onAuthenticatePayload;
@@ -194,7 +205,7 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "validToken",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         documentName: "TheDocName",
         requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
       } as unknown as onAuthenticatePayload;

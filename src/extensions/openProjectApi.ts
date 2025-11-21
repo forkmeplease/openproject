@@ -5,6 +5,7 @@ import type { ApiResponseDocument } from "../types";
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
 import { BlockNoteSchema } from "@blocknote/core";
 import { openProjectWorkPackageStaticBlockSpec } from "op-blocknote-extensions";
+import { decryptToken } from "../services/decryptTokenService";
 
 export const editorSchema = BlockNoteSchema.create().extend({
   blockSpecs: {
@@ -28,6 +29,7 @@ export class OpenProjectApi implements Extension {
     if (!token) {
       throw new Error('Unauthorized: Token missing.');
     }
+    const decryptedToken = decryptToken(token);
 
     if (!opBasePath) {
       throw new Error('Unauthorized: Base URL missing.');
@@ -60,7 +62,7 @@ export class OpenProjectApi implements Extension {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${decryptedToken}`,
       },
     });
 
@@ -75,7 +77,7 @@ export class OpenProjectApi implements Extension {
 
     data.documentName = jsonData.title;
     data.context.documentId = documentId;
-    data.context.token = token;
+    data.context.token = decryptedToken;
     data.context.opBasePath = opBasePath;
     if (!jsonData._links?.update) {
       // https://tiptap.dev/docs/hocuspocus/guides/auth#read-only-mode
