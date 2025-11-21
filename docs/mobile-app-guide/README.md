@@ -92,7 +92,7 @@ To access and use the **OpenProject Mobile App (Beta)**, you’ll need the follo
 ![Applications setting to enable the built-in OAuth](mobile_app_oauth_authentication.png)
 *   **Network connection:** Internet access is required for syncing data with your OpenProject instance.
 > [!NOTE]
-> Some features, such as deep-linking and realtime push notifications, may depend on your organization’s configuration or will become available in future updates.
+> Some features, such as deep-linking and real-time push notifications, may depend on your organization’s configuration or will become available in future updates.
 
 ## Disclaimer
 
