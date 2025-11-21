@@ -37,5 +37,5 @@ The following core features are available in the mobile app:
 | [Notification Centre](notification-centre) | Receive updates about comments, mentions, and work package changes — ensuring you never miss an important activity. |
 | [User Settings](user-settings) | Configure your account, manage app preferences, and tailor notifications to suit your workflow. |
 
-> [!NOTE]
+> [!TIP]
 > For a seamless experience, use the mobile app alongside the web or desktop version of OpenProject. The app is designed as a companion, so you can stay informed, respond quickly, and keep your projects moving — even when you’re away from your desk.
