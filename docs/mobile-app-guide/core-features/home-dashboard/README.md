@@ -50,7 +50,7 @@ The Home Dashboard consists of **modular widgets** that provide snapshots of you
 *   Provides an overview of **time logged during the current week**.
 *   Helps you monitor your productivity and ensure accurate reporting.
 
-![Home dashboard week time tracking widget](mobile_app_homewidget_weektimetracking.png)
+![Home dashboard displaying "week time tracking" widget in the OpenProject mobile app](mobile_app_homewidget_weektimetracking.png)
 
 ### **Portfolios**
 
