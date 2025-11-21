@@ -36,10 +36,20 @@ module Portfolios
 
     attr_reader :current_user, :portfolio
 
+    delegate :archived?, to: :portfolio
+
     def initialize(portfolio:, current_user:)
       super
       @portfolio = portfolio
       @current_user = current_user
+    end
+
+    def name_caption
+      if archived?
+        "#{@portfolio.name} (#{t('project.archive.archived')})"
+      else
+        @portfolio.name
+      end
     end
 
     def currently_favorited?
@@ -96,6 +106,15 @@ module Portfolios
                           .reorder(:status_code)
                           .pluck(:status_code)
                           .tally
+    end
+
+    # Will return a hash with Primer style options if the portfolio is archived.
+    # Will return an empty hash if the portfolio is active.
+    #
+    # Intended to be injected into a Primer component's `**options` parameter that relies on the archived
+    # state of a portfolio to decide the display style.
+    def archived_style
+      archived? ? { color: :muted } : {}
     end
   end
 end
