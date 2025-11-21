@@ -343,6 +343,10 @@ en:
         warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
         role_field_label: "Project Role"
         role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
+        review_hint: >
+          There are %{user_count} who are already assigned to this project attribute in various projects. They
+          might get additional permissions and be added to projects they did not previously have access to.
+        review_button: Review users and permissions
     text_add_new_custom_field: >
       To add new custom fields to a project you first need to create them before
       you can add them to this project.

@@ -39,7 +39,8 @@ module Projects
             focusDirectly: true,
             inputValue: model.role_id,
             decorated: true,
-            placeholder: I18n.t("label_none_parentheses")
+            placeholder: I18n.t("label_none_parentheses"),
+            hiddenFieldAction: "change->admin--custom-field-role-assignment#changeRole"
           }
         ) do |list|
           list.option(label: I18n.t("label_none_parentheses"), value: "", selected: model.role_id.nil?)

@@ -75,6 +75,9 @@ module Admin::Settings
 
     def role_assignment; end
 
+    def role_assignment_preview_dialog
+    end
+
     def update_role_assignment
       call = CustomFields::LinkWithRoleService
         .new(user: current_user, model: @custom_field)
