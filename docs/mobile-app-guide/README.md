@@ -81,7 +81,7 @@ The **OpenProject Mobile App (Beta)** is available now for:
 To access and use the **OpenProject Mobile App (Beta)**, you’ll need the following:
 
 *   **An active OpenProject account:** Either from an **OpenProject Cloud** workspace or an **OpenProject On-premises** installation with API access enabled.
-*   Having a **signed certificate** (**https** not http) on your instance to be able to log in.
+*   Having a **signed certificate** (**https**, not http) on your instance to be able to log in.
 *   **Minimum OpenProject version:** 17.0.0
 > [!NOTE]
 > If you have a previous version of OpenProject you can connect your OpenProject instance by asking your administrator to enable the Built in OAuth applications flag under_ `_{BASE_URL}/admin/settings/experimental_`.
