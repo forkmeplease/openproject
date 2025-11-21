@@ -34,7 +34,6 @@ class Document < ApplicationRecord
     collaborative: "collaborative"
   }
 
-  belongs_to :category, class_name: "DocumentCategory", optional: true
   belongs_to :project
   belongs_to :type, class_name: "DocumentType", optional: true, counter_cache: :documents_count
 
