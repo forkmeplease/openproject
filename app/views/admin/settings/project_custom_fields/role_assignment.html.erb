@@ -43,21 +43,23 @@ See COPYRIGHT and LICENSE files for more details.
   <%= render(Primer::Alpha::Banner.new(scheme: :warning, mb: 3, mt: 3)) { I18n.t("custom_fields.admin.role_assignment.warning") } %>
   <%= render(Projects::Settings::CustomFieldRoleAssignmentForm.new(f)) %>
 
-  <%= render OpPrimer::InsetBoxComponent.new(mt: 3, display: :none, data: { "admin--custom-field-role-assignment-target": "previewHintBox" }) do
-        flex_layout do |box|
-          box.with_row do
-            render(Primer::Beta::Text.new(tag: :p)) do
-              I18n.t("custom_fields.admin.role_assignment.review_hint", user_count: pluralize(@custom_field_usages.count, User.model_name.singular, plural: User.model_name.plural))
+  <% if @custom_field_usages.any? %>
+    <%= render OpPrimer::InsetBoxComponent.new(mt: 3, display: :none, data: { "admin--custom-field-role-assignment-target": "previewHintBox" }) do
+          flex_layout do |box|
+            box.with_row do
+              render(Primer::Beta::Text.new(tag: :p)) do
+                I18n.t("custom_fields.admin.role_assignment.review_hint", user_count: pluralize(@custom_field_usages.count, User.model_name.singular, plural: User.model_name.plural))
+              end
             end
-          end
 
-          box.with_row do
-            render(Primer::Beta::Button.new(mt: 3, data: { action: "click->admin--custom-field-role-assignment#showPreviewModal" }, "aria-label": t("custom_fields.admin.role_assignment.review_button"))) do
-              t("custom_fields.admin.role_assignment.review_button")
+            box.with_row do
+              render(Primer::Beta::Button.new(mt: 3, data: { action: "click->admin--custom-field-role-assignment#showPreviewModal" }, "aria-label": t("custom_fields.admin.role_assignment.review_button"))) do
+                t("custom_fields.admin.role_assignment.review_button")
+              end
             end
           end
-        end
-      end %>
+        end %>
+  <% end %>
 
   <%= render(Primer::Beta::Button.new(mt: 3, type: :submit, scheme: :primary, "aria-label": t(:button_save))) { t(:button_save) } %>
 <% end %>

@@ -47,6 +47,7 @@ export default class CustomFieldRoleAssignmentController extends ApplicationCont
 
   declare readonly initialRoleValue:number;
   declare readonly previewHintBoxTarget:HTMLDivElement;
+  declare readonly hasPreviewHintBoxTarget:boolean;
 
   protected turboRequests:TurboRequestsService;
   protected pathHelper:PathHelperService;
@@ -58,6 +59,8 @@ export default class CustomFieldRoleAssignmentController extends ApplicationCont
   }
 
   changeRole(event:Event):void {
+    if (!this.hasPreviewHintBoxTarget) { return; }
+
     const selectElement = event.target as HTMLSelectElement;
     this.currentRoleValue = Number(selectElement.value);
 
