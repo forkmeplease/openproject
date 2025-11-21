@@ -51,7 +51,7 @@ module Projects
       end
     end
 
-    attr_reader :form_identifier, :project, :current_step_index
+    attr_reader :form_identifier, :project, :current_step
 
     private
 

@@ -40,8 +40,8 @@ fr:
     page_header:
       heading: "Tous les documents"
       action_menu:
-        document_actions: "Document actions"
-        edit_title: "Edit title"
+        document_actions: "Actions de documentation"
+        edit_title: "Modifier le titre"
     subheader:
       filter:
         label: "Filtre sur le nom du document"
@@ -53,18 +53,20 @@ fr:
       name: "Nom"
       type: "Type"
       updated_at: "Dernière édition"
-      label_legacy: "Legacy"
+      label_legacy: "L'héritage"
     menu:
       all: "Tous les documents"
       types: "Types"
-    last_updated_at: "Last updated %{time}."
+    last_updated_at: "Dernière mise à jour : %{time}."
+    active_editors: "Active editors"
+    active_editors_count: "%{count} active editors"
     label_attachment_author: "Auteur de la pièce jointe"
     label_categories: "Catégories"
     new_category: "Nouvelle catégorie"
     delete_dialog:
-      title: "Delete document"
-      heading: "Delete this document?"
-      confirmation_message_html: "This will permanently delete this document and all file attachments. Are you sure you want to do this?"
+      title: "Supprimer le document"
+      heading: "Supprimer le document ?"
+      confirmation_message_html: "Cette opération supprimera définitivement ce document et toutes les pièces jointes. Êtes-vous sûr de vouloir faire cela ?"
   label_document_added: "Document ajouté"
   label_document_new: "Nouveau document"
   label_document_plural: "Documents"

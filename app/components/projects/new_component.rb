@@ -43,5 +43,15 @@ module Projects
     def step_3_display
       { display: :none } unless step == 3
     end
+
+    def workspaces_path
+      workspace_type = if Project.workspace_types.key?(project.workspace_type)
+                         project.workspace_type
+                       else
+                         "project"
+                       end
+
+      url_for(workspace_type.pluralize.to_sym)
+    end
   end
 end

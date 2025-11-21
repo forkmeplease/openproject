@@ -31,6 +31,7 @@ See COPYRIGHT and LICENSE files for more details.
   component_wrapper(target: "_top") do
     settings_primer_form_with(
       model: project,
+      url: workspaces_path,
       html: { id: "project-create-form" }
     ) do |f|
       flex_layout do |container|

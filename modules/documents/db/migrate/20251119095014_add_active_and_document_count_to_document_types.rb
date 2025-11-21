@@ -28,9 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-FactoryBot.define do
-  factory :document_category do
-    project
-    sequence(:name) { |n| "I am Category No. #{n}" }
+class AddActiveAndDocumentCountToDocumentTypes < ActiveRecord::Migration[8.0]
+  def change
+    add_column :document_types, :active, :boolean, default: true, null: false
+    add_column :document_types, :documents_count, :integer, default: 0, null: false
+
+    reversible do |dir|
+      dir.up do
+        say_with_time "update documents counter cache for document_types" do
+          execute <<-SQL.squish
+            UPDATE document_types
+            SET documents_count = (
+              SELECT COUNT(*)
+              FROM documents
+              WHERE documents.type_id = document_types.id
+            )
+          SQL
+        end
+      end
+    end
   end
 end

@@ -23,25 +23,33 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class DocumentCategory < Enumeration
-  has_many :documents, foreign_key: "category_id"
-
-  OptionName = :enumeration_doc_categories
-
-  def option_name
-    OptionName
+RSpec.shared_examples_for "storage adapter: command call signature" do |command_name|
+  it "is registered as commands.#{command_name}" do
+    expect(Storages::Adapters::Registry.resolve("#{storage}.commands.#{command_name}")).to eq(described_class)
   end
 
-  def objects_count
-    documents.count
+  it "responds to #call with correct parameters" do
+    expect(described_class).to respond_to(:call)
+
+    method = described_class.method(:call)
+    expect(method.parameters).to contain_exactly(%i[keyreq storage], %i[keyreq auth_strategy], %i[keyreq input_data])
+  end
+end
+
+RSpec.shared_examples_for "storage adapter: query call signature" do |query_name|
+  it "is registered as queries.#{query_name}" do
+    expect(Storages::Adapters::Registry.resolve("#{storage}.queries.#{query_name}")).to eq(described_class)
   end
 
-  def transfer_relations(to)
-    documents.update_all("category_id = #{to.id}")
+  it "responds to #call with correct parameters" do
+    expect(described_class).to respond_to(:call)
+
+    method = described_class.method(:call)
+    expect(method.parameters).to contain_exactly(%i[keyreq storage], %i[keyreq auth_strategy], %i[keyreq input_data])
   end
 end

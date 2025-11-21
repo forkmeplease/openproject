@@ -21,29 +21,18 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.v
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title t(:label_administration), t("documents.label_categories") %>
-
 <%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { @enumeration.name }
-    header.with_breadcrumbs(
-      [
-        { href: admin_index_path, text: t("label_administration") },
-        { href: admin_settings_storages_path, text: t("project_module_storages") },
-        { href: url_for(action: :index), text: t("documents.label_categories") },
-        @enumeration.name
-      ]
-    )
-  end
+  settings_primer_form_with(
+    model: @project,
+    id: "project_creation_wizard_export_artifact_form",
+    url: "/todo/update/correct/controller/action/path",
+    method: :put,
+    data: { controller: "projects--settings--initiation-request--export-artifact" }
+  ) { |form| render Projects::Settings::CreationWizard::ExportForm.new(form) }
 %>
-
-<% content_controller "admin--enumerations" %>
-
-<%= settings_primer_form_with(model: @enumeration, scope: :enumeration, url: url_for(action: :update, id: @enumeration)) do |f| %>
-  <%= render(Admin::Enumerations::ItemForm.new(f)) %>
-<% end %>
