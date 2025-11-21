@@ -23,19 +23,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-RSpec.shared_examples_for "adapter file_info_query: successful file/folder response" do
-  it "returns a file info object" do
+RSpec.shared_examples_for "storage adapter: error response" do |error_type|
+  it "returns a failure: #{error_type}" do
     result = described_class.call(storage:, auth_strategy:, input_data:)
 
-    expect(result).to be_success
+    expect(result).to be_failure
 
-    response = result.value!
-    expect(response).to be_a(Storages::Adapters::Results::StorageFileInfo)
-    expect(response).to eq(file_info)
+    error = result.failure
+    expect(error.code).to eq(error_type)
+    expect(error.source).to eq(error_source)
   end
 end
