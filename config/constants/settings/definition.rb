@@ -740,6 +740,14 @@ module Settings
         default: nil,
         allowed: -> { Role.pluck(:id) }
       },
+      new_project_send_confirmation_email: {
+        format: :boolean,
+        default: true
+      },
+      new_project_notification_text: {
+        format: :string,
+        default: nil
+      },
       notifications_hidden: {
         default: false
       },
