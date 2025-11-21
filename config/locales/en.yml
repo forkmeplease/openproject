@@ -347,6 +347,16 @@ en:
           There are %{user_count} who are already assigned to this project attribute in various projects. They
           might get additional permissions and be added to projects they did not previously have access to.
         review_button: Review users and permissions
+        dialog:
+          title: "Overview of users and permissions"
+          change: Change
+          changes:
+            new_member: Will be added as a member
+            remove_member: Will be removed as a member
+            gain_and_lose_role: Will lose role ‘%{old_role}’ and gain role ‘%{new_role}’
+            gain_role: Will gain role ‘%{new_role}’
+            lose_role: Will lose role ‘%{old_role}’
+            no_change: No changes
     text_add_new_custom_field: >
       To add new custom fields to a project you first need to create them before
       you can add them to this project.

@@ -41,7 +41,7 @@ module Admin::Settings
     before_action :set_sections, only: %i[show index edit update move drop]
     before_action :find_custom_field,
                   only: %i(show edit project_mappings new_link link unlink update destroy delete_option reorder_alphabetical
-                           move drop role_assignment update_role_assignment)
+                           move drop role_assignment update_role_assignment role_assignment_preview_dialog)
     before_action :prepare_custom_option_position, only: %i(update create)
     before_action :find_custom_option, only: :delete_option
     before_action :project_custom_field_mappings_query, only: %i[project_mappings unlink]
@@ -76,6 +76,8 @@ module Admin::Settings
     def role_assignment; end
 
     def role_assignment_preview_dialog
+      role = params[:role_id].to_i == 0 ? nil : ProjectRole.find_by(id: params[:role_id])
+      respond_with_dialog(Admin::CustomFields::RoleAssignmentPreviewDialogComponent.new(custom_field: @custom_field, role: role))
     end
 
     def update_role_assignment
