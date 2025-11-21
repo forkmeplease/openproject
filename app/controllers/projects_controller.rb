@@ -218,10 +218,10 @@ class ProjectsController < ApplicationController
       redirect_to project_path(@new_project), notice: I18n.t(:notice_successful_create)
     else
       # Do not display custom field errors if the form is submitted from the second page.
-      clear_custom_field_errors!(@new_project) if from_step_2?
+      clear_custom_field_errors!(@new_project) unless from_step_3?
       set_wizard_step!(@new_project)
 
-      if @new_project.errors.any?
+      if service_call.message.present?
         flash.now[:error] = I18n.t(:notice_unsuccessful_create_with_reason, reason: service_call.message)
       end
       render action: :new, status: :unprocessable_entity
@@ -270,8 +270,8 @@ class ProjectsController < ApplicationController
     project.custom_values.each { |cv| cv.errors.clear }
   end
 
-  def from_step_2?
-    params[:step].to_i == 2
+  def from_step_3?
+    params[:step].to_i == 3
   end
 
   def find_optional_template

@@ -59,8 +59,7 @@ See COPYRIGHT and LICENSE files for more details.
         end
 
         container.with_row do
-          step_value = step
-          render Projects::StepForm.new(f, step: step_value)
+          render Projects::StepForm.new(f, step:)
         end
       end
     end
