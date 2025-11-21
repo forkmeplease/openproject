@@ -62,7 +62,7 @@ The Home Dashboard consists of **modular widgets** that provide snapshots of you
 ### **Assigned to Me**
 
 *   Lists all **work packages currently assigned to you**.
-*   Includes types and status indicators for quick task management.
+*   Includes work package types and status indicators for quick task management.
 
 ![Home dashboard displaying "work packages assigned to me" widget in the OpenProject mobile app](mobile_app_homewidget_assignedtome.png)
 
