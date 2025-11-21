@@ -23,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
@@ -150,6 +150,7 @@ Rails.application.reloader.to_prepare do
                        "projects/settings/work_packages/internal_comments": %i[show update],
                        "projects/settings/creation_wizard": %i[show disable_dialog toggle refresh_submission_form
                                                                update_name_settings update_submission_settings
+                                                               update_artifact_export_settings
                                                                toggle_project_custom_field
                                                                disable_all_of_section enable_all_of_section],
                        "projects/templated": %i[create destroy],
