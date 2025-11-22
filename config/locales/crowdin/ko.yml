@@ -1180,12 +1180,12 @@ ko:
           off_track: "비정상 상태"
           finished: "마침"
           discontinued: "중단됨"
-        submission_assignee_custom_field: "Assignee when submitted"
-        submission_notification_text: "Notification text"
-        submission_send_confirmation_email: "Confirmation email"
-        submission_status_when_submitted: "Status when submitted"
-        submission_work_package_comment: "Work package comment"
-        submission_work_package_type: "Work package type"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
         template: "Template"
         templated: "템플릿 프로젝트"
         templated_value:
@@ -1829,6 +1829,10 @@ ko:
     header_additional_invalid_fields:
       other: "또한 다음 필드에 문제가 있습니다."
     field_erroneous_label: "이 필드는 유효 하지 않습니다: %{full_errors} \n유효한 값을 입력 해 주십시오."
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "%{datetime}, %{user} 님이 생성함"
@@ -3133,7 +3137,8 @@ ko:
   label_lock_user: "사용자 잠금"
   label_logged_as: "로그인한 계정:"
   label_login: "로그인"
-  label_custom_logo: "사용자 정의 로고"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "사용자 지정 내보내기 로고"
   label_custom_export_cover: "사용자 지정 내보내기 커버 배경"
   label_custom_export_footer: "사용자 지정 내보내기 바닥글 이미지"

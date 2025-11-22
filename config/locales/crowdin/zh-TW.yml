@@ -322,7 +322,7 @@ zh-TW:
     reorder_confirmation: "警告：目前可用值的順序將會遺失。繼續嗎？"
     placeholder_version_select: "需要先選擇工作套件或專案"
     calculated_field_not_editable: "不可編輯屬性。此值會自動計算。"
-    no_role_assigment: "No role assignment"
+    no_role_assigment: "無角色指派"
     instructions:
       is_required: "將自訂欄位標記為必填。這將使您在建立新資源時必須填寫該欄位。更新現有資源時則不需要填寫值。"
       is_required_for_project: "勾選以啟用此屬性，並使其成為所有專案的必要屬性。個別專案無法停用。現有專案更新時將不需要此值。"
@@ -369,7 +369,7 @@ zh-TW:
       int?: "必須是整數。"
       key?: "遺失。"
       not_found: "未找到。"
-      respond_to?: "does not implement required method."
+      respond_to?: "未執行所需的方法。"
       rules:
         copy_workflow_from:
           workflow_missing: "沒有自己的工作流程。"
@@ -548,15 +548,15 @@ zh-TW:
         new_label: "新優先權"
       creation_wizard:
         export:
-          description_attachment_export: "The generated artifact will be saved as a PDF attachment to the artifact work package."
-          description_file_link_export: "The artifact work package will have a file link to a PDF stored in an external file storage. Requires a working file storage with automatically-managed project folders. At the moment only Nextcloud file storages are supported."
-          description_file_storage_selection: "Select which of the configured external file storages should be used."
-          external_file_storage: "External file storage"
-          label_artifact_export: "Artifact export"
-          label_attachment_export: "Save as work package file attachment"
-          label_file_link_export: "Upload file to external file storage and add file link to work package"
-          pdf_file_storage: "PDF file storage"
-          unavailable: "unavailable"
+          description_attachment_export: "產生的產物將會以 PDF 附件的形式，儲存到該產物的工作套件中。"
+          description_file_link_export: "該產物的工作套件將包含一個指向外部檔案儲存庫中 PDF 的檔案連結。此功能需要可正常運作且具備自動管理專案資料夾的檔案儲存服務。目前僅支援 Nextcloud 檔案儲。"
+          description_file_storage_selection: "選擇應使用哪個已設定的外部檔案儲存空間。"
+          external_file_storage: "外部存儲空間"
+          label_artifact_export: "產物匯出"
+          label_attachment_export: "儲存為工作套件檔案附件"
+          label_file_link_export: "將檔案上傳至外部檔案儲存空間，並將檔案連結新增至工作套件"
+          pdf_file_storage: "PDF 檔案儲存"
+          unavailable: "無法使用"
         label_request_submission: "要求提交"
         project_attributes_description: >
           選擇哪些專案屬性應包含在專案啟動請求中。此清單僅包含此專案啟用的 [專案屬性](project_attributes_url)。
@@ -1161,7 +1161,7 @@ zh-TW:
         identifier: "識別碼"
         latest_activity_at: "最新活動"
         parent: "上層專案"
-        project_creation_wizard_enabled: "Project initiation request"
+        project_creation_wizard_enabled: "專案啟動請求"
         public_value:
           title: "可見度"
           true: "公開"
@@ -1176,13 +1176,13 @@ zh-TW:
           off_track: "進度落後"
           finished: "已完成"
           discontinued: "已中止"
-        submission_assignee_custom_field: "Assignee when submitted"
-        submission_notification_text: "Notification text"
-        submission_send_confirmation_email: "Confirmation email"
-        submission_status_when_submitted: "Status when submitted"
-        submission_work_package_comment: "Work package comment"
-        submission_work_package_type: "Work package type"
-        template: "Template"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
+        template: "範本"
         templated: "範本專案"
         templated_value:
           true: "設為範本"
@@ -1718,7 +1718,7 @@ zh-TW:
               cant_exceed_work: "不能高於工時。"
               must_be_set_when_work_is_set: "工時已設定時必填"
               must_be_set_when_work_and_percent_complete_are_set: "工時 和 完成百分比 已設置時必填。"
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: '>- must be 0h when Work is set and % Complete is 100%.'
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: 當已設定工作量且完成百分比為 100% 時，必須為 0 小時。
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 工時未設定設定，但完成度100%時，剩餘工時必須是空白。
           readonly_status: "工作套件處於唯讀狀態，因此無法變更其屬性。"
@@ -1825,6 +1825,10 @@ zh-TW:
     header_additional_invalid_fields:
       other: "以下的欄位有問題:"
     field_erroneous_label: "此欄位不正確: %{full_errors}\n請輸入一個有效的值！"
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "由 %{user} 於 %{datetime} 新增"
@@ -2592,7 +2596,7 @@ zh-TW:
       hours: 小時
       days: 日
     project_initiation:
-      title: "Project initiation request"
+      title: "專案啟動請求"
   pdf_generator:
     page_nr_footer: "頁面 %{page} of %{total}"
     template_attributes:
@@ -3088,7 +3092,7 @@ zh-TW:
   label_installation_guides: "安裝說明"
   label_integer: "整數"
   label_interface: "介面"
-  label_interlinked_role_assignment: "Interlinked Role Assignment"
+  label_interlinked_role_assignment: "相互關聯的角色分配"
   label_internal: "內部"
   label_introduction_video: "入門影片"
   label_invite_user: "邀請使用者"
@@ -3129,7 +3133,8 @@ zh-TW:
   label_lock_user: "鎖定使用者"
   label_logged_as: "登入為"
   label_login: "登入"
-  label_custom_logo: "自訂logo"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "客製匯出的Logo"
   label_custom_export_cover: "自訂匯出封面背景圖"
   label_custom_export_footer: "自訂匯出頁尾圖片"
@@ -3275,7 +3280,7 @@ zh-TW:
   label_project_attribute_manage_link: "管理專案屬性"
   label_project_count: "專案總數"
   label_project_copy_notifications: "在專案複製期間發送電子郵件通知"
-  label_project_initiation_pdf: "Export PDF for project initiation request"
+  label_project_initiation_pdf: "匯出專案啟動請求的 PDF"
   label_project_latest: "最新的專案"
   label_project_default_type: "允許空類型"
   label_project_hierarchy: "專案結構"
@@ -3797,9 +3802,9 @@ zh-TW:
   permission_add_project: "建立專案"
   permission_add_portfolios: "建立投資組合"
   permission_add_programs: "建立方案"
-  permission_add_project_from_template: "Create project from template"
-  permission_add_portfolios_from_template: "Create portfolio from template"
-  permission_add_programs_from_template: "Create program from template"
+  permission_add_project_from_template: "從範本建立專案"
+  permission_add_portfolios_from_template: "從範本建立專案組合"
+  permission_add_programs_from_template: "從範本建立方案"
   permission_add_work_package_attachments: "新增附件"
   permission_add_work_package_attachments_explanation: "允許在沒有編輯工作套件權限的情況下新增附件"
   permission_add_internal_comments: "撰寫內部留言"
@@ -4348,13 +4353,13 @@ zh-TW:
       sections:
         display_representation:
           overview:
-            label: "Project attribute shown in:"
+            label: "專案屬性顯示於："
             main_area:
-              label: "Main area"
-              description: "Add all the project attributes as individual widgets in the main section of the project overview."
+              label: "主要區域"
+              description: "在專案總覽的主要區段中，將所有專案屬性新增為個別小工具。"
             side_panel:
-              label: "Side panel"
-              description: "Add all the project attributes in a section inside the right side panel in the project overview."
+              label: "側邊欄"
+              description: "將所有專案屬性加入專案總覽中右側面板內的區段。"
     project_initiation_request:
       blankslate:
         title: "啟動請求尚未啟用"
@@ -4365,28 +4370,28 @@ zh-TW:
         confirmation_message: "啟動請求精靈將不再適用於基於此模板的新專案。專案經理和專案所有人將需要在專案概述中手動設定和填寫相關資訊。"
         checkbox_message: "我了解此行動是不可逆轉的"
       name:
-        artefact_name: "Artefact name"
-        artefact_name_caption: "Choose the name for this artefact that your project management framework recommends."
+        artefact_name: "產物名稱"
+        artefact_name_caption: "請選擇您的專案管理架構所建議的此產物名稱。"
         options:
-          project_initiation_request: "Project initiation request"
-          project_creation_wizard: "Project creation wizard"
-          project_mandate: "Project mandate"
+          project_initiation_request: "專案啟動請求"
+          project_creation_wizard: "專案建立精靈"
+          project_mandate: "項目任務"
       submission:
-        work_package_type: "Work package type"
-        work_package_type_caption: "The work package type that should be used to store the completed artefact."
-        status_when_submitted: "Status when submitted"
-        status_when_submitted_caption: "The status the generated work package will transition to once the request is submitted."
-        send_confirmation_email: "Send confirmation email to the user who submitted the project initiation request"
-        assignee: "Assignee when submitted"
-        assignee_caption: "The person or group this project initiation request will be assigned to."
-        confirmation_email_text: "Confirmation email text"
-        confirmation_email_default: "Hello,\n\nYou submitted a project initiation request for **%{project_name}**. It is now awaiting review.\nClick the link below to access the work package with your request."
-        work_package_comment: "Work package comment"
-        work_package_comment_caption: "The assignee selected above will automatically be @mentioned in the comment."
-        work_package_comment_default: "A project initiation request for **%{project_name}** was submitted and is awaiting review."
+        work_package_type: "工作套件類型"
+        work_package_type_caption: "應該用來儲存已完成工件的工作套件類型。"
+        status_when_submitted: "提交時的狀態"
+        status_when_submitted_caption: "提交請求後，產生的工作套件將轉換到的狀態。"
+        send_confirmation_email: "向提交專案啟動請求的使用者傳送確認電子郵件"
+        assignee: "提交時的執行者"
+        assignee_caption: "將此專案啟動請求指派給的個人或群組。"
+        confirmation_email_text: "確認電子郵件文字"
+        confirmation_email_default: "您已提交 %{project_name} 的專案啟動請求，目前正等待審核。\n請點擊下方連結以存取包含您請求的工作套件。"
+        work_package_comment: "工作套件留言"
+        work_package_comment_caption: "上面選擇的執行者會自動在留言中 @。"
+        work_package_comment_default: "%{project_name} 的專案啟動請求已提交，正在等待審核。"
     project_phase_definitions:
       heading: "專案生命週期"
-      heading_description: "Project life cycle defines the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
+      heading_description: "專案生命週期定義了可用於專案規劃的各階段，並會顯示在每個專案的概覽頁面中。\n這些屬性可以在專案層級啟用或停用，但無法重新排序。"
       label_add: "增加"
       label_add_description: "增加專案階段定義"
       filter:
@@ -4659,7 +4664,7 @@ zh-TW:
   warning_user_limit_reached_instructions: >
     您已達到用戶限制（%{current}/%{max} 活躍用戶）。請聯繫 sales@openproject.com 升級您的企業版計劃以添加額外用戶。
   warning_interlinking_custom_field_with_role_html: >
-    <strong>Warning:</strong> You are about to link a custom field with a role. This will give users with the "Edit Project Attributes" permission to add members to the project and they will be assigned the linked role. This may lead to privilege escalation because users can assign themselves higher privileges than intended. Please make sure you understand the implications of this action.
+    <strong>警告：</strong>您即將將自訂欄位與角色建立連結。這將允許擁有「編輯專案屬性」權限的使用者新增專案成員，且新增的成員將被指派為所連結的角色。此操作可能導致權限提升，因為使用者可能會為自己指派高於預期的權限。請確保您了解此操作的影響。
   warning_protocol_mismatch_html: >
 
   warning_bar:

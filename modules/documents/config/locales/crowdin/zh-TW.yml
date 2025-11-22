@@ -24,8 +24,13 @@ zh-TW:
     name: "OpenProject 文件"
     description: "一個允許在 OpenProject 專案中建立文件的外掛。"
   activerecord:
+    errors:
+      models:
+        document_type:
+          one_or_more_required: "Cannot delete the last document type"
     models:
       document: "文件"
+      documents: "Documents"
     attributes:
       document:
         content_binary: "二進制內容"
@@ -49,6 +54,14 @@ zh-TW:
     documents_list_blank_slate:
       heading: "尚未有任何文件"
       description: "此檢視中沒有文件。您可以點擊下面的按鈕添加一個。"
+    document_categories_deprecation_notice:
+      heading: File categories are now called 'Document types'
+      description: |-
+        Your existing file categories have been converted to document types with the introduction of the new Documents module.
+        All existing documents have also been migrated to these new types.
+      primary_action: Configure document types
+      secondary_action: Learn more about the Documents module
+    document_type_actions: "Document type actions"
     index_page:
       name: "名稱"
       type: "類型"
@@ -58,15 +71,28 @@ zh-TW:
       all: "所有文件"
       types: "類型"
     last_updated_at: "最後更新 %{time}。"
-    active_editors: "Active editors"
-    active_editors_count: "%{count} active editors"
+    active_editors: "活躍的編輯者"
+    active_editors_count: "%{count} 活躍的編輯"
     label_attachment_author: "附件作者"
     label_categories: "類別"
     new_category: "新增類別"
+    new_type: "New type"
     delete_dialog:
       title: "刪除文件"
       heading: "刪除此文件？"
       confirmation_message_html: "這將永久刪除本文件和所有檔案附件。您確定要這麼做？"
+    delete_document_type_dialog:
+      title: Delete document type
+      heading: Delete this document type?
+      confirmation_message: |-
+        The type "%{type_name}" is currently unused. Deleting this type will have no effect on existing documents.
+      select_reassign_to_label: Reassign documents to
+      reassign_message:
+        other: The type "%{type_name}" is currently being used in %{document_count} documents. Please select which type to reassign them to.
+      at_least_one_type_required:
+        title: Cannot delete document type
+        heading: Cannot delete the last document type
+        message: There must always be at least one document type configured. Create another one first if you want to delete this one.
   label_document_added: "文件已新增"
   label_document_new: "建立新文件"
   label_document_plural: "文件"

@@ -1178,12 +1178,12 @@ ms:
           off_track: "Lari jadual"
           finished: "Telah selesai"
           discontinued: "Dihentikan"
-        submission_assignee_custom_field: "Assignee when submitted"
-        submission_notification_text: "Notification text"
-        submission_send_confirmation_email: "Confirmation email"
-        submission_status_when_submitted: "Status when submitted"
-        submission_work_package_comment: "Work package comment"
-        submission_work_package_type: "Work package type"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
         template: "Template"
         templated: "Projek templat"
         templated_value:
@@ -1827,6 +1827,10 @@ ms:
     header_additional_invalid_fields:
       other: "Tambahan pula, terdapat masalah dengan ruangan yang berikut:"
     field_erroneous_label: "Ruang ini tidak sah: %{full_errors}\nSila masukkan nilai yang sah."
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "dicipta oleh %{user} pada %{datetime}"
@@ -3131,7 +3135,8 @@ ms:
   label_lock_user: "Kunci pengguna"
   label_logged_as: "Log masuk sebagai"
   label_login: "Daftar masuk"
-  label_custom_logo: "Logo tersuai"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "Logo eksport tersuai"
   label_custom_export_cover: "Latar belakang penutup eksport tersuai"
   label_custom_export_footer: "Custom export footer image"

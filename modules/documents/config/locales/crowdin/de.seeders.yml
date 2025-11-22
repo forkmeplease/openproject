@@ -5,13 +5,6 @@
 de:
   seeds:
     common:
-      document_categories:
-        item_0:
-          name: Dokumentation
-        item_1:
-          name: Spezifikation
-        item_2:
-          name: Andere
       document_types:
         item_0:
           name: Note

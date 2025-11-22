@@ -1179,12 +1179,12 @@ ja:
           off_track: "脱線"
           finished: "完了"
           discontinued: "中止"
-        submission_assignee_custom_field: "Assignee when submitted"
-        submission_notification_text: "Notification text"
-        submission_send_confirmation_email: "Confirmation email"
-        submission_status_when_submitted: "Status when submitted"
-        submission_work_package_comment: "Work package comment"
-        submission_work_package_type: "Work package type"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
         template: "Template"
         templated: "テンプレートプロジェクト"
         templated_value:
@@ -1828,6 +1828,10 @@ ja:
     header_additional_invalid_fields:
       other: "また、以下のフィールドに問題がありました："
     field_erroneous_label: "このフィールドが間違っています: %{full_errors}\n正しい値を入力してください。"
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "%{user} によって %{datetime} に作成されました"
@@ -3132,7 +3136,8 @@ ja:
   label_lock_user: "ユーザーをロック"
   label_logged_as: "ログイン中"
   label_login: "ログイン"
-  label_custom_logo: "カスタムロゴ"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "カスタムエクスポートロゴ"
   label_custom_export_cover: "カスタムエクスポートカバーの背景"
   label_custom_export_footer: "カスタムエクスポートフッター画像"
