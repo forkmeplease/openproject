@@ -43,7 +43,7 @@ module Projects
       end
 
       def call
-        render(StepWizard::FooterComponent.new(form_identifier:, total_steps:, current_step:)) do |footer|
+        render(StepWizard::FooterComponent.new(form_identifier:, total_steps:, current_step: current_step + 1)) do |footer|
           footer.with_back_button(href: back_button_href)
           footer.with_cancel_button(href: cancel_button_href)
           footer.with_continue_button(**continue_button_args)
@@ -78,7 +78,7 @@ module Projects
         {
           form: form_identifier,
           name: "next_section",
-          value: next_step ? sections[next_step].id : nil
+          value: sections[next_step]&.id
         }
       end
 
@@ -97,7 +97,7 @@ module Projects
       end
 
       def previous_step
-        return nil if current_step == 1
+        return nil if current_step == 0
 
         current_step - 1
       end
