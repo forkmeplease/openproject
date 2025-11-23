@@ -71,7 +71,7 @@ The Time Tracking module allows you to monitor and log your work efficiently:
 *   **Time Entries Index**: View current and past weeks and their logged time entries.
 *   **Timer Focus Mode**: Track work in real time with a background timer.
 *   **Log Time**: Record time spent on specific work packages manually.
-
+ [Learn more about Time Tracking in OpenProject mobile app](../core-features/time-tracking/).
 ## How do notifications work?
 
 The Notification Centre collects updates from your projects. Users can:
