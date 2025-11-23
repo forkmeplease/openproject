@@ -23,7 +23,7 @@ Before downloading the app, please ensure your environment meets the following p
     *   **iOS 15** or later
     *   **Android 12** or later
 *   **Built-in OAuth applications enabled:** Make sure that the built-in OAuth applications are **enabled in your administration settings** (`{BASE_URL}/admin/oauth/applications`). This is required for successful login from the mobile app.
-![Applications setting to enable the built-in OAuth](mobile_app_oauth_authentication.png)
+![Applications setting to enable the built-in OAuth in OpenProject](mobile_app_oauth_authentication.png)
 *   **Network connection:** Internet access is required for syncing data with your OpenProject instance.
 > [!NOTE]
 > Some features, such as deep-linking and realtime push notifications, may depend on your organization’s configuration or will become available in future updates.
