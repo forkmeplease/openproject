@@ -8,7 +8,7 @@ keywords: Mobile App Login Troubleshooting, log in error, mobile app troubleshoo
 
 # Login Troubleshooting
 
-If you’re having trouble logging in to the **OpenProject Mobile App**, the following sections will help you identify and resolve the most common issues.
+If you’re having trouble logging into the **OpenProject Mobile App**, the following sections will help you identify and resolve the most common issues.
 
 ## Invalid or Inaccessible Instance URL
 
