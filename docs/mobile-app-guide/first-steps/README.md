@@ -15,7 +15,7 @@ Follow these steps to install and start using the **OpenProject Mobile App (Beta
 Before downloading the app, please ensure your environment meets the following prerequisites:
 
 *   **An active OpenProject account:** Either from an **OpenProject Cloud** workspace or an **OpenProject On-premises** installation with API access enabled.
-*   Having a **signed certificate** (**https** not http) on your instance to be able to log in.
+*   A **signed certificate** (**https** not http) on your instance to be able to log in.
 *   **Minimum OpenProject version:** 17.0.0
 > [!NOTE]
 > If you have a previous version of OpenProject you can connect your OpenProject instance by asking your administrator to enable the Built in OAuth applications flag under `_{BASE_URL}/admin/settings/experimental_`.        
