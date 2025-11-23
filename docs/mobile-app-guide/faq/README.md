@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Mobile app FAQ
   priority: 800
 description: FAQ of the OpenProject Mobile app.
-keywords: Mobile app FAQ
+keywords: Mobile app FAQ, faq, mobile app questions, OpenProject mobile app
 ---
 
 # Mobile app FAQ
