@@ -25,7 +25,7 @@ The app requires an **active internet connection** to sync data with your OpenPr
 
 ## What do I need to log in to the app?
 
-You can log in using your OpenProject Cloud account or an On-Premises instance, username and password. Please ensure:
+You can log in using your OpenProject Cloud account or your username and password for your On-Premises instance. Please ensure:
 *   Your instance has a **valid HTTPS certificate**.
 *   **Built-in OAuth applications are enabled** in your instance administration settings (`{BASE_URL}/admin/oauth/applications`).
 *   Your instance is on **OpenProject version 17.0.0 or higher**, or the “OAuth Authentication” feature flag is enabled under **Administration → Experimental** for older instances.
