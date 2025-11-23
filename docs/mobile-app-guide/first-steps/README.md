@@ -52,7 +52,7 @@ Enter the complete **base URL** of your instance (for example, `https://yourcomp
 *   Once your instance is confirmed, log in using your **OpenProject username and password** in the browser modal that opened.
 ![Mobile app browser sign in screen](mobile-app-browser-sign-in.png)
     
-*   The app will ask you permission to have full access to the **OpenProject API v3** so account and securely connect to your workspace.
+*   The app will ask you for a permission to have full access to the **OpenProject API v3** to authorize your account and securely connect to your workspace.
 ![Mobile app browser API v3 authorisation screen](mobile-browser-oauth-authorization.png)
 
 ## Start Exploring
