@@ -55,7 +55,7 @@ Attachments are handled through the **Files** tab. You can upload files, photos,
 Relations between work packages can be managed in the **Relations** tab, where you can connect tasks to one another by adding new relations when needed. Similarly, watchers can be added from the **Watchers** tab to keep stakeholders informed about progress or changes.
 
 ![Mobile app work package details on the activity tab](mobile_app_workpackage_relations.png)
-![Mobile app work package details on the activity tab](mobile_app_workpackage_watchers.png)
+![Work package details on the activity tab in the OpenProject mobile app](mobile_app_workpackage_watchers.png)
 
 ## Time Tracking and Reminders
 
