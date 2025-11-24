@@ -54,14 +54,22 @@ class Projects::CreationWizardController < ApplicationController
       .call(permitted_params.project)
 
     if service_call.success?
-      if params[:finish]
-        redirect_to project_path(@project), notice: I18n.t("projects.wizard.success")
+      if last_page?
+        service_call2 = Projects::CreateArtifactWorkPackageService.new(user: current_user, model: @project).call
+        if service_call2.success?
+          redirect_to project_path(@project), notice: I18n.t("projects.wizard.success")
+        else
+          flash[:error] = service_call2.errors.full_messages
+          render :show,
+                 locals: { menu_name: :none },
+                 status: :unprocessable_entity
+
+        end
       else
         redirect_to project_creation_wizard_path(@project, section: params[:next_section])
       end
     else
       @project = service_call.result
-      @errors = service_call.errors
       render :show,
              locals: { menu_name: :none },
              status: :unprocessable_entity
@@ -69,6 +77,10 @@ class Projects::CreationWizardController < ApplicationController
   end
 
   private
+
+  def last_page?
+    params[:finish]
+  end
 
   def load_sections_and_fields
     enabled_in_wizard_ids = @project

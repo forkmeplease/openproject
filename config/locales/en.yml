@@ -603,7 +603,7 @@ en:
           unavailable: "unavailable"
         label_request_submission: "Request submission"
         project_attributes_description: >
-          Select which project attributes should be included in the project initiation request. 
+          Select which project attributes should be included in the project initiation request.
           This list only includes [project attributes](project_attributes_url) enabled for for this project.
     status:
       button_edit: Edit project status
@@ -612,8 +612,9 @@ en:
       sections: "Sections"
       title: "Project initiation request"
       no_help_text: "This attribute has no help text defined."
-      success: "Project attributes have been saved successfully."
+      success: "Project attributes saved and artifact work package created successfully."
       progress_label: "%{current} of %{total}"
+      create_artifact_work_package_error: "Failed to create artifact work package"
   lists:
     create:
       success: "The modified list has been saved as a new list"
@@ -1649,6 +1650,7 @@ en:
           attributes:
             base:
               archive_permission_missing_on_subprojects: "You do not have the permissions required to archive all sub-projects. Please contact an administrator."
+              project_initiation_request_disabled: "Project initiation request is disabled. It must be enabled to create the artifact work package."
             types:
               in_use_by_work_packages: "still in use by work packages: %{types}"
             enabled_modules:
