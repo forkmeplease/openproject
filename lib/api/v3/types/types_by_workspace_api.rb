@@ -26,26 +26,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "api/v3/projects/project_collection_representer"
-
 module API
   module V3
-    module Versions
-      class ProjectsByVersionAPI < ::API::OpenProjectAPI
-        resources :projects do
+    module Types
+      class TypesByWorkspaceAPI < ::API::OpenProjectAPI
+        resources :types do
           after_validation do
-            @projects = @version.projects.visible(current_user)
-
-            # Authorization for accessing the version is done in the versions
-            # endpoint into which this endpoint is embedded.
+            authorize_in_project %i[view_work_packages manage_types], project: @project
           end
 
           get do
-            path = api_v3_paths.projects_by_version @version.id
-            Projects::ProjectCollectionRepresenter
-              .new(@projects,
-                   self_link: path,
-                   current_user:)
+            TypeCollectionRepresenter.new(@project.types,
+                                          self_link: api_v3_paths.types_by_workspace(@project.id),
+                                          current_user:)
           end
         end
       end

@@ -26,57 +26,43 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
 
 require "spec_helper"
 require "rack/test"
 
-RSpec.describe "API v3 project's versions resource" do
+RSpec.describe "POST api/v3/workspace/:id/work_packages/form", content_type: :json do
   include Rack::Test::Methods
   include API::V3::Utilities::PathHelper
 
-  let(:current_user) do
-    user = create(:user,
-                  member_with_roles: { project => role })
+  current_user { create(:admin) }
 
-    allow(User).to receive(:current).and_return user
-
-    user
+  before do
+    post post_path
   end
-  let(:role) { create(:project_role, permissions: [:view_work_packages]) }
-  let(:project) { create(:project, public: false) }
-  let(:other_project) { create(:project, public: false) }
-  let(:versions) { create_list(:version, 4, project:) }
-  let(:other_versions) { create_list(:version, 2) }
 
   subject(:response) { last_response }
 
-  describe "#get (index)" do
-    let(:get_path) { api_v3_paths.versions_by_project project.id }
-
-    context "logged in user" do
-      before do
-        current_user
-
-        versions
-        other_versions
-
-        get get_path
-      end
-
-      it_behaves_like "API V3 collection response", 4, 4, "Version"
+  shared_examples "with work packages form" do
+    it "returns 200(OK)" do
+      expect(response).to have_http_status(:ok)
     end
 
-    context "logged in user without permission" do
-      let(:role) { create(:project_role, permissions: []) }
-
-      before do
-        current_user
-
-        get get_path
-      end
-
-      it_behaves_like "unauthorized access"
+    it "is of type form" do
+      expect(response.body).to be_json_eql("Form".to_json).at_path("_type")
     end
+  end
+
+  context "for a project path" do
+    let(:post_path) { api_v3_paths.create_workspace_work_package_form(project.id) }
+    let(:project) { create(:project) }
+
+    include_context "with work packages form"
+  end
+
+  context "for a workspace path" do
+    let(:post_path) { api_v3_paths.create_workspace_work_package_form(portfolio.id) }
+    let(:portfolio) { create(:portfolio) }
+
+    include_context "with work packages form"
   end
 end

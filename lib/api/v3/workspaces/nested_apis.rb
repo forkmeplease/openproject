@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,15 +26,20 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-require "spec_helper"
-
-RSpec.describe "API::V3::Projects::AvailableAssigneesAPI" do
-  include API::V3::Utilities::PathHelper
-
-  it_behaves_like "available principals", :assignees do
-    let(:base_permissions) { %i[add_work_packages] }
-    let(:href) { api_v3_paths.available_assignees_in_project(project.id) }
+module API
+  module V3
+    module Workspaces
+      class NestedApis < ::API::OpenProjectAPI
+        mount API::V3::Workspaces::AvailableAssigneesAPI
+        mount API::V3::Types::TypesByWorkspaceAPI
+        mount API::V3::WorkPackages::WorkPackagesByWorkspaceAPI
+        mount API::V3::Categories::CategoriesByWorkspaceAPI
+        mount API::V3::Versions::VersionsByProjectAPI
+        mount API::V3::Queries::QueriesByWorkspaceAPI
+        mount API::V3::Favorites::FavoriteActionsAPI, with: { favorite_object_getter: ->(*) { @project } }
+      end
+    end
   end
 end

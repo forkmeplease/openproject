@@ -26,22 +26,22 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "api/v3/types/type_collection_representer"
-
 module API
   module V3
-    module Types
-      class TypesByProjectAPI < ::API::OpenProjectAPI
-        resources :types do
-          after_validation do
-            authorize_in_project %i[view_work_packages manage_types], project: @project
-          end
+    module Versions
+      class WorkspacesByVersionAPI < ::API::OpenProjectAPI
+        %i[workspaces projects].each do |endpoint|
+          namespace endpoint do
+            after_validation do
+              @projects = @version.projects.visible(current_user)
 
-          get do
-            types = @project.types
-            TypeCollectionRepresenter.new(types,
-                                          self_link: api_v3_paths.types_by_project(@project.id),
-                                          current_user:)
+              # Authorization for accessing the version is done in the versions
+              # endpoint into which this endpoint is embedded.
+            end
+
+            get &::API::V3::Utilities::Endpoints::Index.new(model: Project,
+                                                            self_path: -> { api_v3_paths.workspaces_by_version @version.id })
+                                                       .mount
           end
         end
       end

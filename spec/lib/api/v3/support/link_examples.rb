@@ -34,37 +34,26 @@ RSpec.shared_context "action link shared" do
   let(:all_permissions) { OpenProject::AccessControl.permissions.map(&:name) }
   let(:permissions) { all_permissions }
   let(:action_link_user) do
-    defined?(user) ? user : build_stubbed(:user)
+    if defined?(user)
+      user
+    elsif defined?(current_user)
+      current_user
+    else
+      build_stubbed(:user)
+    end
   end
 
   before do
     login_as(action_link_user)
 
+    context = defined?(project) ? project : workspace
+
     mock_permissions_for(action_link_user) do |mock|
       permissions.each do |permission|
         perm = OpenProject::AccessControl.permission(permission)
         mock.allow_globally perm.name if perm.global?
-        mock.allow_in_project perm.name, project: project if perm.project?
+        mock.allow_in_project perm.name, project: context if perm.project?
       end
-    end
-  end
-
-  it "indicates the desired method" do
-    verb = begin
-      # the standard method #method on an object interferes
-      # with the let named 'method' conditionally defined
-      method
-    rescue ArgumentError
-      :get
-    end
-
-    if verb == :get
-      expect(subject)
-        .not_to have_json_path("_links/#{link}/method")
-    else
-      expect(subject)
-        .to be_json_eql(method.to_json)
-        .at_path("_links/#{link}/method")
     end
   end
 

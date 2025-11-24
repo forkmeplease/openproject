@@ -135,7 +135,7 @@ RSpec.shared_examples_for "APIv3 workspace update form" do
         {
           _links: {
             parent: {
-              href: api_v3_paths.project(viable_parent_workspace.id)
+              href: api_v3_paths.portfolio(viable_parent_workspace.id)
             }
           }
         }
@@ -143,7 +143,7 @@ RSpec.shared_examples_for "APIv3 workspace update form" do
 
       it "sets the workspace in the payload" do
         expect(subject.body)
-          .to be_json_eql(api_v3_paths.project(viable_parent_workspace.id).to_json)
+          .to be_json_eql(api_v3_paths.portfolio(viable_parent_workspace.id).to_json)
           .at_path("_embedded/payload/_links/parent/href")
       end
 

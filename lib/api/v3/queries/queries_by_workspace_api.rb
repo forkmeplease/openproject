@@ -26,23 +26,32 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "api/v3/users/user_collection_representer"
-
 module API
   module V3
-    module Projects
-      class AvailableAssigneesAPI < ::API::OpenProjectAPI
-        resource :available_assignees do
+    module Queries
+      class QueriesByWorkspaceAPI < ::API::OpenProjectAPI
+        namespace :queries do
+          helpers ::API::V3::Queries::Helpers::QueryRepresenterResponse
+
           after_validation do
-            authorize_in_project(:add_work_packages, project: @project)
+            authorize_in_any_work_package(:view_work_packages, in_project: @project)
           end
 
-          get &::API::V3::Utilities::Endpoints::Index.new(model: Principal,
-                                                          scope: -> {
-                                                            Principal.possible_assignee(@project).includes(:preference)
-                                                          },
-                                                          render_representer: Users::UnpaginatedUserCollectionRepresenter)
-                                                     .mount
+          mount API::V3::Queries::Schemas::QueryWorkspaceFilterInstanceSchemaAPI
+          mount API::V3::Queries::Schemas::QueryWorkspaceSchemaAPI
+
+          namespace :default do
+            params do
+              optional :valid_subset, type: Boolean
+            end
+
+            get do
+              query = Query.new_default(user: current_user,
+                                        project: @project)
+
+              query_representer_response(query, params, params.delete(:valid_subset))
+            end
+          end
         end
       end
     end

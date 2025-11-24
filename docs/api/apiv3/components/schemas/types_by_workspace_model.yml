@@ -1,4 +1,4 @@
-# Schema: Categories_by_ProjectModel
+# Schema: Types_by_WorkspaceModel
 ---
 allOf:
   - "$ref": "./collection_model.yml"
@@ -16,9 +16,9 @@ allOf:
             allOf:
               - "$ref": "./link.yml"
               - description: |-
-                  The categories collection
+                  The types collection
                   
-                  **Resource**: CategoriesCollection
+                  **Resource**: TypesCollection
                 readOnly: true
       _embedded:
         type: object
@@ -28,5 +28,5 @@ allOf:
             readOnly: true
             items:
               allOf:
-                - "$ref": "./category_model.yml"
-                - description: Collection of Categories
+                - "$ref": "./type_model.yml"
+                - description: Collection of Types

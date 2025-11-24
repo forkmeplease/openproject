@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,33 +28,44 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module API
-  module V3
-    module Queries
-      class QueriesByProjectAPI < ::API::OpenProjectAPI
-        namespace :queries do
-          helpers ::API::V3::Queries::Helpers::QueryRepresenterResponse
+require "spec_helper"
+require "rack/test"
 
-          after_validation do
-            authorize_in_any_work_package(:view_work_packages, in_project: @project)
-          end
+RSpec.describe "GET workspaces/:id/queries/default" do
+  include Rack::Test::Methods
+  include API::V3::Utilities::PathHelper
 
-          mount API::V3::Queries::Schemas::QueryProjectFilterInstanceSchemaAPI
-          mount API::V3::Queries::Schemas::QueryProjectSchemaAPI
+  shared_let(:project) { create(:project) }
 
-          namespace :default do
-            params do
-              optional :valid_subset, type: Boolean
-            end
+  let(:role) { create(:project_role, permissions:) }
+  let(:permissions) { [:view_work_packages] }
 
-            get do
-              query = Query.new_default(user: current_user,
-                                        project: @project)
+  current_user { create(:user, member_with_roles: { project => role }) }
 
-              query_representer_response(query, params, params.delete(:valid_subset))
-            end
-          end
-        end
+  before do
+    allow(User).to receive(:current).and_return current_user
+  end
+
+  context "for a project scope" do
+    it_behaves_like "GET individual query" do
+      let(:base_path) { api_v3_paths.query_project_default(project.id) }
+      let(:self_path) { api_v3_paths.query_workspace_default(project.id) }
+
+      context "when lacking permissions" do
+        let(:permissions) { [] }
+
+        it_behaves_like "unauthorized access"
+      end
+    end
+  end
+
+  context "for a workspace scope" do
+    it_behaves_like "GET individual query" do
+      let(:base_path) { api_v3_paths.query_workspace_default(project.id) }
+      context "when lacking permissions" do
+        let(:permissions) { [] }
+
+        it_behaves_like "unauthorized access"
       end
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,30 +26,54 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
+# ++
 
 require "spec_helper"
 require "rack/test"
 
-RSpec.describe API::V3::WorkPackages::CreateProjectFormAPI, content_type: :json do
+RSpec.describe "GET workspaces/:id/versions" do
   include Rack::Test::Methods
   include API::V3::Utilities::PathHelper
 
-  let(:project) { create(:project, id: 5) }
-  let(:post_path) { api_v3_paths.create_project_work_package_form(project.id) }
-  let(:user) { create(:admin) }
-
-  before do
-    login_as(user)
-    post post_path
-  end
+  shared_let(:project) { create(:project, public: false) }
+  shared_let(:permitted_user) { create(:user, member_with_permissions: { project => [:view_work_packages] }) }
+  shared_let(:unpermitted_user) { create(:user, member_with_permissions: { project => [] }) }
+  shared_let(:versions) { create_list(:version, 4, project:) }
+  shared_let(:other_versions) { create_list(:version, 2) }
 
   subject(:response) { last_response }
 
-  it "returns 200(OK)" do
-    expect(response).to have_http_status(:ok)
+  shared_context "with versions by workspace" do
+    context "for a user with permissions to see the versions" do
+      current_user { permitted_user }
+
+      before do
+        get get_path
+      end
+
+      it_behaves_like "API V3 collection response", 4, 4, "Version"
+    end
+
+    context "for a user without permissions to see the versions" do
+      current_user { unpermitted_user }
+
+      before do
+        get get_path
+      end
+
+      it_behaves_like "unauthorized access"
+    end
   end
 
-  it "is of type form" do
-    expect(response.body).to be_json_eql("Form".to_json).at_path("_type")
+  context "for workspaces/:id/versions" do
+    let(:get_path) { api_v3_paths.versions_by_workspace project.id }
+
+    include_context "with versions by workspace"
+  end
+
+  context "for projects/:id/versions" do
+    let(:get_path) { api_v3_paths.versions_by_project project.id }
+
+    include_context "with versions by workspace"
   end
 end

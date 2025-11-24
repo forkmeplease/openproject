@@ -41,6 +41,18 @@ module API
                                                                   .mount
 
           mount ::API::V3::Workspaces::Schemas::WorkspaceSchemaAPI
+
+          route_param :id, type: Integer do
+            after_validation do
+              @project = if current_user.admin?
+                           Project
+                         else
+                           Project.visible(current_user)
+                         end.find(params[:id])
+            end
+
+            mount API::V3::Workspaces::NestedApis
+          end
         end
       end
     end

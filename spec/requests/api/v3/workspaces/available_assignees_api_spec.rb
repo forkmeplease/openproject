@@ -1,4 +1,6 @@
-#-- copyright
+# frozen_string_literal: true
+
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -24,29 +26,20 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module API
-  module V3
-    module Queries
-      module Schemas
-        class QueryProjectSchemaAPI < ::API::OpenProjectAPI
-          resource :schema do
-            helpers do
-              def representer
-                ::API::V3::Queries::Schemas::QuerySchemaRepresenter
-              end
-            end
+require "spec_helper"
 
-            get do
-              representer.new(Query.new(project: @project),
-                              self_link: api_v3_paths.query_project_schema(@project.id),
-                              current_user:,
-                              form_embedded: false)
-            end
-          end
-        end
-      end
-    end
+RSpec.describe "API::V3::Workspaces::AvailableAssigneesAPI" do
+  include API::V3::Utilities::PathHelper
+
+  it_behaves_like "available principals", :assignees do
+    let(:base_permissions) { %i[add_work_packages] }
+    let(:href) { api_v3_paths.available_assignees_in_workspace(project.id) }
+  end
+
+  it_behaves_like "available principals", :assignees do
+    let(:base_permissions) { %i[add_work_packages] }
+    let(:href) { api_v3_paths.available_assignees_in_project(project.id) }
   end
 end

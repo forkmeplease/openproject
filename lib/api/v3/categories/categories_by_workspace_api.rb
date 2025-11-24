@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -28,32 +26,22 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
-require "rack/test"
+module API
+  module V3
+    module Categories
+      class CategoriesByWorkspaceAPI < ::API::OpenProjectAPI
+        resources :categories do
+          after_validation do
+            @categories = @project.categories
+          end
 
-RSpec.describe "API v3 Query resource" do
-  include Rack::Test::Methods
-  include API::V3::Utilities::PathHelper
-
-  let(:project) { create(:project, identifier: "test_project", public: false) }
-  let(:current_user) do
-    create(:user, member_with_roles: { project => role })
-  end
-  let(:role) { create(:project_role, permissions:) }
-  let(:permissions) { [:view_work_packages] }
-
-  before do
-    allow(User).to receive(:current).and_return current_user
-  end
-
-  describe "#get projects/:project_id/queries/default" do
-    let(:base_path) { api_v3_paths.query_project_default(project.id) }
-
-    it_behaves_like "GET individual query" do
-      context "lacking permissions" do
-        let(:permissions) { [] }
-
-        it_behaves_like "unauthorized access"
+          get do
+            CategoryCollectionRepresenter
+              .new(@categories,
+                   self_link: api_v3_paths.categories_by_workspace(@project.identifier),
+                   current_user:)
+          end
+        end
       end
     end
   end

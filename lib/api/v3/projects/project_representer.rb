@@ -37,6 +37,7 @@ module API
         include ::API::Caching::CachedRepresenter
         include API::Decorators::FormattableProperty
         extend ::API::V3::Utilities::CustomFieldInjector::RepresenterClass
+        include ::API::V3::Workspaces::LinkedResource
 
         def self.current_user_view_allowed_lambda
           ->(*) { current_user.allowed_in_project?(:view_project, represented) || current_user.allowed_globally?(:add_project) }
@@ -51,7 +52,7 @@ module API
         link :createWorkPackage,
              cache_if: -> { current_user.allowed_in_project?(:add_work_packages, represented) } do
           {
-            href: api_v3_paths.create_project_work_package_form(represented.id),
+            href: api_v3_paths.create_workspace_work_package_form(represented.id),
             method: :post
           }
         end
@@ -59,7 +60,7 @@ module API
         link :createWorkPackageImmediately,
              cache_if: -> { current_user.allowed_in_project?(:add_work_packages, represented) } do
           {
-            href: api_v3_paths.work_packages_by_project(represented.id),
+            href: api_v3_paths.work_packages_by_workspace(represented.id),
             method: :post
           }
         end
@@ -68,7 +69,7 @@ module API
              cache_if: -> {
                current_user.allowed_in_project?(:view_work_packages, represented)
              } do
-          { href: api_v3_paths.work_packages_by_project(represented.id) }
+          { href: api_v3_paths.work_packages_by_workspace(represented.id) }
         end
 
         links :storages,
@@ -84,7 +85,7 @@ module API
         end
 
         link :categories do
-          { href: api_v3_paths.categories_by_project(represented.id) }
+          { href: api_v3_paths.categories_by_workspace(represented.id) }
         end
 
         link :versions,
@@ -92,7 +93,7 @@ module API
                current_user.allowed_in_project?(:view_work_packages, represented) ||
                current_user.allowed_in_project?(:manage_versions, represented)
              } do
-          { href: api_v3_paths.versions_by_project(represented.id) }
+          { href: api_v3_paths.versions_by_workspace(represented.id) }
         end
 
         link :memberships,
@@ -109,7 +110,7 @@ module API
                current_user.allowed_in_project?(:view_work_packages, represented) ||
                current_user.allowed_in_project?(:manage_types, represented)
              } do
-          { href: api_v3_paths.types_by_project(represented.id) }
+          { href: api_v3_paths.types_by_workspace(represented.id) }
         end
 
         link :update,
@@ -165,19 +166,7 @@ module API
         links :ancestors,
               uncacheable: true do
           represented.ancestors_from_root.map do |ancestor|
-            # Explicitly check for admin as an archived project
-            # will lead to the admin losing permissions in the project.
-            if current_user.admin? || ancestor.visible?
-              {
-                href: api_v3_paths.project(ancestor.id),
-                title: ancestor.name
-              }
-            else
-              {
-                href: API::V3::URN_UNDISCLOSED,
-                title: I18n.t(:"api_v3.undisclosed.ancestor")
-              }
-            end
+            project_link(ancestor, name: :ancestor, getter: :id)
           end
         end
 
@@ -186,12 +175,7 @@ module API
           { href: api_v3_paths.path_for(:project_storages, filters:) }
         end
 
-        associated_resource :parent,
-                            v3_path: :project,
-                            representer: ::API::V3::Projects::ProjectRepresenter,
-                            uncacheable_link: true,
-                            undisclosed: true,
-                            skip_render: ->(*) { represented.parent && !represented.parent.visible? && !current_user.admin? }
+        associated_project :parent
 
         property :id
         property :identifier,
