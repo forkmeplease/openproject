@@ -133,6 +133,7 @@ class AggregatedMigrations < SquashedMigration
 
   # rubocop:disable Metrics/CollectionLiteralLength
   squashed_migrations *%w[
+    1000015_aggregated_migrations
     10000000000000_to_v710_aggregated_migrations
     20100528100562_aggregated_global_roles_migrations
     20170703075208_add_attribute_help_texts
