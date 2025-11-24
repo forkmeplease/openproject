@@ -58,6 +58,7 @@ class AggregatedMeetingMigrations < SquashedMigration
     20241128190428_create_scheduled_meetings
     20250211185841_create_meeting_outcomes
     20250227140619_change_unique_constraint_on_scheduled_meetings
+    20250304082924_add_time_zone_to_recurring_meetings
   ].freeze
 
   tables Tables::MeetingContents,

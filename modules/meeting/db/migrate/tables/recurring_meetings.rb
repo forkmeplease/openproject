@@ -45,6 +45,7 @@ class Tables::RecurringMeetings < Tables::Base
       t.timestamps
 
       t.integer :interval, default: 1, null: false
+      t.string :time_zone, null: false
     end
   end
 end
