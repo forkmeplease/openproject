@@ -137,6 +137,25 @@ en:
           caption: "Paste the secret provided by the Hocuspocus server."
         hocuspocus_server: Hocuspocus server
 
+      enable_text_collaboration:
+        heading: Real-time collaboration is not enabled
+        description: |-
+          Once enabled, multiple users will be able to work together on a document at the same time.
+          All new documents will be based on a new editor (BlockNote) and will require a working connection to a
+          Hocuspocus server.
+        primary_action: Enable real-time collaboration
+        success: Real-time collaboration has been enabled.
+
+
+      disable_text_collaboration_dialog:
+        title: Disable real-time collaboration
+        heading: Disable real-time collaboration?
+        confirmation_message: |-
+          All existing documents may become inaccessible. Please only do this if you are certain you want to disable
+          real-time collaboration and the BlockNote editor in this instance.
+        confirmation_checkbox_message: I understand that I might permanently lose data
+        success: Real-time collaboration has been disabled.
+
   label_document_added: "Document added"
   label_document_new: "New document"
   label_document_plural: "Documents"

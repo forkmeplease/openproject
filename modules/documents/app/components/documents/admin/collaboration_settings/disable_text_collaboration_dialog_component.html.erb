@@ -30,29 +30,31 @@
 %>
 
 <%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { t("documents.menu.collaboration_settings") }
-    header.with_breadcrumbs(
-      [
-        { href: admin_index_path, text: t("label_administration") },
-        { href: admin_settings_document_collaboration_settings_path, text: t("project_module_documents") },
-        t("documents.menu.collaboration_settings")
-      ]
+  render(
+    Primer::OpenProject::DangerDialog.new(
+      id: "disable-text-collaboration-dialog",
+      title: I18n.t("documents.admin.disable_text_collaboration_dialog.title"),
+      confirm_button_text: I18n.t(:button_disable),
+      form_arguments: {
+        action: admin_settings_document_collaboration_settings_path,
+        method: :delete,
+        data: { turbo: true }
+      },
+      size: :large
     )
+  ) do |dialog|
+    dialog.with_confirmation_message do |message|
+      message.with_heading(tag: :h2) do
+        I18n.t("documents.admin.disable_text_collaboration_dialog.heading")
+      end
 
-    header.with_description.with_content(description)
-
-    if Setting.real_time_text_collaboration_enabled?
-      header.with_action_button(
-        mobile_icon: :trash, mobile_label: I18n.t(:button_disable),
-        title: I18n.t(:button_disable),
-        scheme: :danger,
-        tag: :a,
-        content_arguments: {
-          data: { controller: "async-dialog" }
-        },
-        href: delete_dialog_admin_settings_document_collaboration_settings_path
-      ) { I18n.t(:button_disable) }
+      message.with_description_content(
+        I18n.t("documents.admin.disable_text_collaboration_dialog.confirmation_message")
+      )
     end
+
+    dialog.with_confirmation_check_box_content(
+      I18n.t("documents.admin.disable_text_collaboration_dialog.confirmation_checkbox_message")
+    )
   end
 %>
