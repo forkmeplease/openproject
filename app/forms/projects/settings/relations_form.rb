@@ -36,6 +36,8 @@ module Projects
         f.project_autocompleter(
           name: :parent_id,
           label: attribute_name(:parent_id),
+          invalid: model.errors.include?(:parent_id),
+          validation_message: validation_message(:parent),
           autocomplete_options: {
             model: project_autocompleter_model,
             focusDirectly: false,
@@ -48,6 +50,10 @@ module Projects
       end
 
       private
+
+      def validation_message(attribute)
+        model.errors.full_messages_for(attribute).to_sentence.presence
+      end
 
       def project_autocompleter_model
         return nil unless parent

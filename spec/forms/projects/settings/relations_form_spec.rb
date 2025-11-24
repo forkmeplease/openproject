@@ -92,4 +92,15 @@ RSpec.describe Projects::Settings::RelationsForm, type: :forms do
       end
     end
   end
+
+  context "with validation errors" do
+    before do
+      model.errors.add(:parent, :invalid)
+      render_form
+    end
+
+    it "renders error message" do
+      expect(page).to have_css ".FormControl-inlineValidation", text: "Subproject of is invalid"
+    end
+  end
 end
