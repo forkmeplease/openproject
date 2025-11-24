@@ -34,6 +34,7 @@ Dir[File.join(__dir__, "tables/*.rb")].each { |file| require file }
 
 class AggregatedMeetingMigrations < SquashedMigration
   squashed_migrations *%w[
+    1003015_aggregated_meeting_migrations
     20180323135408_to_v710_aggregated_meeting_migrations
     20230816141222_create_meeting_agenda_items
     20230823113310_add_work_package_to_meeting_agenda_items
@@ -51,6 +52,7 @@ class AggregatedMeetingMigrations < SquashedMigration
     20240408161233_add_state_to_meeting_journal
     20240418110249_set_author_as_presenter
     20240516102219_fix_untitled_meetings
+    20250318123314_add_backlog_to_meeting_sections
   ].freeze
 
   tables Tables::MeetingContents,
