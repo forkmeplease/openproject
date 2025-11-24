@@ -33,15 +33,34 @@ require "spec_helper"
 RSpec.describe NumberFormatHelper do
   describe "#number_with_limit" do
     [
+      # Simple cases
       { input: 10, opts: {}, result: "10" },
       { input: 10.0, opts: {}, result: "10" },
-      { input: 17203230.09932, opts: { length_limit: 8, digits: 8, precision: 3 }, result: "0.172e8" },
-      { input: 17203230.09932, opts: { length_limit: 20, digits: 6, precision: 4 }, result: "0.172e8" },
-      { input: 17203230.09932, opts: { length_limit: 20, digits: 6, precision: 5 }, result: "0.17203e8" },
-      { input: 17203230.09932, opts: { length_limit: 20, digits: 10, precision: 3 }, result: "17203230.099" },
-      { input: 8.402e-13, opts: { length_limit: 9, digits: 6, precision: 2 }, result: "0.84e-12" },
+      # Defaults are converting very big and very small numbers to scientific notation
+      { input: 1_000_000, opts: {}, result: "1000000" },
+      { input: 10_000_000, opts: {}, result: "1.0e7" },
+      { input: 0.0001, opts: {}, result: "0.0001" },
+      { input: 0.00001, opts: {}, result: "1.0e-5" },
+      { input: 100_000.1, opts: {}, result: "100000.1" },
+      { input: 100_000.0001, opts: {}, result: "1.0e5" },
+      { input: 100_000.00001, opts: {}, result: "100000" },
+      # precision influences scientific notation mantissa, trailing zeros are removed
+      { input: 17_203_230.09932, opts: { length_limit: 8, digits: 8, precision: 3 }, result: "1.72e7" },
+      { input: 17_203_230.09932, opts: { length_limit: 8, digits: 8, precision: 4 }, result: "1.7203e7" },
+      { input: 17_203_230.09932, opts: { length_limit: 8, digits: 8, precision: 5 }, result: "1.72032e7" },
+      # If the length limit is violated AFTER precision is rounded, use scientific notation
+      { input: 17_203_230.09932, opts: { length_limit: 11, digits: 8, precision: 3 }, result: "17203230.099" },
+      { input: 17_203_230.09932, opts: { length_limit: 10, digits: 8, precision: 3 }, result: "1.72e7" },
+      # If digit limit before separator is violated, use scientific notation
+      { input: 17_203_230.09932, opts: { length_limit: 20, digits: 8, precision: 3 }, result: "17203230.099" },
+      { input: 17_203_230.09932, opts: { length_limit: 20, digits: 7, precision: 3 }, result: "1.72e7" },
+      # Very small numbers (negative exponent) are rendered correctly
+      { input: 7.04e-8, opts: { length_limit: 9, digits: 6, precision: 2 }, result: "7.04e-8" },
+      { input: 8.402e-13, opts: { length_limit: 9, digits: 6, precision: 2 }, result: "8.4e-13" },
+      # If precision is so small, the number would round to 0, show scientific notation independently of
+      # not violating the length limit.
       { input: 8.402e-13, opts: { length_limit: 20, digits: 6, precision: 20 }, result: "0.0000000000008402" },
-      { input: 8.402e-13, opts: { length_limit: 9, digits: 6, precision: 4 }, result: "0.8402e-12" }
+      { input: 8.402e-13, opts: { length_limit: 20, digits: 6, precision: 4 }, result: "8.402e-13" }
     ].each do |test_case|
       test_case => { input:, opts:, result: }
 

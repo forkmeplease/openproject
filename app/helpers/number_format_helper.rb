@@ -30,16 +30,10 @@
 
 module NumberFormatHelper
   def number_with_limit(number, opts = {})
-    init_formatting_options(opts) => {
-      delimiter:,
-      separator:,
-      digits:,
-      precision:,
-      length_limit:
-    }
+    init_formatting_options(opts) => { digits:, precision:, length_limit: }
 
     string_number = number_with_precision(number, precision:, strip_insignificant_zeros: true)
-    length = string_number.delete("#{delimiter}#{separator}").length
+    length = string_number.delete("#{number_delimiter}#{number_separator}").length
 
     scientific_notation_needed = length > length_limit ||
                                  integer_part_size(number) > digits ||
@@ -57,18 +51,29 @@ module NumberFormatHelper
   def integer_part_size(number) = number.round.to_s.size
 
   def format_scientific_notation(number, precision)
-    exponent = number.to_d.exponent
-    rounding_position = exponent - precision
-    number.round(-1 * rounding_position).to_d.to_s("E")
+    str = "%0.*e" % [precision, number]
+
+    mantissa, exponent = str.split("e")
+
+    # normalize mantissa
+    mantissa = mantissa.sub(/(\.\d*?)0+$/, '\1')
+    mantissa = "#{mantissa}0" if mantissa.end_with?(".")
+
+    # normalize exponent
+    exp_int = exponent.to_i
+
+    "#{mantissa}e#{exp_int}"
   end
 
   def init_formatting_options(opts)
     {
-      delimiter: I18n.t("number.format.delimiter"),
-      separator: I18n.t("number.format.separator"),
       digits: opts[:digits] || 7,
       precision: opts[:precision] || 4,
       length_limit: opts[:length_limit] || 9
     }
   end
+
+  def number_delimiter = I18n.t("number.format.delimiter")
+
+  def number_separator = I18n.t("number.format.separator")
 end
