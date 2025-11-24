@@ -34,12 +34,17 @@ class Tables::RemoteIdentities < Tables::Base
   def self.table(migration)
     create_table migration do |t|
       t.references :user, index: true, null: false, foreign_key: { to_table: :users, on_delete: :cascade }
-      t.references :oauth_client, index: true, null: false, foreign_key: { to_table: :oauth_clients, on_delete: :cascade }
-
+      t.bigint :auth_source_id, null: false
       t.string :origin_user_id, null: false, index: true
-
       t.timestamps
-      t.index %i[user_id oauth_client_id], unique: true
+      t.string :auth_source_type, null: false
+      t.string :integration_type, null: false
+      t.bigint :integration_id, null: false
+
+      t.index %i[auth_source_type auth_source_id]
+      t.index %i[integration_type integration_id]
+      t.index %i[user_id auth_source_type auth_source_id integration_id integration_type],
+              unique: true
     end
   end
 end
