@@ -426,6 +426,7 @@ class AggregatedMigrations < SquashedMigration
     20250214162601_add_project_life_cycle_step_date_indices
     20250220123358_add_polymorphic_auth_source_and_integration_to_remote_identities
     20250226134521_add_restricted_to_journals
+    20250227161653_populate_comments_with_restricted_visibility_permissions
   ]
   # rubocop:enable Metrics/CollectionLiteralLength
 end
