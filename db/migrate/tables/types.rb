@@ -44,6 +44,7 @@ class Tables::Types < Tables::Base
       t.text :attribute_groups
       t.text :description
       t.text :patterns, null: true
+      t.jsonb :pdf_export_templates_config, default: {}
     end
   end
 end
