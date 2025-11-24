@@ -43,6 +43,22 @@ module Projects
     private
 
     def persist(service_call)
+      creation_call = create_artifact_work_package
+
+      creation_call.on_success do
+        artifact_work_package = creation_call.result
+        project.project_creation_wizard_artifact_work_package_id = artifact_work_package.id
+        project.save
+      end
+      creation_call.on_failure do
+        service_call.errors.add(:base, I18n.t("projects.wizard.create_artifact_work_package_error"))
+        service_call.merge!(creation_call)
+      end
+
+      service_call
+    end
+
+    def create_artifact_work_package
       create_params = {
         project:,
         type_id: project.project_creation_wizard_work_package_type_id,
@@ -51,21 +67,7 @@ module Projects
         description: "A project submission has been created.",
         attachments: [pdf_attachment]
       }
-      creation_call = WorkPackages::CreateService.new(user: User.current).call(create_params)
-      if creation_call.success?
-        artifact_work_package = creation_call.result
-        project.project_creation_wizard_artifact_work_package_id = artifact_work_package.id
-        project.save
-      else
-        service_call.errors.add(:base, I18n.t("projects.wizard.create_artifact_work_package_error"))
-        service_call.merge!(creation_call)
-      end
-
-      # store_attribute :settings, :project_creation_wizard_work_package_type_id, :integer
-      # store_attribute :settings, :project_creation_wizard_status_when_submitted_id, :integer
-      # store_attribute :settings, :project_creation_wizard_work_package_comment, :string
-
-      service_call
+      WorkPackages::CreateService.new(user:).call(create_params)
     end
 
     def pdf_attachment

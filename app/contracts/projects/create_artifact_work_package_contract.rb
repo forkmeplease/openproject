@@ -75,14 +75,28 @@ module Projects
     def validate_assignee_custom_field
       return unless project.project_creation_wizard_enabled?
 
-      if project.project_creation_wizard_assignee_custom_field_id.blank?
+      if project_assignee_custom_field_not_configured?
         errors.add :project_creation_wizard_assignee_custom_field_id, :blank
-      elsif project.custom_value_for(assignee_custom_field).blank?
+      elsif not_allowed_to_read_assignee_custom_field_value?
         # insufficient permissions to see the custom field value (current user is not a member of the project)
         errors.add assignee_custom_field.attribute_name, :unauthorized
-      elsif project.custom_value_for(assignee_custom_field).value.blank?
+      elsif missing_assignee_custom_field_value?
         errors.add assignee_custom_field.attribute_name, :blank
       end
+    end
+
+    def project_assignee_custom_field_not_configured?
+      project.project_creation_wizard_assignee_custom_field_id.blank?
+    end
+
+    def not_allowed_to_read_assignee_custom_field_value?
+      # insufficient permissions to see the custom field value (current user is
+      # not a member of the project or other reason)
+      project.custom_value_for(assignee_custom_field).blank?
+    end
+
+    def missing_assignee_custom_field_value?
+      project.custom_value_for(assignee_custom_field).value.blank?
     end
 
     def assignee_custom_field
