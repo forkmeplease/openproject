@@ -130,11 +130,11 @@ class AggregatedMigrations < SquashedMigration
          Tables::RemoteIdentities,
          Tables::HierarchicalItems,
          Tables::HierarchicalItemHierarchies,
-         Tables::ProjectLifeCycleStepDefinitions,
-         Tables::ProjectLifeCycleSteps,
+         Tables::ProjectPhaseDefinitions,
+         Tables::ProjectPhases,
          Tables::Reminders,
          Tables::ReminderNotifications,
-         Tables::ProjectLifeCycleStepJournals,
+         Tables::ProjectPhaseJouernals,
          Tables::ServiceAccountAssociations,
          Tables::ExportSettings
 
