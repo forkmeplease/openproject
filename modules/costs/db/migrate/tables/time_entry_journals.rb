@@ -48,7 +48,7 @@ class Tables::TimeEntryJournals < Tables::Base
       t.bigint :rate_id
       t.references :logged_by, foreign_key: { to_table: :users }, index: true, null: false
       t.integer :start_time, null: true
-      t.integer :end_time, null: true
+      t.string :time_zone, null: true
     end
   end
 end

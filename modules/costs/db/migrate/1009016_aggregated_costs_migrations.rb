@@ -50,6 +50,7 @@ class AggregatedCostsMigrations < SquashedMigration
     20221018160449_add_logged_by_to_cost_entries
     20230622074222_add_ongoing_to_time_entry
     20241120103858_add_start_end_times_to_time_entries
+    20241125104347_add_timezone_identifier_to_time_entry
   ].freeze
 
   tables Tables::CostEntries,

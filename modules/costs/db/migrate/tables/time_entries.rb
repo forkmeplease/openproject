@@ -50,7 +50,7 @@ class Tables::TimeEntries < Tables::Base
       t.references :logged_by, foreign_key: { to_table: :users }, index: true, null: false
       t.boolean :ongoing, null: false, default: false, index: true
       t.integer :start_time, null: true
-      t.integer :end_time, null: true
+      t.string :time_zone, null: true
 
       t.index :activity_id, name: "index_time_entries_on_activity_id"
       t.index :created_at, name: "index_time_entries_on_created_at"
