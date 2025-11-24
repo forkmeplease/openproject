@@ -72,4 +72,13 @@ class AggregatedMeetingMigrations < SquashedMigration
          Tables::RecurringMeetings,
          Tables::ScheduledMeetings,
          Tables::MeetingOutcomes
+
+  modifications do
+    # There's no easy way to express deferrable unique constraints in Rails migrations
+    execute <<~SQL.squish
+      ALTER TABLE scheduled_meetings
+      ADD CONSTRAINT unique_recurring_meeting_start_time
+      UNIQUE (recurring_meeting_id, start_time) DEFERRABLE INITIALLY DEFERRED;
+    SQL
+  end
 end

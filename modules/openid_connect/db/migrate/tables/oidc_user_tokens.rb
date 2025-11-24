@@ -32,7 +32,7 @@ require Rails.root.join("db/migrate/tables/base").to_s
 
 class Tables::OidcUserTokens < Tables::Base
   def self.table(migration)
-    create_unlogged_table migration do |t|
+    create_table migration do |t|
       t.references :user, null: false, index: true, foreign_key: { on_delete: :cascade }
 
       t.string :access_token, null: false

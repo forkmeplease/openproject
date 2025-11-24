@@ -134,7 +134,7 @@ class AggregatedMigrations < SquashedMigration
          Tables::ProjectPhases,
          Tables::Reminders,
          Tables::ReminderNotifications,
-         Tables::ProjectPhaseJouernals,
+         Tables::ProjectPhaseJournals,
          Tables::ServiceAccountAssociations,
          Tables::ExportSettings
 

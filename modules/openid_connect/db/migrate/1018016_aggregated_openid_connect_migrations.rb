@@ -30,6 +30,7 @@
 
 require Rails.root.join("db/migrate/migration_utils/squashed_migration").to_s
 require_relative "tables/oidc_user_session_links"
+require_relative "tables/oidc_user_tokens"
 
 class AggregatedOpenIDConnectMigrations < SquashedMigration
   tables Tables::OidcUserSessionLinks,

@@ -38,9 +38,9 @@ class Tables::ReminderNotifications < Tables::Base
 
       t.timestamps
 
-      t.ndex :reminder_notifications, :notification_id,
-             unique: true,
-             name: "index_reminder_notifications_unique"
+      t.index :notification_id,
+              unique: true,
+              name: "index_reminder_notifications_unique"
     end
   end
 end

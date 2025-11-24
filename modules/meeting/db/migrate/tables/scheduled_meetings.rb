@@ -45,10 +45,6 @@ class Tables::ScheduledMeetings < Tables::Base
       t.boolean :cancelled, default: false, null: false
 
       t.timestamps
-
-      # TODO: Check if we can do it like this or need to manually add the constraint
-      t.check_constraint("UNIQUE (recurring_meeting_id, start_time) DEFERRABLE INITIALLY DEFERRED",
-                         name: "unique_recurring_meeting_start_time")
     end
   end
 end

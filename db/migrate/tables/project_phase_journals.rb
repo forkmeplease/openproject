@@ -30,7 +30,7 @@
 
 require_relative "base"
 
-class Tables::ProjectPhaseJouernals < Tables::Base
+class Tables::ProjectPhaseJournals < Tables::Base
   def self.table(migration)
     create_table migration do |t| # rubocop:disable Rails/CreateTableWithTimestamps
       t.belongs_to :journal, null: false, foreign_key: true
