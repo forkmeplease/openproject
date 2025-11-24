@@ -42,6 +42,8 @@ module Settings
 
       f.rich_text_area(
         name: :new_project_notification_text,
+        value: Setting.new_project_notification_text.presence ||
+               I18n.t("admin.settings.new_project.notification_text_default"),
         required: true,
         rich_text_options: {
           showAttachments: false,
