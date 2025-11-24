@@ -56,6 +56,7 @@ class AggregatedMeetingMigrations < SquashedMigration
     20240426073948_create_recurring_meetings
     20241122143600_add_interval_to_recurring_meeting
     20241128190428_create_scheduled_meetings
+    20250211185841_create_meeting_outcomes
   ].freeze
 
   tables Tables::MeetingContents,
@@ -67,5 +68,6 @@ class AggregatedMeetingMigrations < SquashedMigration
          Tables::MeetingAgendaItems,
          Tables::MeetingAgendaItemJournals,
          Tables::RecurringMeetings,
-         Tables::ScheduledMeetings
+         Tables::ScheduledMeetings,
+         Tables::MeetingOutcomes
 end

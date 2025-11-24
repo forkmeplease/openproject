@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,12 +26,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
-#
+# ++
 
-class CreateMeetingOutcomes < ActiveRecord::Migration[7.1]
-  def change
-    create_table :meeting_outcomes do |t|
+require Rails.root.join("db/migrate/tables/base").to_s
+
+class Tables::MeetingOutcomes < Tables::Base
+  def self.table(migration)
+    create_table migration do |t|
       t.text :notes
       t.belongs_to :meeting_agenda_item, foreign_key: true
       t.belongs_to :work_package, foreign_key: true
