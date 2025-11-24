@@ -134,7 +134,8 @@ class AggregatedMigrations < SquashedMigration
          Tables::ProjectLifeCycleSteps,
          Tables::Reminders,
          Tables::ReminderNotifications,
-         Tables::ProjectLifeCycleStepJournals
+         Tables::ProjectLifeCycleStepJournals,
+         Tables::ServiceAccountAssociations
 
   # rubocop:disable Metrics/CollectionLiteralLength
   squashed_migrations *%w[
@@ -427,6 +428,7 @@ class AggregatedMigrations < SquashedMigration
     20250220123358_add_polymorphic_auth_source_and_integration_to_remote_identities
     20250226134521_add_restricted_to_journals
     20250227161653_populate_comments_with_restricted_visibility_permissions
+    20250324133701_create_service_account_associations
   ]
   # rubocop:enable Metrics/CollectionLiteralLength
 end

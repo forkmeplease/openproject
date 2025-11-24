@@ -28,9 +28,11 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class CreateServiceAccountAssociations < ActiveRecord::Migration[7.1]
-  def change
-    create_table :service_account_associations do |t|
+require_relative "base"
+
+class Tables::ServiceAccountAssociations < Tables::Base
+  def self.table(migration)
+    create_unlogged_table migration do |t|
       t.belongs_to :service_account, null: false, index: { unique: true }
       t.belongs_to :service, null: false, index: false # necessary index covered by composite
       t.string :service_type, null: false
