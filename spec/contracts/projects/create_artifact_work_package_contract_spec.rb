@@ -31,7 +31,7 @@
 require "spec_helper"
 require "contracts/shared/model_contract_shared_context"
 
-RSpec.describe Projects::CreateArtifactWorkPackageContract do
+RSpec.describe Projects::CreateArtifactWorkPackageContract, :check_errors_i18n do
   include_context "ModelContract shared context"
 
   shared_let(:status_new) { create(:status, name: "New") }

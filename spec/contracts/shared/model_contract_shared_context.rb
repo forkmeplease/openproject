@@ -50,6 +50,10 @@ RSpec.shared_context "ModelContract shared context" do # rubocop:disable RSpec/C
     end
     contract_errors = errors.keys.index_with { |key| contract.errors.symbols_for(key) }
     expect(contract_errors).to match(expected_errors)
+    if RSpec.current_example.metadata[:check_errors_i18n]
+      # ensure no I18n::MissingTranslationData is raised because of missing attributes and/or errors translations
+      expect { contract.errors.full_messages }.not_to raise_error
+    end
   end
 
   shared_examples "contract is valid" do
