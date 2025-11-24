@@ -29,27 +29,53 @@
 #++
 
 module Projects
-  module Wizard
-    class PageComponent < ApplicationComponent
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
-      include ApplicationHelper
+  class ProjectCreationFooterComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
 
-      def initialize(project:, custom_fields_by_section:, current_section:)
-        super
+    def initialize(form_identifier:, project:, current_step:)
+      @form_identifier = form_identifier
+      @project = project
+      @current_step = current_step
 
-        @project = project
-        @custom_fields_by_section = custom_fields_by_section
-        @current_section = current_section
+      super
+    end
+
+    def call
+      render(StepWizard::FooterComponent.new(form_identifier:, total_steps:, current_step:)) do |footer|
+        footer.with_cancel_button(href: projects_path)
+        footer.with_continue_button(**continue_button_args)
+        footer.with_submit_button(**submit_button_args)
+        if show_progress_bar?
+          footer.with_progress_bar
+        end
       end
+    end
 
-      private
+    attr_reader :form_identifier, :project, :current_step
 
-      attr_reader :project, :custom_fields_by_section, :current_section
+    private
 
-      def header_button_title
-        I18n.t(:button_cancel)
-      end
+    def show_progress_bar?
+      current_step > 1
+    end
+
+    def continue_button_args
+      {
+        form: form_identifier,
+        name: "next_section"
+      }
+    end
+
+    def submit_button_args
+      {
+        form: form_identifier,
+        name: "finish",
+        value: "true"
+      }
+    end
+
+    def total_steps
+      project.template_id.nil? && project.available_custom_fields.required.any? ? 3 : 2
     end
   end
 end

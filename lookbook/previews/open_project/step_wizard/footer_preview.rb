@@ -28,27 +28,31 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects
-  module Wizard
-    class PageComponent < ApplicationComponent
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
-      include ApplicationHelper
-
-      def initialize(project:, custom_fields_by_section:, current_section:)
-        super
-
-        @project = project
-        @custom_fields_by_section = custom_fields_by_section
-        @current_section = current_section
+module OpenProject
+  module StepWizard
+    # @logical_path OpenProject/StepWizard
+    class FooterPreview < Lookbook::Preview
+      # @label Default
+      def default
+        render_with_template(template: "open_project/step_wizard/footer_preview/playground",
+                             locals: { show_back_button: true, show_cancel_button: true, show_progress_bar: true, total_steps: 6,
+                                       current_step: 3 })
       end
 
-      private
-
-      attr_reader :project, :custom_fields_by_section, :current_section
-
-      def header_button_title
-        I18n.t(:button_cancel)
+      # @label Playground
+      # @param show_back_button [Boolean]
+      # @param show_cancel_button [Boolean]
+      # @param show_progress_bar [Boolean]
+      # @param total_steps [Integer]
+      # @param current_step [Integer]
+      def playground(
+        show_back_button: true,
+        show_cancel_button: true,
+        show_progress_bar: true,
+        total_steps: 6,
+        current_step: 3
+      )
+        render_with_template(locals: { show_back_button:, show_cancel_button:, show_progress_bar:, total_steps:, current_step: })
       end
     end
   end

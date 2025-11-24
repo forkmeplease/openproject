@@ -27,42 +27,36 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%=
-  component_wrapper(target: "_top") do
-    settings_primer_form_with(
-      model: project,
-      url: workspaces_path,
-      html: { id: "project-create-form" }
-    ) do |f|
-      flex_layout do |container|
-        container.with_row(mb: 3, **step_2_display) do
-          render(
-            Primer::Forms::FormList.new(
-              Projects::Settings::NameForm.new(f),
-              Projects::Settings::DescriptionForm.new(f),
-              Projects::Settings::RelationsForm.new(f),
-              Projects::Settings::TypeForm.new(f)
-            )
-          )
-        end
+<div class="op-step-wizard-footer">
+  <div class="op-step-wizard-footer--actions-left">
+    <% unless first_step? %>
+      <%= back_button %>
+    <% end %>
+  </div>
 
-        container.with_row(mb: 3, **step_3_display) do
-          render(Projects::Settings::CustomFieldsForm.new(f))
-        end
+  <%= render(Primer::BaseComponent.new(tag: :div, classes: "op-step-wizard-footer--progress")) do %>
+    <% if progress_bar.present? %>
+      <%= flex_layout(justify_content: :center, align_items: :center) do |progress_wrapper| %>
+        <%= progress_wrapper.with_column(classes: "op-step-wizard-footer--progress-bar") do %>
+          <%= progress_bar %>
+        <% end %>
 
-        container.with_row do
-          template_id = template&.id
-          render_inline_form(f) do |form|
-            if template_id
-              form.hidden name: :template_id, value: template_id, scope_name_to_model: false
-            end
-          end
-        end
+        <%= progress_wrapper.with_column(ml: 2) do %>
+          <%= render(Primer::Beta::Text.new(tag: :div, font_size: :small, color: :muted)) do %>
+            <%= I18n.t("projects.wizard.progress_label", current: current_step, total: total_steps) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 
-        container.with_row do
-          render Projects::StepForm.new(f, step:)
-        end
-      end
-    end
-  end
-%>
+  <div class="op-step-wizard-footer--actions-right">
+    <%= cancel_button %>
+
+    <% if last_step? %>
+      <%= submit_button %>
+    <% else %>
+      <%= continue_button %>
+    <% end %>
+  </div>
+</div>

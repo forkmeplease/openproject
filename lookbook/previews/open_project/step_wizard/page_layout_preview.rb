@@ -28,18 +28,13 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects
-  class TemplateForm < ApplicationForm
-    extend Dry::Initializer
-
-    option :template
-    option :copy_options
-
-    form do |f|
-      f.hidden name: :template_id, value: template.id, scope_name_to_model: false
-
-      f.fields_for(:copy_options, copy_options, nested: false) do |builder|
-        CopyOptionsForm.new(builder, dependencies_label: I18n.t("create_project.copy_options.dependencies_label"))
+module OpenProject
+  module StepWizard
+    # @logical_path OpenProject/StepWizard
+    class PageLayoutPreview < Lookbook::Preview
+      # @display min_height 400px
+      def default
+        render_with_template
       end
     end
   end

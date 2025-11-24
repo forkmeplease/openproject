@@ -27,38 +27,15 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-#
-require "spec_helper"
 
-RSpec.describe Projects::TemplateForm, type: :forms do
-  include ViewComponent::TestHelpers
+module Projects
+  class StepForm < ApplicationForm
+    extend Dry::Initializer[undefined: false]
 
-  def render_form
-    render_in_view_context(
-      model,
-      template,
-      copy_options,
-      described_class
-    ) do |model, template, copy_options, described_class|
-      primer_form_with(url: "/foo", model:) do |f|
-        render(described_class.new(f, template:, copy_options:))
-      end
+    option :step, default: -> { 1 }
+
+    form do |f|
+      f.hidden(name: :step, value: step, scope_name_to_model: false)
     end
-  end
-
-  before do
-    render_form
-  end
-
-  let(:model) { build_stubbed(:project) }
-  let(:template) { build_stubbed(:template_project) }
-  let(:copy_options) { Projects::CopyOptions.new }
-
-  it "renders hidden field" do
-    expect(page).to have_field "template_id", type: :hidden, with: template.id
-  end
-
-  it "renders Copy options" do
-    expect(page).to have_selector :fieldset, "Copy from template"
   end
 end
