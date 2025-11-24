@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,20 +26,33 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
+module Admin
+  module CustomFields
+    module RoleAssignment
+      class PreviewTableComponent < OpPrimer::BorderBoxTableComponent
+        columns :user, :project, :change
+        main_column :change
 
-module Projects
-  class TemplateForm < ApplicationForm
-    extend Dry::Initializer
+        def row_class
+          Admin::CustomFields::RoleAssignment::RowComponent
+        end
 
-    option :template
-    option :copy_options
+        def mobile_title
+          I18n.t("custom_fields.admin.role_assignment.dialog.title")
+        end
 
-    form do |f|
-      f.hidden name: :template_id, value: template.id, scope_name_to_model: false
+        def has_actions?
+          false
+        end
 
-      f.fields_for(:copy_options, copy_options, nested: false) do |builder|
-        CopyOptionsForm.new(builder, dependencies_label: I18n.t("create_project.copy_options.dependencies_label"))
+        def headers
+          [
+            [:user, { caption: User.model_name.human }],
+            [:project, { caption: Project.model_name.human }],
+            [:change, { caption:  I18n.t("custom_fields.admin.role_assignment.dialog.change") }]
+          ].compact
+        end
       end
     end
   end

@@ -27,38 +27,56 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-#
-require "spec_helper"
 
-RSpec.describe Projects::TemplateForm, type: :forms do
-  include ViewComponent::TestHelpers
+module Projects
+  class ProjectCreationFooterComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
 
-  def render_form
-    render_in_view_context(
-      model,
-      template,
-      copy_options,
-      described_class
-    ) do |model, template, copy_options, described_class|
-      primer_form_with(url: "/foo", model:) do |f|
-        render(described_class.new(f, template:, copy_options:))
+    def initialize(form_identifier:, project:, template:, current_step:)
+      @form_identifier = form_identifier
+      @project = project
+      @template = template
+      @current_step = current_step
+
+      super
+    end
+
+    def call
+      render(StepWizard::FooterComponent.new(form_identifier:, total_steps:, current_step:)) do |footer|
+        footer.with_cancel_button(href: projects_path)
+        footer.with_continue_button(**continue_button_args)
+        footer.with_submit_button(**submit_button_args)
+        if show_progress_bar?
+          footer.with_progress_bar
+        end
       end
     end
-  end
 
-  before do
-    render_form
-  end
+    attr_reader :form_identifier, :project, :template, :current_step
 
-  let(:model) { build_stubbed(:project) }
-  let(:template) { build_stubbed(:template_project) }
-  let(:copy_options) { Projects::CopyOptions.new }
+    private
 
-  it "renders hidden field" do
-    expect(page).to have_field "template_id", type: :hidden, with: template.id
-  end
+    def show_progress_bar?
+      current_step > 1
+    end
 
-  it "renders Copy options" do
-    expect(page).to have_selector :fieldset, "Copy from template"
+    def continue_button_args
+      {
+        form: form_identifier,
+        name: "next_section"
+      }
+    end
+
+    def submit_button_args
+      {
+        form: form_identifier,
+        name: "finish",
+        value: "true"
+      }
+    end
+
+    def total_steps
+      template.nil? && project.available_custom_fields.required.any? ? 3 : 2
+    end
   end
 end

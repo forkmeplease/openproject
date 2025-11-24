@@ -75,16 +75,10 @@ RSpec.describe Projects::NewComponent, type: :component do
     let(:template) { build_stubbed(:template_project) }
     let(:copy_options) { Projects::CopyOptions.new }
 
-    it "does not render custom fields form" do
-      allow(Projects::Settings::CustomFieldsForm).to receive(:new)
+    it "renders custom fields form" do
+      allow(Projects::Settings::CustomFieldsForm).to receive(:new).and_call_original
       rendered_component
-      expect(Projects::Settings::CustomFieldsForm).not_to have_received(:new)
-    end
-
-    it "renders template form" do
-      allow(Projects::TemplateForm).to receive(:new).and_call_original
-      rendered_component
-      expect(Projects::TemplateForm).to have_received(:new).with(anything, template:, copy_options:)
+      expect(Projects::Settings::CustomFieldsForm).to have_received(:new)
     end
   end
 end

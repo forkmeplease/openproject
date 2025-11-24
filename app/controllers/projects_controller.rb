@@ -199,7 +199,6 @@ class ProjectsController < ApplicationController
   end
 
   def new_from_template
-    @copy_options = Projects::CopyOptions.new
     @new_project = Projects::CopyService
       .new(user: current_user, source: @template, contract_options: { validate_model: false })
       .call(target_project_params: params.permit(:parent_id).to_h, attributes_only: true)
@@ -208,7 +207,7 @@ class ProjectsController < ApplicationController
     render layout: "no_menu"
   end
 
-  def create_blank
+  def create_blank # rubocop:disable Metrics/AbcSize
     service_call = Projects::CreateService
       .new(user: current_user)
       .call(permitted_params.new_project)
@@ -218,13 +217,19 @@ class ProjectsController < ApplicationController
     if service_call.success?
       redirect_to project_path(@new_project), notice: I18n.t(:notice_successful_create)
     else
-      flash.now[:error] = I18n.t(:notice_unsuccessful_create_with_reason, reason: service_call.message)
+      # Do not display custom field errors if the form is submitted from the second page.
+      clear_custom_field_errors!(@new_project) unless from_step_3?
+      set_wizard_step!(@new_project)
+
+      if service_call.message.present?
+        flash.now[:error] = I18n.t(:notice_unsuccessful_create_with_reason, reason: service_call.message)
+      end
       render action: :new, status: :unprocessable_entity
     end
   end
 
   def create_from_template # rubocop:disable Metrics/AbcSize
-    @copy_options = Projects::CopyOptions.new(permitted_params.copy_project_options)
+    @copy_options = Projects::CopyOptions.new
 
     target_project_params = permitted_params.new_project.to_h.merge(template: @template)
 
@@ -245,6 +250,28 @@ class ProjectsController < ApplicationController
       flash.now[:error] = I18n.t(:notice_unsuccessful_create_with_reason, reason: service_call.message)
       render action: :new, status: :unprocessable_entity
     end
+  end
+
+  def set_wizard_step!(project)
+    attributes_with_error = project.errors.attribute_names
+    second_step_attributes = %i[name description identifier]
+    step_2_is_valid = !attributes_with_error.intersect?(second_step_attributes)
+
+    params[:step] = step_2_is_valid ? 3 : 2
+  end
+
+  def clear_custom_field_errors!(project)
+    # Delete custom field errors from project
+    project.errors.attribute_names
+      .select { |key| key.to_s.start_with?("custom_field") }
+      .each { |key| project.errors.delete(key) }
+
+    # Clear errors on custom value objects
+    project.custom_values.each { |cv| cv.errors.clear }
+  end
+
+  def from_step_3?
+    params[:step].to_i == 3
   end
 
   def find_optional_template
