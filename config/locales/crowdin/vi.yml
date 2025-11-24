@@ -1180,12 +1180,12 @@ vi:
           off_track: "Bị lệch"
           finished: "Hoàn thành"
           discontinued: "Ngừng hoạt động"
-        submission_assignee_custom_field: "Assignee when submitted"
-        submission_notification_text: "Notification text"
-        submission_send_confirmation_email: "Confirmation email"
-        submission_status_when_submitted: "Status when submitted"
-        submission_work_package_comment: "Work package comment"
-        submission_work_package_type: "Work package type"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
         template: "Template"
         templated: "Dự án mẫu"
         templated_value:
@@ -1829,6 +1829,10 @@ vi:
     header_additional_invalid_fields:
       other: "Ngoài ra, còn có vấn đề với trường sau:"
     field_erroneous_label: "Trường này không hợp lệ: %{full_errors}\nVui lòng nhập giá trị hợp lệ."
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "được tạo bởi %{user} vào %{datetime}"
@@ -3133,7 +3137,8 @@ vi:
   label_lock_user: "Khóa người dùng"
   label_logged_as: "Đăng nhập với tư cách"
   label_login: "Đăng nhập"
-  label_custom_logo: "Logo tùy chỉnh"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "Logo xuất khẩu tùy chỉnh"
   label_custom_export_cover: "Nền bìa xuất khẩu tùy chỉnh"
   label_custom_export_footer: "Custom export footer image"

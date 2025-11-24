@@ -24,8 +24,13 @@ fr:
     name: "Documents OpenProject"
     description: "Un plugin OpenProject qui permet la création de documents dans les projets."
   activerecord:
+    errors:
+      models:
+        document_type:
+          one_or_more_required: "Cannot delete the last document type"
     models:
       document: "Document"
+      documents: "Documents"
     attributes:
       document:
         content_binary: "Contenu binaire"
@@ -49,6 +54,14 @@ fr:
     documents_list_blank_slate:
       heading: "Il n'y a pas encore de documents"
       description: "Il n'y a pas de documents dans cette vue. Vous pouvez cliquer sur le bouton ci-dessous pour en ajouter un."
+    document_categories_deprecation_notice:
+      heading: File categories are now called 'Document types'
+      description: |-
+        Your existing file categories have been converted to document types with the introduction of the new Documents module.
+        All existing documents have also been migrated to these new types.
+      primary_action: Configure document types
+      secondary_action: Learn more about the Documents module
+    document_type_actions: "Document type actions"
     index_page:
       name: "Nom"
       type: "Type"
@@ -63,10 +76,24 @@ fr:
     label_attachment_author: "Auteur de la pièce jointe"
     label_categories: "Catégories"
     new_category: "Nouvelle catégorie"
+    new_type: "New type"
     delete_dialog:
       title: "Supprimer le document"
       heading: "Supprimer le document ?"
       confirmation_message_html: "Cette opération supprimera définitivement ce document et toutes les pièces jointes. Êtes-vous sûr de vouloir faire cela ?"
+    delete_document_type_dialog:
+      title: Delete document type
+      heading: Delete this document type?
+      confirmation_message: |-
+        The type "%{type_name}" is currently unused. Deleting this type will have no effect on existing documents.
+      select_reassign_to_label: Reassign documents to
+      reassign_message:
+        one: The type "%{type_name}" is currently being used in %{document_count} document. Please select which type to reassign them to.
+        other: The type "%{type_name}" is currently being used in %{document_count} documents. Please select which type to reassign them to.
+      at_least_one_type_required:
+        title: Cannot delete document type
+        heading: Cannot delete the last document type
+        message: There must always be at least one document type configured. Create another one first if you want to delete this one.
   label_document_added: "Document ajouté"
   label_document_new: "Nouveau document"
   label_document_plural: "Documents"

@@ -28,38 +28,11 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
-
-RSpec.describe Admin::Settings::DocumentCategoriesController, "routing" do
-  describe "document categories" do
-    it {
-      expect(subject).to route(:get, "admin/settings/document_categories")
-        .to(controller: "admin/settings/document_categories", action: "index")
-    }
-
-    it {
-      expect(subject).to route(:get, "admin/settings/document_categories/new")
-        .to(controller: "admin/settings/document_categories", action: "new")
-    }
-
-    it {
-      expect(subject).to route(:post, "admin/settings/document_categories")
-        .to(controller: "admin/settings/document_categories", action: "create")
-    }
-
-    it {
-      expect(subject).to route(:get, "admin/settings/document_categories/1/edit")
-        .to(controller: "admin/settings/document_categories", action: "edit", id: "1")
-    }
-
-    it {
-      expect(subject).to route(:put, "admin/settings/document_categories/1")
-        .to(controller: "admin/settings/document_categories", action: "update", id: "1")
-    }
-
-    it {
-      expect(subject).to route(:delete, "admin/settings/document_categories/1")
-        .to(controller: "admin/settings/document_categories", action: "destroy", id: "1")
-    }
+module Documents
+  module Admin
+    module DocumentCategories
+      class DeprecationNoticeComponent < ApplicationComponent
+      end
+    end
   end
 end

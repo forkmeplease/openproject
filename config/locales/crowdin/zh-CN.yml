@@ -1176,12 +1176,12 @@ zh-CN:
           off_track: "偏离计划"
           finished: "已完成"
           discontinued: "已中断"
-        submission_assignee_custom_field: "Assignee when submitted"
-        submission_notification_text: "Notification text"
-        submission_send_confirmation_email: "Confirmation email"
-        submission_status_when_submitted: "Status when submitted"
-        submission_work_package_comment: "Work package comment"
-        submission_work_package_type: "Work package type"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
         template: "Template"
         templated: "模板项目"
         templated_value:
@@ -1825,6 +1825,10 @@ zh-CN:
     header_additional_invalid_fields:
       other: "此外，以下字段也有问题："
     field_erroneous_label: "这个字段是无效的：%{full_errors}\n请输入一个有效的值。"
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "由 %{user} 创建于 %{datetime} "
@@ -3129,7 +3133,8 @@ zh-CN:
   label_lock_user: "锁定用户"
   label_logged_as: "登录用户名"
   label_login: "登录"
-  label_custom_logo: "自定义徽标"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "自定义导出徽标"
   label_custom_export_cover: "自定义导出封面背景"
   label_custom_export_footer: "自定义导出页脚图像"
