@@ -37,7 +37,7 @@ class Tables::TimeEntries < Tables::Base
       t.bigint :user_id, null: false
       t.belongs_to :work_package, index: false
       t.float :hours, null: true
-      t.string :comments
+      t.text :comments
       t.bigint :activity_id, null: true
       t.date :spent_on, null: false
       t.integer :tyear, null: false
