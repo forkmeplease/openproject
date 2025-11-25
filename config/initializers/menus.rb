@@ -31,6 +31,18 @@
 require "redmine/menu_manager"
 
 Redmine::MenuManager.map :top_menu do |menu|
+  menu.push :portfolios,
+            { controller: "/portfolios", action: "index" },
+            context: :modules,
+            caption: I18n.t("label_portfolio_plural"),
+            icon: "briefcase",
+            if: ->(_) {
+              OpenProject::FeatureDecisions.portfolio_models_active? &&
+                (User.current.logged? || !Setting.login_required?) &&
+                (User.current.allowed_globally?(:add_portfolios) ||
+                  Project.portfolio.allowed_to(User.current, :view_project).any?)
+            }
+
   # projects menu will be added by
   # Redmine::MenuManager::TopMenuHelper#render_projects_top_menu_node
   menu.push :projects,
@@ -112,12 +124,18 @@ Redmine::MenuManager.map :quick_add_menu do |menu|
             }
 
   menu.push :invite_user,
-            nil,
+            ->(project) {
+              { controller: "/users/invite", action: :start_dialog, project_id: project&.id }
+            },
             caption: :label_invite_user,
             icon: "person-add",
             html: {
-              "invite-user-modal-augment": "invite-user-modal-augment"
+              target: nil,
+              data: {
+                turbo_stream: true
+              }
             },
+            skip_permissions_check: true, # Prevent project specific permission checks
             if: ->(_) { User.current.allowed_in_any_project?(:manage_members) }
 end
 
@@ -172,12 +190,29 @@ Redmine::MenuManager.map :global_menu do |menu|
             icon: "person",
             caption: I18n.t("my_page.label")
 
+  menu.push :portfolios,
+            { controller: "/portfolios", action: "index" },
+            caption: I18n.t("label_portfolio_plural"),
+            icon: "briefcase",
+            after: :my_page,
+            if: ->(_) {
+              OpenProject::FeatureDecisions.portfolio_models_active? &&
+                (User.current.logged? || !Setting.login_required?) &&
+                (User.current.allowed_globally?(:add_portfolios) ||
+                  Project.portfolio.allowed_to(User.current, :view_project).any?)
+            }
+
+  menu.push :portfolios_query_select,
+            { controller: "/portfolios", action: "index" },
+            parent: :portfolios,
+            partial: "portfolios/menus/menu"
+
   # Projects
   menu.push :projects,
             { controller: "/projects", project_id: nil, action: "index" },
             caption: I18n.t("label_projects_menu"),
             icon: "project",
-            after: :my_page,
+            after: :portfolios,
             if: ->(_) {
               User.current.logged? || !Setting.login_required?
             }
@@ -691,6 +726,10 @@ Redmine::MenuManager.map :project_menu do |menu|
       action: :index
     },
     project_custom_fields: { caption: :label_project_attributes_plural },
+    creation_wizard: {
+      caption: :label_project_initiation_request,
+      if: ->(_) { OpenProject::FeatureDecisions.project_initiation_active? }
+    },
     modules: { caption: :label_module_plural },
     work_packages: {
       caption: :label_work_package_plural,
@@ -752,6 +791,7 @@ Redmine::MenuManager.map :work_package_split_view do |menu|
   menu.push :watchers,
             { tab: :watchers },
             skip_permissions_check: true,
+            last: true,
             badge: ->(work_package:, **) {
               work_package.watchers.count
             },

@@ -311,6 +311,25 @@ it:
           zero: nessun sottoelemento
           one: 1 sottoelemento
           other: "%{count} sottoelementi"
+      role_assignment:
+        title: Role Assignment
+        description: You can automatically grant a certain project role to any user assigned to this project attribute, regardless of that user’s original role in that project.
+        warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
+        role_field_label: "Project Role"
+        role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
+        review_hint: >
+          There are %{user_count} who are already assigned to this project attribute in various projects. They might get additional permissions and be added to projects they did not previously have access to.
+        review_button: Review users and permissions
+        dialog:
+          title: "Overview of users and permissions"
+          change: Change
+          changes:
+            new_member: Will be added as a member
+            remove_member: Will be removed as a member
+            gain_and_lose_role: Will lose role ‘%{old_role}’ and gain role ‘%{new_role}’
+            gain_role: Will gain role ‘%{new_role}’
+            lose_role: Will lose role ‘%{old_role}’
+            no_change: No changes
     text_add_new_custom_field: >
       Per aggiungere nuovi campi personalizzati a un progetto, è necessario prima crearli.
     is_enabled_globally: "Abilitato a livello globale"
@@ -321,6 +340,7 @@ it:
     reorder_confirmation: "Attenzione: l'ordine corrente dei valori disponibili sarà perso. Continuare?"
     placeholder_version_select: "Prima è necessario selezionare la macro-attività o il progetto"
     calculated_field_not_editable: "Attributo non modificabile. Questo valore viene calcolato automaticamente."
+    no_role_assigment: "No role assignment"
     instructions:
       is_required: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
       is_required_for_project: "Check to enable this attribute and make it required in all projects. It cannot be deactived for individual projects. Existing projects will not require a value when being updated."
@@ -367,6 +387,7 @@ it:
       int?: "deve essere un intero."
       key?: "manca."
       not_found: "non trovato."
+      respond_to?: "does not implement required method."
       rules:
         copy_workflow_from:
           workflow_missing: "non ha un proprio flusso di lavoro."
@@ -425,6 +446,16 @@ it:
   incoming_mails:
     ignore_filenames: >
       Specifica un elenco di nomi da ignorare durante l'elaborazione di allegati per posta in arrivo (ad esempio firme o icone). Immettere un nome file per riga.
+  portfolios:
+    index:
+      search:
+        label: Portfolio name filter
+        placeholder: Search portfolios
+    lists:
+      active: "Active portfolios"
+      my: "My portfolios"
+      favorited: "Favorite portfolios"
+      archived: "Archived portfolios"
   projects:
     copy:
       #Contains custom strings for options when copying a project that cannot be found elsewhere.
@@ -533,8 +564,28 @@ it:
         no_results_title_text: Nessuno spazio su disco registrato aggiuntivo consumato da questo progetto.
       work_package_priorities:
         new_label: "Nuova priorità"
+      creation_wizard:
+        export:
+          description_attachment_export: "The generated artifact will be saved as a PDF attachment to the artifact work package."
+          description_file_link_export: "The artifact work package will have a file link to a PDF stored in an external file storage. Requires a working file storage with automatically-managed project folders for this project. At the moment only Nextcloud file storages are supported."
+          description_file_storage_selection: "Select which of the configured external file storages should be used."
+          external_file_storage: "External file storage"
+          label_artifact_export: "Artifact export"
+          label_attachment_export: "Save as work package file attachment"
+          label_file_link_export: "Upload file to external file storage and add file link to work package"
+          pdf_file_storage: "PDF file storage"
+          unavailable: "unavailable"
+        label_request_submission: "Request submission"
+        project_attributes_description: >
+          Select which project attributes should be included in the project initiation request. This list only includes [project attributes](project_attributes_url) enabled for for this project.
     status:
       button_edit: Modifica lo stato del progetto
+    wizard:
+      sidebar_content_title: "Content"
+      sections: "Sections"
+      no_help_text: "This attribute has no help text defined."
+      success: "Project attributes have been saved successfully."
+      progress_label: "%{current} of %{total}"
   lists:
     create:
       success: "L'elenco modificato è stato salvato come nuovo elenco"
@@ -662,6 +713,57 @@ it:
     memberships:
       no_results_title_text: Questo utente non è attualmente membro di alcun progetto.
     open_profile: "Apri il profilo"
+    invite_user_modal:
+      invite: "Invita"
+      title:
+        invite: "Invita utente"
+        invite_to_project: "Invita %{type} a %{project}"
+        invite_principal_to_project: "Invita %{principal} a %{project}"
+      project:
+        label: "Progetto"
+        required: "Sei pregato di selezionare un progetto"
+        next_button: "Prossimo"
+        no_results: "Nessun progetto è stato trovato"
+        no_invite_rights: "Non puoi invitare i membri a questo progetto"
+      type:
+        required: "Sei pregato di selezionare il tipo da invitare"
+        user:
+          title: "Invita l'utente a %{project_name}"
+          description: "I permessi basati sul ruolo assegnato nel progetto selezionato"
+        group:
+          title: "Invita il gruppo a %{project_name}"
+          description: "I permessi basati sul ruolo assegnato nel progetto selezionato"
+        placeholder_user:
+          title: "Aggiungi un utente segnaposto a %{project_name}"
+          title_no_ee: "Utente del segnaposto (funzionalità solo dell'edizione Enterprise)"
+          description: "Non ha accesso al progetto e non è inviata alcuna email."
+        already_member_message: "Già un membro di %{project}"
+      principal:
+        no_results_user: "Nessun utente è stato trovato"
+        invite_user: "Invito:"
+        no_results_placeholder: "Nessun segnaposto è stato trovato"
+        create_new_placeholder: "Crea nuovo segnaposto:"
+        no_results_group: "Nessun gruppo è stato trovato"
+        invite_to_project: "Invita a %{project_name}"
+        required:
+          user: "Sei pregato di selezionare un utente"
+          placeholder: "Sei pregato di selezionare un segnaposto"
+          group: "Sei pregato di selezionare un gruppo"
+      role:
+        label: "Ruolo in %{project}"
+        no_roles_found: "Nessun ruolo è stato trovato"
+        description: >
+          Questo è il ruolo che l'utente riceverà una volta unitosi al progetto. Il ruolo definisce che azioni possono intraprendere e che informazioni possono vedere. [Scopri di più sui ruoli e le autorizzazioni.] (docs_url)
+        required: "Sei pregato di selezionare un ruolo"
+      message:
+        label: "Messaggio di invito"
+        description: "Invieremo un'email all'utente, a cui puoi aggiungere qui un messaggio personale. Una spiegazione per l'invito potrebbe essere utile o forse qualche informazione sul progetto per aiutarli a iniziare."
+      summary:
+        next_button: "Invia invito"
+      success_message:
+        user: "L'utente può ora connettersi per accedere a %{project}. Nel mentre puoi ad esempio già pianificare con quell'utente e assegnare pacchetti di lavoro."
+        placeholder_user: "Il segnaposto è ora utilizzabile in %{project}. Nel mentre puoi ad esempio già pianificare con quell'utente e assegnare pacchetti di lavoro."
+        group: "Il gruppo è ora parte di %{project}. Nel mentre puoi ad esempio già pianificare con quel gruppo e assegnare pacchetti di lavoro."
   page:
     text: "Testo"
   placeholder_users:
@@ -1086,6 +1188,7 @@ it:
         identifier: "Identificatore"
         latest_activity_at: "Ultima attività alle"
         parent: "Sotto-progetto di"
+        project_creation_wizard_enabled: "Project initiation request"
         public_value:
           title: "Visibilità"
           true: "pubblico"
@@ -1100,6 +1203,13 @@ it:
           off_track: "Fuori limite"
           finished: "Terminato"
           discontinued: "Interrotto"
+        project_creation_wizard_assignee_custom_field: "Assignee when submitted"
+        project_creation_wizard_notification_text: "Notification text"
+        project_creation_wizard_send_confirmation_email: "Confirmation email"
+        project_creation_wizard_status_when_submitted: "Status when submitted"
+        project_creation_wizard_work_package_comment: "Work package comment"
+        project_creation_wizard_work_package_type: "Work package type"
+        template: "Template"
         templated: "Progetto modello"
         templated_value:
           true: "contrassegnato come modello"
@@ -1241,6 +1351,9 @@ it:
         mode_guideline: "Alcune modalità sovrascriveranno i colori personalizzati del tema per l'accessibilità e la leggibilità. Seleziona la modalità Chiara per il supporto completo del tema personalizzato."
         daily_reminders: "Promemoria giornalieri"
         workdays: "Giorni lavorativi"
+      users/invitation/form_model:
+        principal_type: "Tipo di invito"
+        id_or_email: "Nome o indirizzo email"
       version:
         effective_date: "Data di fine"
         sharing: "Condivisione"
@@ -1633,8 +1746,7 @@ it:
               cant_exceed_work: "non può essere superiore a Lavoro."
               must_be_set_when_work_is_set: "obbligatorio quando è impostato Lavoro."
               must_be_set_when_work_and_percent_complete_are_set: "obbligatorio quando sono impostate le opzioni Lavoro e % completamento."
-              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: >-
-                deve essere 0h quando il Lavoro è impostato e la % completamento è 100%.
+              must_be_set_to_zero_hours_when_work_is_set_and_percent_complete_is_100p: '>- must be 0h when Work is set and % Complete is 100%.'
               must_be_empty_when_work_is_empty_and_percent_complete_is_100p: >-
                 deve essere vuoto quando il Lavoro è vuoto e la % completamento è 100%.
           readonly_status: "La macro-attività è in uno stato di sola lettura perciò i suoi attributi non possono essere modificati."
@@ -1754,6 +1866,10 @@ it:
       one: "Inoltre, si è verificato un problema con il seguente campo:"
       other: "Inoltre, si sono verificati problemi con i seguenti campi:"
     field_erroneous_label: "Questo campo non è valido: %{full_errors} Prego, inserisci un valore valido."
+    messages:
+      unsupported_storage_type: "is not a supported storage type."
+      storage_error: "There was an error with the storage connection."
+      invalid_input: "The input is invalid."
   activity:
     item:
       created_by_on: "creato da %{user} il %{datetime}"
@@ -1952,6 +2068,7 @@ it:
   button_collapse_all: "Comprimi Tutto"
   button_configure: "Configura"
   button_continue: "Continua"
+  button_complete: "Complete"
   button_copy: "Copia"
   button_copy_to_clipboard: "Copia negli appunti"
   button_copy_link_to_clipboard: "Copia link negli appunti"
@@ -1962,9 +2079,11 @@ it:
   button_delete_permanently: "Elimina definitivamente"
   button_delete_watcher: "Eliminare osservatore %{name}"
   button_download: "Scarica"
+  button_disable: "Disable"
   button_duplicate: "Duplica"
   button_duplicate_and_follow: "Duplica e segui"
   button_edit: "Modifica"
+  button_enable: "Enable"
   button_edit_associated_wikipage: "Modifica pagina wiki associata: %{page_title}"
   button_expand_all: "Espandi tutto"
   button_favorite: "Aggiunti ai preferiti"
@@ -2051,9 +2170,28 @@ it:
     copy_options:
       dependencies_label: "Copia dal progetto"
   create_project:
+    attributes_heading: "Required attributes"
+    details_heading: "Project details"
     template_label: "Usa modello"
+    template_heading: "Templated projects"
     copy_options:
       dependencies_label: "Copia da modello"
+    blank_template:
+      label: "Blank project"
+      description: Start from scratch. Manually add project attributes, members and modules.
+    blank_description: No description provided.
+  create_portfolio:
+    details_heading: "Portfolio details"
+    template_heading: "Templated portfolios"
+    blank_template:
+      label: "Blank portfolio"
+      description: Start from scratch. Manually add portfolio attributes, members and modules.
+  create_program:
+    details_heading: "Program details"
+    template_heading: "Templated programs"
+    blank_template:
+      label: "Blank program"
+      description: Start from scratch. Manually add program attributes, members and modules.
   create_wiki_page: "Crea nuova pagina della wiki"
   create_wiki_page_button: "Pagina wiki"
   date:
@@ -2524,10 +2662,12 @@ it:
       attribute_not_found: "attributo non trovato: %{attribute}"
       model_not_found: "modello di attributo non valido: %{model}"
       resource_not_found: "risorsa non trovata: %{resource}"
-      rich_text_unsupported: "L'incorporazione di Rich text attualmente non è supportata nell'esportazione"
+      nested_rich_text_unsupported: "Nested rich text embedding currently not supported in export"
     units:
       hours: o
       days: g
+    project_initiation:
+      title: "Project initiation request"
   pdf_generator:
     page_nr_footer: "Pagina %{page} di %{total}"
     template_attributes:
@@ -2602,6 +2742,7 @@ it:
       new_features:
         header: "Informati sulle nuove funzionalità e sugli aggiornamenti dei prodotti."
         learn_about: "Scopri di più su tutte le nuove funzionalità"
+        missing: "There are no highlighted features yet."
         #We need to include the version to invalidate outdated translations in other locales
         "16_6":
           new_features_title: >
@@ -2705,7 +2846,7 @@ it:
         static_token_name: "Token API"
       ical:
         title: "iCalendar"
-        text_hint_link: 'I token iCalendar consentono agli utenti di [iscriversi ai calendari di OpenProject](docs_url) e visualizzare informazioni aggiornate sulle macro-attività da client esterni.'
+        text_hint_link: "I token iCalendar consentono agli utenti di [iscriversi ai calendari di OpenProject](docs_url) e visualizzare informazioni aggiornate sulle macro-attività da client esterni."
         disabled_text: "Le iscrizioni iCalendar non sono abilitate dall'amministratore. Contatta il tuo amministratore per utilizzare questa funzione."
         empty_text_hint: "Per aggiungere un token iCalendar, iscriviti a un calendario nuovo o esistente dall'interno del modulo Calendario di un progetto. È necessario disporre delle autorizzazioni necessarie."
       oauth:
@@ -3063,7 +3204,8 @@ it:
   label_lock_user: "Blocca utente"
   label_logged_as: "Accesso eseguito come"
   label_login: "Accedi"
-  label_custom_logo: "Logo personalizzato"
+  label_custom_logo: "Custom logo desktop"
+  label_custom_logo_mobile: "Custom logo mobile"
   label_custom_export_logo: "Esportazione personalizzata logo"
   label_custom_export_cover: "Sfondo della copertina di esportazione personalizzata"
   label_custom_export_footer: "Immagine personalizzata del piè di pagina dell'esportazione"
@@ -3188,6 +3330,7 @@ it:
   label_planning: "Pianificazione"
   label_please_login: "Occorre effettuare l'accesso"
   label_plugins: "Plugin"
+  label_portfolio_plural: "Portfolios"
   label_modules_and_plugins: "Moduli e Plugin"
   label_precedes: "precede"
   label_preferences: "Preferenze"
@@ -3208,11 +3351,15 @@ it:
   label_project_attribute_manage_link: "Gestisci gli attributi del progetto"
   label_project_count: "Numero totale di progetti"
   label_project_copy_notifications: "Invia le email di notifica durante la copia del progetto"
+  label_project_initiation_pdf: "Export PDF for project initiation request"
   label_project_latest: "Ultimi progetti"
   label_project_default_type: "Permetti tipi vuoti"
   label_project_hierarchy: "Gerarchia del progetto"
   label_project_mappings: "Progetti"
   label_project_new: "Nuovo progetto"
+  label_project_initiation_request: "Project initiation request"
+  label_project_creation_wizard: "New project creation wizard"
+  label_project_mandate: "New project mandate"
   label_project_plural: "Progetti"
   label_project_list_plural: "Elenchi progetto"
   label_project_life_cycle: "Ciclo di vita del progetto"
@@ -3262,6 +3409,7 @@ it:
   label_repository_remove: "Rimuovi il repository"
   label_repository_root: "Cartella radice dell'archivio"
   label_repository_plural: "Archivi"
+  label_request_submission: "Request submission"
   label_required: "obbligatorio"
   label_requires: "richiede"
   label_result_plural: "Risultati"
@@ -3731,6 +3879,9 @@ it:
   permission_add_project: "Crea progetti"
   permission_add_portfolios: "Crea più portfolio"
   permission_add_programs: "Crea programmi"
+  permission_add_project_from_template: "Create project from template"
+  permission_add_portfolios_from_template: "Create portfolio from template"
+  permission_add_programs_from_template: "Create program from template"
   permission_add_work_package_attachments: "Aggiungi allegati"
   permission_add_work_package_attachments_explanation: "Consente di aggiungere allegati senza l'autorizzazione Modifica macro-attività"
   permission_add_internal_comments: "Scrivere commenti interni"
@@ -3776,7 +3927,11 @@ it:
   permission_edit_timelines: "Modificare cronologie"
   permission_edit_wiki_pages: "Modificare pagine wiki"
   permission_export_work_packages: "Esportare macro-attività"
+  permission_export_projects: "Export projects"
   permission_export_wiki_pages: "Esportare pagine wiki"
+  permission_invite_members_by_email: "Invita i membri via email"
+  permission_invite_members_by_email_explanation: >
+    Consente agli utenti di invitare nuovi membri tramite email. Gli utenti invitati riceveranno un'email con un link per impostare la password e attivare il proprio account. Dipende dall'autorizzazione a gestire i membri
   permission_list_attachments: "Elencare allegati"
   permission_log_own_time: "Registrare il proprio tempo"
   permission_log_time: "Registrare il tempo per gli altri utenti"
@@ -3806,6 +3961,9 @@ it:
   permission_share_work_packages: "Condividi macro-attività"
   permission_manage_types: "Seleziona i tipi"
   permission_manage_own_reminders: "Crea promemoria"
+  permission_view_all_principals: "Visualizza tutti gli utenti e i gruppi"
+  permission_view_all_principals_explanation: >
+    Consente agli utenti di visualizzare tutti gli utenti e i gruppi nel sistema, anche se non sono membri di alcun progetto o gruppo a cui si è partecipato.
   permission_view_project: "Visualizza progetti"
   permission_view_changesets: "Visualizza l'archivio revisioni in OpenProject"
   permission_view_internal_comments: "Visualizzare commenti interni"
@@ -3836,6 +3994,11 @@ it:
   permission_edit_project_query: "Modifica elenco di progetti"
   placeholders:
     default: "-"
+  program:
+    count:
+      zero: "0 programs"
+      one: "1 program"
+      other: "%{count} programs"
   project:
     archive:
       title: "Archive project"
@@ -4166,7 +4329,7 @@ it:
   setting_self_registration_manual_activation: "Attivazione account manuale"
   setting_self_registration_manual_activation_caption: >
     Gli utenti possono registrarsi autonomamente. I loro account rimangono in sospeso finché un amministratore o un utente con autorizzazione globale per creare o gestire utenti non li attiva.
-  setting_session_ttl: "Intervallo di tempo al termine del quale scade la sessione per inattività"
+  setting_session_ttl: "Session expiration time after inactivity"
   setting_session_ttl_hint: "Per valori inferiori a 5 è pari a disabilitato"
   setting_session_ttl_enabled: "La sessione scade"
   setting_start_of_week: "La settimana inizia da"
@@ -4264,9 +4427,48 @@ it:
       new:
         heading: "Nuovo attributo"
         description: "Le modifiche a questo attributo di progetto si rifletteranno in tutti i progetti in cui è abilitato. Gli attributi obbligatori non possono essere disabilitati per progetto."
+      sections:
+        display_representation:
+          overview:
+            label: "Project attribute shown in:"
+            main_area:
+              label: "Main area"
+              description: "Add all the project attributes as individual widgets in the main section of the project overview."
+            side_panel:
+              label: "Side panel"
+              description: "Add all the project attributes in a section inside the right side panel in the project overview."
+    project_initiation_request:
+      blankslate:
+        title: "Initiation request not enabled"
+        description: "OpenProject can generate a step-by-step wizard to help project managers fill out a project initiation request. You can chose which project attributes should be included and what to do with the output document. Enable it here to start configuring the wizard."
+      disable_dialog:
+        title: "Disable project initiation request"
+        heading: "Disable this project initiation request?"
+        confirmation_message: "The initiation request wizard will no longer be available to new projects based on this template. Project managers and project owners will need to manually configure and fill out the relevant information in the Project overview."
+        checkbox_message: "I understand that this action is not reversible"
+      name:
+        artifact_name: "Artifact name"
+        artifact_name_caption: "Choose the name for this artifact that your project management framework recommends."
+        options:
+          project_initiation_request: "Project initiation request"
+          project_creation_wizard: "Project creation wizard"
+          project_mandate: "Project mandate"
+      submission:
+        work_package_type: "Work package type"
+        work_package_type_caption: "The work package type that should be used to store the completed artifact."
+        status_when_submitted: "Status when submitted"
+        status_when_submitted_caption: "The status the generated work package will transition to once the request is submitted."
+        send_confirmation_email: "Send confirmation email to the user who submitted the project initiation request"
+        assignee: "Assignee when submitted"
+        assignee_caption: "The person or group this project initiation request will be assigned to."
+        confirmation_email_text: "Confirmation email text"
+        confirmation_email_default: "Hello,\n\nYou submitted a project initiation request for **%{project_name}**. It is now awaiting review.\nClick the link below to access the work package with your request."
+        work_package_comment: "Work package comment"
+        work_package_comment_caption: "The assignee selected above will automatically be @mentioned in the comment."
+        work_package_comment_default: "A project initiation request for **%{project_name}** was submitted and is awaiting review."
     project_phase_definitions:
       heading: "Ciclo di vita del progetto"
-      heading_description: "Il ciclo di vita del progetto definisce le fasi del progetto che possono essere utilizzate per la pianificazione del progetto e apparirà nella pagina panoramica di ogni progetto. Questi attributi possono essere abilitati o disabilitati ma non riordinati a livello di progetto."
+      heading_description: "Project life cycle defines the project phases that can be used for your project planning and will appear in the overview page of each project. These attributes can be enabled or disabled but not re-ordered at a project level."
       label_add: "Aggiungi"
       label_add_description: "Aggiungi definizione di fase progetto"
       filter:

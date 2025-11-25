@@ -44,7 +44,7 @@ class DocumentsController < ApplicationController
 
   def index
     @documents = list_documents_query
-      .includes(:category)
+      .includes(:type)
       .paginate(page: page_param, per_page: per_page_param)
   end
 
@@ -59,30 +59,48 @@ class DocumentsController < ApplicationController
 
   def show
     @attachments = @document.attachments.order(Arel.sql("created_at DESC"))
+
+    if @document.collaborative?
+      generate_oauth_token
+      derive_show_edit_state_from_params
+    end
+  end
+
+  def render_avatars
+    user_ids = params[:user_ids]
+    @users = User.where(id: user_ids)
+    update_via_turbo_stream(component: Documents::ShowEditView::PageHeader::LiveUsersComponent.new(users: @users))
+
+    respond_with_turbo_streams
   end
 
   def new
     @document = @project.documents.build
     @document.attributes = document_params
-    generate_oauth_token
   end
 
   def edit
-    @categories = DocumentCategory.all
-    generate_oauth_token
+    render_400 unless @document.classic?
+  end
+
+  def edit_title
+    update_header_component_via_turbo_stream(state: :edit)
+
+    respond_with_turbo_streams
   end
 
   def create
-    call = attachable_create_call ::Documents::CreateService,
-                                  args: document_params.merge(project: @project)
-
-    if call.success?
-      flash[:notice] = I18n.t(:notice_successful_create)
-      redirect_to project_documents_path(@project)
+    if document_params[:kind] == "classic"
+      create_classic_document
     else
-      @document = call.result
-      render action: :new, status: :unprocessable_entity
+      create_collaborative_document
     end
+  end
+
+  def cancel_title_edit
+    update_header_component_via_turbo_stream(state: :show)
+
+    respond_with_turbo_streams
   end
 
   def update
@@ -99,11 +117,49 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def update_title
+    call = Documents::UpdateService
+      .new(user: current_user, model: @document)
+      .call(document_params.slice(:title))
+
+    state = call.success? ? :show : :edit
+    update_header_component_via_turbo_stream(state:)
+
+    respond_with_turbo_streams
+  end
+
+  def update_type
+    service_call = Documents::UpdateService
+      .new(user: current_user, model: @document)
+      .call(type_id: params[:type_id])
+
+    if service_call.success?
+      update_via_turbo_stream(
+        component: Documents::ShowEditView::PageHeader::InfoLineComponent.new(@document)
+      )
+    else
+      render_error_flash_message_via_turbo_stream(
+        message: service_call.errors.full_messages
+      )
+      @turbo_status = :unprocessable_entity
+    end
+
+    respond_with_turbo_streams
+  end
+
+  def delete_dialog
+    respond_with_dialog Documents::DeleteDialogComponent.new(@document)
+  end
+
   def destroy
-    if @document.destroy
+    service_call = Documents::DeleteService
+      .new(user: current_user, model: @document)
+      .call
+
+    if service_call.success?
       flash[:notice] = I18n.t(:notice_successful_delete)
     else
-      flash[:error] = join_flash_messages(@document.errors.full_messages)
+      flash[:error] = join_flash_messages(service_call.errors.full_messages)
     end
 
     redirect_to project_documents_path(@project), status: :see_other
@@ -112,7 +168,7 @@ class DocumentsController < ApplicationController
   private
 
   def document_params
-    params.fetch(:document, {}).permit("category_id", "title", "description", "content_binary")
+    params.fetch(:document, {}).permit("type_id", "title", "description", "content_binary", "kind")
   end
 
   def list_documents_query
@@ -123,9 +179,30 @@ class DocumentsController < ApplicationController
     @query.results
   end
 
+  def create_classic_document
+    call = attachable_create_call ::Documents::CreateService,
+                                  args: document_params.merge(project: @project)
+
+    if call.success?
+      flash[:notice] = I18n.t(:notice_successful_create)
+      redirect_to project_documents_path(@project)
+    else
+      @document = call.result
+      render action: :new, status: :unprocessable_entity
+    end
+  end
+
+  def create_collaborative_document
+    call = ::Documents::CreateService
+        .new(user: current_user)
+        .call(title: I18n.t(:label_document_new), project: @project, type_id: DocumentType.default.id)
+
+    redirect_to document_path(call.result, state: :edit)
+  end
+
   def generate_oauth_token
     # do not generate a token if the user is not allowed to manage documents
-    if !current_user.allowed_in_project?(:manage_documents, @project)
+    if !current_user.allowed_in_project?(:view_documents, @project)
       return
     end
 
@@ -138,5 +215,15 @@ class DocumentsController < ApplicationController
     else
       Rails.logger.error("Failed to generate OAuth token for document #{@document.id}: #{result.errors}")
     end
+  end
+
+  def update_header_component_via_turbo_stream(state: :show)
+    update_via_turbo_stream(
+      component: Documents::ShowEditView::PageHeaderComponent.new(@document, project: @project, state:)
+    )
+  end
+
+  def derive_show_edit_state_from_params
+    @state = params[:state] == "edit" ? :edit : :show
   end
 end

@@ -78,6 +78,16 @@ export class PathHelperService {
     return `${this.ifcModelsPath(projectIdentifier)}/${modelId}/edit`;
   }
 
+  public inviteUserPath(projectId:string|null) {
+    const path = `${this.staticBase}/users/invite`;
+
+    if (projectId) {
+      return `${path}?user_invitation[project_id]=${projectId}`;
+    }
+
+    return path;
+  }
+
   public ifcModelsDeletePath(projectIdentifier:string, modelId:number|string) {
     return `${this.ifcModelsPath(projectIdentifier)}/${modelId}`;
   }
@@ -114,6 +124,10 @@ export class PathHelperService {
 
   public myPagePath() {
     return `${this.staticBase}/my/page`;
+  }
+
+  public myAccessTokensPath() {
+    return `${this.staticBase}/my/access_tokens`;
   }
 
   public myNotificationsSettingsPath() {
@@ -160,6 +174,14 @@ export class PathHelperService {
     return `${this.projectPath(projectId)}/calendars`;
   }
 
+  public projectCreationWizardPath(projectId:string) {
+    return `${this.projectPath(projectId)}/creation_wizard`;
+  }
+
+  public projectCreationWizardHelpTextPath(projectId:string, customFieldId:string) {
+    return `${this.projectCreationWizardPath(projectId)}/help_text?custom_field_id=${customFieldId}`;
+  }
+
   public projectTeamplannerPath(projectId:string) {
     return `${this.projectPath(projectId)}/team_planners`;
   }
@@ -200,6 +222,10 @@ export class PathHelperService {
       return `${this.projectPath(projectId)}/work_packages`;
     }
     return `${this.staticBase}/work_packages`;
+  }
+
+  public workPackageNewPath():string {
+    return `${this.staticBase}/work_packages/new`;
   }
 
   public projectWorkPackageNewPath(projectId:string) {
@@ -290,11 +316,23 @@ export class PathHelperService {
     return `${this.staticBase}/work_packages/${id}`;
   }
 
+  public genericWorkPackagePath(projectIdentifier:string|null, workPackageId:string|number, tab = 'activity') {
+    if (projectIdentifier) {
+      return `${this.projectWorkPackagePath(projectIdentifier, workPackageId)}/${tab}`;
+    }
+
+    return `${this.workPackagePath(workPackageId)}/${tab}`;
+  }
+
   public workPackageShortPath(id:string|number) {
     return `${this.staticBase}/wp/${id}`;
   }
 
-  public workPackageCopyPath(workPackageId:string|number) {
+  public workPackageCopyPath(projectIdentifier:string|null, workPackageId:string|number) {
+    if (projectIdentifier) {
+      return `${this.workPackagesPath(projectIdentifier)}/${workPackageId}/copy`;
+    }
+
     return `${this.workPackagePath(workPackageId)}/copy`;
   }
 
@@ -306,6 +344,7 @@ export class PathHelperService {
     return `${this.workPackagesPath(projectIdentifier)}/details/${workPackageId}`;
   }
 
+  // Todo: Remove?
   public workPackageDetailsCopyPath(projectIdentifier:string, workPackageId:string|number) {
     return this.workPackageDetailsPath(projectIdentifier, workPackageId, 'copy');
   }
@@ -402,6 +441,10 @@ export class PathHelperService {
 
   public myTimeTrackingRefresh(date:string, viewMode:string, mode:string) {
     return `${this.staticBase}/my/time-tracking/refresh?date=${date}&view_mode=${viewMode}&mode=${mode}`;
+  }
+
+  public previewCustomFieldRoleAssignmentDialog(customFieldId:number, roleId:number) {
+    return `${this.staticBase}/admin/settings/project_custom_fields/${customFieldId}/role_assignment_preview_dialog?role_id=${roleId}`;
   }
 
   public homePath() {

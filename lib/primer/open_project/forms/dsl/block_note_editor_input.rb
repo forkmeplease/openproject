@@ -33,29 +33,32 @@ module Primer
     module Forms
       module Dsl
         class BlockNoteEditorInput < Primer::Forms::Dsl::Input
-          attr_reader :name, :label, :value, :classes, :document_id, :document_name, :oauth_token
+          attr_reader :name,
+                      :label,
+                      :value,
+                      :classes,
+                      :attachments_upload_url,
+                      :attachments_collection_key
 
           ##
           # @param name [String] The name of the input field.
           # @param label [String] The label for the input field.
           # @param value [String] The initial value of the input in base64 format.
-          # @param document_id [String] The ID of the document.
-          # @param document_name [String] The name of the document for the collaborative YJS provider.
-          # @param oauth_token [String, nil] The OAuth token for external server authentication.
-          def initialize(name:, label:, value:, document_id:, document_name:, oauth_token: nil, **system_arguments)
+          # @param attachments_upload_url [String] The URL to which attachments will be uploaded.
+          # @param attachments_collection_key [String] The collection key for attachments.
+          def initialize(name:, label:, value:, attachments_upload_url: "", attachments_collection_key: "", **system_arguments)
             @name = name
             @label = label
             @value = value
             @classes = system_arguments[:classes]
-            @document_id = document_id
-            @document_name = document_name
-            @oauth_token = oauth_token
+            @attachments_upload_url = attachments_upload_url
+            @attachments_collection_key = attachments_collection_key
 
             super(**system_arguments)
           end
 
           def to_component
-            BlockNoteEditor.new(input: self, value:, document_id:, document_name:, oauth_token:)
+            BlockNoteEditor.new(input: self, value:, attachments_upload_url:, attachments_collection_key:)
           end
 
           def type
