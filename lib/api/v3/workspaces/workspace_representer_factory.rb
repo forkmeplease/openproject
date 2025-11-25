@@ -42,7 +42,7 @@ module API
           }
         end
 
-        def create_setter_lambda(name, namespaces: %i(projects programs portfolios))
+        def create_setter_lambda(name, namespaces: %i(projects programs portfolios workspaces))
           ->(fragment:, **) {
             href = fragment["href"]
 
