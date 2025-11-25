@@ -65,17 +65,19 @@ module Projects
         status_id: project.project_creation_wizard_status_when_submitted_id,
         subject:,
         assigned_to_id:,
-        attachments: [pdf_attachment]
+        attachments: [pdf_attachment],
+        journal_notes:
       }
-      WorkPackages::CreateService.new(user:).call(create_params).tap do |result|
-        result.on_success do
-          work_package = result.result
-          Journals::UpdateService.new(model: work_package.last_journal, user:)
-                                 .call(notes: "#{mention_tag(assignee_user)}\n" \
-                                              "\n" \
-                                              "#{project.project_creation_wizard_work_package_comment}")
-        end
-      end
+
+      WorkPackages::CreateService.new(user:).call(create_params)
+    end
+
+    def journal_notes
+      <<~COMMENT
+        #{mention_tag(assignee_user)}
+
+        #{project.project_creation_wizard_work_package_comment}
+      COMMENT
     end
 
     def subject
