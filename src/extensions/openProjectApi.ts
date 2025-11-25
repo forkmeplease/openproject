@@ -22,27 +22,21 @@ export class OpenProjectApi implements Extension {
     * Authenticate the user by validating the token and document access
     */
   async onAuthenticate(data: onAuthenticatePayload) {
-    const { token, documentName, requestParameters } = data;
-    const documentId = requestParameters.get("document_id");
-    const opBasePath = requestParameters.get("openproject_base_path");
+    const { token, documentName } = data;
+    const resourceUrl = documentName;
 
     if (!token) {
       throw new Error('Unauthorized: Token missing.');
     }
     const decryptedToken = decryptToken(token);
 
-    if (!opBasePath) {
-      throw new Error('Unauthorized: Base URL missing.');
-    }
-
-    // Validate opBasePath against allowed domains
     const allowedDomains = process.env.ALLOWED_DOMAINS?.split(',') || [];
     if (allowedDomains.length <= 0) {
       throw new Error('Unauthorized: No allowed domains configured.');
     }
-    
+
     try {
-      const url = new URL(opBasePath);
+      const url = new URL(resourceUrl);
       const isAllowed = allowedDomains.some(domain =>
         url.hostname === domain.trim() || url.hostname.endsWith('.' + domain.trim())
       );
@@ -57,8 +51,7 @@ export class OpenProjectApi implements Extension {
       throw error;
     }
 
-    const targetUrl = `${opBasePath}/api/v3/documents/${documentId}`;
-    const response = await fetch(targetUrl, {
+    const response = await fetch(resourceUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -67,18 +60,13 @@ export class OpenProjectApi implements Extension {
     });
 
     if (!response.ok) {
-      throw new Error('Unauthorized: Invalid token.');
+      throw new Error('Unauthorized: Invalid token or document access denied.');
     }
     const jsonData = await response.json() as ApiResponseDocument;
 
-    if (!jsonData.title || jsonData.title !== documentName) {
-      throw new Error('Unauthorized: Document access denied.');
-    }
-
-    data.documentName = jsonData.title;
-    data.context.documentId = documentId;
+    // data.documentName = resourceUrl;
+    data.context.resourceUrl = resourceUrl;
     data.context.token = decryptedToken;
-    data.context.opBasePath = opBasePath;
     if (!jsonData._links?.update) {
       // https://tiptap.dev/docs/hocuspocus/guides/auth#read-only-mode
       data.connectionConfig.readOnly = true;
@@ -90,12 +78,11 @@ export class OpenProjectApi implements Extension {
     * Retrieve data from the API. This should return the YDoc data
     */
   async onLoadDocument(data: onLoadDocumentPayload) {
-    const { documentId, opBasePath } = data.context;
+    const { resourceUrl } = data.context;
 
-    const targetUrl = `${opBasePath}/api/v3/documents/${documentId}`;
-    console.log(`GET ${targetUrl}`);
+    console.log(`GET ${resourceUrl}`);
 
-    const response = await fetch(targetUrl, {
+    const response = await fetch(resourceUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -119,10 +106,10 @@ export class OpenProjectApi implements Extension {
     * Store data to the API. The data is a YDoc update
     */
   async onStoreDocument(data: onStoreDocumentPayload): Promise<void> {
-    const { documentId, opBasePath, readonly } = data.context;
+    const { resourceUrl, readonly } = data.context;
 
-    if (!documentId || !opBasePath) {
-      console.warn("Missing documentId or opBasePath in context. Skipping store.");
+    if (!resourceUrl) {
+      console.warn("Missing parameters in context. Skipping store.");
       return;
     }
     if (readonly) {
@@ -130,8 +117,7 @@ export class OpenProjectApi implements Extension {
       return;
     }
 
-    const targetUrl = `${opBasePath}/api/v3/documents/${documentId}`;
-    console.log(`PATCH ${targetUrl}`);
+    console.log(`PATCH ${resourceUrl}`);
 
     const base64Data = Buffer.from(Y.encodeStateAsUpdate(data.document)).toString("base64");
 
@@ -144,7 +130,7 @@ export class OpenProjectApi implements Extension {
     // @ts-expect-error BlockNote types are complicated
     const markdownData = await editor.blocksToMarkdownLossy(editorData);
 
-    const response = await fetch(targetUrl, {
+    const response = await fetch(resourceUrl, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
