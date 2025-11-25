@@ -24,18 +24,17 @@ describe("OpenProjectApi", () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
           token: null,
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Token missing.");
     });
 
-    test("when the opBasePath is not present throw an error", async () => {
+    test("when the token is invalid", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-          requestParameters: new URLSearchParams({ document_id: "121" }),
+          // Invalid token, generated with a different secret
+          token: "5Sm4blMLhP8PFS67xw==--br8L/7YDX3rbTLpT--HHEi+SnNdmHmH90N3mHY9A==",
         } as unknown as onAuthenticatePayload)
-      ).rejects.toThrowError("Unauthorized: Base URL missing.");
+      ).rejects.toThrowError("Unsupported state or unable to authenticate data");
     });
 
     test("when ALLOWED_DOMAINS is not configured throw an error", async () => {
@@ -44,58 +43,45 @@ describe("OpenProjectApi", () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
           token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: No allowed domains configured.");
     });
 
-    test("when opBasePath has invalid format throw an error", async () => {
+    test("when the resourceUrl has invalid format throw an error", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
           token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "not-a-valid-url" }),
+          documentName: "not a valid url",
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Invalid base URL format.");
     });
 
-    test("when opBasePath domain is not in ALLOWED_DOMAINS throw an error", async () => {
+    test("when the resourceUrl domain is not in ALLOWED_DOMAINS throw an error", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
           token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://malicious.com" }),
+          documentName: "https://malicious.com/something/1",
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Invalid base URL domain.");
     });
 
-    test("when opBasePath subdomain matches ALLOWED_DOMAINS it should be accepted", async () => {
+    test("when the resourceUrl subdomain matches ALLOWED_DOMAINS it should be accepted", async () => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({ title: "TheDocName" }),
+        json: () => Promise.resolve({}),
       });
 
       const data = {
         context: {},
         connectionConfig: {},
         token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-        documentName: "TheDocName",
-        requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://subdomain.test.api" }),
+        documentName: "https://subdomain.test.api/api/v3/documents/1",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
 
-      expect(data.context.opBasePath).toEqual("https://subdomain.test.api");
-    });
-
-    test("when the token is invalid", async () => {
-      await expect(() =>
-        new OpenProjectApi().onAuthenticate({
-          // Invalid token, generated with a different secret
-          token: "5Sm4blMLhP8PFS67xw==--br8L/7YDX3rbTLpT--HHEi+SnNdmHmH90N3mHY9A==",
-          documentName: "TheDocName",
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
-        } as unknown as onAuthenticatePayload)
-      ).rejects.toThrowError("Unsupported state or unable to authenticate data");
+      expect(data.context.resourceUrl).toEqual("https://subdomain.test.api/api/v3/documents/1");
     });
 
     test("when the server does not authorize the request throw an error", async () => {
@@ -107,10 +93,9 @@ describe("OpenProjectApi", () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
           token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-          documentName: "TheDocName",
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
+          documentName: "https://test.api/api/v3/documents/121",
         } as unknown as onAuthenticatePayload)
-      ).rejects.toThrowError("Unauthorized: Invalid token.");
+      ).rejects.toThrowError("Unauthorized: Invalid token or document access denied.");
 
       expect(fetchMock).toHaveBeenCalledWith(
         "https://test.api/api/v3/documents/121",
@@ -124,43 +109,25 @@ describe("OpenProjectApi", () => {
       );
     });
 
-    test("when the document title does not match the requested documentName, throw an error", async () => {
+    test("when the token is valid set the context", async () => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({ title: "DifferentDocName" }),
-      });
-
-      await expect(() =>
-        new OpenProjectApi().onAuthenticate({
-          token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-          documentName: "TheDocName",
-          requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
-        } as unknown as onAuthenticatePayload)
-      ).rejects.toThrowError("Unauthorized: Document access denied.");
-    });
-
-    test("when the token is valid and document title matches, set the document_id, token and opBasePath on the context", async () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ title: "TheDocName" }),
+        json: () => Promise.resolve({}),
       });
 
       const data = {
         context: {},
         connectionConfig: {},
         token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-        documentName: "TheDocName",
-        requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
+        documentName: "https://test.api/api/v3/documents/121",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
 
-      expect(data.context.documentId).toEqual("121");
+      expect(data.context.resourceUrl).toEqual("https://test.api/api/v3/documents/121");
       expect(data.context.token).toEqual("valid_token");
-      expect(data.context.opBasePath).toEqual("https://test.api");
-      expect(data.documentName).toEqual("TheDocName");
+      expect(data.documentName).toEqual("https://test.api/api/v3/documents/121");
     });
 
     test("when there is no update link, setup the connection as readonly", async () => {
@@ -168,7 +135,6 @@ describe("OpenProjectApi", () => {
         ok: true,
         status: 200,
         json: () => Promise.resolve({
-          title: "TheDocName",
           _links: {
             self: { href: "/api/v3/documents/121" }
           }
@@ -179,8 +145,7 @@ describe("OpenProjectApi", () => {
         context: {},
         connectionConfig: {},
         token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-        documentName: "TheDocName",
-        requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
+        documentName: "https://test.api/api/v3/documents/121",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
@@ -206,8 +171,7 @@ describe("OpenProjectApi", () => {
         context: {},
         connectionConfig: {},
         token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
-        documentName: "TheDocName",
-        requestParameters: new URLSearchParams({ document_id: "121", openproject_base_path: "https://test.api" }),
+        documentName: "https://test.api/api/v3/documents/121",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
@@ -228,14 +192,12 @@ describe("OpenProjectApi", () => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({
-          contentBinary: base64Update
-        }),
+        json: () => Promise.resolve({ contentBinary: base64Update }),
       });
 
       const targetDoc = new Y.Doc();
       const data = {
-        context: { documentId: "121", token: "testToken", opBasePath: "https://test.api" },
+        context: { token: "superValidToken", resourceUrl: "https://test.api/api/v3/documents/121" },
         document: targetDoc,
       } as onLoadDocumentPayload;
 
@@ -248,7 +210,7 @@ describe("OpenProjectApi", () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": expect.stringContaining("Bearer"),
+            "Authorization": "Bearer superValidToken",
           },
         }
       );
@@ -265,7 +227,7 @@ describe("OpenProjectApi", () => {
       });
 
       const data = {
-        context: { documentId: "121", token: "testToken", opBasePath: "https://test.api" },
+        context: { token: "superValidToken", resourceUrl: "https://test.api/api/v3/documents/121" },
         document: new Y.Doc(),
       } as onLoadDocumentPayload;
 
@@ -305,10 +267,9 @@ describe("OpenProjectApi", () => {
 
       const data = {
         context: {
-          documentId: "121",
-          token: "testToken",
-          opBasePath: "https://test.api",
-          readonly: false
+          token: "superValidToken",
+          resourceUrl: "https://test.api/api/v3/documents/121",
+          readonly: false,
         },
         document,
       } as onStoreDocumentPayload;
