@@ -43,7 +43,7 @@ module Projects::Concerns
 
       set_default_role(new_project) unless user.admin?
       disable_custom_fields_with_empty_values(new_project)
-      notify_project_created(new_project)
+      notify_project_created(new_project) if new_project.persisted?
 
       super
     end
