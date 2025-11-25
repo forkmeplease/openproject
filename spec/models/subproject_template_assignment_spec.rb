@@ -48,7 +48,8 @@ RSpec.describe SubprojectTemplateAssignment do
 
   describe "enums" do
     it "defines workspace_type enum" do
-      expect(described_class.workspace_types).to eq({ "project" => "project", "program" => "program" })
+      expect(described_class.workspace_types).to eq({ "project" => "project", "program" => "program",
+                                                      "portfolio" => "portfolio" })
     end
 
     it "allows setting workspace_type to project" do
@@ -61,6 +62,12 @@ RSpec.describe SubprojectTemplateAssignment do
       assignment = build(:subproject_template_assignment, workspace_type: :program)
       expect(assignment.workspace_type).to eq("program")
       expect(assignment).to be_program
+    end
+
+    it "allows setting workspace_type to portfolio" do
+      assignment = build(:subproject_template_assignment, workspace_type: :portfolio)
+      expect(assignment.workspace_type).to eq("portfolio")
+      expect(assignment).to be_portfolio
     end
   end
 
@@ -174,6 +181,14 @@ RSpec.describe SubprojectTemplateAssignment do
       expect(assignment).to be_valid
       expect(assignment.workspace_type).to eq("program")
       expect(assignment.template.workspace_type).to eq("program")
+      expect(assignment.template).to be_templated
+    end
+
+    it "creates a valid assignment with :for_portfolio trait" do
+      assignment = create(:subproject_template_assignment, :for_portfolio)
+      expect(assignment).to be_valid
+      expect(assignment.workspace_type).to eq("portfolio")
+      expect(assignment.template.workspace_type).to eq("portfolio")
       expect(assignment.template).to be_templated
     end
   end

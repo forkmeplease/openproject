@@ -51,6 +51,10 @@ module Pages
           select_template("program_template", template)
         end
 
+        def select_portfolio_template(template)
+          select_template("portfolio_template", template)
+        end
+
         def expect_selected_project_template(template_name)
           expect_selected_template("project_template", template_name)
         end
@@ -59,8 +63,16 @@ module Pages
           expect_selected_template("program_template", template_name)
         end
 
+        def expect_selected_portfolio_template(template_name)
+          expect_selected_template("portfolio_template", template_name)
+        end
+
         def expect_no_program_template_field
           expect(page).to have_no_select("program_template")
+        end
+
+        def expect_no_portfolio_template_field
+          expect(page).to have_no_select("portfolio_template")
         end
 
         def save

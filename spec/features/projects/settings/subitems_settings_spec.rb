@@ -42,12 +42,17 @@ RSpec.describe "Projects", "subitems settings", :js do
     create(:project, name: "Program Template", templated: true, workspace_type: :program)
   end
 
+  shared_let(:portfolio_template) do
+    create(:project, name: "Portfolio Template", templated: true, workspace_type: :portfolio)
+  end
+
   current_user do
     create(:user,
            member_with_permissions: {
              project => permissions,
              project_template => %i[view_project],
-             program_template => %i[view_project]
+             program_template => %i[view_project],
+             portfolio_template => %i[view_project]
            })
   end
 
@@ -59,6 +64,7 @@ RSpec.describe "Projects", "subitems settings", :js do
 
       subitems_settings_page.expect_selected_project_template(nil)
       subitems_settings_page.expect_no_program_template_field
+      subitems_settings_page.expect_no_portfolio_template_field
 
       subitems_settings_page.select_project_template(project_template)
       subitems_settings_page.save
@@ -90,24 +96,30 @@ RSpec.describe "Projects", "subitems settings", :js do
 
       subitems_settings_page.expect_selected_project_template(nil)
       subitems_settings_page.expect_selected_program_template(nil)
+      subitems_settings_page.expect_selected_portfolio_template(nil)
 
       subitems_settings_page.select_project_template(project_template)
       subitems_settings_page.select_program_template(program_template)
+      subitems_settings_page.select_portfolio_template(portfolio_template)
       subitems_settings_page.save
       expect_and_dismiss_flash(message: "Successful update")
 
       subitems_settings_page.expect_selected_project_template(project_template.name)
       subitems_settings_page.expect_selected_program_template(program_template.name)
+      subitems_settings_page.expect_selected_portfolio_template(portfolio_template.name)
 
       expect(project.subproject_template_assignments.project.first&.template).to eq(project_template)
       expect(project.subproject_template_assignments.program.first&.template).to eq(program_template)
+      expect(project.subproject_template_assignments.portfolio.first&.template).to eq(portfolio_template)
       subitems_settings_page.select_project_template(nil)
       subitems_settings_page.select_program_template(nil)
+      subitems_settings_page.select_portfolio_template(nil)
       subitems_settings_page.save
       expect_and_dismiss_flash(message: "Successful update")
 
       subitems_settings_page.expect_selected_project_template(nil)
       subitems_settings_page.expect_selected_program_template(nil)
+      subitems_settings_page.expect_selected_portfolio_template(nil)
       expect(project.subproject_template_assignments).to be_empty
     end
 
@@ -115,10 +127,13 @@ RSpec.describe "Projects", "subitems settings", :js do
       subitems_settings_page.visit!
 
       expect(page).to have_select("project_template", with_options: [project_template.name])
-      expect(page).to have_no_select("project_template", with_options: [program_template.name])
+      expect(page).to have_no_select("project_template", with_options: [program_template.name, portfolio_template.name])
 
       expect(page).to have_select("program_template", with_options: [program_template.name])
-      expect(page).to have_no_select("program_template", with_options: [project_template.name])
+      expect(page).to have_no_select("program_template", with_options: [project_template.name, portfolio_template.name])
+
+      expect(page).to have_select("portfolio_template", with_options: [portfolio_template.name])
+      expect(page).to have_no_select("portfolio_template", with_options: [project_template.name, program_template.name])
     end
   end
 

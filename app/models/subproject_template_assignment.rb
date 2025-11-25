@@ -34,7 +34,8 @@ class SubprojectTemplateAssignment < ApplicationRecord
 
   enum :workspace_type, {
     project: "project",
-    program: "program"
+    program: "program",
+    portfolio: "portfolio"
   }, validate: true
 
   validates :project_id, presence: true
