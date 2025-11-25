@@ -208,7 +208,6 @@ en:
     caption: "This short version will be displayed as caption of the attribute."
     note_public: "Any text and images you add to this field is publicly visible to all logged in users."
     text_overview: "In this view, you can create custom help texts for attributes view. When defined, these texts can be shown by clicking the help icon next to its belonging attribute."
-    label_plural: "Attribute help texts"
     show_preview: "Preview text"
     add_new: "Add help text"
     edit: "Edit help text for %{attribute_field_name}"
@@ -1932,7 +1931,9 @@ en:
 
     models:
       attachment: "File"
-      attribute_help_text: "Attribute help text"
+      attribute_help_text:
+        one: "Attribute help text"
+        other: "Attribute help texts"
       auth_provider:
         one: "Authentication provider"
         other: "Authentication providers"

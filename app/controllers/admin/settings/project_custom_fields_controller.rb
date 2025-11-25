@@ -41,13 +41,15 @@ module Admin::Settings
     before_action :set_sections, only: %i[show index edit update move drop]
     before_action :find_custom_field,
                   only: %i(show edit project_mappings new_link link unlink update destroy delete_option reorder_alphabetical
-                           move drop role_assignment update_role_assignment role_assignment_preview_dialog)
+                           move drop role_assignment update_role_assignment role_assignment_preview_dialog
+                           attribute_help_text update_attribute_help_text)
     before_action :prepare_custom_option_position, only: %i(update create)
     before_action :find_custom_option, only: :delete_option
     before_action :project_custom_field_mappings_query, only: %i[project_mappings unlink]
     before_action :find_custom_field_projects_to_link, only: :link
     before_action :find_unlink_project_custom_field_mapping, only: :unlink
     before_action :prepare_role_assignment_form, only: %i[role_assignment update_role_assignment]
+    before_action :find_or_initialize_attribute_help_text, only: %i[attribute_help_text update_attribute_help_text]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def index
@@ -184,6 +186,24 @@ module Admin::Settings
       respond_with_turbo_streams
     end
 
+    def attribute_help_text; end
+
+    def update_attribute_help_text
+      service_class = @attribute_help_text.persisted? ? ::AttributeHelpTexts::UpdateService : ::AttributeHelpTexts::CreateService
+      call = service_class
+        .new(user: current_user, model: @attribute_help_text)
+        .call(attribute_help_text_params_with_attachments)
+
+      if call.success?
+        flash[:notice] = t(:notice_successful_update)
+        redirect_to attribute_help_text_admin_settings_project_custom_field_path(@custom_field)
+      else
+        @attribute_help_text = call.result
+        flash.now[:error] = call.message || I18n.t("notice_internal_server_error")
+        render :attribute_help_text, status: :unprocessable_entity
+      end
+    end
+
     private
 
     def prepare_role_assignment_form
@@ -265,6 +285,36 @@ module Admin::Settings
 
     def role_assignment_params
       params.expect(custom_field: [:role_id])
+    end
+
+    def find_or_initialize_attribute_help_text
+      @attribute_help_text = AttributeHelpText::Project.find_or_initialize_by(
+        attribute_name: "custom_field_#{@custom_field.id}"
+      )
+    end
+
+    def attribute_help_text_params
+      params
+        .require(:attribute_help_text)
+        .permit(:help_text, :caption, :type, :attribute_name)
+        .merge(
+          type: "AttributeHelpText::Project",
+          attribute_name: "custom_field_#{@custom_field.id}"
+        )
+    end
+
+    def attribute_help_text_params_with_attachments
+      attribute_help_text_params.merge(attachment_params_for_help_text)
+    end
+
+    def attachment_params_for_help_text
+      attachment_params = permitted_params.attachments.to_h
+
+      if attachment_params.any?
+        { attachment_ids: attachment_params.values.map(&:values).flatten }
+      else
+        {}
+      end
     end
   end
 end

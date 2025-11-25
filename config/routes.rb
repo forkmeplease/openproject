@@ -674,6 +674,9 @@ Rails.application.routes.draw do
           get :role_assignment
           post :update_role_assignment
           get :role_assignment_preview_dialog
+
+          get :attribute_help_text
+          put :update_attribute_help_text
         end
         resources :items, controller: "/admin/settings/project_custom_fields/hierarchy/items" do
           member do

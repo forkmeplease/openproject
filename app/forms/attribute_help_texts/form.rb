@@ -36,17 +36,25 @@ module AttributeHelpTexts
         value: model.type
       )
 
-      attribute_form.select_list(
-        name: :attribute_name,
-        label: attribute_name(:attribute_name),
-        required: true,
-        disabled: model.persisted?
-      ) do |list|
-        selectable_attributes.each do |label, value|
-          list.option(
-            label:,
-            value:
-          )
+      if hide_attribute_name?
+        attribute_form.hidden(
+          name: :attribute_name,
+          value: model.attribute_name
+        )
+      else
+        attribute_form.select_list(
+          name: :attribute_name,
+          label: attribute_name(:attribute_name),
+          required: true,
+          disabled: model.persisted?
+        ) do |list|
+          selectable_attributes.each do |label, value|
+            list.option(
+              label:,
+              value:,
+              selected: value == model.attribute_name
+            )
+          end
         end
       end
 
@@ -80,6 +88,14 @@ module AttributeHelpTexts
       )
     end
 
+    def initialize(hide_attribute_name: false)
+      super()
+
+      @hide_attribute_name = hide_attribute_name
+    end
+
+    def hide_attribute_name? = @hide_attribute_name
+
     private
 
     def selectable_attributes
@@ -87,8 +103,10 @@ module AttributeHelpTexts
         available = model.class.available_attributes
         used = AttributeHelpText.used_attributes(model.type)
 
-        available
-          .reject { |key,| used.include? key }
+        # Always include the current attribute_name if it's set, even if it's "used"
+        filtered = available.reject { |key,| used.include?(key) && key != model.attribute_name }
+
+        filtered
           .map { |key, label| [label, key] }
           .sort_by { |label, _key| label.downcase }
       end
