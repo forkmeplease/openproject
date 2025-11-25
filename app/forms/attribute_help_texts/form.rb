@@ -38,7 +38,7 @@ module AttributeHelpTexts
 
       attribute_form.select_list(
         name: :attribute_name,
-        label: AttributeHelpText.human_attribute_name(:attribute_name),
+        label: attribute_name(:attribute_name),
         required: true,
         disabled: model.persisted?
       ) do |list|
@@ -53,13 +53,13 @@ module AttributeHelpTexts
       attribute_form.text_field(
         name: :caption,
         caption: I18n.t("attribute_help_texts.caption"),
-        label: AttributeHelpText.human_attribute_name(:caption),
+        label: attribute_name(:caption),
         required: false
       )
 
       attribute_form.rich_text_area(
         name: :help_text,
-        label: AttributeHelpText.human_attribute_name(:help_text),
+        label: attribute_name(:help_text),
         required: true,
         rich_text_options: {
           showAttachments: true,
