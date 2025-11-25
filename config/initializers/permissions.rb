@@ -133,7 +133,7 @@ Rails.application.reloader.to_prepare do
                      require: :loggedin
 
       map.permission :view_project,
-                     { projects: %i[show export_project_initiation_pdf] },
+                     { projects: %i[show] },
                      permissible_on: :project,
                      public: true
 
@@ -176,7 +176,7 @@ Rails.application.reloader.to_prepare do
 
       map.permission :export_projects,
                      {
-                       projects: %i[export_list_modal]
+                       projects: %i[export_list_modal export_project_initiation_pdf]
                      },
                      permissible_on: :project,
                      dependencies: :view_project
