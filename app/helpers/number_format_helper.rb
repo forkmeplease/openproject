@@ -55,12 +55,11 @@ module NumberFormatHelper
 
     mantissa, exponent = str.split("e")
 
-    # normalize mantissa
-    mantissa = mantissa.sub(/(\.\d*?)0+$/, '\1')
-    mantissa = "#{mantissa}0" if mantissa.end_with?(".")
+    # normalize mantissa - i.e., remove trailing zeros, except if there is only one single zero behind the separator
+    mantissa = mantissa.sub(/(\.\d+?)0+$/, '\1')
 
-    # normalize exponent
-    exp_int = exponent.to_i
+    # normalize exponent: e.g. convert +07 to 7
+    exp_int = Integer(exponent, 10)
 
     "#{mantissa}e#{exp_int}"
   end
