@@ -42,9 +42,7 @@ class ProjectsController < ApplicationController
   before_action :require_admin, only: %i[destroy destroy_info]
   before_action :not_authorized_on_feature_flag_inactive,
                 only: %i[new create],
-                if: -> {
-                  params[:workspace_type].in?(%w[portfolio program])
-                }
+                if: :portfolio_management_feature_required?
   before_action :find_optional_parent, only: :new
   before_action :find_optional_template, only: %i[new create]
 
@@ -336,5 +334,12 @@ class ProjectsController < ApplicationController
     render_403 unless OpenProject::FeatureDecisions.portfolio_models_active?
   end
 
-  helper_method :supported_export_formats
+  def portfolio_management_feature_required? = params[:workspace_type].in?(%w[portfolio program])
+
+  def portfolio_management_feature_missing?
+    portfolio_management_feature_required? && !EnterpriseToken.allows_to?(:portfolio_management)
+  end
+
+  helper_method :supported_export_formats,
+                :portfolio_management_feature_missing?
 end
