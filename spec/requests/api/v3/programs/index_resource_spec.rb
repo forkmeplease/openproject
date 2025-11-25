@@ -78,68 +78,74 @@ RSpec.describe "API v3 Program resource index", content_type: :json do
     get get_path
   end
 
-  it_behaves_like "API V3 collection response", 2, 2, "Program" do
-    let(:elements) { [public_program, program] }
-  end
-
-  context "with a pageSize and offset" do
-    let(:get_path) do
-      api_v3_paths.path_for :programs, sort_by: { id: :asc }, page_size: 1, offset: 1
+  context "with the feature flag enabled", with_flag: { portfolio_models: true } do
+    it_behaves_like "API V3 collection response", 2, 2, "Program" do
+      let(:elements) { [public_program, program] }
     end
 
-    it_behaves_like "API V3 collection response", 2, 1, "Program" do
-      let(:elements) { [program] }
-    end
-  end
+    context "with a pageSize and offset" do
+      let(:get_path) do
+        api_v3_paths.path_for :programs, sort_by: { id: :asc }, page_size: 1, offset: 1
+      end
 
-  context "when signaling the properties to include" do
-    let(:select) { "elements/id,elements/name,elements/_type,total" }
-    let(:get_path) do
-      api_v3_paths.path_for :programs, select:
+      it_behaves_like "API V3 collection response", 2, 1, "Program" do
+        let(:elements) { [program] }
+      end
     end
-    let(:expected) do
-      {
-        total: 2,
-        _embedded: {
-          elements: [
-            {
-              id: public_program.id,
-              name: public_program.name,
-              _type: "Program"
-            },
-            {
-              id: program.id,
-              name: program.name,
-              _type: "Program"
-            }
-          ]
+
+    context "when signaling the properties to include" do
+      let(:select) { "elements/id,elements/name,elements/_type,total" }
+      let(:get_path) do
+        api_v3_paths.path_for :programs, select:
+      end
+      let(:expected) do
+        {
+          total: 2,
+          _embedded: {
+            elements: [
+              {
+                id: public_program.id,
+                name: public_program.name,
+                _type: "Program"
+              },
+              {
+                id: program.id,
+                name: program.name,
+                _type: "Program"
+              }
+            ]
+          }
         }
-      }
+      end
+
+      it "is the reduced set of properties of the embedded elements" do
+        expect(last_response.body)
+          .to be_json_eql(expected.to_json)
+      end
     end
 
-    it "is the reduced set of properties of the embedded elements" do
-      expect(last_response.body)
-        .to be_json_eql(expected.to_json)
+    context "when filtering by typeahead" do
+      let(:filters) do
+        [{ typeahead: { operator: "**", values: [search_string] } }]
+      end
+
+      let(:search_string) { public_program.name }
+
+      it_behaves_like "API V3 collection response", 1, 1, "Program" do
+        let(:elements) { [public_program] }
+      end
+    end
+
+    context "when not being logged in and login is required" do
+      current_user { create(:anonymous) }
+
+      context "if user is not logged in" do
+        it_behaves_like "unauthenticated access"
+      end
     end
   end
 
-  context "when filtering by typeahead" do
-    let(:filters) do
-      [{ typeahead: { operator: "**", values: [search_string] } }]
-    end
-
-    let(:search_string) { public_program.name }
-
-    it_behaves_like "API V3 collection response", 1, 1, "Program" do
-      let(:elements) { [public_program] }
-    end
-  end
-
-  context "when not being logged in and login is required" do
-    current_user { create(:anonymous) }
-
-    context "if user is not logged in" do
-      it_behaves_like "unauthenticated access"
-    end
+  context "without the feature flag enabled", with_flag: { portfolio_models: false } do
+    it_behaves_like "not found"
   end
 end
