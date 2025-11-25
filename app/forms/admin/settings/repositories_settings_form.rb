@@ -59,8 +59,11 @@ module Admin
           name: :repository_storage_cache_minutes,
           type: :number,
           caption: simple_format(I18n.t("repositories.storage.update_timeout")),
-          trailing_visual: { text: { text: I18n.t(:label_minute_plural) } },
-          input_width: :small
+          trailing_visual: {
+            id: "settings_repository_storage_cache_minutes_unit", text: { text: I18n.t(:label_minute_plural) }
+          },
+          input_width: :small,
+          aria: { describedby: "settings_repository_storage_cache_minutes_unit" }
         )
 
         sf.check_box(

@@ -45,7 +45,8 @@ RSpec.describe Admin::Settings::RepositoriesSettingsForm, type: :forms do
       expect(field["name"]).to eq "settings[autofetch_changesets]"
     end
 
-    expect(rendered_form).to have_field "Repository disk size cache", type: :number do |field|
+    expect(rendered_form).to have_field "Repository disk size cache", type: :number,
+                                                                      accessible_description: "minutes" do |field|
       expect(field["name"]).to eq "settings[repository_storage_cache_minutes]"
     end
 

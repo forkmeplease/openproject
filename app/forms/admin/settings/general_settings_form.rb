@@ -49,7 +49,10 @@ module Admin
           name: :activity_days_default,
           type: :number,
           input_width: :xsmall,
-          trailing_visual: { text: { text: I18n.t(:label_day_plural) } }
+          trailing_visual: {
+            text: { id: "settings_activity_days_default_unit", text: I18n.t(:label_day_plural) }
+          },
+          aria: { describedby: "settings_activity_days_default_unit" }
         )
 
         sf.text_field(
@@ -83,7 +86,10 @@ module Admin
           name: :file_max_size_displayed,
           type: :number,
           input_width: :xsmall,
-          trailing_visual: { text: { text: I18n.t(:"number.human.storage_units.units.kb") } }
+          trailing_visual: {
+            text: { id: "settings_file_max_size_displayed_unit", text: I18n.t(:"number.human.storage_units.units.kb") }
+          },
+          aria: { describedby: "settings_file_max_size_displayed_unit" }
         )
 
         sf.text_field(

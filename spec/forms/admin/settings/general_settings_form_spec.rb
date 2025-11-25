@@ -49,7 +49,8 @@ RSpec.describe Admin::Settings::GeneralSettingsForm, type: :forms do
       expect(field["name"]).to eq "settings[per_page_options]"
     end
 
-    expect(rendered_form).to have_field "Days displayed on project activity", type: :number do |field|
+    expect(rendered_form).to have_field "Days displayed on project activity", type: :number,
+                                                                              accessible_description: "days" do |field|
       expect(field["name"]).to eq "settings[activity_days_default]"
     end
 
@@ -77,7 +78,8 @@ RSpec.describe Admin::Settings::GeneralSettingsForm, type: :forms do
       expect(field["name"]).to eq "settings[work_packages_projects_export_limit]"
     end
 
-    expect(rendered_form).to have_field "Max size of text files displayed inline", type: :number do |field|
+    expect(rendered_form).to have_field "Max size of text files displayed inline", type: :number,
+                                                                                   accessible_description: "kB" do |field|
       expect(field["name"]).to eq "settings[file_max_size_displayed]"
     end
 
