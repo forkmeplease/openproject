@@ -155,9 +155,9 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
         artifact_work_package = WorkPackage.find(project.project_creation_wizard_artifact_work_package_id)
         expect(artifact_work_package.attachments.count).to eq(1)
         attachment = artifact_work_package.attachments.first
-        date = Time.zone.today.iso8601
+        date = Date.current.iso8601
         expect(attachment.content_type).to eq "application/pdf"
-        expect(attachment.filename).to match /Important_Project_project_mandate_#{date}_\d+-\d+.pdf/
+        expect(attachment.filename).to match /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/
       end
     end
 
@@ -186,13 +186,13 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
         artifact_work_package = WorkPackage.find(project.project_creation_wizard_artifact_work_package_id)
         expect(artifact_work_package.attachments.count).to eq(0)
 
-        date = Time.zone.today.iso8601
+        date = Date.current.iso8601
         expect(Storages::UploadFileService)
           .to have_received(:call)
           .with(container: project,
                 project_storage:,
                 file_path: "project_mandate",
-                filename: /Important_Project_project_mandate_#{date}_\d+-\d+.pdf/,
+                filename: /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/,
                 file_data: instance_of(StringIO))
       end
 
