@@ -22,12 +22,12 @@ export interface IProject {
   name:string;
   public:boolean;
   active:boolean;
-  _type:string;
   statusExplanation:IFormattable;
   description:IFormattable;
 
   createdAt:string;
   updatedAt:string;
 
+  _type: string;
   _links:IProjectHalResourceLinks;
 }
