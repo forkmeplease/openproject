@@ -48,7 +48,7 @@ module API
           else
             associated_resource_default_link(project,
                                              :itself,
-                                             v3_path: project&.workspace_type,
+                                             v3_path: project.workspace_type,
                                              skip_link: -> { false },
                                              title_attribute: :name,
                                              getter:)
@@ -66,9 +66,9 @@ module API
                                  as: name,
                                  skip_render: ->(*) { project_invisible?(represented.public_send(name)) })
             options = {
-              as: as,
+              as:,
               representer: ::API::V3::Projects::ProjectRepresenter,
-              skip_render: skip_render,
+              skip_render:,
               link: ::API::V3::Workspaces::WorkspaceRepresenterFactory
                      .create_link_lambda(name),
               setter: ::API::V3::Workspaces::WorkspaceRepresenterFactory
