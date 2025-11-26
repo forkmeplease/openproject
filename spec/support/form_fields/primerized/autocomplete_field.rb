@@ -42,7 +42,10 @@ module FormFields
       def open_options
         wait_for_autocompleter_options_to_be_loaded
         wait(timeout: 3).for do
-          field_container.find(".ng-select-container").click
+          # click the arrow to prevent clicking inside the input field and
+          # risking to remove some elements in a mult-select (clicking the "x")
+          # this may close the dropdown, but it will be clicked again if it's not open anyway.
+          field_container.find(".ng-select-container .ng-arrow-wrapper").click
           page
         end.to have_css(".ng-dropdown-panel-items", wait: 0.25)
       end
