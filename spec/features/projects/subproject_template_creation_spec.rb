@@ -118,7 +118,7 @@ RSpec.describe "Creating subproject with predefined template from quick add menu
 
         expect(page).to have_current_path new_project_path(parent_id: parent_project.id)
 
-        expect(page).to have_text("Templated projects")
+        expect(page).to have_text("Select a project template to work with the most common project management methods, or create a project from scratch.") # rubocop:disable Layout/LineLength
         expect(page).to have_text("Blank project")
         expect(page).to have_text("Project Template")
         click_on "Continue"
