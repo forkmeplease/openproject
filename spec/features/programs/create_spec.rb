@@ -32,7 +32,8 @@ require "spec_helper"
 
 RSpec.describe "Programs",
                "creation",
-               :js do
+               :js,
+               with_ee: :portfolio_management do # TODO: test without enterprise feature
   shared_let(:user_with_permissions) do
     create(:user,
            global_permissions: :add_programs)
