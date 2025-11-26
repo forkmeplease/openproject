@@ -114,7 +114,7 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
     end
 
     it "if the artifact name is misconfigured (unexisting name key), " \
-       "sets the subject to the 'project_creation_wizard' artifact name" do
+         "sets the subject to the 'project_creation_wizard' artifact name" do
       project.update(project_creation_wizard_artifact_name: "misconfigured")
       result = instance.call
       project = result.result
@@ -135,8 +135,8 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
     end
 
     it "adds a comment to the artifact work package " \
-       "using the project_creation_wizard_work_package_comment setting " \
-       "and mentioning the assignee" do
+         "using the project_creation_wizard_work_package_comment setting " \
+         "and mentioning the assignee" do
       result = instance.call
       project = result.result
 
@@ -190,7 +190,7 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
 
         allow(Storages::UploadFileService)
           .to receive(:call)
-          .and_return(service_result)
+                .and_return(service_result)
       end
 
       it "calls the nextcloud storage service" do
@@ -204,11 +204,11 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
         date = Date.current.iso8601
         expect(Storages::UploadFileService)
           .to have_received(:call)
-          .with(container: artifact_work_package,
-                project_storage:,
-                file_path: "project_mandate",
-                filename: /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/,
-                file_data: instance_of(StringIO))
+                .with(container: artifact_work_package,
+                      project_storage:,
+                      file_path: "project_mandate",
+                      filename: /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/,
+                      file_data: instance_of(StringIO))
       end
 
       context "when service call fails" do
@@ -272,7 +272,7 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
 
           allow(Storages::UploadFileService)
             .to receive(:call)
-            .and_return(ServiceResult.success)
+                  .and_return(ServiceResult.success)
         end
 
         it "does not try to create another artifact pdf and upload it" do
@@ -284,7 +284,7 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
       end
 
       context "when the already existing artifact work package gets deleted " \
-              "(dangling artifact work package id in project settings)" do
+                "(dangling artifact work package id in project settings)" do
         before do
           already_existing_artifact_work_package.destroy
         end
@@ -302,11 +302,11 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
   context "when contract is invalid" do
     before do
       allow(mocked_contract).to receive_messages(
-        validate: false,
-        errors: ActiveModel::Errors.new(project).tap do |errors|
-          errors.add(:base, :error_unauthorized)
-        end
-      )
+                                  validate: false,
+                                  errors: ActiveModel::Errors.new(project).tap do |errors|
+                                    errors.add(:base, :error_unauthorized)
+                                  end
+                                )
     end
 
     it "does not create any work packages" do
@@ -316,6 +316,70 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
       project = result.result
       expect(project.project_creation_wizard_artifact_work_package_id).to be_nil
       expect(project.work_packages.count).to be_zero
+    end
+  end
+
+  describe "notification email" do
+    context "when confirmation email is enabled" do
+      before do
+        project.update(
+          project_creation_wizard_send_confirmation_email: true,
+          project_creation_wizard_notification_text: "Thank you for submitting your request"
+        )
+      end
+
+      it "sends the creation wizard submitted email" do
+        allow(ProjectArtifactsMailer).to receive(:creation_wizard_submitted).and_call_original
+
+        result = instance.call
+
+        expect(result).to be_success
+        expect(ProjectArtifactsMailer).to have_received(:creation_wizard_submitted)
+      end
+
+      it "sends the email with correct parameters" do
+        mailer_double = instance_double(ActionMailer::MessageDelivery)
+        allow(mailer_double).to receive(:deliver_later)
+
+        allow(ProjectArtifactsMailer)
+          .to receive(:creation_wizard_submitted)
+                .with(current_user, project, instance_of(WorkPackage))
+                .and_return(mailer_double)
+
+        instance.call
+
+        expect(mailer_double).to have_received(:deliver_later)
+      end
+
+      it "enqueues the email for delivery" do
+        expect do
+          instance.call
+        end.to have_enqueued_job(Mails::MailerJob)
+                 .with("ProjectArtifactsMailer", "creation_wizard_submitted", "deliver_now",
+                       { args: [current_user, project, instance_of(WorkPackage)] })
+      end
+    end
+
+    context "when confirmation email is disabled" do
+      before do
+        project.update(project_creation_wizard_send_confirmation_email: false)
+      end
+
+      it "does not send the creation wizard submitted email" do
+        allow(ProjectArtifactsMailer).to receive(:creation_wizard_submitted)
+
+        result = instance.call
+
+        expect(result).to be_success
+        expect(ProjectArtifactsMailer).not_to have_received(:creation_wizard_submitted)
+      end
+
+      it "does not enqueue any email delivery job" do
+        expect do
+          instance.call
+        end.not_to have_enqueued_job(Mails::MailerJob)
+                     .with("ProjectArtifactsMailer", "creation_wizard_submitted", "deliver_now", anything)
+      end
     end
   end
 end
