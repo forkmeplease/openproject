@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -25,22 +27,22 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-#
 
-module OpenProject::Patches::MailerControllerCsp
-  extend ActiveSupport::Concern
+class ProjectArtifactsMailerPreview < ActionMailer::Preview
+  # Preview emails at http://localhost:3000/rails/mailers/project_artifacts_mailer
 
-  included do
-    prepend_before_action :extend_content_security_policy
+  def creation_wizard_submitted
+    project = FactoryBot.build_stubbed(:project)
+    work_package = FactoryBot.build_stubbed(:work_package, project: project)
+    project.project_creation_wizard_enabled = true
+    project.project_creation_wizard_notification_text = <<~STR
+      Hello,
 
-    def extend_content_security_policy
-      append_content_security_policy_directives(
-        script_src: %w('unsafe-inline')
-      )
-    end
+      You submitted a project initiation request for **#{project.name}**. It is now awaiting review.
+      Click the link below to access the work package with your request.
+    STR
+    user = FactoryBot.build_stubbed(:user)
+
+    ProjectArtifactsMailer.creation_wizard_submitted(user, project, work_package)
   end
-end
-
-OpenProject::Patches.patch_gem_version "rails", "8.0.4" do
-  Rails::MailersController.include OpenProject::Patches::MailerControllerCsp
 end
