@@ -79,8 +79,8 @@ RSpec.describe "Creating subproject with predefined template from quick add menu
         expect(page).to have_field("Name")
         expect(page).to have_no_text("Template project")
 
-        # Parent field should be pre-filled
-        field.expect_selected parent_project.name
+        # Parent field should be hidden, as it's prefilled
+        field.expect_not_visible
 
         # Fill in project details and create
         fill_in "Name", with: "New Subproject"
@@ -124,7 +124,7 @@ RSpec.describe "Creating subproject with predefined template from quick add menu
         click_on "Continue"
 
         expect(page).to have_field "Name"
-        field.expect_selected parent_project.name
+        field.expect_not_visible
       end
     end
   end

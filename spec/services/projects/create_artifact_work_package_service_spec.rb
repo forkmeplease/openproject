@@ -146,6 +146,19 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
       expect(artifact_work_package.last_journal.notes).to include(/<mention[^>]+>@#{assignee_user.name}<\/mention>/)
     end
 
+    it "adds a relative link to the project creation wizard in the description and journal comment" do
+      result = instance.call
+      project = result.result
+
+      artifact_work_package = WorkPackage.find(project.project_creation_wizard_artifact_work_package_id)
+      expected_path = Rails.application.routes.url_helpers.project_creation_wizard_path(project)
+      expected_link_text = I18n.t("settings.project_initiation_request.wizard_status_button.project_mandate")
+      expected_link = "[#{expected_link_text}](#{expected_path})"
+
+      expect(artifact_work_package.last_journal.notes).to include(expected_link)
+      expect(artifact_work_package.description).to include(expected_link)
+    end
+
     context "when artifact storage is internal" do
       it "attaches directly to the work package" do
         project.update(project_creation_wizard_artifact_export_type: "attachment")
@@ -189,7 +202,7 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
         date = Date.current.iso8601
         expect(Storages::UploadFileService)
           .to have_received(:call)
-          .with(container: project,
+          .with(container: artifact_work_package,
                 project_storage:,
                 file_path: "project_mandate",
                 filename: /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/,

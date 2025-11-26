@@ -31,6 +31,8 @@
 module Projects
   class CreateArtifactWorkPackageService < ::BaseServices::BaseContracted
     include Contracted
+    include ProjectHelper
+    include Rails.application.routes.url_helpers
     prepend Projects::Concerns::UpdateDemoData
 
     def initialize(user:, model:, contract_class: Projects::CreateArtifactWorkPackageContract)
@@ -42,11 +44,13 @@ module Projects
 
     private
 
+    attr_accessor :artifact_work_package
+
     def persist(service_call)
       creation_call = create_artifact_work_package
 
       creation_call.on_success do
-        artifact_work_package = creation_call.result
+        self.artifact_work_package = creation_call.result
         project.project_creation_wizard_artifact_work_package_id = artifact_work_package.id
         project.save
       end
@@ -74,7 +78,7 @@ module Projects
 
       storage_call = Storages::UploadFileService
         .call(
-          container: service_call.result,
+          container: artifact_work_package,
           project_storage:,
           file_path: project.project_creation_wizard_artifact_name,
           file_data: StringIO.new(export.content),
@@ -93,7 +97,7 @@ module Projects
 
       @project_storage = project
         .project_storages
-        .find_by(id: project.project_creation_wizard_artifact_export_storage)
+        .find_by(storage_id: project.project_creation_wizard_artifact_export_storage)
     end
 
     def create_artifact_work_package
@@ -103,7 +107,8 @@ module Projects
         status_id: project.project_creation_wizard_status_when_submitted_id,
         subject:,
         assigned_to_id:,
-        journal_notes:
+        journal_notes:,
+        description:
       }
 
       create_params[:attachments] = [pdf_attachment] if store_attachment_locally?
@@ -115,6 +120,8 @@ module Projects
         #{mention_tag(assignee_user)}
 
         #{project.project_creation_wizard_work_package_comment}
+
+        #{wizard_relative_link}
       COMMENT
     end
 
@@ -122,6 +129,10 @@ module Projects
       I18n.t(project.project_creation_wizard_artifact_name,
              default: ::Projects::CreationWizard::DEFAULT_ARTIFACT_NAME_OPTION.to_sym,
              scope: "settings.project_initiation_request.name.options")
+    end
+
+    def description
+      wizard_relative_link
     end
 
     def store_attachment_locally?
@@ -174,6 +185,15 @@ module Projects
           text: "@#{user.name}"
         }
       )
+    end
+
+    def wizard_relative_link
+      artifact_key = project.project_creation_wizard_artifact_name || "project_initiation_request"
+      link_text = I18n.t(
+        "settings.project_initiation_request.wizard_status_button.#{artifact_key}",
+        default: I18n.t("settings.project_initiation_request.wizard_status_button.project_initiation_request")
+      )
+      "[#{link_text}](#{project_creation_wizard_path(project)})"
     end
   end
 end
