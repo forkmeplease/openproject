@@ -4,7 +4,7 @@ page:
   margin_bottom: 80
   margin_left: 60
   margin_right: 60
-  page_break_threshold: 140
+  page_break_threshold: 120
   link_color: "175A8E"
 
 page_header:
@@ -22,55 +22,48 @@ page_logo:
   offset: 10
 
 page_heading:
-  size: 14
+  size: 16
   styles: [ "bold" ]
   margin_bottom: 8
+  color: "008080"
 
 page_subheading:
-  size: 12
-  styles: [ "bold" ]
-  margin_bottom: 12
+  size: 10
+  styles: []
+  margin_bottom: 8
 
 page_head_margin:
   margin_bottom: 18
 
 cover:
   header:
-    logo_height: 25
-    border:
-      color: 'd3dee3'
-      height: 1
-      offset: 6
-  footer:
+    logo_height: 45
+  heading:
+    size: 12
+    color: '000000'
+    margin_top: 100
+    border_color: '000000'
+    border_width: 1
+    padding_right: 0
+    padding_left: 0
+    padding_top: 10
+    padding_bottom: 8
+    no_border_right: true
+    no_border_left: true
+  badge:
     size: 10
-    color: '414d5f'
-    offset: 50
-  hero:
-    padding_right: 144
-    padding_top: 110
-    title:
-      max_height: 30
-      spacing: 10
-      font: 'SpaceMono'
-      color: '414d5f'
-      size: 10
-    heading:
-      spacing: 14
-      color: '414d5f'
-      styles:
-        - bold
-      size: 16
-    dates:
-      spacing: 4
-      max_height: 16
-      color: '414d5f'
-      size: 10
-      styles:
-        - bold
-    subheading:
-      max_height: 30
-      color: '414d5f'
-      size: 10
+    offset: 0
+  title:
+    margin_top: 30
+    no_border: true
+    color: "008080"
+    size: 32
+  footer:
+    margin_bottom: 20
+    size: 12
+    leading: 3
+    styles: [ "bold" ]
+    color: '000000'
 
 section:
   margin_bottom: 8
@@ -81,7 +74,7 @@ section:
     styles: [ "bold" ]
     hr:
       color: "FFFFFF"
-      height: 0.25
+      height: 0
 
 project:
   title:
@@ -89,9 +82,9 @@ project:
     color: "000000"
     margin_bottom: 8
     styles: [ "bold" ]
-    badge:
-      size: 10
-      offset: 1
+  badge:
+    size: 10
+    offset: 0
   markdown_label:
     size: 10
     color: "000000"

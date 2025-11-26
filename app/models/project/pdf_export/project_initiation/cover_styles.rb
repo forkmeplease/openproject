@@ -28,52 +28,52 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Exports::PDF::Common::Styles
-  include MarkdownToPDF::StyleValidation
-
-  def initialize(styles_asset_path, style_yml_file = "standard.yml", schema_json_file = "schema.json")
-    yml = YAML::load_file(File.join(styles_asset_path, style_yml_file))
-    schema = JSON::load_file(File.join(styles_asset_path, schema_json_file))
-    validate_schema!(yml, schema)
-    @styles = yml.deep_symbolize_keys
+module Project::PDFExport::ProjectInitiation::CoverStyles
+  def cover_header_logo_height
+    resolve_pt(@styles.dig(:cover, :header, :logo_height), 25)
   end
 
-  protected
-
-  def resolve_pt(value, default)
-    parse_pt(value) || default
+  def cover_header_margin
+    resolve_margin(@styles.dig(:cover, :header))
   end
 
-  def resolve_table_cell(style)
-    # prawn.table.make_cell does use differently named options
-    # so to have them specified consistently, we map here
-    opts = opts_table_cell(style || {})
-    font_styles = opts.delete(:styles) || []
-    opts[:font_style] = font_styles[0] unless font_styles.empty?
-    color = opts.delete(:color)
-    opts[:text_color] = color unless color.nil?
-    opts
+  def cover_heading
+    resolve_font(@styles.dig(:cover, :heading))
   end
 
-  def resolve_markdown_styling(style)
-    page = style.delete(:font)
-    style[:page] = page unless page.nil?
-    style
+  def cover_heading_margin
+    resolve_margin(@styles.dig(:cover, :heading))
   end
 
-  def resolve_borders(style)
-    opts_borders(style || {})
+  def cover_heading_border
+    resolve_borders(@styles.dig(:cover, :heading))
   end
 
-  def resolve_font(style)
-    opts_font(style || { size: 10 })
+  def cover_heading_padding
+    resolve_padding(@styles.dig(:cover, :heading))
   end
 
-  def resolve_margin(style)
-    opts_margin(style || {})
+  def cover_title
+    resolve_font(@styles.dig(:cover, :title))
   end
 
-  def resolve_padding(style)
-    opts_padding(style || {})
+  def cover_title_margin
+    resolve_margin(@styles.dig(:cover, :title))
+  end
+
+  def cover_title_border
+    resolve_borders(@styles.dig(:cover, :title))
+  end
+
+  def cover_title_padding
+    resolve_padding(@styles.dig(:cover, :title))
+  end
+
+  def cover_footer
+    resolve_font(@styles.dig(:cover, :footer))
+  end
+
+  def cover_footer_margin
+    resolve_margin(@styles.dig(:cover, :footer))
   end
 end

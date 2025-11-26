@@ -36,8 +36,8 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
   include Exports::PDF::Common::Markdown
   include Exports::PDF::Common::Badge
   include Exports::PDF::Components::Page
-  include Exports::PDF::Components::Cover
   include Project::PDFExport::Common::ProjectAttributes
+  include Project::PDFExport::ProjectInitiation::Cover
   include Project::PDFExport::ProjectInitiation::Styles
   include ProjectHelper
 
@@ -90,8 +90,8 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
     pdf.title = heading
     write_cover_page! if with_cover?
     with_margin(styles.page_head_margin) do
-      write_project_initiation_heading
       write_project_initiation_title
+      write_project_initiation_heading
       write_project_initiation_description
     end
     write_project_initiation
@@ -107,27 +107,40 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
     @export_datetime = Time.zone.now
   end
 
-  def cover_page_footer_date
-    format_time(export_datetime)
-  end
-
-  def footer_date
+  def cover_page_heading
     heading
-  end
-
-  def cover_page_dates
-    nil
-  end
-
-  def cover_page_subheading
-    nil
   end
 
   def cover_page_title
     project.name
   end
 
-  def cover_page_heading
+  def cover_page_footers
+    [
+      Setting.app_title,
+      format_time(export_datetime)
+    ].compact
+  end
+
+  def write_cover_heading
+    status = project_initiation_status
+    return super if status.nil?
+
+    write_cover_heading_with_badge(status.name, status_prawn_color(status), styles.cover_status_badge_offset)
+  end
+
+  def write_cover_heading_with_badge(badge_text, color, offset)
+    text_style = styles.cover_heading
+    prawn_draw_text_box(
+      badge_fragments(cover_page_heading, text_style, badge_text, color, offset, styles.cover_status_badge),
+      badge_options(text_style, badge_text, offset),
+      styles.cover_heading_margin,
+      styles.cover_heading_padding,
+      styles.cover_heading_border
+    )
+  end
+
+  def footer_date
     heading
   end
 
@@ -228,25 +241,25 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
 
   def write_subheading_with_badge(badge_text, color)
     offset = styles.status_badge_offset
+    text_style = styles.page_subheading
     with_margin(styles.page_subheading_margins) do
       pdf.formatted_text(
-        title_fragments(badge_text, color, offset),
-        title_options(badge_text, offset)
+        badge_fragments(heading, text_style, badge_text, color, offset, styles.status_badge),
+        badge_options(text_style, badge_text, offset)
       )
     end
   end
 
-  def title_fragments(badge_text, color, offset)
-    badge_style = styles.status_badge
+  def badge_fragments(text, text_style, badge_text, color, offset, badge_style)
     [
-      styles.page_subheading.merge(text: heading),
+      text_style.merge({ text: }),
       { text: " " },
       prawn_badge(badge_text, color, offset: offset, font_size: badge_style[:size], line_height: badge_style[:size])
     ]
   end
 
-  def title_options(badge_text, offset)
-    styles.page_subheading.merge(draw_text_callback: prawn_badge_draw_text_callback(badge_text, offset))
+  def badge_options(text_style, badge_text, offset)
+    text_style.merge(draw_text_callback: prawn_badge_draw_text_callback(badge_text, offset))
   end
 
   def write_project_initiation_description
