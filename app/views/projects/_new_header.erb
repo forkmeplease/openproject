@@ -26,25 +26,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
-<% html_title(t(:label_portfolio_plural)) -%>
-<div class="portfolios-page">
-  <%=
-    render(
-      Portfolios::IndexPageHeaderComponent.new(
-        query:,
-        current_user:,
-        params:
+
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { title }
+
+    if @parent
+      header.with_breadcrumbs(
+        [
+          { href: project_overview_path(@parent.id), text: @parent.name },
+          title
+        ].compact
       )
-    )
-  %>
-  <%=
-    with_enterprise_banner_guard(
-      :portfolio_management,
-      variant: :large,
-      image: "enterprise/portfolio-management.png"
-    ) do
-  %>
-    <%= render Portfolios::IndexSubHeaderComponent.new(query:, current_user:, disable_buttons: false) %>
-    <%= render Portfolios::IndexComponent.new(query:, current_user:) %>
-  <% end %>
-</div>
+    else
+      header.with_breadcrumbs(nil)
+    end
+  end
+%>

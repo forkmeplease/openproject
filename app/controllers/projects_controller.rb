@@ -42,9 +42,7 @@ class ProjectsController < ApplicationController
   before_action :require_admin, only: %i[destroy destroy_info]
   before_action :not_authorized_on_feature_flag_inactive,
                 only: %i[new create],
-                if: -> {
-                  params[:workspace_type].in?(%w[portfolio program])
-                }
+                if: :portfolio_management_feature_required?
   before_action :find_optional_parent, only: :new
   before_action :find_optional_template, only: %i[new create]
 
@@ -196,7 +194,7 @@ class ProjectsController < ApplicationController
     params[:step] = params.fetch(:step, 1).to_i
     @new_project = @parent&.children&.build(params.permit(:workspace_type)) || Project.new(params.permit(:workspace_type))
 
-    render layout: "no_menu"
+    render layout: layout_for_new
   end
 
   def new_from_template
@@ -206,7 +204,7 @@ class ProjectsController < ApplicationController
       .call(target_project_params: params.permit(:parent_id).to_h, attributes_only: true)
       .result
 
-    render layout: "no_menu"
+    render layout: layout_for_new
   end
 
   def create_blank # rubocop:disable Metrics/AbcSize
@@ -336,5 +334,20 @@ class ProjectsController < ApplicationController
     render_403 unless OpenProject::FeatureDecisions.portfolio_models_active?
   end
 
-  helper_method :supported_export_formats
+  def layout_for_new
+    if portfolio_management_feature_missing?
+      "global"
+    else
+      "no_menu"
+    end
+  end
+
+  def portfolio_management_feature_required? = params[:workspace_type].in?(%w[portfolio program])
+
+  def portfolio_management_feature_missing?
+    portfolio_management_feature_required? && !EnterpriseToken.allows_to?(:portfolio_management)
+  end
+
+  helper_method :supported_export_formats,
+                :portfolio_management_feature_missing?
 end
