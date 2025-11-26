@@ -69,6 +69,7 @@ export class OpHeaderProjectSelectListComponent implements OnInit, OnChanges {
     readonly elementRef:ElementRef,
     readonly cdRef:ChangeDetectorRef,
     readonly currentProjectService:CurrentProjectService,
+    // eslint-disable-next-line @angular-eslint/prefer-inject
     readonly sanitizer:DomSanitizer
   ) { }
 

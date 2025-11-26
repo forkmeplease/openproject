@@ -31,7 +31,9 @@
               size="small"
             ></svg>
           }
-          <span *ngIf="portfolioModelsEnabled" class="color-fg-muted" [innerHTML]="workspaceTypeIconWithLabel(project)"></span>
+          @if (portfolioModelsEnabled) {
+            <span class="color-fg-muted" [innerHTML]="workspaceTypeIconWithLabel(project)"></span>
+          }
         </span>
         @if (currentProjectService.id === project.id.toString()) {
           <a
@@ -57,7 +59,9 @@
             data-test-selector="op-header-project-select--item-disabled-title"
           >
             <span>{{ project.name }}</span>
-            <span *ngIf="portfolioModelsEnabled" class="color-fg-muted" [innerHTML]="workspaceTypeIconWithLabel(project)"></span>
+            @if (portfolioModelsEnabled) {
+              <span class="color-fg-muted" [innerHTML]="workspaceTypeIconWithLabel(project)"></span>
+            }
           </span>
         </span>
       }
