@@ -97,7 +97,7 @@ module Projects
 
       @project_storage = project
         .project_storages
-        .find_by(id: project.project_creation_wizard_artifact_export_storage)
+        .find_by(storage_id: project.project_creation_wizard_artifact_export_storage)
     end
 
     def create_artifact_work_package
