@@ -1,0 +1,7 @@
+<% if artifact_id %>
+  <% if artifact_work_package %>
+  <% end %>
+<% else %>
+  <%= render Primer::Beta::Text.new(tag: :p, font_weight: :bold) { t("settings.project_initiation_request.status.not_completed") } %>
+  <%= render Primer::Beta::Text.new { t("settings.project_initiation_request.status.not_completed_description") } %>
+<% end %>
