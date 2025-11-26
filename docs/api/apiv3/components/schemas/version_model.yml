@@ -80,9 +80,9 @@ properties:
         allOf:
         - "$ref": "./link.yml"
         - description: |-
-            The project to which the version belongs
+            The workspace to which the version belongs
 
-            **Resource**: Project
+            **Resource**: Workspace
           readOnly: true
       availableInProjects:
         allOf:
@@ -90,7 +90,7 @@ properties:
         - description: |-
             Workspaces where this version can be used
 
-            **Resource**: Projects
+            **Resource**: Workspace
           readOnly: true
 example:
   _links:
