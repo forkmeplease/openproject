@@ -1,4 +1,4 @@
-<% if @texts_by_type.any? %>
+<% if @attribute_help_texts.any? %>
   <div class="generic-table--container">
     <div class="generic-table--results-container">
       <table class="generic-table" data-controller="table-highlighting">
@@ -34,7 +34,7 @@
         </tr>
         </thead>
         <tbody>
-        <% @texts_by_type.each do |attribute_help_text| -%>
+        <% @attribute_help_texts.each do |attribute_help_text| -%>
           <tr class="attribute-help-text--entry">
             <td>
               <%= link_to h(attribute_help_text.attribute_field_name),

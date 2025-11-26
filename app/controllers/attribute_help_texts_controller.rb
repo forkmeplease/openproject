@@ -41,7 +41,7 @@ class AttributeHelpTextsController < ApplicationController
   authorization_checked! :show_dialog
 
   def index
-    @texts_by_type = AttributeHelpText
+    @attribute_help_texts = AttributeHelpText
       .where(type: @attribute_scope)
       .to_a
       .sort_by(&:attribute_field_name)
@@ -49,6 +49,7 @@ class AttributeHelpTextsController < ApplicationController
 
   def show_dialog
     @attribute_help_text = AttributeHelpText.visible(current_user).find(params[:id])
+
     respond_with_dialog(
       AttributeHelpTexts::ShowDialogComponent.new(attribute_help_text: @attribute_help_text)
     )
