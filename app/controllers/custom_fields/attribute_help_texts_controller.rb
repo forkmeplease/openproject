@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,27 +26,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-class AttributeHelpTexts::IndexPageHeaderComponent < ApplicationComponent
-  include OpPrimer::ComponentHelpers
-  include ApplicationHelper
-  include TabsHelper
+module CustomFields
+  class AttributeHelpTextsController < ApplicationController
+    include ::CustomFields::AttributeHelpTextActions
 
-  def initialize(tabs: nil)
-    super
-    @tabs = tabs
-  end
+    layout "admin"
 
-  def breadcrumb_items
-    [
-      { href: admin_index_path, text: t("label_administration") },
-      helpers.nested_breadcrumb_element(AttributeHelpText.human_plural_model_name,
-                                        I18n.t(currently_selected_tab[:label].to_s))
-    ]
-  end
+    before_action :require_admin
 
-  def currently_selected_tab
-    @currently_selected_tab ||= selected_tab(@tabs)
+    private
+
+    def find_custom_field
+      @custom_field = WorkPackageCustomField.find(params[:custom_field_id])
+    end
+
+    def show_path
+      custom_field_attribute_help_text_path(@custom_field)
+    end
+
+    def render_attribute_help_text_form(status: :ok)
+      render "custom_fields/attribute_help_texts/show_work_package", status:
+    end
   end
 end
