@@ -27,39 +27,16 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+RSpec.shared_context "with rendered inline form" do
+  include ViewComponent::TestHelpers
 
-class My::LocaleForm < ApplicationForm
-  include Redmine::I18n
+  let(:form_arguments) { { url: "/foo", model: } }
 
-  form do |f|
-    f.select_list(
-      name: :language,
-      label: attribute_name(:language),
-      required: true,
-      include_blank: include_auto? ? I18n.t(:label_auto_option) : false,
-      input_width: :medium
-    ) do |list|
-      available_languages.each do |label, value|
-        list.option(label:, value:, lang: value)
+  def vc_render_inline_form(&)
+    render_in_view_context(form_arguments) do |form_arguments|
+      primer_form_with(**form_arguments) do |f|
+        render_inline_form(f, &)
       end
     end
-
-    f.fields_for(:pref, model.pref, nested: false) do |builder|
-      ::My::TimeZoneForm.new(builder)
-    end
-
-    f.submit(name: :submit, label: I18n.t(:button_save), scheme: :primary)
-  end
-
-  private
-
-  def include_auto?
-    valid_languages.to_set == all_languages.to_set
-  end
-
-  def available_languages
-    @available_languages ||= valid_languages
-      .map { translate_language(it) }
-      .sort_by(&:first)
   end
 end

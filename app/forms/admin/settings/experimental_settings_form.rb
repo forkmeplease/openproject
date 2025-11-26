@@ -28,38 +28,35 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class My::LocaleForm < ApplicationForm
-  include Redmine::I18n
+module Admin
+  module Settings
+    class ExperimentalSettingsForm < ApplicationForm
+      include ::Settings::FormHelper
 
-  form do |f|
-    f.select_list(
-      name: :language,
-      label: attribute_name(:language),
-      required: true,
-      include_blank: include_auto? ? I18n.t(:label_auto_option) : false,
-      input_width: :medium
-    ) do |list|
-      available_languages.each do |label, value|
-        list.option(label:, value:, lang: value)
+      settings_form do |sf|
+        sf.check_box_group(
+          label: I18n.t("settings.experimental.feature_flags"),
+          visually_hide_label: true
+        ) do |group|
+          available_feature_flags.each do |(label, name)|
+            group.check_box(
+              name:,
+              label:,
+              checked: setting_value(name),
+              disabled: setting_disabled?(name),
+              caption: ::Settings::Definition[name].description
+            )
+          end
+        end
+      end
+
+      private
+
+      def available_feature_flags
+        OpenProject::FeatureDecisions
+          .all
+          .map { [it.to_s.humanize, "feature_#{it}_active"] }
       end
     end
-
-    f.fields_for(:pref, model.pref, nested: false) do |builder|
-      ::My::TimeZoneForm.new(builder)
-    end
-
-    f.submit(name: :submit, label: I18n.t(:button_save), scheme: :primary)
-  end
-
-  private
-
-  def include_auto?
-    valid_languages.to_set == all_languages.to_set
-  end
-
-  def available_languages
-    @available_languages ||= valid_languages
-      .map { translate_language(it) }
-      .sort_by(&:first)
   end
 end

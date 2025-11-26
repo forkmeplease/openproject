@@ -28,38 +28,42 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class My::LocaleForm < ApplicationForm
-  include Redmine::I18n
+require "rails_helper"
 
-  form do |f|
-    f.select_list(
-      name: :language,
-      label: attribute_name(:language),
-      required: true,
-      include_blank: include_auto? ? I18n.t(:label_auto_option) : false,
-      input_width: :medium
-    ) do |list|
-      available_languages.each do |label, value|
-        list.option(label:, value:, lang: value)
+RSpec.describe Admin::Settings::RepositoriesSettings::CheckoutForm, type: :forms do
+  include ViewComponent::TestHelpers
+
+  let(:form_arguments) { { url: "/foo", model: false, scope: :settings } }
+  let(:vendor) { :git }
+
+  def vc_render_form
+    render_in_view_context(described_class, form_arguments, vendor) do |described_class, form_arguments, vendor|
+      primer_form_with(**form_arguments) do |f|
+        f.fields_for(:repository_checkout_data) do |fo|
+          fo.fields_for(vendor) do |fg|
+            render(described_class.new(fg, vendor:))
+          end
+        end
       end
     end
+  end
 
-    f.fields_for(:pref, model.pref, nested: false) do |builder|
-      ::My::TimeZoneForm.new(builder)
+  subject(:rendered_form) do
+    vc_render_form
+    page
+  end
+
+  it "renders", :aggregate_failures do
+    expect(rendered_form).to have_field "Show checkout instructions", type: :checkbox do |field|
+      expect(field["name"]).to eq "settings[repository_checkout_data][git][enabled]"
     end
 
-    f.submit(name: :submit, label: I18n.t(:button_save), scheme: :primary)
-  end
+    expect(rendered_form).to have_field "Checkout base URL", type: :url do |field|
+      expect(field["name"]).to eq "settings[repository_checkout_data][git][base_url]"
+    end
 
-  private
-
-  def include_auto?
-    valid_languages.to_set == all_languages.to_set
-  end
-
-  def available_languages
-    @available_languages ||= valid_languages
-      .map { translate_language(it) }
-      .sort_by(&:first)
+    expect(rendered_form).to have_field "Checkout instruction text", type: :textarea do |field|
+      expect(field["name"]).to eq "settings[repository_checkout_data][git][text]"
+    end
   end
 end

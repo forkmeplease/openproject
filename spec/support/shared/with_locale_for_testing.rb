@@ -28,38 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class My::LocaleForm < ApplicationForm
-  include Redmine::I18n
+# Use the language spoken in the evil realm of Mordor. Fortunately, it's
+# only used for testing.
+RSpec.shared_context "with locale for testing" do
+  let(:enforce_available_locales) { I18n.config.enforce_available_locales }
+  let(:translations) { {} }
 
-  form do |f|
-    f.select_list(
-      name: :language,
-      label: attribute_name(:language),
-      required: true,
-      include_blank: include_auto? ? I18n.t(:label_auto_option) : false,
-      input_width: :medium
-    ) do |list|
-      available_languages.each do |label, value|
-        list.option(label:, value:, lang: value)
-      end
-    end
-
-    f.fields_for(:pref, model.pref, nested: false) do |builder|
-      ::My::TimeZoneForm.new(builder)
-    end
-
-    f.submit(name: :submit, label: I18n.t(:button_save), scheme: :primary)
+  before do
+    I18n.config.enforce_available_locales = !enforce_available_locales
+    I18n.backend.store_translations(:mo, translations)
+    I18n.locale = :mo
   end
 
-  private
-
-  def include_auto?
-    valid_languages.to_set == all_languages.to_set
-  end
-
-  def available_languages
-    @available_languages ||= valid_languages
-      .map { translate_language(it) }
-      .sort_by(&:first)
+  after do
+    I18n.locale = I18n.default_locale
+    I18n.backend.translations.delete(:mo)
+    I18n.config.enforce_available_locales = enforce_available_locales
   end
 end

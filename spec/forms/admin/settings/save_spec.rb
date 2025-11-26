@@ -28,38 +28,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class My::LocaleForm < ApplicationForm
-  include Redmine::I18n
+require "rails_helper"
 
-  form do |f|
-    f.select_list(
-      name: :language,
-      label: attribute_name(:language),
-      required: true,
-      include_blank: include_auto? ? I18n.t(:label_auto_option) : false,
-      input_width: :medium
-    ) do |list|
-      available_languages.each do |label, value|
-        list.option(label:, value:, lang: value)
-      end
-    end
+RSpec.describe Admin::Settings::Save, type: :forms do
+  include_context "with rendered form"
 
-    f.fields_for(:pref, model.pref, nested: false) do |builder|
-      ::My::TimeZoneForm.new(builder)
-    end
+  let(:form_arguments) { { url: "/foo", model: false, scope: :settings } }
 
-    f.submit(name: :submit, label: I18n.t(:button_save), scheme: :primary)
+  subject(:rendered_form) do
+    vc_render_form
+    page
   end
 
-  private
-
-  def include_auto?
-    valid_languages.to_set == all_languages.to_set
-  end
-
-  def available_languages
-    @available_languages ||= valid_languages
-      .map { translate_language(it) }
-      .sort_by(&:first)
+  it "renders", :aggregate_failures do
+    expect(rendered_form).to have_button "Save", type: "submit", class: "Button--primary"
   end
 end

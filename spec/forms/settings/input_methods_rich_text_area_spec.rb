@@ -28,38 +28,36 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class My::LocaleForm < ApplicationForm
-  include Redmine::I18n
+require "rails_helper"
 
-  form do |f|
-    f.select_list(
-      name: :language,
-      label: attribute_name(:language),
-      required: true,
-      include_blank: include_auto? ? I18n.t(:label_auto_option) : false,
-      input_width: :medium
-    ) do |list|
-      available_languages.each do |label, value|
-        list.option(label:, value:, lang: value)
-      end
-    end
+RSpec.describe Settings::InputMethods, "#rich_text_area", :aggregate_failures, :settings_reset, type: :forms do
+  include_context "with rendered inline settings form"
+  include_context "with locale for testing"
 
-    f.fields_for(:pref, model.pref, nested: false) do |builder|
-      ::My::TimeZoneForm.new(builder)
-    end
+  let(:translations) { { setting_ultimate_answer: "Ultimate answer" } }
+  let(:name) { "ultimate_answer" }
+  let(:format) { :string }
+  let(:default) { nil }
 
-    f.submit(name: :submit, label: I18n.t(:button_save), scheme: :primary)
+  before do
+    Settings::Definition.add(name, default:, format:)
+    Setting.create!(name:, value: "")
   end
 
-  private
+  subject(:rendered_form) do
+    vc_render_inline_settings_form do |settings_form|
+      settings_form.rich_text_area(name: :ultimate_answer, rich_text_options: {})
+    end
 
-  def include_auto?
-    valid_languages.to_set == all_languages.to_set
+    page
   end
 
-  def available_languages
-    @available_languages ||= valid_languages
-      .map { translate_language(it) }
-      .sort_by(&:first)
+  it "renders the backing text area" do
+    expect(rendered_form).to have_field "Ultimate answer", type: "textarea", visible: :hidden
+  end
+
+  it "renders the augmented text area" do
+    expect(rendered_form).to have_element "opce-ckeditor-augmented-textarea",
+                                          "data-text-area-id": "ultimate_answer".to_json
   end
 end
