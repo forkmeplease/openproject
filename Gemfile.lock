@@ -661,7 +661,7 @@ GEM
       rake (>= 13)
     googleapis-common-protos-types (1.22.0)
       google-protobuf (~> 4.26)
-    googleauth (1.15.1)
+    googleauth (1.16.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.2)
       google-logging-utils (~> 0.1)
@@ -801,7 +801,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.1.0)
-    markly (0.14.1)
+    markly (0.15.0)
     matrix (0.4.3)
     messagebird-rest (5.0.0)
       jwt (< 4)
@@ -1625,7 +1625,7 @@ DEPENDENCIES
   lograge (~> 0.14.0)
   lookbook (= 2.3.13)
   mail (= 2.9.0)
-  markly (~> 0.14)
+  markly (~> 0.15)
   matrix (~> 0.4.3)
   md_to_pdf!
   meta-tags (~> 2.22.2)
@@ -1928,7 +1928,7 @@ CHECKSUMS
   google-protobuf (4.32.1-x86_64-linux-gnu) sha256=2d209c1980dbdeb4114c7d839a3305fb78dc90bde42fb9a22974c8a4841e0263
   google-protobuf (4.32.1-x86_64-linux-musl) sha256=d5314aea8817bd372177205667b4f4442a5884212bcaccb1ba569ec8a1a06ec4
   googleapis-common-protos-types (1.22.0) sha256=f97492b77bd6da0018c860d5004f512fe7cd165554d7019a8f4df6a56fbfc4c7
-  googleauth (1.15.1) sha256=d61960893d0d573601d94a38889613b991f40a59ab755b5beed87bf2c3d3cb24
+  googleauth (1.16.0) sha256=1e7b5c2ee7edc6a0f5a4a4312c579b3822dc0be2679d6d09ca19d8c7ca5bd5f1
   grape (2.4.0) sha256=3d59673e80f11d49ba86270b78344e5348dc057b318c2bbc1c01f3532f9b6aec
   grape_logging (3.0.0) sha256=7b62d984ce96df15d120508668debe307e6a59ac1c511f1d9b5f3b4bea793e13
   gravatar_image_tag (1.2.0) sha256=eb5630fea846b711e713b934a0178fb9785f02f4eb9ced8d6faa4d537c40fdcf
@@ -1978,7 +1978,7 @@ CHECKSUMS
   lookbook (2.3.13) sha256=acfa04a1ba7a87b057c222d78a2d72763546f52549e97590993344c8373f6d21
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
-  markly (0.14.1) sha256=911970dcf1d077461ab39d46a6e7b68f3e8acbb3a7a9fec41393bad46dceab4f
+  markly (0.15.0) sha256=63328dac2f7c14d8fd4b9f9ed4c50f02f63a2b3e43ddeb8516aae528086f47ec
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   md_to_pdf (0.2.5)
   messagebird-rest (5.0.0) sha256=da4cc1efba3d5e4aa021fad07426c2cb6b326ce5670da5104bb8f6056a39d59c
