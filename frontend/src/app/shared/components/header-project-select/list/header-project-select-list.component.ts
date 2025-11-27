@@ -22,9 +22,9 @@ import { CurrentProjectService } from 'core-app/core/current-project/current-pro
 import { getMetaContent } from 'core-app/core/setup/globals/global-helpers';
 import {
   toDOMString,
-  projectRoadmapIconData,
   briefcaseIconData,
   SVGData,
+  versionsIconData,
 } from '@openproject/octicons-angular';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -144,7 +144,7 @@ export class OpHeaderProjectSelectListComponent implements OnInit, OnChanges {
   private workspaceTypeSVGData(workspaceType:string):SVGData|undefined{
     switch (workspaceType) {
       case 'program': {
-        return projectRoadmapIconData;
+        return versionsIconData;
       }
       case 'portfolio': {
         return briefcaseIconData;
