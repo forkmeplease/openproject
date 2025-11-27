@@ -33,17 +33,18 @@ See COPYRIGHT and LICENSE files for more details.
       title: I18n.t("storages.page_titles.file_storages.delete"),
       form_arguments:,
       size: :large,
-      test_selector: TEST_SELECTOR
+      test_selector: TEST_SELECTOR,
+      confirm_button_text: I18n.t("button_remove_permanently")
     )
   ) do |dialog|
 %>
   <% dialog.with_confirmation_message do |message|
-       message.with_heading(tag: :h2) { I18n.t("storages.page_titles.file_storages.delete") }
+       message.with_heading(tag: :h2) { I18n.t("storages.page_titles.project_storages.delete") }
      end %>
   <% dialog.with_additional_details do %>
     <% render(Primer::OpenProject::FlexLayout.new) do |flex| %>
       <% flex.with_row do %>
-        <%= t("storages.delete_warning.storage", file_storage: "<strong>#{h(@project_storage.storage.name)}</strong>").html_safe %>
+        <%= t("storages.delete_warning.project_storage", file_storage: "<strong>#{h(@project_storage.storage.name)}</strong>").html_safe %>
       <% end %>
       <% flex.with_row do %>
         <ul>
@@ -53,5 +54,5 @@ See COPYRIGHT and LICENSE files for more details.
       <% end %>
     <% end %>
   <% end %>
-  <% dialog.with_confirmation_check_box_content(I18n.t(:text_permanent_delete_confirmation_checkbox_label)) %>
+  <% dialog.with_confirmation_check_box_content(I18n.t(:text_permanent_remove_confirmation_checkbox_label)) %>
 <% end %>
