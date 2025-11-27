@@ -1,7 +1,7 @@
 /*
  * -- copyright
  * OpenProject is an open source project management software.
- * Copyright (C) 2023 the OpenProject GmbH
+ * Copyright (C) the OpenProject GmbH
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 3.
@@ -28,20 +28,19 @@
  * ++
  */
 
-import { debugLog } from 'core-app/shared/helpers/debug_output';
 import { BlockNoteEditorOptions, BlockNoteSchema, filterSuggestionItems } from '@blocknote/core';
 import { User } from '@blocknote/core/comments';
 import * as blockNoteLocales from '@blocknote/core/locales';
 import { BlockNoteView } from '@blocknote/mantine';
 import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { OpColorMode } from 'core-app/core/setup/globals/theme-utils';
 import { IUploadFile } from 'core-app/core/upload/upload.service';
 import { LiveCollaborationManager } from 'core-stimulus/helpers/live-collaboration-helpers';
 import { initializeOpBlockNoteExtensions, openProjectWorkPackageBlockSpec, openProjectWorkPackageSlashMenu } from 'op-blocknote-extensions';
-import { useEffect, useState } from 'react';
 import { firstValueFrom } from 'rxjs';
 import * as Y from 'yjs';
+import { useCollaboration } from './hooks/useCollaboration';
+import { useOpTheme } from './hooks/useOpTheme';
 
 interface CollaborativeUser {
   name:string;
@@ -65,8 +64,6 @@ const schema = BlockNoteSchema.create().extend({
   },
 });
 
-const detectTheme = ():OpColorMode => { return window.OpenProject.theme.detectOpColorMode(); };
-
 export default function OpBlockNoteContainer({ inputField,
                                                inputText,
                                                activeUser,
@@ -75,9 +72,6 @@ export default function OpBlockNoteContainer({ inputField,
                                                attachmentsUploadUrl,
                                                attachmentsCollectionKey,
                                                hocuspocusProvider }:OpBlockNoteContainerProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [connectionError, setConnectionError] = useState(false);
-  const [theme, setTheme] = useState<OpColorMode>(detectTheme());
 
   const userLocale = window.I18n.locale;
   const blockNoteLocaleString = Object.keys(blockNoteLocales).includes(userLocale) ? userLocale : 'en';
@@ -172,71 +166,8 @@ export default function OpBlockNoteContainer({ inputField,
     ];
   };
 
-  useEffect(() => {
-    const updateInput = () => {
-      const update = Y.encodeStateAsUpdate(doc);
-      const b64 = btoa(String.fromCharCode(...update));
-      inputField.value = b64;
-    };
-
-    let connectionTimeout:ReturnType<typeof setTimeout> | null = null;
-
-    const editorReady = () => {
-      debugLog('[BlockNote Editor] synced with collaboration server');
-      setIsLoading(false);
-      setConnectionError(false);
-    };
-
-    const handleDisconnect = () => {
-      debugLog('[BlockNote Editor] Disconnected from collaboration server');
-      setConnectionError(true);
-    };
-
-    if(hocuspocusProvider) {
-      if (hocuspocusProvider.synced) {
-        editorReady();
-      } else {
-        // Set timeout to show connection error if not connected within 5 seconds
-        connectionTimeout = setTimeout(() => {
-          if (!hocuspocusProvider.synced) {
-            setConnectionError(true);
-          }
-        }, 5000);
-      }
-
-      hocuspocusProvider.on('synced', editorReady);
-      hocuspocusProvider.on('disconnect', handleDisconnect);
-    } else {
-      doc.on('update', updateInput);
-      setIsLoading(false);
-    }
-
-    return () => {
-      if (hocuspocusProvider) {
-        if (connectionTimeout) clearTimeout(connectionTimeout);
-
-        hocuspocusProvider.off('synced', editorReady);
-        hocuspocusProvider.off('disconnect', handleDisconnect);
-        hocuspocusProvider.destroy();
-      } else {
-        // disable Yjs update listener. Opposite of doc.on('update', ...);
-        doc.off('update', updateInput);
-      }
-    };
-  }, [hocuspocusProvider]);
-
-  useEffect(() => {
-    const handleThemeChange = () => {
-      const newTheme = detectTheme();
-      setTheme(newTheme);
-    };
-
-    window.addEventListener('op:theme-changed', handleThemeChange);
-
-    return () => {
-      window.removeEventListener('op:theme-changed', handleThemeChange);
-    };
-  }, []);
+  const { isLoading, connectionError } = useCollaboration(hocuspocusProvider, doc, inputField);
+  const theme = useOpTheme();
 
   if (connectionError) {
     return (
