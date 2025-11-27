@@ -75,6 +75,12 @@ class DocumentsController < ApplicationController
     respond_with_turbo_streams
   end
 
+  def render_last_saved_at
+    update_via_turbo_stream(component: Documents::ShowEditView::PageHeader::LiveSavedAtComponent.new(@document))
+
+    respond_with_turbo_streams
+  end
+
   def render_connection_error
     update_via_turbo_stream(component: Documents::ShowEditView::ConnectionErrorNoticeComponent.new)
 

@@ -33,9 +33,9 @@
   component_wrapper(
     tag: "turbo-frame", refresh: :morph,
     data: {
-      controller: "documents--live-users",
-      action: "click->documents--live-users#toggle_popover",
-      "test-selector": "live-users"
+      controller: "documents--live-events",
+      action: "click->documents--live-events#toggle_popover",
+      "test-selector": "live-events"
     }
   ) do
     render Primer::BaseComponent.new(tag: :div, position: :relative) do
@@ -43,7 +43,7 @@
         flex_layout do |flex_container|
           flex_container.with_column do
             render Primer::Beta::AvatarStack.new(
-              data: { "documents--live-users-target": "users" }
+              data: { "documents--live-events-target": "users" }
             ) do |component|
               users.map do |user|
                 component.with_avatar(src: avatar_url(user), alt: user.name)
@@ -59,7 +59,7 @@
         render Primer::Beta::Popover.new(
           position: :absolute,
           display: :none, # hidden by default
-          data: { "documents--live-users-target": "popover" }
+          data: { "documents--live-events-target": "popover" }
         ) do |component|
           component.with_heading { I18n.t("documents.active_editors") }
           component.with_body(caret: :top_left) do

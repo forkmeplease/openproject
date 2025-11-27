@@ -55,7 +55,9 @@ module OpenProject::Documents
         permission :view_documents,
                    {
                      documents: %i[
-                       index search show download render_avatars render_connection_error render_connection_recovery
+                       index search show download
+                       render_avatars render_last_saved_at
+                       render_connection_error render_connection_recovery
                      ],
                      "documents/menus": %i[show]
                    },
