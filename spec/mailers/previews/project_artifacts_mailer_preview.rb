@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2010-2024 the OpenProject GmbH
+# Copyright (C) the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -26,27 +26,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-class Users::DeletePageHeaderComponent < ApplicationComponent
-  include OpPrimer::ComponentHelpers
-  include ApplicationHelper
+class ProjectArtifactsMailerPreview < ActionMailer::Preview
+  # Preview emails at http://localhost:3000/rails/mailers/project_artifacts_mailer
 
-  def initialize(user:, layout:)
-    super
-    @user = user
-    @layout = layout
-  end
+  def creation_wizard_submitted
+    project = FactoryBot.build_stubbed(:project)
+    work_package = FactoryBot.build_stubbed(:work_package, project: project)
+    project.project_creation_wizard_enabled = true
+    project.project_creation_wizard_notification_text = <<~STR
+      Hello,
 
-  def breadcrumb_items
-    if @layout == "my"
-      [{ href: my_account_path, text: t(:label_my_account) }, t("account.delete")]
-    else
-      [{ href: admin_index_path, text: t(:label_administration) },
-       { href: admin_settings_users_path, text: t(:label_user_and_permission) },
-       { href: users_path, text: t(:label_user_plural) },
-       { href: edit_user_path(@user), text: @user.name },
-       t("account.delete")]
-    end
+      You submitted a project initiation request for **#{project.name}**. It is now awaiting review.
+      Click the link below to access the work package with your request.
+    STR
+    user = FactoryBot.build_stubbed(:user)
+
+    ProjectArtifactsMailer.creation_wizard_submitted(user, project, work_package)
   end
 end

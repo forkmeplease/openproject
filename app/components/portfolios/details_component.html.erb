@@ -1,28 +1,36 @@
 <%=
-  flex_layout do |flex|
+  flex_layout(**archived_style) do |flex|
     flex.with_row(mb: 2) do
       flex_layout(align_items: :center) do |header|
-        header.with_column do
-          render(
-            Primer::Beta::Link.new(
-              classes: "portfolio-name",
-              href: project_overview_path(@portfolio),
-              font_weight: :bold
-            )
-          ) do
-            @portfolio.name
+        header.with_column(mr: 2) do
+          if archived?
+            render(Primer::Beta::Text.new(classes: "portfolio-name")) do
+              name_caption
+            end
+          else
+            render(
+              Primer::Beta::Link.new(
+                classes: "portfolio-name",
+                href: project_overview_path(@portfolio),
+                font_weight: :bold
+              )
+            ) do
+              name_caption
+            end
           end
         end
 
-        header.with_column(ml: 2, mr: 2) do
-          render(
-            Projects::StatusButtonComponent.new(
-              user: @current_user,
-              project: @portfolio,
-              hide_help_text: true,
-              size: :small
+        unless archived?
+          header.with_column(mr: 2, test_selector: "op-portfolios--status") do
+            render(
+              Projects::StatusButtonComponent.new(
+                user: @current_user,
+                project: @portfolio,
+                hide_help_text: true,
+                size: :small
+              )
             )
-          )
+          end
         end
 
         if render_sub_status_bar?
@@ -71,71 +79,94 @@
 
     flex.with_row do
       flex_layout(align_items: :center) do |footer|
-        footer.with_column(mr: 3) do
-          render(
-            Primer::Beta::IconButton.new(
-              icon: currently_favorited? ? "star-fill" : "star",
-              scheme: :invisible,
-              mobile_icon: currently_favorited? ? "star-fill" : "star",
-              size: :medium,
-              tag: :a,
-              tooltip_direction: :e,
-              href: helpers.build_favorite_path(@portfolio, format: :html),
-              data: { turbo_method: currently_favorited? ? :delete : :post },
-              classes: currently_favorited? ? "op-primer--star-icon " : "",
-              label: currently_favorited? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite),
-              aria: { label: currently_favorited? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite) },
-              test_selector: "op-portfolios--favorite-button"
-            )
-          )
-        end
-
-        if has_subportfolios?
+        unless archived?
           footer.with_column(mr: 3) do
             render(
-              Primer::Beta::Octicon.new(
-                icon: workspace_icon("portfolio"),
-                align_self: :center,
-                "aria-label": t("portfolio.count", count: all_subportfolios.count),
-                mr: 1
+              Primer::Beta::IconButton.new(
+                icon: currently_favorited? ? "star-fill" : "star",
+                scheme: :invisible,
+                mobile_icon: currently_favorited? ? "star-fill" : "star",
+                size: :medium,
+                tag: :a,
+                tooltip_direction: :e,
+                href: helpers.build_favorite_path(@portfolio, format: :html),
+                data: { turbo_method: currently_favorited? ? :delete : :post },
+                classes: currently_favorited? ? "op-primer--star-icon " : "",
+                label: currently_favorited? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite),
+                aria: { label: currently_favorited? ? I18n.t(:button_unfavorite) : I18n.t(:button_favorite) },
+                test_selector: "op-portfolios--favorite-button"
               )
-            ) + content_tag(:span, t("portfolio.count", count: all_subportfolios.count))
+            )
           end
-        end
 
-        footer.with_column(mr: 3) do
-          render(
-            Primer::Beta::Octicon.new(
-              icon: workspace_icon("program"),
-              align_self: :center,
-              "aria-label": t("program.count", count: all_subprograms.count),
-              mr: 1
+          if has_subportfolios?
+            footer.with_column(mr: 3) do
+              concat(
+                render(
+                  Primer::Beta::Octicon.new(
+                    icon: workspace_icon("portfolio"),
+                    align_self: :center,
+                    "aria-label": t("portfolio.count", count: all_subportfolios.count),
+                    mr: 1
+                  )
+                )
+              )
+              concat(
+                render(Primer::Beta::Text.new) do
+                  t("portfolio.count", count: all_subportfolios.count)
+                end
+              )
+            end
+          end
+
+          footer.with_column(mr: 3) do
+            concat(
+              render(
+                Primer::Beta::Octicon.new(
+                  icon: workspace_icon("program"),
+                  align_self: :center,
+                  "aria-label": t("program.count", count: all_subprograms.count),
+                  mr: 1
+                )
+              )
             )
-          ) + content_tag(:span, t("program.count", count: all_subprograms.count))
-        end
-
-        footer.with_column(mr: 3) do
-          render(
-            Primer::Beta::Octicon.new(
-              icon: workspace_icon("project"),
-              align_self: :center,
-              "aria-label": t("project.count", count: all_subprojects.count),
-              mr: 1
+            concat(
+              render(Primer::Beta::Text.new) do
+                t("program.count", count: all_subprograms.count)
+              end
             )
-          ) + content_tag(:span, t("project.count", count: all_subprojects.count))
-        end
+          end
 
-        # TODO: WP-68872 render budget
-        # footer.with_column(mr: 3) do
-        #   render(
-        #     Primer::Beta::Octicon.new(
-        #       icon: "op-budget",
-        #       align_self: :center,
-        #       "aria-label": "TODO",
-        #       mr: 1
-        #     )
-        #   ) + content_tag(:span, "34,000 EUR budget - 12,000 EUR spent")
-        # end
+          footer.with_column(mr: 3) do
+            concat(
+              render(
+                Primer::Beta::Octicon.new(
+                  icon: workspace_icon("project"),
+                  align_self: :center,
+                  "aria-label": t("project.count", count: all_subprojects.count),
+                  mr: 1
+                )
+              )
+            )
+            concat(
+              render(Primer::Beta::Text.new) do
+                t("project.count", count: all_subprojects.count)
+              end
+            )
+          end
+
+          # TODO: WP-68872 render budget
+          # footer.with_column(mr: 3) do
+          #   render(
+          #     Primer::Beta::Octicon.new(
+          #       icon: "op-budget",
+          #       align_self: :center,
+          #       "aria-label": "TODO",
+          #       mr: 1
+          #     )
+          #   ) + content_tag(:span, "34,000 EUR budget - 12,000 EUR spent")
+          # end
+        end
 
         footer.with_column do
           render(

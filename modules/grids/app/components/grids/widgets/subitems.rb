@@ -53,24 +53,20 @@ module Grids
         subitems_with_more.last
       end
 
-      def has_no_subitems?
-        displayed_subitems.empty?
+      def has_subitems?
+        displayed_subitems.any?
       end
 
       def wrapper_arguments
         { full_width: true }
       end
 
-      def show_create_sub_work_space_buttons?
+      def can_create_sub_programs?
         project.portfolio? && can_create_sub_projects?
       end
 
       def can_create_sub_projects?
         @can_create_sub_projects ||= User.current.allowed_in_project?(:add_subprojects, @project)
-      end
-
-      def create_sub_portfolio_path
-        new_portfolio_path(parent_id: project.id)
       end
 
       def create_sub_program_path

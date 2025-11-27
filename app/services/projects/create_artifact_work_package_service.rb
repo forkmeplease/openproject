@@ -83,6 +83,8 @@ module Projects
     end
 
     def after_perform(service_call)
+      send_notification_email
+
       return service_call if store_attachment_locally? || skip_creation?
 
       if project_storage.nil?
@@ -110,6 +112,14 @@ module Projects
       end
 
       service_call
+    end
+
+    def send_notification_email
+      return unless project.project_creation_wizard_send_confirmation_email
+
+      ProjectArtifactsMailer
+        .creation_wizard_submitted(user, project, artifact_work_package)
+        .deliver_later
     end
 
     def project_storage

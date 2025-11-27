@@ -105,6 +105,10 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
     @export_datetime = Time.zone.now
   end
 
+  def cover_page_footer_date
+    format_time(export_datetime)
+  end
+
   def footer_date
     heading
   end
@@ -143,7 +147,7 @@ class Project::PDFExport::ProjectInitiation < Exports::Exporter
   end
 
   def with_cover?
-    false
+    true
   end
 
   def can_view_attribute?(_project, _attribute)

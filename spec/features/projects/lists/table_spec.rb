@@ -46,6 +46,7 @@ RSpec.describe "Projects lists table display and actions", :js, with_settings: {
     end
   end
   shared_let(:development_project) { create(:project, name: "Development project", identifier: "development-project") }
+  shared_let(:archived_project) { create(:project, name: "Archived project", identifier: "archived-project", active: false) }
 
   let(:news) { create(:news, project:) }
   let(:projects_page) { Pages::Projects::Index.new }
@@ -222,6 +223,23 @@ RSpec.describe "Projects lists table display and actions", :js, with_settings: {
             .to have_css("th", text: "LATEST ACTIVITY AT")
           expect(page)
             .to have_css("td", text: news.created_at.strftime("%m/%d/%Y"))
+        end
+      end
+
+      specify "archived projects offer no option to be marked as favorite" do
+        login_as(admin)
+        visit projects_path
+        load_and_open_filters admin
+        projects_page.filter_by_active("no")
+        wait_for_reload
+
+        projects_page.within_row(archived_project) do
+          expect(page).to have_text(archived_project.name)
+          expect(page).not_to have_test_selector("project-list-favorite-button")
+        end
+
+        projects_page.activate_menu_of(archived_project) do |menu|
+          expect(menu).to have_no_text("Add to favorites")
         end
       end
 

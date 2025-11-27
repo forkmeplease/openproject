@@ -37,15 +37,7 @@ See COPYRIGHT and LICENSE files for more details.
                             scheme: :invisible,
                             aria: { label: I18n.t(:button_add_sub_item) } }
       ) do |menu|
-        if show_create_sub_work_space_buttons?
-          menu.with_item(
-            label: I18n.t(:label_portfolio),
-            tag: :a,
-            href: create_sub_portfolio_path
-          ) do |item|
-            item.with_leading_visual_icon(icon: :briefcase)
-          end
-
+        if can_create_sub_programs?
           menu.with_item(
             label: I18n.t(:label_program),
             tag: :a,
@@ -68,7 +60,7 @@ See COPYRIGHT and LICENSE files for more details.
     end
 
     if can_view_subprojects?
-      if !has_no_subitems?
+      if has_subitems?
         displayed_subitems.each do |child|
           container.with_row do
             flex_layout do |row|

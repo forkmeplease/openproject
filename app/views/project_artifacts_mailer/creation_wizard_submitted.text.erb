@@ -26,9 +26,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
-<%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { t("account.delete") }
-    header.with_breadcrumbs(breadcrumb_items)
-  end
-%>
+
+<%= @project.name %>
+<%= project_url(@project) %>
+
+<%= strip_tags(@notification_text) %>
+
+<% if @work_package.visible? %>
+  <p>
+    <%= I18n.t(
+          "settings.project_initiation_request.status.submitted_button",
+        ) %>: <%= project_work_packages_url(@project, @work_package) %>
+  </p>
+<% end %>
+
+<% if @project.project_creation_wizard_enabled? %>
+  <p>
+    <%= I18n.t(
+          "settings.project_initiation_request.wizard_status_button.#{@project.project_creation_wizard_artifact_name}",
+        ) %>: <%= project_creation_wizard_url(@project) %>
+  </p>
+<% end %>

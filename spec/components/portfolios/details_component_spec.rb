@@ -41,7 +41,8 @@ RSpec.describe Portfolios::DetailsComponent, type: :component do
   let(:user) { create(:admin) }
   let(:status_code_a) { "on_track" }
   let(:status_code_b) { "at_risk" }
-  let!(:portfolio) { create(:portfolio, description: "portfolio description") }
+  let(:active) { true }
+  let!(:portfolio) { create(:portfolio, description: "portfolio description", active:) }
 
   current_user { user }
 
@@ -68,13 +69,7 @@ RSpec.describe Portfolios::DetailsComponent, type: :component do
     def portfolio.favorited?; false; end
   end
 
-  describe "portfolio" do
-    it "renders the title as a link" do
-      expect(subject).to have_element("a", text: portfolio.name) do |link|
-        expect(link[:href]).to eq(project_overview_path(portfolio))
-      end
-    end
-
+  shared_examples "having a description and last update time" do
     it { expect(subject).to have_text(portfolio.description) }
 
     context "when the portfolio has no description" do
@@ -83,6 +78,26 @@ RSpec.describe Portfolios::DetailsComponent, type: :component do
       end
 
       it { expect(subject).to have_text("No description provided") }
+    end
+
+    describe "#updated_at" do
+      before do
+        allow(portfolio).to receive(:updated_at).and_return(1.month.ago)
+      end
+
+      it "shows when the portfolio was last updated" do
+        expect(subject).to have_test_selector("op-portfolios--updated-at", text: "Updated about 1 month ago")
+      end
+    end
+  end
+
+  describe "portfolio" do
+    it_behaves_like "having a description and last update time"
+
+    it "renders the title as a link" do
+      expect(subject).to have_css(".portfolio-name", text: portfolio.name) do |link|
+        expect(link[:href]).to eq(project_overview_path(portfolio))
+      end
     end
 
     it "offers a button to favor the portfolio" do
@@ -117,13 +132,14 @@ RSpec.describe Portfolios::DetailsComponent, type: :component do
       end
     end
 
-    describe "#updated_at" do
-      before do
-        allow(portfolio).to receive(:updated_at).and_return(1.month.ago)
+    describe "portfolio status" do
+      it "shows the status button if the status is not set" do
+        expect(subject).to have_css("#projects-status-button-component-#{portfolio.id}", text: "Not set")
       end
 
-      it "shows when the portfolio was last updated" do
-        expect(subject).to have_test_selector("op-portfolios--updated-at", text: "Updated about 1 month ago")
+      it "shows the status button if the status is set" do
+        portfolio.status_code = "on_track"
+        expect(subject).to have_css("#projects-status-button-component-#{portfolio.id}", text: "On track")
       end
     end
 
@@ -158,6 +174,33 @@ RSpec.describe Portfolios::DetailsComponent, type: :component do
           expect(subject).not_to have_test_selector("op-portfolios--status-not_set")
         end
       end
+    end
+  end
+
+  describe "archived portfolio" do
+    let(:active) { false }
+
+    it_behaves_like "having a description and last update time"
+
+    it { expect(subject).to have_no_text("2 programs") }
+    it { expect(subject).to have_no_text("5 projects") }
+    it { expect(subject).to have_no_text("0 portfolios") }
+
+    it "renders the title as text" do
+      expect(subject).to have_no_css(".portfolio-name.Link")
+      expect(subject).to have_css(".portfolio-name", text: "#{portfolio.name} (Archived)")
+    end
+
+    it "has to button to favor the portfolio" do
+      expect(subject).not_to have_test_selector("op-portfolios--favorite-button")
+    end
+
+    it "has no status button" do
+      expect(subject).to have_no_css("#projects-status-button-component-#{portfolio.id}")
+    end
+
+    it "has no sub-item status" do
+      expect(subject).not_to have_test_selector("op-portfolios--sub-status-bar")
     end
   end
 end

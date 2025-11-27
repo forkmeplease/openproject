@@ -32,7 +32,8 @@ require "spec_helper"
 
 RSpec.describe "Portfolios",
                "creation",
-               :js do
+               :js,
+               with_ee: :portfolio_management do # TODO: test without enterprise feature
   shared_let(:user_with_permissions) do
     create(:user,
            global_permissions: :add_portfolios)
@@ -65,9 +66,9 @@ RSpec.describe "Portfolios",
     # Step 2: Fill in project details
     fill_in "Name", with: "Foo bar"
 
-    expect(page).to have_combo_box "Subproject of"
-    parent_field.expect_no_option "Other portfolio"
-    parent_field.select_option "Root portfolio"
+    # No parent field since portfolios are always root elements
+    expect(page)
+      .not_to have_combo_box "Subproject of"
 
     click_on "Complete"
 
@@ -79,7 +80,7 @@ RSpec.describe "Portfolios",
     portfolio = Project.last
     expect(portfolio.workspace_type).to eq "portfolio"
     expect(portfolio.identifier).to eq "foo-bar"
-    expect(portfolio.parent).to eq root_portfolio
+    expect(portfolio.parent).to be_nil
   end
 
   context "without the necessary permissions to create portfolios", with_flag: { portfolio_models: true } do

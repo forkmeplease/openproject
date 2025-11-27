@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Portfolios", "index", :js do
+RSpec.describe "Portfolios", "index", :js, with_ee: :portfolio_management do # TODO: test without enterprise feature
   let!(:portfolio_a) { create(:portfolio, name: "Portfolio A") }
   let!(:portfolio_b) { create(:portfolio, name: "Portfolio B") }
   let!(:portfolio_favorited) { create(:portfolio, name: "Favorited") }
@@ -135,6 +135,16 @@ RSpec.describe "Portfolios", "index", :js do
       portfolios_page.expect_title("Archived portfolios")
       portfolios_page.expect_portfolios_listed(inactive_portfolio)
       portfolios_page.expect_portfolios_not_listed(portfolio_a, portfolio_b, portfolio_favorited)
+
+      # For archived portfolios, no status bar, favorite button or project count is shown:
+      portfolios_page.within_row(inactive_portfolio) do
+        expect(page).to have_no_test_selector("op-portfolios--favorite-button")
+        expect(page).to have_no_test_selector("op-portfolios--sub-status-bar")
+        expect(page).to have_no_test_selector("op-portfolios--status")
+        expect(page).to have_no_text("0 portfolios")
+        expect(page).to have_no_text("0 projects")
+        expect(page).to have_no_text("0 programs")
+      end
     end
 
     it "allows you to favorite and unfavorite portfolios" do
@@ -180,14 +190,8 @@ RSpec.describe "Portfolios", "index", :js do
         portfolios_page.within_row(portfolio_a) do
           expect(page).to have_test_selector("op-portfolios--sub-status-bar")
 
-          # It renders the correct percentages per status:
-          on_track = page.find_test_selector("op-portfolios--status-on_track")
-          on_track_percentage = on_track["data-percentage"]
-          expect(on_track_percentage).to eq("66.7")
-
-          at_risk = page.find_test_selector("op-portfolios--status-at_risk")
-          at_risk_percentage = at_risk["data-percentage"]
-          expect(at_risk_percentage).to eq("33.3")
+          portfolios_page.expect_status_bar_percentage(portfolio_a, "on_track", "66.7", find_row: false)
+          portfolios_page.expect_status_bar_percentage(portfolio_a, "at_risk", "33.3", find_row: false)
 
           # The status bar shows a hover card on hover:
           hover_card_selector = "op-portfolios--hover-card-#{portfolio_a.id}"

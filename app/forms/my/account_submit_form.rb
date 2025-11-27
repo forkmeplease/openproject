@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -25,22 +27,11 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-#
 
-module OpenProject::Patches::MailerControllerCsp
-  extend ActiveSupport::Concern
-
-  included do
-    prepend_before_action :extend_content_security_policy
-
-    def extend_content_security_policy
-      append_content_security_policy_directives(
-        script_src: %w('unsafe-inline')
-      )
-    end
+class My::AccountSubmitForm < ApplicationForm
+  form do |form|
+    form.submit(name: :submit,
+                label: I18n.t("activerecord.attributes.user_preference.button_update_user_information"),
+                scheme: :default)
   end
-end
-
-OpenProject::Patches.patch_gem_version "rails", "8.0.4" do
-  Rails::MailersController.include OpenProject::Patches::MailerControllerCsp
 end

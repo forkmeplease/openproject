@@ -49,7 +49,9 @@ module Projects
       ""
     end
 
-    def favorited
+    def favorited # rubocop:disable Metrics/AbcSize
+      return nil if project.archived?
+
       render(Primer::Beta::IconButton.new(
                icon: currently_favorited? ? "star-fill" : "star",
                scheme: :invisible,
@@ -154,11 +156,11 @@ module Projects
     def name
       content = [content_tag(:i, "", class: "projects-table--hierarchy-icon")]
 
-      if project.archived?
-        content << content_tag(:span, I18n.t("project.archive.archived"), class: "archived-label")
-      end
-
       content << helpers.link_to_project(project, {}, { data: { turbo: false } }, false)
+
+      if project.archived?
+        content << content_tag(:span, "(#{I18n.t('project.archive.archived')})", class: "archived-label")
+      end
 
       if workspace_type_badge && OpenProject::FeatureDecisions.portfolio_models_active?
         content << workspace_type_badge
@@ -295,7 +297,7 @@ module Projects
     end
 
     def more_menu_favorite_item
-      return if currently_favorited?
+      return if currently_favorited? || project.archived?
 
       {
         scheme: :default,
@@ -308,7 +310,7 @@ module Projects
     end
 
     def more_menu_unfavorite_item
-      return unless currently_favorited?
+      return if !currently_favorited? || project.archived?
 
       {
         scheme: :default,
