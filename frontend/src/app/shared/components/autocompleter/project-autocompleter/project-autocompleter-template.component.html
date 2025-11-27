@@ -24,6 +24,7 @@
       >{{ item.name }}</div>
       @if (shouldShowWorkspaceTypeBadge(item)) {
         <div
+          class="color-fg-muted"
           [innerHTML]="workspaceTypeIconWithLabel(item)"
           style="flex-shrink: 0;"
         ></div>
