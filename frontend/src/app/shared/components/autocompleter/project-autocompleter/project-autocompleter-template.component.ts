@@ -38,7 +38,7 @@ import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { IAutocompleterTemplateComponent } from 'core-app/shared/components/autocompleter/op-autocompleter/op-autocompleter.component';
 import {
   toDOMString,
-  projectRoadmapIconData,
+  versionsIconData,
   briefcaseIconData,
   SVGData,
 } from '@openproject/octicons-angular';
@@ -80,7 +80,7 @@ export class ProjectAutocompleterTemplateComponent implements IAutocompleterTemp
   private workspaceTypeSVGData(workspaceType:string):SVGData|undefined {
     switch (workspaceType) {
       case 'Program': {
-        return projectRoadmapIconData;
+        return versionsIconData;
       }
       case 'Portfolio': {
         return briefcaseIconData;
