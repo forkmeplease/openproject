@@ -57,7 +57,7 @@
       end
 
       flex.with_column do
-        last_updated_at_content
+        render(Documents::ShowEditView::PageHeader::LiveSavedAtComponent.new(document))
       end
     end
   end

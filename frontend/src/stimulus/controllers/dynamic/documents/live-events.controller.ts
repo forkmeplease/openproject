@@ -28,7 +28,7 @@
  * ++
  */
 
-import { HocuspocusProvider, onAwarenessUpdateParameters } from '@hocuspocus/provider';
+import { HocuspocusProvider, onAwarenessUpdateParameters, onStatelessParameters } from '@hocuspocus/provider';
 import * as Turbo from '@hotwired/turbo';
 import { LiveCollaborationManager } from 'core-stimulus/helpers/live-collaboration-helpers';
 import { ApplicationController, useDebounce } from 'stimulus-use';
@@ -49,6 +49,7 @@ export default class extends ApplicationController {
     LiveCollaborationManager.onReady((provider:HocuspocusProvider) => {
       this.provider = provider;
       this.provider.on('awarenessUpdate', this.onAwarenessUpdate);
+      this.provider.on('stateless', this.onStateless);
     });
 
     useDebounce(this, { wait: 1000 });
@@ -57,6 +58,7 @@ export default class extends ApplicationController {
   disconnect() {
     this.currentUsers.clear();
     this.provider?.off('awarenessUpdate', this.onAwarenessUpdate);
+    this.provider?.on('stateless', this.onStateless);
   }
 
   toggle_popover() {
@@ -66,7 +68,13 @@ export default class extends ApplicationController {
   private onAwarenessUpdate = (data:onAwarenessUpdateParameters) => {
     const changed = this.updateUsers(data.states);
     if (changed) {
-      this.triggerUpdateUI();
+      this.triggerUpdateUsersUI();
+    }
+  };
+
+  private onStateless = (data:onStatelessParameters) => {
+    if (data.payload == 'storeEvent') {
+      this.fetchTemplate(`${window.location.pathname}/render_last_saved_at`);
     }
   };
 
@@ -89,15 +97,17 @@ export default class extends ApplicationController {
     );
   }
 
-  private triggerUpdateUI() {
+  private triggerUpdateUsersUI() {
     const params = new URLSearchParams();
 
     for (const user of this.currentUsers.values()) {
       params.append('user_ids[]', user.id);
     }
 
-    const url = `${window.location.pathname}/render_avatars?${params}`;
+    this.fetchTemplate(`${window.location.pathname}/render_avatars?${params}`);
+  }
 
+  private fetchTemplate(url:string) {
     void fetch(url, {
       method: 'GET',
       headers: { Accept: 'text/vnd.turbo-stream.htm' },

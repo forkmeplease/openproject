@@ -59,7 +59,7 @@ RSpec.describe "Show/Edit Document View",
     expect(page).to have_content("Collaborative document")
 
     aggregate_failures "can see live users" do
-      within_test_selector("live-users") do
+      within_test_selector("live-events") do
         expect(page).to have_content("1 active editors")
       end
     end

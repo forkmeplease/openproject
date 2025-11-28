@@ -32,18 +32,30 @@
 module Documents
   module ShowEditView
     module PageHeader
-      class InfoLineComponent < ApplicationComponent
-        include OpPrimer::ComponentHelpers
-        include OpPrimer::FormHelpers
+      class LiveSavedAtComponent < ApplicationComponent
         include OpTurbo::Streamable
         include Redmine::I18n
 
         alias_method :document, :model
 
-        private
+        # replaces the need for a template
+        def call
+          component_wrapper do
+            last_saved_at_content
+          end
+        end
 
-        def other_document_types
-          DocumentType.where.not(id: document.type_id).pluck(:name, :id)
+        def last_saved_at_content
+          safe_join [
+            I18n.t("documents.last_updated_at", time: updated_at_time).html_safe
+          ]
+        end
+
+        def updated_at_time
+          OpPrimer::RelativeTimeComponent.new(
+            datetime: in_user_zone(document.updated_at),
+            month: :long
+          ).render_in(view_context)
         end
       end
     end
