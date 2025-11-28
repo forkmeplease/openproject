@@ -164,9 +164,9 @@ uk:
         title: "Таблиця маркерів доступу"
     settings:
       new_project:
-        project_creation: "Project creation"
+        project_creation: "Створення проєкту"
         notification_text_default: >
-          <p>Hello,</p> <p>A new project has been created: projectValue:name</p> <p>Thank you</p>
+          <p>Вітаємо,</p> <p>Новий проєкт створено: projectValue:name</p> <p>Дякуємо</p>
     workflows:
       tabs:
         default_transitions: "Стандартні переходи"
@@ -190,12 +190,12 @@ uk:
       title: "Вкладення на карантині"
       error_cannot_act_self: "Неможливо виконати дії з файлами, вивантаженими вами."
   attribute_help_texts:
-    caption: "This short version will be displayed as caption of the attribute."
-    note_public: "Any text and images you add to this field is publicly visible to all logged in users."
+    caption: "Ця коротка версія буде показуватися як заголовок атрибута."
+    note_public: "Будь-який текст та зображення, додані до цього поля, є загальнодоступними для всіх зареєстрованих користувачів."
     text_overview: "У цьому поданні можна створювати спеціальні тексти довідки для перегляду атрибутів. Коли вони визначені, ці тексти можна показувати, натиснувши піктограму довідки поруч з її атрибутом."
     show_preview: "Попередній перегляд тексту"
     add_new: "Додати текст довідки"
-    edit_field_name: "Edit help text for %{attribute_field_name}"
+    edit_field_name: "Редагувати текст довідки для%{attribute_field_name}"
   background_jobs:
     status:
       error_requeue: "Виконується повторний запуск завдання, оскільки попередня спроба завершилася такою помилкою: %{message}"
@@ -307,7 +307,7 @@ uk:
         placeholder:
           label: "Мітка елемента"
           short: "Коротка назва"
-          weight: "Weight"
+          weight: "Вага"
       notice:
         remember_items_and_projects: "Обов’язково задайте елементи й проєкти на відповідних вкладках для цього користувацького поля."
       hierarchy:
@@ -316,10 +316,10 @@ uk:
           one: 1 піделемент
           other: "Піделементів: %{count}"
       role_assignment:
-        title: Role Assignment
-        description: You can automatically grant a certain project role to any user assigned to this project attribute, regardless of that user’s original role in that project.
-        warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
-        role_field_label: "Project Role"
+        title: Призначення ролі
+        description: Ви можете автоматично надавати певну роль у проєкті будь-якому користувачу, якому призначено цей атрибут, незалежно від його початкової ролі у цьому проєкті.
+        warning: Залежно від вибраної нижче ролі, користувач, якому призначено цей атрибут проєкту, може отримати значно більше прав доступу, ніж мав раніше, включно з можливістю додавати нових учасників та підвищувати їхню роль.
+        role_field_label: "Роль проєкту"
         role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
         review_hint: >
           There are %{user_count} who are already assigned to this project attribute in various projects. They might get additional permissions and be added to projects they did not previously have access to.
@@ -346,7 +346,7 @@ uk:
     calculated_field_not_editable: "Атрибут не підлягає редагуванню. Його значення обчислюється автоматично."
     no_role_assigment: "No role assignment"
     instructions:
-      is_required: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
+      is_required: "Позначте поле як обов'язкове. Це зробить заповнення поля обов'язковим під час створення нових ресурсів. Наявні ресурси не потребуватимуть введення значення під час оновлення."
       is_required_for_project: "Check to enable this attribute and make it required in all projects. It cannot be deactived for individual projects. Existing projects will not require a value when being updated."
       is_for_all: "Позначте користувацьке поле як доступне в усіх наявних і нових проєктах."
       multi_select: "Дає змогу користувачу задавати кілька значень цього користувацького поля."
@@ -1529,7 +1529,7 @@ uk:
               minimum: "має містити принаймні один фільтр для адміністратора доступу, контексту або адміністратора з оператором «=»."
         custom_field:
           at_least_one_custom_option: "Необхідно мати принаймні один варіант."
-          previous_custom_field_recalculation_unprocessed: "The recalculation of previous changes for this custom field have not been applied yet, please try again in a few minutes."
+          previous_custom_field_recalculation_unprocessed: "Перерахунок попередніх змін для цього власного поля ще не було застосовано. Спробуйте повторити спробу за кілька хвилин."
           referenced_in_other_fields_html:
             one: "%{name} використовується при обчисленні атрибутів проєкту %{links}."
             few: "%{name} використовується при обчисленнях атрибутів проєкту: %{links}."
@@ -2863,7 +2863,7 @@ uk:
         #We need to include the version to invalidate outdated translations in other locales
         "16_6":
           new_features_title: >
-            Випуск включає різноманітні нові функції і покращення, такі як:
+            Випуск включає різноманітні нові функції та покращення, такі як:
           new_features_list:
             line_0: Обчислені значення для оцінки проєктів і підрахунку балів (доповнення версії Enterprise).
             line_1: Ієрархія типів атрибутів проєкту.
@@ -3278,7 +3278,7 @@ uk:
   label_index_by_title: "Індекс за назвою"
   label_information: "Інформація"
   label_information_plural: "Інформація"
-  label_installation_guides: "Інструкції зі встановлення"
+  label_installation_guides: "Інструкції із встановлення"
   label_integer: "Ціле число"
   label_interface: "Інтерфейс"
   label_internal: "Власне"

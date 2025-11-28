@@ -27,14 +27,14 @@ uk:
     errors:
       models:
         document_type:
-          one_or_more_required: "Cannot delete the last document type"
+          one_or_more_required: "Неможливо видалити останній тип документа"
     models:
       document: "Документ"
-      documents: "Documents"
+      documents: "Документи"
     attributes:
       document:
         content_binary: "Двійковий вміст"
-        title: "Назва "
+        title: "Заголовок"
   activity:
     filter:
       document: "Документи"
@@ -45,8 +45,8 @@ uk:
     page_header:
       heading: "Усі документи"
       action_menu:
-        document_actions: "Document actions"
-        edit_title: "Edit title"
+        document_actions: "Дії з документом"
+        edit_title: "Редагувати назву"
     subheader:
       filter:
         label: "Фільтр за назвою документів"
@@ -55,92 +55,90 @@ uk:
       heading: "Документів ще немає"
       description: "У цьому поданні немає документів. Щоб додати, натисніть кнопку нижче."
     document_categories_deprecation_notice:
-      heading: File categories are now called 'Document types'
+      heading: Категорії файлів тепер називаються "Типи документу"
       description: |-
-        Your existing file categories have been converted to document types with the introduction of the new Documents module.
-        All existing documents have also been migrated to these new types.
-      primary_action: Configure document types
-      secondary_action: Learn more about the Documents module
-    document_type_actions: "Document type actions"
+        Наявні категорії файлів були перетворені на типи документів із впровадженням нового модуля «Документи».
+        Усі наявні документи також були перенесені до цих нових типів.
+      primary_action: Налаштувати типи документів
+      secondary_action: Дізнайтеся більше про модуль Документи
+    document_type_actions: "Дії з типом документа"
     text_collaboration_disabled_notice:
       description: |-
-        Unable to open document because real-time text collaboration is disabled.
-        Please contact your administrator to enable real-time text collaboration if you want to access this document.
+        Неможливо відкрити документ, оскільки режим спільного редагування в реальному часі вимкнено.
+        Будь ласка, зверніться до адміністратора, щоб увімкнути спільне редагування в реальному часі, якщо ви хочете отримати доступ до цього документа.
     show_edit_view:
       connection_error_notice:
         description: |-
-          Unable to open document because the real-time text collaboration server is unreachable.
-          Please contact the administrator if the problem persists.
-        action: Try again
+          Неможливо відкрити документ, оскільки сервер спільного редагування в реальному часі недоступний.
+          Будь ласка, зверніться до адміністратора якщо проблема не зникне.
+        action: Спробуйте знову
       connection_recovery_notice:
-        description: "The connection to the real-time text collaboration server has been restored."
+        description: "З’єднання з сервером спільного редагування в реальному часі відновлено."
     index_page:
       name: "Назва"
       type: "Тип"
       updated_at: "Останнє редагування"
-      label_legacy: "Legacy"
+      label_legacy: "Застаріле"
     menu:
       all: "Усі документи"
       types: "Типи"
-      collaboration_settings: "Real-time collaboration"
-    last_updated_at: "Last updated %{time}."
-    active_editors: "Active editors"
-    active_editors_count: "%{count} active editors"
+      collaboration_settings: "Спільне редагування в реальному часі"
+    last_updated_at: "Останнє оновлення%{time}."
+    active_editors: "Активні редактори"
+    active_editors_count: "%{count} активних редакторів"
     label_attachment_author: "Автор додатку"
     label_categories: "Категорії"
     new_category: "Нова категорія"
-    new_type: "New type"
+    new_type: "Новий тип"
     delete_dialog:
-      title: "Delete document"
-      heading: "Delete this document?"
-      confirmation_message_html: "This will permanently delete this document and all file attachments. Are you sure you want to do this?"
+      title: "Видалити документ"
+      heading: "Видалити цей документ?"
+      confirmation_message_html: "Це назавжди видалить цей документ та всі вкладені файли. Ви впевнені, що хочете зробити це?"
     delete_document_type_dialog:
-      title: Delete document type
-      heading: Delete this document type?
+      title: Видалити тип документа
+      heading: Видалити цей тип документа?
       confirmation_message: |-
-        The type "%{type_name}" is currently unused. Deleting this type will have no effect on existing documents.
-      select_reassign_to_label: Reassign documents to
+        Тип"%{type_name}" наразі не використовується. Видалення цього типу не вплине на наявні документи.
+      select_reassign_to_label: Перепризначити документи на
       reassign_message:
-        one: The type "%{type_name}" is currently being used in %{document_count} document. Please select which type to reassign them to.
-        few: The type "%{type_name}" is currently being used in %{document_count} documents. Please select which type to reassign them to.
-        many: The type "%{type_name}" is currently being used in %{document_count} documents. Please select which type to reassign them to.
-        other: The type "%{type_name}" is currently being used in %{document_count} documents. Please select which type to reassign them to.
+        one: Тип "%{type_name}" наразі використовується в %{document_count} документі. Виберіть тип, до якого їх перепризначити.
+        few: Тип "%{type_name}" наразі використовується в %{document_count} документах. Виберіть тип, до якого їх перепризначити.
+        many: Тип "%{type_name}" наразі використовується в %{document_count} документах. Виберіть тип, до якого їх перепризначити.
+        other: Тип "%{type_name}" наразі використовується в %{document_count} документах. Виберіть тип, до якого їх перепризначити.
       at_least_one_type_required:
-        title: Cannot delete document type
-        heading: Cannot delete the last document type
-        message: There must always be at least one document type configured. Create another one first if you want to delete this one.
+        title: Неможливо видалити тип документа
+        heading: Неможливо видалити останній тип документа
+        message: Має бути налаштований щонайменше один тип документа. Спочатку створіть інший, якщо хочете видалити цей.
     admin:
       collaboration_settings:
         page_header:
           description: |-
-            When enabled, real-time collaboration allows multiple users to edit a document at the same time.
-            It requires a working %{hocuspocus_server_link} to function.
+            Якщо увімкнено, спільне редагування в реальному часі дає змогу кільком користувачам одночасно редагувати документ.
+            Для роботи потрібен працездатний %{hocuspocus_server_link}.
         banner:
-          none_writable: These values are configured via environment variables and cannot be edited here.
-          some_unwritable: Some values are configured via environment variables and cannot be edited here.
+          none_writable: Ці значення налаштовуються через змінні середовища й не можуть бути змінені тут.
+          some_unwritable: Деякі значення налаштовуються за допомогою змінних середовища і не можуть бути відредаговані тут.
         hocuspocus_server_url:
-          label: "Hocuspocus server URL"
-          caption: "The address of the working Hocuspocus server."
+          label: "URL-адреса сервера Hocuspocus"
+          caption: "Адреса робочого сервера Hocuspocus."
         hocuspocus_server_secret:
-          label: "Client secret"
-          caption: "Paste the secret provided by the Hocuspocus server."
-        hocuspocus_server: Hocuspocus server
+          label: "Секретний ключ клієнта"
+          caption: "Вставте секретний код, наданий сервером Hocuspocus."
+        hocuspocus_server: Сервер Hocuspocus
       enable_text_collaboration:
-        heading: Real-time collaboration is not enabled
+        heading: Спільне редагування в реальному часі не ввімкнено
         description: |-
-          Once enabled, multiple users will be able to work together on a document at the same time.
-          All new documents will be based on a new editor (BlockNote) and will require a working connection to a
-          Hocuspocus server.
-        primary_action: Enable real-time collaboration
-        success: Real-time collaboration has been enabled.
+          Після ввімкнення кілька користувачів зможуть одночасно працювати над документом.
+          Усі нові документи використовуватимуть новий редактор (BlockNote) і вимагатимуть робочого підключення до сервера Hocuspocus.
+        primary_action: Увімкнути спільне редагування в реальному часі
+        success: Спільне редагування в реальному часі ввімкнено.
       disable_text_collaboration_dialog:
-        title: Disable real-time collaboration
-        heading: Disable real-time collaboration?
+        title: Вимкнути спільне редагування в реальному часі
+        heading: Вимкнути спільне редагування в реальному часі?
         confirmation_message: |-
-          All existing documents may become inaccessible. Please only do this if you are certain you want to disable
-          real-time collaboration and the BlockNote editor in this instance.
-        confirmation_checkbox_message: I understand that I might permanently lose data
-        success: Real-time collaboration has been disabled.
+          Усі наявні документи можуть стати недоступними. Будь ласка, виконуйте цю дію лише якщо впевнені, що хочете вимкнути спільне редагування в реальному часі та редактор BlockNote у цьому середовищі.
+        confirmation_checkbox_message: Я розумію, що можу назавжди втратити дані
+        success: Спільне редагування в реальному часі вимкнене.
   label_document_added: "Документ додано"
   label_document_new: "Новий документ"
   label_document_plural: "Документи"
@@ -148,7 +146,7 @@ uk:
   label_document_title: "Назва"
   label_document_description: "Опис"
   label_document_category: "Категорія"
-  label_document_type: "Type"
+  label_document_type: "Тип"
   permission_manage_documents: "Керування документами"
   permission_view_documents: "Перегляд документів"
   project_module_documents: "Документи"

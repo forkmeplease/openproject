@@ -165,7 +165,7 @@ uk:
           group_does_not_exist: "Групи «%{group}» не існує. Перевірте конфігурацію свого екземпляра Nextcloud."
           insufficient_privileges: OpenProject не має достатніх привілеїв, щоб додати користувача %{user} в групу «%{group}». Перевірте налаштування своєї групи в Nextcloud.
           not_allowed: Nextcloud блокує запит.
-          not_found: OpenProject could not find the file on the Nextcloud Storage Provider. Please check if it wasn't deleted.
+          not_found: OpenProject не зміг знайти файл на сховищі Nextcloud. Перевірте, будь ласка, чи він не був видалений.
           unauthorized: Не вдалося синхронізувати OpenProject із Nextcloud. Перевірте своє сховище й конфігурацію Nextcloud.
           user_does_not_exist: "%{user} не існує в Nextcloud."
         one_drive_sync_service:
@@ -185,7 +185,7 @@ uk:
               permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
           error: Сталася неочікувана помилка. Переконайтеся, що є доступ до OneDrive, і перевірте журнали працівників OpenProject, щоб дізнатися більше.
           not_allowed: OpenProject не має дозволу на доступ до вашого диска OneDrive. Перевірте дозволи, установлені в програмі Azure.
-          unauthorized: Не вдалося синхронізувати OpenProject із OneDrive. Перевірте конфігурацію свого сховища й додатку Azure.
+          unauthorized: Не вдалося синхронізувати OpenProject з OneDrive. Перевірте конфігурацію свого сховища й додатку Azure.
           user_does_not_exist: "%{user} не існує в Nextcloud."
         sharepoint_sync_service:
           attributes:
@@ -548,7 +548,7 @@ uk:
     storage_list_blank_slate:
       description: Додайте сховище, щоб воно з’явилося тут.
       heading: У вас ще немає жодного сховища.
-    successful_storage_connection: Сховище підключено. Щоб користуватися ним, активуйте модуль і визначене сховище в налаштуваннях кожного потрібного проєкту.
+    successful_storage_connection: Сховище під'єднано. Щоб користуватися ним, активуйте модуль і визначене сховище в налаштуваннях кожного потрібного проєкту.
     upsell:
       one_drive:
         description: |-
