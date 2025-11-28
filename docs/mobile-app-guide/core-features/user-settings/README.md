@@ -3,7 +3,7 @@ sidebar_navigation:
   title: User settings
   priority: 740
 description: Personalize their mobile app experience, configure notifications, manage account details, and provide feedback.
-keywords: Mobile app features user settings
+keywords: Mobile app features user settings, user settings, user rights, user permissions, mobile permission, mobile settings, mobile user, mobile notification settings
 ---
 
 # User settings

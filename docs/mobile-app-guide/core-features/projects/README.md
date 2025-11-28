@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Projects
   priority: 780
 description: An organized view of all portfolios, programs, and projects you have access to.
-keywords: Mobile app features projects
+keywords: Mobile app features projects, mobile project, mobile portfolio, mobile program, program, programme, project, portfolio, mobile app
 ---
 
 # Projects
@@ -27,7 +27,7 @@ The main screen of the Projects module acts as an **index page**, allowing you t
 *   **Browse a hierarchical list of all projects**, expandable to show programs and child projects.
 *   **Filter the list** to display only your **favorite projects** for quick access.
 
-![Mobile app project module index](mobile_app_projectsmodule.png)
+![Project module index in the OpenProject mobile app](mobile_app_projectsmodule.png)
 
 ## Portfolio, Program, and Project Details
 
@@ -43,6 +43,6 @@ When you enter a portfolio, program, or project, the mobile app provides three k
     *   Displays all **projects or programs that belong to the selected portfolio, program, or project**.
     *   Helps you explore the hierarchy and drill down into individual initiatives.
 
-![Mobile app project details overview](mobile_app_project_overview.png)
-![Mobile app project details work packages](mobile_app_project_workpackages.png)
-![Mobile app project details sub-elements in the project](mobile_app_project_inthisportfolio.png)
+![Project details overview in the OpenProject mobile app](mobile_app_project_overview.png)
+![Project details work packages in the OpenProject mobile app](mobile_app_project_workpackages.png)
+![Project details sub-elements in the project in the OpenProject mobile app](mobile_app_project_inthisportfolio.png)

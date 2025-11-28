@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Time tracking
   priority: 770
 description: Enables you to easily record, review, and manage the time you spend on your work.
-keywords: Mobile app features time tracking
+keywords: Mobile app features time tracking, time tracking, mobile time tracking, mobile time, log time, time logging, time-logging, time management, time, time entry, time log, timer focus, focus timer
 ---
 
 # Time tracking
@@ -27,8 +27,8 @@ The **Time Entries Index** provides a clear, chronological view of all your logg
 
 This view is ideal for maintaining accurate records and verifying past entries.
 
-![Mobile app time tracking week logged time index page](mobile_app_timetrackingmodule.png)
-![Mobile app time tracking index page with a day of the week selected](mobile_app_timetrackingmodule_dayfocused.png)
+![Time tracking week logged time index page in the OpenProject mobile app](mobile_app_timetrackingmodule.png)
+![Time tracking index page with a day of the week selected in the OpenProject mobile app](mobile_app_timetrackingmodule_dayfocused.png)
 
 ## Timer Focus Mode
 
@@ -37,8 +37,8 @@ The **Timer Focus Mode** allows you to track time as it happens, helping you sta
 *   **Let the timer run in the background**, even if you switch apps or lock your device.
 *   **Stop the timer** when finished, and convert the session into a logged time entry.
 
-![Mobile app timer running in a focus mode](mobile_app_focustimer.png)
-![Mobile app timer running in the background shown in the index page](mobile_app_timerrunning.png)
+![Timer running in a focus mode in the OpenProject mobile app](mobile_app_focustimer.png)
+![Timer running in the background shown in the index page in the OpenProject mobile app](mobile_app_timerrunning.png)
 
 ## Log Time
 
@@ -47,4 +47,4 @@ The **Log Time** feature allows you to manually enter time spent on work package
 *   **Specify the date, duration, and activity type**.
 *   **Ensure accurate reporting** even if you didn’t use the focus timer.
 
-![Mobile app log time modal](mobile_app_logtime.png)
+![Log time modal in the OpenProject mobile app](mobile_app_logtime.png)

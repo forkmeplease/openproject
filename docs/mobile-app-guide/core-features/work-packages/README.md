@@ -3,7 +3,7 @@ sidebar_navigation:
   title: Work packages
   priority: 760
 description: Browse, search, create, update, and collaborate on work packages directly from your mobile device.
-keywords: Mobile app features work packages
+keywords: Mobile app features work packages, work package, work packages, create work package, edit work package, share work package, mobile app
 ---
 
 # Work packages
@@ -27,34 +27,34 @@ When accessing the Work Packages module, you are presented with a list of open w
 
 In addition to filtering, you can quickly locate specific work packages through the search functionality. Tapping the search icon opens a search bar where users can type keywords and instantly view matching results.
 
-![Mobile app work packages index page](mobile_app_workpackages_index.png)
+![Work packages index page in the OpenProject mobile app](mobile_app_workpackages_index.png)
 
 ## Create Work Packages
 
 Creating new work packages is also fully supported. You can tap the &quot;+&quot; button to begin the creation process. After selecting the work package type and project, you can fill in the required fields to quickly create a new entry. For more detailed entries, you may choose to open the full attribute list and complete optional fields before saving, resulting in a comprehensive work package with all available metadata.
 
-![Mobile app work package creation bottom sheet to select a type](mobile_app_create_workpackage_type.png)
-![Mobile app work package creation details modal](mobile_app_create_workpackage_details.png)
+![Work package creation bottom sheet to select a type in the OpenProject mobile app](mobile_app_create_workpackage_type.png)
+![Work package creation details modal in the OpenProject mobile app](mobile_app_create_workpackage_details.png)
 
 ## Overview and Edit
 
 You can open any work package to view its details and make updates. Editing is initiated through the pencil icon, giving access to fields such as the title, description, status, and any available custom fields. All updates are applied directly in the work package, so users can easily refine information as work progresses.
 
-![Mobile app work package details on the overview tab](mobile_app_workpackage_details_overview.png)
+![Work package details on the overview tab in the OpenProject mobile app](mobile_app_workpackage_details_overview.png)
 
 ## Collaboration and Communication
 
 The module supports collaboration through the **Activity** tab, where you can participate in discussions. Comments can be added or replied to, mentions can be used to involve other users, and images may be included directly in the comment body. This makes it easier to share updates, coordinate with your team, or provide visual information on the go.
 
-![Mobile app work package details on the activity tab](mobile_app_workpackage_activity.png)
+![Work package details on the activity tab in the OpenProject mobile app](mobile_app_workpackage_activity.png)
 
 Attachments are handled through the **Files** tab. You can upload files, photos, or videos from their device, or take a new picture using the camera and attach it immediately. This allows work packages to hold all relevant documentation in one place.
 
-![Mobile app work package details on the files tab](mobile_app_workpackage_files.png)
+![Work package details on the files tab in the OpenProject mobile app](mobile_app_workpackage_files.png)
 
 Relations between work packages can be managed in the **Relations** tab, where you can connect tasks to one another by adding new relations when needed. Similarly, watchers can be added from the **Watchers** tab to keep stakeholders informed about progress or changes.
 
-![Mobile app work package details on the activity tab](mobile_app_workpackage_relations.png)
+![Work package details on the activity tab in the OpenProject mobile app](mobile_app_workpackage_relations.png)
 ![Work package details on the activity tab in the OpenProject mobile app](mobile_app_workpackage_watchers.png)
 
 ## Time Tracking and Reminders
@@ -69,4 +69,4 @@ Additionally, you can set reminders from within the **More** menu. By configurin
 
 Work packages can be easily shared using the device’s **native sharing features**. From within a work package, you can access the system share from the **More** menu to send a direct link to the item through messaging apps, email, collaboration tools, or any other app supported by their operating system. This simplifies cross-platform communication and makes it effortless to bring others into the loop.
 
-![Mobile app work package details sharing bottom sheet open](mobile_app_workpackage_share.png)
+![Work package details sharing bottom sheet open in the OpenProject mobile app](mobile_app_workpackage_share.png)
