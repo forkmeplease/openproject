@@ -172,7 +172,8 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
         attachment = artifact_work_package.attachments.first
         date = Date.current.iso8601
         expect(attachment.content_type).to eq "application/pdf"
-        expect(attachment.filename).to match /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/
+        regex = /#{project.identifier}_Project_mandate_#{artifact_work_package.status.name}_#{date}_\d+-\d+.pdf/
+        expect(attachment.filename).to match regex
       end
     end
 
@@ -204,11 +205,11 @@ RSpec.describe Projects::CreateArtifactWorkPackageService do
         date = Date.current.iso8601
         expect(Storages::UploadFileService)
           .to have_received(:call)
-                .with(container: artifact_work_package,
-                      project_storage:,
-                      file_path: "project_mandate",
-                      filename: /Important_Project_Project_mandate_#{date}_\d+-\d+.pdf/,
-                      file_data: instance_of(StringIO))
+          .with(container: artifact_work_package,
+                project_storage:,
+                file_path: "project_mandate",
+                filename: /#{project.identifier}_Project_mandate_#{artifact_work_package.status.name}_#{date}_\d+-\d+.pdf/,
+                file_data: instance_of(StringIO))
       end
 
       context "when service call fails" do
