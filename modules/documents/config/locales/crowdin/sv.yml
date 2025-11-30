@@ -21,8 +21,8 @@
 #++
 sv:
   plugin_openproject_documents:
-    name: "OpenProject Documents"
-    description: "An OpenProject plugin to allow creation of documents in projects."
+    name: "OpenProject-dokument"
+    description: "Ett OpenProject-plugin som gör det möjligt att skapa dokument i projekt."
   activerecord:
     errors:
       models:
@@ -83,7 +83,7 @@ sv:
       all: "All documents"
       types: "Typer"
       collaboration_settings: "Real-time collaboration"
-    last_updated_at: "Last saved %{time}."
+    last_updated_at: "Senast sparad %{time}."
     active_editors: "Active editors"
     active_editors_count: "%{count} active editors"
     label_attachment_author: "Författare för bilaga"

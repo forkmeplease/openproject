@@ -1,8 +1,8 @@
 sv:
   label_job_status_plural: "Job statuses"
   plugin_openproject_job_status:
-    name: "OpenProject Job status"
-    description: "Listing and status of background jobs."
+    name: "OpenProject jobbstatus"
+    description: "Lista och status för bakgrundsjobb."
   job_status_dialog:
     download_starts: 'The download should start automatically.'
     link_to_download: 'Or, %{link} to download.'

@@ -13,7 +13,7 @@ sv:
         name_identifier_format: Name identifier format
         idp_sso_service_url: Identity provider login endpoint
         idp_slo_service_url: Identity provider logout endpoint
-        idp_cert: Public certificate of identity provider
+        idp_cert: Offentligt certifikat för identitetsleverantör
         authn_requests_signed: Sign SAML AuthnRequests
         want_assertions_signed: Require signed responses
         want_assertions_encrypted: Require encrypted responses
@@ -56,7 +56,7 @@ sv:
       label_mapping: Mapping
       label_requested_attribute_for: "Requested attribute for: %{attribute}"
       no_results_table: No SAML identity providers have been defined yet.
-      notice_created: A new SAML identity provider was successfully created.
+      notice_created: En ny SAML-identitetsleverantör har skapats.
       plural: SAML identity providers
       singular: SAML identity provider
       requested_attributes: Requested attributes

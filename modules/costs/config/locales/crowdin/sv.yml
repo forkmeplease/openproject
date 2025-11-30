@@ -22,7 +22,7 @@
 sv:
   plugin_costs:
     name: "Tid och kostnader"
-    description: "This module adds features for planning and tracking costs of projects."
+    description: "Denna modul lägger till funktioner för planering och uppföljning av projektkostnader."
   activerecord:
     attributes:
       cost_entry:
@@ -208,8 +208,8 @@ sv:
   setting_costs_currency_format: "Formatet för valuta"
   setting_enforce_tracking_start_and_end_times: "Require start and finish times"
   setting_enforce_without_allow: "Requiring start and finish times is not possible without allowing them"
-  setting_allow_tracking_start_and_end_times_caption: "Enables entering start and finish times when logging time."
-  setting_enforce_tracking_start_and_end_times_caption: "Makes entering start and finish times mandatory when logging time."
+  setting_allow_tracking_start_and_end_times_caption: "Gör det möjligt att ange start- och sluttider vid tidsloggning."
+  setting_enforce_tracking_start_and_end_times_caption: "Gör det obligatoriskt att ange start- och sluttider när du loggar tid."
   text_assign_time_and_cost_entries_to_project: "Tilldela rapporterade timmar och kostnader till projektet"
   text_destroy_cost_entries_question: "%{cost_entries} rapporterades på de arbetspaket som du håller på och tar bort. Vad vill du göra?"
   text_destroy_time_and_cost_entries: "Ta bort rapporterade timmar och kostnader"
