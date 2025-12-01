@@ -12,7 +12,7 @@ The **Notification Centre** provides a centralized view of all updates, mentions
 
 ## Receiving and Viewing Notifications
 
-After logging in to the app, you will automatically receive notifications generated in their OpenProject environment. Whenever an update occurs—such as a comment, status change, or mention—the notification will appear inside the Notification Centre. You can simply open the app and navigate to the Notification Centre to view any new, unread items waiting for their attention.
+After logging into the app, you will automatically receive notifications generated in their OpenProject environment. Whenever an update occurs—such as a comment, status change, or mention—the notification will appear inside the Notification Centre. You can simply open the app and navigate to the Notification Centre to view any new, unread items waiting for their attention.
 
 You can also choose to display **all notifications**, not just unread ones. By toggling the switch to view all items, the Notification Centre expands to include both read and unread notifications. This is useful for revisiting past activity or reviewing a complete history of updates.
 
