@@ -34,7 +34,7 @@ module Project::PDFExport::ProjectInitiation::Styles
     include MarkdownToPDF::StyleHelper
     include Exports::PDF::Common::Styles
     include Exports::PDF::Components::PageStyles
-    include Exports::PDF::Components::CoverStyles
+    include Project::PDFExport::ProjectInitiation::CoverStyles
     include Project::PDFExport::Common::ProjectAttributesStyles
 
     def page_subheading
@@ -60,12 +60,20 @@ module Project::PDFExport::ProjectInitiation::Styles
       }
     end
 
+    def cover_status_badge
+      resolve_font(@styles.dig(:cover, :badge))
+    end
+
+    def cover_status_badge_offset
+      resolve_pt(@styles.dig(:cover, :badge, :offset), 0)
+    end
+
     def status_badge
-      resolve_font(@styles.dig(:project, :title, :badge))
+      resolve_font(@styles.dig(:project, :badge))
     end
 
     def status_badge_offset
-      resolve_pt(@styles.dig(:project, :title, :badge, :offset), 0)
+      resolve_pt(@styles.dig(:project, :badge, :offset), 0)
     end
 
     def section_title_margins

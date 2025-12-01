@@ -82,9 +82,9 @@ RSpec.describe Project::PDFExport::ProjectInitiation, with_flag: { project_initi
                                     default: :project_initiation_request,
                                     scope: "settings.project_initiation_request.name.options")
       expected_document = [
-        project.name, custom_artefact_name, export_time_formatted, # cover page
-        project.name,
+        custom_artefact_name, project.name, Setting.app_title, export_time_formatted, # cover page
         custom_artefact_name,
+        project.name,
         "1/1", custom_artefact_name, project.name
       ].join(" ")
       expect(subject).to eq expected_document
@@ -111,9 +111,9 @@ RSpec.describe Project::PDFExport::ProjectInitiation, with_flag: { project_initi
 
     it "exports a PDF containing project initiation with custom attributes grouped by sections" do
       expected_document = [
-        project.name, heading, export_time_formatted, # cover page
-        project.name,
+        heading, project.name, Setting.app_title, export_time_formatted, # cover page
         heading,
+        project.name,
         "The description of the project",
 
         "Section A",
@@ -141,10 +141,11 @@ RSpec.describe Project::PDFExport::ProjectInitiation, with_flag: { project_initi
     let(:project) { create(:project, project_creation_wizard_status_when_submitted_id: wizard_status.id) }
 
     it "exports a PDF containing project initiation using the custom defined name" do
+      heading_with_badge = [heading, " ", "    Submitted    "]
       expected_document = [
-        project.name, heading, export_time_formatted, # cover page
+        *heading_with_badge, project.name, Setting.app_title, export_time_formatted, # cover page
+        *heading_with_badge,
         project.name,
-        heading, " ", "    Submitted    ",
         "1/1", heading, project.name
       ].join(" ")
       expect(subject).to eq expected_document
@@ -155,10 +156,11 @@ RSpec.describe Project::PDFExport::ProjectInitiation, with_flag: { project_initi
     let(:project) { create(:project, project_creation_wizard_artifact_work_package_id: work_package.id) }
 
     it "exports a PDF containing project initiation using the custom defined name" do
+      heading_with_badge = [heading, " ", "    Approved    "]
       expected_document = [
-        project.name, heading, export_time_formatted, # cover page
+        *heading_with_badge, project.name, Setting.app_title, export_time_formatted, # cover page
+        *heading_with_badge,
         project.name,
-        heading, " ", "    Approved    ",
         "1/1", heading, project.name
       ].join(" ")
       expect(subject).to eq expected_document
