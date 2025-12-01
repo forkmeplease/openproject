@@ -73,8 +73,8 @@ Your input directly helps improve the mobile experience and ensure a stable, fea
 
 The **OpenProject Mobile App (Beta)** is available now for:
 
-*   **iOS:** [App Store link](?).
-*   **Android:** [Google Play link](?).
+*   **iOS:** [App Store link](https://apps.apple.com/us/app/openproject/id6474431879).
+*   **Android:** [Google Play link](https://play.google.com/store/apps/details?id=org.openproject.app).
 
 ## Requirements
 

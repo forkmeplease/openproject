@@ -18,7 +18,7 @@ You see a browser error such as _“The site can't be reached. The server addres
 **Cause:**  
 The URL you entered may be incorrect, inaccessible, or not using HTTPS.
 
-**How to Fix:**
+**Possible Solution:**
 *   Double-check the URL format (e.g., `https://yourcompany.openproject.com`).
 *   Ensure your instance is publicly accessible and uses **HTTPS** (HTTP is not supported).
 *   Try opening the same URL in your mobile browser to confirm connectivity.
@@ -31,7 +31,7 @@ Login fails with a browser error such as _“An authorization error has occurred
 **Cause:**  
 The mobile app uses OAuth 2.0 for secure authentication. If the built-in OAuth applications are not enabled in your instance, the app cannot log you in.
 
-**How to Fix:**
+**Possible Solution:**
 1.  Go to your OpenProject administration area at:  
     `{BASE_URL}/admin/oauth/applications`
 2.  Make sure that **Built-in OAuth applications** are enabled.
@@ -46,7 +46,7 @@ You know that your instance is running not on the minimum supported version, Ope
 The OpenProject Mobile App requires your instance to be on **OpenProject version 17.0.0 or higher**.  
 If your instance is running an older version, OAuth authentication may be disabled by default.
 
-**How to Fix:**
+**Possible Solution:**
 *   Ask your OpenProject administrator to check the current version of your instance.
 *   Update to newer version of OpenProject.
     *   If updating is not am option, the administrator can **temporarily enable OAuth authentication** by removing the feature flag under:  
@@ -64,7 +64,7 @@ You receive a browser error message such as _“Secure connection failed. Untrus
 **Cause:**  
 Your OpenProject instance must use a **valid, signed SSL certificate** (HTTPS). Self-signed certificates or expired certificates are not supported.
 
-**How to Fix:**
+**Possible Solution:**
 *   Verify that your SSL certificate is valid and trusted by your device.
 *   If you’re using a self-signed certificate, replace it with one from a trusted certificate authority (CA).
     
@@ -77,7 +77,7 @@ You see _“Invalid username or password”_ when logging in.
 **Cause:**  
 Your login credentials are incorrect or have been changed.
 
-**How to Fix:**
+**Possible Solution:**
 *   Make sure you’re using your **OpenProject account credentials**, not your email alias (unless configured as your username).
 *   Try logging in via the web version of OpenProject to confirm your credentials.
 *   Reset your password if necessary.
@@ -90,7 +90,7 @@ Login attempts fail with no clear error message.
 **Cause:**  
 Your on-premises OpenProject instance may have **API access disabled**, preventing the mobile app from connecting.
 
-**How to Fix:**
+**Possible Solution:**
 *   Log in as an administrator and navigate to:  
     `Administration → System settings → API`
 *   Ensure that **API access** is enabled.
@@ -104,7 +104,7 @@ You receive a browser error message such as _“Secure connection failed. Untrus
 **Cause:**  
 The mobile app only supports secure connections via **HTTPS**.
 
-**How to Fix:**
+**Possible Solution:**
 *   Configure your instance to use HTTPS with a valid certificate.
 *   Redirect HTTP traffic to HTTPS using your web server configuration.
 
@@ -116,7 +116,7 @@ Login attempts time out or fail when using certain networks with an error such a
 **Cause:**  
 Corporate or restricted networks may block outbound requests to your OpenProject instance or authentication endpoints.
 
-**How to Fix:**
+**Possible Solution:**
 *   Check the network connection of your device. Internet access is required for the app to work.
 *   Try connecting from a different network (e.g., mobile data).
 *   Ask your IT team to whitelist your OpenProject domain.
