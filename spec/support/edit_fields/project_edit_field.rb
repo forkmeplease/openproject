@@ -29,12 +29,12 @@ class ProjectEditField < SelectField
       option = page.find(".ng-option", text: name)
 
       if workspace_badge
-        expect(option).to have_css("svg.octicon")
-        expect(option).to have_css(".color-fg-muted", text: workspace_badge)
+        expect(option).to have_octicon
+        expect(option).to have_primer_text(workspace_badge, color: :muted)
       else
         # Expect no octicon SVG
-        expect(option).to have_no_css("svg.octicon")
-        expect(option).to have_no_css(".color-fg-muted")
+        expect(option).to have_no_octicon
+        expect(option).to have_no_primer_text(color: :muted)
       end
     end
   end
