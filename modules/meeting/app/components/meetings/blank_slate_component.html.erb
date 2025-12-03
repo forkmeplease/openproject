@@ -32,47 +32,6 @@ See COPYRIGHT and LICENSE files for more details.
     component.with_visual_icon(icon: :book, size: :medium)
     component.with_heading(tag: :h2).with_content(I18n.t("meeting.blankslate.title"))
 
-    component.with_description do
-      flex_layout do |flex|
-        flex.with_row(mb: 6) do
-          render(Primer::Beta::Text.new) { I18n.t("meeting.blankslate.desc") }
-        end
-
-        if can_create_meetings?
-          flex.with_row do
-            render(
-              Primer::Alpha::ActionMenu.new(
-                size: :medium
-              )
-            ) do |menu|
-              menu.with_show_button(
-                scheme: :secondary
-              ) do |button|
-                button.with_trailing_action_icon(icon: :"triangle-down")
-                I18n.t("meeting.blankslate.action")
-              end
-
-              menu.with_item(
-                label: I18n.t("meeting.types.one_time"),
-                tag: :a,
-                href: new_one_time_meeting_path,
-                content_arguments: { data: { controller: "async-dialog" } }
-              ) do |item|
-                item.with_description.with_content(t("meeting.types.structured_text"))
-              end
-
-              menu.with_item(
-                label: I18n.t("meeting.types.recurring"),
-                tag: :a,
-                href: new_recurring_meeting_path,
-                content_arguments: { data: { controller: "async-dialog" } }
-              ) do |item|
-                item.with_description.with_content(t("meeting.types.recurring_text"))
-              end
-            end
-          end
-        end
-      end
-    end
+    component.with_description_content(I18n.t("meeting.blankslate.desc"))
   end
 %>

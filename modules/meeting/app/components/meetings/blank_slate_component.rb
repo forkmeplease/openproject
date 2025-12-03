@@ -33,16 +33,18 @@ module Meetings
     include OpPrimer::ComponentHelpers
     include ApplicationHelper
 
-    def initialize(project: nil)
+    def initialize(project: nil, current_user: User.current)
       super
+
       @project = project
+      @current_user = current_user
     end
 
     def can_create_meetings?
       if @project
-        User.current.allowed_in_project?(:create_meetings, @project)
+        @current_user.allowed_in_project?(:create_meetings, @project)
       else
-        User.current.allowed_in_any_project?(:create_meetings)
+        @current_user.allowed_in_any_project?(:create_meetings)
       end
     end
 
