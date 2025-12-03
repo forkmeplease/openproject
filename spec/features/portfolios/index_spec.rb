@@ -147,8 +147,6 @@ RSpec.describe "Portfolios", "index", :js, with_ee: :portfolio_management do # T
         page.find_test_selector("op-portfolios--favorite-button").click
       end
 
-      wait_for_network_idle
-
       expect(portfolio_a).to be_favorited_by(current_user)
     end
 
@@ -163,8 +161,6 @@ RSpec.describe "Portfolios", "index", :js, with_ee: :portfolio_management do # T
       portfolios_page.expect_portfolios_listed(portfolio_favorited)
       portfolios_page.expect_portfolios_not_listed(portfolio_a, portfolio_b, inactive_portfolio)
       page.find_by_id("portfolio-filters-form-clear-button").click
-
-      wait_for_network_idle
 
       portfolios_page.toggle_filters_section
       portfolios_page.filter_by_active("no")
