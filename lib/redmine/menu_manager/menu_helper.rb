@@ -40,14 +40,14 @@ module Redmine::MenuManager::MenuHelper
   # Renders the application main menu
   def render_main_menu(menu, project = nil) # rubocop:disable Metrics/PerceivedComplexity
     # Fall back to project_menu when project exists (not during project creation)
-    if menu.nil? && project && project.persisted?
+    if menu.nil? && project&.persisted?
       menu = :project_menu
     end
 
     if menu.blank? || menu == :none
       # For some global pages such as home
       nil
-    elsif menu == :project_menu && project && project.persisted?
+    elsif menu == :project_menu && project&.persisted?
       build_wiki_menus(project)
       render_menu(:project_menu, project)
     else
@@ -176,8 +176,7 @@ module Redmine::MenuManager::MenuHelper
     )
   end
 
-  # rubocop:disable Metrics/AbcSize
-  def render_single_menu_node(item, project = nil, menu_class = "op-menu")
+  def render_single_menu_node(item, project = nil, menu_class = "op-menu") # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     caption, url, selected = extract_node_details(item, project)
     shown_in_main_menu = menu_class == "op-menu"
 
@@ -218,8 +217,6 @@ module Redmine::MenuManager::MenuHelper
     link_to link_text, url, html_options
   end
 
-  # rubocop:enable Metrics/AbcSize
-
   def current_menu_item_part_of_menu?(menu, project = nil)
     return true if no_menu_item_wiki_prefix? || wiki_prefix?
 
@@ -248,7 +245,7 @@ module Redmine::MenuManager::MenuHelper
   def render_unattached_children_menu(node, project)
     return nil unless node.child_menus
 
-    (+"").tap do |child_html|
+    "".html_safe.tap do |child_html|
       unattached_children = node.child_menus.call(project)
       # Tree nodes support #each so we need to do object detection
       if unattached_children.is_a? Array
@@ -258,7 +255,7 @@ module Redmine::MenuManager::MenuHelper
       else
         raise Redmine::MenuManager::MenuError, ":child_menus must be an array of MenuItems"
       end
-    end.html_safe
+    end
   end
 
   def render_unattached_menu_item(menu_item, project)
@@ -284,7 +281,7 @@ module Redmine::MenuManager::MenuHelper
 
     content_tag("li",
                 content,
-                class: "#{node.partial ? 'partial ' : ''}main-menu-item",
+                class: "#{'partial ' if node.partial}main-menu-item",
                 data: { name: node.name })
   end
 
