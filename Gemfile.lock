@@ -883,7 +883,7 @@ GEM
       actionview
       openproject-octicons (= 19.31.1)
       railties
-    openproject-primer_view_components (0.78.0)
+    openproject-primer_view_components (0.78.1)
       actionview (>= 7.2.0)
       activesupport (>= 7.2.0)
       openproject-octicons (>= 19.30.1)
@@ -1657,7 +1657,7 @@ DEPENDENCIES
   openproject-octicons (~> 19.31.1)
   openproject-octicons_helper (~> 19.31.1)
   openproject-openid_connect!
-  openproject-primer_view_components (~> 0.78.0)
+  openproject-primer_view_components (~> 0.78.1)
   openproject-recaptcha!
   openproject-reporting!
   openproject-storages!
@@ -2037,7 +2037,7 @@ CHECKSUMS
   openproject-octicons (19.31.1) sha256=8f357d4bf5967f7bdc76e0cfe45bf8834d25a2b34327477f21c040835cdadcfa
   openproject-octicons_helper (19.31.1) sha256=ad4250cf57c06ada9226500891a0c7506556f025bee66ecfb37fe1c6606bc1de
   openproject-openid_connect (1.0.0)
-  openproject-primer_view_components (0.78.0) sha256=089455b39ee0f94dbfdcf61c15f300d1be957bdff74381312c8fbd9c0d65acb2
+  openproject-primer_view_components (0.78.1) sha256=aead310868ecd2fb2c7c9d9ce733f4d9fab9a95427304ec1d104832b416f2757
   openproject-recaptcha (1.0.0)
   openproject-reporting (1.0.0)
   openproject-storages (1.0.0)
