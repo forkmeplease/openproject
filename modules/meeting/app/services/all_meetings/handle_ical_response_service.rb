@@ -40,6 +40,8 @@ module AllMeetings
     end
 
     def perform # rubocop:disable Metrics/AbcSize
+      return ServiceResult.failure(message: I18n.t("meeting.ical_response.meeting_not_found")) if meeting.nil?
+
       participant = meeting.participants.find_by!(user: user)
 
       if participant.update(participation_status: partstat, comment: comment)
@@ -50,8 +52,6 @@ module AllMeetings
           errors: participant.errors.full_messages
         )
       end
-    rescue ActiveRecord::RecordNotFound
-      ServiceResult.failure(message: I18n.t("meeting.ical_response.meeting_not_found"))
     rescue ArgumentError => e
       ServiceResult.failure(message: I18n.t("meeting.ical_response.update_failed"), errors: [e.message])
     end
@@ -69,8 +69,24 @@ module AllMeetings
       @ical_event ||= parsed_calendar.events.first
     end
 
-    def meeting
-      @meeting ||= Meeting.visible(user).find_by!(uid: ical_event.uid.value_ical)
+    def meeting # rubocop:disable Metrics/AbcSize
+      @meeting ||= begin
+        uid = ical_event.uid.value_ical
+        meeting = Meeting.visible(user).find_by(uid: uid)
+
+        if meeting
+          meeting
+        else
+          recurring_meeting = RecurringMeeting.visible(user).find_by(uid: uid)
+
+          if ical_event.recurrence_id
+            occurrence_time = ical_event.recurrence_id.value_ical
+            recurring_meeting.scheduled_meetings.find_by(start_time: occurrence_time)&.meeting
+          else
+            recurring_meeting.template
+          end
+        end
+      end
     end
 
     def attendee

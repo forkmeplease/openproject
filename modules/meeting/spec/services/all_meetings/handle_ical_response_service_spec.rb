@@ -36,6 +36,39 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
   let(:project) { create(:project, enabled_module_names: %w[meetings], members: { user => role }) }
   let(:service) { described_class.new(user: user) }
 
+  let(:participant_email) { user.mail }
+  let(:attendee_string) do
+    "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=#{partstat};CN=#{user.name}:mailto:#{participant_email}"
+  end
+
+  let(:ical_method) { "REPLY" }
+  let(:additional_ical_properties) { "" }
+  let(:ical_string) do
+    <<~ICAL
+      BEGIN:VCALENDAR
+      PRODID:-//OpenProject//Test Meeting Responder 1.0//EN
+      VERSION:2.0
+      CALSCALE:GREGORIAN
+      METHOD:#{ical_method}
+      BEGIN:VEVENT
+      DTSTART:#{meeting.start_time.utc.strftime('%Y%m%dT%H%M%SZ')}
+      DTEND:#{meeting.end_time.utc.strftime('%Y%m%dT%H%M%SZ')}
+      DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+      ORGANIZER;CN=OpenProject:mailto:meetingresponse@example.com
+      UID:#{uid}
+      #{attendee_string}
+      CREATED:#{meeting.created_at.utc.strftime('%Y%m%dT%H%M%SZ')}
+      LAST-MODIFIED:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+      SEQUENCE:0
+      STATUS:CONFIRMED
+      SUMMARY:#{meeting.title}
+      TRANSP:OPAQUE
+      #{additional_ical_properties}
+      END:VEVENT
+      END:VCALENDAR
+    ICAL
+  end
+
   subject { service.call(ical_string: ical_string) }
 
   context "with a regular meeting" do
@@ -45,37 +78,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
       end
     end
 
-    let(:ical_method) { "REPLY" }
     let(:uid) { meeting.uid }
-    let(:participant_email) { user.mail }
-    let(:attendee_string) do
-      "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=#{partstat};CN=#{user.name}:mailto:#{participant_email}"
-    end
-
-    let(:ical_string) do
-      <<~ICAL
-        BEGIN:VCALENDAR
-        PRODID:-//OpenProject//Test Meeting Responder 1.0//EN
-        VERSION:2.0
-        CALSCALE:GREGORIAN
-        METHOD:#{ical_method}
-        BEGIN:VEVENT
-        DTSTART:#{meeting.start_time.utc.strftime('%Y%m%dT%H%M%SZ')}
-        DTEND:#{meeting.end_time.utc.strftime('%Y%m%dT%H%M%SZ')}
-        DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
-        ORGANIZER;CN=OpenProject:mailto:meetingresponse@example.com
-        UID:#{uid}
-        #{attendee_string}
-        CREATED:#{meeting.created_at.utc.strftime('%Y%m%dT%H%M%SZ')}
-        LAST-MODIFIED:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
-        SEQUENCE:0
-        STATUS:CONFIRMED
-        SUMMARY:#{meeting.title}
-        TRANSP:OPAQUE
-        END:VEVENT
-        END:VCALENDAR
-      ICAL
-    end
 
     context "when accepting the invitation" do
       let(:partstat) { "ACCEPTED" }
@@ -84,6 +87,8 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
         expect { subject }.to change {
           meeting.participants.find_by(user: user).participation_status
         }.from("needs_action").to("accepted")
+
+        expect(subject).to be_success
       end
     end
 
@@ -94,6 +99,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
         expect { subject }.to change {
           meeting.participants.find_by(user: user).participation_status
         }.from("needs_action").to("declined")
+        expect(subject).to be_success
       end
     end
 
@@ -104,6 +110,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
         expect { subject }.to change {
           meeting.participants.find_by(user: user).participation_status
         }.from("needs_action").to("tentative")
+        expect(subject).to be_success
       end
     end
 
@@ -189,6 +196,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
         expect { subject }.to change {
           meeting.participants.find_by(user: user).comment
         }.from(nil).to(comment)
+        expect(subject).to be_success
       end
     end
 
@@ -196,33 +204,82 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
       let(:partstat) { "ACCEPTED" }
       let(:comment) { "Looking forward to the meeting!" }
 
-      let(:attendee_string) do
-        <<~ICAL
-          ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=#{partstat};CN=#{user.name}:mailto:#{participant_email}
-          COMMENT:#{comment}
-        ICAL
-      end
+      let(:additional_ical_properties) { "COMMENT:#{comment}" }
 
       it "updates the participant's comment" do
         expect { subject }.to change {
           meeting.participants.find_by(user: user).comment
         }.from(nil).to(comment)
+        expect(subject).to be_success
       end
     end
   end
 
   context "with a recurring meeting" do
-    let(:recurring_meeting) do
+    let!(:recurring_meeting) do
       create(:recurring_meeting, project: project) do |recurring_meeting|
-        recurring_meeting.template.participants << create(:meeting_participant, meeting: recurring_meeting, user: user,
-                                                                                invited: true)
+        recurring_meeting.template.participants << create(:meeting_participant,
+                                                          meeting: recurring_meeting.template,
+                                                          user: user,
+                                                          invited: true)
       end
     end
 
     context "when responding to the series" do
+      let(:uid) { recurring_meeting.uid }
+      let(:meeting) { recurring_meeting.template }
+
+      context "when accepting the invitation" do
+        let(:partstat) { "ACCEPTED" }
+
+        it "updates the participant's status on the template" do
+          expect { subject }.to change {
+            meeting.participants.find_by(user: user).participation_status
+          }.from("needs_action").to("accepted")
+
+          expect(subject).to be_success
+        end
+      end
     end
 
     context "when responding to a single occurrence" do
+      let(:uid) { recurring_meeting.uid }
+      let(:recurrence_id) { recurring_meeting.start_time + 7.days }
+      let!(:meeting) do
+        RecurringMeetings::InitOccurrenceService
+          .new(user: User.system, recurring_meeting:)
+          .call(start_time: recurrence_id)
+          .result
+      end
+
+      let(:additional_ical_properties) do
+        "RECURRENCE-ID:#{recurrence_id.utc.strftime('%Y%m%dT%H%M%SZ')}"
+      end
+
+      context "when accepting the invitation" do
+        let(:partstat) { "ACCEPTED" }
+
+        it "updates the participant's status on the template" do
+          expect { subject }.to change {
+            meeting.participants.find_by(user: user).participation_status
+          }.from("needs_action").to("accepted")
+
+          expect(subject).to be_success
+        end
+      end
+
+      context "when no meeting occurrence is found for the recurrence ID" do
+        let(:partstat) { "ACCEPTED" }
+
+        let(:additional_ical_properties) do
+          "RECURRENCE-ID:#{2.years.ago.utc.strftime('%Y%m%dT%H%M%SZ')}"
+        end
+
+        it "returns an error" do
+          expect(subject).to be_failure
+          expect(subject.message).to eq(I18n.t("meeting.ical_response.meeting_not_found"))
+        end
+      end
     end
   end
 end
