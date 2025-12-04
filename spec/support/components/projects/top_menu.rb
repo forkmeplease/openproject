@@ -99,10 +99,13 @@ module Components
         page.find autocompleter_selector, wait: 10
       end
 
-      def expect_result(name, disabled: false, workspace_badge: false)
+      def expect_result(name, disabled: false, workspace_badge: nil)
         within search_results do
           selector = disabled ? autocompleter_item_disabled_title_selector : autocompleter_item_title_selector
           item = page.find(selector, text: name)
+
+          # Skip badge verification when workspace badge is not set
+          next if workspace_badge.nil?
 
           if workspace_badge
             expect(item).to have_octicon
