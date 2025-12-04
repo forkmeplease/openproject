@@ -66,6 +66,10 @@ RSpec.describe(
     create(:user,
            member_with_roles: { source => role })
   end
+  let(:other_user) do
+    create(:user,
+           member_with_roles: { source => role })
+  end
   let(:instance) { described_class.new(source:, user: current_user) }
   let(:only_args) { nil }
   let(:target_project_params) do
@@ -92,7 +96,7 @@ RSpec.describe(
   before do
     allow(Setting)
       .to receive(:new_project_user_role_id)
-            .and_return(new_project_role.id.to_s)
+            .and_return(new_project_role&.id&.to_s)
   end
 
   describe ".copyable_dependencies" do
@@ -376,7 +380,7 @@ RSpec.describe(
 
         # Default role being assigned according to setting
         #  merged with the role the user already had.
-        member = project_copy.members.last
+        member = project_copy.members.reload.last
         expect(member.principal).to eql(current_user)
         expect(member.roles.reload).to contain_exactly(role, new_project_role)
 
@@ -939,7 +943,7 @@ RSpec.describe(
             custom_field
             # Void the custom field caching
             RequestStore.clear!
-            work_package.send(custom_field.attribute_setter, current_user.id)
+            work_package.send(custom_field.attribute_setter, other_user.id)
             work_package.save!(validate: false)
           end
 
@@ -949,7 +953,7 @@ RSpec.describe(
             it "copies the custom_field" do
               expect(subject).to be_success
               wp = project_copy.work_packages.find_by(subject: work_package.subject)
-              expect(wp.send(custom_field.attribute_getter)).to eql current_user
+              expect(wp.send(custom_field.attribute_getter)).to eql other_user
             end
           end
 

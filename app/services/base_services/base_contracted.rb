@@ -56,7 +56,7 @@ module BaseServices
       in_context(model, send_notifications:, &)
     end
 
-    def perform
+    def perform # rubocop:disable Metrics/AbcSize
       self.params, send_notifications = extract(params, :send_notifications)
       service_context(send_notifications:) do
         service_call = validate_params
