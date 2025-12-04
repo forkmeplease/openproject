@@ -161,6 +161,24 @@ module MeetingAgendaItems
     end
 
     def move_to_next_meeting_action_item(menu)
+      next_meeting_action_item(
+        menu,
+        label: t(:label_agenda_item_move_to_next),
+        path_helper: :move_to_next_dialog_meeting_agenda_item_path,
+        icon: "arrow-right"
+      )
+    end
+
+    def duplicate_in_next_meeting_action_item(menu)
+      next_meeting_action_item(
+        menu,
+        label: t(:label_agenda_item_duplicate_in_next),
+        path_helper: :duplicate_in_next_dialog_meeting_agenda_item_path,
+        icon: :duplicate
+      )
+    end
+
+    def next_meeting_action_item(menu, label:, path_helper:, icon:)
       return unless editable?
       return if in_template?
       return if @series.nil?
@@ -169,17 +187,20 @@ module MeetingAgendaItems
       return if next_date.nil?
 
       menu.with_item(
-        label: t(:label_agenda_item_move_to_next),
+        label:,
         tag: :button,
         content_arguments: { data: {
           action: "click->meetings--submit#intercept",
-          href: move_to_next_dialog_meeting_agenda_item_path(@meeting_agenda_item.meeting,
-                                                             @meeting_agenda_item,
-                                                             datetime: next_date.iso8601),
+          href: send(
+            path_helper,
+            @meeting_agenda_item.meeting,
+            @meeting_agenda_item,
+            datetime: next_date.iso8601
+          ),
           method: "GET"
         } }
       ) do |item|
-        item.with_leading_visual_icon(icon: "arrow-right")
+        item.with_leading_visual_icon(icon:)
       end
     end
 
