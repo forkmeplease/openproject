@@ -39,15 +39,30 @@ module AllMeetings
       super()
     end
 
-    def perform # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
-      uid = ical_event.uid&.value_ical
-      recurrence_id = ical_event.recurrence_id&.value_ical
+    def perform
+      result = ServiceResult.success
+
+      ical_events.each do |event|
+        event_result = handle_ical_event(event)
+        result.merge!(event_result)
+      end
+
+      result
+    rescue ArgumentError => e
+      ServiceResult.failure(message: I18n.t("meeting.ical_response.update_failed"), errors: [e.message])
+    end
+
+    private
+
+    def handle_ical_event(event) # rubocop:disable Metrics/AbcSize
+      uid = event.uid&.value_ical
+      recurrence_id = event.recurrence_id&.value_ical
 
       # First check if the UID belongs to a single meeeting
       meeting = Meeting.visible(user).find_by(uid: uid)
 
       if meeting
-        update_participation_status(meeting)
+        update_participation_status(meeting, event)
         return ServiceResult.success
       end
 
@@ -56,12 +71,14 @@ module AllMeetings
 
       if recurring_meeting.blank?
         # No recurring meeting, we can leave
-        return ServiceResult.failure(message: I18n.t("meeting.ical_response.meeting_not_found"))
+        errors = ActiveModel::Errors.new(self)
+        errors.add(uid, I18n.t("meeting.ical_response.meeting_not_found"))
+        return ServiceResult.failure(errors:)
       end
 
       if recurrence_id.nil?
         # No recurrence, so update participation on the template
-        update_participation_status(recurring_meeting.template)
+        update_participation_status(recurring_meeting.template, event)
         return ServiceResult.success
       end
 
@@ -70,24 +87,20 @@ module AllMeetings
 
       if scheduled_meeting
         # We have an instantiated meeting, so update that one
-        update_participation_status(scheduled_meeting.meeting)
+        update_participation_status(scheduled_meeting.meeting, event)
       else
         # No instantiated meeting, so create an interim response
         RecurringMeetingInterimResponse.create!(
           user: user,
           recurring_meeting: recurring_meeting,
           start_time: recurrence_id,
-          participation_status: partstat,
-          comment: comment
+          participation_status: partstat(event),
+          comment: comment(event)
         )
       end
 
       ServiceResult.success
-    rescue ArgumentError => e
-      ServiceResult.failure(message: I18n.t("meeting.ical_response.update_failed"), errors: [e.message])
     end
-
-    private
 
     def parsed_calendar
       @parsed_calendar ||= Icalendar::Calendar.parse(params[:ical_string]).first.tap do |calendar|
@@ -96,27 +109,34 @@ module AllMeetings
       end
     end
 
-    def ical_event
-      @ical_event ||= parsed_calendar.events.first
+    def ical_events
+      parsed_calendar.events
     end
 
-    def attendee
-      @attendee ||= ical_event.attendee.find { it.value_ical == "mailto:#{user.mail}" }.tap do |attendee|
+    def attendee(event)
+      event.attendee.find { it.value_ical == "mailto:#{user.mail}" }.tap do |attendee|
         raise ArgumentError, "No attendee found for mailto:#{user.mail}" unless attendee
       end
     end
 
-    def partstat
-      attendee.ical_params["partstat"].first.downcase
+    def partstat(event)
+      attendee(event).ical_params["partstat"].first.downcase
     end
 
-    def comment
-      attendee.ical_params["x-response-comment"]&.first || ical_event.comment&.first
+    def comment(event)
+      comment = attendee(event).ical_params["x-response-comment"]&.first || event.comment&.first
+      return if comment.blank?
+
+      if comment.is_a?(Array)
+        comment.join
+      else
+        comment
+      end
     end
 
-    def update_participation_status(meeting)
+    def update_participation_status(meeting, event)
       participant = meeting.participants.find_by!(user: user)
-      participant.update!(participation_status: partstat, comment: comment)
+      participant.update!(participation_status: partstat(event), comment: comment(event))
     end
   end
 end

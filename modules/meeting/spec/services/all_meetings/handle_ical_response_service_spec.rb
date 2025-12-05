@@ -146,7 +146,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
 
       it "returns an error" do
         expect(subject).to be_failure
-        expect(subject.message).to eq(I18n.t("meeting.ical_response.meeting_not_found"))
+        expect(subject.errors[uid]).to include(I18n.t("meeting.ical_response.meeting_not_found"))
       end
     end
 
@@ -287,6 +287,69 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
           expect(interim_response.start_time).to eq(recurrence_date)
           expect(interim_response.participation_status).to eq("accepted")
         end
+      end
+    end
+
+    context "when responding to the series and the occurence in one mail" do
+      let(:recurrence_id) { recurring_meeting.start_time + 7.days }
+      let!(:meeting) do
+        RecurringMeetings::InitOccurrenceService
+          .new(user: User.system, recurring_meeting:)
+          .call(start_time: recurrence_id)
+          .result
+      end
+
+      let(:ical_string) do
+        <<~ICAL
+          BEGIN:VCALENDAR
+          PRODID:-//OpenProject//Test Meeting Responder 1.0//EN
+          VERSION:2.0
+          CALSCALE:GREGORIAN
+          METHOD:REPLY
+          BEGIN:VEVENT
+          DTSTART:#{recurring_meeting.template.start_time.utc.strftime('%Y%m%dT%H%M%SZ')}
+          DTEND:#{recurring_meeting.template.end_time.utc.strftime('%Y%m%dT%H%M%SZ')}
+          DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+          ORGANIZER;CN=OpenProject:mailto:meetingresponse@example.com
+          UID:#{recurring_meeting.uid}
+          ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=#{user.name}:mailto:#{participant_email}
+          CREATED:#{recurring_meeting.template.created_at.utc.strftime('%Y%m%dT%H%M%SZ')}
+          LAST-MODIFIED:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+          SEQUENCE:0
+          STATUS:CONFIRMED
+          SUMMARY:#{recurring_meeting.title}
+          TRANSP:OPAQUE
+          END:VEVENT
+          BEGIN:VEVENT
+          DTSTART:#{meeting.start_time.utc.strftime('%Y%m%dT%H%M%SZ')}
+          DTEND:#{meeting.end_time.utc.strftime('%Y%m%dT%H%M%SZ')}
+          DTSTAMP:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+          ORGANIZER;CN=OpenProject:mailto:meetingresponse@example.com
+          UID:#{recurring_meeting.uid}
+          RECURRENCE-ID:#{recurrence_id.utc.strftime('%Y%m%dT%H%M%SZ')}
+          ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;CN=#{user.name}:mailto:#{participant_email}
+          COMMENT:Sorry\\, I cannot attend this occurrence.
+          CREATED:#{meeting.created_at.utc.strftime('%Y%m%dT%H%M%SZ')}
+          LAST-MODIFIED:#{Time.current.utc.strftime('%Y%m%dT%H%M%SZ')}
+          SEQUENCE:0
+          STATUS:CONFIRMED
+          SUMMARY:#{meeting.title}
+          TRANSP:OPAQUE
+          END:VEVENT
+          END:VCALENDAR
+        ICAL
+      end
+
+      it "changes the participant's status on both the template and the occurrence" do
+        expect { subject }.to change {
+          recurring_meeting.template.participants.find_by(user: user).participation_status
+        }.from("needs_action").to("accepted").and change {
+          meeting.participants.find_by(user: user).participation_status
+        }.from("needs_action").to("declined")
+
+        expect(subject).to be_success
+
+        expect(meeting.participants.find_by(user: user).comment).to eq("Sorry, I cannot attend this occurrence.")
       end
     end
   end
