@@ -149,6 +149,10 @@ RSpec.describe Meetings::IcalendarBuilder,
       let(:other_user) { create(:user) }
       let(:parsed_calendar) { Icalendar::Calendar.parse(builder.to_ical).first }
 
+      before do
+        meeting.participants.first.update(participation_status: "unknown")
+      end
+
       subject(:builder) { described_class.new(timezone:, user: other_user) }
 
       it "does not set PARTSTAT and RSVP for any attendees" do
@@ -226,6 +230,8 @@ RSpec.describe Meetings::IcalendarBuilder,
              time_zone: timezone.tzinfo.name).tap do |recurring_meeting|
         create(:meeting_participant, :invitee, meeting: recurring_meeting.template, user: user1)
         create(:meeting_participant, :invitee, meeting: recurring_meeting.template, user: user2)
+
+        recurring_meeting.template.participants.update_all(participation_status: :unknown)
       end
     end
 
@@ -293,11 +299,11 @@ RSpec.describe Meetings::IcalendarBuilder,
       subject(:builder) { described_class.new(timezone:, user: user1) }
 
       before do
-        recurring_meeting.template.participants.find_by(user: user1).update(participation_status: :needs_action)
+        recurring_meeting.template.participants.find_by(user: user1).update!(participation_status: :needs_action)
         recurring_meeting.meetings.each do |meeting|
           meeting.participants.find_by(user: user1).update(participation_status: :needs_action)
         end
-        recurring_meeting.template.participants.find_by(user: user2).update(participation_status: :declined)
+        recurring_meeting.template.participants.find_by(user: user2).update!(participation_status: :declined)
       end
 
       let(:parsed_calendar) { Icalendar::Calendar.parse(builder.to_ical).first }

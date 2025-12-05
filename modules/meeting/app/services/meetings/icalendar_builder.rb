@@ -218,7 +218,7 @@ module Meetings
       end
     end
 
-    def attendee_participation_status(participant) # rubocop:disable Metrics/PerceivedComplexity
+    def attendee_participation_status(participant)
       return nil if participant.participation_status.nil?
 
       if participant.participation_needs_action?
@@ -229,15 +229,13 @@ module Meetings
         "DECLINED"
       elsif participant.participation_tentative?
         "TENTATIVE"
-      elsif participant.participation_delegated?
-        "DELEGATED"
       elsif participant.participation_unknown?
         nil
       end
     end
 
     def attendee_rsvp_needed?(participant)
-      calendar_generated_for_user == participant.user && participant.needs_action?
+      calendar_generated_for_user == participant.user && participant.participation_needs_action?
     end
 
     def ical_datetime(time, timezone: builder_internal_timezone)

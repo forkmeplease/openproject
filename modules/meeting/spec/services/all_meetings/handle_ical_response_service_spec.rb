@@ -189,7 +189,8 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
       let(:comment) { "Looking forward to the meeting!" }
 
       let(:attendee_string) do
-        "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=#{partstat};CN=#{user.name};X-RESPONSE-COMMENT=#{comment}:mailto:#{participant_email}"
+        "ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=#{partstat};CN=#{user.name};" \
+          "X-RESPONSE-COMMENT=#{comment}:mailto:#{participant_email}"
       end
 
       it "updates the participant's comment" do
