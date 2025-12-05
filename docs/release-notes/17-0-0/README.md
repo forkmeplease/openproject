@@ -22,6 +22,14 @@ In these Release Notes, we will give an overview of important feature changes. A
 
 <!-- Remove this section if empty, add to it in pull requests linking to tickets and provide information -->
 
+
+
+### PostgreSQL update to 17.0
+
+The docker and packaged installations are now using PostgreSQL 17.0 by default. Note that there is no automatic upgrade for your cluster if you are running older versions of PostgreSQL. Please see [our database migration guide](../../installation-and-operations/misc/migration-to-postgresql17/) on how to upgrade to newer versions of PostgreSQL.
+
+
+
 ### Removal of special semver
 
 We removed the `special` fragment of the semantic version of OpenProject. This has not been in use.
