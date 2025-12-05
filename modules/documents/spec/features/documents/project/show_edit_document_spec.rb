@@ -59,7 +59,7 @@ RSpec.describe "Show/Edit Document View",
 
     aggregate_failures "can see live users" do
       within_test_selector("live-events") do
-        expect(page).to have_content("1 active editors")
+        expect(page).to have_content("1 active editor")
       end
     end
 
