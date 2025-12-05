@@ -70,7 +70,7 @@ module CustomFields
         path << item.label if @label
 
         str_parts = []
-        str_parts << path.join(" / ") unless path.empty?
+        str_parts << path.join(" / ") if path.present?
 
         if @suffix
           suffix = format_suffix(item)
