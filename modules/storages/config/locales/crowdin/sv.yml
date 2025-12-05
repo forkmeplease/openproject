@@ -237,17 +237,23 @@ sv:
     error_invalid_provider_type: Välj en giltig lagringsleverantör.
     file_storage_view:
       access_management:
-        automatic_management: Automatiskt hanterad åtkomst och mappar
-        automatic_management_description: Låt OpenProject skapa mappar per projekt automatiskt och hantera dess användaråtkomst. Detta rekommenderas eftersom det säkerställer att varje teammedlem alltid har rätt behörigheter.
-        description: Välj typ av hantering av användaråtkomst och skapande av mappar. Vi rekommenderar att använda den automatiskt hanterade tillgången för att ha en mer organiserad struktur och garantera åtkomst till alla relevanta användare.
-        manual_management: Manuellt hanterad åtkomst och mappar
-        manual_management_description: Skapa och hantera mappar per projekt manuellt på egen hand. Du måste manuellt se till att relevanta användare har åtkomst.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Välj typ av hantering av användaråtkomst och skapande av mappar.
-        subtitle: Åtkomsthantering
+        subtitle: Folder and access management
       access_management_section: Åtkomst och projektmappar
       automatically_managed_folders: Automatiskt hanterade mappar
       general_information: Allmän information
       oauth_configuration: OAuth konfiguration
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: Projektmappar

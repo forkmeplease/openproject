@@ -237,17 +237,23 @@ vi:
     error_invalid_provider_type: Vui lòng chọn một nhà cung cấp lưu trữ hợp lệ.
     file_storage_view:
       access_management:
-        automatic_management: Quản lý và thư mục tự động
-        automatic_management_description: Để OpenProject tạo thư mục cho từng dự án tự động và quản lý quyền truy cập của người dùng. Điều này được khuyến nghị vì nó đảm bảo rằng mỗi thành viên trong nhóm luôn có quyền truy cập đúng.
-        description: Chọn loại quản lý quyền truy cập của người dùng và tạo thư mục. Chúng tôi khuyến nghị sử dụng quản lý tự động để có cấu trúc tổ chức hơn và đảm bảo quyền truy cập cho tất cả người dùng liên quan.
-        manual_management: Quản lý và thư mục thủ công
-        manual_management_description: Tạo và quản lý thư mục cho từng dự án thủ công. Bạn sẽ cần phải đảm bảo rằng các người dùng liên quan có quyền truy cập.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Chọn loại quản lý quyền truy cập và tạo thư mục.
-        subtitle: Quản lý quyền truy cập
+        subtitle: Folder and access management
       access_management_section: Quyền truy cập và thư mục dự án
       automatically_managed_folders: Thư mục được quản lý tự động
       general_information: Thông tin chung
       oauth_configuration: OAuth configuration
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: Thư mục dự án

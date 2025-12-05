@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,33 +26,19 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-require "spec_helper"
+module Projects::Scopes
+  module AvailableTemplates
+    extend ActiveSupport::Concern
 
-RSpec.describe Principals::DeleteJob, "Meetings", type: :model do
-  subject(:job) { described_class.perform_now(principal) }
-
-  shared_let(:deleted_user) do
-    create(:deleted_user)
-  end
-  let(:principal) do
-    create(:user)
-  end
-
-  context "with a meeting" do
-    let!(:meeting) { create(:meeting, author: principal) }
-    let!(:meeting_agenda_item) { create(:meeting_agenda_item, presenter: principal) }
-    let!(:meeting_outcome) { create(:meeting_outcome, meeting_agenda_item:, author: principal) }
-    let!(:recurring_meeting) { create(:recurring_meeting, author: principal) }
-
-    it "rewrites the references" do
-      job
-
-      expect(meeting.reload.author).to eq deleted_user
-      expect(meeting_agenda_item.reload.presenter).to eq deleted_user
-      expect(meeting_outcome.reload.author).to eq deleted_user
-      expect(recurring_meeting.reload.author).to eq deleted_user
+    class_methods do
+      def available_templates(workspace_type)
+        allowed_to(User.current, :copy_projects)
+           .active
+           .templated
+           .workspace_type(workspace_type)
+      end
     end
   end
 end

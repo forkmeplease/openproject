@@ -237,17 +237,23 @@ lt:
     error_invalid_provider_type: Prašome pažymėti tinkamą saugyklos tiekėją.
     file_storage_view:
       access_management:
-        automatic_management: Atutomatiškai valdoma prieiga ir aplankai
-        automatic_management_description: Leisti OpenProject automatiškai kurti projektų aplankus ir tvarkyti naudotojų prieigą. Tai rekomenduojama, nes užtikrina, kad kiekvienas komandos narys visada turi reikiamas prieigos teises.
-        description: Parinkite naudotojų prieigos ir aplankų kūrimo valdymo tipą. Mes rekomenduojame naudoti automatiškai valdomą prieigą, kad turėtumėte labiau organizuotą struktūrą ir garantuotumėte prieigą visiems reikiamiems naudotojams.
-        manual_management: Rankiniu būdu valdoma prieiga ir aplankai
-        manual_management_description: Kurkite ir valdykite projektų aplankus patys rankiniu būdu. Jums reikės rankiniu būdu užtikrinti, kad reikiami naudotojai turi prieigą.
+        automatic_management: Enable automatically-managed access and folders
+        automatic_management_description: Each project will be able to decide, when a storage is added to it, whether they want the automatically-managed or the manual approach to folder and access management.
+        description: OpenProject can automatically create and manage project folders when a file storage is added to a project. This can result in a more organized folder structure and straightforward access management that guarantees access to all relevant users.
+        manual_management: Only allow manually-managed access and folders
+        manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
         setup_incomplete: Parinkite naudotojų prieigos ir aplankų kūrimo valdymo tipą.
-        subtitle: Prieigos valdymas
+        subtitle: Folder and access management
       access_management_section: Prieiga ir projekto aplankai
       automatically_managed_folders: Automatiškai valdomi aplankai
       general_information: Bendra informacija
       oauth_configuration: OAuth configuration
+      one_drive:
+        access_management:
+          automatic_management: Enable automatically-managed access and folders
+          automatic_management_description: Each project using this file storage will necessarily have to use the automatically-managed approach to folder and access management. They cannot do it manually.
+          manual_management: Only allow manually-managed access and folders
+          manual_management_description: Projects using this storage will not be offered the option of the automatically-managed approach. Folders and access must be managed manually.
       one_drive_oauth: Azure OAuth
       openproject_oauth: OpenProject OAuth
       project_folders: Projekto aplankai
