@@ -1,4 +1,4 @@
-class JiraImportJob < ApplicationJob
+class JiraImportDataJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
   good_job_control_concurrency_with(
     total_limit: 2,
@@ -70,8 +70,6 @@ class JiraImportJob < ApplicationJob
       end
 
       # IMPORT STATUSES
-
-      binding.pry
 
       JiraStatus.all.each do |jira_status|
         status = Status.create!(name: "J-#{jira_status.payload['name']}")

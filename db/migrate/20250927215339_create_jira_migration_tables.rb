@@ -12,6 +12,8 @@ class CreateJiraMigrationTables < ActiveRecord::Migration[8.0]
     create_table :jira_imports do |t|
       t.string :status
       t.timestamp :import_time_point
+      t.bigint :author_id, null: false
+      t.string :projects, array: true, default: []
       t.references :jira, foreign_key: { on_delete: :cascade, on_update: :cascade }
     end
 
@@ -38,7 +40,7 @@ class CreateJiraMigrationTables < ActiveRecord::Migration[8.0]
       t.string :jira_issue_id
       t.references :jira, foreign_key: { on_delete: :cascade, on_update: :cascade }
       t.references :jira_import, foreign_key: { on_delete: :cascade, on_update: :cascade }
-      t.index [:jira_id, :jira_project_id, :jira_issue_id], unique: true
+      t.index [:jira_id, :jira_issue_id], unique: true
 
       t.timestamps
     end

@@ -1,4 +1,4 @@
-class JiraSyncJob < ApplicationJob
+class JiraFetchDataJob < ApplicationJob
   include GoodJob::ActiveJobExtensions::Concurrency
   good_job_control_concurrency_with(
     total_limit: 2,
@@ -65,7 +65,7 @@ JiraSyncJob.new.perform(1)
             updated_at:
           }
         end
-        upsert_result = JiraIssue.upsert_all(issues_upsert_data, unique_by: [:jira_id, :jira_project_id, :jira_issue_id])
+        upsert_result = JiraIssue.upsert_all(issues_upsert_data, unique_by: [:jira_id, :jira_issue_id])
         while(total > start_at + max_results)
           start_at = start_at + max_results
           result = j.issues(jql:,
@@ -86,7 +86,7 @@ JiraSyncJob.new.perform(1)
               updated_at:
             }
           end
-          upsert_result = JiraIssue.upsert_all(issues_upsert_data, unique_by: [:jira_id, :jira_project_id, :jira_issue_id])
+          upsert_result = JiraIssue.upsert_all(issues_upsert_data, unique_by: [:jira_id, :jira_issue_id])
         end
       end
 
