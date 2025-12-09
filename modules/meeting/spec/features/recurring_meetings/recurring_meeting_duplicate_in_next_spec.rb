@@ -88,7 +88,7 @@ RSpec.describe "Recurring meetings duplicate in next meeting", :js do
 
     let!(:next_meeting) do
       # Initialize the next occurrence
-      RecurringMeetings::InitNextOccurrenceJob.perform_now(series, series.next_occurrence(from_time: meeting.start_time))
+      RecurringMeetings::InitNextOccurrenceJob.perform_now(series, series.next_occurrence)
       series.meetings.not_templated.last
     end
 
@@ -139,7 +139,7 @@ RSpec.describe "Recurring meetings duplicate in next meeting", :js do
         create(:scheduled_meeting,
                :cancelled,
                recurring_meeting: series,
-               start_time: series.next_occurrence(from_time: recurring_meeting.start_time))
+               start_time: series.next_occurrence)
       end
 
       it "shows an error message" do
