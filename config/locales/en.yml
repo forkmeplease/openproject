@@ -4713,6 +4713,7 @@ en:
     passwords: "Passwords"
     project_attributes:
       heading: "Project attributes"
+      label_for_all_projects: "All projects"
       label_new_attribute: "Project attribute"
       label_new_section: "Section"
       label_edit_section: "Edit title"
