@@ -183,7 +183,8 @@ module MeetingAgendaItems
       return if in_template?
       return if @series.nil?
 
-      next_date = @series.next_occurrence(from_time: @meeting.start_time)
+      from_time = @meeting.start_time.past? ? Time.current : @meeting.start_time
+      next_date = @series.next_occurrence(from_time:)
       return if next_date.nil?
 
       menu.with_item(
