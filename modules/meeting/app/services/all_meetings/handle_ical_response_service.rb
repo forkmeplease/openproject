@@ -54,7 +54,7 @@ module AllMeetings
 
     private
 
-    def handle_ical_event(event) # rubocop:disable Metrics/AbcSize
+    def handle_ical_event(event) # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
       uid = event.uid&.value_ical
       recurrence_id = event.recurrence_id&.value_ical
 
