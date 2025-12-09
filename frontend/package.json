@@ -60,7 +60,6 @@
     "ts-node": "~10.9.2",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.48.0",
-    "webpack-bundle-analyzer": "^4.4.2",
     "wscat": "^6.1.0"
   },
   "dependencies": {
@@ -191,7 +190,7 @@
     "os": false
   },
   "scripts": {
-    "analyze": "ng build --configuration production --stats-json && webpack-bundle-analyzer -h 0.0.0.0 -p 9999 ../public/assets/frontend/stats.json",
+    "analyze": "ng build --configuration production --stats-json && npx esbuild-visualizer --metadata ../public/assets/frontend/stats.json",
     "build": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build --configuration production --named-chunks --source-map",
     "build:watch": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build --watch --named-chunks",
     "ci:plugins:register_frontend": "node ci-plugins-generator.js",
