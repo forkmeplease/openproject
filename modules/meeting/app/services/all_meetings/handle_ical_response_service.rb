@@ -79,6 +79,12 @@ module AllMeetings
       if recurrence_id.nil?
         # No recurrence, so update participation on the template
         update_participation_status(recurring_meeting.template, event)
+
+        # Also update all instantiated meetings that still need a response
+        instantiated_scheduled_meetings_awaiting_responses(recurring_meeting).each do |scheduled_meeting|
+          update_participation_status(scheduled_meeting.meeting, event)
+        end
+
         return ServiceResult.success
       end
 
@@ -137,6 +143,19 @@ module AllMeetings
     def update_participation_status(meeting, event)
       participant = meeting.participants.find_by!(user: user)
       participant.update!(participation_status: partstat(event), comment: comment(event))
+    end
+
+    def instantiated_scheduled_meetings_awaiting_responses(recurring_meeting)
+      recurring_meeting
+      .scheduled_meetings
+      .joins(meeting: :participants)
+      .includes(meeting: :participants)
+      .where(meetings: {
+               meeting_participants: {
+                 user_id: user.id,
+                 participation_status: MeetingParticipant.participation_statuses[:needs_action]
+               }
+             })
     end
   end
 end

@@ -241,6 +241,27 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
           expect(subject).to be_success
         end
       end
+
+      context "when there already is an instantiated meeting, but it also still waits for a response" do
+        let(:partstat) { "ACCEPTED" }
+        let(:recurrence_id) { recurring_meeting.start_time + 7.days }
+        let!(:meeting) do
+          RecurringMeetings::InitOccurrenceService
+            .new(user: User.system, recurring_meeting:)
+            .call(start_time: recurrence_id)
+            .result
+        end
+
+        it "updates the participant status on the recurring meeting and the instantiated meeting" do
+          expect { subject }.to change {
+            recurring_meeting.template.participants.find_by(user: user).participation_status
+          }.from("needs_action").to("accepted").and change {
+            meeting.participants.find_by(user: user).participation_status
+          }.from("needs_action").to("accepted")
+
+          expect(subject).to be_success
+        end
+      end
     end
 
     context "when responding to a single occurrence" do
