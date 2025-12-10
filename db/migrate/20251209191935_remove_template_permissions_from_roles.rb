@@ -28,17 +28,9 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require Rails.root.join("db/migrate/migration_utils/permission_adder")
-
-class AddFromTemplatePermissionsToRolesWithAddPermissions < ActiveRecord::Migration[8.0]
+class RemoveTemplatePermissionsFromRoles < ActiveRecord::Migration[8.0]
   def up
-    ::Migration::MigrationUtils::PermissionAdder.add(:add_project, :add_project_from_template)
-    ::Migration::MigrationUtils::PermissionAdder.add(:add_programs, :add_programs_from_template)
-    ::Migration::MigrationUtils::PermissionAdder.add(:add_portfolios, :add_portfolios_from_template)
-  end
-
-  def down
-    # Remove the permissions that were added
+    # Remove any leftover permissions that may have been previously added.
     RolePermission.delete_by(
       permission: %w(
         add_project_from_template
