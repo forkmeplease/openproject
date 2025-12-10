@@ -2724,15 +2724,19 @@ zh-CN:
         learn_about: "详细了解所有新功能"
         missing: "There are no highlighted features yet."
         #We need to include the version to invalidate outdated translations in other locales
-        "16_6":
+        "17_0":
           new_features_title: >
-            此版本包含多项新功能和改进，例如：
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: 项目评估和评分的计算值（Enterprise 附加组件）。
-            line_1: 项目特性类型层次结构。
-            line_2: 可以产生重大影响的性能更新。
-            line_3: '“文档”模块的新索引页面。'
-            line_4: 可以更改自定义字段条目的父项。
+            line_0: Real-time documents collaboration.
+            line_1: Ability to structure related projects into programs and portfolios to focus them on strategic goals (Enterprise add-on).
+            line_2: Better meeting management with draft mode, presentation mode, enhanced outcomes, and iCal subscription.
+            line_3: Updated SharePoint integration with more restrictive permissions (Enterprise add-on).
+            line_4: Redesigned project overview with new tabs, configurable widgets, and an improved layout.
+            line_5: Option to guard the privacy of users not working in the same project more strictly.
+            line_6: Improved project creation flow with better template selection.
+            line_7: Smarter global search including type and status, improving precision in several autocompleters.
+            line_8: Accessibility improvements with ALT texts and improved chart colors.
     links:
       upgrade_enterprise_edition: "升级到企业版"
       postgres_migration: "将您的安装迁移到 PostgreSQL"
