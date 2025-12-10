@@ -2437,7 +2437,7 @@ zh-TW:
         title: "只讓少數人能看到的內部備註"
         description: " "
       portfolio_management:
-        description: Align your projects to your strategic goals by organizing them into portfolios and programs.
+        description: 透過將專案組織成投資組合與計畫，讓你的專案與策略目標保持一致。
     teaser:
       title:
         other: "%{count} %{trial_plan} 試用令牌所剩天數"
@@ -2722,15 +2722,19 @@ zh-TW:
         learn_about: "進一步瞭解所有新功能"
         missing: "目前還沒有突出顯示的功能。"
         #We need to include the version to invalidate outdated translations in other locales
-        "16_6":
+        "17_0":
           new_features_title: >
-            該版本包含多種新功能和改進，例如：
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: 專案評估和評分的計算值（企業附加元件）。
-            line_1: 專案屬性類型層級。
-            line_2: 影響力極大的效能更新。
-            line_3: 文件模組新增索引頁。
-            line_4: 可更改自訂欄位項目的父項。
+            line_0: Real-time documents collaboration.
+            line_1: Ability to structure related projects into programs and portfolios to focus them on strategic goals (Enterprise add-on).
+            line_2: Better meeting management with draft mode, presentation mode, enhanced outcomes, and iCal subscription.
+            line_3: Updated SharePoint integration with more restrictive permissions (Enterprise add-on).
+            line_4: Redesigned project overview with new tabs, configurable widgets, and an improved layout.
+            line_5: Option to guard the privacy of users not working in the same project more strictly.
+            line_6: Improved project creation flow with better template selection.
+            line_7: Smarter global search including type and status, improving precision in several autocompleters.
+            line_8: Accessibility improvements with ALT texts and improved chart colors.
     links:
       upgrade_enterprise_edition: "升級到企業版"
       postgres_migration: "將您的安裝遷移到 PostgreSQL"
@@ -4463,7 +4467,7 @@ zh-TW:
         status_when_submitted_caption: "提交請求後，產生的工作套件將轉換到的狀態。"
         send_confirmation_email: "向提交專案啟動請求的使用者傳送確認電子郵件"
         assignee: "提交時的執行者"
-        assignee_caption_html: "The user or group assigned to this project attribute will also become the assignee of the new work package. This list includes active project attributes of type <i>User</i> only."
+        assignee_caption_html: "被指派到此專案屬性的使用者或群組，將同時成為新工作套件的受指派人。此清單僅包含類型為 <i>User</i> 的啟用中專案屬性。"
         confirmation_email_text: "確認電子郵件文字"
         confirmation_email_default: "您已提交 %{project_name} 的專案啟動請求，目前正等待審核。\n請點擊下方連結以存取包含您請求的工作套件。"
         work_package_comment: "工作套件留言"
