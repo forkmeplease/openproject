@@ -587,7 +587,6 @@ en:
         title: "Template settings"
         enable_failed: "Failed to enable template mode."
         members:
-          description: "Configure which roles should be excluded when this template is used to create a new project. Members with these roles will not be copied to the new project."
           excluded_roles_label: "Roles to exclude when template is applied"
           excluded_roles_caption: >
             When creating a new project from this template, the roles selected above will be omitted. 
