@@ -137,7 +137,7 @@ gem "rack-attack", "~> 6.8.0"
 gem "browser", "~> 6.2.0"
 
 # Providing health checks
-gem "okcomputer", "~> 1.19.0"
+gem "okcomputer", "~> 1.19.1"
 
 # Lograge to provide sane and non-verbose logging
 gem "lograge", "~> 0.14.0"
@@ -399,7 +399,7 @@ group :postgres do
 end
 
 # Support application loading when no database exists yet.
-gem "activerecord-nulldb-adapter", "~> 1.1.1"
+gem "activerecord-nulldb-adapter", "~> 1.2.2"
 
 # Have application level locks on the database to have a mutex shared between workers/hosts.
 # We e.g. employ this to safeguard the creation of journals.
@@ -417,6 +417,6 @@ gemfiles.each do |file|
   send(:eval_gemfile, file) if File.readable?(file)
 end
 
-gem "openproject-octicons", "~>19.31.1"
-gem "openproject-octicons_helper", "~>19.31.1"
+gem "openproject-octicons", "~>19.32.0"
+gem "openproject-octicons_helper", "~>19.32.0"
 gem "openproject-primer_view_components", "~>0.78.1"

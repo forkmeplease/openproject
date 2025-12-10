@@ -2863,15 +2863,19 @@ uk:
         learn_about: "Дізнайтеся більше про всі нові функції"
         missing: "There are no highlighted features yet."
         #We need to include the version to invalidate outdated translations in other locales
-        "16_6":
+        "17_0":
           new_features_title: >
-            Випуск включає різноманітні нові функції та покращення, такі як:
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: Обчислені значення для оцінки проєктів і підрахунку балів (доповнення версії Enterprise).
-            line_1: Ієрархія типів атрибутів проєкту.
-            line_2: Значні покращення продуктивності.
-            line_3: Нова індексна сторінка модуля «Документи».
-            line_4: Можливість змінити батьківський об’єкт елемента користувацького поля.
+            line_0: Real-time documents collaboration.
+            line_1: Ability to structure related projects into programs and portfolios to focus them on strategic goals (Enterprise add-on).
+            line_2: Better meeting management with draft mode, presentation mode, enhanced outcomes, and iCal subscription.
+            line_3: Updated SharePoint integration with more restrictive permissions (Enterprise add-on).
+            line_4: Redesigned project overview with new tabs, configurable widgets, and an improved layout.
+            line_5: Option to guard the privacy of users not working in the same project more strictly.
+            line_6: Improved project creation flow with better template selection.
+            line_7: Smarter global search including type and status, improving precision in several autocompleters.
+            line_8: Accessibility improvements with ALT texts and improved chart colors.
     links:
       upgrade_enterprise_edition: "Оновлення до версії Enterprise"
       postgres_migration: "Міграція інсталяції в PostgreSQL"

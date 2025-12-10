@@ -2773,15 +2773,19 @@ fr:
         learn_about: "En savoir plus sur les nouvelles fonctionnalités"
         missing: "There are no highlighted features yet."
         #We need to include the version to invalidate outdated translations in other locales
-        "16_6":
+        "17_0":
           new_features_title: >
-            Cette version contient plusieurs nouvelles fonctionnalités et améliorations, telles que :
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: Valeurs calculées pour l'évaluation et la notation des projets (add-on Enterprise).
-            line_1: Hiérarchie des types d'attributs du projet.
-            line_2: Des mises à jour de performance avec un impact important.
-            line_3: Nouvelle page d'index pour le module Documents.
-            line_4: Possibilité de changer le parent d'un champ personnalisé.
+            line_0: Real-time documents collaboration.
+            line_1: Ability to structure related projects into programs and portfolios to focus them on strategic goals (Enterprise add-on).
+            line_2: Better meeting management with draft mode, presentation mode, enhanced outcomes, and iCal subscription.
+            line_3: Updated SharePoint integration with more restrictive permissions (Enterprise add-on).
+            line_4: Redesigned project overview with new tabs, configurable widgets, and an improved layout.
+            line_5: Option to guard the privacy of users not working in the same project more strictly.
+            line_6: Improved project creation flow with better template selection.
+            line_7: Smarter global search including type and status, improving precision in several autocompleters.
+            line_8: Accessibility improvements with ALT texts and improved chart colors.
     links:
       upgrade_enterprise_edition: "Passer à la version Enterprise"
       postgres_migration: "Migration de votre installation vers PostgreSQL"
