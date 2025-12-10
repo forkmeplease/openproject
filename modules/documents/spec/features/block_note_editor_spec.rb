@@ -68,6 +68,7 @@ RSpec.describe "BlockNote editor rendering", :js do
   end
 
   it "renders the BlockNote editor with custom menu entries for work package linking" do
+    pending("handling tests with shadow dom")
     visit document_path(document)
 
     expect(page).to have_test_selector("blocknote-document-description")

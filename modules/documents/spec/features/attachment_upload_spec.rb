@@ -153,9 +153,9 @@ RSpec.describe "Upload attachment to documents",
     it_behaves_like "can upload an image in CKEditor"
   end
 
-  # these specs work only if the editor is *not* under a shadow root
   shared_examples "can upload an image in BlockNote" do
     it "is possible to upload attachments from the editor" do
+      pending("handling tests with shadow dom")
       expect(page).to have_no_css("img[alt='image.png']")
       editor.open_add_image_dialog
 
@@ -168,11 +168,11 @@ RSpec.describe "Upload attachment to documents",
     end
   end
 
-  # these specs work only if the editor is *not* under a shadow root
   shared_examples "with non-whitelisted file types" do
     context "with an incompatible attachment allowlist",
             with_settings: { attachment_whitelist: %w[image/jpg] } do
       it "shows a nice error" do
+        pending("handling tests with shadow dom")
         editor.open_add_image_dialog
         expect do
           attach_file(image_fixture.path, make_visible: true) do
@@ -227,14 +227,14 @@ RSpec.describe "Upload attachment to documents",
     end
 
     context "with internal uploads" do
-      # it_behaves_like "can upload an image in BlockNote"
-      # it_behaves_like "with non-whitelisted file types"
+      it_behaves_like "can upload an image in BlockNote"
+      it_behaves_like "with non-whitelisted file types"
       it_behaves_like "with attachments list in the sidebar"
     end
 
     context "with uploads to an external storage", :with_direct_uploads do
-      # it_behaves_like "can upload an image in BlockNote"
-      # it_behaves_like "with non-whitelisted file types"
+      it_behaves_like "can upload an image in BlockNote"
+      it_behaves_like "with non-whitelisted file types"
       it_behaves_like "with attachments list in the sidebar"
     end
   end

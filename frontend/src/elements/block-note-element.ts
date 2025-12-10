@@ -94,7 +94,7 @@ class BlockNoteElement extends HTMLElement {
         }
       )
     );
-  }
+  };
 
   private parseActiveUser():User | null {
     const userData = this.getAttribute('active-user');
