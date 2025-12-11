@@ -31,11 +31,18 @@ import { Application } from '@hotwired/stimulus';
 import CheckAllController from './check-all.controller';
 import CheckableController from './checkable.controller';
 
+const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
 describe('CheckAllController', () => {
   let Stimulus:Application;
   let fixturesElement:HTMLElement;
 
-  beforeAll(() => {
+  beforeEach(() => {
+    fixturesElement = document.createElement('div');
+    document.body.appendChild(fixturesElement);
+  });
+
+  beforeEach(async () => {
     Stimulus = Application.start();
     // Stimulus.debug = true;
     Stimulus.handleError = (error, message, detail) => {
@@ -43,6 +50,7 @@ describe('CheckAllController', () => {
     };
     Stimulus.register('checkable', CheckableController);
     Stimulus.register('check-all', CheckAllController);
+    await nextFrame();
   });
 
   const checkAllTemplate = `
@@ -60,12 +68,6 @@ describe('CheckAllController', () => {
     </div>
   `;
 
-
-  beforeEach(() => {
-    fixturesElement = document.createElement('div');
-    document.body.appendChild(fixturesElement);
-  });
-
   function appendTemplate(html:string) {
     const template = document.createElement('template');
     template.innerHTML = html.trim();
@@ -73,11 +75,16 @@ describe('CheckAllController', () => {
   }
 
   describe('without checkable controller', () => {
-    it('does nothing', () => {
+    beforeEach(async () => {
       appendTemplate(checkAllTemplate);
+      await nextFrame();
+    });
 
-      document.getElementById('check-all')!.click();
-      document.getElementById('uncheck-all')!.click();
+    it('does nothing and does not error', () => {
+      expect(() => {
+        document.getElementById('check-all')!.click();
+        document.getElementById('uncheck-all')!.click();
+      }).not.toThrow();
     });
   });
 
@@ -85,21 +92,22 @@ describe('CheckAllController', () => {
     beforeEach(async () => {
       appendTemplate(checkableTemplate);
       appendTemplate(checkAllTemplate);
-
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await nextFrame();
     });
 
-    it('toggles checkboxes', () => {
+    it('toggles checkboxes', async () => {
       const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
 
       expect(inputs).toHaveSize(3);
       expect(inputs.every((i) => !i.checked)).toBeTrue();
 
       document.getElementById('check-all')!.click();
+      await nextFrame();
 
       expect(inputs.every((i) => i.checked)).toBeTrue();
 
       document.getElementById('uncheck-all')!.click();
+      await nextFrame();
 
       expect(inputs.every((i) => !i.checked)).toBeTrue();
     });
@@ -124,7 +132,7 @@ describe('CheckAllController', () => {
       // Remove the outlet element to trigger outlet disconnect
       document.getElementById('checkables')!.remove();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await nextFrame();
 
       const ariaAfter = checkAllEl.getAttribute('aria-controls') ?? '';
 
@@ -134,9 +142,7 @@ describe('CheckAllController', () => {
 
   afterEach(() => {
     fixturesElement.remove();
-  });
 
-  afterAll(() => {
     Stimulus.stop();
   });
 });
