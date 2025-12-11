@@ -91,6 +91,12 @@ export default class FiltersFormController extends Controller {
   declare urlPathNameValue:string;
   declare hasFilterFormTarget:boolean;
 
+  private formLoadedResolver:(() => void)|null = () => null;
+
+  filterFormLoaded = new Promise<void>((resolve) => {
+    this.formLoadedResolver = resolve;
+  });
+
   private boundListener = this.sendForm.bind(this);
 
   initialize() {
@@ -106,6 +112,15 @@ export default class FiltersFormController extends Controller {
   disconnect() {
     const clearButton = document.getElementById(this.clearButtonIdValue);
     clearButton?.removeEventListener('click', (event:MouseEvent) => this.clearInputWithButton(event));
+  }
+
+  addFilterSelectTargetConnected() {
+    // This is used as an indicator that the filter form is loaded. Other targets could have been used
+    // as well.
+    if (this.formLoadedResolver) {
+      this.formLoadedResolver();
+      this.formLoadedResolver = null;
+    }
   }
 
   // Register and deregister change/input listeners on input elements to reload the page's frames on user input.
