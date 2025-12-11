@@ -31,7 +31,7 @@
 import { User } from '@blocknote/core/comments';
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import * as Y from 'yjs';
-import { BlockNoteEditor } from './components/BlockNoteEditor';
+import { OpBlockNoteEditor } from './components/OpBlockNoteEditor';
 import { useCollaboration } from './hooks/useCollaboration';
 
 export interface OpBlockNoteContainerProps {
@@ -98,7 +98,7 @@ export default function OpBlockNoteContainer({ inputField,
   }
 
   return (
-    <BlockNoteEditor
+    <OpBlockNoteEditor
       activeUser={activeUser}
       readOnly={readOnly}
       openProjectUrl={openProjectUrl}

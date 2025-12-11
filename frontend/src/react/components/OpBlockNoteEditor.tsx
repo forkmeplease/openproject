@@ -34,8 +34,8 @@ import { BlockNoteView } from '@blocknote/mantine';
 import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import { initializeOpBlockNoteExtensions, openProjectWorkPackageBlockSpec, openProjectWorkPackageSlashMenu } from 'op-blocknote-extensions';
-import * as Y from 'yjs';
 import { useEffect, useMemo } from 'react';
+import * as Y from 'yjs';
 import { useBlockNoteAttachments } from '../hooks/useBlockNoteAttachments';
 import { useBlockNoteLocale } from '../hooks/useBlockNoteLocale';
 import { useOpTheme } from '../hooks/useOpTheme';
@@ -45,7 +45,7 @@ interface CollaborativeUser {
   color:string;
 }
 
-export interface BlockNoteEditorProps {
+export interface OpBlockNoteEditorProps {
   activeUser:User;
   readOnly:boolean;
   openProjectUrl:string;
@@ -65,7 +65,7 @@ function generateRandomColor() {
   return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
 }
 
-export function BlockNoteEditor({
+export function OpBlockNoteEditor({
   activeUser,
   readOnly,
   openProjectUrl,
@@ -73,7 +73,7 @@ export function BlockNoteEditor({
   attachmentsCollectionKey,
   hocuspocusProvider,
   doc,
-}:BlockNoteEditorProps) {
+}:OpBlockNoteEditorProps) {
   const { localeString, localeDictionary } = useBlockNoteLocale(window.I18n.locale);
   const { enabled: attachmentsEnabled, uploadFile } = useBlockNoteAttachments(attachmentsCollectionKey, attachmentsUploadUrl);
 
