@@ -10,6 +10,8 @@
       role="button"
       (click)="clear(item)"
       (keydown.enter)="clear(item)"
+      (keydown.space)="$event.preventDefault(); clear(item)"
+      [attr.aria-label]="this.I18n.t('js.autocomplete_select.remove', { name: item.name })"
     >×</span>
     <span class="ng-value-label d-flex gap-2">
       <span class="ellipsis">{{ item.name }}</span>
