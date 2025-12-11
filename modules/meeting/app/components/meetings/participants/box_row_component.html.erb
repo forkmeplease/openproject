@@ -11,15 +11,21 @@
         )
       end
 
-      row.with_column(flex: 1, classes: "ellipsis") do
-        if @participant.participation_needs_action? || @participant.participation_unknown?
-          render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) { t("meeting_participant.participation_status.needs_action").capitalize }
-        elsif @participant.participation_accepted?
-          render(Primer::Beta::Text.new(font_size: :small, color: :success)) { t("meeting_participant.participation_status.accepted").capitalize }
-        elsif @participant.participation_declined?
-          render(Primer::Beta::Text.new(font_size: :small, color: :danger)) { t("meeting_participant.participation_status.declined").capitalize }
-        elsif @participant.participation_tentative?
-          render(Primer::Beta::Text.new(font_size: :small, color: :attention)) { t("meeting_participant.participation_status.tentative").capitalize }
+      row.with_column(flex: 1, flex_layout: true) do |column|
+        column.with_row do
+          @participant.user.name
+        end
+
+        column.with_row do
+          if @participant.participation_needs_action? || @participant.participation_unknown?
+            render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) { t("meeting_participant.participation_status.needs_action").capitalize }
+          elsif @participant.participation_accepted?
+            render(Primer::Beta::Text.new(font_size: :small, color: :success)) { t("meeting_participant.participation_status.accepted").capitalize }
+          elsif @participant.participation_declined?
+            render(Primer::Beta::Text.new(font_size: :small, color: :danger)) { t("meeting_participant.participation_status.declined").capitalize }
+          elsif @participant.participation_tentative?
+            render(Primer::Beta::Text.new(font_size: :small, color: :attention)) { t("meeting_participant.participation_status.tentative").capitalize }
+          end
         end
       end
 
