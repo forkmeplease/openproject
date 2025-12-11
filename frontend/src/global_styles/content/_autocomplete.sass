@@ -140,10 +140,10 @@ div.autocomplete
   height: initial !important
   min-height: initial !important
 
-  .ng-value-label:not(.d-flex)
+  .ng-value-label:not(:has(> *))
     display: initial !important
 
-  .ng-value-label.d-flex
+  .ng-value-label:has(> *)
     min-width: 0
 
   .ng-placeholder
