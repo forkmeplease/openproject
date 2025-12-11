@@ -33,25 +33,14 @@
         end
       end
 
-      subheader.with_bottom_pane_component classes: filter_classes,
-                                           data: {
-                                             "filter--filters-form-target": "filterForm"
-                                           } do
-        helpers.turbo_frame_tag(
-          "portfolios_filters",
-          src: portfolios_filters_path(
-            **params.permit(:filters, :columns, :sortBy, :id, :query_id)
-          ),
-          target: "_top",
-          loading: "lazy",
-          data: { turbo: false }
-        ) do
-          render Primer::Alpha::SkeletonBox.new(
-            width: "100%",
-            height: skeleton_height,
-            mt: 3
+      subheader.with_bottom_pane_component do
+        render(
+          Projects::ProjectsFiltersComponent.new(
+            query: @query,
+            lazy_loaded_path: :portfolios_filters_path,
+            initially_expanded: filters_expanded?
           )
-        end
+        )
       end
     end
   end

@@ -28,17 +28,11 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-# rubocop:disable OpenProject/AddPreviewForViewComponent
 class Projects::ProjectsFiltersComponent < Filter::FilterComponent
-  # rubocop:enable OpenProject/AddPreviewForViewComponent
   def allowed_filters
     super
       .select { |f| allowed_filter?(f) }
       .sort_by(&:human_name)
-  end
-
-  def turbo_requests?
-    true
   end
 
   private

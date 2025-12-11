@@ -31,9 +31,12 @@ module Filter
   # rubocop:disable OpenProject/AddPreviewForViewComponent
   class FilterComponent < ApplicationComponent
     OPERATORS_WITHOUT_VALUES = %w[* !* t w].freeze
+    TURBO_FRAME_ID = "filter_component"
 
     # rubocop:enable OpenProject/AddPreviewForViewComponent
     options :query
+    options :lazy_loaded_path
+    options :initially_expanded
 
     # Returns filters, active and inactive.
     # In case a filter is active, the active one will be preferred over the inactive one.
@@ -56,6 +59,27 @@ module Filter
 
     def operator_without_value?(operator)
       OPERATORS_WITHOUT_VALUES.include?(operator)
+    end
+
+    def lazy_loaded? = !!lazy_loaded_path
+
+    def initially_expanded? = initially_expanded || false
+
+    def turbo_requests? = false
+
+    def skeleton_height
+      # This is an approximation.
+      # * 100 for the padding and the filter selection
+      # * 40 per filter and their bottom margin. But the height of the filters vary unfortunately.
+      "#{100 + (query.filters.count * 40)}px"
+    end
+
+    def filter_classes
+      "op-filters-form op-filters-form_top-margin #{'-expanded' if initially_expanded?}"
+    end
+
+    def lazy_turbo_frame_src
+      public_send(lazy_loaded_path, **params.permit(:filters, :columns, :sortBy, :id, :query_id))
     end
 
     protected

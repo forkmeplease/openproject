@@ -74,19 +74,8 @@ module Portfolios
       @current_user.allowed_globally?(:add_portfolios)
     end
 
-    def skeleton_height
-      # This is an approximation.
-      # * 100 for the padding and the filter selection
-      # * 40 per filter and their bottom margin. But the height of the filters vary unfortunately.
-      "#{100 + (@query.filters.count * 40)}px"
-    end
-
     def filters_expanded?
       params[:filters].present?
-    end
-
-    def filter_classes
-      "op-filters-form op-filters-form_top-margin #{'-expanded' if filters_expanded?}"
     end
   end
 end
