@@ -55,6 +55,31 @@ class BlockNoteElement extends HTMLElement {
       link.setAttribute('href', blockNoteStylesheetUrl);
       shadowRoot.appendChild(link);
     }
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .block-note-editor-container {
+        align-items: center;
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 10px;
+        height: 100%;
+        max-width: none;
+        padding: 0;
+      }
+
+      .block-note-editor-container > .bn-editor {
+        height: 100%;
+        max-width: $blocknote-max-width;
+        min-height: 80vh;
+        overflow: auto;
+        width: 100%;
+        background-color: transparent;
+        padding-top: 10px; // Small padding to display cursor label when at the very top
+        padding-inline: 0; // No inline padding necessary given transparent background
+      }
+    `;
+    shadowRoot.appendChild(style);
   }
 
   connectedCallback() {
