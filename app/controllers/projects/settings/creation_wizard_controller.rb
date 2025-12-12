@@ -98,6 +98,7 @@ class Projects::Settings::CreationWizardController < Projects::SettingsControlle
 
     custom_field_ids = ProjectCustomField
                          .where(custom_field_section_id: section_id)
+                         .where(is_required: false)
                          .pluck(:id)
 
     ProjectCustomFieldProjectMapping

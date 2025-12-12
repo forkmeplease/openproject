@@ -58,9 +58,7 @@ module Projects
           end
 
           def toggle_enabled?
-            # It is always possible to toggle project attributes for a PIR - even fields that are active for
-            # all projects.
-            true
+            !@project_custom_field.required?
           end
 
           def toggle_data_attributes
