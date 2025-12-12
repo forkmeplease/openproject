@@ -784,7 +784,7 @@ ko:
         required: "역할을 선택하십시오"
       message:
         label: "초대 메시지"
-        description: "사용자에게 이메일이 전송될 것입니다. 여기에 개인 메시지를 추가할 수도 있습니다. 초대에 관한 유용한 설명을 넣거나, 프로젝트를 시작하는 데 도움이 되는 정보를 넣을 수 있습니다."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "초대장 보내기"
       success_message:

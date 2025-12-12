@@ -784,7 +784,7 @@ vi:
         required: "Vui lòng chọn một vai trò"
       message:
         label: "Tin nhắn mời"
-        description: "Chúng tôi sẽ gửi email đến người dùng, bạn có thể thêm một tin nhắn cá nhân tại đây. Một lời giải thích về lời mời có thể hữu ích, hoặc có thể là một chút thông tin về dự án để giúp họ bắt đầu."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Gửi lời mời"
       success_message:

@@ -783,7 +783,7 @@ ms:
         required: "Sila pilih peranan"
       message:
         label: "Mesej jemputan"
-        description: "Kami akan menghantar e-mel ke pengguna, dimana anda boleh menambah mesej peribadi di sini. Satu penerangan untuk jemputan akan berguna, atau mungkin sedikit maklumat berkenaan projek untuk bantu mereka bermula."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Hantar jemputan"
       success_message:

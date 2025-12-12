@@ -781,7 +781,7 @@ zh-CN:
         required: "请选择一个角色"
       message:
         label: "邀请消息"
-        description: "我们将向用户发送一封电子邮件，您可以在此处添加要向其发送的个人消息。提供邀请说明可能会很有用，您也可以添加一些有关该项目的信息以帮助他们开始。"
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "发送邀请"
       success_message:

@@ -28,40 +28,15 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-class Projects::Settings::TemplateController < Projects::SettingsController
-  include OpTurbo::ComponentStream
-  include OpTurbo::FlashStreamHelper
+require_relative "project_edit_field"
 
-  menu_item :settings_template
-
-  def show; end
-
-  def update # rubocop:disable Metrics/AbcSize
-    excluded_role_ids = Array(params[:excluded_role_ids]).compact_blank.map(&:to_i)
-
-    call = Projects::UpdateService
-      .new(user: current_user, model: @project)
-      .call(settings: @project.settings.merge("excluded_role_ids_on_copy" => excluded_role_ids))
-
-    if call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-    else
-      flash[:error] = call.message || I18n.t(:notice_update_failed)
-    end
-
-    redirect_to project_settings_template_path(@project)
+# For work package table inline editing
+class InlineProjectEditField < ProjectEditField
+  def autocompleter
+    field_container.find("op-project-autocompleter")
   end
 
-  def toggle_template
-    call = Projects::UpdateService
-      .new(user: current_user, model: @project)
-      .call(templated: ActiveRecord::Type::Boolean.new.cast(params[:value]))
-
-    render_error_flash_message_via_turbo_stream(message: call.message) if call.failure?
-    update_via_turbo_stream(component: Projects::Settings::Template::SettingsComponent.new(@project.reload))
-
-    respond_with_turbo_streams do |format|
-      format.html { project_settings_template_path(@project) }
-    end
+  def field_type
+    "op-project-autocompleter"
   end
 end

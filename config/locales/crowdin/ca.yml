@@ -788,7 +788,7 @@ ca:
         required: "Si us plau, selecciona un rol"
       message:
         label: "Missatge d'invitació"
-        description: "Enviarem un correu electrònic a l'usuari, al qual pots afegir un missatge personal aquí. Una explicació per a la invitació pot ser útil, o potser una mica d'informació amb relació al projecte per ajudar als usuaris a començar."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Enviar la invitació"
       success_message:

@@ -789,7 +789,7 @@ it:
         required: "Sei pregato di selezionare un ruolo"
       message:
         label: "Messaggio di invito"
-        description: "Invieremo un'email all'utente, a cui puoi aggiungere qui un messaggio personale. Una spiegazione per l'invito potrebbe essere utile o forse qualche informazione sul progetto per aiutarli a iniziare."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Invia invito"
       success_message:

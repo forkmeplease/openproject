@@ -788,7 +788,7 @@ nl:
         required: "Selecteer een rol"
       message:
         label: "Uitnodigings bericht"
-        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or prehaps a bit of information regarding the project to help them get started."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Verstuur uitnodiging"
       success_message:

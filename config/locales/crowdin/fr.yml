@@ -791,7 +791,7 @@ fr:
         required: "Veuillez sélectionner un rôle"
       message:
         label: "Message d'invitation"
-        description: "Nous enverrons un e-mail à l'utilisateur, auquel vous pourrez ajouter un message personnel ici. Une explication concernant l'invitation pourrait être utile ou peut-être quelques informations concernant le projet pour l'aider à démarrer."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Envoyer une invitation"
       success_message:

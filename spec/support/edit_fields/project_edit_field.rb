@@ -28,40 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-class Projects::Settings::TemplateController < Projects::SettingsController
-  include OpTurbo::ComponentStream
-  include OpTurbo::FlashStreamHelper
+require_relative "select_edit_field"
 
-  menu_item :settings_template
-
-  def show; end
-
-  def update # rubocop:disable Metrics/AbcSize
-    excluded_role_ids = Array(params[:excluded_role_ids]).compact_blank.map(&:to_i)
-
-    call = Projects::UpdateService
-      .new(user: current_user, model: @project)
-      .call(settings: @project.settings.merge("excluded_role_ids_on_copy" => excluded_role_ids))
-
-    if call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-    else
-      flash[:error] = call.message || I18n.t(:notice_update_failed)
-    end
-
-    redirect_to project_settings_template_path(@project)
+class ProjectEditField < SelectField
+  def autocompleter
+    field_container
   end
 
-  def toggle_template
-    call = Projects::UpdateService
-      .new(user: current_user, model: @project)
-      .call(templated: ActiveRecord::Type::Boolean.new.cast(params[:value]))
+  def search_for(query)
+    search_autocomplete(autocompleter,
+                        query:,
+                        results_selector: ".ng-dropdown-panel-items")
+  end
 
-    render_error_flash_message_via_turbo_stream(message: call.message) if call.failure?
-    update_via_turbo_stream(component: Projects::Settings::Template::SettingsComponent.new(@project.reload))
+  def dropdown
+    ng_find_dropdown(autocompleter, results_selector: ".ng-dropdown-panel-items")
+  end
 
-    respond_with_turbo_streams do |format|
-      format.html { project_settings_template_path(@project) }
+  def expect_option(name, workspace_badge: false)
+    within(dropdown) do
+      option = page.find(".ng-option", text: name)
+
+      if workspace_badge
+        expect(option).to have_octicon
+        expect(option).to have_primer_text(workspace_badge, color: :muted)
+      else
+        expect(option).to have_no_octicon
+        expect(option).to have_no_primer_text(color: :muted)
+      end
     end
+  end
+
+  def clear_search
+    ng_select_input(autocompleter).set("")
   end
 end

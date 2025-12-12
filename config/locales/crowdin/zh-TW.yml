@@ -783,7 +783,7 @@ zh-TW:
         required: "請選擇角色"
       message:
         label: "邀請訊息"
-        description: "我們會寄送一封電子郵件給使用者，您可以在此加入個人訊息。說明邀請的原因或提供一些有關專案的資訊，能夠幫助他們更順利開始使用。"
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "發送邀請函"
       success_message:

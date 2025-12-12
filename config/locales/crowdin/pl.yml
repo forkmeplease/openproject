@@ -802,7 +802,7 @@ pl:
         required: "Wybierz rolę"
       message:
         label: "Wiadomość z zaproszeniem"
-        description: "Wyślemy do użytkownika wiadomość e-mail, do której możesz tutaj dodać prywatną wiadomość. Może to być wyjaśnienie zaproszenia lub ułatwiające rozpoczęcie pracy informacje na temat projektu."
+        description: "We will send an email to the user, to which you can add a personal message here. An explanation for the invitation could be useful, or perhaps a bit of information regarding the project to help them get started."
       summary:
         next_button: "Wyślij zaproszenie"
       success_message:
