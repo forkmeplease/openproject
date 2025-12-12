@@ -28,8 +28,9 @@
  * ++
  */
 
-import { BlockNoteEditorOptions, BlockNoteSchema, filterSuggestionItems } from '@blocknote/core';
+import { BlockNoteEditorOptions, BlockNoteSchema } from '@blocknote/core';
 import { User } from '@blocknote/core/comments';
+import { filterSuggestionItems } from '@blocknote/core/extensions';
 import { BlockNoteView } from '@blocknote/mantine';
 import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
 import { HocuspocusProvider } from '@hocuspocus/provider';
