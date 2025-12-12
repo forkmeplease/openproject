@@ -251,6 +251,20 @@ module Pages::Meetings
       end
     end
 
+    def duplicate_item_in_next_meeting(item)
+      open_menu(item) do
+        click_on "Duplicate"
+        click_on "Duplicate in next occurrence"
+      end
+      expect_modal("Duplicate in next occurrence?")
+
+      retry_block do
+        page.within_modal "Duplicate in next occurrence?" do
+          click_on "Duplicate"
+        end
+      end
+    end
+
     def open_menu(item, &)
       retry_block do
         page.within("#meeting-agenda-item-#{item.id}") do

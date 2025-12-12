@@ -45,6 +45,15 @@ module Admin
           model.id
         end
 
+        def secondary_text
+          ::CustomFields::Hierarchy::HierarchicalItemFormatter
+            .new(label: false,
+                 number_length_limit: 42,
+                 number_integer_digit_limit: 40,
+                 number_precision: 40)
+            .format(item: model)
+        end
+
         def item_link
           custom_field = @root.custom_field
 
