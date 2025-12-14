@@ -33,7 +33,7 @@ module OpenProject
     class CheckAllComponent < ApplicationComponent
       include Primer::AttributesHelper
 
-      attr_reader :checkable_id
+      attr_reader :checkable_id, :base_id
 
       CHECKABLE_CONTROLLER_SELECTOR = "[data-controller~='checkable']"
 
@@ -41,6 +41,7 @@ module OpenProject
         action = use_outlet? ? "check-all#checkAll:stop" : "checkable#checkAll:stop"
         controls = checkable_id if use_outlet?
 
+        system_arguments[:id] = "#{base_id}-check-all"
         system_arguments[:data] = merge_data(
           system_arguments, {
             data: { action: }
@@ -57,6 +58,7 @@ module OpenProject
         action = use_outlet? ? "check-all#uncheckAll:stop" : "checkable#uncheckAll:stop"
         controls = checkable_id if use_outlet?
 
+        system_arguments[:id] = "#{base_id}-uncheck-all"
         system_arguments[:data] = merge_data(
           system_arguments, {
             data: { action: }
@@ -90,6 +92,7 @@ module OpenProject
         super()
 
         @checkable_id = checkable_id
+        @base_id = checkable_id || self.class.generate_id
 
         @system_arguments = system_arguments
         @system_arguments[:tag] ||= :span
