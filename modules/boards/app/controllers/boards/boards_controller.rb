@@ -2,7 +2,7 @@ module ::Boards
   class BoardsController < BaseController
     include Layout
 
-    before_action :load_and_authorize_in_optional_project
+    before_action :load_and_authorize_in_optional_project, except: [:destroy]
 
     # The boards permission alone does not suffice
     # to view work packages
@@ -10,7 +10,8 @@ module ::Boards
 
     before_action :build_board_grid, only: %i[new]
     before_action :load_query, only: %i[index]
-    before_action :find_board_grid, only: %i[destroy]
+    authorization_checked! :destroy
+    before_action :find_and_authorize_board_grid_for_deletion, only: %i[destroy]
     before_action :ensure_board_type_not_restricted, only: %i[create]
 
     menu_item :boards
@@ -39,7 +40,7 @@ module ::Boards
     end
 
     def destroy
-      @board_grid.destroy
+      @board_grid.destroy!
 
       flash[:notice] = I18n.t(:notice_successful_delete)
 
@@ -63,9 +64,13 @@ module ::Boards
                                  .where(project: projects)
     end
 
-    def find_board_grid
+    def find_and_authorize_board_grid_for_deletion
       @board_grid = Boards::Grid.find(params[:id])
       @project = @board_grid.project
+
+      unless current_user.allowed_in_project?(:manage_board_views, @project)
+        render_403
+      end
     end
 
     def authorize_work_package_permission
