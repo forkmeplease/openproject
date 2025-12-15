@@ -42,14 +42,20 @@ See COPYRIGHT and LICENSE files for more details.
   <div class="generic-table--results-container">
     <table
       class="generic-table workflow-table transitions-<%= name %>"
-      data-controller="checkable">
+      data-controller="checkable table-highlighting">
       <caption class="sr-only">
         <%= t(".matrix_caption_#{name}", default: t(".matrix_caption")) %>
       </caption>
+      <colgroup>
+        <col data-highlight="false">
+        <% @statuses.size.times do |role| %>
+          <col>
+        <% end %>
+      </colgroup>
       <thead class="-sticky">
         <tr>
           <th></th>
-          <th colspan="<%= @statuses.length %>" class="-max">
+          <th colspan="<%= @statuses.size %>" class="-max">
             <div class="generic-table--sort-header-outer -no-border">
               <div class="generic-table--sort-header">
                 <%=
