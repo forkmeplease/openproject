@@ -35,7 +35,6 @@ module OpenProject
       defaultText: [:except, %w[list bool date text user version hierarchy calculated_value]],
       enterpriseBanner: [:only, %w[hierarchy]],
       formula: [:only, %w[calculated_value]],
-      hasComment: [:only, %w[bool date float int list user version]],
       length: [:except, %w[list bool date user version link hierarchy calculated_value]],
       multiSelect: [:only, %w[list user version hierarchy]],
       possibleValues: [:only, %w[list]],

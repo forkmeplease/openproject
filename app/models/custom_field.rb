@@ -351,7 +351,7 @@ class CustomField < ApplicationRecord
   end
 
   def can_have_comment?
-    is_a?(ProjectCustomField) && field_format.in?(%w[bool date float int list user version])
+    is_a?(ProjectCustomField)
   end
 
   ##
