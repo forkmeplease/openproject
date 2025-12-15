@@ -7,9 +7,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'help/**'
-  # We run this in the less privileged mode to allow external PRs to use this workflow.
-  # This means the workflow will be executed on the base branch, making sure only our own workflow logic is used.
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize]
     branches:
       - dev
