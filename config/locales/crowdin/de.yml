@@ -532,8 +532,6 @@ de:
         project_template_caption: "Wählen Sie eine Projektvorlage, die als Standard für neue Unterprojekte verwendet werden soll."
         program_template_label: "Vorlage für Programme"
         program_template_caption: "Wählen Sie eine Programmvorlage, die als Standard für neue Programme in diesem Portfolio verwendet werden soll."
-        portfolio_template_label: "Vorlage für Portfolios"
-        portfolio_template_caption: "Wählen Sie eine Portfoliovorlage, die als Standard für neue Teilportfolios verwendet werden soll."
         no_template: "Keine vordefinierte Vorlage"
       template:
         menu_title: "Template"

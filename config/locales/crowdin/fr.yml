@@ -535,8 +535,6 @@ fr:
         project_template_caption: "Sélectionnez un modèle de projet à utiliser par défaut pour les nouveaux sous-éléments de ce type."
         program_template_label: "Modèle de programme"
         program_template_caption: "Sélectionnez un programme modèle à utiliser par défaut pour les nouveaux sous-postes de ce type."
-        portfolio_template_label: "Modèle pour les portfolios"
-        portfolio_template_caption: "Sélectionnez un modèle de portefeuille à utiliser par défaut pour les nouveaux sous-éléments de ce type."
         no_template: "Pas de modèle prédéfini"
       template:
         menu_title: "Template"
