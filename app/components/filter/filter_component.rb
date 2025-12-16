@@ -35,8 +35,10 @@ module Filter
 
     # rubocop:enable OpenProject/AddPreviewForViewComponent
     options :query
-    options :lazy_loaded_path
-    options :initially_expanded
+    # The path used for fetching the filter section lazily from the backend upon opening it.
+    # If none is provided, the filters are rendered right away.
+    options lazy_loaded_path: false
+    options initially_expanded: false
 
     # Returns filters, active and inactive.
     # In case a filter is active, the active one will be preferred over the inactive one.
@@ -63,7 +65,7 @@ module Filter
 
     def lazy_loaded? = !!lazy_loaded_path
 
-    def initially_expanded? = initially_expanded || false
+    def initially_expanded? = initially_expanded
 
     def turbo_requests? = false
 
