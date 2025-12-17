@@ -36,23 +36,31 @@ module Storages
           class UploadFileCommand < Base
             def call(auth_strategy:, input_data:)
               with_tagged_logger do
-                split_identifier(input_data.parent_location) => { drive_id:, location: }
+                drive_id, location = get_location(input_data.parent_location)
                 info "Uploading file #{input_data.file_name} to parent location #{input_data.parent_location}"
-
                 file_content = input_data.io.read
 
                 Authentication[auth_strategy].call(storage: @storage) do |http|
-                  create_upload_session(auth_strategy, drive_id, location, input_data.file_name).bind do |upload_url|
-                    upload_file_content(http, upload_url, file_content).bind do |upload_response|
-                      info "File successfully uploaded, fetching its file info back..."
-                      fetch_file_info(http, drive_id, upload_response)
-                    end
-                  end
+                  upload_file(http, auth_strategy, drive_id, location, input_data.file_name, file_content)
                 end
               end
             end
 
             private
+
+            def get_location(parent_location)
+              split_identifier(parent_location) => { drive_id:, location: }
+              [drive_id, location]
+            end
+
+            def upload_file(http, auth_strategy, drive_id, location, file_name, file_content)
+              create_upload_session(auth_strategy, drive_id, location, file_name).bind do |upload_url|
+                upload_file_content(http, upload_url, file_content).bind do |upload_response|
+                  info "File successfully uploaded, fetching its file info back..."
+                  fetch_file_info(http, drive_id, upload_response)
+                end
+              end
+            end
 
             def create_upload_session(auth_strategy, drive_id, location, file_name)
               upload_link_input = Input::UploadLink.build(
