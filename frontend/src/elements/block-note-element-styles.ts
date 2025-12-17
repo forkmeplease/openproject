@@ -57,4 +57,7 @@ const blockNoteStylesContent = `
 }
 `;
 
-export default blockNoteStylesContent;
+const blockNoteStyleSheet = new CSSStyleSheet();
+blockNoteStyleSheet.replaceSync(blockNoteStylesContent);
+
+export { blockNoteStyleSheet };

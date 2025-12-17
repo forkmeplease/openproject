@@ -30,19 +30,16 @@
 
 import { User } from '@blocknote/core/comments';
 import { HocuspocusProvider } from '@hocuspocus/provider';
+import { Application } from '@hotwired/stimulus';
+import ConnectionErrorHandlerController from 'core-stimulus/controllers/dynamic/documents/connection-error-handler.controller';
 import { LiveCollaborationManager } from 'core-stimulus/helpers/live-collaboration-helpers';
 import { ShadowDomWrapper } from 'op-blocknote-extensions';
 import React from 'react';
 import type { Root } from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
-import OpBlockNoteContainer from '../react/OpBlockNoteContainer';
-import blockNoteStylesContent from './block-note-element-styles';
-import { Application } from '@hotwired/stimulus';
 import { environment } from '../environments/environment';
-import ConnectionErrorHandlerController from 'core-stimulus/controllers/dynamic/documents/connection-error-handler.controller';
-
-const blockNoteStyleSheet = new CSSStyleSheet();
-blockNoteStyleSheet.replaceSync(blockNoteStylesContent);
+import OpBlockNoteContainer from '../react/OpBlockNoteContainer';
+import { blockNoteStyleSheet } from './block-note-element-styles';
 
 class BlockNoteElement extends HTMLElement {
   private mount:HTMLDivElement;
