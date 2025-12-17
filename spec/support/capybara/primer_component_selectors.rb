@@ -118,9 +118,7 @@ Capybara.add_selector :octicon, locator_type: [String, Symbol] do
 
   describe_expression_filters do |size: nil, **|
     desc = +""
-    if size.present?
-      desc << size.is_a?(Numeric) ? " with size #{size}px" : " with #{size} size"
-    end
+    desc << (size.is_a?(Numeric) ? " with size #{size}px" : " with #{size.inspect} size") if size.present?
     desc
   end
 end
