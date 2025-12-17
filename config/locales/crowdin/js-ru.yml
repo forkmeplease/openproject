@@ -554,7 +554,7 @@ ru:
       date_alerts:
         milestone_date: "Дата вехи"
         overdue: "Просрочено"
-        overdue_since: "с %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "сегодня."
         property_is: "в %{difference_in_days}."
         property_was: "было %{difference_in_days} назад."

@@ -130,6 +130,10 @@ module Admin
           )
         end
 
+        def item_actions
+          render Item::ActionsComponent.new(@active_item), layout: false
+        end
+
         private
 
         def item_service

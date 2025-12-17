@@ -555,7 +555,7 @@ ko:
       date_alerts:
         milestone_date: "마일스톤 날짜"
         overdue: "기한 지남"
-        overdue_since: "- %{difference_in_days} 이후."
+        overdue_since: "for %{difference_in_days}."
         property_today: "- 오늘입니다."
         property_is: "- %{difference_in_days} 이내입니다."
         property_was: "- %{difference_in_days} 전이었습니다."

@@ -554,7 +554,7 @@ de:
       date_alerts:
         milestone_date: "Datum des Meilensteins"
         overdue: "Überfällig"
-        overdue_since: "seit %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "ist heute."
         property_is: "ist in %{difference_in_days}."
         property_was: "war vor %{difference_in_days}."

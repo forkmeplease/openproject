@@ -554,7 +554,7 @@ zh-TW:
       date_alerts:
         milestone_date: "里程碑日期"
         overdue: "逾期"
-        overdue_since: "自 %{difference_in_days} 天."
+        overdue_since: "for %{difference_in_days}."
         property_today: "今天"
         property_is: "剩 %{difference_in_days} 天。"
         property_was: " %{difference_in_days}天前"

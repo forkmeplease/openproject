@@ -555,7 +555,7 @@ cs:
       date_alerts:
         milestone_date: "Datum milníku"
         overdue: "Po termínu"
-        overdue_since: "od %{difference_in_days}"
+        overdue_since: "for %{difference_in_days}."
         property_today: "je dnes."
         property_is: "je v %{difference_in_days}"
         property_was: "byl před %{difference_in_days}"

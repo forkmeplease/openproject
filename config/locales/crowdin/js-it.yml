@@ -555,7 +555,7 @@ it:
       date_alerts:
         milestone_date: "Data inizio"
         overdue: "In ritardo"
-        overdue_since: "da %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "è oggi."
         property_is: "tra %{difference_in_days}."
         property_was: "era %{difference_in_days} fa."

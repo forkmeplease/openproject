@@ -555,7 +555,7 @@ uk:
       date_alerts:
         milestone_date: "Дата віхи"
         overdue: "Прострочено"
-        overdue_since: "%{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "сьогодні."
         property_is: "через %{difference_in_days}."
         property_was: "%{difference_in_days} тому."

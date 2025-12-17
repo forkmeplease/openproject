@@ -555,7 +555,7 @@ tr:
       date_alerts:
         milestone_date: "Kilometre taşı tarihi"
         overdue: "Süresi geçmiş"
-        overdue_since: "%{difference_in_days} önceden beri."
+        overdue_since: "for %{difference_in_days}."
         property_today: "bugün."
         property_is: "%{difference_in_days} içinde."
         property_was: "%{difference_in_days} önce idi."

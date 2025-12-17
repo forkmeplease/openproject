@@ -555,7 +555,7 @@ pl:
       date_alerts:
         milestone_date: "Data  kamienia milowego"
         overdue: "Przekroczony termin"
-        overdue_since: "od %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "jest dzisiaj."
         property_is: "jest za %{difference_in_days}."
         property_was: "była %{difference_in_days} temu."

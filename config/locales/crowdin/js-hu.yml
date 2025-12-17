@@ -554,7 +554,7 @@ hu:
       date_alerts:
         milestone_date: "Milestone date"
         overdue: "Overdue"
-        overdue_since: "%{difference_in_days} napja."
+        overdue_since: "for %{difference_in_days}."
         property_today: "is today."
         property_is: "%{difference_in_days} napon belül."
         property_was: "%{difference_in_days} napja volt."

@@ -556,7 +556,7 @@ ja:
       date_alerts:
         milestone_date: "マイルストーン"
         overdue: "期限切れ"
-        overdue_since: "%{difference_in_days}以降。"
+        overdue_since: "for %{difference_in_days}."
         property_today: "は今日です。"
         property_is: "は%{difference_in_days}後。"
         property_was: "は、 %{difference_in_days} 前です。"

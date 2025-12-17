@@ -555,7 +555,7 @@ fr:
       date_alerts:
         milestone_date: "Date jalon"
         overdue: "En retard"
-        overdue_since: "depuis %{difference_in_days}."
+        overdue_since: "for %{difference_in_days}."
         property_today: "a lieu aujourd'hui."
         property_is: "a lieu dans %{difference_in_days}."
         property_was: "avait lieu il y a %{difference_in_days}."

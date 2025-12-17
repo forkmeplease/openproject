@@ -554,7 +554,7 @@ ro:
       date_alerts:
         milestone_date: "Dată etapă"
         overdue: "Restanțe"
-        overdue_since: "de %{difference_in_days}"
+        overdue_since: "for %{difference_in_days}."
         property_today: "este azi."
         property_is: "este în %{difference_in_days}"
         property_was: "a fost acum %{difference_in_days}"
