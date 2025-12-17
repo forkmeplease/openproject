@@ -17,8 +17,10 @@ module OpenProject::Webhooks
       ##
       # Find a module based on the event name
       def lookup_resource_name(event_name)
-        resource = resource_modules.detect { |m| m.available_events_map.key?(event_name) }
-        resource.try(:resource_name)
+        resource, events = available_events_map.detect { |_, events_map| events_map.key?(event_name) }
+        event = events[event_name] if resource
+
+        [resource, event]
       end
 
       def resource_modules

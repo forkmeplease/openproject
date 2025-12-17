@@ -2,6 +2,8 @@ module ::Webhooks
   module Outgoing
     module Webhooks
       class RowComponent < ::RowComponent
+        include OpPrimer::ComponentHelpers
+
         property :description
 
         delegate :event_names, to: :webhook
@@ -22,16 +24,18 @@ module ::Webhooks
         end
 
         def events
-          return t(:"webhooks.outgoing.label_x_event_resources", count: 0) if event_names.empty?
+          return render_warning(t(:"webhooks.outgoing.label_x_event_resources", count: 0).capitalize) if event_names.empty?
 
           event_names
-            .filter_map { OpenProject::Webhooks::EventResources.lookup_resource_name(it) }
-            .uniq
-            .join(t(:"support.array.words_connector", default: ", "))
+            .map { OpenProject::Webhooks::EventResources.lookup_resource_name(it) }
+            .group_by(&:first)
+            .transform_values { |pairs| pairs.map(&:last).sort }
+            .then { render_events_list(it) }
         end
 
         def selected_projects
           return t(:"webhooks.outgoing.form.project_ids.all") if webhook.all_projects?
+          return render_warning(t(:label_x_projects, count: 0).capitalize) if webhook.projects.empty?
 
           t(:label_x_projects, count: webhook.projects.size)
         end
@@ -64,6 +68,27 @@ module ::Webhooks
             data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) },
             title: t(:button_delete)
           )
+        end
+
+        private
+
+        def render_warning(text)
+          render OpPrimer::WarningText.new(show_warning_label: false).with_content(text)
+        end
+
+        def render_events_list(items)
+          render(OpPrimer::ListComponent.new(ml: 0)) do |list|
+            items.each do |resource, events|
+              list.with_item do
+                component_collection do |list_item_parts|
+                  list_item_parts.with_component(Primer::Beta::Text.new.with_content(resource))
+                  list_item_parts.with_component(Primer::Beta::Text.new(font_size: :small, color: :muted)) do
+                    events.join(t(:"support.array.words_connector", default: ", ")).then { "(#{it})" }
+                  end
+                end
+              end
+            end
+          end
         end
       end
     end

@@ -73,8 +73,9 @@ RSpec.describe Webhooks::Outgoing::Webhooks::RowComponent, type: :component do
     context "when no projects are enabled" do
       let(:webhook) { build_stubbed(:webhook, all_projects: false) }
 
-      it "renders 'no projects'" do
-        expect(rendered_component).to have_content "no projects"
+      it "renders 'No projects'" do
+        expect(rendered_component).to have_octicon :"alert-fill"
+        expect(rendered_component).to have_primer_text "No projects", color: "attention"
       end
     end
   end
@@ -86,16 +87,21 @@ RSpec.describe Webhooks::Outgoing::Webhooks::RowComponent, type: :component do
     context "when no events are enabled" do
       let(:event_names) { [] }
 
-      it "renders 'no event resources'" do
-        expect(rendered_component).to have_content "No event resources"
+      it "renders 'No event resources'" do
+        expect(rendered_component).to have_octicon :"alert-fill"
+        expect(rendered_component).to have_primer_text "No event resources", color: "attention"
       end
     end
 
     context "when some events are enabled" do
       let(:event_names) { ["project:created", "work_package_comment:comment"] }
 
-      it "renders resource list" do
-        expect(rendered_component).to have_content "Projects, Work package comments"
+      it "renders resource list", :aggregate_failures do
+        expect(rendered_component).to have_list do |list|
+          expect(list).to have_list_item count: 2
+          expect(list).to have_list_item "Projects (created)"
+          expect(list).to have_list_item "Work package comments (comment)"
+        end
       end
     end
   end
