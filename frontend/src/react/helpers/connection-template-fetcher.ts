@@ -90,6 +90,12 @@ export async function fetchConnectionTemplate(
 
     if (content !== null) {
       targetElement.innerHTML = content;
+
+      // Attach reload handler to the error button (Stimulus not available in Shadow DOM)
+      const reloadButton = targetElement.querySelector('#connection-error-reload-button');
+      if (reloadButton) {
+        reloadButton.addEventListener('click', () => window.location.reload());
+      }
     }
   } catch (error) {
     console.error('Error fetching connection template:', error);
