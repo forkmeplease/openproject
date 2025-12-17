@@ -29,9 +29,8 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
-import { renderStreamMessage } from '@hotwired/turbo';
 
-export default class extends Controller {
+export default class ConnectionErrorHandlerController extends Controller {
   connect():void {
     void this.fetchErrorTemplate();
   }
@@ -63,7 +62,7 @@ export default class extends Controller {
 
     await fetch(url, {
       method: 'GET',
-      headers: { Accept: 'text/vnd.turbo-stream.htm' },
+      headers: { Accept: 'text/vnd.turbo-stream.html' },
     })
       .then((response:Response) => {
         if (response.ok) {
@@ -71,8 +70,38 @@ export default class extends Controller {
         }
         return Promise.reject(new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`));
       })
-      .then((html:string) => renderStreamMessage(html))
+      .then((html:string) => this.applyTurboStreamToShadowDom(html))
       .catch((error:Error) => console.error('Error:', error));
+  }
+
+  /**
+   * Manually applies Turbo Stream response to Shadow DOM element.
+   * Standard Turbo.renderStreamMessage() uses document.getElementById() which can't find Shadow DOM elements.
+   */
+  private applyTurboStreamToShadowDom(html:string):void {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const turboStream = doc.querySelector('turbo-stream');
+
+    if (!turboStream) {
+      console.error('No turbo-stream element found in response');
+      return;
+    }
+
+    const template = turboStream.querySelector('template');
+    if (!template) {
+      console.error('No template element found in turbo-stream');
+      return;
+    }
+
+    const action = turboStream.getAttribute('action');
+    const content = template.innerHTML;
+
+    if (action === 'update') {
+      this.element.innerHTML = content;
+    } else {
+      console.warn(`Unhandled turbo-stream action: ${action}. Only 'update' is currently supported.`);
+    }
   }
 
   private getDocumentIdFromUrl():string|null {

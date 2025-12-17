@@ -30,6 +30,7 @@
 
 import { User } from '@blocknote/core/comments';
 import { HocuspocusProvider } from '@hocuspocus/provider';
+import { useEffect } from 'react';
 import * as Y from 'yjs';
 import { OpBlockNoteEditor } from './components/OpBlockNoteEditor';
 import { useCollaboration } from './hooks/useCollaboration';
@@ -43,6 +44,7 @@ export interface OpBlockNoteContainerProps {
   attachmentsUploadUrl:string;
   attachmentsCollectionKey:string;
   hocuspocusProvider?:HocuspocusProvider;
+  errorContainer?:HTMLElement;
 }
 
 const SKELETON_TITLE_STYLE = { width: '25%', height: '40px' };
@@ -55,7 +57,8 @@ export default function OpBlockNoteContainer({ inputField,
                                                openProjectUrl,
                                                attachmentsUploadUrl,
                                                attachmentsCollectionKey,
-                                               hocuspocusProvider }:OpBlockNoteContainerProps) {
+                                               hocuspocusProvider,
+                                               errorContainer }:OpBlockNoteContainerProps) {
   const doc:Y.Doc = hocuspocusProvider
     ? hocuspocusProvider.document
     : (() => {
@@ -75,6 +78,17 @@ export default function OpBlockNoteContainer({ inputField,
 
   const { isLoading, connectionError } = useCollaboration(hocuspocusProvider, doc, inputField);
 
+  // Toggle Stimulus controller based on connection error state
+  useEffect(() => {
+    if (!errorContainer) return;
+
+    if (connectionError) {
+      errorContainer.dataset.controller = 'documents--connection-error-handler';
+    } else {
+      delete errorContainer.dataset.controller;
+    }
+  }, [connectionError, errorContainer]);
+
   if (isLoading) {
     return (
       <div>
@@ -89,12 +103,8 @@ export default function OpBlockNoteContainer({ inputField,
   }
 
   if (connectionError) {
-    return (
-      <div
-        id="documents-show-edit-view-connection-error-notice-component"
-        data-controller="documents--connection-error-handler"
-      />
-    );
+    // Error UI is rendered by Stimulus controller in errorContainer (outside React tree)
+    return null;
   }
 
   return (
