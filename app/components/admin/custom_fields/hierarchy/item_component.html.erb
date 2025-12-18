@@ -56,7 +56,7 @@ See COPYRIGHT and LICENSE files for more details.
             end
           end
 
-          if model.children.any?
+          if model.children_count > 0
             item_information.with_column(mr: 2) do
               render(Primer::Beta::Text.new) { children_count }
             end
