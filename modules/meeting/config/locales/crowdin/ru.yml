@@ -611,7 +611,7 @@ ru:
   text_work_package_has_no_upcoming_meeting_agenda_items: "Этот пакет работ пока не включен в повестку предстоящего совещания."
   text_agenda_item_move_next_meeting_cancelled: "Не удалось переместить на следующее совещание, так как оно было отменено."
   text_work_package_add_to_meeting_hint: 'Используйте кнопку "Добавить к совещанию", чтобы добавить этот пакет работ к предстоящему совещанию.'
-  text_work_package_has_no_past_meeting_agenda_items: "Этот пакет работ не упоминался на прошлом совещании."
+  text_work_package_has_no_past_meeting_agenda_items: "This work package was not added as an agenda item in a past meeting."
   text_email_updates_muted: "Обновления календаря по электронной почте отключены. Участники не будут получать обновленные приглашения по электронной почте, когда Вы вносите изменения."
   text_email_updates_enabled: "Обновления календаря по электронной почте включены. Все участники получат обновленные приглашения по электронной почте, когда Вы внесете изменения."
   my_account:
