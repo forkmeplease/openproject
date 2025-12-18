@@ -2,12 +2,6 @@
 
 <%= nonced_javascript_tag do %>
   (function() {
-    // TODO: remove as soon as openapi-explorer with https://github.com/Authress-Engineering/openapi-explorer/pull/292 is released
-    const originalPushState = history.pushState;
-    history.pushState = function(state, title, url) {
-      return originalPushState.call(this, state, title, URL.parse(url, location.href).href);
-    };
-
     // set openapi-explorer parent width and height explicitly to prevent them being set to 100vw/100vh by the script
     // which leads to double scroll bars
     // https://github.com/Authress-Engineering/openapi-explorer/blob/49d4d32de6fd7b14a8f5f95fbfefa8cd72e72587/src/openapi-explorer.js#L191-L196
