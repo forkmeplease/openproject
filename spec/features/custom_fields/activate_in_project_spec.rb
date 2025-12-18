@@ -29,7 +29,6 @@
 #++
 
 require "spec_helper"
-require "support/pages/custom_fields/index_page"
 
 RSpec.describe "custom fields", :js do
   let(:user) { create(:admin) }

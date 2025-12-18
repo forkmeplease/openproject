@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "support/pages/custom_fields/index_page"
 
 def get_possible_values(amount)
   (1..amount).to_a.map { |x| "PREFIX #{x}" }
