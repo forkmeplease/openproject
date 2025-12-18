@@ -40,7 +40,7 @@ class Status < ApplicationRecord
 
   validates :name,
             presence: true,
-            uniqueness: { case_sensitive: true },
+            uniqueness: { case_sensitive: false },
             length: { maximum: 256 }
 
   validates :default_done_ratio, inclusion: { in: 0..100, allow_nil: false }

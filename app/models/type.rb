@@ -63,7 +63,8 @@ class Type < ApplicationRecord
 
   validates :name,
             presence: true,
-            uniqueness: { case_sensitive: true }
+            uniqueness: { case_sensitive: false },
+            length: { maximum: 255 }
 
   scopes :milestone
 
