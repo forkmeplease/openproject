@@ -31,10 +31,6 @@
 require "rails_helper"
 
 RSpec.describe Webhooks::Outgoing::Webhooks::RowComponent, type: :component do
-  def render_component(...)
-    render_inline(described_class.new(...))
-  end
-
   subject(:rendered_component) do
     table = instance_double(Webhooks::Outgoing::Webhooks::TableComponent,
                             columns: [column],
