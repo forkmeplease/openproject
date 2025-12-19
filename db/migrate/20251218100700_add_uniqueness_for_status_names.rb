@@ -38,10 +38,10 @@ class AddUniquenessForStatusNames < ActiveRecord::Migration[8.0]
       WHERE statuses.id = counter.id AND counter.rn > 1;
     SQL
 
-    add_index :statuses, "LOWER(name)", unique: true, algorithm: :concurrently
+    add_index :statuses, "LOWER(name)", unique: true, algorithm: :concurrently, name: "index_statuses_on_LOWER_name"
   end
 
   def down
-    remove_index :statuses, column: "LOWER(name)", algorithm: :concurrently
+    remove_index :statuses, name: "index_statuses_on_LOWER_name", algorithm: :concurrently
   end
 end

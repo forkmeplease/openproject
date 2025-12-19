@@ -38,10 +38,10 @@ class AddUniquenessForTypeNames < ActiveRecord::Migration[8.0]
       WHERE types.id = counter.id AND counter.rn > 1;
     SQL
 
-    add_index :types, "LOWER(name)", unique: true, algorithm: :concurrently
+    add_index :types, "LOWER(name)", unique: true, algorithm: :concurrently, name: "index_types_on_LOWER_name"
   end
 
   def down
-    remove_index :types, column: "LOWER(name)", algorithm: :concurrently
+    remove_index :types, name: "index_types_on_LOWER_name", algorithm: :concurrently
   end
 end
