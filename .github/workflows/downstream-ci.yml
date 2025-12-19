@@ -77,7 +77,7 @@ jobs:
               https://api.github.com/repos/$REPOSITORY/actions/workflows/$WORKFLOW_ID/dispatches
           )
 
-          if [ "$status" = "204" -o "$status" = "200" ]; then
+          if [[ "$status" =~ ^2..$ ]]; then
             echo Downstream workflow triggered successfully
           else
             echo Failed to trigger downstream workflow:
