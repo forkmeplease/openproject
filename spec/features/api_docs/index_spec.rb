@@ -61,7 +61,7 @@ RSpec.describe "REST API docs index page", :js, :selenium do
       expect(page).to have_current_path("#{api_docs_url}#?route=overview") # fragment is added
     end
 
-    it "allows navigating back to docs" do
+    it "allows navigating back to docs and forward from docs" do
       visit_docs_page
       expect(page).to have_text api_docs_text
 
@@ -70,6 +70,9 @@ RSpec.describe "REST API docs index page", :js, :selenium do
 
       page.go_back
       expect(page).to have_text api_docs_text
+
+      page.go_forward
+      expect(page).to have_no_text api_docs_text
     end
 
     context "when APIv3 documentation is disabled (from Administration > API > Enable docs page)",
