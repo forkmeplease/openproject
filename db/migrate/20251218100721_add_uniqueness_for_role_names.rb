@@ -38,10 +38,10 @@ class AddUniquenessForRoleNames < ActiveRecord::Migration[8.0]
       WHERE roles.id = counter.id AND counter.rn > 1;
     SQL
 
-    add_index :roles, "LOWER(name)", unique: true, algorithm: :concurrently
+    add_index :roles, "LOWER(name)", unique: true, algorithm: :concurrently, name: "index_roles_on_LOWER_name"
   end
 
   def down
-    remove_index :roles, column: "LOWER(name)", algorithm: :concurrently
+    remove_index :roles, name: "index_roles_on_LOWER_name", algorithm: :concurrently
   end
 end
