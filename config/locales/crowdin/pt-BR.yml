@@ -4642,6 +4642,8 @@ pt-BR:
     A edição Enterprise (Edição corporativa) contará com estes complementos adicionais para campos personalizados dos Projetos: <br> <ul> <li><b>Adicionar campos personalizados para projetos a sua Lista de projetos para criar uma visão do portfólio de projetos</b></li> </ul>
   text_custom_logo_instructions: >
     The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×47px image. You can add as much spacing inside that image as you like.
+  text_custom_logo_mobile_instructions: >
+    The logo automatically scales to fit the header. For best results, upload a white logo on a transparent 130×33px image. You can add as much spacing inside that image as you like.
   text_custom_export_logo_instructions: >
     Este é o logotipo que aparece nas exportações de PDF. O arquivo de imagem precisa ser PNG ou JPEG. Recomenda-se um logotipo colorido ou preto em plano de fundo transparente ou branco.
   text_custom_export_cover_instructions: >
