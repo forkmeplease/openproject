@@ -68,7 +68,7 @@ gem "scimitar", "~> 2.13"
 
 gem "acts_as_list", "~> 1.2.6"
 gem "acts_as_tree", "~> 2.9.0"
-gem "awesome_nested_set", "~> 3.8.0"
+gem "awesome_nested_set", "~> 3.9.0"
 gem "closure_tree", "~> 9.3.0"
 gem "rubytree", "~> 2.1.0"
 
