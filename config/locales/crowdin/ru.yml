@@ -349,27 +349,27 @@ ru:
     no_role_assigment: "Роль не назначена"
     instructions:
       is_required:
-        all: "Mark the custom field as required. This will make it mandatory to fill in the field when creating new resources. Existing resources will not require a value when being updated."
-        project: "Check to enable this attribute and make it required in all projects. It cannot be deactivated for individual projects. Existing projects will not require a value when being updated."
+        all: "Отметьте пользовательское поле как обязательное. Это сделает обязательным заполнение поля при создании новых ресурсов. Существующие ресурсы не будут требовать ввода значения при обновлении."
+        project: "Установите флажок, чтобы включить этот атрибут и сделать его обязательным для всех проектов. Его нельзя отключить для отдельных проектов. Существующие проекты не будут требовать значения при обновлении."
       is_for_all:
-        all: "Mark the custom field as available in all existing and new projects."
-        project: "Mark the attribute as available in all existing and new projects."
+        all: "Отметьте пользовательское поле как доступное во всех существующих и новых проектах."
+        project: "Отметьте атрибут как доступный во всех существующих и новых проектах."
       multi_select:
-        all: "Allows the user to assign multiple values to this custom field."
-        project: "Allows the user to assign multiple values to this attribute."
+        all: "Разрешить пользователю присвоить несколько значений этому пользовательскому полю."
+        project: "Разрешить пользователю присвоить несколько значений этому атрибуту."
       searchable:
-        all: "Include the field values when using the global search functionality."
-        project: "Check to make this attribute available as a filter in project lists."
+        all: "Включать значения полей при использовании функции глобального поиска."
+        project: "Установите флажок, чтобы сделать этот атрибут доступным в качестве фильтра в списках проектов."
       editable:
-        all: "Allow the field to be editable by users themselves."
+        all: "Разрешить редактирование поля самими пользователями."
       admin_only:
-        all: "Check to make this custom field only visible to administrators. Users without admin rights will not be able to view or edit it."
-        project: "Check to make this attribute only visible to administrators. Users without admin rights will not be able to view or edit it."
+        all: "Установите флажок, чтобы сделать это пользовательское поле видимым только для администраторов. Пользователи без прав администратора не смогут просматривать или редактировать его."
+        project: "Установите флажок, чтобы сделать этот атрибут видимым только для администраторов. Пользователи без прав администратора не смогут просматривать или редактировать его."
       is_filter:
         all: >
-          Allow the custom field to be used in a filter in work package views. Note that only with 'For all projects' selected, the custom field will show up in global views.
+          Разрешить использовать пользовательское поле в качестве фильтра в представлениях пакетов работ. Обратите внимание, что только при выборе опции 'Для всех проектов' пользовательское поле будет отображаться в глобальных представлениях.
       formula:
-        project: "Add numeric values or type / to search for an attribute or a mathematical operator."
+        project: "Добавьте числовые значения или введите / для поиска атрибута или математического оператора."
     tab:
       no_results_title_text: Нет настраиваемых полей.
       no_results_content_text: Создать новое настраиваемое поле
@@ -590,8 +590,8 @@ ru:
           label_disable_single: "Неактивно в этом проекте, нажмите для включения"
           remove_from_project: "Удалить из проекта"
         is_for_all_blank_slate:
-          heading: For all projects
-          description: This project attribute is enabled in all projects since the "For all projects" option is checked. It cannot be deactivated for individual projects.
+          heading: Для всех проектов
+          description: Этот атрибут проекта включен во всех проектах, поскольку опция "Для всех проектов" отмечена. Его нельзя отключить для отдельных проектов.
       types:
         no_results_title_text: На данный момент доступных типов нет.
         form:
@@ -744,15 +744,15 @@ ru:
       no_results_content_text: Добавить новость
   roles:
     permissions:
-      section_check_all_label: "Assign all %{module} permissions"
-      section_uncheck_all_label: "Unassign all %{module} permissions"
+      section_check_all_label: "Назначьте все разрешения %{module}"
+      section_uncheck_all_label: "Отменить все разрешения %{module}"
     report:
-      matrix_caption: "Permissions matrix for %{module} module"
-      matrix_checkbox_label: "Assign %{permission} permission to %{role} role"
-      matrix_check_all_label: "Assign all %{module} permissions to all roles"
-      matrix_uncheck_all_label: "Unassign all %{module} permissions from all roles"
-      matrix_check_uncheck_all_in_row_label_html: "Toggle <em>%{permission}</em> permission for all roles"
-      matrix_check_uncheck_all_in_col_label_html: "Toggle all %{module} permissions for <em>%{role}</em> role"
+      matrix_caption: "Матрица разрешений для модуля %{module}"
+      matrix_checkbox_label: "Назначьте разрешение %{permission} на роль %{role}"
+      matrix_check_all_label: "Назначьте все разрешения %{module} всем ролям"
+      matrix_uncheck_all_label: "Отмените все разрешения %{module} всех ролей"
+      matrix_check_uncheck_all_in_row_label_html: "Переключить разрешение <em>%{permission}</em> для всех ролей"
+      matrix_check_uncheck_all_in_col_label_html: "Переключить все разрешения %{module} для роли <em>%{role}</em>"
   users:
     autologins:
       prompt: "Оставаться в системе %{num_days}"
@@ -949,14 +949,14 @@ ru:
       no_results_content_text: Добавить новую wiki-страницу
   workflows:
     form:
-      matrix_caption: "Workflow matrix"
-      matrix_caption_assignee: "Workflow matrix for assignee"
-      matrix_caption_author: "Workflow matrix for author"
-      matrix_checkbox_label: "Allow transition from %{old_status} to %{new_status}"
-      matrix_check_all_label: "Allow all transitions"
-      matrix_uncheck_all_label: "Disallow all transitions"
-      matrix_check_uncheck_all_in_row_label_html: "Toggle transitions from <em>%{old_status}</em> to all new statuses"
-      matrix_check_uncheck_all_in_col_label_html: "Toggle transitions from all old statuses to <em>%{new_status}</em>"
+      matrix_caption: "Матрица рабочего процесса"
+      matrix_caption_assignee: "Матрица рабочего процесса для назначенного"
+      matrix_caption_author: "Матрица рабочего процесса для автора"
+      matrix_checkbox_label: "Разрешить переход от %{old_status} к %{new_status}"
+      matrix_check_all_label: "Разрешить все переходы"
+      matrix_uncheck_all_label: "Запретить все переходы"
+      matrix_check_uncheck_all_in_row_label_html: "Переключить переходы от <em>%{old_status}</em> ко всем новым статусам"
+      matrix_check_uncheck_all_in_col_label_html: "Переключить переходы от всех старых статусов к <em>%{new_status}</em>"
   work_flows:
     index:
       no_results_title_text: В данный момент рабочих потоков нет.
@@ -1295,7 +1295,7 @@ ru:
         work_packages: "Задачи"
         workspace_type: "Тип рабочего пространства"
       project_custom_field:
-        is_required: "Required"
+        is_required: "Требуется"
         custom_field_section: Раздел
       subproject_template_assignment:
         workspace_type: "Тип рабочего пространства"
@@ -1586,7 +1586,7 @@ ru:
               not_allowed_custom_fields_referenced: "Атрибут %{custom_fields} не может быть использован, потому что это приводит к циклической ссылке, один атрибут зависит от другого."
               format: "%{message}"
             required:
-              cannot_be_true: "cannot be set to true."
+              cannot_be_true: "не может быть установлено в true."
         custom_fields_project:
           attributes:
             project_ids:
@@ -4597,7 +4597,7 @@ ru:
     passwords: "Пароли"
     project_attributes:
       heading: "Атрибуты проекта"
-      label_for_all_projects: "All projects"
+      label_for_all_projects: "Все проекты"
       label_new_attribute: "Атрибут проекта"
       label_new_section: "Раздел"
       label_edit_section: "Переименовать"
