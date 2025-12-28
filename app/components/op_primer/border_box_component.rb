@@ -29,7 +29,8 @@
 #++
 
 module OpPrimer
-  # A patched version of Primer's BorderBox.
+  # A patched version of Primer's BorderBox that allows overriding the `tag:`
+  # for rows, as well as additional label arguments.
   #
   # @note
   #   DO NOT use this component unless you have a good reason to do so.
@@ -94,7 +95,7 @@ module OpPrimer
     # @param scheme [Symbol] Color scheme. <%= one_of(Primer::Beta::BorderBox::ROW_SCHEME_MAPPINGS.keys) %>
     # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
     renders_many :rows, lambda { |scheme: DEFAULT_ROW_SCHEME, **system_arguments|
-      system_arguments[:tag] = :li
+      system_arguments[:tag] ||= :li
       system_arguments[:classes] = class_names(
         "Box-row",
         ROW_SCHEME_MAPPINGS[fetch_or_fallback(ROW_SCHEME_MAPPINGS.keys, scheme, DEFAULT_ROW_SCHEME)],
@@ -117,8 +118,8 @@ module OpPrimer
       )
 
       @system_arguments[:system_arguments_denylist] = { %i[p pt pb pr pl] => PADDING_SUGGESTION }
-      @list_arguments = deny_tag_argument(**list_arguments)
-      @list_arguments[:tag] = :ul
+      @list_arguments = list_arguments
+      @list_arguments[:tag] ||= :ul
     end
 
     def render?

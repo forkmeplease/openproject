@@ -180,7 +180,7 @@ RSpec.describe OpPrimer::BorderBoxTableComponent, :aggregate_failures, type: :co
     end
 
     it "adds cell semantics" do
-      expect(rendered_component).to have_element :li, class: "op-border-box-grid" do |row|
+      expect(rendered_component).to have_selector :row, class: "Box-row" do |row|
         expect(row).to have_selector :role, :rowheader, count: 1, class: "op-border-box-grid__row-item"
         expect(row).to have_selector :role, :cell, count: 1, class: "op-border-box-grid__row-item"
         expect(row).to have_selector :role, :cell, count: 1, class: "op-border-box-grid__row-action"

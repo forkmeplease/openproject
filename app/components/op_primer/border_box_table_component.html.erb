@@ -34,7 +34,7 @@ See COPYRIGHT and LICENSE files for more details.
       classes: container_class,
       role: :table,
       aria: { colcount: column_count },
-      list_arguments: { role: :rowgroup },
+      list_arguments: { tag: :div, role: :rowgroup },
       test_selector:
     )
   ) do |component|
@@ -102,7 +102,7 @@ See COPYRIGHT and LICENSE files for more details.
 
   <% if rows.empty? %>
     <%
-      component.with_row(scheme: :default, role: :row) do
+      component.with_row(scheme: :default, tag: :div, role: :row) do
         render(Primer::BaseComponent.new(tag: :div, role: :cell, aria: { colspan: column_count })) do
           render_blank_slate
         end
@@ -114,6 +114,7 @@ See COPYRIGHT and LICENSE files for more details.
         row_instance = row_class.new(row: row, table: self)
         component.with_row(
           scheme: row_instance.scheme,
+          tag: :div,
           id: row_instance.row_css_id,
           classes: [grid_class, row_instance.row_css_class],
           role: :row
