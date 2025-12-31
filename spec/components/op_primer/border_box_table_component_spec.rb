@@ -105,6 +105,10 @@ RSpec.describe OpPrimer::BorderBoxTableComponent, :aggregate_failures, type: :co
       expect(rendered_component).to have_selector :role, :table, aria: { colcount: 3 }
     end
 
+    it "provides an accessible name based on mobile title" do
+      expect(rendered_component).to have_selector :role, :table, accessible_name: "Mobile Header"
+    end
+
     it "adds rowgroup, row semantics for table head" do
       expect(render_component).to have_selector :role, :rowgroup, class: "Box-header" do |rowgroup|
         expect(rowgroup).to have_selector :row, count: 2
