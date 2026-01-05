@@ -55,7 +55,7 @@ es:
       heading: "Aún no hay documentos"
       description: "No hay documentos en esta vista. Puede hacer clic en el botón de abajo para añadir uno."
     document_categories_deprecation_notice:
-      heading: File categories are now called 'Document types'
+      heading: La categoría del archivo no está en tipo de documentos
       description: |-
         Your existing file categories have been converted to document types with the introduction of the new Documents module.
         All existing documents have also been migrated to these new types.
