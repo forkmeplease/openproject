@@ -84,8 +84,6 @@ module WikiHelper
     end
   end
 
-  private
-
   def wiki_page_options_for_select_of_level(pages,
                                             parent: nil,
                                             level: 0,
@@ -100,8 +98,8 @@ module WikiHelper
   end
 
   def wiki_page_option(page, level, ids)
-    indent = level.positive? ? (("&nbsp;" * level * 2) + "&#187; ") : ""
+    indent = level.positive? ? "#{"\u00A0" * level * 2}» " : ""
     id = ids ? page.id : page.title
-    [(indent + h(page.title)).html_safe, id]
+    [indent + h(page.title), id]
   end
 end
