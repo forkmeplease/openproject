@@ -27,54 +27,31 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-module Exports
-  class Exporter
-    include Redmine::I18n
-    include ActionView::Helpers::TextHelper
-    include ActionView::Helpers::NumberHelper
 
-    attr_accessor :object,
-                  :options,
-                  :current_user
+require "rails_helper"
 
-    class_attribute :model
+RSpec.describe Exports::Exporter do
+  let(:exporter) { described_class.new(nil) }
 
-    def initialize(object, options = {})
-      self.object = object
-      self.options = options
-      self.current_user = options.fetch(:current_user) { User.current }
+  context "with #sane_filename" do
+    it "normalizes and replaces separators with underscores" do
+      expect(exporter.sane_filename("two  words.ext")).to eq("two_words.ext")
     end
 
-    def self.key
-      name.demodulize.underscore.to_sym
+    it "removes symbols that may cause problems with popular filesystem" do
+      expect(exporter.sane_filename("invalid // , : \\ removed.ext")).to eq("invalid_removed.ext")
     end
 
-    # Remove characters that could cause problems on popular OSses
-    def sane_filename(name)
-      parts = name.split /(?<=.)\.(?=[^.])(?!.*\.[^.])/m
+    it "uses locale aware transliteration of e.g. umlauts" do
+      expect(exporter.sane_filename("ä ö ü ß ẞ.ext")).to eq("a_o_u_ss_SS.ext")
 
-      parts.map! do |s|
-        # Preserve the file extension avoid eg. .xls => .khls for some languages
-        s.match?(/\A\.[a-zA-Z]+\z/) ? s : I18n.transliterate(s).gsub(/[^a-z0-9-]+/i, "_")
+      I18n.with_locale(:de) do
+        expect(exporter.sane_filename("ä ö ü ß ẞ.ext")).to eq("ae_oe_ue_ss_SS.ext")
       end
 
-      parts.join "."
-    end
-
-    # Run the export, yielding the result of the render output
-    def export!
-      raise NotImplementedError
-    end
-
-    protected
-
-    def formatter_for(attribute, export_format)
-      ::Exports::Register.formatter_for(model, attribute, export_format)
-    end
-
-    def format_attribute(object, attribute, export_format, **)
-      formatter = formatter_for(attribute, export_format)
-      formatter.format(object, **)
+      I18n.with_locale(:uk) do
+        expect(exporter.sane_filename("Київ.ext")).to eq("Kyiv.ext")
+      end
     end
   end
 end
