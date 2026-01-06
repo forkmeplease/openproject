@@ -33,16 +33,16 @@ require "rails_helper"
 RSpec.describe Exports::Exporter do
   let(:exporter) { described_class.new(nil) }
 
-  context "with sane_filename" do
+  context "with #sane_filename" do
     it "normalizes and replaces separators with underscores" do
       expect(exporter.sane_filename("two  words.ext")).to eq("two_words.ext")
     end
 
-    it "removes symbols may cause problems in popular filesystem" do
+    it "removes symbols that may cause problems with popular filesystem" do
       expect(exporter.sane_filename("invalid // , : \\ removed.ext")).to eq("invalid_removed.ext")
     end
 
-    it "uses local aware transliteration of e.g. umlauts" do
+    it "uses locale aware transliteration of e.g. umlauts" do
       expect(exporter.sane_filename("ä ö ü ß ẞ.ext")).to eq("a_o_u_ss_SS.ext")
 
       I18n.with_locale(:de) do
