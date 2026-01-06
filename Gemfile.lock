@@ -797,7 +797,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.1.0)
-    markly (0.15.0)
+    markly (0.15.2)
     matrix (0.4.3)
     mcp (0.4.0)
       json-schema (>= 4.1)
@@ -1973,7 +1973,7 @@ CHECKSUMS
   lookbook (2.3.14) sha256=c11a693bde9915b553c4463440ad5e750829f90bff08abdb6b8610373864cd7c
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
-  markly (0.15.0) sha256=63328dac2f7c14d8fd4b9f9ed4c50f02f63a2b3e43ddeb8516aae528086f47ec
+  markly (0.15.2) sha256=65dae965d4dd4ecd997fba43b93acc0fe7dadfec6f07a748640c7a9299a8551e
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   mcp (0.4.0) sha256=4d1dd2b99fbd81a5fdc808d258c38a4f57dd69751ee1e5f62b3ab40e31625a36
   md_to_pdf (0.2.5)
