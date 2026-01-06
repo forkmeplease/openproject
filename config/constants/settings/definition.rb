@@ -575,7 +575,10 @@ module Settings
       },
       real_time_text_collaboration_enabled: {
         description: "Enable real-time collaborative editing of text fields using BlockNoteJS and Hocuspocus server.",
-        default: true
+        default: -> {
+          Setting.collaborative_editing_hocuspocus_url.present? &&
+            Setting.collaborative_editing_hocuspocus_secret.present?
+        }
       },
       collaborative_editing_hocuspocus_url: {
         format: :string,
