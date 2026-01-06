@@ -125,7 +125,7 @@ RSpec.shared_examples_for "hierarchy custom fields on index page" do |type|
   end
 end
 
-RSpec.shared_examples_for "expected fields for the custom field's format" do |type, format|
+RSpec.shared_examples_for "expected fields for the custom field's format", :aggregate_failures do |type, format|
   let(:cf_page) { Pages::CustomFields::Index.new }
   let(:user) { create(:admin) }
 
@@ -135,15 +135,11 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
     cf_page.visit_page type
   end
 
-  def expect_page_to_have_texts(*text)
-    text.each do |t|
-      expect(page).to have_text(t)
-    end
-  end
-
-  def expect_page_not_to_have_texts(*text)
-    text.each do |t|
-      expect(page).to have_no_text(t)
+  def expect_page_to_have(selectors)
+    selectors.each do |selector, locators|
+      locators.each do |locator|
+        expect(page).to send("have_#{selector}".singularize, locator)
+      end
     end
   end
 
@@ -174,11 +170,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "Text"
       end
 
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_default_value,
+          label_is_required
+        ],
+        no_texts: [
+          label_multi_value,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Long text"
@@ -187,11 +192,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "Long text"
       end
 
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_default_value,
+          label_is_required
+        ],
+        no_texts: [
+          label_multi_value,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Integer"
@@ -201,11 +215,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
       end
 
       # Integer has min/max_len and regex as well which seems strange.
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_default_value,
+          label_is_required
+        ],
+        no_texts: [
+          label_multi_value,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Float"
@@ -215,11 +238,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
       end
 
       # Float has min/max_len and regex as well which seems strange.
-      expect_page_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_default_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_default_value,
+          label_is_required
+        ],
+        no_texts: [
+          label_multi_value,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "List"
@@ -228,12 +260,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "List"
       end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_possible_values, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_allow_non_open_versions,
-        label_default_value, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_multi_value,
+          label_possible_values,
+          label_is_required
+        ],
+        no_texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_allow_non_open_versions,
+          label_default_value,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Date"
@@ -242,11 +282,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "Date"
       end
 
-      expect_page_to_have_texts(label_is_required)
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_multi_value,
-        label_allow_non_open_versions, label_possible_values, label_default_value,
-        label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_is_required
+        ],
+        no_texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_multi_value,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_default_value,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Boolean"
@@ -255,12 +304,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "Boolean"
       end
 
-      expect_page_to_have_texts(
-        label_default_value
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_multi_value, label_is_required,
-        label_allow_non_open_versions, label_possible_values, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_default_value
+        ],
+        no_texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_multi_value,
+          label_is_required,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "User"
@@ -269,12 +326,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "User"
       end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_allow_non_open_versions,
-        label_possible_values, label_default_value, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_multi_value,
+          label_is_required
+        ],
+        no_texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_default_value,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Version"
@@ -283,12 +348,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "Version"
       end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_allow_non_open_versions, label_is_required
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp,
-        label_possible_values, label_default_value, label_ee_banner_hierarchy
+      expect_page_to_have(
+        texts: [
+          label_multi_value,
+          label_allow_non_open_versions,
+          label_is_required
+        ],
+        no_texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_possible_values,
+          label_default_value,
+          label_ee_banner_hierarchy
+        ]
       )
     end
   when "Hierarchy"
@@ -297,12 +370,20 @@ RSpec.shared_examples_for "expected fields for the custom field's format" do |ty
         cf_page.click_to_create_new_custom_field "Hierarchy"
       end
 
-      expect_page_to_have_texts(
-        label_multi_value, label_is_required, label_ee_banner_hierarchy
-      )
-      expect_page_not_to_have_texts(
-        label_min_length, label_max_length, label_regexp, label_allow_non_open_versions,
-        label_possible_values, label_default_value
+      expect_page_to_have(
+        texts: [
+          label_multi_value,
+          label_is_required,
+          label_ee_banner_hierarchy
+        ],
+        no_texts: [
+          label_min_length,
+          label_max_length,
+          label_regexp,
+          label_allow_non_open_versions,
+          label_possible_values,
+          label_default_value
+        ]
       )
       expect(page).to have_button("Save", disabled: true)
     end
