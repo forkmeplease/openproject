@@ -28,32 +28,15 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpPrimer
-  class FullPagePromptComponent < Primer::Component
-    attr_reader :system_arguments
-
-    renders_one :icon, lambda { |icon:, size: :medium, **system_arguments|
-      Primer::Beta::Octicon.new(icon:, size:, **system_arguments)
-    }
-
-    renders_one :title, lambda { |tag: :h2, **system_arguments|
-      Primer::Beta::Heading.new(tag:, mb: 2, font_size: 5, **system_arguments)
-    }
-
-    renders_one :action, types: {
-      button: lambda { |**system_arguments|
-        system_arguments[:classes] = class_names(
-          system_arguments[:classes],
-          "op-full-page-prompt--action"
+module Admin
+  module Settings
+    class ExternalLinksSettingsForm < ApplicationForm
+      settings_form do |sf|
+        sf.check_box(
+          name: :capture_external_links,
+          caption: I18n.t(:setting_capture_external_links_text)
         )
-        Primer::Beta::Button.new(**system_arguments)
-      }
-    }
-
-    def initialize(**system_arguments)
-      super()
-
-      @system_arguments = system_arguments
+      end
     end
   end
 end

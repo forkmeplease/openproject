@@ -28,13 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Patterns
-  # @hidden
-  class FullPagePromptsPreview < ViewComponent::Preview
-    # @display min_height 520px
-    def external_link_capture
-      render_with_template(locals: { external_url: "https://example.com" })
-    end
+module Admin::Settings
+  class ExternalLinksSettingsController < ::Admin::SettingsController
+    menu_item :settings_external_links
   end
 end
-

@@ -28,19 +28,48 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpPrimer
-  # @logical_path OpenProject/Primer
-  # @display min_height 520px
-  class FullPagePromptComponentPreview < Lookbook::Preview
-    # Basic example of a full-page prompt.
-    def default
-      render_with_template
+require "spec_helper"
+
+RSpec.describe ExternalLinkWarningController do
+  render_views
+
+  describe "GET #show" do
+    context "with a valid external URL" do
+      it "renders the warning page" do
+        get :show, params: { url: "https://example.com" }
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include("Leaving OpenProject")
+        expect(response.body).to include("https://example.com")
+      end
+
+      it "unescapes the URL parameter" do
+        encoded_url = CGI.escape("https://example.com/path?param=value")
+        get :show, params: { url: encoded_url }
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include("https://example.com/path?param=value")
+      end
     end
 
-    # Example as used by the external link warning / capture flow.
-    # @param external_url text
-    def external_link_capture(external_url: "https://example.com")
-      render_with_template(locals: { external_url: })
+    context "with an invalid URL" do
+      it "redirects to home when URL is blank" do
+        get :show, params: { url: "" }
+
+        expect(response).to redirect_to(home_path)
+      end
+
+      it "redirects to home when URL is missing" do
+        get :show
+
+        expect(response).to redirect_to(home_path)
+      end
+
+      it "redirects to home when URL is not a valid HTTP/HTTPS URL" do
+        get :show, params: { url: "not-a-url" }
+
+        expect(response).to redirect_to(home_path)
+      end
     end
   end
 end

@@ -28,32 +28,35 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpPrimer
-  class FullPagePromptComponent < Primer::Component
-    attr_reader :system_arguments
+class ExternalLinkWarningController < ApplicationController
+  layout "only_logo"
 
-    renders_one :icon, lambda { |icon:, size: :medium, **system_arguments|
-      Primer::Beta::Octicon.new(icon:, size:, **system_arguments)
-    }
+  skip_before_action :check_if_login_required
+  no_authorization_required! :show
+  before_action :ensure_valid_external_url, only: [:show]
 
-    renders_one :title, lambda { |tag: :h2, **system_arguments|
-      Primer::Beta::Heading.new(tag:, mb: 2, font_size: 5, **system_arguments)
-    }
+  def show; end
 
-    renders_one :action, types: {
-      button: lambda { |**system_arguments|
-        system_arguments[:classes] = class_names(
-          system_arguments[:classes],
-          "op-full-page-prompt--action"
-        )
-        Primer::Beta::Button.new(**system_arguments)
-      }
-    }
+  private
 
-    def initialize(**system_arguments)
-      super()
+  def ensure_valid_external_url
+    external_url = params[:url]
+    external_url = CGI.unescape(external_url) if external_url.present?
 
-      @system_arguments = system_arguments
+    unless valid_url?(external_url)
+      redirect_to home_path, status: :see_other
+      return
     end
+
+    @external_url = external_url
+  end
+
+  def valid_url?(url)
+    return false if url.blank?
+
+    uri = URI.parse(url)
+    uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+  rescue URI::InvalidURIError
+    false
   end
 end

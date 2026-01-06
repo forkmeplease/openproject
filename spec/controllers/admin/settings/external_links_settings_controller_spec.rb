@@ -28,32 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpPrimer
-  class FullPagePromptComponent < Primer::Component
-    attr_reader :system_arguments
+require "spec_helper"
 
-    renders_one :icon, lambda { |icon:, size: :medium, **system_arguments|
-      Primer::Beta::Octicon.new(icon:, size:, **system_arguments)
-    }
+RSpec.describe Admin::Settings::ExternalLinksSettingsController do
+  shared_let(:user) { create(:admin) }
 
-    renders_one :title, lambda { |tag: :h2, **system_arguments|
-      Primer::Beta::Heading.new(tag:, mb: 2, font_size: 5, **system_arguments)
-    }
+  current_user { user }
 
-    renders_one :action, types: {
-      button: lambda { |**system_arguments|
-        system_arguments[:classes] = class_names(
-          system_arguments[:classes],
-          "op-full-page-prompt--action"
-        )
-        Primer::Beta::Button.new(**system_arguments)
-      }
-    }
-
-    def initialize(**system_arguments)
-      super()
-
-      @system_arguments = system_arguments
-    end
-  end
+  include_examples "GET #show requires admin permission and renders template", path: "external_links_settings"
 end
