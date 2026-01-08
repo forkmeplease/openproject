@@ -643,6 +643,18 @@ Redmine::MenuManager.map :admin_menu do |menu|
             if: ->(_) { User.current.admin? },
             caption: :label_backlogs,
             icon: "op-backlogs"
+
+  menu.push :import,
+            { controller: "/admin/jiras", action: :index },
+            if: ->(_) { User.current.admin? && OpenProject::FeatureDecisions.jira_import_active? },
+            caption: :label_import,
+            icon: "desktop-download"
+
+  menu.push :jira_import,
+            { controller: "/admin/jiras", action: :index },
+            if: ->(_) { User.current.admin? && OpenProject::FeatureDecisions.jira_import_active? },
+            caption: :label_jira_import,
+            parent: :import
 end
 
 Redmine::MenuManager.map :project_menu do |menu|

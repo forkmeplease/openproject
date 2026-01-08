@@ -118,6 +118,10 @@ en:
       explanation:
         text: "Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect %{webhook_link} delay."
         link: "webhook"
+    jiras:
+      form:
+        url_description: "Jira host URL description"
+        personal_access_token_description: "Personal Access Token description"
     scim_clients:
       authentication_methods:
         sso: "JWT from identity provider"
@@ -1190,6 +1194,8 @@ en:
 
   activerecord:
     attributes:
+      jira_import:
+        projects: "Projects"
       announcements:
         show_until: "Display until"
       attachment:
@@ -1394,6 +1400,9 @@ en:
       scim_client:
         authentication_method: "Authentication method"
         jwt_sub: "Subject claim"
+      jira:
+        url: "Jira host URL"
+        personal_access_token: "Personal Access Token"
       status:
         is_closed: "Work package closed"
         is_readonly: "Work package read-only"
@@ -1972,6 +1981,9 @@ en:
       scim_client:
         one: "SCIM client"
         other: "SCIM clients"
+      jira:
+        one: "Jira"
+        other: "Jira"
       status: "Work package status"
       token/api:
         one: Access token
@@ -3361,6 +3373,7 @@ en:
   label_languages: "Languages"
   label_locale: "Language and region"
   label_jump_to_a_project: "Jump to a project..."
+  label_jira_import: "Jira import"
   label_keyword_plural: "Keywords"
   label_language_based: "Based on user's language"
   label_last_activity: "Last activity"

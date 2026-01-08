@@ -717,6 +717,16 @@ Rails.application.routes.draw do
       post "plugin/:id", action: :update_plugin
     end
 
+    resources :jiras do
+      resources :jira_imports, module: :jiras do
+        member do
+          get :fetch
+          get :import
+          get :remove
+        end
+      end
+    end
+
     resources :quarantined_attachments,
               controller: "/admin/attachments/quarantined_attachments",
               only: %i[index destroy]

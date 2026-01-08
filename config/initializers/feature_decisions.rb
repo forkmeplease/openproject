@@ -88,3 +88,7 @@ OpenProject::FeatureDecisions.add :project_initiation,
 OpenProject::FeatureDecisions.add :meetings_presentation_mode,
                                   description: "Enables presentation mode for meetings.",
                                   force_active: true
+
+OpenProject::FeatureDecisions.add :jira_import,
+                                  description: "Enables Jira Migration Tool.",
+                                  force_active: false
