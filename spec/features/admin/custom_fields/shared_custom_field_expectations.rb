@@ -163,9 +163,9 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
   # Project CFs don't show "For all projects" and "Used as a filter". Not tested here.
   # Content right to left is not shown for Project CFs Long text. Strange. Not tested.
 
-  case format
-  when "Text"
-    it "shows the right options for the text custom field type" do
+  it "shows the right options for the #{format} custom field type" do
+    case format
+    when "Text"
       retry_block do
         cf_page.click_to_create_new_custom_field "Text"
       end
@@ -185,9 +185,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "Long text"
-    it "shows the right options for the long text custom field type" do
+    when "Long text"
       retry_block do
         cf_page.click_to_create_new_custom_field "Long text"
       end
@@ -207,9 +205,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "Integer"
-    it "shows the right options for the list custom field type" do
+    when "Integer"
       retry_block do
         cf_page.click_to_create_new_custom_field "Integer"
       end
@@ -230,9 +226,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "Float"
-    it "shows the right options for the float custom field type" do
+    when "Float"
       retry_block do
         cf_page.click_to_create_new_custom_field "Float"
       end
@@ -253,9 +247,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "List"
-    it "shows the right options for the list custom field type" do
+    when "List"
       retry_block do
         cf_page.click_to_create_new_custom_field "List"
       end
@@ -275,9 +267,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
           label_ee_banner_hierarchy
         ]
       )
-    end
-  when "Date"
-    it "shows the right options for the date custom field type" do
+    when "Date"
       retry_block do
         cf_page.click_to_create_new_custom_field "Date"
       end
@@ -297,9 +287,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "Boolean"
-    it "shows the right options for the boolean custom field type" do
+    when "Boolean"
       retry_block do
         cf_page.click_to_create_new_custom_field "Boolean"
       end
@@ -319,9 +307,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "User"
-    it "shows the right options for the user custom field type" do
+    when "User"
       retry_block do
         cf_page.click_to_create_new_custom_field "User"
       end
@@ -341,9 +327,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "Version"
-    it "shows the right options for the version custom field type" do
+    when "Version"
       retry_block do
         cf_page.click_to_create_new_custom_field "Version"
       end
@@ -363,9 +347,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ],
         no_fieldset: label_possible_values
       )
-    end
-  when "Hierarchy"
-    it "shows the right options for the hierarchy custom field type" do
+    when "Hierarchy"
       retry_block do
         cf_page.click_to_create_new_custom_field "Hierarchy"
       end
@@ -386,6 +368,8 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
       expect(page).to have_button("Save", disabled: true)
+    else
+      fail "fields for #{format} custom field are not defined"
     end
   end
 end
