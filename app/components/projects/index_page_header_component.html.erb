@@ -127,7 +127,7 @@
 
         if can_export?
           menu.with_sub_menu_item(label: t("js.label_export")) do |submenu|
-            submenu.with_leading_visual_icon(icon: "sign-out")
+            submenu.with_leading_visual_icon(icon: :download)
             helpers.supported_export_formats.each do |key|
               submenu.with_item(
                 label: t("export.format.#{key}"),
