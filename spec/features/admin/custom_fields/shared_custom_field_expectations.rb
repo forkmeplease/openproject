@@ -164,12 +164,12 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
   # Content right to left is not shown for Project CFs Long text. Strange. Not tested.
 
   it "shows the right options for the #{format} custom field type" do
+    retry_block do
+      cf_page.click_to_create_new_custom_field format
+    end
+
     case format
     when "Text"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Text"
-      end
-
       expect_page_to_have(
         fields: [
           label_min_length,
@@ -186,10 +186,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "Long text"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Long text"
-      end
-
       expect_page_to_have(
         fields: [
           label_min_length,
@@ -206,10 +202,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "Integer"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Integer"
-      end
-
       # Integer has min/max_len and regex as well which seems strange.
       expect_page_to_have(
         fields: [
@@ -227,10 +219,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "Float"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Float"
-      end
-
       # Float has min/max_len and regex as well which seems strange.
       expect_page_to_have(
         fields: [
@@ -248,10 +236,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "List"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "List"
-      end
-
       expect_page_to_have(
         fields: [
           label_multi_value,
@@ -268,10 +252,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         ]
       )
     when "Date"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Date"
-      end
-
       expect_page_to_have(
         fields: [
           label_is_required
@@ -288,10 +268,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "Boolean"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Boolean"
-      end
-
       expect_page_to_have(
         fields: [
           label_default_value
@@ -308,10 +284,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "User"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "User"
-      end
-
       expect_page_to_have(
         fields: [
           label_multi_value,
@@ -328,10 +300,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "Version"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Version"
-      end
-
       expect_page_to_have(
         fields: [
           label_multi_value,
@@ -348,10 +316,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
         no_fieldset: label_possible_values
       )
     when "Hierarchy"
-      retry_block do
-        cf_page.click_to_create_new_custom_field "Hierarchy"
-      end
-
       expect_page_to_have(
         fields: [
           label_multi_value,
