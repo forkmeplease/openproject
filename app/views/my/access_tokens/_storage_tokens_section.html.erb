@@ -26,6 +26,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
+
+<%# locals: (storage_tokens:) -%>
+
 <div id="storage-token-section" class="mb-4">
   <%= render(Primer::Beta::Subhead.new) do |component|
     component.with_heading(tag: :h3, size: :medium) do
@@ -36,5 +39,5 @@ See COPYRIGHT and LICENSE files for more details.
     end
   end %>
 
-  <%= render(My::AccessToken::Storages::TableComponent.new(rows: @storage_tokens)) %>
+  <%= render(My::AccessToken::Storages::TableComponent.new(rows: storage_tokens)) %>
 </div>

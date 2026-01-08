@@ -21,23 +21,26 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%# locals: (granted_applications:) -%>
+<%# locals: (granted_applications:, ical_tokens_grouped_by_query:) -%>
 
-<div id="oauth-token-section" class="mb-4">
-  <%= render(Primer::Beta::Subhead.new) do |component|
-    component.with_heading(tag: :h3, size: :medium) do
-      t("my_account.access_tokens.oauth.title")
-    end
-    component.with_description do
-      t("my_account.access_tokens.oauth.text_hint")
-    end
-  end %>
+<%= render(Primer::Beta::Text.new(tag: :div, color: :subtle, mb: 3)) { t("my_account.access_tokens.tabs.provider.description") } %>
 
-  <%= render(My::AccessToken::OAuthApplication::TableComponent.new(rows: granted_applications)) %>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.api_tokens, token_type: Token::API) %>
+<%= render partial: "icalendar_tokens_section", locals: { ical_tokens_grouped_by_query: } %>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.ical_meeting_tokens, token_type: Token::ICalMeeting) %>
+<%= render partial: "oauth_tokens_section", locals: { granted_applications: } %>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: Array(@user.rss_token), token_type: Token::RSS) %>
+
+<div class="generic-table--container">
+  <div class="generic-table--results-container">
+    <table class="generic-table" data-controller="table-highlighting">
+      <%= call_hook(:view_access_tokens_table, user: @user) %>
+    </table>
+  </div>
 </div>

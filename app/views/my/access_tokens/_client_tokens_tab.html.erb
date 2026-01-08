@@ -21,23 +21,14 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%# locals: (granted_applications:) -%>
+<%# locals: (storage_tokens:) -%>
 
-<div id="oauth-token-section" class="mb-4">
-  <%= render(Primer::Beta::Subhead.new) do |component|
-    component.with_heading(tag: :h3, size: :medium) do
-      t("my_account.access_tokens.oauth.title")
-    end
-    component.with_description do
-      t("my_account.access_tokens.oauth.text_hint")
-    end
-  end %>
+<%= render(Primer::Beta::Text.new(tag: :div, color: :subtle, mb: 3)) { t("my_account.access_tokens.tabs.client.description") } %>
 
-  <%= render(My::AccessToken::OAuthApplication::TableComponent.new(rows: granted_applications)) %>
-</div>
+<%= render partial: "storage_tokens_section", locals: { storage_tokens: } %>
