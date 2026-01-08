@@ -92,6 +92,13 @@ module Pages::RecurringMeeting
       end
     end
 
+    def restore(date:)
+      within("li", text: date) do
+        click_on "more-button"
+        click_on "Restore this occurrence"
+      end
+    end
+
     def cancel_occurrence(date:)
       within("li", text: date) do
         click_on "more-button"
