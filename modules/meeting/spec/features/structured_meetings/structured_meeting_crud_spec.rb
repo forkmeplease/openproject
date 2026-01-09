@@ -513,5 +513,30 @@ RSpec.describe "Meetings CRUD",
         show_page.expect_blankslate
       end
     end
+
+    it "maintains section order when rendering" do
+      section1 = create(:meeting_section, meeting:, title: "Section A")
+      section2 = create(:meeting_section, meeting:, title: "Section B")
+      section3 = create(:meeting_section, meeting:, title: "Section C")
+
+      show_page.visit!
+      show_page.expect_section(title: "Section A")
+      show_page.expect_section(title: "Section B")
+      show_page.expect_section(title: "Section C")
+
+      show_page.select_section_action(section3, "Move up")
+
+      wait_for_network_idle
+
+      expect([section1, section2, section3].map { |s| s.reload.position }).to eq([1, 3, 2])
+
+      expect(show_page.section_headers)
+        .to eq(["Section A", "Section C", "Section B"])
+
+      show_page.reload!
+
+      expect(show_page.section_headers)
+        .to eq(["Section A", "Section C", "Section B"])
+    end
   end
 end
