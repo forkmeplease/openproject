@@ -168,7 +168,8 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
     end
 
     case format
-    when "Text"
+    when "Text", "Integer", "Float"
+      # Integer and Float have min/max_len and regex as well which seems strange.
       expect_page_to_have(
         fields: [
           label_min_length,
@@ -192,38 +193,6 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
           label_is_required
         ],
         rich_text_field: label_default_value,
-        no_labels: [
-          label_multi_value,
-          label_allow_non_open_versions
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Integer"
-      # Integer has min/max_len and regex as well which seems strange.
-      expect_page_to_have(
-        fields: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_default_value,
-          label_is_required
-        ],
-        no_labels: [
-          label_multi_value,
-          label_allow_non_open_versions
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Float"
-      # Float has min/max_len and regex as well which seems strange.
-      expect_page_to_have(
-        fields: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_default_value,
-          label_is_required
-        ],
         no_labels: [
           label_multi_value,
           label_allow_non_open_versions
