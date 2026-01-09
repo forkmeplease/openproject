@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,25 +28,16 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class BacklogsSettingsController < ApplicationController
-  layout "admin"
-  menu_item :admin_backlogs
+require "rails_helper"
 
-  before_action :require_admin
+RSpec.describe Admin::Settings::BacklogsSettingsModel, type: :model do
+  describe "validations" do
+    subject(:model) { described_class.new(story_types: [1, 2, 3]) }
 
-  def show
-    @settings = Admin::Settings::BacklogsSettingsModel.new(Setting.plugin_openproject_backlogs)
-  end
-
-  def update # rubocop:disable Metrics/AbcSize
-    @settings = Admin::Settings::BacklogsSettingsModel.new(permitted_params.backlogs_admin_settings)
-    if @settings.valid?
-      Setting.plugin_openproject_backlogs = @settings.to_h
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to action: :show
-    else
-      flash.now[:error] = I18n.t(:notice_unsuccessful_update_with_reason, reason: @settings.errors.full_messages.to_sentence)
-      render :show, status: :unprocessable_entity
+    it "validates that a story type cannot be used as a task type" do
+      expect(subject).to validate_exclusion_of(:task_type)
+        .in_array([1, 2, 3])
+        .with_message(I18n.t("errors.attributes.task_type.cannot_be_story_type"))
     end
   end
 end

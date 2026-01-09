@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,25 +28,39 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class BacklogsSettingsController < ApplicationController
-  layout "admin"
-  menu_item :admin_backlogs
+module Primer
+  module OpenProject
+    module Forms
+      module Dsl
+        # :nodoc:
+        class SelectPanelInput < Primer::Forms::Dsl::Input
+          attr_reader :name, :label, :block
 
-  before_action :require_admin
+          def initialize(name:, label:, **system_arguments, &block)
+            @name = name
+            @label = label
+            @block = block
 
-  def show
-    @settings = Admin::Settings::BacklogsSettingsModel.new(Setting.plugin_openproject_backlogs)
-  end
+            super(**system_arguments)
+          end
 
-  def update # rubocop:disable Metrics/AbcSize
-    @settings = Admin::Settings::BacklogsSettingsModel.new(permitted_params.backlogs_admin_settings)
-    if @settings.valid?
-      Setting.plugin_openproject_backlogs = @settings.to_h
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to action: :show
-    else
-      flash.now[:error] = I18n.t(:notice_unsuccessful_update_with_reason, reason: @settings.errors.full_messages.to_sentence)
-      render :show, status: :unprocessable_entity
+          def to_component
+            SelectPanel.new(input: self)
+          end
+
+          # :nocov:
+          def type
+            :select_panel
+          end
+          # :nocov:
+
+          # :nocov:
+          def focusable?
+            true
+          end
+          # :nocov:
+        end
+      end
     end
   end
 end

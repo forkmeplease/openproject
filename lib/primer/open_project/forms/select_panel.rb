@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,25 +28,32 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class BacklogsSettingsController < ApplicationController
-  layout "admin"
-  menu_item :admin_backlogs
+module Primer
+  module OpenProject
+    module Forms
+      # :nodoc:
+      class SelectPanel < Primer::Forms::BaseComponent
+        delegate :builder, :form, to: :@input
 
-  before_action :require_admin
+        def initialize(input:)
+          super()
 
-  def show
-    @settings = Admin::Settings::BacklogsSettingsModel.new(Setting.plugin_openproject_backlogs)
-  end
+          @input = input
+          @input.label_arguments[:id] = label_id
 
-  def update # rubocop:disable Metrics/AbcSize
-    @settings = Admin::Settings::BacklogsSettingsModel.new(permitted_params.backlogs_admin_settings)
-    if @settings.valid?
-      Setting.plugin_openproject_backlogs = @settings.to_h
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to action: :show
-    else
-      flash.now[:error] = I18n.t(:notice_unsuccessful_update_with_reason, reason: @settings.errors.full_messages.to_sentence)
-      render :show, status: :unprocessable_entity
+          @input.input_arguments[:form_arguments] = {
+            name: @input.name,
+            builder: builder
+          }
+
+          @input.input_arguments[:select_variant] ||= :single
+          @input.input_arguments[:dynamic_label] = true unless @input.input_arguments.key(:dynamic_label)
+        end
+
+        def label_id
+          @label_id ||= "label-#{@input.base_id}"
+        end
+      end
     end
   end
 end

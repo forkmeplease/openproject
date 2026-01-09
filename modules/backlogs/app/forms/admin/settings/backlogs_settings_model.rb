@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,25 +28,33 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class BacklogsSettingsController < ApplicationController
-  layout "admin"
-  menu_item :admin_backlogs
+module Admin
+  module Settings
+    class BacklogsSettingsModel
+      include ActiveModel::Model
+      include ActiveModel::Attributes
 
-  before_action :require_admin
+      attribute :story_types,           array: true, default: []
+      attribute :task_type,             :integer
+      attribute :points_burn_direction, :string
+      attribute :wiki_template,         :string
 
-  def show
-    @settings = Admin::Settings::BacklogsSettingsModel.new(Setting.plugin_openproject_backlogs)
-  end
+      validates :task_type, exclusion: {
+        in: ->(setting) { setting.story_types }, message: :cannot_be_story_type
+      }
 
-  def update # rubocop:disable Metrics/AbcSize
-    @settings = Admin::Settings::BacklogsSettingsModel.new(permitted_params.backlogs_admin_settings)
-    if @settings.valid?
-      Setting.plugin_openproject_backlogs = @settings.to_h
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to action: :show
-    else
-      flash.now[:error] = I18n.t(:notice_unsuccessful_update_with_reason, reason: @settings.errors.full_messages.to_sentence)
-      render :show, status: :unprocessable_entity
+      def story_types=(value)
+        super(Array(value).map(&:to_i))
+      end
+
+      def to_h
+        {
+          story_types:,
+          task_type:,
+          points_burn_direction:,
+          wiki_template:
+        }
+      end
     end
   end
 end
