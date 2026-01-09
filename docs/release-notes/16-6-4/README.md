@@ -20,7 +20,7 @@ Below you will find a complete list of all changes and bug fixes.
 A Local File Read (LFR) vulnerability exists in the work package PDF export functionality of OpenProject < 16.6.4 . By uploading a specially crafted SVG file (disguised as a PNG) as a work package attachment, an attacker can exploit the backend image processing engine (ImageMagick). When the work package is exported to PDF, the backend attempts to resize the image, triggering the ImageMagick text: coder. This allows an attacker to read arbitrary local files that the application user has permissions to access (e.g., /etc/passwd, all project configuration files, private project data, etc.)
 
 This vulnerability was assigned to the CVE CVE-2026-22605.
-For more information, please see the [GitHub Advisory](https://github.com/opf/openproject/security/advisories/GHSA-m8f2-cwpq-vvhh).
+For more information, please see the [GitHub Advisory GHSA-m8f2-cwpq-vvhh)](https://github.com/opf/openproject/security/advisories/GHSA-m8f2-cwpq-vvhh).
 
 The vulnerability has been responsibly disclosed through the [YesWeHack bounty program for OpenProject](https://yeswehack.com/programs/openproject) by user [syndrome_imposter](https://yeswehack.com/hunters/syndrome-impostor). This bug bounty program is being sponsored by the European Commission.
 
