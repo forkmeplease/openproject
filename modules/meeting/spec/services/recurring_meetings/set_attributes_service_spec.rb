@@ -87,13 +87,23 @@ RSpec.describe RecurringMeetings::SetAttributesService, type: :model do
       }
     end
 
-    it "sets the current_schedule_start_date to the next occurrence from now" do
+    it "sets the current_schedule_start to the next occurrence from now" do
       travel_to Time.utc(2026, 6, 15, 9, 0, 0) do
         subject
 
         # Meeting runs from 01.01.2026 10:00 UTC, every 2 weeks and ends at 31.12.2026
         # The next occurrence from 15.06.2026 09:00 UTC is 18.06.2026 10:00 UTC
         expect(model_instance.current_schedule_start).to eq("2026-06-18 10:00:00 UTC")
+      end
+    end
+
+    it "sets the current_schedule_start to the start_time if there is no next occurrence" do
+      travel_to Time.utc(2027, 1, 1, 9, 0, 0) do
+        subject
+
+        # Meeting runs from 01.01.2026 10:00 UTC, every 2 weeks and ends at 31.12.2026
+        # There is no next occurrence from 01.01.2027 09:00 UTC, so we set it to start_time
+        expect(model_instance.current_schedule_start).to eq(model_instance.start_time)
       end
     end
   end

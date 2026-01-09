@@ -40,7 +40,7 @@ module RecurringMeetings
           model.interval = 1
         end
 
-        model.current_schedule_start = model.next_occurrence(from_time: Time.current)
+        model.current_schedule_start = model.next_occurrence(from_time: Time.current) || model.start_time
       end
     end
 
