@@ -520,17 +520,15 @@ RSpec.describe "Meetings CRUD",
       section3 = create(:meeting_section, meeting:, title: "Section C")
 
       show_page.visit!
-      show_page.expect_section(title: "Section A")
-      show_page.expect_section(title: "Section B")
-      show_page.expect_section(title: "Section C")
+
+      expect(show_page.section_headers)
+        .to eq(["Section A", "Section B", "Section C"])
 
       show_page.select_section_action(section3, "Move up")
 
-      wait_for_network_idle
-
-      expect([section1, section2, section3].map { |s| s.reload.position }).to eq([1, 3, 2])
-
-      expect(show_page.section_headers)
+      wait_for { [section1, section2, section3].map { |s| s.reload.position } }
+        .to eq([1, 3, 2])
+      wait_for { show_page.section_headers }
         .to eq(["Section A", "Section C", "Section B"])
 
       show_page.reload!

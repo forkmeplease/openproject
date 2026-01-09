@@ -768,7 +768,8 @@ module Pages::Meetings
     end
 
     def section_headers
-      page.all(".op-meeting-section-container[data-test-selector^='meeting-section-header-container-']").map(&:text)
+      page.all(".op-meeting-section-container[data-test-selector^='meeting-section-header-container-']")
+          .map(&:text)
     end
   end
 end
