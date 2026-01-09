@@ -89,7 +89,7 @@ RSpec.describe "Document collaboration settings admin",
 
   context "with hocuspocus url set via environment variable",
           with_env: { "OPENPROJECT_COLLABORATIVE_EDITING_HOCUSPOCUS_URL" => "wss://env-hocuspocus.example.com" },
-          with_settings: { real_time_text_collaboration_enabled: true } do
+          with_settings: { collaborative_editing_hocuspocus_secret: "secret1234" } do
     before do
       reset(:collaborative_editing_hocuspocus_url)
       visit admin_settings_document_collaboration_settings_path
@@ -101,12 +101,16 @@ RSpec.describe "Document collaboration settings admin",
       expect(page).to have_field("Hocuspocus server URL",
                                  with: "wss://env-hocuspocus.example.com",
                                  disabled: true)
+
+      expect(page).to have_field("Client secret",
+                                 with: "",
+                                 disabled: false)
     end
   end
 
   context "with secret set via environment variable",
           with_env: { "OPENPROJECT_COLLABORATIVE_EDITING_HOCUSPOCUS_SECRET" => "envsupersecret" },
-          with_settings: { real_time_text_collaboration_enabled: true } do
+          with_settings: { collaborative_editing_hocuspocus_url: "wss://env-hocuspocus.example.com" } do
     before do
       reset(:collaborative_editing_hocuspocus_secret)
       visit admin_settings_document_collaboration_settings_path
@@ -115,6 +119,9 @@ RSpec.describe "Document collaboration settings admin",
     it "shows the secret as read-only" do
       expect(page).to have_content("Some values are configured via environment variables and cannot be edited here.")
 
+      expect(page).to have_field("Hocuspocus server URL",
+                                 with: "wss://env-hocuspocus.example.com",
+                                 disabled: false)
       expect(page).to have_field("Client secret",
                                  with: "",
                                  disabled: true)
@@ -125,8 +132,7 @@ RSpec.describe "Document collaboration settings admin",
           with_env: {
             "OPENPROJECT_COLLABORATIVE_EDITING_HOCUSPOCUS_URL" => "wss://env-hocuspocus.example.com",
             "OPENPROJECT_COLLABORATIVE_EDITING_HOCUSPOCUS_SECRET" => "envsupersecret"
-          },
-          with_settings: { real_time_text_collaboration_enabled: true } do
+          } do
     before do
       reset(:collaborative_editing_hocuspocus_url)
       reset(:collaborative_editing_hocuspocus_secret)

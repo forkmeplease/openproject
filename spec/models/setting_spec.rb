@@ -605,16 +605,20 @@ RSpec.describe Setting do
   end
 
   describe "default_projects_modules conditional default" do
+    shared_examples "base modules unchanged" do
+      it "includes the base modules" do
+        base_modules = %w[calendar board_view work_package_tracking gantt news costs wiki]
+        expect(Settings::Definition[:default_projects_modules].default).to include(*base_modules)
+      end
+    end
+
     context "when real_time_text_collaboration is enabled",
             with_settings: { real_time_text_collaboration_enabled: true } do
       it "includes documents in the default modules" do
         expect(Settings::Definition[:default_projects_modules].default).to include("documents")
       end
 
-      it "includes the base modules" do
-        base_modules = %w[calendar board_view work_package_tracking gantt news costs wiki]
-        expect(Settings::Definition[:default_projects_modules].default).to include(*base_modules)
-      end
+      it_behaves_like "base modules unchanged"
     end
 
     context "when real_time_text_collaboration is disabled",
@@ -623,10 +627,7 @@ RSpec.describe Setting do
         expect(Settings::Definition[:default_projects_modules].default).not_to include("documents")
       end
 
-      it "includes the base modules" do
-        base_modules = %w[calendar board_view work_package_tracking gantt news costs wiki]
-        expect(Settings::Definition[:default_projects_modules].default).to include(*base_modules)
-      end
+      it_behaves_like "base modules unchanged"
     end
   end
 end
