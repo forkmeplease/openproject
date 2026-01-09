@@ -144,6 +144,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
   end
 
   # Form element labels, default English translation in the trailing comment:
+  let(:label_name) { I18n.t("attributes.name") } # Name
   let(:label_min_length) { I18n.t("activerecord.attributes.custom_field.min_length") } # Minimum length
   let(:label_max_length) { I18n.t("activerecord.attributes.custom_field.max_length") } # Maximum length
   let(:label_regexp) { I18n.t("activerecord.attributes.custom_field.regexp") } # Regular expression
@@ -166,6 +167,8 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
     retry_block do
       cf_page.click_to_create_new_custom_field format
     end
+
+    expect(page).to have_field(label_name)
 
     case format
     when "Text", "Integer", "Float"
