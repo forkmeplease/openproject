@@ -170,145 +170,58 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
 
     expect(page).to have_field(label_name)
 
-    case format
-    when "Text", "Integer", "Float"
-      # Integer and Float have min/max_len and regex as well which seems strange.
-      expect_page_to_have(
-        fields: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_default_value,
-          label_is_required
-        ],
-        no_labels: [
-          label_multi_value,
-          label_allow_non_open_versions
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Long text"
-      expect_page_to_have(
-        fields: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_is_required
-        ],
-        rich_text_field: label_default_value,
-        no_labels: [
-          label_multi_value,
-          label_allow_non_open_versions
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "List"
-      expect_page_to_have(
-        fields: [
-          label_multi_value,
-          label_is_required
-        ],
-        fieldset: label_possible_values,
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_allow_non_open_versions,
-          label_default_value
-        ]
-      )
-    when "Date"
-      expect_page_to_have(
-        fields: [
-          label_is_required
-        ],
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_multi_value,
-          label_allow_non_open_versions,
-          label_default_value
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Boolean"
-      expect_page_to_have(
-        fields: [
-          label_default_value
-        ],
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_multi_value,
-          label_is_required,
-          label_allow_non_open_versions
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "User"
-      expect_page_to_have(
-        fields: [
-          label_multi_value,
-          label_is_required
-        ],
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_allow_non_open_versions,
-          label_default_value
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Version"
-      expect_page_to_have(
-        fields: [
-          label_multi_value,
-          label_allow_non_open_versions,
-          label_is_required
-        ],
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_default_value
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Hierarchy"
-      expect_page_to_have(
-        fields: [
-          label_multi_value,
-          label_is_required
-        ],
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_regexp,
-          label_allow_non_open_versions,
-          label_default_value
-        ],
-        no_fieldset: label_possible_values
-      )
-    when "Link"
-      expect_page_to_have(
-        fields: [
-          label_regexp,
-          label_default_value,
-          label_is_required
-        ],
-        no_labels: [
-          label_min_length,
-          label_max_length,
-          label_multi_value,
-          label_allow_non_open_versions
-        ],
-        no_fieldset: label_possible_values
-      )
+    if format in "Text" | "Integer" | "Float" | "Long text"
+      expect_page_to_have(fields: [
+                            label_min_length,
+                            label_max_length
+                          ])
     else
-      fail "fields for #{format} custom field are not defined"
+      expect_page_to_have(no_labels: [
+                            label_min_length,
+                            label_max_length
+                          ])
+    end
+
+    # Integer and Float have min/max_len and regex as well which seems strange.
+    if format in "Text" | "Integer" | "Float" | "Long text" | "Link"
+      expect(page).to have_field(label_regexp)
+    else
+      expect(page).to have_no_label(label_regexp)
+    end
+
+    case format
+    in "Text" | "Integer" | "Float" | "Link"
+      expect(page).to have_field(label_default_value, type: "text")
+    in "Boolean"
+      expect(page).to have_field(label_default_value, type: "checkbox")
+    in "Long text"
+      expect(page).to have_rich_text_field(label_default_value)
+    else
+      expect(page).to have_no_label(label_default_value)
+    end
+
+    if format in "List" | "User" | "Version" | "Hierarchy"
+      expect(page).to have_field(label_multi_value)
+    else
+      expect(page).to have_no_label(label_multi_value)
+    end
+
+    if format == "Boolean"
+      expect(page).to have_no_label(label_is_required)
+    else
+      expect(page).to have_field(label_is_required)
+    end
+
+    if format == "Version"
+      expect(page).to have_field(label_allow_non_open_versions)
+    else
+      expect(page).to have_no_label(label_allow_non_open_versions)
+    end
+
+    if format == "List"
+      expect(page).to have_fieldset(label_possible_values)
+    else
+      expect(page).to have_no_fieldset(label_possible_values)
     end
   end
 end
