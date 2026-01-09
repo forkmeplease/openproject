@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -28,36 +27,23 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-#
 
-module Documents
-  module ShowEditView
-    module PageHeader
-      class LiveUsersComponent < ApplicationComponent
-        include OpPrimer::ComponentHelpers
-        include OpPrimer::FormHelpers
-        include OpTurbo::Streamable
-        include AvatarHelper
+class AddDocumentsToDefaultProjectsModules < ActiveRecord::Migration[8.0]
+  def up
+    return unless Setting.exists?(:real_time_text_collaboration_enabled)
+    return unless Setting.real_time_text_collaboration_enabled?
 
-        attr_reader :users
+    # Only update if setting exists in DB (avoid updating on new installations - seeder handles that)
+    setting = Setting.find_by(name: "default_projects_modules")
+    return unless setting
 
-        def initialize(users: [User.current])
-          super
-          @users = users
-        end
+    current_modules = setting.value || []
+    return if current_modules.include?("documents")
 
-        def active_editors
-          I18n.t("documents.active_editors_count", count: users.count).html_safe
-        end
+    Setting.default_projects_modules = current_modules + ["documents"]
+  end
 
-        def avatar_options_for(user)
-          {
-            src: avatar_url(user),
-            alt: user.name,
-            unique_id: user.id
-          }
-        end
-      end
-    end
+  def down
+    # No-op
   end
 end
