@@ -1126,6 +1126,8 @@ tr:
     global_search:
       all_projects: "Tüm projelerde"
       close_search: "Aramayı kapat"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "Bu projede + alt projelerde"
       current_project: "Bu projede"
       recently_viewed: "Son görüntülenenler"

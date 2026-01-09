@@ -1125,6 +1125,8 @@ hu:
     global_search:
       all_projects: "Az összes projektben"
       close_search: "Keresés bezárása"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "Ebben a projektben + alprojektekben"
       current_project: "Ebben a projektben"
       recently_viewed: "Recently viewed"

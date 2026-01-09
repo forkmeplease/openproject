@@ -1134,6 +1134,8 @@ cs:
     global_search:
       all_projects: "Ve všech projektech"
       close_search: "Zavřít hledání"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "V tomto projektu + podprojektech"
       current_project: "V tomto projektu"
       recently_viewed: "Nedávno zobrazené"

@@ -1122,6 +1122,8 @@ zh-CN:
     global_search:
       all_projects: "在所有项目中"
       close_search: "关闭搜索"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "在当前项目和子项目中"
       current_project: "在当前项目中"
       recently_viewed: "最近浏览"

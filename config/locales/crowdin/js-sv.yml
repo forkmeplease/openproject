@@ -1125,6 +1125,8 @@ sv:
     global_search:
       all_projects: "I alla projekt"
       close_search: "Stäng sökning"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "I detta projekt + delprojekt"
       current_project: "I detta projekt"
       recently_viewed: "Nyligen visade"

@@ -236,14 +236,14 @@ fr:
         summary: "« %{title} » a été annulée par %{actor}."
         date_time: "Date/heure prévue"
       ended:
-        header_series: "Ended: Meeting series '%{title}'"
-        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
+        header_series: "Terminé : Série de rencontres '%{title}'"
+        summary_series: "La série de réunions '%{title}' a été clôturée par %{actor}."
       updated:
         header: "La réunion « %{title} » a été mise à jour"
         summary: "La réunion « %{title} » a été mise à jour par %{actor}"
         body: "La réunion « %{title} » a été mise à jour par %{actor}."
-        old_title: "Old title"
-        new_title: "New title"
+        old_title: "Ancien titre"
+        new_title: "Nouveau titre"
         old_date_time: "Ancienne date/heure"
         new_date_time: "Nouvelle date/heure"
         old_location: "Ancien emplacement"

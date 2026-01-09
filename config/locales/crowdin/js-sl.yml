@@ -1133,6 +1133,8 @@ sl:
     global_search:
       all_projects: "V vseh projektih"
       close_search: "Zapri iskanje"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "V tem projektu + podprojektu"
       current_project: "V tem projektu"
       recently_viewed: "Recently viewed"

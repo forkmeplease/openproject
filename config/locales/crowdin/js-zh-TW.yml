@@ -1121,6 +1121,8 @@ zh-TW:
     global_search:
       all_projects: "在所有的專案"
       close_search: "關閉搜尋"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "目前專案和子專案"
       current_project: "目前專案"
       recently_viewed: "最近檢視"

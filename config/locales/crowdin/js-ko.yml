@@ -1122,6 +1122,8 @@ ko:
     global_search:
       all_projects: "모든 프로젝트에서"
       close_search: "검색 닫기"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "이 프로젝트 + 하위 프로젝트에서"
       current_project: "이 프로젝트에서"
       recently_viewed: "최근에 조회됨"

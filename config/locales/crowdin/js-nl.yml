@@ -1126,6 +1126,8 @@ nl:
     global_search:
       all_projects: "Voor alle projecten"
       close_search: "Sluit zoekopdracht"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "In dit project + subprojecten"
       current_project: "In dit project"
       recently_viewed: "Recent bekeken"

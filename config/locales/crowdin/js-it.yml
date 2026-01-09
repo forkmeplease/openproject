@@ -1126,6 +1126,8 @@ it:
     global_search:
       all_projects: "In tutti progetti"
       close_search: "Chiudi ricerca"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "In questo progetto + sottoprogetti"
       current_project: "In questo progetto"
       recently_viewed: "Visualizzati di recente"

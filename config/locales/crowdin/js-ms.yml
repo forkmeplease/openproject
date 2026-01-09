@@ -1122,6 +1122,8 @@ ms:
     global_search:
       all_projects: "Dalam semua projek"
       close_search: "Tutup carian"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "Dalam projek ini + subprojek"
       current_project: "Dalam projek ini"
       recently_viewed: "Dilihat baru-baru ini"

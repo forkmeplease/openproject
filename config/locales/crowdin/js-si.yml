@@ -1126,6 +1126,8 @@ si:
     global_search:
       all_projects: "සියලු ව්යාපෘති"
       close_search: "සෙවුම වසන්න"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "මෙම ව්යාපෘතිය+උප ව්යාපෘති"
       current_project: "මෙම ව්යාපෘතියේ"
       recently_viewed: "Recently viewed"

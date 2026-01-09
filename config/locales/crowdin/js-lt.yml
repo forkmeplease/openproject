@@ -1134,6 +1134,8 @@ lt:
     global_search:
       all_projects: "Visuose projektuose"
       close_search: "Uždaryti paiešką"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "Šiame projekte + subprojektuose"
       current_project: "Šiame projekte"
       recently_viewed: "Neseniai žiūrėtos"

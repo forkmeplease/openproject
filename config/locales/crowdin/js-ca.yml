@@ -1126,6 +1126,8 @@ ca:
     global_search:
       all_projects: "En tots els projectes"
       close_search: "Tanca la cerca"
+      items_available: "%{count} items available"
+      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
       current_project_and_all_descendants: "En aquest projecte + subprojectes"
       current_project: "En aquest projecte"
       recently_viewed: "Vist recentment"
