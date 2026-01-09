@@ -55,12 +55,12 @@ RSpec.describe "Backlogs Admin Settings", :js do
         page.find(:role, :option, accessible_name: "STORY").click
       end
 
-      click_on accessible_name: "Close"
+      click_on "Apply"
     end
 
     expect(page).to have_button accessible_description: "Story types", text: "Selected types: Story, Feature"
 
-    click_on "Apply"
+    click_on "Save"
 
     expect_and_dismiss_flash type: :success, message: "Successful update."
 
@@ -82,7 +82,7 @@ RSpec.describe "Backlogs Admin Settings", :js do
         expect(page).to have_selector :role, :option, count: 1, visible: :visible
       end
 
-      click_on accessible_name: "Close"
+      click_on "Apply"
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe "Backlogs Admin Settings", :js do
 
     expect(page).to have_button accessible_description: "Task type", text: "Selected type: Task"
 
-    click_on "Apply"
+    click_on "Save"
 
     expect_and_dismiss_flash type: :success, message: "Successful update."
 
@@ -118,7 +118,7 @@ RSpec.describe "Backlogs Admin Settings", :js do
         page.find(:role, :option, accessible_name: "FEATURE").click
       end
 
-      click_on accessible_name: "Close"
+      click_on "Apply"
     end
 
     expect(page).to have_button accessible_description: "Story types", text: "Selected types: Feature"
@@ -142,7 +142,7 @@ RSpec.describe "Backlogs Admin Settings", :js do
         expect(page).to have_selector(:role, :option, accessible_name: "STORY", aria: { disabled: true })
       end
 
-      click_on accessible_name: "Close"
+      click_on "Apply"
     end
   end
 
@@ -151,7 +151,7 @@ RSpec.describe "Backlogs Admin Settings", :js do
 
     choose "Down", fieldset: "Points burn up/down"
 
-    click_on "Apply"
+    click_on "Save"
 
     expect_and_dismiss_flash type: :success, message: "Successful update."
 
@@ -163,7 +163,7 @@ RSpec.describe "Backlogs Admin Settings", :js do
 
     fill_in "Template for sprint wiki page", with: "my_sprint_wiki_page"
 
-    click_on "Apply"
+    click_on "Save"
 
     expect_and_dismiss_flash type: :success, message: "Successful update."
 

@@ -54,6 +54,12 @@ module Admin
               label_arguments: { classes: "__hl_inline_type_#{value}" }
             )
           end
+
+          select_menu.with_footer(show_divider: true) do
+            render(Primer::Beta::Button.new(scheme: :primary, data: { action: "click:select-panel#hide" })) do
+              I18n.t(:button_apply)
+            end
+          end
         end
 
         f.select_panel(
@@ -99,7 +105,7 @@ module Admin
           input_width: :medium
         )
 
-        f.submit(scheme: :primary, name: :apply, label: I18n.t(:button_apply))
+        f.submit(scheme: :primary, name: :apply, label: I18n.t(:button_save))
       end
 
       private

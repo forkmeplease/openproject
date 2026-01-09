@@ -61,6 +61,6 @@ RSpec.describe Admin::Settings::BacklogsSettingsForm, type: :forms do
       expect(field["value"]).to eq "down"
     end
 
-    expect(rendered_form).to have_button "Apply", type: "submit"
+    expect(rendered_form).to have_button "Save", type: "submit"
   end
 end
