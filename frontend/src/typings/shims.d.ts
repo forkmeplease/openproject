@@ -36,6 +36,10 @@ declare module '@hotwired/turbo' {
     adapter:BrowserAdapter;
   };
 
+  export const config:{
+    drive:{ progressBarDelay:number }
+  };
+
   export const navigator:{
     submitForm:(form:HTMLFormElement, submitter?:HTMLElement) => void;
   };
@@ -46,9 +50,6 @@ declare module '@hotwired/turbo' {
   }
 
   export function start():void;
-
-  export function setProgressBarDelay(delay:number):void;
-
 }
 
 declare global {

@@ -13,7 +13,7 @@ import { StreamActions } from '@hotwired/turbo';
 import { addTurboAngularWrapper } from 'core-turbo/turbo-angular-wrapper';
 
 Turbo.session.drive = true;
-Turbo.setProgressBarDelay(100);
+Turbo.config.drive.progressBarDelay = 100;
 
 // Start turbo
 Turbo.start();
