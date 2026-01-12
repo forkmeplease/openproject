@@ -262,12 +262,12 @@ class RecurringMeeting < ApplicationRecord
 
   delegate :occurs_at?, to: :schedule
 
-  def remaining_occurrences
+  def remaining_occurrences(after_time: Time.current)
     case end_after
     when "specific_date"
-      schedule.occurrences_between(Time.current, end_date.to_time(:utc).end_of_day)
+      schedule.occurrences_between(after_time, end_date.to_time(:utc).end_of_day)
     when "iterations"
-      schedule.remaining_occurrences(Time.current)
+      schedule.remaining_occurrences(after_time)
     end
   end
 
@@ -354,15 +354,17 @@ class RecurringMeeting < ApplicationRecord
     when "specific_date"
       rule.until((end_date + 1.day).to_time(:utc))
     when "iterations"
-      if only_upcoming_iterations
-        # For most schedules it would not matter, but counting the occurences that already happened is easier
-        # than calculating the number of upcoming ones manually
-        rule.count(iterations - schedule.occurrences_between(start_time, current_schedule_start - 1.minute).size)
-      else
-        rule.count(iterations)
-      end
+      rule.count(iterations_for_schedule(only_upcoming_iterations: only_upcoming_iterations))
     else
       rule
+    end
+  end
+
+  def iterations_for_schedule(only_upcoming_iterations:)
+    if only_upcoming_iterations
+      remaining_occurrences(after_time: current_schedule_start).size
+    else
+      iterations
     end
   end
 

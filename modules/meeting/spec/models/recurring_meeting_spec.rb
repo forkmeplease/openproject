@@ -237,6 +237,8 @@ RSpec.describe RecurringMeeting,
               end_after: "iterations",
               iterations: 5,
               current_schedule_start: DateTime.parse("2024-10-15T12:00Z"))
+
+        # Occurrences on 2024-10-01, 2024-10-08, 2024-10-15, 2024-10-22, 2024-10-29
       end
 
       it "builds an IceCube schedule for iCal based on current_schedule_start" do
@@ -248,7 +250,7 @@ RSpec.describe RecurringMeeting,
         rrule = schedule.rrules.first
 
         expect(rrule).to be_a(IceCube::WeeklyRule)
-        expect(rrule.occurrence_count).to eq(2) # 15th is the 3rd occurrence, so 2 remaining
+        expect(rrule.occurrence_count).to eq(3) # 15th is the 3rd occurrence, so with it 3 remaining
       end
 
       it "builds an IceCube schedule for based on start_time" do
