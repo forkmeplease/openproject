@@ -419,8 +419,6 @@ en:
       description: >
         This template will be used whenever new meetings in the series get created.
         You can add agenda items, participants, and attachments to this template.
-      blankslate_finalize: >
-        Finish setup and schedule first meeting
       label_view_template: "View template"
       label_edit_template: "Edit template"
       banner_html: >

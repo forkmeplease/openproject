@@ -3,18 +3,5 @@
     component.with_visual_icon(icon: :book)
     component.with_heading(tag: :h2).with_content(title)
     component.with_description_content(description)
-
-    if can_finalize_template?
-      component.with_secondary_action(
-        href: exit_draft_mode_dialog_project_meeting_path(@meeting.project, @meeting),
-        data: {
-          action: "click->meetings--submit#intercept",
-          href: exit_draft_mode_dialog_project_meeting_path(@meeting.project, @meeting),
-          method: "GET"
-        }
-      ) do
-        t(:"recurring_meeting.template.blankslate_finalize")
-      end
-    end
   end
 %>
