@@ -963,9 +963,9 @@ Rails.application.routes.draw do
         post :generate_api_key
       end
 
+      delete :remove_oauth_client_token
       delete :revoke_api_key
       delete :revoke_ical_token
-      delete :revoke_storage_token
       delete :revoke_ical_meeting_token
     end
   end

@@ -27,37 +27,18 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%= component_wrapper(class: "mb-4") do %>
+<%# locals: (oauth_client_tokens:) -%>
+<!-- TODO: Generalize to client tokens table -->
+
+<div id="oauth-client-token-section" class="mb-4">
   <%= render(Primer::Beta::Subhead.new) do |component|
     component.with_heading(tag: :h3, size: :medium) do
-      t(:title, scope: i18n_scope)
+      t("my_account.access_tokens.oauth_client.title")
     end
     component.with_description do
-      t(:text_hint, scope: i18n_scope)
+      t("my_account.access_tokens.oauth_client.text_hint")
     end
   end %>
 
-  <% if token_available? %>
-    <%= render My::AccessToken::API::TableComponent.new(rows: @tokens, title: t(:table_title, scope: i18n_scope), token_type:) %>
-    <% if show_add_button? %>
-      <%= render(
-            Primer::Beta::Button.new(
-              tag: :a,
-              mt: 3,
-              scheme: :secondary,
-              test_selector: "#{token_type.model_name.element}-token-add",
-              href: add_button_path,
-              data: { turbo_stream: true, turbo_method: add_button_method },
-              aria: { label: t(:add_button, scope: i18n_scope) },
-              role: "button",
-              title: t(:add_button, scope: i18n_scope)
-            )
-          ) do |button|
-            button.with_leading_visual_icon(icon: add_button_icon)
-            t(:add_button, scope: i18n_scope)
-          end %>
-    <% end %>
-  <% else %>
-    <%= render(Primer::Alpha::Banner.new(icon: :info)) { t(:disabled_text, scope: i18n_scope) } %>
-  <% end %>
-<% end %>
+  <%= render(My::AccessToken::OAuthClient::TableComponent.new(rows: oauth_client_tokens)) %>
+</div>

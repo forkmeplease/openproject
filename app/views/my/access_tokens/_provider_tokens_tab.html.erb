@@ -27,33 +27,20 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title(t(:label_my_account), I18n.t("my_account.access_tokens.access_tokens")) -%>
+<%# locals: (granted_applications:, ical_tokens_grouped_by_query:) -%>
 
-<%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { I18n.t("my_account.access_tokens.access_tokens") }
-    header.with_breadcrumbs(
-      [{ href: my_account_path, text: t(:label_my_account) },
-       I18n.t("my_account.access_tokens.access_tokens")]
-    )
+<%= render(Primer::Beta::Text.new(tag: :div, color: :subtle, mb: 3)) { t("my_account.access_tokens.tabs.provider.description") } %>
 
-    render_tab_header_nav(header, [
-      {
-        name: "provider",
-        path: my_access_tokens_path(tab: "provider"),
-        label: t("my_account.access_tokens.tabs.provider.title")
-      },
-      {
-        name: "client",
-        path: my_access_tokens_path(tab: "client"),
-        label: t("my_account.access_tokens.tabs.client.title")
-      }
-    ])
-  end
-%>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.api_tokens, token_type: Token::API) %>
+<%= render partial: "icalendar_tokens_section", locals: { ical_tokens_grouped_by_query: } %>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: @user.ical_meeting_tokens, token_type: Token::ICalMeeting) %>
+<%= render partial: "oauth_application_tokens_section", locals: { granted_applications: } %>
+<%= render ::My::AccessToken::APITokensSectionComponent.new(tokens: Array(@user.rss_token), token_type: Token::RSS) %>
 
-<% if params[:tab] == "client" %>
-  <%= render partial: "client_tokens_tab", locals: { oauth_client_tokens: @oauth_client_tokens } %>
-<% else %>
-  <%= render partial: "provider_tokens_tab", locals: { ical_tokens_grouped_by_query: @ical_tokens_grouped_by_query, granted_applications: granted_applications } %>
-<% end %>
+<div class="generic-table--container">
+  <div class="generic-table--results-container">
+    <table class="generic-table" data-controller="table-highlighting">
+      <%= call_hook(:view_access_tokens_table, user: @user) %>
+    </table>
+  </div>
+</div>

@@ -27,33 +27,8 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title(t(:label_my_account), I18n.t("my_account.access_tokens.access_tokens")) -%>
+<%# locals: (oauth_client_tokens:) -%>
 
-<%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { I18n.t("my_account.access_tokens.access_tokens") }
-    header.with_breadcrumbs(
-      [{ href: my_account_path, text: t(:label_my_account) },
-       I18n.t("my_account.access_tokens.access_tokens")]
-    )
+<%= render(Primer::Beta::Text.new(tag: :div, color: :subtle, mb: 3)) { t("my_account.access_tokens.tabs.client.description") } %>
 
-    render_tab_header_nav(header, [
-      {
-        name: "provider",
-        path: my_access_tokens_path(tab: "provider"),
-        label: t("my_account.access_tokens.tabs.provider.title")
-      },
-      {
-        name: "client",
-        path: my_access_tokens_path(tab: "client"),
-        label: t("my_account.access_tokens.tabs.client.title")
-      }
-    ])
-  end
-%>
-
-<% if params[:tab] == "client" %>
-  <%= render partial: "client_tokens_tab", locals: { oauth_client_tokens: @oauth_client_tokens } %>
-<% else %>
-  <%= render partial: "provider_tokens_tab", locals: { ical_tokens_grouped_by_query: @ical_tokens_grouped_by_query, granted_applications: granted_applications } %>
-<% end %>
+<%= render partial: "oauth_client_tokens_section", locals: { oauth_client_tokens: } %>

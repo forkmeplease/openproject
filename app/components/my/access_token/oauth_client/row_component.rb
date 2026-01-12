@@ -30,26 +30,37 @@
 
 module My
   module AccessToken
-    module API
+    module OAuthClient
       class RowComponent < OpPrimer::BorderBoxRowComponent
-        def api_token
+        def client_token
           model
         end
 
-        def token_name
-          if !api_token.respond_to?(:token_name) || api_token.token_name.nil?
-            t(:static_token_name, scope: i18n_token_scope)
-          else
-            api_token.token_name
+        def name
+          render(Primer::Beta::Text.new(test_selector: "oauth-client-token-#{row.id}")) do
+            client_token.oauth_client.integration.name
           end
         end
 
+        def integration_type
+          integration_class_name = client_token.oauth_client.integration_type
+          integration_class = begin
+            integration_class_name.constantize
+          rescue NameError
+            nil
+          end
+
+          return I18n.t("my_account.access_tokens.oauth_client.unknown_integration") unless integration_class
+
+          integration_class.model_name.human
+        end
+
         def created_at
-          helpers.format_time(api_token.created_at)
+          helpers.format_time(client_token.created_at)
         end
 
         def expires_on
-          I18n.t("my_account.access_tokens.indefinite_expiration")
+          helpers.format_time(client_token.updated_at + client_token.expires_in.seconds)
         end
 
         def button_links
@@ -61,29 +72,18 @@ module My
                    icon: :trash,
                    scheme: :danger,
                    tag: :a,
-                   href: delete_path,
+                   href: my_access_token_remove_oauth_client_token_path(client_token),
                    "aria-label": t(:button_delete),
                    tooltip_direction: :w,
-                   test_selector: "api-token-revoke",
+                   test_selector: "oauth-client-token-#{client_token.id}-remove",
                    data: {
                      turbo_method: :delete,
-                     turbo_confirm: t("my_account.access_tokens.simple_revoke_confirmation")
+                     turbo_confirm: t(
+                       "my_account.access_tokens.oauth_client.remove_token",
+                       integration: client_token.oauth_client.integration.name
+                     )
                    }
                  ))
-        end
-
-        private
-
-        def delete_path
-          case model
-          when Token::API then my_access_token_revoke_api_key_path(api_token.id)
-          when Token::ICalMeeting then my_access_token_revoke_ical_meeting_token_path(api_token.id)
-          when Token::RSS then revoke_rss_key_my_access_tokens_path(api_token.id)
-          end
-        end
-
-        def i18n_token_scope
-          [:my_account, :access_tokens, api_token.class.model_name.i18n_key]
         end
       end
     end
