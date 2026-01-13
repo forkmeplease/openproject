@@ -49,18 +49,6 @@ RSpec.describe WorkPackage do
     shared_let(:other_work_package) { build_stubbed(:work_package) }
     shared_let(:other_user) { create(:user) }
 
-    let!(:work_package) do
-      User.execute_as current_user do
-        create(:work_package,
-               project_id: project.id,
-               type:,
-               description: "Description",
-               priority:,
-               status:,
-               duration: 1)
-      end
-    end
-
     current_user { create(:user) }
 
     shared_examples_for "journaled values for" do |new_values_set:,
@@ -301,39 +289,6 @@ RSpec.describe WorkPackage do
       end
     end
 
-    # The below test was failing with the following error:
-    # ERROR:  new row for relation "journals" violates check constraint "journals_validity_period_not_empty" (PG::CheckViolation)
-    # DETAIL:  Failing row contains (1178, WorkPackage, 481, 1252, , 2025-12-04 07:58:21.028586+00, 1,
-    #          2025-12-04 07:58:21.028586+00, Journal::WorkPackageJournal, 833, {}, empty, f).
-    it "can add multiple comments right after creation" do
-      work_package
-      User.execute_as current_user do
-        # create multiple journals after creation
-        work_package.add_journal(user: current_user, notes: "First comment")
-        work_package.save_journals
-        work_package.add_journal(user: current_user, notes: "Second comment")
-        work_package.save_journals
-
-        ##### The fix is incomplete: the part below still fails.
-        ##### There may also be some issues with timestamps inaccuracies: some
-        ##### updated_at not matching the journal's validity periods.
-
-        # # create multiple journals after update
-        # work_package.update(subject: "Updated subject")
-        # work_package.add_journal(user: current_user, notes: "Third comment")
-        # work_package.save_journals
-        # work_package.add_journal(user: current_user, notes: "Fourth comment")
-        # work_package.save_journals
-
-        # # Verify journals were created with aggregation:
-        # # - Journal 1: creation + first comment (aggregated)
-        # # - Journal 2: second comment (can't aggregate - both have notes)
-        # # - Journal 3: update + third comment (aggregated)
-        # # - Journal 4: fourth comment (can't aggregate - both have notes)
-        # expect(work_package.journals.count).to eq(4)
-      end
-    end
-
     context "on creation" do
       let(:work_package) do
         described_class.new(author: current_user,
@@ -405,7 +360,16 @@ RSpec.describe WorkPackage do
                          "project_phase_definition_id" => [nil, :project_phase_definition]
                        },
                        expect_new_journal: true,
-                       expect_predecessor_changed: false
+                       expect_predecessor_changed: false do
+        it "results in created_at and updated_at being the same on the work package" do
+          work_package.save!
+          # Just to ensure that there actually is nothing hidden in the DB
+          work_package.reload
+
+          expect(work_package.created_at)
+            .to eql work_package.updated_at
+        end
+      end
     end
 
     context "when nothing is changed" do
@@ -724,6 +688,10 @@ RSpec.describe WorkPackage do
       let(:attachment) { build(:attachment) }
       let(:attachment_id) { "attachments_#{attachment.id}" }
 
+      let!(:work_package) do
+        create(:work_package)
+      end
+
       before do
         work_package.attachments << attachment
         work_package.save!
@@ -751,6 +719,10 @@ RSpec.describe WorkPackage do
       end
 
       let(:custom_field_id) { "custom_fields_#{custom_value.custom_field_id}" }
+
+      let!(:work_package) do
+        create(:work_package)
+      end
 
       shared_context "for work package with custom value" do
         before do
@@ -861,6 +833,10 @@ RSpec.describe WorkPackage do
     context "on file link changes", with_settings: { journal_aggregation_time_minutes: 0 } do
       let(:file_link) { build(:file_link) }
       let(:file_link_id) { "file_links_#{file_link.id}" }
+
+      let!(:work_package) do
+        create(:work_package)
+      end
 
       before do
         work_package.file_links << file_link
@@ -1245,6 +1221,73 @@ RSpec.describe WorkPackage do
                            },
                            # The value of description does change which is what causes update_at to change
                            expect_work_package_update_at_changed: true
+        end
+      end
+    end
+
+    # The below test was failing with the following error:
+    # ERROR:  new row for relation "journals" violates check constraint "journals_validity_period_not_empty" (PG::CheckViolation)
+    # DETAIL:  Failing row contains (1178, WorkPackage, 481, 1252, , 2025-12-04 07:58:21.028586+00, 1,
+    #          2025-12-04 07:58:21.028586+00, Journal::WorkPackageJournal, 833, {}, empty, f).
+    context "on adding two notes right after creation" do
+      let(:work_package) do
+        create(:work_package,
+               subject: "Initial subject") do |wp|
+          wp.add_journal(user: current_user, notes: "First comment")
+          wp.save!
+        end
+      end
+
+      include_examples "journaled values for",
+                       new_values_set: {
+                         "journal_notes" => "Second comment"
+                       },
+                       expected_values: {},
+                       expected_notes: "Second comment",
+                       expect_new_journal: true
+
+      context "when then changing an attribute" do
+        before do
+          work_package.add_journal(user: current_user, notes: "Second comment")
+          work_package.save!
+        end
+
+        include_examples "journaled values for",
+                         new_values_set: {
+                           "subject" => "Changed subject"
+                         },
+                         expected_values: {
+                           "subject" => ["Initial subject", "Changed subject"]
+                         },
+                         expected_notes: "Second comment",
+                         expect_new_journal: false
+
+        context "when now adding a note" do
+          before do
+            work_package.update!(subject: "Changed subject")
+          end
+
+          include_examples "journaled values for",
+                           new_values_set: {
+                             "journal_notes" => "Third comment"
+                           },
+                           expected_values: {},
+                           expected_notes: "Third comment",
+                           expect_new_journal: true
+
+          context "when now adding another note" do
+            before do
+              work_package.add_journal(user: current_user, notes: "Third comment")
+            end
+
+            include_examples "journaled values for",
+                             new_values_set: {
+                               "journal_notes" => "Fourth comment"
+                             },
+                             expected_values: {},
+                             expected_notes: "Fourth comment",
+                             expect_new_journal: true
+          end
         end
       end
     end
