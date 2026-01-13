@@ -118,13 +118,6 @@ module Journals
     # It consists of a couple of parts that are kept as individual queries (as CTEs) but
     # are all executed within a single database call.
     #
-    # The first four CTEs('cleanup_predecessor_data', 'cleanup_predecessor_attachable', 'cleanup_predecessor_customizable'
-    # and cleanup_predecessor_storable) strip the information of a predecessor if one exists. If no predecessor exists,
-    # a noop SQL statement is employed instead.
-    # To strip the information from the journal, the data record (e.g. from work_packages_journals) as well as the
-    # attachment and custom value information is removed. The journal itself is kept and will later on have its
-    # updated_at and possibly its notes property updated.
-    #
     # The next CTEs (`max_journals`) responsibility is to fetch the latest journal and have that available for later queries
     # (i.e. when determining the latest state of the journable, when getting the current version number and when
     # comparing the timestamps of the last journalization time and the work package's updated_at time).
@@ -146,12 +139,20 @@ module Journals
     # When comparing text based values, newlines are normalized as otherwise users having a different OS might change a text value
     # without intending to.
     #
-    # Journalization is then continued only if
+    # Journalization continues only if
     # * a change has been identified (by the `changes` CTE)
     # * OR a note is present
     # * OR a cause is present (which would be different from the cause of the predecessor as that one would otherwise be
     #   aggregated with)
     # * OR a predecessor is replaced
+    #
+    # If a change has been identified (not for a note or a cause) and a predecessor to aggregate with exists, the predecessor's
+    # data is stripped. this is done by the CTEs 'cleanup_predecessor_data' and the ones for the associated data,
+    # 'cleanup_predecessor_XYZ' (where XYZ is e.g. attachable or customizable). If no predecessor exists,
+    # a noop SQL statement is run instead.
+    # To strip the information from the journal, the data record (e.g. from work_packages_journals) as well as the
+    # associated data information is removed. The journal itself is kept and will later on have its
+    # updated_at and possibly its notes property updated.
     #
     # To enforce consistent timestamps throughout the data structure of journable and journal, the time used for further timestamp
     # setting is then calculated once between the two CTEs `touch_journable` and `fetch_time`. The auxiliary tables
@@ -411,7 +412,7 @@ module Journals
     # Whenever an attribute is updated on the journable before creating the journal, the updated_at timestamp
     # will already have been increased so nothing needs to be done.
     # But if any of the associated data is updated or if only a cause or note is added, the journable would
-    # otherwise not have receive an updated timestamp.
+    # otherwise not have received an updated timestamp.
     def touch_journable_sql(predecessor, notes, cause) # rubocop:disable Metrics/AbcSize
       if journable.class.aaj_options[:timestamp].to_sym == :updated_at
         sql = <<~SQL
@@ -450,8 +451,8 @@ module Journals
 
     # Sets the validity_period's upper boundary of the preceding journal to the created_at timestamp of the inserted journal.
     # The upper bound set is not included.
-    # If there is a predecessor (meaning we are aggregating/updating an existing journal), nothing is done since
-    # in that case the preceding journal is the one we are currently aggregating with so it will still remain
+    # If there is a predecessor (meaning we are aggregating/updating an existing journal), nothing is done.
+    # In that case, the preceding journal is the one we are currently aggregating with so it will still remain
     # the most recent one.
     def update_predecessor_sql(predecessor, notes, cause)
       return "SELECT 1" if predecessor.present?
