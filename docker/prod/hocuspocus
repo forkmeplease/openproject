@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export SECRET="${OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET}"
+
+cd /usr/local/hocuspocus
+
+npm start run

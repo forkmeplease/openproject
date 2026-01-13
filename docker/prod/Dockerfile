@@ -39,6 +39,9 @@ ENV OPENPROJECT_INSTALLATION__TYPE=docker
 ENV OPENPROJECT_ATTACHMENTS__STORAGE__PATH=$APP_DATA_PATH/files
 ENV OPENPROJECT_RAILS__CACHE__STORE=file_store
 ENV OPENPROJECT_ANGULAR_UGLIFY=true
+# leave the following empty to fill automatically, using the bundled hocuspocus
+ENV OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__URL=
+ENV OPENPROJECT_COLLABORATIVE__EDITING__HOCUSPOCUS__SECRET=
 
 RUN useradd -d /home/$APP_USER -m $APP_USER && \
   mkdir -p $APP_PATH && chown $APP_USER:$APP_USER $APP_PATH && \
@@ -107,6 +110,8 @@ ENV PGDATA=/var/openproject/pgdata
 
 COPY --from=openproject/gosu /go/bin/gosu /usr/local/bin/gosu
 RUN chmod +x /usr/local/bin/gosu && gosu nobody true
+
+COPY --from=openproject/hocuspocus --chown=$APP_USER:$APP_USER /app /usr/local/hocuspocus
 
 RUN ./docker/prod/setup/postinstall-onprem.sh && \
   ln -s /app/docker/prod/setup/.irbrc /root/
