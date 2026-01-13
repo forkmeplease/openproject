@@ -254,6 +254,13 @@ RSpec.describe WorkPackage do
           expect(work_package.reload.updated_at)
             .not_to eql(updated_at_before)
         end
+      else
+        it "keeps the updated_at time of the work package" do
+          # Using this complicated form of writing to avoid problems
+          # e.g. with reloading before the work package is initially saved
+          expect { work_package.save! }
+            .not_to change { work_package.reload.updated_at }
+        end
       end
     end
 

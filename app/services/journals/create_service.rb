@@ -404,33 +404,30 @@ module Journals
     end
 
     # Updates the updated_at timestamp of the journable.
-    # That is only carried out if the journable doesn't already have a newer timestamp than the most recent journal or
-    # hasn't been updated by the `#save` call after which this service runs.
-    # Most recent in this case can mean one of two things:
-    #  * if there is a predecessor we are aggregating with, it is that predecessor
-    #  * otherwise, the most recent journal that we are not aggregating with.
+    #
     # Whenever an attribute is updated on the journable before creating the journal, the updated_at timestamp
     # will already have been increased so nothing needs to be done.
     # But if any of the associated data is updated or if only a cause or note is added, the journable would
     # otherwise not have received an updated timestamp.
-    def touch_journable_sql(predecessor, notes, cause) # rubocop:disable Metrics/AbcSize
+    #
+    # Therefore, this is only carried out if:
+    # * the journable doesn't already have a newer timestamp than the most recent journal AND
+    # * if there are changes or a note or a cause
+    def touch_journable_sql(predecessor, notes, cause)
       if journable.class.aaj_options[:timestamp].to_sym == :updated_at
         sql = <<~SQL
           UPDATE
             #{journable_table_name}
           SET
-            updated_at = COALESCE(:update_timestamp, statement_timestamp())
+            updated_at = statement_timestamp()
           WHERE
             id = :id
             #{only_on_changed_or_forced_condition_sql(predecessor, notes, cause)}
-            AND NOT updated_at > COALESCE(:predecessor_timestamp, (SELECT updated_at FROM max_journals))
+            AND NOT updated_at > (SELECT updated_at FROM max_journals)
           RETURNING updated_at
         SQL
 
-        keep_same_updated_at = journable.updated_at_previously_changed? && !journable.previously_new_record?
         sanitize(sql,
-                 update_timestamp: keep_same_updated_at ? journable.updated_at : nil,
-                 predecessor_timestamp: predecessor&.updated_at,
                  id: journable.id)
       else
         <<~SQL
