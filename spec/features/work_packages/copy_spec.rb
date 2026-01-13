@@ -102,7 +102,7 @@ RSpec.describe "Work package copy", :js, :selenium do
     to_copy_work_package_page.expect_current_path
     to_copy_work_package_page.expect_fully_loaded
 
-    to_copy_work_package_page.update_attributes Description: "Copied WP Description"
+    to_copy_work_package_page.fill_in_attributes Description: "Copied WP Description"
     to_copy_work_package_page.save!
 
     expect(page).to have_css(".op-toast--content",
