@@ -136,6 +136,14 @@ module CustomFields
         )
       end
 
+      if show_has_comment_field?
+        details_form.check_box(
+          name: :has_comment,
+          label: label(:has_comment),
+          caption: instructions(:has_comment)
+        )
+      end
+
       if show_is_required_field?
         details_form.check_box(
           name: :is_required,
@@ -222,6 +230,10 @@ module CustomFields
 
     def show_default_rich_text_field?
       %w[text].include?(model.field_format)
+    end
+
+    def show_has_comment_field?
+      model.can_have_comment?
     end
 
     def show_is_required_field?
