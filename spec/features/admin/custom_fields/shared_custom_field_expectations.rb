@@ -169,6 +169,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
   end
   let(:label_default_value) { I18n.t("activerecord.attributes.custom_field.default_value") } # Default value
   let(:label_is_required) { I18n.t("activerecord.attributes.custom_field.is_required") } # Required
+  let(:label_formula) { I18n.t("activerecord.attributes.custom_field.formula") } # Formula
   # Spent time SFs don't show "Searchable". Not tested here.
   # Project CFs don't show "For all projects" and "Used as a filter". Not tested here.
   # Content right to left is not shown for Project CFs Long text. Strange. Not tested.
@@ -211,7 +212,7 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
     end
 
     if (type in "Work package" | "Project") &&
-       !(format in "Boolean" | "Date" | "Float" | "Integer" | "User" | "Version" | "Hierarchy")
+       !(format in "Boolean" | "Calculated value" | "Date" | "Float" | "Integer" | "User" | "Version" | "Hierarchy")
       expect(page).to have_field(label_searchable)
     else
       expect(page).to have_no_label(label_searchable)
@@ -259,10 +260,16 @@ RSpec.shared_examples_for "expected fields for the custom field's format", :aggr
       expect(page).to have_no_label(label_multi_value)
     end
 
-    if format == "Boolean"
+    if format in "Boolean" | "Calculated value"
       expect(page).to have_no_label(label_is_required)
     else
       expect(page).to have_field(label_is_required)
+    end
+
+    if format == "Calculated value"
+      expect(page).to have_pattern_input(label_formula)
+    else
+      expect(page).to have_no_label(label_formula)
     end
 
     if format == "Version"
