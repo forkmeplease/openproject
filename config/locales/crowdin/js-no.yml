@@ -203,6 +203,8 @@
         add_table: "Legg til tabell over tilknyttede arbeidspakker"
         edit_query: "Rediger spørring"
         new_group: "Ny gruppe"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Tilbakestill til standard"
       working_days:
         calendar:

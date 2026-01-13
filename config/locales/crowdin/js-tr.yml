@@ -203,6 +203,8 @@ tr:
         add_table: "Bağlantılı iş paketlerinin tablosunu ekle"
         edit_query: "Sorguyu düzenle"
         new_group: "Yeni grup"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Varsayılanlara geri yükle"
       working_days:
         calendar:

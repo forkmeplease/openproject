@@ -393,8 +393,6 @@ ja:
       blank_title: "一連の会議のテンプレートがありません"
       description: >
         このテンプレートは、シリーズの新しい会議が作成されるたびに使用されます。このテンプレートに議題、参加者、添付ファイルを追加できます。
-      blankslate_finalize: >
-        このテンプレートの準備が完了したら、上の「%{button_title}」ボタンをクリックしてセットアップを完了し、シリーズの最初のミーティングをスケジュールします。
       label_view_template: "テンプレートを表示"
       label_edit_template: "テンプレートを編集"
       banner_html: >
@@ -601,10 +599,12 @@ ja:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar for meetings"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendarミーティングトークンを使用すると、ユーザーはすべてのミーティングを購読し、外部クライアントで最新のミーティング情報を表示できます。"
         disabled_text: "iCalendarの会議予約は管理者によって有効化されていません。この機能を使用するには、管理者に連絡してください。"
-        empty_text_hint: 'iCalendarのミーティングトークンを追加するには、<a href="%{path}">ミーティングセクションに</a>行き、そこから登録します。'
         add_button: "カレンダーを購読する"
   my:
     access_token:
@@ -619,7 +619,6 @@ ja:
         token/ical_meeting:
           title: "iCalミーティング購読トークンが生成されました"
           body: "以下のURLをパスワードと同じように扱ってください。アクセス権を持っている人はすべてのミーティングを閲覧できます。"
-          warning: "このトークンが表示される唯一の時間です。今すぐコピーしてください。"
       revocation:
         token/ical_meeting:
           notice_success: "iCalendar ミーティング購読が正常に取り消されました。"

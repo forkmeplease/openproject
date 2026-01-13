@@ -203,6 +203,8 @@ si:
         add_table: "අදාළ වැඩ පැකේජ වගුව එකතු කරන්න"
         edit_query: "විමසුම සංස්කරණය කරන්න"
         new_group: "නව කණ්ඩායම"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "පැහැර හැරීම් නැවත සකසන්න"
       working_days:
         calendar:

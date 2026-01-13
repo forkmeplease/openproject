@@ -203,6 +203,8 @@ lt:
         add_table: "Pridėti susijusių darbų paketų lentelę"
         edit_query: "Keisti užklausą"
         new_group: "Nauja grupė"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Atstatyti į numatytuosius"
       working_days:
         calendar:

@@ -203,6 +203,8 @@ es:
         add_table: "Agregar tabla de paquetes de trabajo relacionados"
         edit_query: "Editar consulta"
         new_group: "Nuevo grupo"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Restablecer valores predeterminados"
       working_days:
         calendar:
@@ -557,7 +559,7 @@ es:
       date_alerts:
         milestone_date: "Fecha de hito"
         overdue: "Vencido"
-        overdue_since: "for %{difference_in_days}."
+        overdue_since: "durante %{difference_in_days}."
         property_today: "es hoy."
         property_is: "está en %{difference_in_days}."
         property_was: "fue hace %{difference_in_days}."
@@ -1166,10 +1168,10 @@ es:
       no_results: "Ningún producto coincide con tu criterio de búsqueda"
       no_favorite_results: "Ningún proyecto favorito coincide con sus criterios de búsqueda."
     include_workspaces:
-      search_placeholder: "Search..."
+      search_placeholder: "Buscar…"
       types:
-        program: "Program"
-        portfolio: "Portfolio"
+        program: "Programa"
+        portfolio: "Cartera"
     baseline:
       toggle_title: "Referencia"
       clear: "Despejar"

@@ -398,8 +398,6 @@ it:
       blank_title: "Il modello della tua serie di riunioni è vuoto"
       description: >
         Questo modello verrà utilizzato ogni volta che verranno create nuove riunioni della serie. A questo modello può aggiungere punti dell'ordine del giorno, partecipanti e allegati.
-      blankslate_finalize: >
-        Quando hai finito di preparare questo modello, clicca sul pulsante '%{button_title}' in alto per terminare l'impostazione e programmare la prima riunione della serie.
       label_view_template: "Visualizza modello"
       label_edit_template: "Modifica modello"
       banner_html: >
@@ -608,10 +606,12 @@ it:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar per le riunioni"
+        table_title: "iCalendar meeting tokens"
         text_hint: "I token iCalendar delle riunioni consentono agli utenti di iscriversi a tutte le proprie riunioni e di visualizzare le informazioni aggiornate in client esterni."
         disabled_text: "Le iscrizioni alle riunioni iCalendar non sono abilitate dall'amministratore. Contatta il tuo amministratore per utilizzare questa funzione."
-        empty_text_hint: 'Per aggiungere un token iCalendar della riunione, vai alla <a href="%{path}">sezione riunioni</a> e iscriviti da lì.'
         add_button: "Iscriviti al calendario"
   my:
     access_token:
@@ -626,7 +626,6 @@ it:
         token/ical_meeting:
           title: "È stato generato un token di iscrizione a una riunione iCal"
           body: "Tratta il seguente URL come una password. Chiunque vi abbia accesso può vedere tutte le tue riunioni."
-          warning: "Questa è l'unica volta in cui vedrai questo token. Assicurati di copiarlo adesso."
       revocation:
         token/ical_meeting:
           notice_success: "L'iscrizione alle riunioni di iCalendar è stato revocato con successo."

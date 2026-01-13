@@ -202,6 +202,8 @@ ro:
         add_table: "Adaugă pachet de lucru asociat"
         edit_query: "Editare query"
         new_group: "Grupare nouă"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Resetare AVATAR implicit"
       working_days:
         calendar:

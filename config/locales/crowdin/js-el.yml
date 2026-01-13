@@ -202,6 +202,8 @@ el:
         add_table: "Προσθήκη πίνακα με σχετιζόμενες εργασίες"
         edit_query: "Επεξεργασία αναζήτησης"
         new_group: "Νέα ομάδα"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Επαναφορά στα προεπιλεγμένα"
       working_days:
         calendar:

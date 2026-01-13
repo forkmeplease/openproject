@@ -203,6 +203,8 @@ fil:
         add_table: "Add table of related work packages"
         edit_query: "Edit query"
         new_group: "Bagong grupo"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "I-reset sa mga default"
       working_days:
         calendar:

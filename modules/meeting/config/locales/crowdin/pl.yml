@@ -408,8 +408,6 @@ pl:
       blank_title: "Szablon serii spotkań jest pusty"
       description: >
         Ten szablon będzie używany za każdym razem, gdy zostaną utworzone nowe spotkania w serii. Do tego szablonu możesz dodać elementy planu spotkania, uczestników i załączniki.
-      blankslate_finalize: >
-        Gdy skończysz przygotowywać ten szablon, kliknij przycisk „%{button_title}” powyżej, aby zakończyć konfigurację i zaplanować pierwsze spotkanie serii.
       label_view_template: "Wyświetl szablon"
       label_edit_template: "Edytuj szablon"
       banner_html: >
@@ -622,10 +620,12 @@ pl:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar dla spotkań"
+        table_title: "iCalendar meeting tokens"
         text_hint: "Tokeny spotkań aplikacji iCalendar umożliwiają użytkownikom subskrybowanie wszystkich ich spotkań i wyświetlanie aktualnych informacji o spotkaniach w klientach zewnętrznych."
         disabled_text: "Subskrypcje spotkań w iCalendar nie zostały włączone przez administratora. Aby użyć tej funkcji, skontaktuj się z administratorem."
-        empty_text_hint: 'Aby dodać token spotkania iCalendar, przejdź do <a href="%{path}">sekcji spotkań</a> i tam dokonaj subskrypcji.'
         add_button: "Subskrybuj kalendarz"
   my:
     access_token:
@@ -640,7 +640,6 @@ pl:
         token/ical_meeting:
           title: "Wygenerowano token subskrypcji spotkania iCal"
           body: "Poniższy adres URL traktuj jak hasło. Każdy, kto ma do niego dostęp, może wyświetlić wszystkie Twoje spotkania."
-          warning: "Jest to jedyny raz, gdy zobaczysz ten token. Koniecznie skopiuj go teraz."
       revocation:
         token/ical_meeting:
           notice_success: "Subskrypcja spotkania iCalendar została unieważniona."

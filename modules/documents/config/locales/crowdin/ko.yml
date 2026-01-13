@@ -83,10 +83,10 @@ ko:
       all: "모든 문서"
       types: "유형"
       collaboration_settings: "실시간 공동 작업"
-    last_updated_at: "Last saved %{time}."
+    last_updated_at: "마지막으로 저장 %{time}."
     active_editors: "활성 편집자"
     active_editors_count:
-      other: "%{count} active editors"
+      other: "활성 편집자 %{count}명"
     label_attachment_author: "첨부 파일 작성자"
     label_categories: "카테고리"
     new_category: "새 카테고리"

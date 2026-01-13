@@ -203,6 +203,8 @@ uk:
         add_table: "Додати таблицю пов'язаних пакетів робіт"
         edit_query: "Редагувати запит"
         new_group: "Нова група"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Скинути на типові значення"
       working_days:
         calendar:
@@ -557,7 +559,7 @@ uk:
       date_alerts:
         milestone_date: "Дата віхи"
         overdue: "Прострочено"
-        overdue_since: "for %{difference_in_days}."
+        overdue_since: "протягом %{difference_in_days}."
         property_today: "сьогодні."
         property_is: "через %{difference_in_days}."
         property_was: "%{difference_in_days} тому."
@@ -1174,7 +1176,7 @@ uk:
       no_results: "Жоден проєкт не відповідає вашим критеріям пошуку."
       no_favorite_results: "Немає вибраних проєктів, які відповідають критеріям пошуку."
     include_workspaces:
-      search_placeholder: "Пошук..."
+      search_placeholder: "Пошук…"
       types:
         program: "Програма"
         portfolio: "Портфель"

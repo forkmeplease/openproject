@@ -83,10 +83,10 @@ ru:
       meeting_agenda: "Повестка дня"
       meeting_section: "Раздел"
       token/ical_meeting:
-        one: "Подписка на совещание iCal"
-        few: "iCal Meeting subscription"
-        many: "iCal Meeting subscription"
-        other: "Подписка на совещание iCal"
+        one: " iCal подписка на совещание"
+        few: " iCal подписки на совещание"
+        many: " iCal подписок на совещание"
+        other: " iCal подписок на совещание"
   activity:
     filter:
       meeting: "Совещания"
@@ -252,8 +252,8 @@ ru:
         header: "Встреча '%{title}' была обновлена"
         summary: "Совещание '%{title}' было обновлено пользователем %{actor}"
         body: "Совещание '%{title}' было обновлено пользователем %{actor}."
-        old_title: "Old title"
-        new_title: "New title"
+        old_title: "Старый заголовок"
+        new_title: "Новый заголовок"
         old_date_time: "Старые дата/время"
         new_date_time: "Новые дата/время"
         old_location: "Старое расположение"
@@ -408,8 +408,6 @@ ru:
       blank_title: "Ваш шаблон серии совещаний пуст"
       description: >
         Этот шаблон будет использоваться каждый раз, когда будут создаваться новые совещания в серии. Вы можете добавить в этот шаблон пункты повестки дня, участников и вложения.
-      blankslate_finalize: >
-        По завершении подготовки шаблона нажмите кнопку '%{button_title}', чтобы завершить установку и запланировать первое совещание этой серии.
       label_view_template: "Посмотреть шаблон"
       label_edit_template: "Изменить шаблон"
       banner_html: >
@@ -622,10 +620,12 @@ ru:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar для совещаний"
+        table_title: "iCalendar meeting tokens"
         text_hint: "Токены iCalendar позволяют пользователям подписываться на все свои совещания и просматривать актуальную информацию о них во внешних клиентах."
         disabled_text: "Подписки на совещания iCalendar не включены администратором. Пожалуйста, свяжитесь с администратором для использования этой функции."
-        empty_text_hint: 'Чтобы добавить токен iCalendar, перейдите в <a href="%{path}">раздел совещаний</a> и оформите подписку там.'
         add_button: "Подписаться на календарь"
   my:
     access_token:
@@ -640,7 +640,6 @@ ru:
         token/ical_meeting:
           title: "Сгенерирован токен подписки на совещание iCal"
           body: "Относитесь к следующему URL-адресу так же, как к паролю. Любой, кто имеет к нему доступ, может просматривать все Ваши совещания."
-          warning: "Это единственный раз, когда Вы увидите токен. Убедитесь, что вы сохранили его."
       revocation:
         token/ical_meeting:
           notice_success: "Подписка на совещания iCalendar была успешно отменена."

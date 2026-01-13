@@ -191,7 +191,7 @@ zh-TW:
       error_cannot_act_self: "無法隔離你上傳的檔案"
   attribute_help_texts:
     caption: "此簡短版本將顯示為屬性的標題。"
-    note_public: "Any text and images you add to this field are publicly visible to all logged in users."
+    note_public: "您新增至此欄位的任何文字和影像，對所有登入的使用者都是公開可見的。"
     text_overview: "在此頁面，你可以替屬性頁面建立自訂說明文字。當建立完成後，這些文字在點擊相關屬性旁的求助圖示時顯示。"
     show_preview: "預覽文字"
     add_new: "新增說明文字"
@@ -350,7 +350,7 @@ zh-TW:
     instructions:
       is_required:
         all: "將自訂欄位標記為必填。這將使您在建立新資源時必須填寫該欄位。更新現有資源時則不需要填寫值。"
-        project: "Required attributes need to be filled out by the user on project creation if the field is active ('For all projects' set or copying from a project/template in which the field is active). Existing projects will not require a value when being updated."
+        project: "如果欄位處於活動狀態（設定為「適用於所有專案」或從欄位處於活動狀態的專案/範本複製），使用者需要在建立專案時填寫必填屬性。現有專案在更新時不需要值。"
       is_for_all:
         all: "將自訂欄位標記為在所有現有和新專案中都可用。"
         project: "在所有現有和新專案中將屬性標示為可用。"
@@ -519,7 +519,7 @@ zh-TW:
         text: "此動作不會刪除清單中包含的任何專案。您確定要刪除此專案清單？"
     settings:
       header_details: 基本訊息
-      header_status: Status
+      header_status: 狀態
       header_relations: 專案關係
       button_update_details: 更新
       button_update_status_description: 更新專案狀態及說明
@@ -617,7 +617,7 @@ zh-TW:
         project_attributes_description: >
           選擇哪些專案屬性應包含在專案啟動請求中。此清單僅包含此專案啟用的 [專案屬性](project_attributes_url)。
     status:
-      button_edit: Edit status
+      button_edit: 編輯狀態
     wizard:
       sidebar_content_title: "內容"
       sections: "區段"
@@ -705,9 +705,11 @@ zh-TW:
           create_button: "建立"
           name_label: "令牌名稱"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "API 令牌(Token)已生成。"
-          warning: "這是您唯一一次看到此令牌(Token)的機會，請務必立即複製。"
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "無法重置訪問令牌(Token): %{error}"
       failed_to_create_token: "無法建立訪問令牌(Token): %{error}"
       failed_to_revoke_token: "無法撤銷訪問令牌(Token): %{error}"
@@ -718,8 +720,8 @@ zh-TW:
       notice_rss_token_revoked: "RSS 令牌(Token)已被刪除。 請使用 在RSS 選項裡提供的連結建立新的。"
       notice_ical_token_revoked: '專案「%{project_name}」日曆「%{calendar_name}」的 iCalendar 令牌(Token)「%{token_name}」已被撤銷。 帶有此令牌的 iCalendar URL 無效。'
     password_confirmation_dialog:
-      confirmation_required: "You need to enter your account password to confirm this change."
-      title: "Confirm your password to continue"
+      confirmation_required: "您需要輸入帳戶密碼來確認這項變更。"
+      title: "確認您的密碼以便繼續"
   news:
     index:
       no_results_title_text: 目前沒有新消息報告
@@ -1244,8 +1246,8 @@ zh-TW:
           true: "公開"
           false: "私人的"
         queries: "查詢"
-        status_code: "Status"
-        status_explanation: "Status description"
+        status_code: "狀態"
+        status_explanation: "狀態說明"
         status_codes:
           not_started: "未開始"
           on_track: "進度良好"
@@ -1897,8 +1899,10 @@ zh-TW:
       status: "工作套件狀態"
       token/api:
         other: 存取令牌(Token)
+      token/rss:
+        other: "RSS tokens"
       type:
-        other: "Types"
+        other: "類型"
       user: "使用者"
       version: "版本"
       workflow: "工作流程"
@@ -2111,7 +2115,7 @@ zh-TW:
   button_click_to_reveal: "點擊顯示"
   button_close: "關閉"
   button_collapse_all: "全部收合"
-  button_confirm: "Confirm"
+  button_confirm: "確認"
   button_configure: "設定"
   button_continue: "繼續"
   button_complete: "完成"
@@ -2517,7 +2521,7 @@ zh-TW:
       enabled: "停用"
   enumeration_activities: "工時紀錄活動"
   enumeration_work_package_priorities: "工作套件優先等級"
-  enumeration_reported_project_statuses: "Reported status"
+  enumeration_reported_project_statuses: "報告狀態"
   enumeration_caption_order_changed: "成功更改排序。"
   enumeration_could_not_be_moved: "無法移動枚舉。"
   enterprise_trials:
@@ -2865,34 +2869,58 @@ zh-TW:
         expiration: "過期"
       indefinite_expiration: "無"
       simple_revoke_confirmation: "你確定要撤銷此令牌(Token)？"
+      tabs:
+        client:
+          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
+          title: "Client tokens"
+        provider:
+          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "API 令牌(Tokens)允許第三方應用程式透過 REST API 與此 OpenProject 實例進行通訊。"
+        static_token_name: "API token"
         disabled_text: "API 令牌(Tokens)未由管理員啟用。若要使用此功能，請聯絡您的管理員。"
         add_button: "API 令牌"
-      api:
-        static_token_name: "API 令牌(Token)"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar "
+        table_title: "iCalendar tokens"
         text_hint_link: "iCalendar 權杖可讓使用者[訂閱 OpenProject 行事曆](docs_url)，並在外部用戶端中檢視最新的工作套件資訊。"
         disabled_text: "管理員未啟用 iCalendar 訂閱。 請聯絡您的管理員以使用此功能。"
-        empty_text_hint: "新增 iCalendar 令牌(Token)，可訂閱各專案裡面的日曆( 需擁有相關權限)。"
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "OAuth 令牌(Token)允許第三方應用程式與此 OpenProject 連線。"
-        empty_text_hint: "沒有為您設定和啟動第三方應用程式存取權限。請聯絡您的管理員以啟動此功能"
-      rss:
-        title: "RSS訂閱"
-        text_hint: "RSS 令牌(Token)可讓使用者透過外部 RSS 閱讀器了解本專案管理系統中最新異動。"
-        static_token_name: "RSS 令牌(Token)"
-        disabled_text: "尚未啟用 RSS令牌(Token)功能。 請聯絡您的管理員。"
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
+        title: "RSS"
+        table_title: "RSS tokens"
+        text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
+        static_token_name: "RSS token"
+        disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "檔案儲存"
-        text_hint: "檔案儲存區令牌(Token)，可將本專案管理系統與外部檔案儲存系統連接。"
-        empty_text_hint: "沒有與您帳戶連動的儲存裝置存取權限。"
-        revoke_token: "是否確實要移除此令牌(Token)？您需要再次登錄 %{storage}"
-        removed: "文件存儲區令牌(Token)已成功移除"
-        failed: "出錯了，無法移除令牌(Token)。請稍後再試。"
         unknown_storage: "不明的儲存區"
   notifications:
     reasons:
@@ -3850,7 +3878,7 @@ zh-TW:
   notice_not_authorized: "你沒有存取此頁面的權限"
   notice_not_authorized_archived_project: "你欲存取的專案已被封存"
   notice_requires_enterprise_token: "企業識別碼遺失或不允許存取此頁面。"
-  notice_password_confirmation_failed: "The entered password is not correct."
+  notice_password_confirmation_failed: "輸入的密碼不正確。"
   notice_principals_found_multiple: "找到 %{number} 條結果。\n Tab鍵以轉到第一條結果。"
   notice_principals_found_single: "有一個結果。 \n Tab鍵轉到該結果。"
   notice_parent_item_not_found: "未找到父項目。"
@@ -4223,7 +4251,7 @@ zh-TW:
   setting_apiv3_docs_enabled_instructions_html: >
     如果啟用了文件頁面，您可以在 <a href="%{link}" target="_blank">%{link}</a> 下看到互動式 APIv3 文件
   setting_apiv3_docs_enabled_instructions_warning: >
-    Please be aware that enabling the API docs on a production system may expose sensitive information or result in accidental loss of data when not being careful. We recommend to only enable this setting for development purposes.
+    請注意，在生產系統上啟用 API docs 可能會暴露敏感資訊，或一不小心就會造成資料意外遺失。我們建議僅為開發目的啟用此設定。
   setting_attachment_whitelist: "附件上傳白名單"
   setting_email_delivery_method: "電子郵件傳輸通訊協定"
   setting_emails_salutation: "郵件稱呼"

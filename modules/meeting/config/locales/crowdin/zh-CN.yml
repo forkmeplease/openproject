@@ -393,8 +393,6 @@ zh-CN:
       blank_title: "您的会议系列模板为空"
       description: >
         此模板将在系列中创建新会议时使用。您可以在此模板中添加议程项目、参与者和附件。
-      blankslate_finalize: >
-        准备好模板后，单击上方的 "%{button_title}"按钮完成设置并安排系列会议的第一次会议。
       label_view_template: "查看模板"
       label_edit_template: "编辑模板"
       banner_html: >
@@ -601,10 +599,12 @@ zh-CN:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "会议 iCalendar"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendar 会议令牌允许用户订阅其所有会议，并允许用户在外部客户端中查看最新会议信息。"
         disabled_text: "管理员未启用 iCalendar 会议订阅。请联系管理员以使用此功能。"
-        empty_text_hint: '要添加 iCalendar 会议令牌，请转到<a href="%{path}">会议部分</a>并从那里订阅。'
         add_button: "订阅日历"
   my:
     access_token:
@@ -619,7 +619,6 @@ zh-CN:
         token/ical_meeting:
           title: "已生成一个 iCal 会议订阅令牌"
           body: "像对待密码一样对待下面的 URL。任何可以访问该 URL 的人都可以查看您的所有会议。"
-          warning: "这将是您看到此令牌的唯一机会。请务必立即复制。"
       revocation:
         token/ical_meeting:
           notice_success: "iCalendar 会议订阅已成功撤消。"

@@ -704,9 +704,11 @@ ja:
           create_button: "作成"
           name_label: "トークン名"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "API トークンが生成されました"
-          warning: "このトークンが表示される唯一の時間です。今すぐコピーしてください。"
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "アクセストークンをリセットできませんでした: %{error}"
       failed_to_create_token: "アクセストークンの作成に失敗しました: %{error}"
       failed_to_revoke_token: "アクセストークンの取り消しに失敗しました: %{error}"
@@ -1900,6 +1902,8 @@ ja:
       status: "ステータス名"
       token/api:
         other: アクセストークン
+      token/rss:
+        other: "RSS tokens"
       type:
         other: "Types"
       user: "ユーザ"
@@ -2868,34 +2872,58 @@ ja:
         expiration: "有効期限"
       indefinite_expiration: "なし"
       simple_revoke_confirmation: "このトークンを取り消してもよろしいですか？"
+      tabs:
+        client:
+          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
+          title: "Client tokens"
+        provider:
+          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "API トークンを使用すると、サードパーティのアプリケーションが REST API 経由でこの OpenProject サイトと通信できます。"
+        static_token_name: "API token"
         disabled_text: "API トークンは管理者によって有効化されていません。この機能を使用するには管理者に問い合わせてください。"
         add_button: "API トークン"
-      api:
-        static_token_name: "APIトークン"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar"
+        table_title: "iCalendar tokens"
         text_hint_link: "iCalendar tokens allow users to [subscribe to OpenProject calendars](docs_url) and view up-to-date work package information from external clients."
         disabled_text: "iCalendar サブスクリプションは管理者によって有効になっていません。この機能を使用するには管理者に問い合わせてください。"
-        empty_text_hint: "iCalendar トークンを追加するには、プロジェクトの Calendar モジュール内から新規または既存のカレンダーを購読します。 必要な権限が必要です。"
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "OAuth トークンにより、サードパーティ製アプリケーションがこの OpenProject サイトと接続できます。"
-        empty_text_hint: "サードパーティーのアプリケーションへのアクセスが設定されておらず、アクティブになっていません。この機能を有効にするには管理者に問い合わせてください。"
-      rss:
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
         title: "RSS"
-        text_hint: "RSS トークンにより、ユーザーは外部 RSS リーダーを介してこの OpenProject サイトの最新の変更に追いつくことができます。"
-        static_token_name: "RSS トークン"
-        disabled_text: "RSSトークンは管理者によって有効になっていません。この機能を使用するには管理者に問い合わせてください。"
+        table_title: "RSS tokens"
+        text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
+        static_token_name: "RSS token"
+        disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "ファイルストレージ"
-        text_hint: "ファイルストレージトークンは、このOpenProjectサイトを外部ファイルストレージと接続します。"
-        empty_text_hint: "アカウントにリンクされたストレージへのアクセス権がありません。"
-        revoke_token: "本当にこのトークンを削除しますか？ %{storage}に再度ログインする必要があります"
-        removed: "ファイルストレージトークンを削除しました"
-        failed: "エラーが発生し、トークンを削除できませんでした。後でもう一度お試しください。"
         unknown_storage: "不明なストレージ"
   notifications:
     reasons:

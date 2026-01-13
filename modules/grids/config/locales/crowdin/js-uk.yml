@@ -28,7 +28,7 @@ uk:
           finished: 'Завершено'
           discontinued: 'Припинено'
         project_status_beta:
-          title: 'Status (BETA)'
+          title: 'Статус (BETA)'
         subprojects:
           title: 'Піделементи'
         project_favorites:
@@ -52,7 +52,7 @@ uk:
           title: 'Таблиця робочих пакетів'
         work_packages_graph:
           title: 'Графік робочих пакетів'
-          summary: "Графік %{chartType} показує пакети робіт, які %{description}."
+          summary: "Графік %{chartType} показує пакети робіт, серед яких %{description}."
         work_packages_calendar:
           title: 'Календар'
         work_packages_overview:

@@ -203,6 +203,8 @@ sk:
         add_table: "Pridajte tabuľku súvisiacich pracovných balíčkov"
         edit_query: "Edit query"
         new_group: "Nová skupina"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Obnoviť predvolené"
       working_days:
         calendar:

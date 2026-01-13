@@ -202,6 +202,8 @@ ru:
         add_table: "Добавить таблицу связанных пакетов работ"
         edit_query: "Редактировать запрос"
         new_group: "Новая группа"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Восстановить значения по умолчанию"
       working_days:
         calendar:
@@ -1130,8 +1132,8 @@ ru:
     global_search:
       all_projects: "Во всех проектах"
       close_search: "Закрыть поиск"
-      items_available: "%{count} items available"
-      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
+      items_available: "%{count} доступных элементов"
+      direct_hit_available: "Пакет работ с точным идентификатором найден. Нажмите Enter для его открытия."
       current_project_and_all_descendants: "В этом проекте + подпроектах"
       current_project: "В этом проекте"
       recently_viewed: "Недавно просмотренные"

@@ -203,6 +203,8 @@ ka:
         add_table: "Add table of related work packages"
         edit_query: "მოთხოვნის ჩასწორება"
         new_group: "ახალი ჯგუფი"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Reset to defaults"
       working_days:
         calendar:

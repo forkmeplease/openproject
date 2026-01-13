@@ -236,14 +236,14 @@ pt-BR:
         summary: "\"%{title}\" foi cancelada por %{actor}."
         date_time: "Data/hora programada"
       ended:
-        header_series: "Ended: Meeting series '%{title}'"
-        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
+        header_series: "Encerrada: série de reuniões \"%{title}\""
+        summary_series: "A série de reuniões \"%{title}\" foi encerrada por %{actor}."
       updated:
         header: "A reunião \"%{title}\" foi atualizada"
         summary: "A reuniões \"%{title}\" foi atualizada por %{actor}"
         body: "A reuniões \"%{title}\" foi atualizada por %{actor}."
-        old_title: "Old title"
-        new_title: "New title"
+        old_title: "Título antigo"
+        new_title: "Novo título"
         old_date_time: "Data/hora antiga"
         new_date_time: "Nova data/hora"
         old_location: "Localização antiga"
@@ -398,8 +398,6 @@ pt-BR:
       blank_title: "O modelo da sua série de reuniões está vazio"
       description: >
         Este modelo será utilizado sempre que novas reuniões na série forem criadas. Você pode adicionar itens da agenda, participantes e anexos a este modelo.
-      blankslate_finalize: >
-        Quando terminar de preparar este modelo, clique no botão "%{button_title}" acima para concluir a configuração e agendar a primeira reunião da série.
       label_view_template: "Ver modelo"
       label_edit_template: "Editar modelo"
       banner_html: >
@@ -608,10 +606,12 @@ pt-BR:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar para reuniões"
+        table_title: "iCalendar meeting tokens"
         text_hint: "Os tokens de reunião por iCalendar permitem que os usuários assinem todas as suas reuniões e visualizem informações atualizadas das reuniões em clientes externos."
         disabled_text: "As assinaturas de reuniões iCalendar não estão habilitadas pelo administrador. Entre em contato com o administrador para usar este recurso."
-        empty_text_hint: 'Para adicionar um token de reunião iCalendar, vá para a <a href="%{path}">seção de reuniões</a> e faça a assinatura a partir de lá.'
         add_button: "Assinar calendário"
   my:
     access_token:
@@ -626,7 +626,6 @@ pt-BR:
         token/ical_meeting:
           title: "Um token de assinatura de reunião iCal foi gerado"
           body: "Trate o seguinte URL como uma senha. Qualquer pessoa que tiver acesso a ele poderá visualizar todas as suas reuniões."
-          warning: "Esta é a única vez que você verá este token. Certifique-se de copiá-lo agora."
       revocation:
         token/ical_meeting:
           notice_success: "A assinatura de reunião iCalendar foi revogada com sucesso."

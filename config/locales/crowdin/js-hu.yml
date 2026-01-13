@@ -202,6 +202,8 @@ hu:
         add_table: "Táblázat hozzáadása a kapcsolódó munkacsomagokhoz"
         edit_query: "Lekérdezés módosítása"
         new_group: "Új csoport"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Alapbeállítások visszaállítása"
       working_days:
         calendar:

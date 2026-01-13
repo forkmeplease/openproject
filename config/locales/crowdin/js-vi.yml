@@ -202,6 +202,8 @@ vi:
         add_table: "Thêm bảng các công việc liên quan"
         edit_query: "Chỉnh sửa truy vấn"
         new_group: "Nhóm mới"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Đặt lại về mặc định"
       working_days:
         calendar:

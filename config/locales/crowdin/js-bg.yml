@@ -203,6 +203,8 @@ bg:
         add_table: "Add table of related work packages"
         edit_query: "Редактирай заявка"
         new_group: "Нова група"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Възстановяване по подразбиране"
       working_days:
         calendar:

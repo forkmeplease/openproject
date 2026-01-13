@@ -329,7 +329,7 @@ zh-CN:
           change: 更改
           changes:
             new_member: 将被添加为成员
-            remove_member: 将作为成员移除
+            remove_member: 将被移除成员身份
             gain_and_lose_role: 将失去角色“%{old_role}”，并获得角色“%{new_role}”
             gain_role: 将获得角色“%{new_role}”
             lose_role: 将失去角色“%{old_role}”
@@ -348,13 +348,13 @@ zh-CN:
     instructions:
       is_required:
         all: "将自定义字段标记为必填。这将在创建新资源时强制要求填写该字段。更新现有资源时，不会强制要求填写该值。"
-        project: "如果字段处于活动状态，则需要用户在创建项目时填写必填特性（设置“适用于所有项目”或从已激活该字段的项目/模板中复制）。现有项目在更新时不需要值。"
+        project: "如果字段处于有效状态，则需要用户在创建项目时填写必填特性（设置“适用于所有项目”或从已激活该字段的项目/模板中复制）。现有项目在更新时不需要值。"
       is_for_all:
         all: "将自定义字段标记为在所有现有项目和新项目中可用。"
         project: "将特性标记为在所有现有项目和新项目中可用。"
       multi_select:
-        all: "允许用户为该自定义字段分配多个值。"
-        project: "允许用户为该特性分配多个值。"
+        all: "允许用户为此自定义字段指定多个值。"
+        project: "允许用户为此特性指定多个值。"
       searchable:
         all: "使用全局搜索功能时包含字段值。"
         project: "选中可将此特性用作项目列表中的筛选条件。"
@@ -402,7 +402,7 @@ zh-CN:
       int?: "必须为整数。"
       key?: "缺失。"
       not_found: "未找到。"
-      respond_to?: "不实施所需方法。"
+      respond_to?: "不实现所需方法。"
       rules:
         copy_workflow_from:
           workflow_missing: "无独立工作流。"
@@ -469,10 +469,10 @@ zh-CN:
       sub_items_html:
         other: "<strong>%{count}</strong> 个子条目"
     lists:
-      active: "活跃的项目组合"
+      active: "有效项目组合"
       my: "我的项目组合"
       favorited: "收藏的项目组合"
-      archived: "存档的项目组合"
+      archived: "归档的项目组合"
   projects:
     copy:
       #Contains custom strings for options when copying a project that cannot be found elsewhere.
@@ -491,7 +491,7 @@ zh-CN:
       scheduled: "删除已安排并且将在后台执行。您将收到结果通知。"
       schedule_failed: "项目不能删除: %{errors}"
       failed: "项目 '%{name}' 删除失败"
-      failed_text: "删除项目 '%{name}' 的请求失败。该项目仍位于存档中。"
+      failed_text: "删除项目 '%{name}' 的请求失败。该项目仍位于归档中。"
       completed: "项目 '%{name}' 删除完成"
       completed_text: "删除项目“%{name}”的请求已完成。"
       completed_text_children: "此外，下列子项目已被删除："
@@ -550,7 +550,7 @@ zh-CN:
         members:
           excluded_roles_label: "应用模板时要排除的角色"
           excluded_roles_caption: >
-            使用此模板创建新项目时，上面选择的角色将被忽略。您可以根据成员的项目角色选择要排除的成员。然后，用户可以访问模板以进行查看，但无法访问基于该模板创建的新项目。
+            使用此模板创建新项目时，在上方选择的角色将被忽略。您可以根据成员的项目角色选择要排除的成员。然后，用户可以访问模板进行查看，但无法访问基于该模板创建的新项目。
       actions:
         label_enable_all: "全部启用"
         label_disable_all: "全部禁用"
@@ -586,7 +586,7 @@ zh-CN:
           remove_from_project: "从项目移除"
         is_for_all_blank_slate:
           heading: 适用于所有项目
-          description: 由于选中了“适用于所有项目”选项，因此所有项目都启用了该项目特性。无法为单个项目停用该特性。
+          description: 由于选中了“适用于所有项目”选项，所有项目都启用了此项目特性。无法为个别项目停用该特性。
       types:
         no_results_title_text: 目前有可用的类型。
         form:
@@ -603,7 +603,7 @@ zh-CN:
       creation_wizard:
         export:
           description_attachment_export: "生成的工件将作为 PDF 附件保存到工件工作包中。"
-          description_file_link_export: "工件工作包将有一个文件链接，指向存储在外部文件存储空间的 PDF 文件。此项目需要一个工作中的文件存储空间，其中包含自动管理的项目文件夹。目前仅支持 Nextcloud 文件存储空间。"
+          description_file_link_export: "工件工作包将有一个文件链接，指向存储在外部文件存储空间的 PDF 文件。此项目需要一个有效文件存储空间，其中包含自动管理的项目文件夹。目前仅支持 Nextcloud 文件存储空间。"
           description_file_storage_selection: "选择应使用哪个配置的外部文件存储空间。"
           external_file_storage: "外部文件存储空间"
           label_artifact_export: "工件导出"
@@ -613,11 +613,11 @@ zh-CN:
           unavailable: "不可用"
         label_request_submission: "请求提交"
         project_attributes_description: >
-          选择哪些项目特性应包含在项目启动请求中。此列表仅包含为该项目启用的[项目特性](project_attributes_url)。
+          选择哪些项目特性应包含在项目启动请求中。此列表仅包含为此项目启用的[项目特性](project_attributes_url)。
     status:
       button_edit: 编辑状态
     wizard:
-      sidebar_content_title: "内容"
+      sidebar_content_title: "目录"
       sections: "分区"
       title: "项目启动请求"
       no_help_text: "此特性未定义帮助文本。"
@@ -703,9 +703,11 @@ zh-CN:
           create_button: "创建"
           name_label: "令牌名称"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "API 令牌已生成"
-          warning: "这将是您看到此令牌的唯一机会。请务必立即复制。"
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "无法重置访问令牌: %{error}"
       failed_to_create_token: "创建访问令牌失败： %{error}"
       failed_to_revoke_token: "撤销访问令牌失败： %{error}"
@@ -724,15 +726,15 @@ zh-CN:
       no_results_content_text: 添加新闻项
   roles:
     permissions:
-      section_check_all_label: "分配所有 %{module} 权限"
-      section_uncheck_all_label: "取消分配所有 %{module} 权限"
+      section_check_all_label: "指定所有 %{module} 权限"
+      section_uncheck_all_label: "取消指定所有 %{module} 权限"
     report:
       matrix_caption: "%{module} 模块的权限矩阵"
-      matrix_checkbox_label: "向 %{role} 角色指定 %{permission} 权限"
+      matrix_checkbox_label: "向“%{role}”角色指定“%{permission}”权限"
       matrix_check_all_label: "向所有角色指定所有 %{module} 权限"
-      matrix_uncheck_all_label: "取消分配所有角色的所有 %{module} 权限"
-      matrix_check_uncheck_all_in_row_label_html: "切换所有角色的 <em>%{permission}</em> 权限"
-      matrix_check_uncheck_all_in_col_label_html: "切换 <em>%{role}</em> 角色的 %{module} 权限"
+      matrix_uncheck_all_label: "取消指定所有角色的所有 %{module} 权限"
+      matrix_check_uncheck_all_in_row_label_html: "切换所有角色的“%{permission}”<em></em>权限"
+      matrix_check_uncheck_all_in_col_label_html: "切换“%{role}”<em></em>角色的 %{module} 权限"
   users:
     autologins:
       prompt: "保持登录状态 %{num_days}"
@@ -929,11 +931,11 @@ zh-CN:
       matrix_caption: "工作流矩阵"
       matrix_caption_assignee: "受理人的工作流矩阵"
       matrix_caption_author: "作者的工作流矩阵"
-      matrix_checkbox_label: "允许从 %{old_status} 转换为 %{new_status}"
+      matrix_checkbox_label: "允许从“%{old_status}”转换为“%{new_status}”"
       matrix_check_all_label: "允许所有转换"
       matrix_uncheck_all_label: "禁止所有转换"
-      matrix_check_uncheck_all_in_row_label_html: "切换从 <em>%{old_status}</em> 到所有新状态的转换"
-      matrix_check_uncheck_all_in_col_label_html: "切换从所有旧状态到 <em>%{new_status}</em> 的转换"
+      matrix_check_uncheck_all_in_row_label_html: "切换从“%{old_status}”<em></em>到所有新状态的转换"
+      matrix_check_uncheck_all_in_col_label_html: "切换从所有旧状态到“%{new_status}”<em></em>的转换"
   work_flows:
     index:
       no_results_title_text: 目前没有工作流。
@@ -1102,11 +1104,11 @@ zh-CN:
     deletion_pending: "帐户已安排删除。请注意，此流程在后台进行。可能需要一些时间才能完全删除用户。"
     deletion_info:
       data_consequences:
-        other: "所有用户特定的数据都将被删除。用户在共享视图中的活动（如工作包和会议）不会被删除，而是会与一个无法与原始帐户关联的通用“已删除用户”相关联。"
-        self: "所有用户特定的数据都将被删除。您在共享视图中的活动（如工作包和会议）不会被删除，而是会与一个无法与原始帐户关联的通用“已删除用户”相关联。"
+        other: "所有用户特定的数据都将被删除。用户在共享视图（如工作包和会议）中的活动不会被删除，而是会与一个无法与原始帐户关联的通用“已删除用户”相关联。"
+        self: "所有用户特定的数据都将被删除。您在共享视图（如工作包和会议）中的活动不会被删除，而是会与一个无法与原始帐户关联的通用“已删除用户”相关联。"
       heading: "是否删除 %{name} 的帐户？"
       login_consequences:
-        other: "该帐户将立即从系统中移除，用户将无法再使用其凭据登录。"
+        other: "此帐户将立即从系统中移除，用户将无法再使用其凭据登录。"
         self: "您的帐户将立即从系统中移除，您将无法再使用您的凭据登录。"
     error_inactive_activation_by_mail: >
       您的帐户尚未激活。要激活您的帐户，请单击通过电子邮件发送到您的链接。
@@ -1257,7 +1259,7 @@ zh-CN:
         project_creation_wizard_notification_text: "通知文本"
         project_creation_wizard_send_confirmation_email: "确认电子邮件"
         project_creation_wizard_status_when_submitted: "提交时的状态"
-        project_creation_wizard_work_package_comment: "工作包评论"
+        project_creation_wizard_work_package_comment: "工作包备注"
         project_creation_wizard_work_package_type: "工作包类型"
         template: "模板"
         templated: "模板项目"
@@ -1897,6 +1899,8 @@ zh-CN:
       status: "工作包状态"
       token/api:
         other: 访问令牌
+      token/rss:
+        other: "RSS tokens"
       type:
         other: "类型"
       user: "用户"
@@ -2483,7 +2487,7 @@ zh-CN:
         title: "编写只有小部分群体能看见的内部评论"
         description: " "
       portfolio_management:
-        description: 通过将项目组织成项目组合和项目群，使项目与您的战略目标保持一致。
+        description: 通过将项目组织成项目组合与项目群，使项目与您的战略目标保持一致。
     teaser:
       title:
         other: "%{trial_plan} 试用令牌剩余 %{count} 天"
@@ -2688,7 +2692,7 @@ zh-CN:
       attribute_not_found: "属性未找到： %{attribute}"
       model_not_found: "属性模型无效： %{model}"
       resource_not_found: "未找到资源： %{resource}"
-      nested_rich_text_unsupported: "目前不支持在导出时使用嵌套富文本嵌入功能"
+      nested_rich_text_unsupported: "目前不支持在导出中使用嵌套富文本嵌入向量"
     units:
       hours: 时
       days: 天
@@ -2766,14 +2770,14 @@ zh-CN:
       new_features:
         header: "了解新功能和产品更新。"
         learn_about: "详细了解所有新功能"
-        missing: "目前还没有突出显示的功能。"
+        missing: "目前还没有高亮显示的功能。"
         #We need to include the version to invalidate outdated translations in other locales
         "17_0":
           new_features_title: >
             此版本包含各种新功能和改进，例如：
           new_features_list:
             line_0: 实时文档协作。
-            line_1: 能够将相关项目构建成项目群和项目组合，使其专注于战略目标（企业版附加组件）。
+            line_1: 能够将相关项目构建成项目群与项目组合，使其专注于战略目标（企业版附加组件）。
             line_2: 更好的会议管理，包括草稿模式、演示模式、增强的结果和 iCal 订阅。
             line_3: 更新了 SharePoint 集成，具有更严格的权限（企业版附加组件）。
             line_4: 重新设计了项目概览，具有新的选项卡、可配置的微件以及改进的布局。
@@ -2865,34 +2869,58 @@ zh-CN:
         expiration: "过期"
       indefinite_expiration: "永不"
       simple_revoke_confirmation: "确定要撤销此令牌吗？"
+      tabs:
+        client:
+          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
+          title: "Client tokens"
+        provider:
+          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "API 令牌允许第三方应用程序通过 REST API 与此 OpenProject 实例通信。"
+        static_token_name: "API token"
         disabled_text: "管理员未启用 API 令牌。请联系管理员以使用此功能。"
         add_button: "API 令牌"
-      api:
-        static_token_name: "API 令牌"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar"
+        table_title: "iCalendar tokens"
         text_hint_link: "iCalendar 令牌允许用户[订阅OpenProject日历](docs_url)，并查看来自外部客户端的最新工作包信息。"
         disabled_text: "管理员未启用 iCalendar 订阅。请联系管理员以使用此功能。"
-        empty_text_hint: "要添加 iCalendar 令牌，请从项目的日历模块中订阅新的或现有日历。您必须拥有必要的权限。"
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "OAuth 令牌允许第三方应用程序与此 OpenProject 实例连接。"
-        empty_text_hint: "没有为您配置和激活第三方应用程序访问权限。请联系管理员以激活此功能。"
-      rss:
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
         title: "RSS"
-        text_hint: "RSS 令牌允许用户通过外部 RSS 阅读器了解此 OpenProject 实例中的最新变化。"
-        static_token_name: "RSS 令牌"
-        disabled_text: "管理员未启用 RSS 令牌。请联系管理员以使用此功能。"
+        table_title: "RSS tokens"
+        text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
+        static_token_name: "RSS token"
+        disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "文件存储"
-        text_hint: "文件存储区令牌将此 OpenProject 实例与外部文件存储区连接。"
-        empty_text_hint: "没有与您的帐户相关联的存储区访问权限。"
-        revoke_token: "是否确实要移除此令牌？您需要再次登录 %{storage}"
-        removed: "文件存储区令牌已成功移除"
-        failed: "出错了，无法移除令牌。请稍后再试。"
         unknown_storage: "未知存储"
   notifications:
     reasons:
@@ -3388,7 +3416,7 @@ zh-CN:
   label_project_new: "新的项目"
   label_project_initiation_request: "新项目启动请求"
   label_project_creation_wizard: "新项目创建向导"
-  label_project_mandate: "新项目批准书"
+  label_project_mandate: "新项目授权"
   label_project_plural: "项目"
   label_project_list_plural: "项目列表"
   label_project_life_cycle: "项目生命周期"
@@ -3923,7 +3951,7 @@ zh-CN:
   permission_comment_news: "评论新闻"
   permission_commit_access: "读/写访问存储库 (提交)"
   permission_copy_projects: "复制项目"
-  permission_copy_projects_explanation: "在模板项目中，该权限具有一个辅助功能，即允许通过模板创建新项目。"
+  permission_copy_projects_explanation: "在模板项目中，此权限具有一个辅助功能，即允许通过模板创建新项目。"
   permission_copy_work_packages: "复制工作包"
   permission_create_backup: "创建备份"
   permission_delete_work_package_watchers: "删除关注者"
@@ -4468,10 +4496,10 @@ zh-CN:
       sections:
         display_representation:
           overview:
-            label: "项目特性显示在："
+            label: "项目特性显示位置："
             main_area:
               label: "主要区域"
-              description: "将所有项目特性作为单独的微件添加到项目概览的主分区。"
+              description: "将所有项目特性作为个别微件添加到项目概览的主分区。"
             side_panel:
               label: "侧面板"
               description: "将所有项目特性添加到项目概览的右侧面板中的一个分区。"
@@ -4487,7 +4515,7 @@ zh-CN:
       wizard_status_button:
         project_initiation_request: "打开项目启动请求"
         project_creation_wizard: "打开项目创建向导"
-        project_mandate: "打开项目批准书"
+        project_mandate: "打开项目授权"
       blankslate:
         title: "启动请求未启用"
         description: "OpenProject 可以生成一个分步向导，帮助项目经理填写项目启动请求。您可以选择应包含哪些项目特性以及如何处理输出文档。请在此处启用以开始配置向导。"
@@ -4502,10 +4530,10 @@ zh-CN:
         options:
           project_initiation_request: "项目启动请求"
           project_creation_wizard: "项目创建向导"
-          project_mandate: "项目批准书"
+          project_mandate: "项目授权"
       submission:
         description_template: >
-          **此工作包是在 %{wizard_name} 工作流完成后自动创建的。** 包含所有提交信息的 PDF 工件已生成并附加到此工作包，以供参考和审核。 如果需要更新或重新运行初始化步骤，您可以随时使用以下链接重新打开向导：
+          **此工作包是在 %{wizard_name} 工作流完成后自动创建的**。 包含所有提交信息的 PDF 工件已生成并附加到此工作包，供参考和审核。 如果需要更新或重新运行初始化步骤，您可以随时使用下方链接重新打开向导：
         description: "当用户提交项目启动请求时，将创建一个新的工作包，并以 PDF 文件形式附上请求工件。以下设置定义了新工作包的类型、状态和受理人。"
         work_package_type: "工作包类型"
         work_package_type_caption: "应当用于存储已完成工件的工作包类型。"
@@ -4513,11 +4541,11 @@ zh-CN:
         status_when_submitted_caption: "提交请求后，生成的工作包将转入的状态。"
         send_confirmation_email: "向提交项目启动请求的用户发送确认电子邮件"
         assignee: "提交时的受理人"
-        assignee_caption_html: "被指定至此项目特性的用户或群组也将成为新工作包的受理人。此列表仅包含类型为<i>用户</i>的活跃项目特性。"
+        assignee_caption_html: "被指定至此项目特性的用户或群组也将成为新工作包的受理人。此列表仅包含类型为<i>用户</i>的有效项目特性。"
         confirmation_email_text: "确认电子邮件文本"
         confirmation_email_default: "您好！\n\n您提交了 **%{project_name}** 的项目启动请求。目前正在等待审查。\n请点击下方链接访问工作包以及您的请求。"
-        work_package_comment: "工作包评论"
-        work_package_comment_caption: "上面选择的受理人将自动在评论中提及。"
+        work_package_comment: "工作包备注"
+        work_package_comment_caption: "在上方选择的受理人将在备注中被自动提及。"
         work_package_comment_default: "**%{project_name}** 的项目启动请求已提交，正在等待审查。"
     project_phase_definitions:
       heading: "项目生命周期"
@@ -4595,9 +4623,9 @@ zh-CN:
   text_project_custom_field_html: >
     企业版将为项目的自定义字段添加以下其他附加组件：<br> <ul> <li><b>在项目列表中添加项目自定义字段，以创建项目组合视图</b></li> </ul>
   text_custom_logo_instructions: >
-    徽标会自动缩放以适应页眉。为获得最佳效果，请上传一个透明背景的 130×47 像素白色徽标图像。您可以根据自己的喜好在图像内添加间距。
+    徽标会自动缩放以适应页眉。为获得最佳效果，请上传一个位于透明的 130×47 像素图像上的白色徽标。您可以根据自己的喜好在图像内添加间距。
   text_custom_logo_mobile_instructions: >
-    徽标会自动缩放以适应页眉。为获得最佳效果，请上传一个透明背景的 130×33 像素白色徽标图像。您可以根据自己的喜好在图像内添加间距。
+    徽标会自动缩放以适应页眉。为获得最佳效果，请上传一个位于透明的 130×33 像素图像上的白色徽标。您可以根据自己的喜好在图像内添加间距。
   text_custom_export_logo_instructions: >
     这是在 PDF 导出文件中显示的徽标。它需要为 PNG 或 JPEG 图像文件。建议使用带有透明或白色背景的黑色或彩色徽标。
   text_custom_export_cover_instructions: >
@@ -4985,7 +5013,7 @@ zh-CN:
       unable_to_create_attachment: "无法创建附件"
       unable_to_create_attachment_permissions: "由于缺少文件系统权限，无法保存附件"
       user:
-        name_readonly: "名称特性为只读特性。可以通过特性名称和姓氏写入更改。"
+        name_readonly: "name 特性为只读特性。可以通过 firstname 和 lastname 特性写入更改。"
       render:
         context_not_parsable: "所提供的上下文环境并不是指向资源的链接。"
         unsupported_context: "所提供的资源不被上下文环境所支持。"

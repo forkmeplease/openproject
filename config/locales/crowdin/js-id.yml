@@ -203,6 +203,8 @@ id:
         add_table: "Add table of related work packages"
         edit_query: "Edit query"
         new_group: "Grup baru"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Disetel ulang ke kondisi bawaan"
       working_days:
         calendar:

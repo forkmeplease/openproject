@@ -203,6 +203,8 @@ zh-CN:
         add_table: "添加相关工作包表"
         edit_query: "编辑查询"
         new_group: "新建组"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "重置为默认值"
       working_days:
         calendar:
@@ -303,7 +305,7 @@ zh-CN:
       success_message: 'URL“%{name}”已成功复制到剪贴板。请将其粘贴到日历客户端中以完成订阅。'
     label_activate: "激活"
     label_assignee: "指定"
-    label_assignee_alt_text: "此工作包指定至 %{name}"
+    label_assignee_alt_text: "此工作包被指定至 %{name}"
     label_add_column_after: "之后添加列"
     label_add_column_before: "在之前添加列"
     label_add_columns: "添加列"
@@ -345,7 +347,7 @@ zh-CN:
     label_collapse: "折叠"
     label_collapsed: "折叠"
     label_collapse_all: "全部折叠"
-    label_collapse_text: "折叠文本"
+    label_collapse_text: "收起文本"
     label_comment: "评论"
     label_committed_at: "在 %{date} %{committed_revision_link}"
     label_committed_link: "上传的修订 %{revision_identifier}"
@@ -557,7 +559,7 @@ zh-CN:
       date_alerts:
         milestone_date: "里程碑日期"
         overdue: "逾期"
-        overdue_since: "持续 %{difference_in_days}。"
+        overdue_since: "%{difference_in_days}。"
         property_today: "今天。"
         property_is: "%{difference_in_days}后。"
         property_was: "%{difference_in_days}前。"

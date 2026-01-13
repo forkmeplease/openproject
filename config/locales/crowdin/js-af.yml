@@ -203,6 +203,8 @@ af:
         add_table: "Voeg tabel van verwante werkpakkette toe"
         edit_query: "Edit query"
         new_group: "Nuwe groep"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Reset to defaults"
       working_days:
         calendar:

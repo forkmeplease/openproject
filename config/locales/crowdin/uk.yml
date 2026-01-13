@@ -322,14 +322,14 @@ uk:
         role_field_label: "Роль проєкту"
         role_field_caption: Ця роль проєкту буде автоматично надана будь-якому користувачу, якому призначено цей атрибут проєкту
         review_hint: >
-          У різних проєктах цей атрибут проєкту вже призначено стільком користувачам: %{user_count}. Вони можуть отримати додаткові дозволи, а також доступ до проєктів, у які їх раніше не було додано.
+          Цей атрибут проєкту вже призначено стільком користувачам у різних проєктах: %{user_count}. Вони можуть отримати додаткові дозволи, а також доступ до проєктів, у які їх раніше не було додано.
         review_button: Переглянути користувачів і дозволи
         dialog:
           title: "Огляд користувачів і дозволів"
           change: Змінити
           changes:
             new_member: Буде додано як учасника
-            remove_member: Цього учасника буде видалено
+            remove_member: Буде видалено як учасника
             gain_and_lose_role: Втратить роль «%{old_role}» і отримає роль «%{new_role}»
             gain_role: Отримає роль «%{new_role}»
             lose_role: Втратить роль «%{old_role}»
@@ -347,8 +347,8 @@ uk:
     no_role_assigment: "Роль не призначено"
     instructions:
       is_required:
-        all: "Позначте користувальницьке поле як обов’язкове. Тоді його необхідно буде заповнювати при створенні нових ресурсів. При оновленні наявних ресурсів вводити значення не буде потрібно."
-        project: "Створюючи проєкт, користувач має заповнювати обов’язкові атрибути, якщо поле активне (через установлення прапорця «Для всіх проєктів» або копіювання з проєкту/шаблону, де воно активне). Це поле не потрібно заповнювати при оновленні наявних проєктів."
+        all: "Позначте користувацьке поле як обов’язкове. Тоді його необхідно буде заповнювати при створенні нових ресурсів. При оновленні наявних ресурсів вводити значення не буде потрібно."
+        project: "Створюючи проєкт, користувач має заповнювати обов’язкові атрибути, якщо поле активне (як результат установлення прапорця «Для всіх проєктів» або копіювання з проєкту/шаблону, де воно активне). Це поле не потрібно заповнювати при оновленні наявних проєктів."
       is_for_all:
         all: "Позначте користувацьке поле як доступне в усіх наявних і нових проєктах."
         project: "Позначте атрибут як доступний в усіх наявних і нових проєктах."
@@ -494,7 +494,7 @@ uk:
       scheduled: "Видалення заплановано та виконується у фоновому режимі. Ви отримаєте сповіщення про результат."
       schedule_failed: "Проект не можна видалити: %{errors}"
       failed: "Не вдалося видалити проєкт «%{name}»"
-      failed_text: "Не вдалося виконати запит на видалення проєкту «%{name}». Проєкт залишився в архіві."
+      failed_text: "Не вдалося виконати запит на видалення проєкту «%{name}». Він залишився в архіві."
       completed: "Видалення проєкту «%{name}» завершено"
       completed_text: "Запит видалення проекту '%{name}' завершено."
       completed_text_children: "Крім того, видалено такі підпроєкти:"
@@ -553,7 +553,7 @@ uk:
         members:
           excluded_roles_label: "Ролі, які слід виключити при застосуванні шаблону"
           excluded_roles_caption: >
-            При створенні нового проєкту на основі цього шаблону, ролі, вибрані вище, буде випущено. Це дає змогу виключити певних учасників на основі їхніх ролей у проєктах. Такі користувачі зможуть переглядати шаблон, але не матимуть доступу до нових проєктів, створених на його основі.
+            При створенні нового проєкту на основі цього шаблону ролі, вибрані вище, буде випущено. Це дає змогу виключити певних учасників на основі ролей, які їм призначено в проєктах. Такі користувачі зможуть переглядати шаблон, але не матимуть доступу до нових проєктів, створених на його основі.
       actions:
         label_enable_all: "Увімкнути все"
         label_disable_all: "Вимкнути все"
@@ -605,7 +605,7 @@ uk:
         new_label: "Новий пріоритет"
       creation_wizard:
         export:
-          description_attachment_export: "Створений артефакт буде збережено як PDF-вкладення в пакеті робіт артефакту."
+          description_attachment_export: "Створений артефакт буде збережено як вкладення у форматі PDF у пакеті робіт артефакту."
           description_file_link_export: "Пакет робіт артефакту міститиме посилання на файл PDF, що зберігатиметься в зовнішньому сховищі. Знадобиться робоче файлове сховище з папками проєкту з автоматичним керуванням для цього проєкту. Зараз підтримуються лише файлові сховища Nextcloud."
           description_file_storage_selection: "Виберіть налаштоване зовнішнє файлове сховище, яке слід використовувати."
           external_file_storage: "Зовнішнє файлове сховище"
@@ -620,7 +620,7 @@ uk:
     status:
       button_edit: Редагувати статус
     wizard:
-      sidebar_content_title: "Вміст"
+      sidebar_content_title: "Зміст"
       sections: "Розділи"
       title: "Запит на ініціювання проєкту"
       no_help_text: "Для цього атрибута не визначено текст довідки."
@@ -724,9 +724,11 @@ uk:
           create_button: "Створити"
           name_label: "Ім’я маркера"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "Маркер API згенеровано"
-          warning: "Це єдиний раз, коли ви побачите цей маркер. Обов’язково скопіюйте його зараз."
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "Не вдалося відновити маркер доступу: %{error}"
       failed_to_create_token: "Не вдалося створити маркер доступу: %{error}"
       failed_to_revoke_token: "Не вдалося відкликати маркер доступу: %{error}"
@@ -825,7 +827,7 @@ uk:
         required: "Виберіть роль"
       message:
         label: "Повідомлення із запрошенням"
-        description: "Ми надішлемо користувачу електронний лист, у який ви можете додати особисте повідомлення. Радимо пояснити причину запрошення або, наприклад, додати інформацію про проєкт, щоб користувачу було простіше почати працювати над ним."
+        description: "Ми надішлемо користувачу електронний лист, у який ви можете додати своє повідомлення. Радимо пояснити причину запрошення або, наприклад, додати інформацію про проєкт, щоб користувачу було простіше почати працювати над ним."
       summary:
         next_button: "Надіслати запрошення"
       success_message:
@@ -1127,8 +1129,8 @@ uk:
     deletion_pending: "Для цього облікового запису заплановано видалення. Зверніть увагу, що цей процес відбувається у фоновому режимі. Остаточне видалення даних користувача може зайняти кілька хвилин."
     deletion_info:
       data_consequences:
-        other: "Усі дані, які стосуються користувача, буде видалено. Дії користувача в спільних поданнях, таких як пакети робіт і наради, залишаться в системі, проте їх буде зв’язано із загальним «Видаленим користувачем», який не має стосунку до оригінального облікового запису."
-        self: "Усі дані, які стосуються користувача, буде видалено. Ваші дії в спільних поданнях, таких як пакети робіт і наради, залишаться в системі, проте їх буде зв’язано із загальним «Видаленим користувачем», який не має стосунку до вашого оригінального облікового запису."
+        other: "Усі дані, які стосуються користувача, буде видалено. Дії користувача в спільних поданнях, таких як пакети робіт і наради, залишаться в системі, проте їх буде зв’язано із загальним «Видаленим користувачем», який ніяк не вказує на оригінальний обліковий запис."
+        self: "Усі дані, які стосуються користувача, буде видалено. Ваші дії в спільних поданнях, таких як пакети робіт і наради, залишаться в системі, проте їх буде зв’язано із загальним «Видаленим користувачем», який ніяк не вказує на ваш оригінальний обліковий запис."
       heading: "Видалити обліковий запис, яким користується %{name}?"
       login_consequences:
         other: "Цей обліковий запис буде негайно видалено із системи, і користувач більше не зможе ввійти в неї за допомогою своїх облікових даних."
@@ -1961,6 +1963,11 @@ uk:
         few: Маркери доступу
         many: Маркери доступу
         other: Маркери доступу
+      token/rss:
+        one: "RSS token"
+        few: "RSS tokens"
+        many: "RSS tokens"
+        other: "RSS tokens"
       type:
         one: "Тип"
         few: "Типи"
@@ -2298,7 +2305,7 @@ uk:
   create_project:
     attributes_heading: "Укажіть цю обов’язкову інформацію, щоб працювати над своїми проєктами."
     template_label: "Використовувати шаблон"
-    template_heading: "Виберіть шаблон проєкту, щоб користуватися найпоширенішими методами керування проєктами, або створіть проєкт із нуля."
+    template_heading: "Виберіть шаблон проєкту, щоб користуватися найпоширенішими методами управління проєктами, або створіть проєкт із нуля."
     copy_options:
       dependencies_label: "Копіювати з шаблона"
     blank_template:
@@ -2306,12 +2313,12 @@ uk:
       description: Почніть із нуля. Уручну додайте атрибути проєкту, учасників і модулі.
     blank_description: Опису немає.
   create_portfolio:
-    template_heading: "Виберіть шаблон портфеля, щоб користуватися найпоширенішими методами керування проєктами, або створіть портфель із нуля."
+    template_heading: "Виберіть шаблон портфеля, щоб користуватися найпоширенішими методами управління проєктами, або створіть портфель із нуля."
     blank_template:
       label: "Пустий портфель"
       description: Почніть із нуля. Уручну додайте атрибути портфеля, учасників і модулі.
   create_program:
-    template_heading: "Виберіть шаблон програми, щоб користуватися найпоширенішими методами керування проєктами, або створіть програму з нуля."
+    template_heading: "Виберіть шаблон програми, щоб користуватися найпоширенішими методами управління проєктами, або створіть програму з нуля."
     blank_template:
       label: "Пуста програма"
       description: Почніть із нуля. Уручну додайте атрибути програми, учасників і модулі.
@@ -2582,7 +2589,7 @@ uk:
       readonly_work_packages:
         description: "Позначайте пакети робіт як доступні лише для читання залежно від статусу."
       custom_field_hierarchies:
-        description: "Користувацькі поля типу «Ієрархія» дають змогу впорядковувати ієрархічні структури в пакети робіт і проєкти, використовуючи багаторівневі списки."
+        description: "Користувацькі поля типу «Ієрархія» дають змогу впорядковувати ієрархічні структури в пакети робіт і проєкти, використовуючи багаторівневі розкривні списки."
       date_alerts:
         description: "Завдяки оповіщенням про дати ви завжди знатимете про заплановані дати початку або завершення, тож ніколи не пропускатимете важливі терміни й не забуватимете про них."
       weighted_item_lists:
@@ -2592,7 +2599,7 @@ uk:
       project_list_sharing:
         description: "Діліться списками проєктів з окремими користувачами."
       calculated_values:
-        description: "Тип «Розраховані значення» дає змогу створити атрибут на основі математичної формули з використанням числових значень і інших атрибутів проєкту й користувацьких полів."
+        description: "Тип «Розраховані значення» дає змогу створити атрибут на основі математичної формули з використанням числових значень, а також інших атрибутів проєкту й користувацьких полів."
       define_custom_style:
         title: "Користувацький колір теми й логотип"
         more_info: "Примітка: вибраний логотип буде загальнодоступний."
@@ -2919,10 +2926,10 @@ uk:
             line_2: зручніше керування нарадами завдяки режиму чернетки, режиму презентації, покращеним результатам і підписці iCal;
             line_3: оновлена інтеграція із SharePoint із суворішими дозволами (доповнення версії Enterprise);
             line_4: 'оновлений дизайн сторінки «Огляд проєкту»: нові вкладки, віджети, які можна налаштовувати, і покращений макет;'
-            line_5: Option to guard the privacy of users not working in the same project more strictly.
-            line_6: Improved project creation flow with better template selection.
-            line_7: Smarter global search including type and status, improving precision in several autocompleters.
-            line_8: Accessibility improvements with ALT texts and improved chart colors.
+            line_5: можливість застосовувати суворіший захист конфіденційність користувачів, які не працюють в одному проєкті;
+            line_6: зручніший процес створення проєктів завдяки кращому вибору шаблонів;
+            line_7: 'зручніший глобальний пошук: ураховує тип і статус, підвищено точність автозаповнення кількох типів даних;'
+            line_8: 'покращення для людей з обмеженими фізичними можливостями: вдосконалено тексти ALT і кольори діаграм.'
     links:
       upgrade_enterprise_edition: "Оновлення до версії Enterprise"
       postgres_migration: "Міграція інсталяції в PostgreSQL"
@@ -3007,34 +3014,58 @@ uk:
         expiration: "Закінчується"
       indefinite_expiration: "Ніколи"
       simple_revoke_confirmation: "Справі відкликати цей маркер?"
+      tabs:
+        client:
+          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
+          title: "Client tokens"
+        provider:
+          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "Маркери API дають змогу стороннім додаткам обмінюватися даними із цим екземпляром OpenProject через інтерфейси REST API."
+        static_token_name: "API token"
         disabled_text: "Маркери API не дозволено адміністратором. Зверніться до нього, якщо вам потрібна ця функція."
         add_button: "Маркер API"
-      api:
-        static_token_name: "Маркер API"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar"
+        table_title: "iCalendar tokens"
         text_hint_link: "Маркери iCalendar дають змогу користувачам [підписуватися на календарі OpenProject](docs_url) і переглядати актуальну інформацію про пакети робіт у зовнішніх клієнтах."
         disabled_text: "Підписки на iCalendar не дозволено адміністратором. Зверніться до нього, якщо вам потрібна ця функція."
-        empty_text_hint: "Щоб додати маркер iCalendar, підпишіться на новий або наявний календар у модулі календаря проєкту. У вас мають бути необхідні дозволи."
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "Маркери OAuth дають змогу стороннім додаткам обмінюватися даними із цим екземпляром OpenProject."
-        empty_text_hint: "Для вас не налаштовано й не ввімкнено доступ до сторонніх додатків. Щоб активувати цю функцію, зверніться до адміністратора."
-      rss:
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
         title: "RSS"
-        text_hint: "Маркери RSS дають змогу користувачам зберігати останні зміни в цьому екземплярі OpenProject через зовнішній RSS-агрегатор."
-        static_token_name: "Маркер RSS"
-        disabled_text: "Маркери API не дозволено адміністратором. Зверніться до нього, якщо вам потрібна ця функція."
+        table_title: "RSS tokens"
+        text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
+        static_token_name: "RSS token"
+        disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "Файлові сховища"
-        text_hint: "Маркери файлових сховищ підключають цей екземпляр OpenProject до зовнішнього файлового сховища."
-        empty_text_hint: "Немає доступу до сховища, пов’язаного з вашим обліковим записом."
-        revoke_token: "Справді вилучити цей маркер? Вам знадобиться знову ввійти в %{storage}"
-        removed: "Маркер файлового сховища вилучено"
-        failed: "Сталася помилка, і не вдалося вилучити маркет. Повторіть спробу пізніше."
         unknown_storage: "Невідоме сховище"
   notifications:
     reasons:
@@ -3522,7 +3553,7 @@ uk:
   label_project_attribute_manage_link: "Керувати атрибутами проєкту"
   label_project_count: "Загальна кількість проектів"
   label_project_copy_notifications: "Відправлення повідомлень по електронній пошті в ході реалізації проекту копія"
-  label_project_initiation_export_pdf: "Експорт PDF для %{project_creation_name}"
+  label_project_initiation_export_pdf: "Експорт PDF для проєкту «%{project_creation_name}»"
   label_project_latest: "Останні проекти"
   label_project_default_type: "Дозволити порожній тип"
   label_project_hierarchy: "Ієрархія проектів"
@@ -4371,7 +4402,7 @@ uk:
   setting_apiv3_docs_enabled_instructions_html: >
     Якщо сторінку документів увімкнено, ви можете отримати інтерактивне подання документації APIv3 за посиланням <a href="%{link}" target="_blank">%{link}</a>.
   setting_apiv3_docs_enabled_instructions_warning: >
-    Please be aware that enabling the API docs on a production system may expose sensitive information or result in accidental loss of data when not being careful. We recommend to only enable this setting for development purposes.
+    Зверніть увагу: увімкнення документації API у виробничій системі може призвести до розкриття конфіденційної інформації або випадкової втрати даних, якщо ви не будете обережними. Рекомендуємо вмикати цей параметр лише для потреб розробки.
   setting_attachment_whitelist: "Дозволений список завантаження вкладень"
   setting_email_delivery_method: "Спосіб доставки електронної пошти"
   setting_emails_salutation: "Звертатися до користувача в електронних листах так:"
@@ -4631,7 +4662,7 @@ uk:
         OpenProject може створити покроковий майстер, який допомагатиме менеджерам проєктів заповнювати запити на ініціювання проєктів. Ви можете вибрати атрибути проєктів, які слід включити, і в результаті створити артефакт у форматі PDF.
       status:
         submitted: "Запит «%{wizard_name}» подано"
-        submitted_description: "Натисніть кнопку нижче, щоб перейти до пакета робіт для процесу подання."
+        submitted_description: "Натисніть кнопку нижче, щоб перейти до пакета робіт процесу подання."
         submitted_button: "Відкрити поданий запит"
         not_completed: "Запит «%{wizard_name}» ще не заповнено"
         not_completed_description: "Надайте необхідну інформацію, указавши атрибути, і ініціюйте проєкт."
@@ -4645,7 +4676,7 @@ uk:
       disable_dialog:
         title: "Вимкнути запит на ініціювання проєкту"
         heading: "Вимкнути цей запит на ініціювання проєкту?"
-        confirmation_message: "Майстер запиту на ініціювання більше не буде доступний для нових проєктів, створених на основі цього шаблону. Менеджерам і власникам проєктів доведеться вручну налаштувати й указувати відповідну інформацію на сторінці «Огляд проєкту»."
+        confirmation_message: "Майстер запиту на ініціювання більше не буде доступний для нових проєктів, створених на основі цього шаблону. Менеджерам і власникам проєктів доведеться вручну вибирати налаштування й указувати відповідну інформацію на сторінці «Огляд проєкту»."
         checkbox_message: "Я розумію, що цю дію не можна буде скасувати"
       name:
         artifact_name: "Назва артефакту"
@@ -4657,16 +4688,16 @@ uk:
       submission:
         description_template: >
           **Цей пакет робіт автоматично створено після завершення робочого процесу «%{wizard_name}».** Артефакт у форматі PDF, що містить усю подану інформацію, було створено й додано в цей пакет робіт для довідки й аудиту. Якщо знадобиться оновити дані або повторити кроки ініціювання, можна будь-коли знову відкрити майстер, скориставшись посиланням, наведеним нижче:
-        description: "Коли користувач подає запит на ініціювання проєкту, створюється новий пакет робіт із артефактом запиту, долученим як файл PDF. Наведені нижче налаштування визначають тип, статус і виконавця нового пакета робіт."
+        description: "Коли користувач подає запит на ініціювання проєкту, створюється новий пакет робіт з артефактом запиту, долученим як файл PDF. Наведені нижче налаштування визначають тип, статус і виконавця нового пакета робіт."
         work_package_type: "Тип пакета робіт"
         work_package_type_caption: "Тип пакета робіт, який слід використовувати для зберігання завершеного артефакту."
         status_when_submitted: "Статус на момент подання"
         status_when_submitted_caption: "Статус, який буде присвоєно створеному пакету робіт після подання запиту."
-        send_confirmation_email: "Надіслати лист із підтвердженням користувачу, що надіслав запит на ініціювання проєкту"
+        send_confirmation_email: "Надіслати лист із підтвердженням користувачу, що подав запит на ініціювання проєкту"
         assignee: "Виконавець на момент подання"
-        assignee_caption_html: "The user or group assigned to this project attribute will also become the assignee of the new work package. This list includes active project attributes of type <i>User</i> only."
+        assignee_caption_html: "Користувач або група, призначена цьому атрибуту проєкту, також стане отримувачем нового пакета робіт. Цей список включає активні атрибути проєкту лише типу <i>Користувач</i>."
         confirmation_email_text: "Текст листа з підтвердженням"
-        confirmation_email_default: "Вітаємо!\n\nВи надіслали запит на ініціювання проєкту **%{project_name}**. Зараз він очікує на розгляд.\nПерейдіть за посиланням нижче, щоб отримати доступ до пакета робіт із Вашим запитом."
+        confirmation_email_default: "Вітаємо!\n\nВи подали запит на ініціювання проєкту **%{project_name}**. Зараз він очікує на розгляд.\nПерейдіть за посиланням нижче, щоб отримати доступ до пакета робіт із Вашим запитом."
         work_package_comment: "Коментар до пакета робіт"
         work_package_comment_caption: "Виконавця, вибраного вище, буде автоматично @згадано в коментарі."
         work_package_comment_default: "Запит на ініціювання проєкту **%{project_name}** подано, і він очікує на розгляд."

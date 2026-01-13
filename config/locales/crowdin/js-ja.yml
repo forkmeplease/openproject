@@ -204,6 +204,8 @@ ja:
         add_table: "関係するワークパッケージのテーブルを追加する"
         edit_query: "クエリの編集"
         new_group: "新規グループ"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "デフォルトに戻す"
       working_days:
         calendar:

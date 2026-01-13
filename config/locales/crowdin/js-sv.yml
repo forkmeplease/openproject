@@ -202,6 +202,8 @@ sv:
         add_table: "Lägg till tabell med relaterade arbetspaket"
         edit_query: "Redigera fråga"
         new_group: "Ny grupp"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Återställ standardinställningar"
       working_days:
         calendar:

@@ -203,6 +203,8 @@ eo:
         add_table: "Aldoni tabelon de rilataj laborpakaĵoj"
         edit_query: "Edit query"
         new_group: "Nova grupo"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Restarigi la defaŭltojn"
       working_days:
         calendar:

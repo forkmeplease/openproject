@@ -52,7 +52,7 @@ zh-CN:
           title: '工作包表'
         work_packages_graph:
           title: '工作包图'
-          summary: "显示工作包的 %{chartType} 图表，这些工作包是 %{description}。"
+          summary: "显示工作包的%{chartType}，其中 %{description}。"
         work_packages_calendar:
           title: '日历'
         work_packages_overview:

@@ -202,6 +202,8 @@ zh-TW:
         add_table: "新增相關工作套件表格"
         edit_query: "編輯查詢"
         new_group: "新增群組"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "重設為預設值"
       working_days:
         calendar:
@@ -1118,8 +1120,8 @@ zh-TW:
     global_search:
       all_projects: "在所有的專案"
       close_search: "關閉搜尋"
-      items_available: "%{count} items available"
-      direct_hit_available: "Work package with exact ID found. Press Enter to open it."
+      items_available: "%{count} 可提供的項目"
+      direct_hit_available: "找到具有精確 ID 的工作套件。按 Enter 開啟它。"
       current_project_and_all_descendants: "目前專案和子專案"
       current_project: "目前專案"
       recently_viewed: "最近檢視"

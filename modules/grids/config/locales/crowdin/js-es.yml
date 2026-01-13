@@ -19,7 +19,7 @@ es:
           title: 'Descripción'
           no_results: "Aún no se ha escrito ninguna descripción. Puede proporcionar una descripción en la configuración del proyecto."
         project_status:
-          title: 'Status'
+          title: 'Estado'
           not_started: 'No empezado'
           on_track: 'Según lo previsto'
           off_track: 'Fuera de lo previsto'
@@ -28,7 +28,7 @@ es:
           finished: 'Terminado'
           discontinued: 'Discontinuado'
         project_status_beta:
-          title: 'Status (BETA)'
+          title: 'Estado (BETA)'
         subprojects:
           title: 'Subelementos'
         project_favorites:

@@ -231,14 +231,14 @@ ko:
         summary: "'%{title}'을(를) %{actor} 님이 취소했습니다."
         date_time: "스케줄링된 날짜/시간"
       ended:
-        header_series: "Ended: Meeting series '%{title}'"
-        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
+        header_series: "종료됨: 미팅 시리즈 '%{title}'"
+        summary_series: "'%{title}' 미팅 시리즈를 %{actor} 님이 종료했습니다."
       updated:
         header: "'%{title}' 미팅이 업데이트되었습니다"
         summary: "'%{title}' 미팅을 %{actor} 님이 업데이트했습니다"
         body: "'%{title}' 미팅을 %{actor} 님이 업데이트했습니다."
-        old_title: "Old title"
-        new_title: "New title"
+        old_title: "이전 제목"
+        new_title: "새 제목"
         old_date_time: "이전 날짜/시간"
         new_date_time: "새로운 날짜/시간"
         old_location: "이전 위치"
@@ -393,8 +393,6 @@ ko:
       blank_title: "미팅 시리즈 템플릿이 비어 있습니다."
       description: >
         이 템플릿은 시리즈의 새로운 미팅이 생성될 때마다 사용됩니다. 이 템플릿에 안건 항목, 참가자 및 첨부 파일을 추가할 수 있습니다.
-      blankslate_finalize: >
-        이 템플릿 준비가 완료되면 위의 '%{button_title}' 버튼을 클릭하여 설정을 완료하고 시리즈의 첫 번째 미팅을 예약합니다.
       label_view_template: "템플릿 보기"
       label_edit_template: "템플릿 편집"
       banner_html: >
@@ -601,10 +599,12 @@ ko:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "미팅용 iCalendar"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendar 미팅 토큰을 통해 사용자는 모든 미팅을 구독하고 외부 클라이언트에서 최신 미팅 정보를 볼 수 있습니다."
         disabled_text: "관리자가 iCalendar 미팅 구독을 활성화하지 않았습니다. 이 기능을 사용하려면 관리자에게 문의하세요."
-        empty_text_hint: 'iCalendar 미팅 토큰을 추가하려면 <a href="%{path}">미팅 섹션</a>으로 이동하여 여기에서 구독하세요.'
         add_button: "캘린더 구독"
   my:
     access_token:
@@ -619,7 +619,6 @@ ko:
         token/ical_meeting:
           title: "iCal 미팅 구독 토큰이 생성되었습니다"
           body: "다음 URL을 암호처럼 취급하세요. 액세스 권한이 있으면 누구든지 모든 미팅을 볼 수 있습니다."
-          warning: "이번에만 이 토큰이 표시됩니다. 지금 이 토큰을 복사해야 합니다."
       revocation:
         token/ical_meeting:
           notice_success: "iCalendar 미팅 구독이 취소되었습니다."

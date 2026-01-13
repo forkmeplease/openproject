@@ -203,6 +203,8 @@ pl:
         add_table: "Dodaj tabelę powiązanych pakietów roboczych"
         edit_query: "Edytuj zapytanie"
         new_group: "Nowa Grupa"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Resetuj do ustawień domyślnych"
       working_days:
         calendar:

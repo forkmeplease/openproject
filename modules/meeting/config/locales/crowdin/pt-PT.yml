@@ -398,8 +398,6 @@ pt-PT:
       blank_title: "O seu modelo da série de reuniões está vazio"
       description: >
         Este modelo será utilizado sempre que forem criadas novas reuniões na série. Pode adicionar itens da agenda, participantes e anexos a este modelo.
-      blankslate_finalize: >
-        Quando terminar de preparar este modelo, clique no botão "%{button_title}" acima para concluir a configuração e agendar a primeira reunião da série.
       label_view_template: "Ver modelo"
       label_edit_template: "Editar modelo"
       banner_html: >
@@ -608,10 +606,12 @@ pt-PT:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar para reuniões"
+        table_title: "iCalendar meeting tokens"
         text_hint: "Os tokens do iCalendar permitem aos utilizadores subscrever os calendários do OpenProject, e ver informações atualizadas sobre pacotes de trabalho de clientes externos."
         disabled_text: "As subscrições de reuniões do iCalendar não estão ativadas pelo administrador. Contacte o seu administrador para utilizar esta funcionalidade."
-        empty_text_hint: 'Para adicionar um token de reunião do iCalendar, aceda à <a href="%{path}">secção de reuniões</a> e subscreva a partir daí.'
         add_button: "Subscrever o calendário"
   my:
     access_token:
@@ -626,7 +626,6 @@ pt-PT:
         token/ical_meeting:
           title: "Foi gerado um token de subscrição de reunião iCal"
           body: "Trate o seguinte URL como se fosse uma palavra-passe. Qualquer pessoa que tenha acesso a ele pode ver todas as suas reuniões."
-          warning: "Esta é a única vez que verá este token. Não se esqueça de o copiar agora."
       revocation:
         token/ical_meeting:
           notice_success: "A subscrição da reunião iCalendar foi revogada com êxito."

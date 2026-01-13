@@ -398,8 +398,6 @@ fr:
       blank_title: "Votre modèle de série de réunions est vide"
       description: >
         Ce modèle sera utilisé chaque fois que de nouvelles réunions seront créées dans la série. Vous pouvez ajouter des points à l'ordre du jour, des participants et des pièces jointes à ce modèle.
-      blankslate_finalize: >
-        Lorsque vous avez terminé de préparer ce modèle, cliquez sur le bouton « %{button_title} » ci-dessus pour terminer la configuration et programmer la première réunion de la série.
       label_view_template: "Voir le modèle"
       label_edit_template: "Modifier le modèle"
       banner_html: >
@@ -608,10 +606,12 @@ fr:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar pour les réunions"
+        table_title: "iCalendar meeting tokens"
         text_hint: "Les jetons de réunion iCalendar permettent aux utilisateurs de s'abonner à toutes leurs réunions et d'afficher des informations actualisées sur les réunions dans des clients externes."
         disabled_text: "Les abonnements iCalendar ne sont pas activés par l'administrateur. Veuillez contacter votre administrateur pour utiliser cette fonctionnalité."
-        empty_text_hint: 'Pour ajouter un jeton de réunion iCalendar, accédez à la section <a href="%{path}">réunions</a> et abonnez-vous à partir de là.'
         add_button: "S'abonner au calendrier"
   my:
     access_token:
@@ -626,7 +626,6 @@ fr:
         token/ical_meeting:
           title: "Un jeton d'abonnement à une réunion iCal a été généré"
           body: "Traite l'URL suivante comme un mot de passe. Quiconque y a accès peut voir toutes vos réunions."
-          warning: "C'est la seule fois que vous verrez ce jeton. Pensez à le copier maintenant."
       revocation:
         token/ical_meeting:
           notice_success: "L'abonnement à la réunion iCalendar a été révoqué avec succès."

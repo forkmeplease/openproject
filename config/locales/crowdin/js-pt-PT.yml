@@ -203,6 +203,8 @@ pt-PT:
         add_table: "Adicionar tabela de pacotes de trabalho relacionados"
         edit_query: "Editar consulta"
         new_group: "Novo Grupo"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Repor predefinições"
       working_days:
         calendar:

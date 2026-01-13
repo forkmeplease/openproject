@@ -203,6 +203,8 @@ ms:
         add_table: "Tambah jadual pakej kerja yang berkaitan"
         edit_query: "Edit pertanyaan"
         new_group: "Kumpulan baharu"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Set semula ke default"
       working_days:
         calendar:

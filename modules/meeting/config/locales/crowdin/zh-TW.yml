@@ -237,8 +237,8 @@ zh-TW:
         header: "會議 '%{title}' 已更新"
         summary: "會議 '%{title}' 已由 %{actor}更新"
         body: "會議 '%{title}' 已由 %{actor}更新。"
-        old_title: "Old title"
-        new_title: "New title"
+        old_title: "舊標題"
+        new_title: "新標題"
         old_date_time: "舊日期/時間"
         new_date_time: "新日期/時間"
         old_location: "舊位置"
@@ -393,8 +393,6 @@ zh-TW:
       blank_title: "您的會議範本是空的"
       description: >
         每當在系列中建立新會議時，都會使用此範本。您可以在此範本中加入議程項目、與會者和附件。
-      blankslate_finalize: >
-        準備完此範本後，按一下上方的 '%{button_title}' 按鈕，即可完成設定並排定系列會議的第一次會議。
       label_view_template: "查看範本"
       label_edit_template: "編輯範本"
       banner_html: >
@@ -601,10 +599,12 @@ zh-TW:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "會議用 iCalendar"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendar 會議令牌(Tokens)可讓使用者訂閱其所有會議，並在外部用戶端中檢視最新的會議資訊。"
         disabled_text: "iCalendar 會議訂閱未由管理員啟用。若要使用此功能，請聯絡您的管理員。"
-        empty_text_hint: '若要新增 iCalendar 會議權杖，請前往 <a href="%{path}">會議區段</a> 並在那裡進行訂閱。'
         add_button: "訂閱行事曆"
   my:
     access_token:
@@ -619,7 +619,6 @@ zh-TW:
         token/ical_meeting:
           title: "已生成一個 iCal 會議訂閱令牌(Token)。"
           body: "請將以下 URL 視同密碼處理。任何擁有該連結的人都能檢視您的所有會議。"
-          warning: "這是您唯一一次看到此令牌(Token)的機會，請務必立即複製。"
       revocation:
         token/ical_meeting:
           notice_success: "iCalendar 會議訂閱已成功撤銷。"

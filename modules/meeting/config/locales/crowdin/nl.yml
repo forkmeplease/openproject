@@ -398,8 +398,6 @@ nl:
       blank_title: "Uw vergaderreeks sjabloon is leeg"
       description: >
         Dit sjabloon wordt gebruikt wanneer nieuwe vergaderingen in de serie worden aangemaakt. U kunt agendapunten, deelnemers en bijlagen aan het sjabloon toevoegen.
-      blankslate_finalize: >
-        Wanneer u klaar bent met het voorbereiden van het sjabloon, klikt u op de knop '%{button_title}' hierboven om het instellen te voltooien en de eerste vergadering van de serie te plannen.
       label_view_template: "Sjabloon bekijken"
       label_edit_template: "Bewerkt sjabloon"
       banner_html: >
@@ -608,10 +606,12 @@ nl:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar for meetings"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendar meeting tokens allow users to subscribe to all their meetings and view up-to-date meeting information in external clients."
         disabled_text: "iCalendar meeting subscriptions are not enabled by the administrator. Please contact your administrator to use this feature."
-        empty_text_hint: 'To add an iCalendar meeting token, go to the <a href="%{path}">meetings section</a> and subscribe from there.'
         add_button: "Abonneren op agenda"
   my:
     access_token:
@@ -626,7 +626,6 @@ nl:
         token/ical_meeting:
           title: "An iCal meeting subscription token has been generated"
           body: "Treat the following URL as you would a password. Anyone who has access to it can view all your meetings."
-          warning: "This is the only time you will see this token. Make sure to copy it now."
       revocation:
         token/ical_meeting:
           notice_success: "The iCalendar meeting subscription has been revoked successfully."

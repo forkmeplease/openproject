@@ -398,8 +398,6 @@ sv:
       blank_title: "Din mall för mötesserier är tom"
       description: >
         Denna mall kommer att användas när nya möten i serien skapas. Du kan lägga till agenda objekt, deltagare och bilagor till denna mall.
-      blankslate_finalize: >
-        När du är klar med att förbereda denna mall, klicka på knappen '%{button_title}' ovan för att avsluta konfigurationen och schemalägga det första mötet i serien.
       label_view_template: "Visa mall"
       label_edit_template: "Redigera mall"
       banner_html: >
@@ -608,10 +606,12 @@ sv:
   my_account:
     access_tokens:
       token/ical_meeting:
+        blank_description: "You can create one using the button below."
+        blank_title: "No iCalendar meeting token"
         title: "iCalendar för möten"
+        table_title: "iCalendar meeting tokens"
         text_hint: "iCalendar meeting tokens gör det möjligt för användare att prenumerera på alla sina möten och visa aktuell mötesinformation i externa klienter."
         disabled_text: "mötesprenumerationer i iCalendar är inte aktiverade av administratören. Kontakta din administratör om du vill använda den här funktionen."
-        empty_text_hint: 'För att lägga till en iCalendar-mötestoken går du till <a href="%{path}">avsnittet Möten</a> och prenumererar därifrån.'
         add_button: "Prenumerera på kalender"
   my:
     access_token:
@@ -626,7 +626,6 @@ sv:
         token/ical_meeting:
           title: "En prenumerationstoken för iCal-mötet har genererats"
           body: "Behandla följande URL som du skulle behandla ett lösenord. Alla som har tillgång till den kan se alla dina möten."
-          warning: "Detta är enda gången du kommer att se denna token. Se till att kopiera den nu."
       revocation:
         token/ical_meeting:
           notice_success: "Prenumerationen på iCalendar möte har återkallats."

@@ -203,6 +203,8 @@ cs:
         add_table: "Přidat seznam se souvisejícími pracovními balíčky"
         edit_query: "Upravit dotaz"
         new_group: "Nová skupina"
+        delete_group: "Delete group"
+        remove_attribute: "Remove from group"
         reset_to_defaults: "Obnovit výchozí nastavení"
       working_days:
         calendar:
