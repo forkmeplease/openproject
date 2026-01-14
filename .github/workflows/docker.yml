@@ -26,6 +26,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -34,6 +37,7 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64/v8
           tags: |
             openproject/hocuspocus:latest
             openproject/hocuspocus:${{ env.DOCKER_TAG }}
@@ -41,7 +45,6 @@ jobs:
           cache-to: type=gha,mode=max
       - name: Summarize build
         run: |
-          echo "Built \`openproject/hocuspocus:${{ env.DOCKER_TAG }}\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate GHA token
         id: generate-gha-token
