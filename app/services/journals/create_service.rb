@@ -295,11 +295,90 @@ module Journals
 
     def cleanup_predecessor_data_sql(predecessor, notes, cause)
       cleanup_predecessor_for(predecessor,
+                              notes,
+                              cause,
                               data_table_name,
                               :id,
-                              :data_id,
-                              notes,
-                              cause)
+                              :data_id)
+    end
+
+    # Updates the updated_at timestamp of the journable.
+    #
+    # Whenever an attribute is updated on the journable before creating the journal, the updated_at timestamp
+    # will already have been increased so nothing needs to be done.
+    # But if any of the associated data is updated or if only a cause or note is added, the journable would
+    # otherwise not have received an updated timestamp.
+    #
+    # Therefore, this is only carried out if:
+    # * the journable doesn't already have a newer timestamp than the most recent journal AND
+    # * if there are changes or a note or a cause
+    def touch_journable_sql(notes, cause)
+      if journable.class.aaj_options[:timestamp].to_sym == :updated_at
+        sql = <<~SQL
+          UPDATE
+            #{journable_table_name}
+          SET
+            updated_at = statement_timestamp()
+          WHERE
+            id = :id
+            #{only_on_changed_or_forced_condition_sql(notes, cause)}
+            AND NOT updated_at > (SELECT updated_at FROM max_journals)
+          RETURNING updated_at
+        SQL
+
+        sanitize(sql,
+                 id: journable.id)
+      else
+        <<~SQL
+          SELECT NULL::timestamp with time zone AS updated_at
+        SQL
+      end
+    end
+
+    # Fetches the timestamp to be used by all subsequent SQL statements e.g. for
+    # * setting the created_at and updated_at timestamps of the newly created journal
+    # * setting the updated_at timestamp on an updated (aggregated with) journal
+    # * setting the validity_period (upper bound) of the preceding journal.
+    def fetch_time_sql
+      sanitize(<<~SQL, journable_timestamp:)
+        SELECT COALESCE((SELECT updated_at FROM touch_journable), :journable_timestamp) AS updated_at
+      SQL
+    end
+
+    def insert_data_sql(notes, cause)
+      sanitize(<<~SQL, journable_id:)
+        INSERT INTO
+          #{data_table_name} (
+            #{data_sink_columns}
+          )
+        SELECT
+          #{data_source_columns}
+        FROM #{journable_table_name}
+        #{journable_data_sql_addition}
+        WHERE
+          #{journable_table_name}.id = :journable_id
+          #{only_on_changed_or_forced_condition_sql(notes, cause)}
+        RETURNING *
+      SQL
+    end
+
+    # Sets the validity_period's upper boundary of the preceding journal to the created_at timestamp of the inserted journal.
+    # The upper bound set is not included.
+    # If there is a predecessor (meaning we are aggregating/updating an existing journal), nothing is done.
+    # In that case, the preceding journal is the one we are currently aggregating with so it will still remain
+    # the most recent one.
+    def update_predecessor_sql(predecessor, notes, cause)
+      return "SELECT 1" if predecessor.present?
+
+      <<~SQL
+        UPDATE
+          journals
+        SET
+          validity_period = tstzrange(lower(validity_period), (SELECT updated_at FROM fetch_time), '[)')
+        WHERE
+          id = (SELECT id from max_journals)
+          #{only_on_changed_or_forced_condition_sql(notes, cause)}
+      SQL
     end
 
     def update_or_insert_journal_sql(predecessor, notes, internal, cause)
@@ -384,85 +463,6 @@ module Journals
                journable_type:,
                user_id: user.id,
                data_type: journable.class.journal_class.name)
-    end
-
-    def insert_data_sql(notes, cause)
-      sanitize(<<~SQL, journable_id:)
-        INSERT INTO
-          #{data_table_name} (
-            #{data_sink_columns}
-          )
-        SELECT
-          #{data_source_columns}
-        FROM #{journable_table_name}
-        #{journable_data_sql_addition}
-        WHERE
-          #{journable_table_name}.id = :journable_id
-          #{only_on_changed_or_forced_condition_sql(notes, cause)}
-        RETURNING *
-      SQL
-    end
-
-    # Updates the updated_at timestamp of the journable.
-    #
-    # Whenever an attribute is updated on the journable before creating the journal, the updated_at timestamp
-    # will already have been increased so nothing needs to be done.
-    # But if any of the associated data is updated or if only a cause or note is added, the journable would
-    # otherwise not have received an updated timestamp.
-    #
-    # Therefore, this is only carried out if:
-    # * the journable doesn't already have a newer timestamp than the most recent journal AND
-    # * if there are changes or a note or a cause
-    def touch_journable_sql(notes, cause)
-      if journable.class.aaj_options[:timestamp].to_sym == :updated_at
-        sql = <<~SQL
-          UPDATE
-            #{journable_table_name}
-          SET
-            updated_at = statement_timestamp()
-          WHERE
-            id = :id
-            #{only_on_changed_or_forced_condition_sql(notes, cause)}
-            AND NOT updated_at > (SELECT updated_at FROM max_journals)
-          RETURNING updated_at
-        SQL
-
-        sanitize(sql,
-                 id: journable.id)
-      else
-        <<~SQL
-          SELECT NULL::timestamp with time zone AS updated_at
-        SQL
-      end
-    end
-
-    # Fetches the timestamp to be used by all subsequent SQL statements e.g. for
-    # * setting the created_at and updated_at timestamps of the newly created journal
-    # * setting the updated_at timestamp on an updated (aggregated with) journal
-    # * setting the validity_period (upper bound) of the preceding journal.
-    def fetch_time_sql
-      sanitize(<<~SQL, journable_timestamp:)
-        SELECT COALESCE((SELECT updated_at FROM touch_journable), :journable_timestamp) AS updated_at
-      SQL
-    end
-
-    # Sets the validity_period's upper boundary of the preceding journal to the created_at timestamp of the inserted journal.
-    # The upper bound set is not included.
-    # If there is a predecessor (meaning we are aggregating/updating an existing journal), nothing is done.
-    # In that case, the preceding journal is the one we are currently aggregating with so it will still remain
-    # the most recent one.
-    def update_predecessor_sql(predecessor, notes, cause)
-      return "SELECT 1" if predecessor.present?
-
-      <<~SQL
-        UPDATE
-          journals
-        SET
-          validity_period = tstzrange(lower(validity_period), (SELECT updated_at FROM fetch_time), '[)')
-        WHERE
-          id = (SELECT id from max_journals)
-          #{only_on_changed_or_forced_condition_sql(notes, cause)}
-      SQL
     end
 
     def changes_data_sql

@@ -36,11 +36,11 @@ class Journals::CreateService
 
     def cleanup_predecessor(predecessor, notes, cause)
       cleanup_predecessor_for(predecessor,
+                              notes,
+                              cause,
                               "project_phase_journals",
                               :journal_id,
-                              :id,
-                              notes,
-                              cause)
+                              :id)
     end
 
     def insert_sql
