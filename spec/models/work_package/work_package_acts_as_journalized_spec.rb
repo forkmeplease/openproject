@@ -51,263 +51,12 @@ RSpec.describe WorkPackage do
 
     current_user { create(:user) }
 
-    shared_examples_for "journaled values for" do |new_values_set:,
-                                                   expected_values:,
-                                                   expect_new_journal: true,
-                                                   expect_predecessor_changed: expect_new_journal,
-                                                   expect_work_package_update_at_changed: true,
-                                                   expected_cause: nil,
-                                                   expected_notes: nil|
-      def value_or_id(value)
-        value.is_a?(Symbol) ? public_send(value).id : value
-      end
-
-      def last_journal
-        work_package.journals.reload.last
-      end
-
-      before do
-        new_values_set.each do |property, value|
-          work_package.public_send("#{property}=", value_or_id(value))
-        end
-      end
-
-      expected_values.each do |property, (old_value, new_value)|
-        context "for #{property}" do
-          it "tracks the change from old value #{old_value.inspect} to new value #{new_value.inspect}" do
-            work_package.save!
-
-            expect(last_journal.old_value_for(property)).to eq(value_or_id(old_value))
-            expect(last_journal.new_value_for(property)).to eq(value_or_id(new_value))
-          end
-        end
-      end
-
-      if expected_values.empty?
-        it "has no changes tracked" do
-          work_package.save!
-
-          expect(last_journal.details.except("cause"))
-            .to be_empty
-        end
-      end
-
-      if expect_new_journal
-        it "creates a new journal" do
-          expect { work_package.save! }
-            .to change { work_package.journals.reload.count }
-                  .by(1)
-        end
-
-        it "has the timestamp of the work package update time for created_at" do
-          work_package.save!
-
-          expect(last_journal.created_at)
-            .to eql(work_package.reload.updated_at)
-        end
-
-        it "has the timestamp of the work package update time for updated_at" do
-          work_package.save!
-
-          expect(last_journal.updated_at)
-            .to eql(work_package.reload.updated_at)
-        end
-
-        it "has the updated_at of the work package as the lower bound for validity_period and no upper bound" do
-          work_package.save!
-
-          expect(last_journal.validity_period)
-            .to eql(work_package.reload.updated_at...)
-        end
-
-        it "has the current user as the journal's user" do
-          work_package.save!
-
-          expect(last_journal.user)
-            .to eql(current_user)
-        end
-
-        if expect_predecessor_changed
-          it "sets the upper bound of the preceding journal to be the created_at time of the newly created journal" do
-            work_package.save!
-
-            former_last_journal = work_package.journals.reload[-2]
-            expect(former_last_journal.validity_period)
-              .to eql(former_last_journal.created_at...work_package.last_journal.created_at)
-          end
-
-          it "keeps the user of the preceding journal" do
-            former_last_journal = last_journal
-
-            work_package.save!
-
-            expect(work_package.journals.reload[-2].user)
-              .to eql(former_last_journal.user)
-          end
-        end
-      else
-        it "does not create a new journal" do
-          expect { work_package.save! }
-            .not_to change { work_package.journals.reload.count }
-        end
-
-        it "has the current user as the journal's user" do
-          work_package.save!
-
-          expect(last_journal.user)
-            .to eql(current_user)
-        end
-
-        it "keeps the journal's created_at time" do
-          expect { work_package.save! }
-            .not_to change {
-              last_journal.created_at
-            }
-        end
-
-        it "sets the journal's updated_at time to the work package's created_at time" do
-          work_package.save!
-
-          expect(last_journal.updated_at)
-            .to eql(work_package.reload.updated_at)
-        end
-
-        it "keeps created_at of the journal as the lower bound for validity_period and no upper bound" do
-          work_package.save!
-
-          expect(last_journal.validity_period)
-            .to eql(last_journal.created_at...)
-        end
-      end
-
-      it "has the current user as the journal's user" do
-        work_package.save!
-
-        expect(work_package.journals.reload.last.user)
-          .to eql(current_user)
-      end
-
-      it "sends an OpenProject notification" do
-        allow(OpenProject::Notifications)
-          .to receive(:send)
-
-        work_package.save!
-
-        expect(OpenProject::Notifications)
-          .to have_received(:send)
-                .with(OpenProject::Events::JOURNAL_CREATED,
-                      anything)
-      end
-
-      if expected_cause
-        it "has the expected cause" do
-          work_package.save!
-
-          expect(last_journal.cause)
-            .to eql(expected_cause)
-        end
-      else
-        it "has no cause" do
-          work_package.save!
-
-          expect(last_journal.cause)
-            .to be_empty
-        end
-      end
-
-      if expected_notes
-        it "has the expected notes" do
-          work_package.save!
-
-          expect(last_journal.notes)
-            .to eql(expected_notes)
-        end
-      else
-        it "has no notes" do
-          work_package.save!
-
-          expect(last_journal.notes)
-            .to be_empty
-        end
-      end
-
-      if expect_work_package_update_at_changed
-        it "updates the updated_at time of the work package" do
-          # Using this complicated form of writing to avoid problems
-          # e.g. with reloading before the work package is initially saved
-          updated_at_before = work_package.updated_at
-
-          work_package.save!
-
-          expect(work_package.reload.updated_at)
-            .not_to eql(updated_at_before)
-        end
-      else
-        it "keeps the updated_at time of the work package" do
-          # Using this complicated form of writing to avoid problems
-          # e.g. with reloading before the work package is initially saved
-          expect { work_package.save! }
-            .not_to change { work_package.reload.updated_at }
-        end
-      end
-    end
-
-    shared_examples_for "no journaled value changes for" do |new_values_set:, expect_work_package_update_at_changed: false|
-      before do
-        new_values_set.each do |property, value|
-          work_package.public_send("#{property}=", value)
-        end
-      end
-
-      it "does not create a new journal" do
-        expect { work_package.save! }
-          .not_to change(Journal, :count)
-      end
-
-      it "does not update the updated_at time of the last journal" do
-        expect { work_package.save! }
-          .not_to change {
-            work_package.journals.reload.last.updated_at
-          }
-      end
-
-      unless expect_work_package_update_at_changed
-        it "does not update the updated_at time of the work package" do
-          expect { work_package.save! }
-            .not_to change(work_package, :updated_at)
-        end
-      end
-
-      it "does not send an OpenProject notification" do
-        allow(OpenProject::Notifications)
-          .to receive(:send)
-
-        work_package.save!
-
-        expect(OpenProject::Notifications)
-          .not_to have_received(:send)
-      end
-    end
+    # For the shared examples
+    let(:journable) { work_package }
 
     context "on creation" do
       let(:work_package) do
-        described_class.new(author: current_user,
-                            subject: "Initial subject",
-                            description: "Initial description",
-                            project:,
-                            type:,
-                            priority:,
-                            status:,
-                            start_date: Date.new(2026, 1, 9),
-                            due_date: nil,
-                            duration: 1,
-                            estimated_hours: 3.0,
-                            schedule_manually: true,
-                            assigned_to: current_user,
-                            responsible: current_user,
-                            category: nil,
-                            version:,
-                            ignore_non_working_days: true)
+        described_class.new(author: current_user)
       end
 
       include_examples "journaled values for",
@@ -473,19 +222,6 @@ RSpec.describe WorkPackage do
                          "project_phase_definition_id" => [nil, :project_phase_definition]
                        },
                        expect_new_journal: true
-
-      # describe "adding journal with a missing journal and an existing journal" do
-      #  before do
-      #    allow(WorkPackages::UpdateContract).to receive(:new).and_return(NoopContract.new)
-      #    service = WorkPackages::UpdateService.new(user: current_user, model: work_package)
-      #    service.call(journal_notes: "note to be deleted", send_notifications: false)
-      #    work_package.reload
-      #    service.call(description: "description v2", send_notifications: false)
-      #    work_package.reload
-      #    work_package.journals.reload.find_by(notes: "note to be deleted").delete
-
-      #    service.call(description: "description v4", send_notifications: false)
-      #  end
     end
 
     context "on changes within aggregation time for a work package with no update yet (single journal)" do
@@ -1220,7 +956,7 @@ RSpec.describe WorkPackage do
                              "description" => "Description\n\nwith newlines\n\nembedded"
                            },
                            # The value of description does change which is what causes update_at to change
-                           expect_work_package_update_at_changed: true
+                           expect_journable_update_at_changed: true
         end
       end
     end
@@ -1290,6 +1026,28 @@ RSpec.describe WorkPackage do
           end
         end
       end
+    end
+
+    context "on having a broken journal chain (e.g. because of legacy data)",
+            with_settings: { journal_aggregation_time_minutes: 0 } do
+      let(:work_package) do
+        create(:work_package,
+               description: "Initial description") do |wp|
+          wp.add_journal(notes: "Note to be deleted")
+          wp.save!
+          wp.update!(description: "Changed description")
+          wp.journals.reload.find_by(notes: "Note to be deleted").destroy!
+        end
+      end
+
+      include_examples "journaled values for",
+                       new_values_set: {
+                         "description" => "Changed again description"
+                       },
+                       expected_values: {
+                         "description" => ["Changed description", "Changed again description"]
+                       },
+                       expect_new_journal: true
     end
   end
 

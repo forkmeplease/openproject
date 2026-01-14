@@ -219,11 +219,11 @@ module Journals
         ), cleanup_predecessor_data AS (
           #{cleanup_predecessor_data_sql(predecessor, notes, cause)}
         ), touch_journable AS (
-          #{touch_journable_sql(predecessor, notes, cause)}
+          #{touch_journable_sql(notes, cause)}
         ), fetch_time AS (
           #{fetch_time_sql}
         ), insert_data AS (
-          #{insert_data_sql(predecessor, notes, cause)}
+          #{insert_data_sql(notes, cause)}
         ), update_predecessor AS (
           #{update_predecessor_sql(predecessor, notes, cause)}
         ), inserted_journal AS (
@@ -386,7 +386,7 @@ module Journals
                data_type: journable.class.journal_class.name)
     end
 
-    def insert_data_sql(predecessor, notes, cause)
+    def insert_data_sql(notes, cause)
       sanitize(<<~SQL, journable_id:)
         INSERT INTO
           #{data_table_name} (
@@ -398,7 +398,7 @@ module Journals
         #{journable_data_sql_addition}
         WHERE
           #{journable_table_name}.id = :journable_id
-          #{only_on_changed_or_forced_condition_sql(predecessor, notes, cause)}
+          #{only_on_changed_or_forced_condition_sql(notes, cause)}
         RETURNING *
       SQL
     end
@@ -413,7 +413,7 @@ module Journals
     # Therefore, this is only carried out if:
     # * the journable doesn't already have a newer timestamp than the most recent journal AND
     # * if there are changes or a note or a cause
-    def touch_journable_sql(predecessor, notes, cause)
+    def touch_journable_sql(notes, cause)
       if journable.class.aaj_options[:timestamp].to_sym == :updated_at
         sql = <<~SQL
           UPDATE
@@ -422,7 +422,7 @@ module Journals
             updated_at = statement_timestamp()
           WHERE
             id = :id
-            #{only_on_changed_or_forced_condition_sql(predecessor, notes, cause)}
+            #{only_on_changed_or_forced_condition_sql(notes, cause)}
             AND NOT updated_at > (SELECT updated_at FROM max_journals)
           RETURNING updated_at
         SQL
@@ -461,7 +461,7 @@ module Journals
           validity_period = tstzrange(lower(validity_period), (SELECT updated_at FROM fetch_time), '[)')
         WHERE
           id = (SELECT id from max_journals)
-          #{only_on_changed_or_forced_condition_sql(predecessor, notes, cause)}
+          #{only_on_changed_or_forced_condition_sql(notes, cause)}
       SQL
     end
 
@@ -582,7 +582,7 @@ module Journals
     end
 
     def only_one_or_same_cause?(predecessor, cause)
-      predecessor.cause.empty? || cause.empty? || predecessor.cause == cause
+      predecessor.cause.empty? || cause.blank? || predecessor.cause == cause
     end
 
     def log_journal_creation(predecessor)
