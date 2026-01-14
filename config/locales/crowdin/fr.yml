@@ -713,9 +713,11 @@ fr:
           create_button: "Créer"
           name_label: "Nom du jeton"
       created_dialog:
+        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
         token/api:
           title: "Le jeton d'API a été généré"
-          warning: "Note : Ceci est la seule fois où vous verrez ce jeton, veuillez le copier maintenant."
+        token/rss:
+          title: "The RSS token has been generated"
       failed_to_reset_token: "Impossible de réinitialiser le jeton d’accès : %{error}"
       failed_to_create_token: "Impossible de créer le jeton d'accès : %{error}"
       failed_to_revoke_token: "Impossible de révoquer le jeton d'accès : %{error}"
@@ -725,6 +727,9 @@ fr:
       notice_api_token_revoked: "Le jeton d'API a été supprimé. Pour créer un nouveau jeton, veuillez utiliser le bouton dans la section API."
       notice_rss_token_revoked: "Le jeton d'API a été supprimé. Pour créer un nouveau jeton, veuillez utiliser le lien dans la section RSS."
       notice_ical_token_revoked: 'Le jeton iCalendar « %{token_name} » pour le calendrier « %{calendar_name} » du projet « %{project_name} » a été révoqué. L''URL iCalendar liée à ce jeton est maintenant invalide.'
+    password_confirmation_dialog:
+      confirmation_required: "Vous devez saisir le mot de passe de votre compte pour confirmer cette modification."
+      title: "Confirmez votre mot de passe pour continuer"
   news:
     index:
       no_results_title_text: Il n'y a actuellement aucune actualité à publier.
@@ -1509,7 +1514,8 @@ fr:
         not_a_datetime: "n'est pas une heure valide."
         not_a_number: "n'est pas un nombre."
         not_allowed: "est invalide en raison d’autorisations insuffisantes."
-        not_json: "n'est pas un objet JSON valide."
+        not_json: "ne peut pas être analysé en tant que JSON."
+        not_json_object: "n'est pas un objet JSON."
         not_an_integer: "n'est pas un entier."
         not_an_iso_date: "n’est pas une date valide. Format requis : AAAA-MM-JJ."
         not_same_project: "n'appartient pas au même projet."
@@ -1917,7 +1923,12 @@ fr:
       token/api:
         one: Jeton d'accès
         other: Jetons d’accès
-      type: "Type"
+      token/rss:
+        one: "RSS token"
+        other: "RSS tokens"
+      type:
+        one: "Type"
+        other: "Types"
       user: "Utilisateur"
       version: "Version"
       workflow: "Flux de travail"
@@ -2134,6 +2145,7 @@ fr:
   button_click_to_reveal: "Cliquez pour révéler"
   button_close: "Fermer"
   button_collapse_all: "Tout replier"
+  button_confirm: "Confirmer"
   button_configure: "Configurer"
   button_continue: "Continuer"
   button_complete: "Compléter"
@@ -2166,6 +2178,7 @@ fr:
   button_print: "Imprimer"
   button_quote: "Citer"
   button_remove: Supprimer
+  button_remove_permanently: "Supprimer définitivement"
   button_remove_reminder: "Supprimer le rappel"
   button_rename: "Renommer"
   button_replace: "Remplacer"
@@ -2907,34 +2920,58 @@ fr:
         expiration: "Expiration"
       indefinite_expiration: "Jamais"
       simple_revoke_confirmation: "Voulez-vous vraiment révoquer ce jeton ?"
+      tabs:
+        client:
+          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
+          title: "Client tokens"
+        provider:
+          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
+          title: "Provider tokens"
       token/api:
+        blank_description: "There is no API token yet. You can create one using the button below."
+        blank_title: "No API token"
         title: "API"
+        table_title: "API tokens"
         text_hint: "Les jetons d'API permettent aux applications tierces de communiquer avec cette instance OpenProject via les API REST."
+        static_token_name: "API token"
         disabled_text: "Les jetons d'API ne sont pas activés par l'administrateur. Veuillez contacter votre administrateur pour utiliser cette fonctionnalité."
         add_button: "Jeton d'API"
-      api:
-        static_token_name: "Jeton d'API"
       ical:
+        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
+        blank_title: "No iCalendar token"
         title: "iCalendar"
+        table_title: "iCalendar tokens"
         text_hint_link: "Les jetons iCalendar permettent aux utilisateurs de [s'abonner aux calendriers OpenProject](docs_url) et d'afficher des informations à jour sur les lots de travaux provenant de clients externes."
         disabled_text: "Les abonnements iCalendar ne sont pas activés par l'administrateur. Veuillez contacter votre administrateur pour utiliser cette fonctionnalité."
-        empty_text_hint: "Pour ajouter un jeton iCalendar, abonnez-vous à un nouveau calendrier ou à un calendrier existant depuis le module Calendrier d'un projet. Vous devez avoir les autorisations nécessaires."
-      oauth:
+      oauth_application:
+        active_tokens: "Active tokens"
+        blank_description: "There is no third-party application access configured and active for you."
+        blank_title: "No OAuth application token"
+        last_used_at: "Last used at"
         title: "OAuth"
-        text_hint: "Les jetons OAuth permettent à des applications tierces de se connecter à cette instance OpenProject."
-        empty_text_hint: "Il n'y a pas d'accès à des applications tierces configuré et actif pour vous. Veuillez contacter votre administrateur pour activer cette fonctionnalité."
-      rss:
+        table_title: "OAuth application tokens"
+        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+      oauth_client:
+        blank_description: "There are no OAuth client tokens yet."
+        blank_title: "No OAuth client tokens"
+        failed: "An error occurred and the token couldn't be removed. Please try again later."
+        integration_type: "Integration type"
+        table_title: "OAuth client tokens"
+        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        title: "OAuth"
+        remove_token: "Do you really want to remove this token? You will need to login again on %{integration}."
+        removed: "OAuth client token successfully removed"
+        unknown_integration: "Unknown"
+      token/rss:
+        add_button: "RSS Token"
+        blank_description: "There is no RSS token yet. You can create one using the button below."
+        blank_title: "No RSS token"
         title: "RSS"
-        text_hint: "Les jetons RSS permettent aux utilisateurs de suivre les derniers changements de cette instance OpenProject via un lecteur RSS externe."
-        static_token_name: "Jeton RSS"
-        disabled_text: "Les jetons RSS ne sont pas activés par l'administrateur. Veuillez contacter votre administrateur pour utiliser cette fonctionnalité."
+        table_title: "RSS tokens"
+        text_hint: "RSS tokens allow users to keep up with the latest changes in this OpenProject instance via an external RSS reader."
+        static_token_name: "RSS token"
+        disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
-        title: "Espaces de stockage de fichiers"
-        text_hint: "Les jetons de stockage de fichiers connectent cette instance OpenProject à une solution de stockage de fichiers externe."
-        empty_text_hint: "Il n'y a pas d'accès à l'espace de stockage lié à votre compte."
-        revoke_token: "Voulez-vous vraiment supprimer ce jeton ? Vous devrez vous reconnecter sur %{storage}"
-        removed: "Jeton de stockage de fichiers supprimé avec succès"
-        failed: "Une erreur s'est produite et le jeton n'a pas pu être supprimé. Veuillez réessayer plus tard."
         unknown_storage: "Espace de stockage inconnu"
   notifications:
     reasons:
@@ -3894,7 +3931,7 @@ fr:
   notice_not_authorized: "Vous n'êtes pas autorisé à accéder à cette page."
   notice_not_authorized_archived_project: "Le projet auquel vous essayer d'accéder a été archivé."
   notice_requires_enterprise_token: "Le jeton Enterprise est manquant ou n'autorise pas l'accès à cette page."
-  notice_password_confirmation_failed: "Votre mot de passe est incorrect. Impossible de continuer."
+  notice_password_confirmation_failed: "Le mot de passe saisi est incorrect."
   notice_principals_found_multiple: "Il y a %{number} résultats trouvés. Tabulation pour sélectionner le premier résultat."
   notice_principals_found_single: "Il y a un seul résultat. Tabulation pour le sélectionner."
   notice_parent_item_not_found: "L'élément parent est introuvable."
@@ -4722,6 +4759,7 @@ fr:
     Remarque : si cette option est activée, un badge indiquant l'état de votre installation s'affichera dans le panneau <a href="%{information_panel_path}">%{information_panel_label}</a> administration et sur la page d'accueil. Il n'est affiché que pour les administrateurs. <br/>Le badge vérifiera votre version actuelle d'OpenProject par rapport à la base de données officielle d'OpenProject pour vous avertir de toute mise à jour ou vulnérabilité connue. Pour plus d'informations sur ce que la vérification fournit, quelles données sont nécessaires pour fournir les mises à jour disponibles, et comment désactiver cette vérification, veuillez visiter <a href="%{more_info_url}">la documentation de configuration</a>.
   text_own_membership_delete_confirmation: "Vous êtes sur le point de retirer tout ou partie de vos permissions et ne pourrez peut-être plus modifier le projet par la suite.\nÊtes vous sûr de vouloir continuer?"
   text_permanent_delete_confirmation_checkbox_label: "Je comprends que cette suppression ne peut pas être annulée"
+  text_permanent_remove_confirmation_checkbox_label: "Je comprends que cette suppression ne peut pas être annulée"
   text_plugin_assets_writable: "Répertoire des « plugin assets » est accessible en écriture"
   text_powered_by: "Propulsé par %{link}"
   text_project_identifier_info: "Seulement les lettres en minuscule (a-z), les nombres, les tirets et les underscores sont autorisés, il est obligatoire de commencer avec une lettre en minuscule."
