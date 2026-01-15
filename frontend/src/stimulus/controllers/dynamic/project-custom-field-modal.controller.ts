@@ -31,7 +31,7 @@
 
 import { Controller } from '@hotwired/stimulus';
 
-export default class ProjectCustomFieldEditController extends Controller {
+export default class ProjectCustomFieldModalController extends Controller {
   static values = {
     url: { type: String },
   };
