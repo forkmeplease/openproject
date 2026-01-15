@@ -29,9 +29,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 15 Jan 2026 15:59:59 GMT
+      - Thu, 15 Jan 2026 15:56:49 GMT
       Etag:
-      - '"f3a18c1549fc5cc25a12e359f0fff6cc"'
+      - '"a989eef6cf427d5f910d584f0ae1f994"'
       Feature-Policy:
       - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
         'none';payment 'none'
@@ -40,13 +40,13 @@ http_interactions:
       Server:
       - Apache/2.4.65 (Debian)
       Set-Cookie:
-      - ocup2vbftjhb=e2ebf1a0b8f0722dcc2a4978c46e3736; path=/; secure; HttpOnly; SameSite=Lax,
-        oc_sessionPassphrase=7BNC1b%2F9WyYPUBoGMBQS%2BofzWlCni329LPgEBvilgtaOFVd2Q5%2F7m7gn0QkcMAGLFIduDwBvWJpVcbhwQzgpFwoUyowm0rYgtjM4yV4MRsVJV6moSdh0wtin9MoHnM4K;
-        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=e2ebf1a0b8f0722dcc2a4978c46e3736;
+      - ocup2vbftjhb=70cdb280c0cf5fe6bbf8c29445f0b8ff; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=p%2FoePmDRyhRCnLvCZWU1AtNBgyCKnEyMz%2FTgd7l4YYDzGHYVNsDblLNGwdaJfwb%2BnpPQYF7CJp%2BzjCUE%2FrlrXLeRt8JlPz7QKNLPRlKuzjSH1O1cew88ZS7oGbfXp4tJ;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=70cdb280c0cf5fe6bbf8c29445f0b8ff;
         path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
         path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
         __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
-        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocup2vbftjhb=e2ebf1a0b8f0722dcc2a4978c46e3736;
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocup2vbftjhb=70cdb280c0cf5fe6bbf8c29445f0b8ff;
         path=/; secure; HttpOnly; SameSite=Lax
       X-Content-Type-Options:
       - nosniff
@@ -57,14 +57,14 @@ http_interactions:
       X-Powered-By:
       - PHP/8.3.27
       X-Request-Id:
-      - aaxjbPUja7s4eJ56SmAo
+      - mXJ9NEdvzRKHf8stwAVs
       X-Robots-Tag:
       - noindex, nofollow
       Content-Length:
-      - '419'
+      - '465'
     body:
       encoding: UTF-8
-      string: '{"ocs":{"meta":{"status":"ok","statuscode":200,"message":"OK"},"data":{"version":{"major":32,"minor":0,"micro":1,"string":"32.0.1","edition":"","extendedSupport":false},"capabilities":{"bruteforce":{"delay":0,"allow-listed":false},"app_api":{"version":"32.0.0"},"theming":{"name":"Nextcloud","productName":"Nextcloud","url":"https:\/\/nextcloud.com","slogan":"a
+      string: '{"ocs":{"meta":{"status":"ok","statuscode":200,"message":"OK"},"data":{"version":{"major":32,"minor":0,"micro":1,"string":"32.0.1","edition":"","extendedSupport":false},"capabilities":{"bruteforce":{"delay":0,"allow-listed":false},"app_api":{"version":"32.0.0"},"integration_openproject":{"app_version":"2.11.0","groupfolder_version":"20.1.7","groupfolders_enabled":false},"theming":{"name":"Nextcloud","productName":"Nextcloud","url":"https:\/\/nextcloud.com","slogan":"a
         safe home for all your data","color":"#00679e","color-text":"#ffffff","color-element":"#00679e","color-element-bright":"#00679e","color-element-dark":"#00679e","logo":"https:\/\/nextcloud.local\/core\/img\/logo\/logo.svg?v=0","background":"https:\/\/nextcloud.local\/apps\/theming\/img\/background\/jo-myoung-hee-fluid.webp","background-text":"#ffffff","background-plain":false,"background-default":true,"logoheader":"https:\/\/nextcloud.local\/core\/img\/logo\/logo.svg?v=0","favicon":"https:\/\/nextcloud.local\/core\/img\/logo\/logo.svg?v=0"}}}}}'
-  recorded_at: Thu, 15 Jan 2026 15:59:59 GMT
+  recorded_at: Thu, 15 Jan 2026 15:56:49 GMT
 recorded_with: VCR 6.4.0
