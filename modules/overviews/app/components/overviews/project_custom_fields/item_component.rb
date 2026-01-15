@@ -52,17 +52,21 @@ module Overviews
         User.current.allowed_in_project?(:edit_project_attributes, @project)
       end
 
-      def authorized_edit_wrapper
-        if calculated_value? && allowed_to_edit?
-          calculated_field_wrapper
-        elsif allowed_to_edit?
-          editable_wrapper
+      def value_wrapper
+        if allowed_to_edit?
+          if calculated_value? && !has_comment?
+            calculated_field_wrapper
+          else
+            modal_wrapper
+          end
+        elsif has_comment?
+          modal_wrapper
         else
           Primer::Beta::Text.new
         end
       end
 
-      def editable_wrapper
+      def modal_wrapper
         Primer::Beta::Text.new(
           tag: :div,
           classes: "project-custom-field-clickable",
