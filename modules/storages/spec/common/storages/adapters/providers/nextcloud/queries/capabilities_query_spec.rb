@@ -78,7 +78,7 @@ module Storages
               it_behaves_like "a successful Nextcloud capabilities response"
             end
 
-            context "if group folder app is installed but disabled",
+            context "if team folder app is installed but disabled",
                     vcr: "nextcloud/capabilities_success_team_folders_disabled" do
               let(:app_enabled?) { true }
               let(:app_version) { SemanticVersion.parse("2.11.0") }
@@ -88,7 +88,7 @@ module Storages
               it_behaves_like "a successful Nextcloud capabilities response"
             end
 
-            context "if group folder app is not installed",
+            context "if team folder app is not installed",
                     vcr: "nextcloud/capabilities_success_team_folders_not_installed" do
               let(:app_enabled?) { true }
               let(:app_version) { SemanticVersion.parse("2.11.0") }
