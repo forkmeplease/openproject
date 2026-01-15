@@ -4246,11 +4246,17 @@ ja:
   setting_apiv3_cors_origins_text_html: >
     CORS が有効になっている場合、これらは OpenProject API へのアクセスが許可されている起源です。 <br/> 期待される値を指定する方法については、 <a href="%{origin_link}" target="_blank">Origin ヘッダー</a> のドキュメントを確認してください。
   setting_apiv3_write_readonly_attributes: "読み取り専用属性への書き込み権限"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    この API を有効にすると、管理者は作成時に createdAt や author などの静的な読み取り専用属性を書き込むことができるようになります。 <br/> <strong>警告</strong>この設定はデータのインポートなどのユースケースを持ちますが、管理者が他のユーザーになりすましてアイテムを作成することを可能にします。しかし、すべての作成リクエストは真の作成者として記録されます。 </br> 属性とサポートされるリソースの詳細については、 %{api_documentation_link}を参照してください。
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "API ページの最大サイズ"
-  setting_apiv3_max_page_instructions_html: >
-    API が応答する最大ページサイズを設定します。 単一ページでより多くの値を返すAPIリクエストを実行することはできません。 <br/> <strong>警告:</strong> 必要な理由がわかった場合にのみ、この値を変更してください。 高い値に設定すると、パフォーマンスへの影響が大きくなります。 に対し、ページ化されたビューでは、ページ化されたビューでエラーが発生します。
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "文章"
   setting_apiv3_docs_enabled: "ドキュメントページを有効にする"
   setting_apiv3_docs_enabled_instructions_html: >

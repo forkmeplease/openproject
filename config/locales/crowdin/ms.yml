@@ -4244,11 +4244,17 @@ ms:
   setting_apiv3_cors_origins_text_html: >
     Jika CORS telah dibenarkan, ini ialah asal yang dibenarkan untuk mengakses API OpenProject. <br/> Sila semak dokumentasi <a href="%{origin_link}" target="_blank">di pengepala Asal </a> untuk cara nyatakan nilai-nilai yang dijangkakan.
   setting_apiv3_write_readonly_attributes: "Tulis akses pada atribut baca-sahaja"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    Jika dibenarkan, API tersebut akan membenarkan para pentadbir untuk menulis atribut statik baca-sahaja semasa penciptaan, seperti diciptakanPada dan pengarang. <br/> <strong>Amaran:</strong> Tetapan ini mempunyai kes-guna untuk, cth., mengimport data, tetapi membenarkan para pentadbir untuk meniru penciptaan item sebagai pengguna lain. Walau bagaimanapun, semua permintaan penciptaan sedang dilog oleh pengarang sebenar. </br> Untuk maklumat lanjut tentang atribut dan sumber yang disokong, sila lihat %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Saiz halaman maksimum API"
-  setting_apiv3_max_page_instructions_html: >
-    Tetapkan saiz halaman maksimum yang boleh diberi maklum balas API. Ia tidak mungkin boleh melaksanakan permintaan API yang kembalikan lebih banyak nilai pada satu halaman. <br/> <strong>Amaran:</strong> Sila ubah nilai ini hanya jika anda pasti anda perlukannya. Tetapkan ia ke nilai tinggi akan  memberi kesan kepada prestasi yang ketara, manakala nilai yang lagi rendah dari pilihan mengikut halaman akan mengakibatkan ralat di paparan yang dipautkan.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Dokumentasi"
   setting_apiv3_docs_enabled: "Benarkan halaman docs"
   setting_apiv3_docs_enabled_instructions_html: >

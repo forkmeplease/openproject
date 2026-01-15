@@ -4293,11 +4293,17 @@ nl:
   setting_apiv3_cors_origins_text_html: >
     Als CORS is ingeschakeld, zijn dit de oorsprong die toegang heeft tot OpenProject API. <br/> Bekijk de <a href="%{origin_link}" target="_blank">Documentatie op de Oorsprongshoofd</a> over hoe u de verwachte waarden kunt opgeven.
   setting_apiv3_write_readonly_attributes: "Schrijftoegang tot alleen-lezen attributen"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    Als deze optie is ingeschakeld, staat de API beheerders toe om statische alleen-lezen attributen te schrijven tijdens het aanmaken, zoals createdAt en author. <br/> <strong>Waarschuwing:</strong> Deze instelling heeft een use-case voor bijvoorbeeld het importeren van gegevens, maar staat beheerders toe om zich bij het aanmaken van items voor te doen als andere gebruikers. Alle aanmaakverzoeken worden echter gelogd met de echte auteur. </br> Voor meer informatie over attributen en ondersteunde bronnen, zie de %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Maximale API pagina grootte"
-  setting_apiv3_max_page_instructions_html: >
-    Stel de maximale pagina grootte in waarmee de API zal reageren. Het is niet mogelijk om API-verzoeken uit te voeren die meer waarden op een enkele pagina weergeven. <br/> <strong>Waarschuwing:</strong> Wijzig deze waarde alleen als u zeker weet waarom u het nodig heeft. Het instellen op een hoge waarde zal aanzienlijke prestatieeffecten hebben, terwijl een waarde lager is dan de per pagina opties fouten veroorzaakt in gepagineerde weergaven.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Documentatie"
   setting_apiv3_docs_enabled: "Documentenpagina inschakelen"
   setting_apiv3_docs_enabled_instructions_html: >

@@ -4244,11 +4244,17 @@ ko:
   setting_apiv3_cors_origins_text_html: >
     CORS가 활성화된 경우, OpenProject API에 액세스하도록 허용된 원본이 있습니다. <br/> <a href="%{origin_link}" target="_blank">원본 헤더의 설명서</a>에서 예상 값 지정 방법을 확인하세요.
   setting_apiv3_write_readonly_attributes: "읽기 전용 특성에 대한 쓰기 액세스"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    활성화하면, API를 통해 관리자가 생성 중에 createdAt 및 author 등의 정적 읽기 전용 특성을 작성할 수 있습니다. <br/> <strong>경고:</strong> 이 설정은 데이터 가져오기 등의 사용 사례가 있지만 관리자가 다른 사용자로 가장하여 항목을 만들 수 있습니다. 그러나 모든 생성 요청은 실제 작성자와 함께 기록되고 있습니다. </br> 특성 및 지원되는 리소스에 대한 자세한 내용은 %{api_documentation_link}에서 참조하세요.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "최대 API 페이지 크기"
-  setting_apiv3_max_page_instructions_html: >
-    API가 응답할 최대 페이지 크기를 설정하세요. 단일 페이지에서 더 많은 값을 반환하는 API 요청을 수행할 수 없습니다. <br/> <strong>경고:</strong> 이 값이 필요한 이유가 확실한 경우에만 이 값을 변경하세요. 높은 값으로 설정하면 성능에 상당한 영향을 미치고, 페이지당 옵션보다 낮은 값은 페이지가 매겨진 보기에서 오류를 일으킵니다.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "설명서"
   setting_apiv3_docs_enabled: "문서 페이지 활성화"
   setting_apiv3_docs_enabled_instructions_html: >

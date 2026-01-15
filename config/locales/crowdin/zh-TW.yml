@@ -4241,11 +4241,17 @@ zh-TW:
   setting_apiv3_cors_origins_text_html: >
     如果啓用了 CORS ，這些是允許訪問 OpenProject API 的源。<br/>請查看<a href="%{origin_link}" target="_blank">有關“源”標題的文檔</a>，瞭解如何指定預期值。
   setting_apiv3_write_readonly_attributes: "對唯讀屬性的寫入存取權限"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    若啟用，API 將允許管理員在建立時寫入靜態唯讀屬性，例如 createdAt 與 author。<br/> <strong>警告：</strong> 此設定適用於例如匯入資料的情境，但同時也允許管理員在建立項目時冒充其他使用者。不過，所有建立請求都會記錄實際作者。</br>如需屬性與支援資源的更多資訊，請參閱 %{api_documentation_link}。
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "API 每頁最大值"
-  setting_apiv3_max_page_instructions_html: >
-    設定 API 回應的最大值。 無法執行單一頁面上傳回更多值的 API 請求。 <br/> <strong>警告：</strong>如果您很確定，才變更該值。 設定為高值將導致效能不彰，數值過低也將造成檢視錯誤。
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "說明文件"
   setting_apiv3_docs_enabled: "啟用文件頁面"
   setting_apiv3_docs_enabled_instructions_html: >

@@ -132,7 +132,7 @@ fr:
   label_select_type: "Sélectionnez un type"
   label_select_types: "Sélectionnez le type"
   label_selected_type: "Type sélectionné"
-  label_selected_types: "Selected types"
+  label_selected_types: "Types sélectionnés"
   label_sprint_backlog: "carnet de sprint"
   label_sprint_cards: "Exporter les cartes"
   label_sprint_impediments: "Obstacles de sprint"
@@ -170,6 +170,6 @@ fr:
   version_settings_display_option_none: "aucune"
   version_settings_display_option_right: "droite"
   setting_plugin_openproject_backlogs_story_types_caption: |
-    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+    Types traités comme des histoires du backlog (par exemple, Feature, User story). Doit être différent du type de tâche.
   setting_plugin_openproject_backlogs_task_type_caption: |
-    Type used for story tasks. Must differ from story types.
+    Type utilisé pour les tâches liées aux histoires. Doit être différent des types d'histoires.

@@ -713,11 +713,11 @@ fr:
           create_button: "Créer"
           name_label: "Nom du jeton"
       created_dialog:
-        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
+        one_time_warning: "C'est la seule fois que vous verrez ce jeton. Veillez à le copier maintenant."
         token/api:
           title: "Le jeton d'API a été généré"
         token/rss:
-          title: "The RSS token has been generated"
+          title: "Le jeton RSS a été généré"
       failed_to_reset_token: "Impossible de réinitialiser le jeton d’accès : %{error}"
       failed_to_create_token: "Impossible de créer le jeton d'accès : %{error}"
       failed_to_revoke_token: "Impossible de révoquer le jeton d'accès : %{error}"
@@ -1924,8 +1924,8 @@ fr:
         one: Jeton d'accès
         other: Jetons d’accès
       token/rss:
-        one: "RSS token"
-        other: "RSS tokens"
+        one: "Jeton RSS"
+        other: "Jetons RSS"
       type:
         one: "Type"
         other: "Types"
@@ -2922,32 +2922,32 @@ fr:
       simple_revoke_confirmation: "Voulez-vous vraiment révoquer ce jeton ?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
-          title: "Client tokens"
+          description: "Les jetons clients sont émis par d'autres applications, permettant à OpenProject d'y accéder."
+          title: "Jetons de client"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
-          title: "Provider tokens"
+          description: "Les jetons de fournisseur sont émis par OpenProject, ce qui permet à d'autres applications d'y accéder."
+          title: "Jetons du fournisseur"
       token/api:
-        blank_description: "There is no API token yet. You can create one using the button below."
-        blank_title: "No API token"
+        blank_description: "Il n'y a pas encore de jeton API. Vous pouvez en créer un en utilisant le bouton ci-dessous."
+        blank_title: "Pas de jeton API"
         title: "API"
-        table_title: "API tokens"
+        table_title: "Jetons d'API"
         text_hint: "Les jetons d'API permettent aux applications tierces de communiquer avec cette instance OpenProject via les API REST."
-        static_token_name: "API token"
+        static_token_name: "Jeton API"
         disabled_text: "Les jetons d'API ne sont pas activés par l'administrateur. Veuillez contacter votre administrateur pour utiliser cette fonctionnalité."
         add_button: "Jeton d'API"
       ical:
-        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
-        blank_title: "No iCalendar token"
+        blank_description: "Pour ajouter un jeton iCalendar, abonnez-vous à un calendrier nouveau ou existant à partir du module Calendrier d'un projet. Vous devez disposer des autorisations nécessaires."
+        blank_title: "Pas de jeton iCalendar"
         title: "iCalendar"
-        table_title: "iCalendar tokens"
+        table_title: "Jetons iCalendar"
         text_hint_link: "Les jetons iCalendar permettent aux utilisateurs de [s'abonner aux calendriers OpenProject](docs_url) et d'afficher des informations à jour sur les lots de travaux provenant de clients externes."
         disabled_text: "Les abonnements iCalendar ne sont pas activés par l'administrateur. Veuillez contacter votre administrateur pour utiliser cette fonctionnalité."
       oauth_application:
-        active_tokens: "Active tokens"
+        active_tokens: "Jetons actifs"
         blank_description: "There is no third-party application access configured and active for you."
         blank_title: "No OAuth application token"
-        last_used_at: "Last used at"
+        last_used_at: "Dernière utilisation à"
         title: "OAuth"
         table_title: "OAuth application tokens"
         text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
@@ -4296,11 +4296,17 @@ fr:
   setting_apiv3_cors_origins_text_html: >
     Si CORS est activé, ce sont les origines qui sont autorisées à accéder à l'API OpenProject. <br/> Veuillez vérifier la <a href="%{origin_link}" target="_blank">documentation sur l'en-tête Origin</a> sur la façon de spécifier les valeurs attendues.
   setting_apiv3_write_readonly_attributes: "Accès en écriture aux attributs en lecture seule"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    Si cette option est activée, l'API permettra aux administrateurs d'écrire des attributs statiques en lecture seule lors de la création, tels que createdAt et author. <br/> <strong>Avertissement :</strong> Ce paramètre est utile, par exemple, pour l'importation de données, mais il permet aux administrateurs de se faire passer pour d'autres utilisateurs lors de la création d'éléments. Toutes les demandes de création sont toutefois enregistrées au nom du véritable auteur. </br> Pour plus d'informations sur les attributs et les ressources prises en charge, veuillez consulter la %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Taille maximale de page d'API"
-  setting_apiv3_max_page_instructions_html: >
-    Définissez la taille maximale de la page avec laquelle l'API répondra. Il ne sera pas possible d'effectuer des requêtes API qui retournent plus de valeurs sur une seule page. <br/> <strong>Avertissement :</strong> veuillez modifier cette valeur uniquement si vous êtes sûr de savoir pourquoi vous en avez besoin. Définir à une valeur élevée entraînera des impacts significatifs sur les performances, alors qu'une valeur inférieure aux options de chaque page provoquera des erreurs dans les vues paginées.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Documentation"
   setting_apiv3_docs_enabled: "Activer la page docs"
   setting_apiv3_docs_enabled_instructions_html: >

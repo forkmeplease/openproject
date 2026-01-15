@@ -4297,11 +4297,17 @@
   setting_apiv3_cors_origins_text_html: >
     Hvis CORS er aktivert, er dette opprinnelsen som har tilgang til OpenProject API. <br/> Kontroller <a href="%{origin_link}" target="_blank">Dokumentasjonen på Origin header</a> på hvordan angi de forventede verdiene.
   setting_apiv3_write_readonly_attributes: "Skrivetilgang til skrivebeskyttede egenskaper"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    Hvis aktivert, vil API-et tillate at administratorer skriver statiske skrivebeskyttede egenskaper under oppretting, som OpprettetPå og forfatter. <br/> <strong>Advarsel:</strong> Denne innstillingen har et brukstilfelle for f.eks importere data, men lar administratorer personliggjøre etableringen av elementer som andre brukere. Alle forespørsler om opprettelse blir imidlertid logget med virkelig forfatter. </br> For mer informasjon om egenskaper og støttede ressurser, se %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Maksimal størrelse på API side"
-  setting_apiv3_max_page_instructions_html: >
-    Angi den maksimale sidestørrelsen API vil svare med. (Automatic Translation) Det vil ikke være mulig å utføre API-forespørsler som returnerer flere verdier på én side. <br/> <strong>Advarsel:</strong> Endre denne verdien hvis du er sikker på hvorfor du trenger den. Ved å sette en høy verdi vil det ha betydelig innvirkning på ytelsen, mens en verdi lavere enn per sidealternativer vil forårsake feil i sidevisning
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Dokumentasjon"
   setting_apiv3_docs_enabled: "Aktiver dokumenter"
   setting_apiv3_docs_enabled_instructions_html: >

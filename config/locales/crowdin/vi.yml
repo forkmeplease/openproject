@@ -4247,11 +4247,17 @@ vi:
   setting_apiv3_cors_origins_text_html: >
     Nếu CORS được kích hoạt, đây là các nguồn gốc được phép truy cập API của OpenProject. <br/> Vui lòng kiểm tra <a href="%{origin_link}" target="_blank">Tài liệu về Header Origin</a> để biết cách chỉ định các giá trị mong đợi.
   setting_apiv3_write_readonly_attributes: "Quyền ghi vào thuộc tính chỉ đọc"
-  setting_apiv3_write_readonly_attributes_instructions_html: >
-    Nếu được kích hoạt, API sẽ cho phép quản trị viên ghi các thuộc tính chỉ đọc tĩnh trong quá trình tạo, chẳng hạn như createdAt và author. <br/> <strong>Cảnh báo:</strong> Cài đặt này có trường hợp sử dụng cho ví dụ, nhập dữ liệu, nhưng cho phép quản trị viên giả mạo việc tạo các mục như các người dùng khác. Tuy nhiên, tất cả các yêu cầu tạo đều được ghi lại với tác giả thực sự. </br> Để biết thêm thông tin về các thuộc tính và tài nguyên được hỗ trợ, vui lòng xem %{api_documentation_link}.
+  setting_apiv3_write_readonly_attributes_instructions: >
+    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+  setting_apiv3_write_readonly_attributes_warning: >
+    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+  setting_apiv3_write_readonly_attributes_additional: >
+    For more information on attributes and supported resources, please see the %{api_documentation_link}.
   setting_apiv3_max_page_size: "Kích thước trang API tối đa"
-  setting_apiv3_max_page_instructions_html: >
-    Đặt kích thước trang tối đa mà API sẽ phản hồi. Sẽ không thể thực hiện các yêu cầu API trả về nhiều giá trị trên một trang. <br/> <strong>Cảnh báo:</strong> Vui lòng chỉ thay đổi giá trị này nếu bạn chắc chắn về lý do cần thiết. Thiết lập giá trị cao sẽ dẫn đến tác động đáng kể đến hiệu suất, trong khi giá trị thấp hơn các tùy chọn trên trang sẽ gây lỗi trong các chế độ xem phân trang.
+  setting_apiv3_max_page_size_instructions: >
+    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+  setting_apiv3_max_page_size_warning: >
+    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
   setting_apiv3_docs: "Tài liệu"
   setting_apiv3_docs_enabled: "Kích hoạt trang tài liệu"
   setting_apiv3_docs_enabled_instructions_html: >
