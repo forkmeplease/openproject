@@ -68,9 +68,9 @@ module Overviews
             controller: "project-custom-field-modal async-dialog",
             "project-custom-field-modal-url-value": edit_project_custom_field_path(project_id: @project.id,
                                                                                   id: @project_custom_field.id),
-            action: "click->project-custom-field-modal#openEditDialog " \
-                    "keydown.enter->project-custom-field-modal#openEditDialog " \
-                    "keydown.space->project-custom-field-modal#openEditDialog " \
+            action: "click->project-custom-field-modal#open " \
+                    "keydown.enter->project-custom-field-modal#open " \
+                    "keydown.space->project-custom-field-modal#open " \
                     "project-custom-field-modal:open-dialog->async-dialog#handleOpenDialog"
           },
           aria: {

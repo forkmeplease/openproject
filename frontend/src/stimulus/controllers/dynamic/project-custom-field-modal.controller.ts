@@ -38,7 +38,7 @@ export default class ProjectCustomFieldModalController extends Controller {
 
   declare urlValue:string;
 
-  openEditDialog(event:Event) {
+  open(event:Event) {
     const target = event.target as HTMLElement;
 
     // Check if the event is on an interactive element that should be ignored
