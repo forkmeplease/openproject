@@ -71,13 +71,20 @@ module Overviews
       end
 
       def modal_wrapper
+        action_label_key = allowed_to_edit? ? :label_edit_x : :label_view_x
+
+        url = if allowed_to_edit?
+                edit_project_custom_field_path(project_id: @project, id: @project_custom_field)
+              else
+                project_custom_field_path(project_id: @project, id: @project_custom_field)
+              end
+
         {
           tag: :div,
-          classes: "project-custom-field-clickable",
+          classes: "project-custom-field-clickable", # TODO: should it differentiate calculated value field?
           data: {
             controller: "project-custom-field-modal async-dialog",
-            "project-custom-field-modal-url-value": edit_project_custom_field_path(project_id: @project.id,
-                                                                                  id: @project_custom_field.id),
+            "project-custom-field-modal-url-value": url,
             action: "click->project-custom-field-modal#open " \
                     "keydown.enter->project-custom-field-modal#open " \
                     "keydown.space->project-custom-field-modal#open " \
@@ -85,7 +92,7 @@ module Overviews
           },
           aria: {
             label: [
-              I18n.t(:label_edit_x, x: @project_custom_field.name),
+              I18n.t(action_label_key, x: @project_custom_field.name),
               I18n.t(:label_value_x, x: accessible_value_text)
             ].join(", ")
           },
