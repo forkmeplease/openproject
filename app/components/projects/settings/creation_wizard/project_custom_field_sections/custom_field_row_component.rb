@@ -58,7 +58,8 @@ module Projects
           end
 
           def toggle_disabled?
-            @project_custom_field.required?
+            @project_custom_field.required? ||
+              configured_as_creation_wizard_assignee?
           end
 
           def toggle_data_attributes
