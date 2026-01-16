@@ -4543,7 +4543,7 @@ ro:
       omniauth_direct_login_hint_html: >
         Dacă această opțiune este activă, cererile de conectare vor fi redirecționate către furnizorul omniauth configurat. Pagina de autentificare verticală și pagina de autentificare vor fi dezactivate. <br/> <strong>Notă:</strong> Dacă nu dezactivezi și autentificarea cu parole, cu această opțiune activată, utilizatorii încă se pot autentifica intern vizitând pagina de autentificare <code>%{internal_path}</code>.
       remapping_existing_users_hint: >
-        If enabled, allows any configured identity provider to login existing users based on their email address, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
+        If enabled, allows any configured identity provider to login existing users based on their username, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
     attachments:
       whitelist_text_html: >
         Definește o listă validă de extensii de fișiere și/sau tipuri mime pentru fișierele încărcate. <br/> Introdu extensii de fișiere (de ex. <code>%{ext_example}</code>) sau tipuri mime (e. ., <code>%{mime_example}</code>). <br/> Lasă gol pentru a permite oricărui tip de fișier să fie încărcat. Valori multiple permise (o linie pentru fiecare valoare).
