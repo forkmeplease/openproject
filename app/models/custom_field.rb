@@ -369,7 +369,7 @@ class CustomField < ApplicationRecord
 
     # Use a ruby finder to avoid hitting the database with N+1 queries on the project list page,
     # the errors are eager loaded via the Queries::Projects::CustomFieldContext.
-    calculated_value_errors.find { it.customized_id == customized.id }
+    calculated_value_errors.find { it.customized == customized }
   end
 
   private
