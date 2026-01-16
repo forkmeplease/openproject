@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    if: github.repository_owner == 'opf'
+    if: github.repository == 'opf/openproject'
     name: ${{ matrix.target }}
     runs-on: ubuntu-latest
     services:
