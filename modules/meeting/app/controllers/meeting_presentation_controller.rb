@@ -36,7 +36,6 @@ class MeetingPresentationController < ApplicationController
   load_and_authorize_with_permission_in_project :view_meetings
 
   before_action :find_meeting
-  before_action :check_feature_flag
   before_action :check_presentable
   before_action :determine_current_id
   before_action :set_started_at
