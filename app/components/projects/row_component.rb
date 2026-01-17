@@ -161,7 +161,7 @@ module Projects
         workspace_type_badge
       ].compact_blank
 
-      safe_join(content)
+      content_tag(:div, safe_join(content), class: "projects-table--name")
     end
 
     def hierarchy_icon
