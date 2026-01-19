@@ -2,11 +2,9 @@ import { BlockNoteSchema } from "@blocknote/core";
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
 import type { onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload } from "@hocuspocus/server";
 import { Extension } from "@hocuspocus/server";
-import { createVerifier } from "fast-jwt";
 import { openProjectWorkPackageStaticBlockSpec } from "op-blocknote-extensions";
 import * as Y from "yjs";
 import { decryptToken } from "../services/decryptTokenService";
-import * as DigestSecretService from "../services/digestSecretService";
 import type { ApiResponseDocument } from "../types";
 
 export const editorSchema = BlockNoteSchema.create().extend({
@@ -14,8 +12,6 @@ export const editorSchema = BlockNoteSchema.create().extend({
     "openProjectWorkPackage": openProjectWorkPackageStaticBlockSpec(),
   },
 });
-
-const verifyToken = createVerifier({ key: DigestSecretService.secret() });
 
 function printLog(message:string) {
   console.log(`[${new Date().toISOString()}] ${message}`);
@@ -36,23 +32,24 @@ export class OpenProjectApi implements Extension {
     if (!packedParams) {
       throw new Error('Unauthorized: Missing auth params');
     }
+
+    const decryptedToken = decryptToken(packedParams);
+
     const {
       resource_url: tokenResourceUrl,
-      oauth_token: authToken,
+      oauth_token,
       // readonly,
-    } = verifyToken(packedParams);
+    } = decryptedToken;
 
     if (tokenResourceUrl !== resourceUrl) {
       throw new Error('Unauthorized: Token resource URL does not match document.');
     }
 
-    const decryptedToken = decryptToken(authToken);
-
     const response = await fetch(resourceUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${decryptedToken}`,
+        "Authorization": `Bearer ${oauth_token}`,
       },
     });
 
@@ -62,7 +59,7 @@ export class OpenProjectApi implements Extension {
     const jsonData = await response.json() as ApiResponseDocument;
 
     data.context.resourceUrl = resourceUrl;
-    data.context.token = decryptedToken;
+    data.context.token = oauth_token;
     if (!jsonData._links?.update) {
       // https://tiptap.dev/docs/hocuspocus/guides/auth#read-only-mode
       data.connectionConfig.readOnly = true;

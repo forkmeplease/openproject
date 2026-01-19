@@ -24,21 +24,12 @@ describe("OpenProjectApi", () => {
       ).rejects.toThrowError("Unauthorized: Missing auth params");
     });
 
-    test("when the packedParams is expired", async () => {
-      await expect(() => 
-        new OpenProjectApi().onAuthenticate({
-          // Expired JWT 
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL29wZW5wcm9qZWN0LmxvY2FsL2FwaS92My9kb2N1bWVudHMvMSIsIm9hdXRoX3Rva2VuIjoiNVNtNGJsTUxoUDhQRlM2N3h3PT0tLWJyOEwvN1lEWDNyYlRMcFQtLUhIRWkrU25OZG1IbUg5ME4zbUhZOUE9PSIsInJlYWRvbmx5IjpmYWxzZSwiZXhwIjoxNzY4ODAyOTU0fQ.jajN89IqReZ8uJQJ-oJci7HCXW3DcVvsUUJg_98jjVE",
-        } as unknown as onAuthenticatePayload)
-      ).rejects.toThrowError("The token has expired at 2026-01-19T06:09:14.000Z.");
-    });
-
     test("when the oauth_token is invalid throw an error", async () => {
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          // JWT with a invalid oauth token, generated with a different secret
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL29wZW5wcm9qZWN0LmxvY2FsL2FwaS92My9kb2N1bWVudHMvMSIsIm9hdXRoX3Rva2VuIjoiNVNtNGJsTUxoUDhQRlM2N3h3PT0tLWJyOEwvN1lEWDNyYlRMcFQtLUhIRWkrU25OZG1IbUg5ME4zbUhZOUE9PSIsInJlYWRvbmx5IjpmYWxzZSwiZXhwIjo0MDcwOTA4ODAwfQ.Q8wUm9j5Fr4bzs06pTRmF7k0Ssc0BXfju8RtdXdrtNc",
-          documentName: "https://openproject.local/api/v3/documents/1",
+          // invalid token generated with a different secret
+          token: "mXPMUDJ41lbo0xc0qjgeUrk0nYfuCKMxPZa+/euNNM8jVpeZI5uU/YQQa60WnLoYo7gkCKlOCcdY5BVS2MqkpnSf5RWQPhNjm0czkiZ6hK4G6Y3EJOZkE67MPyVmyYFGgxnoGajwMAI=--gyIqET3MOf8a+HDk--DW5I6ZOWaGHRgiJ6FjOcZQ==",
+          documentName: "https://test.api/api/v3/documents/1",
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unsupported state or unable to authenticate data");
     });
@@ -48,7 +39,7 @@ describe("OpenProjectApi", () => {
 
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL3Rlc3QuYXBpL2FwaS92My9kb2N1bWVudHMvMTIxIiwib2F1dGhfdG9rZW4iOiJ6WU4xdXBaM1cxcEg5WUU9LS1GOTVMUEJ3cXNNdHpoYWpELS15dW11a1M4R0xNZnI1bmxVVHFOcW13PT0iLCJyZWFkb25seSI6ZmFsc2UsImV4cCI6NDA3MDkwODgwMH0.BTcNp7lSyPqxkxB7auEjAOY6Id14q_Mjcona56uwCiE",
+          token: "Yjo1x80JGIjrK8J6IDOuRn5kIOGvaAUw8C1so+dJJq7cgkllf3dQnw6d8bgiKbHXw8ZaMYE4IyOI1KQgX2ZRmx1mKBkxtb/fc7eCpGyTKGTA2Y1r/q7VJYiJZlpX7gx3nu569joEl/k=--mUkLaPiK0E82vGT9--gj1ZnTNlydL9j+Xw8+YFAA==",
           documentName: "https://indemiddle/api/v3/documents/1",
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Token resource URL does not match document.");
@@ -62,18 +53,18 @@ describe("OpenProjectApi", () => {
 
       await expect(() =>
         new OpenProjectApi().onAuthenticate({
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL3Rlc3QuYXBpL2FwaS92My9kb2N1bWVudHMvMTIxIiwib2F1dGhfdG9rZW4iOiJ6WU4xdXBaM1cxcEg5WUU9LS1GOTVMUEJ3cXNNdHpoYWpELS15dW11a1M4R0xNZnI1bmxVVHFOcW13PT0iLCJyZWFkb25seSI6ZmFsc2UsImV4cCI6NDA3MDkwODgwMH0.BTcNp7lSyPqxkxB7auEjAOY6Id14q_Mjcona56uwCiE",
-          documentName: "https://test.api/api/v3/documents/121",
+          token: "Yjo1x80JGIjrK8J6IDOuRn5kIOGvaAUw8C1so+dJJq7cgkllf3dQnw6d8bgiKbHXw8ZaMYE4IyOI1KQgX2ZRmx1mKBkxtb/fc7eCpGyTKGTA2Y1r/q7VJYiJZlpX7gx3nu569joEl/k=--mUkLaPiK0E82vGT9--gj1ZnTNlydL9j+Xw8+YFAA==",
+          documentName: "https://test.api/api/v3/documents/1",
         } as unknown as onAuthenticatePayload)
       ).rejects.toThrowError("Unauthorized: Invalid token or document access denied.");
 
       expect(fetchMock).toHaveBeenCalledWith(
-        "https://test.api/api/v3/documents/121",
+        "https://test.api/api/v3/documents/1",
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer avalidtoken",
+            "Authorization": "Bearer some_token_value",
           },
         }
       );
@@ -89,15 +80,15 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL3Rlc3QuYXBpL2FwaS92My9kb2N1bWVudHMvMTIxIiwib2F1dGhfdG9rZW4iOiJ6WU4xdXBaM1cxcEg5WUU9LS1GOTVMUEJ3cXNNdHpoYWpELS15dW11a1M4R0xNZnI1bmxVVHFOcW13PT0iLCJyZWFkb25seSI6ZmFsc2UsImV4cCI6NDA3MDkwODgwMH0.BTcNp7lSyPqxkxB7auEjAOY6Id14q_Mjcona56uwCiE",
-        documentName: "https://test.api/api/v3/documents/121",
+        token: "Yjo1x80JGIjrK8J6IDOuRn5kIOGvaAUw8C1so+dJJq7cgkllf3dQnw6d8bgiKbHXw8ZaMYE4IyOI1KQgX2ZRmx1mKBkxtb/fc7eCpGyTKGTA2Y1r/q7VJYiJZlpX7gx3nu569joEl/k=--mUkLaPiK0E82vGT9--gj1ZnTNlydL9j+Xw8+YFAA==",
+        documentName: "https://test.api/api/v3/documents/1",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
 
-      expect(data.context.resourceUrl).toEqual("https://test.api/api/v3/documents/121");
-      expect(data.context.token).toEqual("avalidtoken");
-      expect(data.documentName).toEqual("https://test.api/api/v3/documents/121");
+      expect(data.context.resourceUrl).toEqual("https://test.api/api/v3/documents/1");
+      expect(data.context.token).toEqual("some_token_value");
+      expect(data.documentName).toEqual("https://test.api/api/v3/documents/1");
     });
 
     test("when there is no update link, setup the connection as readonly", async () => {
@@ -106,7 +97,7 @@ describe("OpenProjectApi", () => {
         status: 200,
         json: () => Promise.resolve({
           _links: {
-            self: { href: "/api/v3/documents/121" }
+            self: { href: "/api/v3/documents/1" }
           }
         }),
       });
@@ -114,8 +105,8 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL3Rlc3QuYXBpL2FwaS92My9kb2N1bWVudHMvMTIxIiwib2F1dGhfdG9rZW4iOiJ6WU4xdXBaM1cxcEg5WUU9LS1GOTVMUEJ3cXNNdHpoYWpELS15dW11a1M4R0xNZnI1bmxVVHFOcW13PT0iLCJyZWFkb25seSI6ZmFsc2UsImV4cCI6NDA3MDkwODgwMH0.BTcNp7lSyPqxkxB7auEjAOY6Id14q_Mjcona56uwCiE",
-        documentName: "https://test.api/api/v3/documents/121",
+        token: "Yjo1x80JGIjrK8J6IDOuRn5kIOGvaAUw8C1so+dJJq7cgkllf3dQnw6d8bgiKbHXw8ZaMYE4IyOI1KQgX2ZRmx1mKBkxtb/fc7eCpGyTKGTA2Y1r/q7VJYiJZlpX7gx3nu569joEl/k=--mUkLaPiK0E82vGT9--gj1ZnTNlydL9j+Xw8+YFAA==",
+        documentName: "https://test.api/api/v3/documents/1",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
@@ -131,8 +122,8 @@ describe("OpenProjectApi", () => {
         json: () => Promise.resolve({
           title: "TheDocName",
           _links: {
-            self: { href: "/api/v3/documents/121" },
-            update: { href: "/api/v3/documents/121" }
+            self: { href: "/api/v3/documents/1" },
+            update: { href: "/api/v3/documents/1" }
           }
         }),
       });
@@ -140,8 +131,8 @@ describe("OpenProjectApi", () => {
       const data = {
         context: {},
         connectionConfig: {},
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91cmwiOiJodHRwczovL3Rlc3QuYXBpL2FwaS92My9kb2N1bWVudHMvMTIxIiwib2F1dGhfdG9rZW4iOiJ6WU4xdXBaM1cxcEg5WUU9LS1GOTVMUEJ3cXNNdHpoYWpELS15dW11a1M4R0xNZnI1bmxVVHFOcW13PT0iLCJyZWFkb25seSI6ZmFsc2UsImV4cCI6NDA3MDkwODgwMH0.BTcNp7lSyPqxkxB7auEjAOY6Id14q_Mjcona56uwCiE",
-        documentName: "https://test.api/api/v3/documents/121",
+        token: "Yjo1x80JGIjrK8J6IDOuRn5kIOGvaAUw8C1so+dJJq7cgkllf3dQnw6d8bgiKbHXw8ZaMYE4IyOI1KQgX2ZRmx1mKBkxtb/fc7eCpGyTKGTA2Y1r/q7VJYiJZlpX7gx3nu569joEl/k=--mUkLaPiK0E82vGT9--gj1ZnTNlydL9j+Xw8+YFAA==",
+        documentName: "https://test.api/api/v3/documents/1",
       } as unknown as onAuthenticatePayload;
 
       await new OpenProjectApi().onAuthenticate(data);
