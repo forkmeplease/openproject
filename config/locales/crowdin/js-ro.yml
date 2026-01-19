@@ -200,7 +200,7 @@ ro:
         drag_to_activate: "Mutați câmpuri de aici pentru a le activa"
         add_group: "Adaugă grup atribut"
         add_table: "Adaugă pachet de lucru asociat"
-        edit_query: "Editare query"
+        edit_query: "Editează interogare"
         new_group: "Grupare nouă"
         delete_group: "Șterge grup"
         remove_attribute: "Elimină din grup"

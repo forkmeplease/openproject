@@ -50,15 +50,15 @@ ro:
     subheader:
       filter:
         label: "Filtru nume document"
-        placeholder: "Type here to search document names"
+        placeholder: "Scrie aici pentru a căuta numele documentului"
     documents_list_blank_slate:
-      heading: "There are no documents yet"
-      description: "There are no documents in this view. You can click the button below to add one."
+      heading: "Nu există încă documente"
+      description: "Nu există documente în această vizualizare. Poți da clic pe butonul de mai jos pentru a adăuga unul."
     document_categories_deprecation_notice:
-      heading: File categories are now called 'Document types'
+      heading: Categoriile de fișiere se numesc acum 'Tipuri de documente'
       description: |-
-        Your existing file categories have been converted to document types with the introduction of the new Documents module.
-        All existing documents have also been migrated to these new types.
+        Categoriile existente de fișiere au fost convertite în tipuri de documente cu introducerea noului modul Documente.
+        Toate documentele existente au fost de asemenea migrate la aceste tipuri noi.
       primary_action: Configure document types
       secondary_action: Learn more about the Documents module
     document_type_actions: "Document type actions"
@@ -110,13 +110,13 @@ ro:
       at_least_one_type_required:
         title: Cannot delete document type
         heading: Cannot delete the last document type
-        message: There must always be at least one document type configured. Create another one first if you want to delete this one.
+        message: Trebuie să existe întotdeauna cel puțin un tip de document configurat. Creează un altul mai întâi dacă vrei să îl ștergi pe acesta.
     admin:
       collaboration_settings:
         page_header:
           description: |-
-            When enabled, real-time collaboration allows multiple users to edit a document at the same time.
-            It requires a working %{hocuspocus_server_link} to function.
+            Când este activată, colaborarea în timp real permite mai multor utilizatori să editeze un document în același timp.
+            Are nevoie de un %{hocuspocus_server_link} care să funcționeze.
         banner:
           none_writable: These values are configured via environment variables and cannot be edited here.
           some_unwritable: Some values are configured via environment variables and cannot be edited here.
@@ -130,17 +130,17 @@ ro:
       enable_text_collaboration:
         heading: Real-time collaboration is not enabled
         description: |-
-          Once enabled, multiple users will be able to work together on a document at the same time.
-          All new documents will be based on a new editor (BlockNote) and will require a working connection to a
-          Hocuspocus server.
+          Odată activat, mai mulți utilizatori vor putea lucra împreună pe un document în același timp.
+          Toate documentele noi se vor baza pe un editor nou (BlockNote) și va necesita o conexiune de lucru la un server
+          Hocuspocus.
         primary_action: Enable real-time collaboration
         success: Real-time collaboration has been enabled.
       disable_text_collaboration_dialog:
         title: Disable real-time collaboration
         heading: Dezactivează colaborarea în timp real?
         confirmation_message: |-
-          All existing documents may become inaccessible. Please only do this if you are certain you want to disable
-          real-time collaboration and the BlockNote editor in this instance.
+          Toate documentele existente pot deveni inaccesibile. Te rugăm să faci asta doar dacă ești sigur că vrei să dezactivezi
+          colaborare în timp real și editorul BlockNote în acest caz.
         confirmation_checkbox_message: I understand that I might permanently lose data
         success: Colaborarea în timp real a fost dezactivată.
   label_document_added: "Document adăugat"
