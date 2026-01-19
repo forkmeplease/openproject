@@ -162,37 +162,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :agenda, controller: "meeting_agendas", only: [:update] do
-      member do
-        get :history
-        get :diff
-        put :close
-        put :open
-        post :preview
-      end
-
-      resources :versions, only: [:show],
-                           controller: "meeting_agendas"
-    end
-
-    resource :contents, controller: "meeting_contents", only: %i[show update] do
-      member do
-        get :history
-        get :diff
-      end
-    end
-
-    resource :minutes, controller: "meeting_minutes", only: [:update] do
-      member do
-        get :history
-        get :diff
-        post :preview
-      end
-
-      resources :versions, only: [:show],
-                           controller: "meeting_minutes"
-    end
-
     member do
       get "/:tab" => "meetings#show", :constraints => { tab: /(agenda|minutes)/ }, :as => "tab"
     end
