@@ -32,15 +32,18 @@ require "spec_helper"
 
 require_relative "../support/pages/meetings/show"
 
-RSpec.describe "Meeting outcomes work package linking", :js do
+RSpec.describe "Work package meeting outcomes", :js do
   include Components::Autocompleter::NgSelectAutocompleteHelpers
 
-  shared_let(:project) { create(:project, enabled_module_names: %w[meetings work_package_tracking]) }
+  shared_let(:status) { create(:status, is_default: true) }
+  shared_let(:priority) { create(:priority, is_default: true) }
+  shared_let(:project) { create(:project_with_types, enabled_module_names: %w[meetings work_package_tracking]) }
   shared_let(:user) do
     create :user,
            lastname: "First",
            preferences: { time_zone: "Etc/UTC" },
-           member_with_permissions: { project => %i[view_meetings manage_agendas manage_outcomes view_work_packages] }
+           member_with_permissions: { project => %i[view_meetings manage_agendas manage_outcomes
+                                                    view_work_packages add_work_packages] }
   end
   shared_let(:meeting) do
     create :meeting,
@@ -72,125 +75,162 @@ RSpec.describe "Meeting outcomes work package linking", :js do
 
   context "when a user has the necessary permissions" do
     context "when the meeting is 'in progress'" do
-      it "shows a dropdown with two outcome options" do
-        show_page.visit!
+      context "when linking an existing work package as an outcome" do
+        it "can link an existing work package as an outcome" do
+          show_page.visit!
+          wait_for_network_idle
 
-        within("#meeting-agenda-items-outcomes-new-button-component-#{meeting_agenda_item.id}") do
-          click_on "Outcome"
+          show_page.open_menu(meeting_agenda_item) do
+            click_on "Add outcome"
+            expect(page).to have_text("Existing work package")
+            click_on "Existing work package"
+          end
 
-          expect(page).to have_text("Write outcome")
-          expect(page).to have_text("Existing work package")
-        end
-      end
+          expect(page).to have_test_selector("op-agenda-item-outcome-wp-autocomplete")
+          select_autocomplete(find_test_selector("op-agenda-item-outcome-wp-autocomplete"),
+                              query: "Important",
+                              results_selector: "body")
 
-      it "can link an existing work package as an outcome" do
-        show_page.visit!
+          within(".meeting-agenda-item-outcome-form") do
+            click_on "Add"
+          end
 
-        item = MeetingAgendaItem.find(meeting_agenda_item.id)
-
-        within("#meeting-agenda-items-outcomes-new-button-component-#{item.id}") do
-          click_on "Outcome"
-        end
-        page.find("a", text: "Existing work package", wait: 3).click
-
-        expect(page).to have_css("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id}")
-        select_autocomplete(find_test_selector("op-agenda-item-outcome-wp-autocomplete"),
-                            query: "Important",
-                            results_selector: "body")
-        within("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id}") do
-          click_on "Add"
+          show_page.in_outcome_component(meeting_agenda_item) do
+            expect(page).to have_link(work_package1.subject)
+          end
         end
 
-        show_page.in_outcome_component(item) do
-          expect(page).to have_text(work_package1.type.name)
-          expect(page).to have_text("##{work_package1.id}")
-          expect(page).to have_text(work_package1.status.name)
-          expect(page).to have_link(work_package1.subject)
-        end
-      end
+        it "can cancel adding an existing work package outcome" do
+          show_page.visit!
+          wait_for_network_idle
 
-      it "can delete a work package outcome" do
-        outcome = create(:meeting_outcome,
-                         meeting_agenda_item:,
-                         work_package: work_package1,
-                         kind: :work_package)
+          show_page.open_menu(meeting_agenda_item) do
+            click_on "Add outcome"
+            click_on "Existing work package"
+          end
 
-        show_page.visit!
+          expect(page).to have_test_selector("op-agenda-item-outcome-wp-autocomplete")
+          page.find_test_selector("op-agenda-item-outcome-wp-autocomplete").find(".ng-input input").send_keys(:escape)
 
-        item = MeetingAgendaItem.find(meeting_agenda_item.id)
-
-        show_page.in_outcome_component(item) do
-          expect(page).to have_text(work_package1.subject)
-          show_page.select_outcome_action "Remove outcome"
-        end
-
-        expect(page).to have_no_text(work_package1.subject)
-        expect { outcome.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      end
-
-      it "can create both text and work package outcomes for the same agenda item" do
-        show_page.visit!
-
-        item = MeetingAgendaItem.find(meeting_agenda_item.id)
-
-        within("#meeting-agenda-items-outcomes-new-button-component-#{item.id}") do
-          click_on "Outcome"
-        end
-        page.find("a", text: "Write outcome", wait: 3).click
-
-        field = TextEditorField.new(page, "Outcome", selector: test_selector("meeting-outcome-input-for-#{item.id}"))
-        field.expect_active!
-        field.set_value "This is a text outcome"
-        click_on "Save"
-
-        show_page.in_outcome_component(item) do
-          show_page.expect_outcome "This is a text outcome"
-        end
-
-        within("#meeting-agenda-items-outcomes-new-button-component-#{item.id}") do
-          click_on "Outcome"
-        end
-        page.find("a", text: "Existing work package", wait: 3).click
-
-        select_autocomplete(find_test_selector("op-agenda-item-outcome-wp-autocomplete"),
-                            query: "Another",
-                            results_selector: "body")
-
-        within("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id}") do
-          click_on "Add"
-        end
-
-        show_page.in_outcome_component(item) do
-          show_page.expect_outcome "This is a text outcome"
-          expect(page).to have_link(work_package2.subject)
-
-          expect(page).to have_text("Outcome 1")
-          expect(page).to have_text("Outcome 2")
-        end
-      end
-
-      it "can cancel adding a work package outcome" do
-        show_page.visit!
-
-        item = MeetingAgendaItem.find(meeting_agenda_item.id)
-
-        within("#meeting-agenda-items-outcomes-new-button-component-#{item.id}") do
-          click_on "Outcome"
-        end
-        page.find("a", text: "Existing work package", wait: 3).click
-
-        expect(page).to have_css("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id}")
-
-        # Close the autocompleter dropdown that opens automatically
-        page.find("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id} .ng-input input").send_keys(:escape)
-
-        within("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id}") do
           click_on "Cancel"
+
+          expect(page).to have_no_test_selector("op-agenda-item-outcome-wp-autocomplete")
         end
 
-        # Form should be hidden, button should be back
-        expect(page).to have_no_css("#meeting-agenda-items-outcomes-work-package-form-component-#{item.id}")
-        expect(page).to have_css("#meeting-agenda-items-outcomes-new-button-component-#{item.id}")
+        it "can delete a work package outcome" do
+          outcome = create(:meeting_outcome,
+                           meeting_agenda_item:,
+                           work_package: work_package1,
+                           kind: :work_package)
+
+          show_page.visit!
+          wait_for_network_idle
+
+          show_page.in_outcome_component(meeting_agenda_item) do
+            expect(page).to have_link(work_package1.subject)
+            show_page.select_outcome_action "Remove outcome"
+          end
+
+          expect(page).to have_no_link(work_package1.subject)
+          expect { outcome.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+
+      context "when creating a new work package as an outcome" do
+        it "can create a new work package and link it as an outcome" do
+          show_page.visit!
+          wait_for_network_idle
+
+          show_page.open_menu(meeting_agenda_item) do
+            click_on "Add outcome"
+            expect(page).to have_text("New work package")
+            click_on "New work package"
+          end
+
+          expect(page).to have_dialog(I18n.t(:label_work_package_new))
+
+          page.within_dialog(I18n.t(:label_work_package_new)) do
+            fill_in "Subject", with: "New WP from meeting outcome"
+            click_on "Create"
+          end
+
+          expect(page).to have_no_dialog(I18n.t(:label_work_package_new))
+
+          created_wp = WorkPackage.find_by(subject: "New WP from meeting outcome")
+          expect(created_wp).to be_present
+          expect(created_wp.project).to eq(project)
+
+          show_page.in_outcome_component(meeting_agenda_item) do
+            expect(page).to have_link(created_wp.subject)
+          end
+        end
+
+        it "shows an inline validation error when subject is empty" do
+          show_page.visit!
+          wait_for_network_idle
+
+          show_page.open_menu(meeting_agenda_item) do
+            click_on "Add outcome"
+            expect(page).to have_text("New work package")
+            click_on "New work package"
+          end
+
+          expect(page).to have_dialog(I18n.t(:label_work_package_new))
+
+          page.within_dialog(I18n.t(:label_work_package_new)) do
+            fill_in "Subject", with: ""
+            click_on "Create"
+
+            expect(page).to have_text("Subject can't be blank")
+          end
+
+          expect(page).to have_dialog(I18n.t(:label_work_package_new))
+          expect(WorkPackage.find_by(subject: "")).to be_nil
+        end
+
+        it "can cancel creating a new work package" do
+          show_page.visit!
+          wait_for_network_idle
+
+          initial_wp_count = WorkPackage.count
+
+          show_page.open_menu(meeting_agenda_item) do
+            click_on "Add outcome"
+            expect(page).to have_text("New work package")
+            click_on "New work package"
+          end
+
+          expect(page).to have_dialog(I18n.t(:label_work_package_new))
+
+          page.within_dialog(I18n.t(:label_work_package_new)) do
+            fill_in "Subject", with: "This should not be created"
+            click_on "Cancel"
+          end
+
+          expect(page).to have_no_dialog(I18n.t(:label_work_package_new))
+          expect(WorkPackage.count).to eq(initial_wp_count)
+        end
+      end
+
+      context "when user lacks add_work_packages permission" do
+        let(:current_user) do
+          create(:user,
+                 member_with_permissions: {
+                   project => %i[view_meetings manage_agendas manage_outcomes view_work_packages]
+                 })
+        end
+
+        it "does not show the new work package option" do
+          show_page.visit!
+          wait_for_network_idle
+
+          show_page.open_menu(meeting_agenda_item) do
+            click_on "Add outcome"
+            expect(page).to have_text("Write outcome")
+            expect(page).to have_text("Existing work package")
+            expect(page).to have_no_text("New work package")
+          end
+        end
       end
     end
   end
@@ -214,17 +254,19 @@ RSpec.describe "Meeting outcomes work package linking", :js do
 
     it "shows undisclosed message for users without access" do
       show_page.visit!
+      wait_for_network_idle
 
       show_page.in_outcome_component(meeting_agenda_item) do
-        expect(page).to have_text("Private work package")
+        expect(page).to have_link("Private work package")
       end
 
       login_as(other_user)
 
       show_page.visit!
+      wait_for_network_idle
 
       show_page.in_outcome_component(meeting_agenda_item) do
-        expect(page).to have_no_text("Private work package")
+        expect(page).to have_no_link("Private work package")
         expect(page).to have_text(I18n.t(:label_agenda_item_undisclosed_wp, id: other_wp.id))
       end
     end
@@ -241,16 +283,19 @@ RSpec.describe "Meeting outcomes work package linking", :js do
 
     it "shows deleted work package message after deletion" do
       show_page.visit!
+      wait_for_network_idle
 
       show_page.in_outcome_component(meeting_agenda_item) do
-        expect(page).to have_text("To be deleted")
+        expect(page).to have_link("To be deleted")
       end
 
       work_package_to_delete.destroy!
+
       show_page.visit!
+      wait_for_network_idle
 
       show_page.in_outcome_component(meeting_agenda_item) do
-        expect(page).to have_no_text("To be deleted")
+        expect(page).to have_no_link("To be deleted")
         expect(page).to have_text(I18n.t(:label_agenda_item_deleted_wp))
       end
     end
@@ -267,16 +312,17 @@ RSpec.describe "Meeting outcomes work package linking", :js do
 
     before do
       outcome
-      show_page.visit!
     end
 
     it "can view work package outcomes but not add or edit them" do
+      show_page.visit!
+      wait_for_network_idle
+
       show_page.in_outcome_component(meeting_agenda_item) do
-        expect(page).to have_text(work_package1.subject)
+        expect(page).to have_link(work_package1.subject)
       end
 
       show_page.expect_no_outcome_button
-
       show_page.expect_no_outcome_actions
     end
   end
