@@ -222,6 +222,7 @@ class DocumentsController < ApplicationController
     redirect_to document_path(call.result, state: :edit)
   end
 
+  # rubocop:disable Metrics/AbcSize
   def define_token_payload
     oauth_token = generate_encrypted_oauth_token
 
@@ -230,17 +231,23 @@ class DocumentsController < ApplicationController
       API::V3::Utilities::PathHelper::ApiV3Path.document(@document.id)
     ).to_s
 
+    secret = Documents::OAuth::DigestSecretService
+      .new(Setting.collaborative_editing_hocuspocus_secret)
+      .call
+    return Rails.logger.error(secret.errors) if secret.failure?
+
     @token_payload = JWT.encode(
       {
         resource_url: @resource_url,
         oauth_token:,
         readonly: @readonly,
-        exp: 20.minutes.from_now.to_i
+        exp: 2.minutes.from_now.to_i
       },
-      Setting.collaborative_editing_hocuspocus_secret,
+      secret.result,
       "HS256"
     )
   end
+  # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable Metrics/AbcSize
   def generate_encrypted_oauth_token
