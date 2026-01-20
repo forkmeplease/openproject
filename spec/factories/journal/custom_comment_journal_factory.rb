@@ -28,31 +28,6 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Journals::CreateService
-  class Association
-    include Helpers
-
-    ASSOCIATION_NAMES = %i[
-      AgendaItemable
-      Attachable
-      CustomComment
-      Customizable
-      ProjectPhase
-      Storable
-    ].freeze
-
-    def self.for(journable)
-      ASSOCIATION_NAMES
-        .map { "Journals::CreateService::#{it}".constantize.new(journable) }
-        .select(&:associated?)
-    end
-
-    attr_reader :journable
-
-    def initialize(journable)
-      @journable = journable
-    end
-
-    def name = self.class.name.demodulize.underscore
-  end
+FactoryBot.define do
+  factory :custom_comment_journal, class: "Journal::CustomCommentJournal"
 end
