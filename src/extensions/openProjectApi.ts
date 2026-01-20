@@ -1,11 +1,13 @@
-import type { onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload } from "@hocuspocus/server";
-import { Extension } from "@hocuspocus/server";
-import * as Y from "yjs";
-import type { ApiResponseDocument } from "../types";
-import { ServerBlockNoteEditor } from "@blocknote/server-util";
 import { BlockNoteSchema } from "@blocknote/core";
+import { ServerBlockNoteEditor } from "@blocknote/server-util";
+import type { onAuthenticatePayload, onLoadDocumentPayload, onStatelessPayload, onStoreDocumentPayload } from "@hocuspocus/server";
+import { Extension } from "@hocuspocus/server";
 import { openProjectWorkPackageStaticBlockSpec } from "op-blocknote-extensions";
+import * as Y from "yjs";
 import { decryptToken } from "../services/decryptTokenService";
+import type { ApiResponseDocument } from "../types";
+
+const TOKEN_REFRESH_PREFIX = "REFRESH:";
 
 export const editorSchema = BlockNoteSchema.create().extend({
   blockSpecs: {
@@ -132,6 +134,64 @@ export class OpenProjectApi implements Extension {
     }
 
     data.document.connections.forEach(({ connection }) => connection.sendStateless("storeEvent"));
+  }
+
+  /**
+    * Handle stateless messages from clients
+    */
+  async onStateless(data: onStatelessPayload): Promise<void> {
+    const { payload, connection } = data;
+
+    if (payload.startsWith(TOKEN_REFRESH_PREFIX)) {
+      const encryptedToken = payload.slice(TOKEN_REFRESH_PREFIX.length);
+      await this.handleTokenRefresh(encryptedToken, connection);
+    }
+  }
+
+  /**
+    * Process a token refresh request from the client
+    */
+  private async handleTokenRefresh(encryptedToken: string, connection: onStatelessPayload["connection"]): Promise<void> {
+    if (!encryptedToken) {
+      return;
+    }
+
+    const { resourceUrl } = connection.context;
+    if (!resourceUrl) {
+      return;
+    }
+
+    try {
+      const decryptedToken = decryptToken(encryptedToken);
+
+      const response = await fetch(resourceUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${decryptedToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        printLog(`Token refresh failed: ${response.statusText}`);
+        return;
+      }
+
+      const jsonData = await response.json() as ApiResponseDocument;
+
+      connection.context.token = decryptedToken;
+
+      const wasReadonly = connection.context.readonly;
+      const isReadonly = !jsonData._links?.update;
+
+      if (wasReadonly !== isReadonly) {
+        connection.context.readonly = isReadonly;
+        connection.readOnly = isReadonly;
+        printLog(`Readonly status changed: ${isReadonly}`);
+      }
+    } catch (error) {
+      printLog(`Token refresh error: ${error}`);
+    }
   }
 }
 

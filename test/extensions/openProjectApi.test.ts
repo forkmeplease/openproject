@@ -1,4 +1,4 @@
-import { Document, onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload } from "@hocuspocus/server";
+import { Document, onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload, onStatelessPayload } from "@hocuspocus/server";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import * as Y from "yjs";
 import { OpenProjectApi, createEditor } from "../../src/extensions/openProjectApi";
@@ -221,7 +221,7 @@ describe("OpenProjectApi", () => {
 
       const document = new Y.Doc();
       const fragment = document.getXmlFragment('document-store');
-     
+
       // @ts-expect-error BlockNote types are complicated
       editor.blocksToYXmlFragment(blocks, fragment);
 
@@ -248,6 +248,176 @@ describe("OpenProjectApi", () => {
           body: expect.stringContaining("content_binary"),
         })
       );
+    });
+  });
+
+  describe("onStateless", () => {
+    test("should ignore messages that do not start with REFRESH:", async () => {
+      const data = {
+        payload: "some other message",
+        connection: {
+          readOnly: false,
+          context: { resourceUrl: "https://test.api/api/v3/documents/121" },
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      await api.onStateless(data);
+
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    test("should ignore empty token after REFRESH: prefix", async () => {
+      const data = {
+        payload: "REFRESH:",
+        connection: {
+          readOnly: false,
+          context: { resourceUrl: "https://test.api/api/v3/documents/121" },
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      await api.onStateless(data);
+
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    test("should return early if resourceUrl is missing", async () => {
+      const data = {
+        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        connection: {
+          readOnly: false,
+          context: {},
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      await api.onStateless(data);
+
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    test("should validate and update token on successful refresh", async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({
+          _links: {
+            self: { href: "/api/v3/documents/121" },
+            update: { href: "/api/v3/documents/121" }
+          }
+        }),
+      });
+
+      const data = {
+        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        connection: {
+          readOnly: false,
+          context: {
+            resourceUrl: "https://test.api/api/v3/documents/121",
+            token: "old_token",
+            readonly: false,
+          },
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      await api.onStateless(data);
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://test.api/api/v3/documents/121",
+        expect.objectContaining({
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer valid_token",
+          },
+        })
+      );
+
+      expect(data.connection.context.token).toBe("valid_token");
+    });
+
+    test("should update readonly status when permissions change from writable to readonly", async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({
+          _links: {
+            self: { href: "/api/v3/documents/121" }
+            // No update link = readonly
+          }
+        }),
+      });
+
+      const data = {
+        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        connection: {
+          readOnly: false,
+          context: {
+            resourceUrl: "https://test.api/api/v3/documents/121",
+            token: "old_token",
+            readonly: false,
+          },
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      await api.onStateless(data);
+
+      expect(data.connection.context.readonly).toBe(true);
+      expect(data.connection.readOnly).toBe(true);
+    });
+
+    test("should not update context if token validation fails", async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        statusText: "Unauthorized",
+      });
+
+      const data = {
+        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        connection: {
+          readOnly: false,
+          context: {
+            resourceUrl: "https://test.api/api/v3/documents/121",
+            token: "old_token",
+            readonly: false,
+          },
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      await api.onStateless(data);
+
+      expect(data.connection.context.token).toBe("old_token");
+    });
+
+    test("should handle decryption errors gracefully", async () => {
+      const data = {
+        payload: "REFRESH:invalid_encrypted_token",
+        connection: {
+          readOnly: false,
+          context: {
+            resourceUrl: "https://test.api/api/v3/documents/121",
+            token: "old_token",
+          },
+        },
+        document: {},
+      } as unknown as onStatelessPayload;
+
+      const api = new OpenProjectApi();
+      // Should not throw, just log and return
+      await expect(api.onStateless(data)).resolves.toBeUndefined();
+
+      expect(data.connection.context.token).toBe("old_token");
     });
   });
 });
