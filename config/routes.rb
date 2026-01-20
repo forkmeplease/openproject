@@ -720,9 +720,10 @@ Rails.application.routes.draw do
     resources :jiras do
       resources :jira_imports, module: :jiras do
         member do
-          get :fetch
-          get :import
+          get :continue
           get :remove
+          get :select_projects_modal
+          post :select_projects
         end
       end
     end

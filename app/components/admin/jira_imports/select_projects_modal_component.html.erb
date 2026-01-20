@@ -1,0 +1,13 @@
+<%= render(
+      Primer::Alpha::Dialog.new(
+        title: "Select projects to import",
+        id: MODAL_ID
+      )
+    ) do |d| %>
+  <% d.with_header(variant: :large) %>
+  <% d.with_body do %>
+    <% settings_primer_form_with(**form_options) do |f| %>
+      <% render(Admin::JiraImports::Form.new(f, jira_import:)) %>
+    <% end %>
+  <% end %>
+<% end %>

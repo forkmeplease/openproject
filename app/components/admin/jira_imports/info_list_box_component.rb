@@ -28,48 +28,40 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class JiraImport < ApplicationRecord
-  belongs_to :jira
+module Admin
+  module JiraImports
+    class InfoListBoxComponent < Primer::Component
+      include OpPrimer::ComponentHelpers
 
-  STATE_INITIAL = "initial"
-  STATE_FETCHING = "fetching"
-  STATE_FETCH_ERROR = "fetch-error"
-  STATE_FETCHED = "fetched"
-  STATE_CONFIGURING = "configuring"
-  STATE_IMPORTING = "importing"
-  STATE_IMPORT_ERROR = "import-error"
-  STATE_IMPORTED = "imported"
-  STATE_REVERTING = "reverting"
-  STATE_REVERT_ERROR = "revert-error"
-  STATE_REVERTED = "reverted"
+      attr_reader :title, :list, :system_arguments
 
-  STATES = [
-    STATE_INITIAL,
-    STATE_FETCHING,
-    STATE_FETCH_ERROR,
-    STATE_FETCHED,
-    STATE_CONFIGURING,
-    STATE_IMPORTING,
-    STATE_IMPORT_ERROR,
-    STATE_IMPORTED,
-    STATE_REVERTING,
-    STATE_REVERT_ERROR,
-    STATE_REVERTED
-  ]
+      def initialize(title:, list:, **system_arguments)
+        super()
+        @title = title
+        @list = list
+        @system_arguments = system_arguments
+      end
 
-  def status_equal_or_after?(check_status)
-    STATES.index(status) >= STATES.index(check_status)
-  end
-
-  def status_before?(check_status)
-    STATES.index(status) < STATES.index(check_status)
-  end
-
-  def status_running?
-    [
-      STATE_FETCHING,
-      STATE_IMPORTING,
-      STATE_REVERTING
-    ].include?(status)
+      def call
+        render(OpPrimer::InsetBoxComponent.new(border: false)) do
+          flex_layout do |flex|
+            flex.with_row(mb: 1) do
+              render(Primer::Beta::Text.new(font_weight: :bold)) { title }
+            end
+            list.each do |item|
+              flex.with_row(mt: 2) do
+                concat(render(
+                         Primer::Beta::Octicon.new(
+                           icon: item[:checked] ? :"check-circle" : :"x-circle",
+                           color: item[:checked] ? :success : :danger
+                         )
+                       ))
+                concat(render(Primer::Beta::Text.new(ml: 1)) { item[:label] })
+              end
+            end
+          end
+        end
+      end
+    end
   end
 end

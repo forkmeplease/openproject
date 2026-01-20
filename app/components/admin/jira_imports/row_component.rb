@@ -31,7 +31,7 @@
 module Admin::JiraImports
   class RowComponent < OpPrimer::BorderBoxRowComponent
     def id
-      render(Primer::Beta::Link.new(href: edit_admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id), font_weight: :bold)) { "Import ##{model.id}" }
+      render(Primer::Beta::Link.new(href: admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id), font_weight: :bold)) { "Import ##{model.id}" }
     end
 
     def author
@@ -40,8 +40,17 @@ module Admin::JiraImports
 
     def button_links
       [
-        action_menu
+        edit_button
       ]
+    end
+
+    def edit_button
+      render(Primer::Beta::IconButton.new(
+               icon: :pencil,
+               tag: :a,
+               href: admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id),
+               "aria-label": "Edit"
+      ))
     end
 
     def status
@@ -60,40 +69,6 @@ module Admin::JiraImports
           pl: 2
         )
       ) { model.projects.join(" ") }
-    end
-
-    def action_menu
-      render(Primer::Alpha::ActionMenu.new) do |menu|
-        menu.with_show_button(icon: "kebab-horizontal", "aria-label": "More", scheme: :invisible)
-        menu.with_item(
-          tag: :a,
-          label: "Edit",
-          href: edit_admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id)
-        ) do |item|
-          item.with_leading_visual_icon(icon: :pencil)
-        end
-        menu.with_item(
-          tag: :a,
-          label: "Fetch",
-          href: fetch_admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id)
-        ) do |item|
-          item.with_leading_visual_icon(icon: :"arrow-left")
-        end
-        menu.with_item(
-          tag: :a,
-          label: "Import",
-          href: import_admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id)
-        ) do |item|
-          item.with_leading_visual_icon(icon: :"arrow-down")
-        end
-        menu.with_item(
-          tag: :a,
-          label: "Remove",
-          href: remove_admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id)
-        ) do |item|
-          item.with_leading_visual_icon(icon: :"x")
-        end
-      end
     end
   end
 end

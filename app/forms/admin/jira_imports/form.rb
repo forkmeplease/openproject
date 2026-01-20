@@ -31,17 +31,25 @@
 module Admin
   module JiraImports
     class Form < ApplicationForm
+      attr_reader :jira_import
+
+      def initialize(jira_import:)
+        super()
+
+        @jira_import = jira_import
+      end
+
       form do |f|
         f.check_box_group(name: "projects", label: "Jira Projects") do |check_group|
-          model.jira.available_projects.each do |project|
-            check_group.check_box(value: project["id"], label: project["key"], caption: project["name"])
+          (@jira_import.available["projects"] || []).each do |project|
+            check_group.check_box(value: project["id"], label: project["name"], caption: project["key"])
           end
         end
 
         f.submit(
           name: :submit,
-          label: model.persisted? ? I18n.t(:button_save) : I18n.t(:button_create),
-          scheme: :primary,
+          label: I18n.t(:button_save),
+          scheme: :primary
         )
       end
     end

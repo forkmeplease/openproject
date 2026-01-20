@@ -43,7 +43,7 @@ module Admin
 
     def show
       @jira = Jira.find(params[:id])
-      @jira_imports = JiraImport.where(jira_id: @jira.id)
+      @jira_imports = JiraImport.where(jira_id: @jira.id).sort_by(&:id)
     end
 
     def new

@@ -38,17 +38,29 @@ See COPYRIGHT and LICENSE files for more details.
        @jira.url]
     )
     header.with_description do
-      "You can import different sets of data with each import run. It is possible to undo an import run immediately after but not afterwards."
+      I18n.t(:"admin.jiras.run.index.description")
+    end
+    if @jira_imports.any?
+      header.with_action_button(
+        scheme: :primary,
+        mobile_icon: nil,
+        mobile_label: nil,
+        tag: :a,
+        href: new_admin_jira_jira_import_path(jira_id: @jira.id)
+      ) do |button|
+        button.with_leading_visual_icon(icon: :plus)
+        I18n.t(:"admin.jiras.run.index.button_import_run")
+      end
     end
     header.with_action_button(
       mobile_icon: nil,
       mobile_label: nil,
       tag: :a,
       href: edit_admin_jira_path(@jira)
-    ) { "Edit configuration" }
+    ) { I18n.t(:"admin.jiras.run.index.button_edit_configuration") }
   end
 %>
 
-<%= 
+<%=
   render(Admin::JiraImports::TableComponent.new(jira: @jira, rows: @jira_imports))
 %>

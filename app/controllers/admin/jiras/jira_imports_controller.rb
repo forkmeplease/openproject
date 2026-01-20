@@ -37,49 +37,82 @@ module Admin
       menu_item :jira_import
 
       before_action :require_admin
-      before_action :find_jira_and_jira_import, only: %i[edit update fetch import remove]
+      before_action :find_jira_and_jira_import, only: %i[show continue remove select_projects select_projects_modal]
 
       def new
         jira = Jira.find(params[:jira_id])
-        jira_import = JiraImport.create!(author_id: current_user.id, jira_id: jira.id, status: "initial")
-        redirect_to(edit_admin_jira_jira_import_path(jira_id: jira.id, id: jira_import.id))
+        jira_import = JiraImport.create!(author_id: current_user.id, jira_id: jira.id, status: JiraImport::STATE_INITIAL)
+        redirect_to(admin_jira_jira_import_path(jira_id: jira.id, id: jira_import.id))
       end
 
-      def edit
+      def show
       end
 
-      def update
-        projects = params[:jira_import][:projects]
-        @jira_import.update!(projects:, status: "configured")
-        redirect_to(admin_jira_path(@jira))
+      def continue
+        case params[:step]
+        when "fetch"
+          fetch
+        when "import"
+          import
+        when "configure"
+          configure
+        else
+          # nop
+        end
+        render_wizard
       end
 
-      def fetch
-        redirect_to(admin_jira_path(@jira))
+      def select_projects
+        @jira_import.update!(projects: params[:projects])
+        redirect_to(admin_jira_jira_import_path(jira_id: @jira.id, id: @jira_import.id))
       end
 
-      def import
-        redirect_to(admin_jira_path(@jira))
+      def select_projects_modal
+        respond_with_dialog Admin::JiraImports::SelectProjectsModalComponent.new(jira_import: @jira_import)
       end
 
       def remove
+        raise StandardError.new(I18n.t(:"admin.jiras.run.remove_error")) if @jira_import.status_running?
+
+        @jira_import.destroy!
         redirect_to(admin_jira_path(@jira))
       end
 
       private
 
+      def fetch
+        return unless [JiraImport::STATE_FETCH_ERROR, JiraImport::STATE_INITIAL].include?(@jira_import.status)
+
+        job = JiraMetaDataJob.perform_later(@jira_import.id)
+        @jira_import.update!(status: JiraImport::STATE_FETCHING, job_id: job.job_id)
+      end
+
+      def import
+        return unless [JiraImport::STATE_IMPORT_ERROR, JiraImport::STATE_CONFIGURING].include?(@jira_import.status)
+
+        # job = JiraImportDataJob.perform_later(@jira_import.id)
+        @jira_import.update!(status: JiraImport::STATE_IMPORTING)
+      end
+
+      def configure
+        return unless @jira_import.status == JiraImport::STATE_FETCHED
+
+        @jira_import.update!(status: JiraImport::STATE_CONFIGURING)
+      end
+
+      def revert
+        return unless [JiraImport::STATE_REVERT_ERROR, JiraImport::STATE_IMPORTED].include?(@jira_import.status)
+
+        @jira_import.update!(status: JiraImport::STATE_REVERTING)
+      end
+
+      def render_wizard
+        render Admin::JiraImports::WizardComponent.new(@jira_import), layout: false
+      end
+
       def find_jira_and_jira_import
         @jira = Jira.find(params[:jira_id])
         @jira_import = JiraImport.find(params[:id])
-      end
-
-      def jira_params
-        params.expect(jira: %i[url personal_access_token])
-      end
-
-      def stream_form_component(&)
-        update_via_turbo_stream(component: Admin::Jiras::FormComponent.new(@jira))
-        respond_with_turbo_streams(&)
       end
     end
   end

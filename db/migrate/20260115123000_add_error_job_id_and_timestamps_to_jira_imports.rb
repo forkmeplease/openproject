@@ -28,38 +28,13 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module JiraImports
-    class FormComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
+class AddErrorJobIdAndTimestampsToJiraImports < ActiveRecord::Migration[8.0]
+  change_table :jira_imports, bulk: true do |t|
+    t.string :error unless column_exists?(:jira_imports, :error)
+    t.string :job_id
+    t.jsonb :available, default: {}
 
-      def self.wrapper_key = :jira_imports_form
-
-      private
-
-      def form_options
-        form_target.merge(stimulus_controller_options)
-                   .merge(model:)
-      end
-
-      def form_target
-        if model.new_record?
-          { method: :post, url:  admin_jira_jira_imports_path }
-        else
-          { method: :patch, url:  admin_jira_jira_import_path(jira_id: model.jira.id, id: model.id) }
-        end
-      end
-
-      def stimulus_controller_options
-        {
-          # data: {
-          #   controller: "scim-clients--form-inputs",
-          #   turbo_frame: "_top"
-          # }
-        }
-      end
-    end
+    # Add created_at and updated_at; allow nulls for existing records.
+    t.timestamps default: -> { "CURRENT_TIMESTAMP" }
   end
 end
