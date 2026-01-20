@@ -38,24 +38,29 @@ module Admin
 
       def self.wrapper_key = :jira_imports_wizard
 
-      def import_settings
+      def import_stats_available
         [
-          { label: projects_label, caption: "Including only name and key", value: "projects", checked: true },
-          { label: issues_label, caption: "Includes only name, title and description", value: "issues", checked: true },
-          { label: users_label, caption: "Includes only name, email and project membership", value: "users", checked: true },
-          { label: statuses_label, caption: "Does not include workflows", value: "statuses", checked: true },
-          { label: types_label, caption: "Types are attached to projects", value: "types", checked: true }
+          { label: projects_label(available_projects_count), checked: true },
+          { label: "#{issues_label(available_issues_count)} (name, title and description)", checked: true },
+          { label: statuses_label(available_statuses_count), checked: true },
+          { label: types_label(available_types_count), checked: true }
         ]
       end
 
-      def import_stats_available
-        [
-          { label: projects_label, checked: true },
-          { label: "#{issues_label} (name, title and description)", checked: true },
-          { label: users_label, checked: true },
-          { label: statuses_label, checked: true },
-          { label: types_label, checked: true }
-        ]
+      def available_projects_count
+        model.available['projects']&.count
+      end
+
+      def available_issues_count
+        model.available['total_issues']
+      end
+
+      def available_statuses_count
+        model.available['total_statuses']
+      end
+
+      def available_types_count
+        model.available['total_issue_types']
       end
 
       def import_stats_unavailable
@@ -63,28 +68,56 @@ module Admin
           { label: "Relations between issues", checked: false },
           { label: "Attachments in issues", checked: false },
           { label: "Custom workflow", checked: false },
+          { label: "Users", checked: false },
           { label: "User, group and project permissions", checked: false }
         ]
       end
 
-      def projects_label
-        "#{model.available['projects']&.count || '?'} projects"
+      def projects_label(count)
+        "#{count || '?'} projects"
       end
 
-      def types_label
-        "#{model.available['total_issue_types'] || '?'} types"
+      def issues_label(count)
+        "#{count || '?'} issues"
       end
 
-      def statuses_label
-        "#{model.available['total_statuses'] || '?'} statuses"
+      def statuses_label(count)
+        "#{count || '?'} statuses"
       end
 
-      def issues_label
-        "#{model.available['total_issues'] || '?'} issues"
+      def types_label(count)
+        "#{count || '?'} types"
       end
 
-      def users_label
-        "#{model.available['total_users'] || '?'} users"
+      def import_selection
+        [
+          { label: projects_label(selected_projects_count), checked: true },
+          { label: issues_label(selected_issues_count), checked: true },
+          { label: statuses_label(selected_statuses_count), checked: true },
+          { label: types_label(selected_types_count), checked: true }
+        ]
+      end
+
+      def selected_projects
+        (model.projects || []).map do |project_id|
+          model.available['projects']&.find { |p| p['id'] == project_id }
+        end.compact
+      end
+
+      def selected_projects_count
+        model.projects&.count || 0
+      end
+
+      def selected_issues_count
+        selected_projects.sum { |project| project['issue_count'] || 0 }
+      end
+
+      def selected_types_count
+        selected_projects.flat_map { |project| project['issue_type_ids'] || [] }.uniq.count
+      end
+
+      def selected_statuses_count
+        selected_projects.flat_map { |project| project['status_ids'] || [] }.uniq.count
       end
     end
   end

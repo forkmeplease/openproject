@@ -42,7 +42,7 @@ module Admin
       form do |f|
         f.check_box_group(name: "projects", label: "Jira Projects") do |check_group|
           (@jira_import.available["projects"] || []).each do |project|
-            check_group.check_box(value: project["id"], label: project["name"], caption: project["key"])
+            check_group.check_box(value: project["id"], label: project["name"], caption: project["key"], checked: @jira_import.projects&.include?(project["id"]))
           end
         end
 

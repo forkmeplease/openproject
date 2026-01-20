@@ -10,7 +10,10 @@ export default class extends Controller {
 
     pollTargetConnected() {
         if (this.interval === undefined) {
-            this.interval = setInterval(() => this.frameTarget.reload(), 10000);
+            this.interval = setInterval(() => {
+                this.frameTarget.src = this.frameTarget.src.split('?')[0];
+                this.frameTarget.reload();
+            }, 10000);
         }
     }
 

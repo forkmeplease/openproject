@@ -28,11 +28,18 @@ class JiraMetaDataJob < ApplicationJob
 
     project_stats = projects.map do |project|
       result = j.issues(jql: "project = '#{project["key"]}'", max_results: 0)
+      project_statuses = j.project_statuses(project["key"])
+
+      issue_type_ids = project_statuses.map { |type| type["id"] }.uniq
+      status_ids = project_statuses.flat_map { |type| type["statuses"].map { |status| status["id"] } }.uniq
+
       {
         "id" => project["id"],
         "key" => project["key"],
         "name" => project["name"],
-        "issue_count" => result["total"]
+        "issue_count" => result["total"],
+        "issue_type_ids" => issue_type_ids,
+        "status_ids" => status_ids
       }
     end
 

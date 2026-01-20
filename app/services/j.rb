@@ -130,4 +130,12 @@ curl --request GET \
   def groups(query: ".", start_at: 0, max_results: 50)
     @httpx.get("#{@url}/rest/api/2/groups/picker", params: { query:,  startAt: start_at, maxResults: max_results }).json
   end
+
+  def project_statuses(project_id_or_key)
+    @httpx.get("#{@url}/rest/api/2/project/#{project_id_or_key}/statuses").json
+  end
+
+  def project(project_id_or_key)
+    @httpx.get("#{@url}/rest/api/2/project/#{project_id_or_key}").json
+  end
 end

@@ -50,13 +50,17 @@ module Admin
       end
 
       def continue
-        case params[:step]
-        when "fetch"
-          fetch
-        when "import"
-          import
-        when "configure"
-          configure
+        unless @jira_import.status_running?
+          case params[:step]
+          when "init"
+            init
+          when "fetch"
+            fetch
+          when "import"
+            import
+          when "configure"
+            configure
+          end
         end
         render_wizard
       end
@@ -79,8 +83,14 @@ module Admin
 
       private
 
+      def init
+        return unless @jira_import.status_between?(JiraImport::STATE_INITIAL, JiraImport::STATE_CONFIGURING)
+
+        @jira_import.update!(status: JiraImport::STATE_INITIAL)
+      end
+
       def fetch
-        return unless [JiraImport::STATE_FETCH_ERROR, JiraImport::STATE_INITIAL].include?(@jira_import.status)
+        return unless @jira_import.status_between?(JiraImport::STATE_INITIAL, JiraImport::STATE_CONFIGURING)
 
         job = JiraMetaDataJob.perform_later(@jira_import.id)
         @jira_import.update!(status: JiraImport::STATE_FETCHING, job_id: job.job_id)
