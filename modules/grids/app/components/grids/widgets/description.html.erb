@@ -31,7 +31,8 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   widget_wrapper do
     if project.description.present?
-      helpers.format_text project, :description
+      render OpenProject::Common::InplaceEditFieldComponent.new(model: @project, attribute: :description, visually_hide_label: true)
+      # helpers.format_text project, :description
     else
       render(Primer::Beta::Text.new(color: :subtle)) { t(:"js.grid.widgets.project_description.no_results") }
     end

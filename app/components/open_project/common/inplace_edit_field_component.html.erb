@@ -1,0 +1,24 @@
+<%# system_arguments = @system_arguments %>
+
+<%#=
+<!--  render(Primer::BaseComponent.new(tag: :div, **@wrapper_arguments)) do-->
+<!--    if @form_passed-->
+<!--      primer_form_with(**@form_arguments) do |form|-->
+<!--        render_inline_form(form) do |f|-->
+<!--          f.text_field(**system_arguments)-->
+<!--        end-->
+<!--      end-->
+<!--    else-->
+<!--      render(Primer::Alpha::TextField.new(**@system_arguments))-->
+<!--    end-->
+<!--  end--> %>
+
+<div id="<%= target_id %>">
+  <%= primer_form_with(model:, url: polymorphic_path(model), method: :patch, data: { turbo_stream: true }) do |form|
+        render_field_component = ->(f) { render field_component(f) } # The render_inline_form method looses context and thus does not know about the `field_component` method
+
+        render_inline_form(form) do |f|
+          render_field_component.call(f)
+        end
+      end %>
+</div>
