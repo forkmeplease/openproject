@@ -28,17 +28,33 @@ interface TokenValidationResult {
 
 export class OpenProjectApi implements Extension {
   /**
-   * Validate an encrypted token against the OpenProject API
-   * Returns the decrypted token and readonly status, or null if validation fails
+   * Decrypt and validate packed auth params against the OpenProject API.
+   * Validates origin and resource URL match, then verifies access with the API.
+   * Returns the decrypted oauth_token and readonly status, or throws if validation fails.
    */
-  private async validateToken(encryptedToken: string, resourceUrl: string): Promise<TokenValidationResult> {
-    const decryptedToken = decryptToken(encryptedToken);
+  private async decryptAndValidateToken(
+    encryptedToken: string,
+    resourceUrl: string,
+    requestOrigin?: string
+  ): Promise<TokenValidationResult> {
+    const {
+      resource_url: tokenResourceUrl,
+      oauth_token,
+    } = decryptToken(encryptedToken);
+
+    if (requestOrigin && !tokenResourceUrl?.startsWith(requestOrigin)) {
+      throw new Error('Unauthorized: Token origin does not match request origin.');
+    }
+
+    if (tokenResourceUrl !== resourceUrl) {
+      throw new Error('Unauthorized: Token resource URL does not match document.');
+    }
 
     const response = await fetch(resourceUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${decryptedToken}`,
+        "Authorization": `Bearer ${oauth_token}`,
       },
     });
 
@@ -49,23 +65,24 @@ export class OpenProjectApi implements Extension {
 
     const jsonData = await response.json() as ApiResponseDocument;
     return {
-      decryptedToken,
+      decryptedToken: oauth_token,
       readonly: !jsonData._links?.update,
     };
   }
 
   /**
-   * Authenticate the user by validating the token and document access
-   */
+    * Authenticate the user by validating the token and document access
+    */
   async onAuthenticate(data: onAuthenticatePayload) {
     const { token, documentName } = data;
     const resourceUrl = documentName;
 
     if (!token) {
-      throw new Error('Unauthorized: Token missing.');
+      throw new Error('Unauthorized: Missing auth params');
     }
 
-    const result = await this.validateToken(token, resourceUrl);
+    const requestOrigin = data.request?.headers?.origin;
+    const result = await this.decryptAndValidateToken(token, resourceUrl, requestOrigin);
 
     data.context.resourceUrl = resourceUrl;
     data.context.token = result.decryptedToken;
@@ -169,7 +186,7 @@ export class OpenProjectApi implements Extension {
     }
 
     try {
-      const result = await this.validateToken(token, resourceUrl);
+      const result = await this.decryptAndValidateToken(token, resourceUrl);
 
       connection.context.token = result.decryptedToken;
 
@@ -186,4 +203,3 @@ export class OpenProjectApi implements Extension {
     }
   }
 }
-
