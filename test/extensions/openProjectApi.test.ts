@@ -1,4 +1,4 @@
-import { Document, onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload, onStatelessPayload } from "@hocuspocus/server";
+import { Document, onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload, onTokenSyncPayload } from "@hocuspocus/server";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import * as Y from "yjs";
 import { OpenProjectApi, createEditor } from "../../src/extensions/openProjectApi";
@@ -251,56 +251,40 @@ describe("OpenProjectApi", () => {
     });
   });
 
-  describe("onStateless", () => {
-    test("should ignore messages that do not start with REFRESH:", async () => {
+  describe("onTokenSync", () => {
+    test("should return early if token is missing", async () => {
       const data = {
-        payload: "some other message",
+        token: "",
         connection: {
           readOnly: false,
           context: { resourceUrl: "https://test.api/api/v3/documents/121" },
         },
         document: {},
-      } as unknown as onStatelessPayload;
+      } as unknown as onTokenSyncPayload;
 
       const api = new OpenProjectApi();
-      await api.onStateless(data);
-
-      expect(fetchMock).not.toHaveBeenCalled();
-    });
-
-    test("should ignore empty token after REFRESH: prefix", async () => {
-      const data = {
-        payload: "REFRESH:",
-        connection: {
-          readOnly: false,
-          context: { resourceUrl: "https://test.api/api/v3/documents/121" },
-        },
-        document: {},
-      } as unknown as onStatelessPayload;
-
-      const api = new OpenProjectApi();
-      await api.onStateless(data);
+      await api.onTokenSync(data);
 
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
     test("should return early if resourceUrl is missing", async () => {
       const data = {
-        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         connection: {
           readOnly: false,
           context: {},
         },
         document: {},
-      } as unknown as onStatelessPayload;
+      } as unknown as onTokenSyncPayload;
 
       const api = new OpenProjectApi();
-      await api.onStateless(data);
+      await api.onTokenSync(data);
 
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    test("should validate and update token on successful refresh", async () => {
+    test("should validate and update token on successful sync", async () => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -313,7 +297,7 @@ describe("OpenProjectApi", () => {
       });
 
       const data = {
-        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         connection: {
           readOnly: false,
           context: {
@@ -323,10 +307,10 @@ describe("OpenProjectApi", () => {
           },
         },
         document: {},
-      } as unknown as onStatelessPayload;
+      } as unknown as onTokenSyncPayload;
 
       const api = new OpenProjectApi();
-      await api.onStateless(data);
+      await api.onTokenSync(data);
 
       expect(fetchMock).toHaveBeenCalledWith(
         "https://test.api/api/v3/documents/121",
@@ -355,7 +339,7 @@ describe("OpenProjectApi", () => {
       });
 
       const data = {
-        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         connection: {
           readOnly: false,
           context: {
@@ -365,10 +349,10 @@ describe("OpenProjectApi", () => {
           },
         },
         document: {},
-      } as unknown as onStatelessPayload;
+      } as unknown as onTokenSyncPayload;
 
       const api = new OpenProjectApi();
-      await api.onStateless(data);
+      await api.onTokenSync(data);
 
       expect(data.connection.context.readonly).toBe(true);
       expect(data.connection.readOnly).toBe(true);
@@ -382,7 +366,7 @@ describe("OpenProjectApi", () => {
       });
 
       const data = {
-        payload: "REFRESH:7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
+        token: "7u+b+QRJN7qANls=--URNw83hIWBq3MMIA--jtl+UPdtbniQVFNOs2EcAw==",
         connection: {
           readOnly: false,
           context: {
@@ -392,17 +376,17 @@ describe("OpenProjectApi", () => {
           },
         },
         document: {},
-      } as unknown as onStatelessPayload;
+      } as unknown as onTokenSyncPayload;
 
       const api = new OpenProjectApi();
-      await api.onStateless(data);
+      await api.onTokenSync(data);
 
       expect(data.connection.context.token).toBe("old_token");
     });
 
     test("should handle decryption errors gracefully", async () => {
       const data = {
-        payload: "REFRESH:invalid_encrypted_token",
+        token: "invalid_encrypted_token",
         connection: {
           readOnly: false,
           context: {
@@ -411,11 +395,11 @@ describe("OpenProjectApi", () => {
           },
         },
         document: {},
-      } as unknown as onStatelessPayload;
+      } as unknown as onTokenSyncPayload;
 
       const api = new OpenProjectApi();
       // Should not throw, just log and return
-      await expect(api.onStateless(data)).resolves.toBeUndefined();
+      await expect(api.onTokenSync(data)).resolves.toBeUndefined();
 
       expect(data.connection.context.token).toBe("old_token");
     });

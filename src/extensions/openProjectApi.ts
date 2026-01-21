@@ -1,13 +1,11 @@
 import { BlockNoteSchema } from "@blocknote/core";
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
-import type { onAuthenticatePayload, onLoadDocumentPayload, onStatelessPayload, onStoreDocumentPayload } from "@hocuspocus/server";
+import type { onAuthenticatePayload, onLoadDocumentPayload, onStoreDocumentPayload, onTokenSyncPayload } from "@hocuspocus/server";
 import { Extension } from "@hocuspocus/server";
 import { openProjectWorkPackageStaticBlockSpec } from "op-blocknote-extensions";
 import * as Y from "yjs";
 import { decryptToken } from "../services/decryptTokenService";
 import type { ApiResponseDocument } from "../types";
-
-const TOKEN_REFRESH_PREFIX = "REFRESH:";
 
 export const editorSchema = BlockNoteSchema.create().extend({
   blockSpecs: {
@@ -159,22 +157,11 @@ export class OpenProjectApi implements Extension {
   }
 
   /**
-    * Handle stateless messages from clients
-    */
-  async onStateless(data: onStatelessPayload): Promise<void> {
-    const { payload, connection } = data;
-
-    if (payload.startsWith(TOKEN_REFRESH_PREFIX)) {
-      const encryptedToken = payload.slice(TOKEN_REFRESH_PREFIX.length);
-      await this.handleTokenRefresh(encryptedToken, connection);
-    }
-  }
-
-  /**
-   * Process a token refresh request from the client
+   * Handle token sync from clients (triggered by provider.sendToken())
    */
-  private async handleTokenRefresh(encryptedToken: string, connection: onStatelessPayload["connection"]): Promise<void> {
-    if (!encryptedToken) {
+  async onTokenSync(data: onTokenSyncPayload): Promise<void> {
+    const { token, connection } = data;
+    if (!token) {
       return;
     }
 
@@ -184,19 +171,24 @@ export class OpenProjectApi implements Extension {
     }
 
     try {
-      const result = await this.validateToken(encryptedToken, resourceUrl);
+      const result = await this.validateToken(token, resourceUrl);
       if (!result) {
-        printLog(`ERROR: Token refresh failed for ${resourceUrl}`);
+        printLog(`Token sync failed for ${resourceUrl}`);
         return;
       }
 
       connection.context.token = result.decryptedToken;
-      connection.context.readonly = result.readonly;
-      connection.readOnly = result.readonly;
 
-      printLog(`[Token Refreshed] Resource: ${resourceUrl} Readonly: ${result.readonly}`);
+      // Update permissions if changed
+      const isReadOnly = result.readonly;
+      if (isReadOnly !== connection.readOnly) {
+        connection.readOnly = isReadOnly;
+        connection.context.readonly = isReadOnly;
+      }
+
+      printLog(`[Token Synced] Resource: ${resourceUrl} Readonly: ${result.readonly}`);
     } catch (error) {
-      printLog(`ERROR: Token refresh error: ${error}`);
+      printLog(`Token sync error: ${error}`);
     }
   }
 }
