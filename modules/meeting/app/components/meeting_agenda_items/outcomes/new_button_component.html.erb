@@ -13,7 +13,11 @@
           data: {
             "turbo-stream": true,
             action: "click->meetings--submit#intercept",
-            href: new_meeting_outcome_path(@meeting, meeting_agenda_item_id: @meeting_agenda_item.id, kind: :information),
+            href: new_meeting_outcome_path(
+              @meeting,
+              meeting_agenda_item_id: @meeting_agenda_item.id,
+              kind: :information
+            ),
             method: "GET"
           }
         }
@@ -25,11 +29,32 @@
           data: {
             "turbo-stream": true,
             action: "click->meetings--submit#intercept",
-            href: new_meeting_outcome_path(@meeting, meeting_agenda_item_id: @meeting_agenda_item.id, kind: :work_package),
+            href: new_meeting_outcome_path(
+              @meeting,
+              meeting_agenda_item_id: @meeting_agenda_item.id,
+              kind: :work_package
+            ),
             method: "GET"
           }
         }
       )
+      if User.current.allowed_in_project?(:add_work_packages, @meeting.project)
+        component.with_item(
+          label: t(:label_work_package_new),
+          tag: :a,
+          content_arguments: {
+            data: {
+              "turbo-stream": true,
+              action: "click->meetings--submit#intercept",
+              href: create_work_package_dialog_meeting_outcomes_path(
+                @meeting,
+                meeting_agenda_item_id: @meeting_agenda_item.id
+              ),
+              method: "GET"
+            }
+          }
+        )
+      end
     end
   end
 %>
