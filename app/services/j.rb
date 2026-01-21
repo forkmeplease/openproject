@@ -135,7 +135,7 @@ curl --request GET \
     @httpx.get("#{@url}/rest/api/2/project/#{project_id_or_key}/statuses").json
   end
 
-  def project(project_id_or_key, expand, properties)
+  def project(project_id_or_key, expand:, properties:)
     @httpx.get(
       "#{@url}/rest/api/2/project/#{project_id_or_key}", params: {
       expand:,
