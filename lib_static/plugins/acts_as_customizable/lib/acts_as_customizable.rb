@@ -478,6 +478,12 @@ module Redmine
         end
 
         module AddClassMethods
+          def custom_field_class
+            "#{name}CustomField".constantize
+          rescue NameError
+            nil
+          end
+
           def available_custom_fields(_model)
             RequestStore.fetch(:"#{name.underscore}_custom_fields") do
               CustomField.where(type: "#{name}CustomField").order(:position)
