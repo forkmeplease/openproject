@@ -350,8 +350,12 @@ class CustomField < ApplicationRecord
     version?
   end
 
+  def self.can_have_comment?
+    self == ProjectCustomField
+  end
+
   def can_have_comment?
-    is_a?(ProjectCustomField)
+    self.class.can_have_comment?
   end
 
   ##
