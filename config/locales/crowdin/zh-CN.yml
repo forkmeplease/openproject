@@ -2860,6 +2860,7 @@ zh-CN:
       label: "添加…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "没有要显示的访问令牌"
         description: "他们都已被禁用。他们可以在管理菜单重新启用。"
@@ -2871,10 +2872,8 @@ zh-CN:
       simple_revoke_confirmation: "确定要撤销此令牌吗？"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."

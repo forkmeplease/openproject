@@ -41,7 +41,7 @@ tr:
         sprint:
           cannot_end_before_it_starts: "Sprint başlamadan önce bitemez."
   attributes:
-    task_type: "Task type"
+    task_type: "Görev türü"
   backlogs:
     add_new_story: "Yeni Hikaye"
     any: "herhangi bir"
@@ -105,7 +105,7 @@ tr:
   errors:
     attributes:
       task_type:
-        cannot_be_story_type: "can not also be a story type"
+        cannot_be_story_type: "aynı zamanda bir hikaye türü olamaz"
   error_intro_plural: "Aşağıdaki hatalar algılandı:"
   error_intro_singular: "Aşağıdaki hatalar algılandı:"
   error_outro: "Lütfen yukarıdaki hataları tekrar göndermeden önce düzeltin."
@@ -129,10 +129,10 @@ tr:
   label_points_burn_up: "Yukarı"
   label_product_backlog: "ürün bekleme süresi"
   label_select_all: "Hepsini seç"
-  label_select_type: "Select a type"
-  label_select_types: "Select types"
-  label_selected_type: "Selected type"
-  label_selected_types: "Selected types"
+  label_select_type: "Bir tür seçin"
+  label_select_types: "Türleri seçin"
+  label_selected_type: "Seçili tür"
+  label_selected_types: "Seçilen türler"
   label_sprint_backlog: "sprint biriktirme listesi"
   label_sprint_cards: "Kartları dışa çıkart"
   label_sprint_impediments: "Sprint Engelleri"

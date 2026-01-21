@@ -3008,6 +3008,7 @@ lt:
       label: "Add…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Nėra rodytinų prieigos raktų"
         description: "Visi iš jų buvo išjungti. Jie gali būti vėl įgalinti administravimo meniu."
@@ -3019,10 +3020,8 @@ lt:
       simple_revoke_confirmation: "Ar tikrai norite atšaukti šį raktą?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."

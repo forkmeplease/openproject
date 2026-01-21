@@ -1396,7 +1396,7 @@ tr:
         header_alerts: "Uyarılar"
         button_update_look_and_feel: "Görünümü ve hissi güncelle"
         button_update_alerts: "Uyarıları güncelle"
-        button_update_user_information: "Update profile"
+        button_update_user_information: "Profili güncelle"
         comments_sorting: "İş paketi faaliyetini aşağıdakilere göre sıralanmış olarak görüntüle"
         disable_keyboard_shortcuts: "Klavye kısayollarını devre dışı bırak"
         disable_keyboard_shortcuts_caption_html: |-
@@ -2913,6 +2913,7 @@ tr:
       label: "Ekle…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Görüntülenecek hiçbir erişim izni yok"
         description: "Hepsi de engellendi. Yönetim menüsünden yeniden etkinleştirilebilirler."
@@ -2924,10 +2925,8 @@ tr:
       simple_revoke_confirmation: "Bu belirteci iptal etmek istediğinizden emin misiniz?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."
@@ -2985,7 +2984,7 @@ tr:
       watched: "Takip edilen"
       reminder: "Hatırlatıcı"
     facets:
-      unread: "okunmamış"
+      unread: "Okunmamış"
       unread_title: "Okunmayanları göster"
       all: "Hepsi"
       all_title: "Tümünü göster"
@@ -3733,7 +3732,7 @@ tr:
     digests:
       including_mention_singular: "bahsetme dahil"
       including_mention_plural: "%{number_mentioned} bahsetme dahil"
-      unread_notification_singular: "Okunmamış 1 bildirim"
+      unread_notification_singular: "1 okunmamış bildirim"
       unread_notification_plural: "%{number_unread} okunmamış bildirim"
       you_have: "Var"
     logo_alt_text: "Logo"

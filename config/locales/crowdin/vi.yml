@@ -2864,6 +2864,7 @@ vi:
       label: "Add…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Không có mã truy cập để hiển thị"
         description: "Tất cả đã bị vô hiệu hóa. Chúng có thể được kích hoạt lại trong menu quản trị."
@@ -2875,10 +2876,8 @@ vi:
       simple_revoke_confirmation: "Bạn có chắc chắn muốn thu hồi mã truy cập này không?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."

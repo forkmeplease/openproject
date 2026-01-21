@@ -2911,6 +2911,7 @@ fr:
       label: "Ajouter…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Aucun jeton d'accès à afficher"
         description: "Tous ont été désactivés. Ils peuvent être ré-activés dans le menu d'administration."
@@ -2922,10 +2923,8 @@ fr:
       simple_revoke_confirmation: "Voulez-vous vraiment révoquer ce jeton ?"
       tabs:
         client:
-          description: "Les jetons clients sont émis par d'autres applications, permettant à OpenProject d'y accéder."
           title: "Jetons de client"
         provider:
-          description: "Les jetons de fournisseur sont émis par OpenProject, ce qui permet à d'autres applications d'y accéder."
           title: "Jetons du fournisseur"
       token/api:
         blank_description: "Il n'y a pas encore de jeton API. Vous pouvez en créer un en utilisant le bouton ci-dessous."

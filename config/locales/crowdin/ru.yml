@@ -350,7 +350,7 @@ ru:
     instructions:
       is_required:
         all: "Отметьте пользовательское поле как обязательное. Это сделает обязательным заполнение поля при создании новых ресурсов. Существующие ресурсы не будут требовать ввода значения при обновлении."
-        project: "Required attributes need to be filled out by the user on project creation if the field is active ('For all projects' set or copying from a project/template in which the field is active). Existing projects will not require a value when being updated."
+        project: "Обязательные атрибуты должны быть заполнены пользователем при создании проекта, если поле активно (\"Для всех проектов\" или копирование из проекта/шаблона, в котором поле активно). Существующие проекты не требуют ввода значения при обновлении."
       is_for_all:
         all: "Отметьте пользовательское поле как доступное во всех существующих и новых проектах."
         project: "Отметьте атрибут как доступный во всех существующих и новых проектах."
@@ -726,7 +726,7 @@ ru:
           create_button: "Создать"
           name_label: "Название токена"
       created_dialog:
-        one_time_warning: "This is the only time you will see this token. Make sure to copy it now."
+        one_time_warning: "Это единственный раз, когда Вы увидите токен. Убедитесь, что вы сохранили его."
         token/api:
           title: "Токен доступа к API сгенерирован"
         token/rss:
@@ -2670,7 +2670,7 @@ ru:
       enabled: "Отключить"
   enumeration_activities: "Отслеживание времени"
   enumeration_work_package_priorities: "Приоритеты пакета работ"
-  enumeration_reported_project_statuses: "Reported status"
+  enumeration_reported_project_statuses: "Переданный статус"
   enumeration_caption_order_changed: "Порядок успешно изменен."
   enumeration_could_not_be_moved: "Перечисление не может быть перенесено."
   enterprise_trials:
@@ -3009,6 +3009,7 @@ ru:
       label: "Добавить…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Нет маркеров доступа для отображения"
         description: "Все они были отключены. Они могут быть включены вновь в меню Администрирование."
@@ -3020,42 +3021,40 @@ ru:
       simple_revoke_confirmation: "Вы уверены, что хотите отменить этот токен?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Клиентские токены"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
-          title: "Provider tokens"
+          title: "Провайдерские токены"
       token/api:
-        blank_description: "There is no API token yet. You can create one using the button below."
-        blank_title: "No API token"
+        blank_description: "Токен API еще не создан. Вы можете создать его с помощью кнопки ниже."
+        blank_title: "Нет токена API"
         title: "API"
-        table_title: "API tokens"
+        table_title: "Токены API"
         text_hint: "Токены API позволяют приложениям общаться с этим экземпляром OpenProject через REST API."
-        static_token_name: "API token"
+        static_token_name: "Токен API"
         disabled_text: "Токены API не включены администратором. Пожалуйста, обратитесь к администратору для использования этой функции."
         add_button: "API токен"
       ical:
-        blank_description: "To add an iCalendar token, subscribe to a new or existing calendar from within the Calendar module of a project. You must have the necessary permissions."
-        blank_title: "No iCalendar token"
+        blank_description: "Чтобы добавить токен iCalendar, подпишитесь на новый или существующий календарь из модуля календаря проекта. Вы должны иметь необходимые разрешения."
+        blank_title: "Нет токена iCalendar"
         title: "iCalendar"
-        table_title: "iCalendar tokens"
+        table_title: "Токены iCalendar"
         text_hint_link: "Токены iCalendar позволяют пользователям [подписываться на календари OpenProject](docs_url) и просматривать актуальную информацию о пакетах работ во внешних клиентах."
         disabled_text: "Подписки на iCalendar не включены администратором. Обратитесь к администратору для использования этой функции."
       oauth_application:
-        active_tokens: "Active tokens"
-        blank_description: "There is no third-party application access configured and active for you."
-        blank_title: "No OAuth application token"
-        last_used_at: "Last used at"
+        active_tokens: "Активные токены"
+        blank_description: "Для Вас не будет настроен и активен доступ к сторонним приложениям."
+        blank_title: "Нет токена приложения OAuth"
+        last_used_at: "Последний раз использовался в"
         title: "OAuth"
-        table_title: "OAuth application tokens"
-        text_hint: "OAuth application tokens allow third-party applications to connect with this OpenProject instance."
+        table_title: "Токены приложения OAuth"
+        text_hint: "Токены приложений OAuth позволяют сторонним приложениям подключаться к данному экземпляру OpenProject."
       oauth_client:
-        blank_description: "There are no OAuth client tokens yet."
-        blank_title: "No OAuth client tokens"
-        failed: "An error occurred and the token couldn't be removed. Please try again later."
-        integration_type: "Integration type"
+        blank_description: "Клиентских токенов OAuth пока не существует."
+        blank_title: "Нет клиентских токенов OAuth"
+        failed: "Произошла ошибка, и токен не удалось удалить.  Пожалуйста, повторите попытку позже."
+        integration_type: "Тип интеграции"
         table_title: "Клиентские токены OAuth"
-        text_hint: "OAuth client tokens allow this OpenProject instance to connect with external applications, such as file storages."
+        text_hint: "Клиентские токены OAuth позволяют данному экземпляру OpenProject соединяться с внешними приложениями, например, с файловыми хранилищами."
         title: "OAuth"
         remove_token: "Вы действительно хотите удалить этот токен? Вам нужно будет снова войти в систему %{integration}."
         removed: "Токен OAuth успешно удален"
@@ -3068,7 +3067,7 @@ ru:
         table_title: "Токены RSS"
         text_hint: "Токены RSS позволяют пользователям следить за последними изменениями в этом экземпляре OpenProject через внешний RSS-трекер."
         static_token_name: "Токен RSS"
-        disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
+        disabled_text: "Токены RSS не включены администратором. Пожалуйста, обратитесь к администратору, чтобы использовать эту функцию."
       storages:
         unknown_storage: "Неизвестное хранилище"
   notifications:
@@ -4393,22 +4392,22 @@ ru:
     Если CORS включен, то это источники, которым разрешен доступ к OpenProject API. <br/> Пожалуйста, проверьте <a href="%{origin_link}" target="_blank">документацию по происхождению</a> о том, как указывать ожидаемые значения.
   setting_apiv3_write_readonly_attributes: "Доступ на запись к атрибутам, доступным только для чтения"
   setting_apiv3_write_readonly_attributes_instructions: >
-    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+    Если эта опция включена, API позволит администраторам записывать статические атрибуты, доступные только для чтения, во время создания, такие как createdAt и author.
   setting_apiv3_write_readonly_attributes_warning: >
-    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+    Эта настройка используется, например, для импорта данных, но позволяет администраторам выдавать себя за других пользователей при создании элементов. Однако все запросы на создание регистрируются с указанием истинного автора.
   setting_apiv3_write_readonly_attributes_additional: >
-    For more information on attributes and supported resources, please see the %{api_documentation_link}.
+    Более подробную информацию об атрибутах и поддерживаемых ресурсах см. на сайте %{api_documentation_link}.
   setting_apiv3_max_page_size: "Максимальный размер страницы API"
   setting_apiv3_max_page_size_instructions: >
-    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+    Установите максимальный размер страницы, на которую будет отвечать API. Запросы API, возвращающие больше значений на одной странице, выполнить будет невозможно.
   setting_apiv3_max_page_size_warning: >
-    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
+    Пожалуйста, изменяйте это значение только в том случае, если Вы уверены, зачем оно Вам нужно. Установка большого значения приведет к значительному снижению производительности, в то время как значение, меньшее, чем опции для каждой страницы, приведет к ошибкам при постраничном просмотре.
   setting_apiv3_docs: "Документация"
   setting_apiv3_docs_enabled: "Включить страницу с документами"
   setting_apiv3_docs_enabled_instructions_html: >
     Если включена страница документации к документации, вы можете получить интерактивный вид документации APIv3 под <a href="%{link}" target="_blank">%{link}</a>.
   setting_apiv3_docs_enabled_instructions_warning: >
-    Please be aware that enabling the API docs on a production system may expose sensitive information or result in accidental loss of data when not being careful. We recommend to only enable this setting for development purposes.
+    Пожалуйста, имейте в виду, что включение доступа к документам API на рабочей системе может привести к раскрытию конфиденциальной информации или к случайной потере данных, если не соблюдать осторожность. Мы рекомендуем включать эту настройку только для целей разработки.
   setting_attachment_whitelist: "Белый список загрузки вложений"
   setting_email_delivery_method: "Метод доставки электронной почты"
   setting_emails_salutation: "Адрес пользователя в письмах с"
@@ -4587,7 +4586,7 @@ ru:
       omniauth_direct_login_hint_html: >
         Если эта опция включена, запросы на вход в систему будут перенаправлены на настроенный провайдер omniauth. Выпадающий список входа и страница входа будут отключены. <br/> <strong>Примечание:</strong> Если вы также не отключите вход по паролю, то пользователи все еще могут войти внутри системы, посетив страницу входа <code>%{internal_path}</code>.
       remapping_existing_users_hint: >
-        If enabled, allows any configured identity provider to login existing users based on their username, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
+        Если эта опция включена, она позволяет любому сконфигурированному провайдеру идентификации регистрировать существующих пользователей на основе их имени пользователя, даже если пользователь никогда раньше не входил в систему через этого провайдера. Это может быть полезно при переносе экземпляра OpenProject на нового провайдера SSO, но не рекомендуется при использовании провайдера, которому не доверяют все пользователи Вашего экземпляра.
     attachments:
       whitelist_text_html: >
         Определите список допустимых расширений файлов и/или mime типов для загруженных файлов. <br/> Введите расширения файлов (например, <code>%{ext_example}</code>) или mime типы (e. ., <code>%{mime_example}</code>). <br/> Оставьте пустым, чтобы разрешить загрузку любого типа файла. Допустимы несколько значений (одна строка для каждого значения).

@@ -3007,6 +3007,7 @@ pl:
       label: "Dodaj…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Brak tokenów dostępu"
         description: "Wszystkie elementy zostały wyłączone. Można je ponownie włączyć w menu administratora."
@@ -3018,10 +3019,8 @@ pl:
       simple_revoke_confirmation: "Czy na pewno chcesz unieważnić ten token?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."

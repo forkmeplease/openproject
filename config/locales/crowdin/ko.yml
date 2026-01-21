@@ -2864,6 +2864,7 @@ ko:
       label: "추가…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "표시할 수 있는 접근 토큰이 없습니다."
         description: "모두 비활성화 되었습니다. 관리 메뉴에서 가용 상태로 되돌릴 수 있습니다."
@@ -2875,10 +2876,8 @@ ko:
       simple_revoke_confirmation: "이 토큰을 취소하시겠습니까?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."

@@ -202,8 +202,8 @@ ru:
         add_table: "Добавить таблицу связанных пакетов работ"
         edit_query: "Редактировать запрос"
         new_group: "Новая группа"
-        delete_group: "Delete group"
-        remove_attribute: "Remove from group"
+        delete_group: "Удалить группу"
+        remove_attribute: "Удалить из группы"
         reset_to_defaults: "Восстановить значения по умолчанию"
       working_days:
         calendar:

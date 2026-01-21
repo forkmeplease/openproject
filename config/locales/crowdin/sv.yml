@@ -2913,6 +2913,7 @@ sv:
       label: "Lägg till…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Inga åtkomstnycklar att visa"
         description: "Alla nycklar har visats. Du kan återaktivera dom i administrationsmenyn."
@@ -2924,10 +2925,8 @@ sv:
       simple_revoke_confirmation: "Are you sure you want to revoke this token?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."

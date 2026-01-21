@@ -2905,6 +2905,7 @@ de:
       label: "Hinzufügen…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Kein Zugangs-Token kann angezeigt werden"
         description: "Alle wurden deaktiviert. Sie können im Administrations-Menü wieder aktiviert werden."
@@ -2916,10 +2917,8 @@ de:
       simple_revoke_confirmation: "Sind Sie sicher, dass Sie dieses Token widerrufen möchten?"
       tabs:
         client:
-          description: "Client-Tokens werden von anderen Anwendungen ausgestellt und ermöglichen OpenProject den Zugriff auf die ausstellende Anwendungen."
           title: "Client-Tokens"
         provider:
-          description: "Provider-Tokens werden von OpenProject ausgestellt und ermöglichen anderen Anwendungen den Zugriff."
           title: "Provider-Tokens"
       token/api:
         blank_description: "Es gibt noch kein API-Token. Sie können eines erstellen, indem Sie auf die Schaltfläche unten klicken."

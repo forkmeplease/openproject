@@ -246,8 +246,8 @@ ru:
         summary: "'%{title}' было отменено %{actor}."
         date_time: "Запланированная дата/время"
       ended:
-        header_series: "Ended: Meeting series '%{title}'"
-        summary_series: "Meeting series '%{title}' has been ended by %{actor}."
+        header_series: "Завершено: Серия совещаний '%{title}'"
+        summary_series: "Серия совещаний '%{title}' была завершена %{actor}."
       updated:
         header: "Встреча '%{title}' была обновлена"
         summary: "Совещание '%{title}' было обновлено пользователем %{actor}"
@@ -623,9 +623,9 @@ ru:
     access_tokens:
       token/ical_meeting:
         blank_description: "Вы можете создать его, воспользовавшись кнопкой ниже."
-        blank_title: "No iCalendar meeting token"
+        blank_title: "Нет токена совещания для iCalendar"
         title: "iCalendar для совещаний"
-        table_title: "iCalendar meeting tokens"
+        table_title: "Токен совещания для iCalendar"
         text_hint: "Токены iCalendar позволяют пользователям подписываться на все свои совещания и просматривать актуальную информацию о них во внешних клиентах."
         disabled_text: "Подписки на совещания iCalendar не включены администратором. Пожалуйста, свяжитесь с администратором для использования этой функции."
         add_button: "Подписаться на календарь"

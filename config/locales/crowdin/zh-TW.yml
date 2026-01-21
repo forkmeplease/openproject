@@ -2860,6 +2860,7 @@ zh-TW:
       label: "新增…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "沒有可顯示的存取令牌(Token)"
         description: "他們全都被停用了。他們可以在管理功能表重新啟用"
@@ -2871,10 +2872,8 @@ zh-TW:
       simple_revoke_confirmation: "你確定要撤銷此令牌(Token)？"
       tabs:
         client:
-          description: "用戶端令牌由其他應用程式發行，允許 OpenProject 存取。"
           title: "用戶端令牌"
         provider:
-          description: "服務提供者令牌由 OpenProject 發出，允許其他應用程式存取。"
           title: "服務提供者令牌"
       token/api:
         blank_description: "目前還沒有 API 令牌。您可以使用下面的按鈕建立一個。"

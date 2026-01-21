@@ -3010,6 +3010,7 @@ sl:
       label: "Add…"
   my_account:
     access_tokens:
+      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
       no_results:
         title: "Za prikaz ni nobenega računa"
         description: "Vsi so onemogočeni. Ponovno jih je mogoče omogočiti v skrbniškem meniju."
@@ -3021,10 +3022,8 @@ sl:
       simple_revoke_confirmation: "Are you sure you want to revoke this token?"
       tabs:
         client:
-          description: "Client tokens are issued by other applications, allowing OpenProject to access them."
           title: "Client tokens"
         provider:
-          description: "Provider tokens are issued by OpenProject, allowing other applications to access it."
           title: "Provider tokens"
       token/api:
         blank_description: "There is no API token yet. You can create one using the button below."
