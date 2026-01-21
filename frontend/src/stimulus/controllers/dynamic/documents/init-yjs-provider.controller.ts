@@ -85,10 +85,15 @@ export default class extends Controller {
     LiveCollaborationManager.initializeYjsProvider(provider, ydoc);
 
     if (this.refreshUrlValue && this.tokenExpiresInSecondsValue) {
+      // Destroy any existing service to prevent duplicate timers if connect() is called multiple times
+      this.tokenRefreshService?.destroy();
       this.tokenRefreshService = new TokenRefreshService(
         provider,
         this.refreshUrlValue,
-        (newToken) => { this.currentToken = newToken; },
+        (newToken) => {
+          this.currentToken = newToken;
+          this.canUseCachedToken = true;
+        },
       );
       this.tokenRefreshService.scheduleRefresh(this.tokenExpiresInSecondsValue);
     }
