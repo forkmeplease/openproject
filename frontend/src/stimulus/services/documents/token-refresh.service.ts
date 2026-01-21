@@ -33,7 +33,6 @@ import { getMetaContent } from 'core-app/core/setup/globals/global-helpers';
 
 export interface TokenResponse {
   encrypted_token:string;
-  expires_at:string;
   expires_in_seconds:number;
 }
 

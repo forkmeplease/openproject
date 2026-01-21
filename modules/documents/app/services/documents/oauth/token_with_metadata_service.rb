@@ -61,7 +61,6 @@ module Documents
             encrypted_token: encrypt_result.result,
             resource_url:,
             readonly:,
-            expires_at: access_token.expires_in.seconds.from_now.iso8601,
             expires_in_seconds: access_token.expires_in
           }
         )

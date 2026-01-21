@@ -45,7 +45,7 @@ module Documents
         ).call
 
         if token_result.success?
-          render json: token_result.result.slice(:encrypted_token, :expires_at, :expires_in_seconds), status: :ok
+          render json: token_result.result.slice(:encrypted_token, :expires_in_seconds), status: :ok
         else
           render json: { error: token_result.message }, status: :unprocessable_entity
         end
@@ -53,7 +53,10 @@ module Documents
 
       private
 
-      def find_model_object(object_id = :document_id) = super
+      def find_model_object(object_id = :document_id)
+        super
+        @document = @object
+      end
     end
   end
 end

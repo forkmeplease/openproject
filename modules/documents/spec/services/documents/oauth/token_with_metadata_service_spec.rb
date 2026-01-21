@@ -82,13 +82,6 @@ RSpec.describe Documents::OAuth::TokenWithMetadataService,
       expect(result[:readonly]).to be false
     end
 
-    it "returns expires_at as ISO8601 timestamp" do
-      result = service_call.result
-
-      expect(result[:expires_at]).to be_a(String)
-      expect { Time.iso8601(result[:expires_at]) }.not_to raise_error
-    end
-
     it "returns expires_in_seconds matching the token expiry" do
       result = service_call.result
 
