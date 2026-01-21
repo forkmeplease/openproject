@@ -31,53 +31,57 @@
 class JiraImport < ApplicationRecord
   belongs_to :jira
 
-  STATE_INITIAL = "initial"
-  STATE_FETCHING = "fetching"
-  STATE_FETCH_ERROR = "fetch-error"
-  STATE_FETCHED = "fetched"
-  STATE_CONFIGURING = "configuring"
-  STATE_IMPORTING = "importing"
-  STATE_IMPORT_ERROR = "import-error"
-  STATE_IMPORTED = "imported"
-  STATE_REVERTING = "reverting"
-  STATE_REVERT_ERROR = "revert-error"
-  STATE_REVERTED = "reverted"
+  INITIAL = "initial"
+  FETCHING = "fetching"
+  FETCH_ERROR = "fetch-error"
+  FETCHED = "fetched"
+  CONFIGURING = "configuring"
+  IMPORTING = "importing"
+  IMPORT_ERROR = "import-error"
+  IMPORTED = "imported"
+  REVERTING = "reverting"
+  REVERT_ERROR = "revert-error"
+  REVERTED = "reverted"
 
-  STATES = [
-    STATE_INITIAL,
-    STATE_FETCHING,
-    STATE_FETCH_ERROR,
-    STATE_FETCHED,
-    STATE_CONFIGURING,
-    STATE_IMPORTING,
-    STATE_IMPORT_ERROR,
-    STATE_IMPORTED,
-    STATE_REVERTING,
-    STATE_REVERT_ERROR,
-    STATE_REVERTED
+  STATUSES = [
+    INITIAL,
+    FETCHING,
+    FETCH_ERROR,
+    FETCHED,
+    CONFIGURING,
+    IMPORTING,
+    IMPORT_ERROR,
+    IMPORTED,
+    REVERTING,
+    REVERT_ERROR,
+    REVERTED
   ].freeze
 
   def status_equal_or_after?(check_status)
-    STATES.index(status) >= STATES.index(check_status)
+    STATUSES.index(status) >= STATUSES.index(check_status)
   end
 
   def status_before?(check_status)
-    STATES.index(status) < STATES.index(check_status)
+    STATUSES.index(status) < STATUSES.index(check_status)
   end
 
   def status_after?(check_status)
-    STATES.index(status) > STATES.index(check_status)
+    STATUSES.index(status) > STATUSES.index(check_status)
   end
 
   def status_between?(check_from_including, check_to_including)
-    STATES.index(status) >= STATES.index(check_from_including) && STATES.index(status) <= STATES.index(check_to_including)
+    STATUSES.index(status) >= STATUSES.index(check_from_including) && STATUSES.index(status) <= STATUSES.index(check_to_including)
+  end
+
+  def status?(*check_statuses)
+    check_statuses.include?(status)
   end
 
   def status_running?
     [
-      STATE_FETCHING,
-      STATE_IMPORTING,
-      STATE_REVERTING
+      FETCHING,
+      IMPORTING,
+      REVERTING
     ].include?(status)
   end
 end

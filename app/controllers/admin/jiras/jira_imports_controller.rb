@@ -45,7 +45,7 @@ module Admin
 
       def new
         jira = Jira.find(params[:jira_id])
-        jira_import = JiraImport.create!(author_id: current_user.id, jira_id: jira.id, status: JiraImport::STATE_INITIAL)
+        jira_import = JiraImport.create!(author_id: current_user.id, jira_id: jira.id, status: JiraImport::INITIAL)
         redirect_to(admin_jira_jira_import_path(jira_id: jira.id, id: jira_import.id))
       end
 
@@ -63,6 +63,9 @@ module Admin
           end
         end
         render_wizard
+      rescue StandardError => e
+        render_error_flash_message_via_turbo_stream(message: e.message)
+        respond_with_turbo_streams(status: :unprocessable_entity)
       end
 
       def select_projects
@@ -84,35 +87,35 @@ module Admin
       private
 
       def init
-        return unless @jira_import.status_between?(JiraImport::STATE_INITIAL, JiraImport::STATE_CONFIGURING)
+        return unless @jira_import.status_between?(JiraImport::INITIAL, JiraImport::CONFIGURING)
 
-        @jira_import.update!(status: JiraImport::STATE_INITIAL)
+        @jira_import.update!(status: JiraImport::INITIAL)
       end
 
       def fetch
-        return unless @jira_import.status_between?(JiraImport::STATE_INITIAL, JiraImport::STATE_CONFIGURING)
+        return unless @jira_import.status_between?(JiraImport::INITIAL, JiraImport::CONFIGURING)
 
         job = JiraMetaDataJob.perform_later(@jira_import.id)
-        @jira_import.update!(status: JiraImport::STATE_FETCHING, job_id: job.job_id)
+        @jira_import.update!(status: JiraImport::FETCHING, job_id: job.job_id)
       end
 
       def import
-        return unless [JiraImport::STATE_IMPORT_ERROR, JiraImport::STATE_CONFIGURING].include?(@jira_import.status)
+        return unless model.status?(JiraImport::IMPORT_ERROR, JiraImport::CONFIGURING)
 
         # job = JiraImportDataJob.perform_later(@jira_import.id)
-        @jira_import.update!(status: JiraImport::STATE_IMPORTING)
+        @jira_import.update!(status: JiraImport::IMPORTING)
       end
 
       def configure
-        return unless @jira_import.status == JiraImport::STATE_FETCHED
+        return unless model.status?(JiraImport::FETCHED)
 
-        @jira_import.update!(status: JiraImport::STATE_CONFIGURING)
+        @jira_import.update!(status: JiraImport::CONFIGURING)
       end
 
       def revert
-        return unless [JiraImport::STATE_REVERT_ERROR, JiraImport::STATE_IMPORTED].include?(@jira_import.status)
+        return unless model.status?(JiraImport::REVERT_ERROR, JiraImport::IMPORTED)
 
-        @jira_import.update!(status: JiraImport::STATE_REVERTING)
+        @jira_import.update!(status: JiraImport::REVERTING)
       end
 
       def render_wizard

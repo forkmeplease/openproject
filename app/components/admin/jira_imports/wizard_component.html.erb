@@ -45,13 +45,13 @@ See COPYRIGHT and LICENSE files for more details.
               concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
                 I18n.t(:"admin.jiras.run.body.sections.fetch_data.title")
               })
-              if model.status_equal_or_after?(JiraImport::STATE_FETCHED)
+              if model.status_equal_or_after?(JiraImport::FETCHED)
                 concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
                   I18n.t(:"admin.jiras.run.body.sections.fetch_data.caption_done")
                 })
               end
             end
-            if model.status_between?(JiraImport::STATE_FETCHED, JiraImport::STATE_CONFIGURING)
+            if model.status_between?(JiraImport::FETCHED, JiraImport::CONFIGURING)
               row.with_column do
                 render(
                   Primer::Beta::IconButton.new(
@@ -67,7 +67,7 @@ See COPYRIGHT and LICENSE files for more details.
             end
           end
         end
-        if [JiraImport::STATE_INITIAL, JiraImport::STATE_FETCH_ERROR].include?(model.status)
+        if model.status?(JiraImport::INITIAL, JiraImport::FETCH_ERROR)
           box.with_row(mb: 3) do
             render(Primer::Beta::Text.new) {
               I18n.t(:"admin.jiras.run.body.sections.fetch_data.description")
@@ -85,14 +85,14 @@ See COPYRIGHT and LICENSE files for more details.
               I18n.t(:"admin.jiras.run.body.sections.fetch_data.button_fetch")
             end
           end
-          if model.status == JiraImport::STATE_FETCH_ERROR
+          if model.status?(JiraImport::FETCH_ERROR)
             box.with_row(mt: 3, mb: 3) do
               render(Primer::Alpha::Banner.new(scheme: :danger, icon: :stop)) {
                 model.error || I18n.t('js.error.internal')
               }
             end
           end
-        elsif model.status == JiraImport::STATE_FETCHING
+        elsif model.status?(JiraImport::FETCHING)
           box.with_row(mt: 3) do
             render(Primer::Box.new(border: true, border_color: :accent, border_radius: 2, bg: :accent, p: 3)) do
               concat render(Primer::Beta::Spinner.new(size: :small))
@@ -110,17 +110,17 @@ See COPYRIGHT and LICENSE files for more details.
           concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
             I18n.t(:"admin.jiras.run.body.sections.import_scope.title")
           })
-          if model.status_before?(JiraImport::STATE_FETCHED)
+          if model.status_before?(JiraImport::FETCHED)
             concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
               I18n.t(:"admin.jiras.run.body.sections.import_scope.caption")
             })
-          elsif model.status_equal_or_after?(JiraImport::STATE_IMPORTED)
+          elsif model.status_equal_or_after?(JiraImport::IMPORTED)
             concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
               I18n.t(:"admin.jiras.run.body.sections.import_scope.caption_done")
             })
           end
         end
-        if model.status == JiraImport::STATE_FETCHED
+        if model.status?(JiraImport::FETCHED)
           box.with_row(mb: 3, mt: 3) do
             render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert)) {
               I18n.t(:"admin.jiras.run.body.sections.import_scope.info")
@@ -155,7 +155,7 @@ See COPYRIGHT and LICENSE files for more details.
               I18n.t(:"admin.jiras.run.body.sections.import_scope.button_continue")
             }
           end
-        elsif [JiraImport::STATE_CONFIGURING, JiraImport::STATE_IMPORT_ERROR].include?(model.status)
+        elsif model.status?(JiraImport::CONFIGURING, JiraImport::IMPORT_ERROR)
           box.with_row(mb: 3, mt: 3) do
             render(Primer::Beta::Text.new) {
               I18n.t(:"admin.jiras.run.body.sections.import_scope.label_import")
@@ -189,14 +189,14 @@ See COPYRIGHT and LICENSE files for more details.
               I18n.t(:"admin.jiras.run.body.sections.import_scope.button_start")
             }
           end
-          if model.status == JiraImport::STATE_IMPORT_ERROR
+          if model.status?(JiraImport::IMPORT_ERROR)
             box.with_row(mt: 3, mb: 3) do
               render(Primer::Alpha::Banner.new(scheme: :danger, icon: :stop)) {
                 model.error || I18n.t('js.error.internal')
               }
             end
           end
-        elsif model.status == JiraImport::STATE_IMPORTING
+        elsif model.status?(JiraImport::IMPORTING)
           box.with_row(mb: 3, mt: 3) do
             render(Primer::Beta::Text.new) {
               I18n.t(:"admin.jiras.run.body.sections.import_scope.label_import")
@@ -230,20 +230,20 @@ See COPYRIGHT and LICENSE files for more details.
           concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
             I18n.t(:"admin.jiras.run.body.sections.import_result.title")
           })
-          if model.status_before?(JiraImport::STATE_IMPORTED)
+          if model.status_before?(JiraImport::IMPORTED)
             concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
               I18n.t(:"admin.jiras.run.body.sections.import_result.caption")
             })
           end
         end
-        if model.status == JiraImport::STATE_IMPORTED
+        if model.status?(JiraImport::IMPORTED)
           box.with_row(mt: 3) do
             render(Primer::Alpha::Banner.new(scheme: :success, icon: :"check-circle")) {
               I18n.t(:"admin.jiras.run.body.sections.import_result.info")
             }
           end
         end
-        if [JiraImport::STATE_REVERT_ERROR, JiraImport::STATE_IMPORTED].include?(model.status)
+        if model.status?(JiraImport::REVERT_ERROR, JiraImport::IMPORTED)
           box.with_row(mt: 3, mb: 3) do
             render(Admin::JiraImports::InfoListBoxComponent.new(
               title: I18n.t(:"admin.jiras.run.body.sections.import_result.label_results"),
@@ -265,7 +265,7 @@ See COPYRIGHT and LICENSE files for more details.
               data: { turbo_frame: "jira_import_status" }
             )) { I18n.t(:"admin.jiras.run.body.sections.import_result.button_revert") })
           end
-        elsif model.status == JiraImport::STATE_REVERTING
+        elsif model.status?(JiraImport::REVERTING)
           box.with_row(mb: 3, mt: 3) do
             render(Primer::Box.new(border: true, border_color: :accent, border_radius: 2, bg: :accent, p: 3)) do
               concat render(Primer::Beta::Spinner.new(size: :small))
@@ -274,7 +274,7 @@ See COPYRIGHT and LICENSE files for more details.
               }
             end
           end
-        elsif model.status == JiraImport::STATE_REVERTED
+        elsif model.status?(JiraImport::REVERTED)
           box.with_row(mb: 3, mt: 3) do
             render(Primer::Alpha::Banner.new(scheme: :success, icon: :"check-circle")) {
               I18n.t(:"admin.jiras.run.body.sections.import_result.label_reverted")
@@ -289,7 +289,7 @@ See COPYRIGHT and LICENSE files for more details.
             )) { I18n.t(:"admin.jiras.run.body.sections.import_result.button_done") }
           end
         end
-        if model.status == JiraImport::STATE_REVERT_ERROR
+        if model.status?(JiraImport::REVERT_ERROR)
           box.with_row(mt: 3, mb: 3) do
             render(Primer::Alpha::Banner.new(scheme: :danger, icon: :stop)) {
               model.error || I18n.t('js.error.internal')

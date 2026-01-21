@@ -136,7 +136,7 @@ en:
               title: "Review import"
           sections:
             fetch_data:
-              title: "Fetch data"
+              title: "Fetch instance meta data"
               caption_done: "Completed"
               description: "Click the button below to query the host to see what data is available to import."
               button_fetch: "Check available data from host"

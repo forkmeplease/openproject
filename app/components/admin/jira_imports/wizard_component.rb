@@ -66,7 +66,6 @@ module Admin
       def import_stats_unavailable
         [
           { label: "Relations between issues", checked: false },
-          { label: "Attachments in issues", checked: false },
           { label: "Custom workflow", checked: false },
           { label: "Users", checked: false },
           { label: "User, group and project permissions", checked: false }
