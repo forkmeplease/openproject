@@ -78,17 +78,24 @@ module Users
       [status_link].compact
     end
 
-    def status_link # rubocop:disable Metrics/AbcSize
-      # Don't show for current user
-      return if user.id == table.current_user.id
-
-      # Don't show if you don't have the permission
-      return unless table.current_user.allowed_globally?(:manage_user)
-
-      # Don't show when affected user is an admin and current user is not
-      return if user.admin? && !table.current_user.admin?
+    def status_link
+      return if user_is_current_user?
+      return unless current_user_allowed_to_manage_users?
+      return if user_is_admin_and_current_user_is_no_admin?
 
       helpers.change_user_status_links user
+    end
+
+    def user_is_current_user?
+      user.id == table.current_user.id
+    end
+
+    def current_user_allowed_to_manage_users?
+      table.current_user.allowed_globally?(:manage_user)
+    end
+
+    def user_is_admin_and_current_user_is_no_admin?
+      user.admin? && !table.current_user.admin?
     end
 
     def column_css_class(column)

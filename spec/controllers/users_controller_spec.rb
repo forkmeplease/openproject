@@ -33,6 +33,14 @@ require "work_package"
 
 RSpec.describe UsersController do
   shared_let(:admin) { create(:admin) }
+  shared_let(:user_manager) do
+    create(:user,
+           login: "user-manager",
+           mail: "user-manager@example.com",
+           firstname: "User",
+           lastname: "Manager",
+           global_permissions: %i[view_all_principals manage_user])
+  end
   shared_let(:anonymous) { User.anonymous }
 
   shared_let(:user_password) { "bob!" * 4 }
@@ -411,7 +419,7 @@ RSpec.describe UsersController do
   end
 
   describe "#change_status", with_settings: { available_languages: %w[en de], bcc_recipients: 1 } do
-    let(:acting_user) { admin }
+    let(:acting_user) { user_manager }
     let(:affected_user) { registered_user }
 
     let!(:registered_user) do
@@ -442,7 +450,7 @@ RSpec.describe UsersController do
       end
 
       context "when trying to modifiy yourself" do
-        let(:affected_user) { admin }
+        let(:affected_user) { acting_user }
 
         it "does not allow changing own status" do
           subject
@@ -452,15 +460,28 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when trying to modify an admin as non-admin" do
-        let(:acting_user) { create(:user, global_permissions: %i[view_all_principals manage_user]) }
+      context "when trying to modify an admin" do
         let(:affected_user) { create(:admin) }
 
-        it "does not allow changing the status of an admin" do
-          subject
+        context "as non-admin" do
+          it "does not allow changing the status of an admin" do
+            subject
 
-          expect(flash[:error]).to eq(I18n.t("user.error_admin_change_on_non_admin"))
-          expect(response).to redirect_to(action: :edit)
+            expect(flash[:error]).to eq(I18n.t("user.error_admin_change_on_non_admin"))
+            expect(response).to redirect_to(action: :edit)
+          end
+        end
+
+        context "as admin" do
+          let(:acting_user) { admin }
+
+          it "allows changing the status of an admin" do
+            subject
+
+            affected_user.reload
+
+            expect(affected_user).to be_locked
+          end
         end
       end
     end
@@ -513,7 +534,7 @@ RSpec.describe UsersController do
       end
 
       context "when trying to modifiy yourself" do
-        let(:affected_user) { admin }
+        let(:affected_user) { acting_user }
 
         it "does not allow changing own status" do
           subject
@@ -567,7 +588,7 @@ RSpec.describe UsersController do
       end
 
       context "when trying to modifiy yourself" do
-        let(:affected_user) { admin }
+        let(:affected_user) { acting_user }
 
         it "does not allow changing own status" do
           subject
@@ -577,15 +598,28 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when trying to modify an admin as non-admin" do
-        let(:acting_user) { create(:user, global_permissions: %i[view_all_principals manage_user]) }
+      context "when trying to modify an admin" do
         let(:affected_user) { create(:admin) }
 
-        it "does not allow changing the status of an admin" do
-          subject
+        context "as non-admin" do
+          it "does not allow changing the status of an admin" do
+            subject
 
-          expect(flash[:error]).to eq(I18n.t("user.error_admin_change_on_non_admin"))
-          expect(response).to redirect_to(action: :edit)
+            expect(flash[:error]).to eq(I18n.t("user.error_admin_change_on_non_admin"))
+            expect(response).to redirect_to(action: :edit)
+          end
+        end
+
+        context "as admin" do
+          let(:acting_user) { admin }
+
+          it "allows changing the status of an admin" do
+            subject
+
+            affected_user.reload
+
+            expect(affected_user).to be_active
+          end
         end
       end
 
@@ -613,7 +647,7 @@ RSpec.describe UsersController do
 
         it "shows the user limit reached error and recommends to upgrade" do
           subject
-          expect(flash[:error]).to match /Adding additional users will exceed the current limit.*upgrade/i
+          expect(flash[:error]).to match(/Adding additional users will exceed the current limit./i)
         end
 
         it "does not activate the user" do
@@ -642,7 +676,7 @@ RSpec.describe UsersController do
     end
 
     it "assigns users" do
-      expect(assigns(:users)).to contain_exactly(user, admin)
+      expect(assigns(:users)).to contain_exactly(user, admin, user_manager)
     end
 
     context "with a name filter" do
@@ -669,7 +703,7 @@ RSpec.describe UsersController do
       let!(:deleted_user) { create(:user_marked_for_deletion) }
 
       it "does not include this user to the users list" do
-        expect(assigns(:users)).to contain_exactly(user, admin)
+        expect(assigns(:users)).to contain_exactly(user, admin, user_manager)
       end
     end
   end
