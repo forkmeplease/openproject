@@ -216,15 +216,6 @@ RSpec.describe "Calendar sharing via ical", :js do
           successful_copy_message: 'The URL "A token name" was successfully copied to your clipboard. ' \
                                    "Paste it in your calendar client to complete the subscription."
         )
-
-        # explictly testing for success message is not working in test env, probably
-        # due to missing clipboard permissions of the headless browser
-        #
-        # expect(page).to have_content("URL copied to clipboard")
-
-        # TODO: Not able to test if the URL was actuall copied to the clipboard
-        # Tried following without success
-        # https://copyprogramming.com/howto/emulating-a-clipboard-copy-paste-with-selinum-capybara
       end
 
       it "validates the presence of a name" do
