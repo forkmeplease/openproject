@@ -290,6 +290,33 @@ RSpec.describe "Open the Meetings tab",
       end
     end
 
+    context "when the work_package is linked as an outcome" do
+      let!(:meeting) { create(:meeting, project:) }
+      let!(:other_work_package) { create(:work_package, project:, subject: "Different work package") }
+
+      let!(:meeting_agenda_item) do
+        create(:meeting_agenda_item, meeting:, work_package: other_work_package, notes: "Discussing something else")
+      end
+
+      let!(:outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, work_package:, kind: :work_package)
+      end
+
+      it "shows the meeting with 'Added as outcome' label" do
+        work_package_page.visit!
+        switch_to_meetings_tab
+
+        meetings_tab.expect_upcoming_counter_to_be(1)
+
+        page.within_test_selector("op-meeting-container-#{meeting.id}") do
+          expect(page).to have_content(meeting.title)
+          expect(page).to have_content(I18n.t(:label_added_as_outcome))
+
+          expect(page).to have_no_content(meeting_agenda_item.notes)
+        end
+      end
+    end
+
     context "when the work_package was already referenced in past meetings" do
       let!(:first_past_meeting) { create(:meeting, project:, start_time: Date.yesterday - 11.hours) }
       let!(:second_past_meeting) { create(:meeting, project:, start_time: Date.yesterday - 10.hours) }
