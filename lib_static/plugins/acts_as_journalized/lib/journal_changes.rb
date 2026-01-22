@@ -37,6 +37,7 @@ module JournalChanges
       get_cause_changes,
       get_data_changes,
       get_attachments_changes,
+      get_custom_comments_changes,
       get_custom_fields_changes,
       get_project_phases_changes,
       get_file_links_changes,
@@ -68,6 +69,20 @@ module JournalChanges
     ).single_attribute_changes(
       :filename,
       key_prefix: "attachments"
+    )
+  end
+
+  def get_custom_comments_changes
+    return unless journable.respond_to?(:custom_comments)
+
+    ::Acts::Journalized::Differ::Association.new(
+      predecessor,
+      self,
+      association: :custom_comment_journals,
+      id_attribute: :custom_field_id
+    ).single_attribute_changes(
+      :text,
+      key_prefix: "custom_comment"
     )
   end
 
