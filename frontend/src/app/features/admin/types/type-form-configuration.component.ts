@@ -108,29 +108,6 @@ export class TypeFormConfigurationComponent extends UntilDestroyedMixin implemen
     this.form = this.element.closest('form')!;
     this.submit = this.form.querySelector('.form-configuration--save')!;
 
-    // In the following we are triggering the form submit ourselves to work around
-    // a firefox shortcoming. But to avoid double submits which are sometimes not canceled fast
-    // enough, we need to memoize whether we have already submitted.
-    let submitted = false;
-
-    this.form.addEventListener('submit', (e) => {
-      if (submitted) { // Cancel if already submitted.
-        e.preventDefault();
-        e.stopPropagation();
-      } else {
-        submitted = true;
-      }
-    });
-
-    // Capture mousedown on button because firefox breaks blur on click
-    this.submit.addEventListener('mousedown', () => {
-      setTimeout(() => {
-        if (!submitted) {
-          this.form.requestSubmit();
-        }
-      }, 50);
-    });
-
     // Capture regular form submit
     this.form.addEventListener('submit', this.eventListeners.typeFormUpdater);
 
