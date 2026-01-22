@@ -36,5 +36,8 @@ Rails.application.config.to_prepare do
   # Register the update handler per model
   require_relative "../../lib/open_project/inplace_edit/handlers/default_update"
   require_relative "../../lib/open_project/inplace_edit/handlers/project_update"
-  OpenProject::InplaceEdit::UpdateRegistry.register(Project, OpenProject::InplaceEdit::Handlers::ProjectUpdate)
+  require_relative "../../app/contracts/projects/update_contract"
+  OpenProject::InplaceEdit::UpdateRegistry.register(Project,
+                                                    handler: OpenProject::InplaceEdit::Handlers::ProjectUpdate,
+                                                    contract: Projects::UpdateContract)
 end

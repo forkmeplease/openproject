@@ -32,7 +32,7 @@ module OpenProject
   module InplaceEdit
     module Handlers
       class ProjectUpdate
-        def self.call(model:, attribute:, params:, user:)
+        def self.call(model:, params:, user:)
           call = ::Projects::UpdateService
                    .new(model:, user:)
                    .call(params)

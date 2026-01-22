@@ -32,8 +32,9 @@ module OpenProject
   module InplaceEdit
     module Handlers
       class DefaultUpdate
-        def self.call(model:, attribute:, params:, user:)
-          model.update!(params.slice(attribute))
+        def self.call(model:, params:, user:)
+          BaseServices::Update.new(model:, user:)
+                              .call(params)
         end
       end
     end

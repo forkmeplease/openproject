@@ -34,12 +34,26 @@ module OpenProject
       @registry = {}
 
       class << self
-        def register(model_class, handler)
-          @registry[model_class.name] = handler
+        def register(model_class, handler:, contract:)
+          @registry[model_class.name] = {
+            handler: handler,
+            contract: contract
+          }
         end
 
-        def fetch(model)
-          @registry.fetch(model.class.name, OpenProject::InplaceEdit::Handlers::DefaultUpdate)
+        def fetch_handler(model)
+          entry = @registry.fetch(model.class.name)
+
+          entry ? entry[:handler] : OpenProject::InplaceEdit::Handlers::DefaultUpdate
+        end
+
+        def fetch_contract(model)
+          entry = @registry.fetch(model.class.name)
+          entry && entry[:contract]
+        end
+
+        def registered?(model_class)
+          @registry.key?(model_class)
         end
       end
     end

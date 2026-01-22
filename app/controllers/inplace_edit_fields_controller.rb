@@ -36,11 +36,10 @@ class InplaceEditFieldsController < ApplicationController
   no_authorization_required! :update
 
   def update
-    handler = OpenProject::InplaceEdit::UpdateRegistry.fetch(@model)
+    handler = OpenProject::InplaceEdit::UpdateRegistry.fetch_handler(@model)
 
     success = handler.call(
       model: @model,
-      attribute: @attribute,
       params: permitted_params,
       user: current_user
     )
@@ -62,12 +61,23 @@ class InplaceEditFieldsController < ApplicationController
   private
 
   def find_model
-    @model =
-      params[:model]
-        .constantize
-        .find(params[:id])
-  rescue NameError, ActiveRecord::RecordNotFound
+    model_class = resolve_model_class(params[:model])
+    @model = model_class.visible
+                        .find(params[:id])
+  rescue NameError, ActiveRecord::RecordNotFound, ArgumentError, NoMethodError
     head :not_found
+  end
+
+  def resolve_model_class(model_param)
+    return nil if model_param.blank?
+
+    class_name = model_param.to_s.camelize
+    # Only allow models that are registered for inplace updates.
+    unless OpenProject::InplaceEdit::UpdateRegistry.registered?(class_name)
+      raise ArgumentError, "Unsupported model for inplace edit"
+    end
+
+    class_name.constantize
   end
 
   def set_attribute

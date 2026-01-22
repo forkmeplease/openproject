@@ -44,7 +44,23 @@ module OpenProject
 
       def field_component(form)
         klass = OpenProject::InplaceEdit::FieldRegistry.fetch(attribute)
-        klass.new(form:, attribute:, model:, **@system_arguments)
+        klass.new(form:, attribute:, model:, **merged_system_arguments)
+      end
+
+      private
+
+      def merged_system_arguments
+        @system_arguments.merge(
+          disabled: !writable?
+        )
+      end
+
+      def writable?
+        contract_class = OpenProject::InplaceEdit::UpdateRegistry.fetch_contract(model)
+
+        return false unless contract_class
+
+        contract_class.new(model, User.current).writable?(attribute)
       end
     end
   end
