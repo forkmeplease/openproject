@@ -4,8 +4,8 @@ class JiraFetchAndImportProjectsJob < ApplicationJob
     JiraFetchProjectsJob.perform_now(jira_import_id)
     JiraImportProjectsJob.perform_now(jira_import_id)
     
-    jira_import.update!(status: JiraImport::STATE_IMPORTED, job_id: nil)
+    jira_import.update!(status: JiraImport::IMPORTED, job_id: nil)
   rescue StandardError => e
-    jira_import.update!(status: JiraImport::STATE_IMPORT_ERROR, job_id: nil, error: e.message)
+    jira_import.update!(status: JiraImport::IMPORT_ERROR, job_id: nil, error: e.message)
   end
 end
