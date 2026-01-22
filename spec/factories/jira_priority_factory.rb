@@ -28,15 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class AddErrorJobIdAndTimestampsToJiraImports < ActiveRecord::Migration[8.0]
-  def change
-    change_table :jira_imports, bulk: true do |t|
-      t.string :error unless column_exists?(:jira_imports, :error)
-      t.string :job_id
-      t.jsonb :available, default: {}
+FactoryBot.define do
+  factory :jira_priority do
 
-      # Add created_at and updated_at; allow nulls for existing records.
-      t.timestamps default: -> { "CURRENT_TIMESTAMP" }
-    end
   end
 end

@@ -28,12 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
+FactoryBot.define do
+  factory :jira_import do
 
-RSpec.describe JiraImportDataJob do
-  it do
-    jira = create(:jira)
-    jira_user = create(:jira_user)
-    described_class.perform_now(1)
   end
 end

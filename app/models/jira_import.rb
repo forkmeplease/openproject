@@ -30,6 +30,7 @@
 
 class JiraImport < ApplicationRecord
   belongs_to :jira
+  belongs_to :author, class_name: "User"
 
   INITIAL = "initial"
   INSTANCE_META_FETCHING = "instance-meta-fetching"

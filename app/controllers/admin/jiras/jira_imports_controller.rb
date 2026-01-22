@@ -62,6 +62,8 @@ module Admin
             import
           when "configure"
             configure
+          when "revert"
+            revert
           end
         end
 
@@ -120,8 +122,8 @@ module Admin
       def import
         return unless @jira_import.status?(JiraImport::IMPORT_ERROR, JiraImport::PROJECTS_META_DONE)
 
-        # job = JiraImportDataJob.perform_later(@jira_import.id)
-        @jira_import.update!(status: JiraImport::IMPORTING)
+        job = JiraFetchAndImportProjectsJob.perform_later(@jira_import.id)
+        @jira_import.update!(status: JiraImport::IMPORTING, job_id: job.job_id)
       end
 
       def configure
@@ -133,7 +135,8 @@ module Admin
       def revert
         return unless @jira_import.status?(JiraImport::REVERT_ERROR, JiraImport::IMPORTED)
 
-        @jira_import.update!(status: JiraImport::REVERTING)
+        job = JiraRevertJiraImportJob.perform_later(@jira_import.id)
+        @jira_import.update!(status: JiraImport::REVERTING, job_id: job.job_id)
       end
 
       def render_wizard

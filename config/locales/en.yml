@@ -3449,7 +3449,7 @@ en:
   label_languages: "Languages"
   label_locale: "Language and region"
   label_jump_to_a_project: "Jump to a project..."
-  label_jira_import: "Jira import"
+  label_jira_import: "Jira"
   label_keyword_plural: "Keywords"
   label_language_based: "Based on user's language"
   label_last_activity: "Last activity"
