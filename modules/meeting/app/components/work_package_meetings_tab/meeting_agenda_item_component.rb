@@ -42,5 +42,12 @@ module WorkPackageMeetingsTab
     def work_package_is_agenda_item?
       @meeting_agenda_item.work_package_id == @work_package.id
     end
+
+    def outcome_heading(outcomes, index)
+      heading = t(:label_agenda_outcome)
+      heading += " #{index + 1}" if outcomes.size > 1
+
+      heading
+    end
   end
 end

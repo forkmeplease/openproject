@@ -164,10 +164,12 @@ class WorkPackageMeetingsTabController < ApplicationController
   end
 
   def agenda_items_linked_to_work_package
-    MeetingAgendaItem.where(
-      "meeting_agenda_items.work_package_id = :wp_id OR meeting_agenda_items.id IN (SELECT meeting_agenda_item_id FROM meeting_outcomes WHERE meeting_outcomes.work_package_id = :wp_id)", # rubocop:disable Layout/LineLength
-      wp_id: @work_package.id
-    )
+    MeetingAgendaItem.where(<<~SQL.squish, wp_id: @work_package.id)
+      meeting_agenda_items.work_package_id = :wp_id OR
+      meeting_agenda_items.id IN (
+        SELECT meeting_agenda_item_id FROM meeting_outcomes WHERE meeting_outcomes.work_package_id = :wp_id
+      )
+    SQL
   end
 
   def sort_clause(direction)
