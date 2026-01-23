@@ -114,11 +114,13 @@ module MeetingAgendaItems
                      tag: :button,
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
-                       href: edit_project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                                   @meeting_agenda_item.meeting,
-                                                                   @meeting_agenda_item,
-                                                                   presentation_mode: @presentation_mode,
-                                                                   current_occurrence: @current_occurrence),
+                       href: edit_project_meeting_agenda_item_path(
+                         @meeting_agenda_item.meeting.project,
+                         @meeting_agenda_item.meeting,
+                         @meeting_agenda_item,
+                         presentation_mode: @presentation_mode,
+                         current_occurrence: @current_occurrence
+                       ),
                        method: "GET"
                      } }) do |item|
         item.with_leading_visual_icon(icon: :pencil)
@@ -130,11 +132,13 @@ module MeetingAgendaItems
                      tag: :button,
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
-                       href: edit_project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                                   @meeting_agenda_item.meeting,
-                                                                   @meeting_agenda_item,
-                                                                   display_notes_input: true,
-                                                                   current_occurrence: @current_occurrence),
+                       href: edit_project_meeting_agenda_item_path(
+                         @meeting_agenda_item.meeting.project,
+                         @meeting_agenda_item.meeting,
+                         @meeting_agenda_item,
+                         display_notes_input: true,
+                         current_occurrence: @current_occurrence
+                       ),
                        method: "GET"
                      } }) do |item|
         item.with_leading_visual_icon(icon: :note)
@@ -157,11 +161,13 @@ module MeetingAgendaItems
       submenu.with_item(label: t("label_write_outcome"),
                         tag: :button,
                         content_arguments: outcome_action_data(
-                          new_project_meeting_outcome_path(@meeting_agenda_item.meeting.project,
-                                                           @meeting_agenda_item.meeting,
-                                                           meeting_agenda_item_id: @meeting_agenda_item&.id,
-                                                           kind: :information,
-                                                           current_occurrence: @current_occurrence)
+                          new_project_meeting_outcome_path(
+                            @meeting_agenda_item.meeting.project,
+                            @meeting_agenda_item.meeting,
+                            meeting_agenda_item_id: @meeting_agenda_item&.id,
+                            kind: :information,
+                            current_occurrence: @current_occurrence
+                          )
                         ))
     end
 
@@ -169,11 +175,13 @@ module MeetingAgendaItems
       submenu.with_item(label: t("label_existing_work_package"),
                         tag: :button,
                         content_arguments: outcome_action_data(
-                          new_project_meeting_outcome_path(@meeting_agenda_item.meeting.project,
-                                                           @meeting_agenda_item.meeting,
-                                                           meeting_agenda_item_id: @meeting_agenda_item&.id,
-                                                           kind: :work_package,
-                                                           current_occurrence: @current_occurrence)
+                          new_project_meeting_outcome_path(
+                            @meeting_agenda_item.meeting.project,
+                            @meeting_agenda_item.meeting,
+                            meeting_agenda_item_id: @meeting_agenda_item&.id,
+                            kind: :work_package,
+                            current_occurrence: @current_occurrence
+                          )
                         ))
     end
 
@@ -183,9 +191,11 @@ module MeetingAgendaItems
       submenu.with_item(label: t("label_work_package_new"),
                         tag: :button,
                         content_arguments: outcome_action_data(
-                          create_work_package_dialog_project_meeting_outcomes_path(@meeting.project,
-                                                                                   @meeting,
-                                                                                   meeting_agenda_item_id: @meeting_agenda_item.id)
+                          create_work_package_dialog_project_meeting_outcomes_path(
+                            @meeting.project,
+                            @meeting,
+                            meeting_agenda_item_id: @meeting_agenda_item.id
+                          )
                         ))
     end
 
@@ -220,7 +230,7 @@ module MeetingAgendaItems
       )
     end
 
-    def next_meeting_action_item(menu, label:, path_helper:, icon:)
+    def next_meeting_action_item(menu, label:, path_helper:, icon:) # rubocop:disable Metrics/AbcSize
       return unless editable?
       return if in_template?
       return if @series.nil?
@@ -263,10 +273,12 @@ module MeetingAgendaItems
       label = @meeting_agenda_item.work_package_id.present? ? wp_agenda_item_delete_label : t(:text_destroy)
       menu.with_item(label:,
                      scheme: :danger,
-                     href: project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                            @meeting_agenda_item.meeting,
-                                                            @meeting_agenda_item,
-                                                            current_occurrence: @current_occurrence),
+                     href: project_meeting_agenda_item_path(
+                       @meeting_agenda_item.meeting.project,
+                       @meeting_agenda_item.meeting,
+                       @meeting_agenda_item,
+                       current_occurrence: @current_occurrence
+                     ),
                      form_arguments: {
                        method: :delete, data: { turbo_confirm: t(:text_are_you_sure), "turbo-stream": true }
                      }) do |item|
@@ -283,11 +295,13 @@ module MeetingAgendaItems
                      tag: :button,
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
-                       href: move_project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                                   @meeting_agenda_item.meeting,
-                                                                   @meeting_agenda_item,
-                                                                   move_to:,
-                                                                   current_occurrence: @current_occurrence)
+                       href: move_project_meeting_agenda_item_path(
+                         @meeting_agenda_item.meeting.project,
+                         @meeting_agenda_item.meeting,
+                         @meeting_agenda_item,
+                         move_to:,
+                         current_occurrence: @current_occurrence
+                       )
                      } }) do |item|
         item.with_leading_visual_icon(icon:)
       end
@@ -300,11 +314,13 @@ module MeetingAgendaItems
                      tag: :button,
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
-                       href: drop_project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                                   @meeting_agenda_item.meeting,
-                                                                   @meeting_agenda_item,
-                                                                   type: :to_backlog,
-                                                                   current_occurrence: @current_occurrence)
+                       href: drop_project_meeting_agenda_item_path(
+                         @meeting_agenda_item.meeting.project,
+                         @meeting_agenda_item.meeting,
+                         @meeting_agenda_item,
+                         type: :to_backlog,
+                         current_occurrence: @current_occurrence
+                       )
                      } }) do |item|
         item.with_leading_visual_icon(icon: "discussion-outdated")
       end
@@ -318,11 +334,13 @@ module MeetingAgendaItems
                      tag: :button,
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
-                       href: drop_project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                                   @meeting_agenda_item.meeting,
-                                                                   @meeting_agenda_item,
-                                                                   type: :to_current,
-                                                                   current_occurrence: @current_occurrence)
+                       href: drop_project_meeting_agenda_item_path(
+                         @meeting_agenda_item.meeting.project,
+                         @meeting_agenda_item.meeting,
+                         @meeting_agenda_item,
+                         type: :to_current,
+                         current_occurrence: @current_occurrence
+                       )
                      } }) do |item|
         item.with_leading_visual_icon(icon: "cross-reference")
       end
@@ -336,10 +354,12 @@ module MeetingAgendaItems
                      tag: :button,
                      content_arguments: { data: {
                        action: "click->meetings--submit#intercept",
-                       href: move_to_section_dialog_project_meeting_agenda_item_path(@meeting_agenda_item.meeting.project,
-                                                                                     @meeting_agenda_item.meeting,
-                                                                                     @meeting_agenda_item,
-                                                                                     current_occurrence: @current_occurrence)
+                       href: move_to_section_dialog_project_meeting_agenda_item_path(
+                         @meeting_agenda_item.meeting.project,
+                         @meeting_agenda_item.meeting,
+                         @meeting_agenda_item,
+                         current_occurrence: @current_occurrence
+                       )
                      } }) do |item|
         item.with_leading_visual_icon(icon: "op-move")
       end
