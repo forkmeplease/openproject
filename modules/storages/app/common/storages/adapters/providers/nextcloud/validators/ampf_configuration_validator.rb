@@ -57,7 +57,7 @@ module Storages
 
             def group_folder_app_checks
               required_version = SemanticVersion.parse(
-                nextcloud_dependencies.dig("dependencies", "group_folders_app", "min_version")
+                nextcloud_dependencies.dig("dependencies", "team_folders_app", "min_version")
               )
 
               capabilities = Registry["nextcloud.queries.capabilities"].call(storage: @storage, auth_strategy: noop).value!
