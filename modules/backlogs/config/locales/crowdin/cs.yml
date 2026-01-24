@@ -41,7 +41,7 @@ cs:
         sprint:
           cannot_end_before_it_starts: "Sprint nemůže končit dříve, než začne."
   attributes:
-    task_type: "Task type"
+    task_type: "Typ úlohy"
   backlogs:
     add_new_story: "Nový příběh"
     any: "jakákoliv"
@@ -57,7 +57,7 @@ cs:
     hours: "Hodiny"
     impediment: "Impediment"
     label_versions_default_fold_state: " Verze zobrazit srolovaně"
-    caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."
+    caption_versions_default_fold_state: "Verze se při prohlížení nevyřízených žádostí ve výchozím nastavení nerozbalují. Každou z nich je třeba rozbalit ručně."
     work_package_is_closed: "Pracovní balíček je hotov, když"
     label_is_done_status: "Stav %{status_name} znamená hotovo"
     no_burndown_data: "Nejsou k dispozici žádná data o vypálení. Je nutné mít nastavena data zahájení a ukončení sprintu."
@@ -129,10 +129,10 @@ cs:
   label_points_burn_up: "Nahoru"
   label_product_backlog: "nevyřízené produkty"
   label_select_all: "Vybrat vše"
-  label_select_type: "Select a type"
-  label_select_types: "Select types"
-  label_selected_type: "Selected type"
-  label_selected_types: "Selected types"
+  label_select_type: "Vyberte typ"
+  label_select_types: "Vyberte typy"
+  label_selected_type: "Vybraný typ"
+  label_selected_types: "Vybrané typy"
   label_sprint_backlog: "nevyřízené sprint"
   label_sprint_cards: "Exportovat karty"
   label_sprint_impediments: "Běh impedimenty"
@@ -170,6 +170,6 @@ cs:
   version_settings_display_option_none: "žádný"
   version_settings_display_option_right: "vpravo"
   setting_plugin_openproject_backlogs_story_types_caption: |
-    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+    .
   setting_plugin_openproject_backlogs_task_type_caption: |
     Type used for story tasks. Must differ from story types.

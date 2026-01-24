@@ -532,6 +532,7 @@ tr:
   label_agenda_outcome_actions: "Gündem sonuçları eylemleri"
   label_agenda_outcome_edit: "Sonuç düzenle"
   label_agenda_outcome_delete: "Sonuç kaldır"
+  label_added_as_outcome: "Added as outcome"
   label_write_outcome: "Write outcome"
   label_existing_work_package: "Existing work package"
   text_outcome_not_editable_anymore: "Bu sonuç artık düzenlenemez."

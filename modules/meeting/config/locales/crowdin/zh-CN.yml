@@ -525,6 +525,7 @@ zh-CN:
   label_agenda_outcome_actions: "议程成果行动"
   label_agenda_outcome_edit: "编辑成果"
   label_agenda_outcome_delete: "删除成果"
+  label_added_as_outcome: "Added as outcome"
   label_write_outcome: "Write outcome"
   label_existing_work_package: "Existing work package"
   text_outcome_not_editable_anymore: "此成果已不可编辑。"
