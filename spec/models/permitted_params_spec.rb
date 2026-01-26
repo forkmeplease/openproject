@@ -102,7 +102,7 @@ RSpec.describe PermittedParams do
       acceptable_params = %w(time_zone comments_sorting
                              warn_on_leaving_unsaved)
 
-      acceptable_params.index_with { |_x| "value" }
+      acceptable_params.index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -111,7 +111,7 @@ RSpec.describe PermittedParams do
   describe "#news" do
     let(:attribute) { :news }
     let(:hash) do
-      %w(title summary description).index_with { |_x| "value" }.to_h
+      %w(title summary description).index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -120,7 +120,7 @@ RSpec.describe PermittedParams do
   describe "#comment" do
     let(:attribute) { :comment }
     let(:hash) do
-      %w(commented author comments).index_with { |_x| "value" }.to_h
+      %w(commented author comments).index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -129,7 +129,7 @@ RSpec.describe PermittedParams do
   describe "#watcher" do
     let(:attribute) { :watcher }
     let(:hash) do
-      %w(watchable user user_id).index_with { |_x| "value" }.to_h
+      %w(watchable user user_id).index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -138,7 +138,7 @@ RSpec.describe PermittedParams do
   describe "#reply" do
     let(:attribute) { :reply }
     let(:hash) do
-      %w(content subject).index_with { |_x| "value" }.to_h
+      %w(content subject).index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -147,7 +147,7 @@ RSpec.describe PermittedParams do
   describe "#wiki" do
     let(:attribute) { :wiki }
     let(:hash) do
-      %w(start_page).index_with { |_x| "value" }.to_h
+      %w(start_page).index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -165,7 +165,7 @@ RSpec.describe PermittedParams do
   describe "#category" do
     let(:attribute) { :category }
     let(:hash) do
-      %w(name assigned_to_id).index_with { |_x| "value" }.to_h
+      %w(name assigned_to_id).index_with("value")
     end
 
     it_behaves_like "allows params"
@@ -177,7 +177,7 @@ RSpec.describe PermittedParams do
     context "with whitelisted params" do
       let(:hash) do
         %w(name description effective_date due_date
-           start_date wiki_page_title status sharing).index_with { |_x| "value" }.to_h
+           start_date wiki_page_title status sharing).index_with("value")
       end
 
       it_behaves_like "allows params"
@@ -201,7 +201,7 @@ RSpec.describe PermittedParams do
 
     context "with no instance passed" do
       let(:expected_allowed_params) do
-        %w(subject content forum_id).index_with { |_x| "value" }.to_h
+        %w(subject content forum_id).index_with("value")
       end
 
       let(:hash) do
