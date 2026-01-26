@@ -161,10 +161,10 @@ module MeetingAgendaItems
       submenu.with_item(label: t("label_write_outcome"),
                         tag: :button,
                         content_arguments: outcome_action_data(
-                          new_project_meeting_outcome_path(
+                          new_project_meeting_agenda_item_outcome_path(
                             @meeting_agenda_item.meeting.project,
                             @meeting_agenda_item.meeting,
-                            meeting_agenda_item_id: @meeting_agenda_item&.id,
+                            @meeting_agenda_item,
                             kind: :information,
                             current_occurrence: @current_occurrence
                           )
@@ -175,10 +175,10 @@ module MeetingAgendaItems
       submenu.with_item(label: t("label_existing_work_package"),
                         tag: :button,
                         content_arguments: outcome_action_data(
-                          new_project_meeting_outcome_path(
+                          new_project_meeting_agenda_item_outcome_path(
                             @meeting.project,
                             @meeting,
-                            meeting_agenda_item_id: @meeting_agenda_item&.id,
+                            @meeting_agenda_item,
                             kind: :work_package,
                             current_occurrence: @current_occurrence
                           )
@@ -191,10 +191,10 @@ module MeetingAgendaItems
       submenu.with_item(label: t("label_work_package_new"),
                         tag: :button,
                         content_arguments: outcome_action_data(
-                          create_work_package_dialog_project_meeting_outcomes_path(
+                          create_work_package_project_meeting_agenda_item_outcomes_path(
                             @meeting.project,
                             @meeting,
-                            meeting_agenda_item_id: @meeting_agenda_item.id
+                            @meeting_agenda_item
                           )
                         ))
     end

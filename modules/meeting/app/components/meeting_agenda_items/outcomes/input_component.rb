@@ -62,23 +62,30 @@ module MeetingAgendaItems::Outcomes
     end
 
     def submit_path
-      if @meeting_outcome.id.present?
-        project_meeting_outcome_path(@meeting.project, @meeting, @meeting_outcome.id, format: :turbo_stream)
+      if @meeting_outcome.persisted?
+        project_meeting_agenda_item_outcome_path(@meeting.project,
+                                                 @meeting,
+                                                 @meeting_agenda_item,
+                                                 @meeting_outcome,
+                                                 format: :turbo_stream)
       else
-        project_meeting_outcomes_path(@meeting.project,
-                                      @meeting,
-                                      meeting_agenda_item_id: @meeting_agenda_item.id,
-                                      format: :turbo_stream)
+        project_meeting_agenda_item_outcomes_path(@meeting.project,
+                                                  @meeting,
+                                                  @meeting_agenda_item,
+                                                  format: :turbo_stream)
       end
     end
 
     def cancel_path
-      if @meeting_outcome.id.present?
-        cancel_edit_project_meeting_outcome_path(@meeting.project, @meeting, @meeting_outcome)
+      if @meeting_outcome.persisted?
+        cancel_edit_project_meeting_agenda_item_outcome_path(@meeting.project,
+                                                             @meeting,
+                                                             @meeting_agenda_item,
+                                                             @meeting_outcome)
       else
-        cancel_new_project_meeting_outcomes_path(@meeting.project,
-                                                 @meeting,
-                                                 meeting_agenda_item_id: @meeting_agenda_item.id)
+        cancel_new_project_meeting_agenda_item_outcomes_path(@meeting.project,
+                                                             @meeting,
+                                                             @meeting_agenda_item)
       end
     end
   end

@@ -36,15 +36,14 @@ class MeetingOutcomesController < ApplicationController
   authorize_with_permission :add_work_packages, only: %i[create_work_package_dialog create_work_package]
 
   before_action :set_meeting
-  before_action :set_meeting_agenda_item, except: %i[edit cancel_edit update destroy]
+  before_action :set_meeting_agenda_item
   before_action :set_meeting_outcome, except: %i[new cancel_new create create_work_package_dialog create_work_package]
 
   def new
     update_meeting_metadata_via_turbo_stream
 
     if @meeting.in_progress? && !@meeting_agenda_item.in_backlog?
-      kind = params[:kind].to_sym
-      component = build_outcome_form_component(kind)
+      component = build_outcome_form_component
 
       replace_via_turbo_stream(
         component:,
@@ -183,7 +182,7 @@ class MeetingOutcomesController < ApplicationController
   end
 
   def set_meeting_agenda_item
-    @meeting_agenda_item = @meeting.agenda_items.find(params[:meeting_agenda_item_id])
+    @meeting_agenda_item = @meeting.agenda_items.find(params[:agenda_item_id])
   end
 
   def set_meeting_outcome
@@ -197,8 +196,12 @@ class MeetingOutcomesController < ApplicationController
                        end
   end
 
-  def build_outcome_form_component(kind)
-    component_class = kind == :work_package ? MeetingAgendaItems::Outcomes::WorkPackageFormComponent : MeetingAgendaItems::Outcomes::InputComponent
+  def build_outcome_form_component
+    component_class = if params[:kind] == "work_package"
+                        MeetingAgendaItems::Outcomes::WorkPackageFormComponent
+                      else
+                        MeetingAgendaItems::Outcomes::InputComponent
+                      end
 
     component_class.new(
       meeting: @meeting,

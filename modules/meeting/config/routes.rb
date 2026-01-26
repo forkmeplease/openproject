@@ -92,6 +92,18 @@ Rails.application.routes.draw do
           put :move_to_section_dialog
           post :move_to_section
         end
+
+        resources :outcomes, controller: "meeting_outcomes" do
+          collection do
+            get :cancel_new
+            get :create_work_package_dialog
+            post :create_work_package
+          end
+
+          member do
+            get :cancel_edit
+          end
+        end
       end
 
       resources :sections, controller: "meeting_sections" do
@@ -104,18 +116,6 @@ Rails.application.routes.draw do
           post :cancel_edit
           put :drop
           put :move
-        end
-      end
-
-      resources :outcomes, controller: "meeting_outcomes" do
-        collection do
-          get :new, action: :new, as: :new
-          get :cancel_new
-          get :create_work_package_dialog
-          post :create_work_package
-        end
-        member do
-          get :cancel_edit
         end
       end
 
