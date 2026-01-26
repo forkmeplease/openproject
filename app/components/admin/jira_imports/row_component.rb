@@ -42,12 +42,9 @@ module Admin::JiraImports
     end
 
     def status
-      render(
-        Primer::Beta::Text.new(
-          font_weight: :bold,
-          pl: 2
-        )
-      ) { model.status.to_s }
+      render(Primer::Beta::Label.new(size: :large, inline: true, scheme: model.status_color_scheme)) do
+        I18n.t(model.status.to_s, default: "", scope: "admin.jira.run.status")
+      end
     end
 
     def last_changed

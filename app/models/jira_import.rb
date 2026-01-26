@@ -43,6 +43,7 @@ class JiraImport < ApplicationRecord
   IMPORTING = "importing"
   IMPORT_ERROR = "import-error"
   IMPORTED = "imported"
+  COMPLETED = "completed"
   REVERTING = "reverting"
   REVERT_ERROR = "revert-error"
   REVERTED = "reverted"
@@ -59,6 +60,7 @@ class JiraImport < ApplicationRecord
     IMPORTING,
     IMPORT_ERROR,
     IMPORTED,
+    COMPLETED,
     REVERTING,
     REVERT_ERROR,
     REVERTED
@@ -82,6 +84,19 @@ class JiraImport < ApplicationRecord
 
   def status?(*check_statuses)
     check_statuses.include?(status)
+  end
+
+  def status_color_scheme
+    case status
+    when IMPORT_ERROR, REVERT_ERROR, INSTANCE_META_ERROR, PROJECTS_META_ERROR
+      :danger
+    when IMPORTED, COMPLETED, REVERTED
+      :success
+    when INSTANCE_META_FETCHING, PROJECTS_META_FETCHING, IMPORTING, REVERTING
+      :accent
+    else
+      :attention
+    end
   end
 
   def status_running?

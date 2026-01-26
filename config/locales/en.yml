@@ -146,6 +146,22 @@ en:
           description: "You can import different sets of data with each import run. It is possible to undo an import run immediately after but not afterwards."
           button_import_run: "Import run"
           button_edit_configuration: "Edit configuration"
+        status:
+          initial: "Start"
+          instance-meta-fetching: "Fetching meta data"
+          instance-meta-error: "Error"
+          instance-meta-done: "Meta data fetched"
+          configuring: "Select scope"
+          projects-meta-fetching: "Fetching project data"
+          projects-meta-error: "Error"
+          projects-meta-done: "Data gatherd"
+          importing: "In progress"
+          import-error: "Error"
+          imported: "Preview mode"
+          reverting: "Reverting"
+          revert-error: "Error"
+          reverted: "Reverted"
+          completed: "Completed"
         wizard:
           parts:
             projects:
