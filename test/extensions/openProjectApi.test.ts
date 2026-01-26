@@ -8,7 +8,7 @@ describe("OpenProjectApi", () => {
 
   beforeEach(() => {
     fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
+    vi.stubGlobal("fetch", fetchMock);
   });
 
   afterEach(() => {
