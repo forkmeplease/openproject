@@ -151,22 +151,22 @@ Rails.application.routes.draw do
         get :end_series_dialog
       end
     end
-  end
 
-  resources :work_packages, only: %i[] do
-    resources :meetings, only: %i[] do
-      collection do
-        resources :tab, only: %i[index], controller: "work_package_meetings_tab", as: "meetings_tab" do
-          get :count, on: :collection
+    resources :work_packages, only: %i[] do
+      resources :meetings, only: %i[] do
+        collection do
+          resources :tab, only: %i[index], controller: "work_package_meetings_tab", as: "meetings_tab" do
+            get :count, on: :collection
+          end
         end
       end
-    end
 
-    resources :meeting_agenda_items, only: %i[] do
-      collection do
-        get :dialog, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting_dialog
-        post :create, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting
-        get :refresh_form, controller: "work_package_meetings_tab", action: :refresh_form
+      resources :meeting_agenda_items, only: %i[] do
+        collection do
+          get :dialog, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting_dialog
+          post :create, controller: "work_package_meetings_tab", action: :add_work_package_to_meeting
+          get :refresh_form, controller: "work_package_meetings_tab", action: :refresh_form
+        end
       end
     end
   end
