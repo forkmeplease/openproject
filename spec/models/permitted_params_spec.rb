@@ -61,7 +61,7 @@ RSpec.describe PermittedParams do
     include_context "with prepare params comparison"
 
     it do
-      expected = defined?(expected_allowed_params) ? expected_allowed_params : hash
+      expected = defined?(expected_permitted) ? expected_permitted : hash
       expect(subject).to eq(expected)
     end
   end
@@ -200,12 +200,12 @@ RSpec.describe PermittedParams do
     let(:attribute) { :message }
 
     context "with no instance passed" do
-      let(:expected_allowed_params) do
+      let(:expected_permitted) do
         %w(subject content forum_id).index_with("value")
       end
 
       let(:hash) do
-        expected_allowed_params.merge(evil: "true", sticky: "true", locked: "true")
+        expected_permitted.merge(evil: "true", sticky: "true", locked: "true")
       end
 
       it_behaves_like "allows params"
@@ -219,7 +219,7 @@ RSpec.describe PermittedParams do
 
     context "with project instance passed" do
       let(:project) { instance_double(Project) }
-      let(:expected_allowed_params) do
+      let(:expected_permitted) do
         { "subject" => "value",
           "content" => "value",
           "forum_id" => "value",
@@ -228,7 +228,7 @@ RSpec.describe PermittedParams do
       end
 
       let(:hash) do
-        ActionController::Parameters.new("message" => expected_allowed_params.merge(evil: "true"))
+        ActionController::Parameters.new("message" => expected_permitted.merge(evil: "true"))
       end
 
       before do
@@ -240,7 +240,7 @@ RSpec.describe PermittedParams do
       subject { described_class.new(hash, user).message(project).to_h }
 
       it do
-        expect(subject).to eq(expected_allowed_params)
+        expect(subject).to eq(expected_permitted)
       end
     end
   end
@@ -268,7 +268,7 @@ RSpec.describe PermittedParams do
 
       context "with empty status_code" do
         let(:hash) { { "status_code" => "" } }
-        let(:expected_allowed_params) { { "status_code" => nil } }
+        let(:expected_permitted) { { "status_code" => nil } }
 
         it_behaves_like "allows params"
       end
@@ -316,7 +316,7 @@ RSpec.describe PermittedParams do
 
     context "with dependencies with empty values" do
       let(:hash) { { "dependencies" => ["", " "] } }
-      let(:expected_allowed_params) { { "dependencies" => [] } }
+      let(:expected_permitted) { { "dependencies" => [] } }
 
       it_behaves_like "allows params"
     end
@@ -347,7 +347,7 @@ RSpec.describe PermittedParams do
 
       context "with empty status_code" do
         let(:hash) { { "status_code" => "" } }
-        let(:expected_allowed_params) { { "status_code" => nil } }
+        let(:expected_permitted) { { "status_code" => nil } }
 
         it_behaves_like "allows params"
       end
@@ -368,7 +368,7 @@ RSpec.describe PermittedParams do
       { "type_ids" => ["1", "", "2"] }
     end
 
-    let(:expected_allowed_params) do
+    let(:expected_permitted) do
       [1, 2]
     end
 
@@ -377,7 +377,7 @@ RSpec.describe PermittedParams do
     it do
       actual = described_class.new(params, user).send(attribute)
 
-      expect(actual).to eq(expected_allowed_params)
+      expect(actual).to eq(expected_permitted)
     end
   end
 
@@ -597,7 +597,7 @@ RSpec.describe PermittedParams do
         { "activity_id" => "6", "active" => "1" }
       ]
     end
-    let(:expected_allowed_params) do
+    let(:expected_permitted) do
       [
         ActionController::Parameters.new("activity_id" => "5", "active" => "0").permit!,
         ActionController::Parameters.new("activity_id" => "6", "active" => "1").permit!
