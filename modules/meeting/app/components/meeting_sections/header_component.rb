@@ -147,6 +147,7 @@ module MeetingSections
         label: t("label_agenda_item_work_package_add"),
         href: new_project_meeting_agenda_item_path(@meeting_section.meeting.project,
                                                    @meeting_section.meeting,
+                                                   type: "work_package",
                                                    meeting_section_id: @meeting_section&.id),
         content_arguments: {
           data: { "turbo-stream": true, "test-selector": "meeting-section-add-work-package-from-menu" }
