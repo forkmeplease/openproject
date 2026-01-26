@@ -60,12 +60,12 @@ export class OpenProjectApi implements Extension {
     const { tokenExpiresAt } = data.context;
 
     if (!tokenExpiresAt) {
-      printLog("[Missing tokenExpiresAt] Closing connection");
+      printLog("[beforeHandleMessage] Missing tokenExpiresAt, closing connection");
       throw TokenExpiryMissing;
     }
 
     if (tokenExpiresAt <= new Date()) {
-      printLog("[Token Expired] Closing connection");
+      printLog("[beforeHandleMessage] Token expired, closing connection");
       throw TokenExpired;
     }
   }
@@ -76,7 +76,7 @@ export class OpenProjectApi implements Extension {
   async onLoadDocument(data: onLoadDocumentPayload) {
     const { resourceUrl } = data.context;
 
-    printLog(`GET ${resourceUrl}`);
+    printLog(`[onLoadDocument] GET ${resourceUrl}`);
 
     const response = await fetch(resourceUrl, {
       method: "GET",
@@ -119,7 +119,7 @@ export class OpenProjectApi implements Extension {
       return;
     }
 
-    printLog(`PATCH ${resourceUrl}`);
+    printLog(`[onStoreDocument] PATCH ${resourceUrl}`);
 
     const base64Data = Buffer.from(Y.encodeStateAsUpdate(data.document)).toString("base64");
 
@@ -186,11 +186,11 @@ export class OpenProjectApi implements Extension {
         connection.context.readonly = isReadOnly;
       }
 
-      printLog(`[Token Synced] Resource: ${resourceUrl} Readonly: ${result.readonly}`);
+      printLog(`[onTokenSync] Resource: ${resourceUrl} Readonly: ${result.readonly}`);
     } catch (error) {
       // Explicitly close connection on validation failure
       const reason = error instanceof Error ? error.message : "Token sync failed";
-      printLog(`[Token Sync Failed] ${reason}`);
+      printLog(`[onTokenSync] Error: ${reason}`);
       connection.close(unauthorized(reason));
     }
   }
