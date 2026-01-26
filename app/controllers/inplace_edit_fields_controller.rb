@@ -33,7 +33,16 @@ class InplaceEditFieldsController < ApplicationController
 
   before_action :find_model
   before_action :set_attribute
-  no_authorization_required! :update, :reset
+  no_authorization_required! :edit, :update, :reset
+
+  def edit
+    replace_via_turbo_stream(
+      component: component(enforce_edit_mode: true),
+      status: :ok
+    )
+
+    respond_with_turbo_streams
+  end
 
   def update
     handler = OpenProject::InplaceEdit::UpdateRegistry.fetch_handler(@model)
@@ -51,7 +60,7 @@ class InplaceEditFieldsController < ApplicationController
     end
 
     replace_via_turbo_stream(
-      component:,
+      component: component(enforce_edit_mode: !success),
       status: success ? :ok : :unprocessable_entity
     )
 
@@ -94,19 +103,20 @@ class InplaceEditFieldsController < ApplicationController
       .expect(@model.model_name.param_key => [@attribute])
   end
 
-  def component
+  def component(enforce_edit_mode: false)
     OpenProject::Common::InplaceEditFieldComponent.new(
       model: @model,
       attribute: @attribute,
+      enforce_edit_mode:,
       **system_arguments.to_h.symbolize_keys
     )
   end
 
   def system_arguments
-    arguments = params.to_unsafe_h
-                      .values
-                      .filter_map { |v| v["system_arguments_json"] }
-                      .first
+    arguments = params[:system_arguments_json].presence || params.to_unsafe_h
+                                    .values
+                                    .filter_map { |v| v["system_arguments_json"] }
+                                    .first
 
     arguments.nil? ? {} : JSON.parse(arguments)
   end

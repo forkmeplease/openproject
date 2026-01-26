@@ -33,27 +33,45 @@ module OpenProject
     class InplaceEditFieldComponent < ViewComponent::Base
       include OpTurbo::Streamable
 
-      attr_reader :model, :attribute
+      attr_reader :model, :attribute, :enforce_edit_mode
 
-      def initialize(model:, attribute:, **system_arguments)
+      def initialize(model:, attribute:, enforce_edit_mode: false, **system_arguments)
         super()
         @model = model
         @attribute = attribute
+        @enforce_edit_mode = enforce_edit_mode
         @system_arguments = system_arguments
-      end
-
-      def field_component(form)
-        klass = OpenProject::InplaceEdit::FieldRegistry.fetch(attribute)
-        klass.new(form:, attribute:, model:, **merged_system_arguments)
-      end
-
-      private
-
-      def merged_system_arguments
         @system_arguments.merge(
           disabled: !writable?
         )
       end
+
+      def field_class
+        OpenProject::InplaceEdit::FieldRegistry.fetch(attribute)
+      end
+
+      def edit_field_component(form)
+        field_class.new(
+          form:,
+          attribute:,
+          model:,
+          **@system_arguments
+        )
+      end
+
+      def display_field_class
+        if field_class.respond_to?(:display_class)
+          field_class.display_class
+        else
+          nil
+        end
+      end
+
+      def display_field_component
+        display_field_class.new(model:, attribute:, writable: writable?, **@system_arguments)
+      end
+
+      private
 
       def writable?
         contract_class = OpenProject::InplaceEdit::UpdateRegistry.fetch_contract(model)

@@ -1060,6 +1060,7 @@ Rails.application.routes.draw do
     post :update, controller: "inplace_edit_fields", action: :update
     patch :update, controller: "inplace_edit_fields", action: :update
     get :reset, controller: "inplace_edit_fields", action: :reset
+    get :edit, controller: "inplace_edit_fields", action: :edit
   end
 
   if OpenProject::Configuration.lookbook_enabled?

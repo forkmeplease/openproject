@@ -1,0 +1,5 @@
+<%= render(Primer::BaseComponent.new(tag: :div, **@display_field_arguments)) do %>
+  <div class="op-uc-container op-uc-container_reduced-headings -multiline">
+    <%= render_display_value %>
+  </div>
+<% end %>

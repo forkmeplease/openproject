@@ -32,7 +32,12 @@ module OpenProject
   module Common
     module InplaceEditFields
       class RichTextAreaComponent < ViewComponent::Base
+
         attr_reader :form, :attribute, :model
+
+        def self.display_class
+          DisplayFields::RichTextAreaComponent
+        end
 
         def initialize(form:, attribute:, model:, **system_arguments)
           super()
