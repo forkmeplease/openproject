@@ -32,7 +32,6 @@ module OpenProject
   module Common
     module InplaceEditFields
       class RichTextAreaComponent < ViewComponent::Base
-
         attr_reader :form, :attribute, :model
 
         def self.display_class

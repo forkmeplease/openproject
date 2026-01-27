@@ -41,9 +41,7 @@ module OpenProject
         @attribute = attribute
         @enforce_edit_mode = enforce_edit_mode
         @system_arguments = system_arguments
-        @system_arguments.merge(
-          disabled: !writable?
-        )
+        @system_arguments[:disabled] ||= !writable?
       end
 
       def field_class
@@ -62,8 +60,6 @@ module OpenProject
       def display_field_class
         if field_class.respond_to?(:display_class)
           field_class.display_class
-        else
-          nil
         end
       end
 
@@ -80,11 +76,15 @@ module OpenProject
       private
 
       def writable?
+        return @writable if defined?(@writable)
+
         contract_class = OpenProject::InplaceEdit::UpdateRegistry.fetch_contract(model)
-
-        return false unless contract_class
-
-        contract_class.new(model, User.current).writable?(attribute)
+        @writable =
+          if contract_class.present?
+            contract_class.new(model, User.current).writable?(attribute)
+          else
+            false
+          end
       end
     end
   end
