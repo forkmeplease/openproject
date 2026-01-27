@@ -115,6 +115,36 @@ class MeetingMailer < UserMailer
     end
   end
 
+  def participant_added(meeting, user, actor, added_participant:)
+    @actor = actor
+    @meeting = meeting
+    @user = user
+    @added_participant = added_participant
+
+    open_project_headers "Project" => @meeting.project.identifier,
+                         "Meeting-Id" => @meeting.id
+
+    with_attached_ics(meeting, user) do
+      subject = I18n.t("meeting.email.participant_added.header", title: @meeting.title)
+      mail(to: user, subject: "[#{@meeting.project.name}] #{subject}")
+    end
+  end
+
+  def participant_removed(meeting, user, actor, removed_participant:)
+    @actor = actor
+    @meeting = meeting
+    @user = user
+    @removed_participant = removed_participant
+
+    open_project_headers "Project" => @meeting.project.identifier,
+                         "Meeting-Id" => @meeting.id
+
+    with_attached_ics(meeting, user) do
+      subject = I18n.t("meeting.email.participant_removed.header", title: @meeting.title)
+      mail(to: user, subject: "[#{@meeting.project.name}] #{subject}")
+    end
+  end
+
   private
 
   def with_attached_ics(meeting, user, **args)
