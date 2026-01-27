@@ -29,41 +29,29 @@
 #++
 
 module Admin::JiraImports
-  class RowComponent < OpPrimer::BorderBoxRowComponent
-    def id
-      render(
-        Primer::Beta::Link.new(
-          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-          font_weight: :bold
-        )
-      ) do
-        "#{I18n.t('admin.jira.run.title')} ##{model.id}"
+  class StatusBadgeComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+
+    def initialize(status, **system_arguments)
+      super
+
+      @title = I18n.t(status.to_s, default: "", scope: "admin.jira.run.status")
+      @system_arguments = system_arguments.merge({ scheme: status_color_scheme(status) })
+    end
+
+    def status_color_scheme(status)
+      case status
+      when JiraImport::IMPORT_ERROR, JiraImport::REVERT_ERROR,
+        JiraImport::INSTANCE_META_ERROR, JiraImport::PROJECTS_META_ERROR
+        :danger
+      when JiraImport::IMPORTED, JiraImport::COMPLETED, JiraImport::REVERTED
+        :success
+      when JiraImport::INSTANCE_META_FETCHING, JiraImport::PROJECTS_META_FETCHING,
+        JiraImport::IMPORTING, JiraImport::REVERTING
+        :accent
+      else
+        :attention
       end
-    end
-
-    def status
-      render(Admin::JiraImports::StatusBadgeComponent.new(model.status))
-    end
-
-    def last_changed
-      helpers.format_time(model.updated_at)
-    end
-
-    def button_links
-      [
-        edit_button
-      ]
-    end
-
-    def edit_button
-      render(
-        Primer::Beta::IconButton.new(
-          icon: :pencil,
-          tag: :a,
-          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-          "aria-label": "Edit"
-        )
-      )
     end
   end
 end

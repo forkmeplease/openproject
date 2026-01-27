@@ -32,7 +32,6 @@ module Admin
   module JiraImports
     class WizardComponent < ApplicationComponent
       include ApplicationHelper
-      include Turbo::FramesHelper
       include OpTurbo::Streamable
       include OpPrimer::ComponentHelpers
 

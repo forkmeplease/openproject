@@ -86,19 +86,6 @@ class JiraImport < ApplicationRecord
     check_statuses.include?(status)
   end
 
-  def status_color_scheme
-    case status
-    when IMPORT_ERROR, REVERT_ERROR, INSTANCE_META_ERROR, PROJECTS_META_ERROR
-      :danger
-    when IMPORTED, COMPLETED, REVERTED
-      :success
-    when INSTANCE_META_FETCHING, PROJECTS_META_FETCHING, IMPORTING, REVERTING
-      :accent
-    else
-      :attention
-    end
-  end
-
   def status_running?
     [
       INSTANCE_META_FETCHING,

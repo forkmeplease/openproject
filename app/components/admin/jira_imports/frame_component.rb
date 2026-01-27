@@ -28,42 +28,10 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin::JiraImports
-  class RowComponent < OpPrimer::BorderBoxRowComponent
-    def id
-      render(
-        Primer::Beta::Link.new(
-          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-          font_weight: :bold
-        )
-      ) do
-        "#{I18n.t('admin.jira.run.title')} ##{model.id}"
-      end
-    end
-
-    def status
-      render(Admin::JiraImports::StatusBadgeComponent.new(model.status))
-    end
-
-    def last_changed
-      helpers.format_time(model.updated_at)
-    end
-
-    def button_links
-      [
-        edit_button
-      ]
-    end
-
-    def edit_button
-      render(
-        Primer::Beta::IconButton.new(
-          icon: :pencil,
-          tag: :a,
-          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-          "aria-label": "Edit"
-        )
-      )
+module Admin
+  module JiraImports
+    class FrameComponent < ApplicationComponent
+      include Turbo::FramesHelper
     end
   end
 end

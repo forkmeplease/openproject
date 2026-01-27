@@ -68,7 +68,7 @@ module Admin
           end
         end
 
-        render_wizard
+        render_wizard_frame
       rescue StandardError => e
         respond_to do |format|
           format.turbo_stream do
@@ -77,7 +77,7 @@ module Admin
           end
           format.html do
             flash[:error] = e.message
-            render_wizard
+            render_wizard_frame
           end
         end
       end
@@ -150,8 +150,8 @@ module Admin
         @jira_import.update!(status: JiraImport::COMPLETED)
       end
 
-      def render_wizard
-        render Admin::JiraImports::WizardComponent.new(@jira_import), layout: false
+      def render_wizard_frame
+        render Admin::JiraImports::FrameComponent.new(@jira_import), layout: false
       end
 
       def find_jira_and_jira_import
