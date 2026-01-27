@@ -220,7 +220,7 @@ RSpec.describe "Open the Meetings tab",
         meetings_tab.expect_past_counter_to_be(0)
         meetings_tab.switch_to_past_meetings_section
 
-        expect(page).to have_content("This work package was not mentioned in a past meeting.")
+        expect(page).to have_content("This work package was not added as an agenda item in a past meeting.")
       end
     end
 
@@ -266,7 +266,7 @@ RSpec.describe "Open the Meetings tab",
       end
     end
 
-    context "when the work_package is referenced and has an outcome" do
+    context "when the work_package is referenced and has a single outcome" do
       let!(:meeting) { create(:meeting, project:) }
 
       let!(:meeting_agenda_item) do
@@ -286,6 +286,64 @@ RSpec.describe "Open the Meetings tab",
         page.within_test_selector("op-meeting-container-#{meeting.id}") do
           expect(page).to have_content(meeting_agenda_item.notes)
           expect(page).to have_content(outcome.notes)
+        end
+      end
+    end
+
+    context "when the work_package is referenced and has multiple outcomes" do
+      let!(:meeting) { create(:meeting, project:) }
+
+      let!(:meeting_agenda_item) do
+        create(:meeting_agenda_item, meeting:, work_package:, notes: "Discussion notes")
+      end
+
+      let!(:first_outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, notes: "First decision")
+      end
+
+      let!(:second_outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, notes: "Second decision")
+      end
+
+      it "shows all outcomes with numbered headings" do
+        work_package_page.visit!
+        switch_to_meetings_tab
+
+        meetings_tab.expect_upcoming_counter_to_be(1)
+
+        page.within_test_selector("op-meeting-container-#{meeting.id}") do
+          expect(page).to have_content(meeting_agenda_item.notes)
+          expect(page).to have_content(first_outcome.notes)
+          expect(page).to have_content(second_outcome.notes)
+          expect(page).to have_content("#{I18n.t(:label_agenda_outcome)} 1")
+          expect(page).to have_content("#{I18n.t(:label_agenda_outcome)} 2")
+        end
+      end
+    end
+
+    context "when the work_package is linked as an outcome" do
+      let!(:meeting) { create(:meeting, project:) }
+      let!(:other_work_package) { create(:work_package, project:, subject: "Different work package") }
+
+      let!(:meeting_agenda_item) do
+        create(:meeting_agenda_item, meeting:, work_package: other_work_package, notes: "Discussing something else")
+      end
+
+      let!(:outcome) do
+        create(:meeting_outcome, meeting_agenda_item:, work_package:, kind: :work_package)
+      end
+
+      it "shows the meeting with 'Added as outcome' label" do
+        work_package_page.visit!
+        switch_to_meetings_tab
+
+        meetings_tab.expect_upcoming_counter_to_be(1)
+
+        page.within_test_selector("op-meeting-container-#{meeting.id}") do
+          expect(page).to have_content(meeting.title)
+          expect(page).to have_content(I18n.t(:label_added_as_outcome))
+
+          expect(page).to have_no_content(meeting_agenda_item.notes)
         end
       end
     end

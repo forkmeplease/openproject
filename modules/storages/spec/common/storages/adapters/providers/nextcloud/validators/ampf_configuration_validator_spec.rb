@@ -58,9 +58,9 @@ module Storages
             let(:capabilities_response) do
               ProviderResults::Capabilities.build(
                 app_enabled: true,
-                app_version: SemanticVersion.parse(required_versions.dig("group_folders_app", "min_version")),
+                app_version: SemanticVersion.parse(required_versions.dig("integration_app", "min_version")),
                 group_folder_enabled: true,
-                group_folder_version: SemanticVersion.parse(required_versions.dig("group_folders_app", "min_version"))
+                group_folder_version: SemanticVersion.parse(required_versions.dig("team_folders_app", "min_version"))
               )
             end
 
@@ -75,14 +75,14 @@ module Storages
               expect(validator.call).to be_success
             end
 
-            describe "group_folders_app checks" do
+            describe "team_folders_app checks" do
               before do
                 Registry.unstub
                 Registry.stub("nextcloud.queries.files", ->(*) { files_response })
               end
 
-              it "group_folders_app version mismatch", vcr: "nextcloud/capabilities_success" do
-                absurd_version = { dependencies: { group_folders_app: { min_version: "2099.10.138" } } }.deep_stringify_keys
+              it "team_folders_app version mismatch", vcr: "nextcloud/capabilities_success" do
+                absurd_version = { dependencies: { team_folders_app: { min_version: "2099.10.138" } } }.deep_stringify_keys
                 allow(subject).to receive(:nextcloud_dependencies).and_return(absurd_version)
 
                 results = validator.call
@@ -91,7 +91,7 @@ module Storages
                 expect(results[:group_folder_app].context[:dependency]).to eq("Group Folders")
               end
 
-              it "integration app disabled / missing", vcr: "nextcloud/capabilities_success_group_folder_disabled" do
+              it "integration app disabled / missing", vcr: "nextcloud/capabilities_success_team_folders_disabled" do
                 results = validator.call
 
                 expect(results[:group_folder_app]).to be_a_failure
