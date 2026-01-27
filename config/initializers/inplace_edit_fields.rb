@@ -31,6 +31,7 @@
 Rails.application.config.to_prepare do
   # Register the edit fields per attribute
   OpenProject::InplaceEdit::FieldRegistry.register(:description, OpenProject::Common::InplaceEditFields::RichTextAreaComponent)
+  OpenProject::InplaceEdit::FieldRegistry.register(:status_explanation, OpenProject::Common::InplaceEditFields::RichTextAreaComponent)
 
   # Register the update handler per model
   OpenProject::InplaceEdit::UpdateRegistry.register(Project,

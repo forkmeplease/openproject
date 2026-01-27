@@ -68,7 +68,13 @@ module OpenProject
       end
 
       def display_field_component
+        return nil if display_field_class.nil?
+
         display_field_class.new(model:, attribute:, writable: writable?, **@system_arguments)
+      end
+
+      def wrapper_key
+        "op-inplace-edit-field-component--#{@model.name.parameterize(separator: '_')}-#{model.id}--#{attribute.name}"
       end
 
       private
