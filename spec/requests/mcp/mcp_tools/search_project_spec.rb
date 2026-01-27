@@ -70,12 +70,12 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
     it "finds a project by identifier" do
       subject
-      expect(parsed_results.fetch("structuredContent")).to be_present
+      expect(parsed_results.dig("structuredContent", "items")).to be_present
     end
 
     it "responds with a properly formatted project" do
       subject
-      project = parsed_results.fetch("structuredContent").first
+      project = parsed_results.dig("structuredContent", "items").first
       expect(project.to_json).to match_json_schema.from_docs("project_model")
     end
 
@@ -84,7 +84,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
       it "does not find the project" do
         subject
-        expect(parsed_results.fetch("structuredContent")).to be_empty
+        expect(parsed_results.dig("structuredContent", "items")).to be_empty
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
       it "finds the project" do
         subject
-        expect(parsed_results.fetch("structuredContent")).to be_present
+        expect(parsed_results.dig("structuredContent", "items")).to be_present
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
       it "finds the project" do
         subject
-        expect(parsed_results.fetch("structuredContent")).to be_present
+        expect(parsed_results.dig("structuredContent", "items")).to be_present
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
       it "finds the project" do
         subject
-        expect(parsed_results.fetch("structuredContent")).to be_present
+        expect(parsed_results.dig("structuredContent", "items")).to be_present
       end
 
       context "and when passing a project identifier" do
@@ -119,7 +119,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
         it "finds the project" do
           subject
-          expect(parsed_results.fetch("structuredContent")).to be_present
+          expect(parsed_results.dig("structuredContent", "items")).to be_present
         end
       end
 
@@ -128,7 +128,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
         it "does not find the project" do
           subject
-          expect(parsed_results.fetch("structuredContent")).to be_empty
+          expect(parsed_results.dig("structuredContent", "items")).to be_empty
         end
       end
     end
@@ -144,7 +144,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
 
       it "does not find the project" do
         subject
-        expect(parsed_results.fetch("structuredContent")).to be_empty
+        expect(parsed_results.dig("structuredContent", "items")).to be_empty
       end
     end
 

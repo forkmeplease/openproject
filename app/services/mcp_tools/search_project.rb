@@ -52,13 +52,22 @@ module McpTools
     )
 
     output_schema(
-      type: :array,
-      items: JsonSchemaLoader.new.load("project_model")
+      type: :object,
+      required: ["items"],
+      properties: {
+        items: {
+          type: :array,
+          items: JsonSchemaLoader.new.load("project_model")
+        }
+      }
     )
 
     def call(**query)
       projects = apply_filters(Project.visible.limit(MAX_SIZE), query)
-      projects.map { |p| API::V3::Projects::ProjectRepresenter.create(p, current_user: User.current) }
+
+      {
+        items: projects.map { |p| API::V3::Projects::ProjectRepresenter.create(p, current_user: User.current) }
+      }
     end
   end
 end
