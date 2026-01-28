@@ -37,23 +37,21 @@ module Admin::Import::Jira
     menu_item :jira_import
 
     before_action :require_admin
+    before_action :set_jira, only: %i[show edit update destroy]
 
     def index
-      @jiras = Jira.all
+      @jira_instances = Jira.all
     end
 
     def show
-      @jira = Jira.find(params[:id])
-      @jira_imports = JiraImport.where(jira_id: @jira.id).sort_by(&:id)
+      @jira_imports = JiraImport.where(jira_id: @jira.id).order(id: :desc)
     end
 
     def new
       @jira = Jira.new
     end
 
-    def edit
-      @jira = Jira.find(params[:id])
-    end
+    def edit; end
 
     def create
       result = ::Jiras::CreateService.new(user: User.current).call(jira_params)
@@ -71,7 +69,6 @@ module Admin::Import::Jira
     end
 
     def update
-      @jira = Jira.find(params[:id])
       result = ::Jiras::UpdateService.new(user: User.current, model: @jira).call(jira_params)
 
       result.on_failure do
@@ -86,9 +83,21 @@ module Admin::Import::Jira
       end
     end
 
-    def destroy; end
+    def destroy
+      if JiraImport.exists?(jira_id: @jira.id)
+        flash[:error] = t(:"admin.jira.errors.cannot_delete_with_imports")
+      else
+        @jira.destroy
+        flash[:notice] = t(:notice_successful_delete)
+      end
+      redirect_to action: :index
+    end
 
     private
+
+    def set_jira
+      @jira = Jira.find(params[:id])
+    end
 
     def jira_params
       params.expect(jira: %i[name url personal_access_token])

@@ -40,7 +40,7 @@ module Admin::Import::Jira::Projects
 
     form do |f|
       f.check_box_group(name: :projects) do |check_group|
-        (@jira_import.available["projects"] || []).each do |project|
+        (@jira_import.available&.dig("projects") || []).each do |project|
           check_group.check_box(
             value: project["id"],
             label: project["name"],
