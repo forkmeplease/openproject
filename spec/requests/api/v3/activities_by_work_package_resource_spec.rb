@@ -211,7 +211,7 @@ RSpec.describe API::V3::Activities::ActivitiesByWorkPackageAPI, with_ee: [:inter
         end
 
         context "and internal comments are disabled on the project" do
-          let(:permissions) { %i(view_work_packages view_internal_comments add_internal_comments) }
+          let(:permissions) { %i(view_work_packages add_work_package_comments view_internal_comments add_internal_comments) }
 
           include_context "to create internal comment", internal: true, enabled_internal_comments: false
 
