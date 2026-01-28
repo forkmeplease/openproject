@@ -39,193 +39,20 @@ See COPYRIGHT and LICENSE files for more details.
         }
       end
       component.with_row do
-        flex_layout do |box|
-          box.with_row do
-            flex_layout do |row|
-              row.with_column(flex: 1) do
-                concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
-                  I18n.t(:"admin.jira.run.wizard.sections.fetch_data.title")
-                })
-                if model.status_equal_or_after?(JiraImport::INSTANCE_META_DONE)
-                  concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
-                    I18n.t(:"admin.jira.run.wizard.sections.fetch_data.caption_done")
-                  })
-                end
-              end
-              if model.status?(JiraImport::INSTANCE_META_DONE, JiraImport::CONFIGURING)
-                row.with_column do
-                  render(
-                    Primer::Beta::IconButton.new(
-                      icon: :"op-reload",
-                      tag: :a,
-                      scheme: :invisible,
-                      href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'fetch'),
-                      aria: { label: "Back to fetch data" },
-                      data: { turbo_stream: true }
-                    )
-                  )
-                end
-              end
-            end
-          end
-          if model.status?(JiraImport::INITIAL)
-            box.with_row(mb: 3) do
-              render(Primer::Beta::Text.new) {
-                I18n.t(:"admin.jira.run.wizard.sections.fetch_data.description")
-              }
-            end
-            box.with_row do
-              render(Primer::Beta::Button.new(
-                scheme: :primary,
-                tag: :a,
-                size: :medium,
-                href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'fetch'),
-                data: { turbo_stream: true }
-              )) do
-                I18n.t(:"admin.jira.run.wizard.sections.fetch_data.button_fetch")
-              end
-            end
-          elsif model.status?(JiraImport::INSTANCE_META_ERROR)
-            box.with_row(mt: 3) do
-              render Primer::Alpha::Banner.new(
-                scheme: :danger,
-                icon: :stop,
-              ) do |banner|
-                banner.with_action_button(
-                  tag: :a,
-                  size: :medium,
-                  href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'fetch'),
-                  data: { turbo_stream: true }
-                ) { I18n.t(:"admin.jira.run.wizard.button_retry") }
-                model.error || I18n.t('js.error.internal')
-              end
-            end
-          elsif model.status?(JiraImport::INSTANCE_META_FETCHING)
-            box.with_row(mt: 3) do
-              render(Primer::Box.new(border: true, border_color: :accent, border_radius: 2, bg: :accent, p: 3)) do
-                concat render(Primer::Beta::Spinner.new(size: :small))
-                concat render(Primer::Beta::Text.new(ml: 2)) {
-                  I18n.t(:"admin.jira.run.wizard.sections.fetch_data.label_progress")
-                }
-              end
-            end
-          end
-        end
+        render(Admin::Import::Jira::ImportRuns::WizardStepFetchDataComponent.new(model))
       end
-
       component.with_row(scheme: :neutral, color: :muted, align_items: :center) do
         render(Primer::Beta::Text.new(font_weight: :semibold)) {
           I18n.t(:"admin.jira.run.wizard.groups.configuration.title")
         }
       end
       component.with_row do
-        flex_layout do |box|
-          box.with_row do
-            concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
-              I18n.t(:"admin.jira.run.wizard.sections.import_scope.title")
-            })
-            if model.status_before?(JiraImport::INSTANCE_META_DONE)
-              concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_scope.caption")
-              })
-            elsif model.status_equal_or_after?(JiraImport::PROJECTS_META_DONE)
-              concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_scope.caption_done")
-              })
-            end
-          end
-          if model.status?(JiraImport::INSTANCE_META_DONE)
-            box.with_row(mb: 3, mt: 3) do
-              render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert)) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_info")
-              }
-            end
-            box.with_row(mb: 3) do
-              flex_layout do |flex|
-                flex.with_column(flex: 1, mr: 1) do
-                  render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
-                    title: I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_available_data"),
-                    list: import_stats_available,
-                    h: :full
-                  ))
-                end
-                flex.with_column(flex: 1, ml: 1) do
-                  render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
-                    title: I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_not_available_data"),
-                    list: import_stats_unavailable,
-                    h: :full
-                  ))
-                end
-              end
-            end
-            box.with_row do
-              render(Primer::Beta::Button.new(
-                scheme: :primary,
-                size: :medium,
-                tag: :a,
-                href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'configure'),
-                data: { turbo_stream: true }
-              )) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_scope.button_continue")
-              }
-            end
-          elsif model.status?(JiraImport::CONFIGURING, JiraImport::PROJECTS_META_ERROR)
-            box.with_row(mb: 3, mt: 3) do
-              render(Primer::Beta::Text.new) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_import")
-              }
-            end
-            box.with_row(mb: 3) do
-              render(Primer::Beta::Button.new(
-                size: :medium,
-                tag: :a,
-                href: select_projects_modal_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-                data: { controller: "async-dialog" }
-              )) do |component|
-                component.with_trailing_visual_counter(count: selected_projects_count)
-                I18n.t(:"admin.jira.run.wizard.sections.import_scope.button_select")
-              end
-            end
-            if model.status?(JiraImport::CONFIGURING)
-              box.with_row do
-                render(Primer::Beta::Button.new(
-                  scheme: :primary,
-                  size: :medium,
-                  tag: :a,
-                  href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'stats'),
-                  data: { turbo_stream: true },
-                  disabled: model.projects.nil? || model.projects.empty?
-                )) {
-                  I18n.t(:"admin.jira.run.wizard.sections.import_scope.button_continue")
-                }
-              end
-            elsif model.status?(JiraImport::PROJECTS_META_ERROR)
-              box.with_row do
-                render Primer::Alpha::Banner.new(
-                  scheme: :danger,
-                  icon: :stop,
-                ) do |banner|
-                  banner.with_action_button(
-                    tag: :a,
-                    size: :medium,
-                    href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'stats'),
-                    data: { turbo_stream: true }
-                  ) { I18n.t(:"admin.jira.run.wizard.button_retry") }
-                  model.error || I18n.t('js.error.internal')
-                end
-              end
-            end
-          elsif model.status?(JiraImport::PROJECTS_META_FETCHING)
-            box.with_row(mt: 3) do
-              render(Primer::Box.new(border: true, border_color: :accent, border_radius: 2, bg: :accent, p: 3)) do
-                concat render(Primer::Beta::Spinner.new(size: :small))
-                concat render(Primer::Beta::Text.new(ml: 2)) {
-                  I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_progress")
-                }
-              end
-            end
-          end
-        end
+        render(Admin::Import::Jira::ImportRuns::WizardStepImportScopeComponent.new(
+          model,
+          import_stats_available: import_stats_available,
+          import_stats_unavailable: import_stats_unavailable,
+          selected_projects_count: selected_projects_count
+        ))
       end
       component.with_row(scheme: :neutral, color: :muted, align_items: :center) do
         render(Primer::Beta::Text.new(font_weight: :semibold)) {
@@ -233,177 +60,21 @@ See COPYRIGHT and LICENSE files for more details.
         }
       end
       component.with_row do
-        flex_layout do |box|
-          box.with_row do
-            concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
-              I18n.t(:"admin.jira.run.wizard.sections.confirm_import.title")
-            })
-            if model.status_before?(JiraImport::PROJECTS_META_DONE)
-              concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
-                I18n.t(:"admin.jira.run.wizard.sections.confirm_import.caption")
-              })
-            elsif model.status_equal_or_after?(JiraImport::IMPORTED)
-              concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
-                I18n.t(:"admin.jira.run.wizard.sections.confirm_import.caption_done")
-              })
-            end
-          end
-          if model.status?(JiraImport::PROJECTS_META_DONE, JiraImport::IMPORT_ERROR)
-            box.with_row(mb: 3) do
-              render(Primer::Beta::Text.new) {
-                I18n.t(:"admin.jira.run.wizard.sections.confirm_import.description")
-              }
-            end
-            box.with_row(mb: 3) do
-              render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
-                title: I18n.t(:"admin.jira.run.wizard.sections.confirm_import.label_available_data"),
-                list: import_selection
-              ))
-            end
-            if model.status?(JiraImport::PROJECTS_META_DONE)
-              box.with_row do
-                render(Primer::Beta::Button.new(
-                  scheme: :primary,
-                  size: :medium,
-                  tag: :a,
-                  href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'import'),
-                  data: { turbo_stream: true }
-                )) {
-                  I18n.t(:"admin.jira.run.wizard.sections.confirm_import.button_start")
-                }
-              end
-            elsif model.status?(JiraImport::IMPORT_ERROR)
-              box.with_row do
-                render Primer::Alpha::Banner.new(
-                  scheme: :danger,
-                  icon: :stop,
-                ) do |banner|
-                  banner.with_action_button(
-                    tag: :a,
-                    size: :medium,
-                    href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'import'),
-                    data: { turbo_stream: true }
-                  ) { I18n.t(:"admin.jira.run.wizard.button_retry") }
-                  model.error || I18n.t('js.error.internal')
-                end
-              end
-            end
-          elsif model.status?(JiraImport::IMPORTING)
-            box.with_row(mt: 3, mb: 3) do
-              render(Primer::Box.new(border: true, border_color: :accent, border_radius: 2, bg: :accent, p: 3)) do
-                concat render(Primer::Beta::Spinner.new(size: :small))
-                concat render(Primer::Beta::Text.new(ml: 2)) {
-                  I18n.t(:"admin.jira.run.wizard.sections.confirm_import.label_progress")
-                }
-              end
-            end
-            box.with_row(mb: 3) do
-              render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
-                title: I18n.t(:"admin.jira.run.wizard.sections.confirm_import.label_import_data"),
-                list: import_selection
-              ))
-            end
-          end
-        end
+        render(Admin::Import::Jira::ImportRuns::WizardStepConfirmImportComponent.new(
+          model,
+          import_selection: import_selection
+        ))
       end
-
       component.with_row(scheme: :neutral, color: :muted, align_items: :center) do
         render(Primer::Beta::Text.new(font_weight: :semibold)) {
           I18n.t(:"admin.jira.run.wizard.groups.review.title")
         }
       end
       component.with_row do
-        flex_layout do |box|
-          if model.status?(JiraImport::REVERTING, JiraImport::REVERTED, JiraImport::REVERT_ERROR)
-            box.with_row do
-              concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_result.label_revert")
-              })
-            end
-            case model.status
-            when JiraImport::REVERTING
-              box.with_row(mt: 3) do
-                render(Primer::Box.new(border: true, border_color: :accent, border_radius: 2, bg: :accent, p: 3)) do
-                  concat render(Primer::Beta::Spinner.new(size: :small))
-                  concat render(Primer::Beta::Text.new(ml: 2)) {
-                    I18n.t(:"admin.jira.run.wizard.sections.import_result.label_revert_progress")
-                  }
-                end
-              end
-            when JiraImport::REVERTED
-              box.with_row(mt: 3) do
-                render(Primer::Alpha::Banner.new(scheme: :success, icon: :"check-circle")) {
-                  I18n.t(:"admin.jira.run.wizard.sections.import_result.label_reverted")
-                }
-              end
-            when JiraImport::REVERT_ERROR
-              box.with_row(mt: 3) do
-                render Primer::Alpha::Banner.new(
-                  scheme: :danger,
-                  icon: :stop,
-                ) do |banner|
-                  banner.with_action_button(
-                    tag: :a,
-                    size: :medium,
-                    href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'revert'),
-                    data: { turbo_stream: true }
-                  ) { I18n.t(:"admin.jira.run.wizard.button_retry") }
-                  model.error || I18n.t('js.error.internal')
-                end
-              end
-            end
-          else
-            box.with_row do
-              concat(render(Primer::Beta::Text.new(font_weight: :semibold, tag: :div)) {
-                I18n.t(:"admin.jira.run.wizard.sections.import_result.title")
-              })
-              if model.status_before?(JiraImport::IMPORTED)
-                concat(render(Primer::Beta::Text.new(font_size: :small, color: :subtle)) {
-                  I18n.t(:"admin.jira.run.wizard.sections.import_result.caption")
-                })
-              end
-            end
-            if model.status?(JiraImport::IMPORTED)
-              box.with_row(mt: 3) do
-                render(Primer::Alpha::Banner.new(scheme: :success, icon: :"check-circle")) {
-                  I18n.t(:"admin.jira.run.wizard.sections.import_result.info")
-                }
-              end
-            end
-            if model.status?(JiraImport::IMPORTED, JiraImport::COMPLETED)
-              box.with_row(mt: 3, mb: 3) do
-                render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
-                  title: I18n.t(:"admin.jira.run.wizard.sections.import_result.label_results"),
-                  list: import_selection
-                ))
-              end
-            end
-            if model.status?(JiraImport::IMPORTED)
-              box.with_row(mb: 3) do
-                render(Primer::Alpha::Banner.new(scheme: :default, icon: :info)) {
-                  I18n.t(:"admin.jira.run.wizard.sections.import_result.preview_description")
-                }
-              end
-              box.with_row do
-                concat(render(Primer::Beta::Button.new(
-                  tag: :a,
-                  scheme: :primary,
-                  size: :medium,
-                  mr: 2,
-                  href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'finalize'),
-                  data: { turbo_stream: true }
-                )) { I18n.t(:"admin.jira.run.wizard.sections.import_result.button_done") })
-                concat(render(Primer::Beta::Button.new(
-                  scheme: :default,
-                  tag: :a,
-                  size: :medium,
-                  href: revert_modal_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-                  data: { controller: "async-dialog" }
-                )) { I18n.t(:"admin.jira.run.wizard.sections.import_result.button_revert") })
-              end
-            end
-          end
-        end
+        render(Admin::Import::Jira::ImportRuns::WizardStepReviewComponent.new(
+          model,
+          import_selection: import_selection
+        ))
       end
     end
   end

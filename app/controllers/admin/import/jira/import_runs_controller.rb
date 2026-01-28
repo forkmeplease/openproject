@@ -99,7 +99,7 @@ module Admin::Import::Jira
       respond_to do |format|
         format.turbo_stream do
           render_error_flash_message_via_turbo_stream(message: error.message)
-          respond_with_turbo_streams(status: :unprocessable_entity)
+          respond_with_turbo_streams
         end
         format.html do
           flash[:error] = error.message
