@@ -723,6 +723,7 @@ Rails.application.routes.draw do
         resources :run, controller: "/admin/jiras/jira_imports", module: :jiras do
           member do
             get :continue
+            post :continue
             get :remove
             get :select_projects_modal
             get :revert_modal

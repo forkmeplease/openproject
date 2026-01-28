@@ -41,7 +41,7 @@ module Admin
       def form_arguments
         {
           action: url,
-          method: :get
+          method: :post
         }
       end
 

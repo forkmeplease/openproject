@@ -45,10 +45,13 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 <%=
-  turbo_frame_tag(
-    "jira_import_wizard_frame",
-    src: continue_admin_import_jira_run_path(jira_id: @jira.id, id: @jira_import.id),
-    data: { controller: "jira-import", "jira-import-target": "frame" }
+  render Primer::BaseComponent.new(
+    tag: :div,
+    id: "jira_import_wizard_frame",
+    data: {
+      controller: "jira-import",
+      "jira-import-url-value": continue_admin_import_jira_run_path(jira_id: @jira.id, id: @jira_import.id)
+    }
   ) do
     render(Admin::JiraImports::WizardComponent.new(@jira_import))
   end

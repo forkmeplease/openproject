@@ -35,6 +35,16 @@ module Admin
 
       layout "admin"
 
+      VALID_STEPS = {
+        "init" => :init,
+        "fetch" => :fetch_instance_meta,
+        "stats" => :fetch_projects_meta,
+        "import" => :import,
+        "configure" => :configure,
+        "revert" => :revert,
+        "finalize" => :finalize
+      }.freeze
+
       menu_item :jira_import
 
       before_action :require_admin
@@ -49,41 +59,14 @@ module Admin
       end
 
       def continue
-        unless @jira_import.status_running?
-          case params[:step]
-          when "init"
-            init
-          when "fetch"
-            fetch_instance_meta
-          when "stats"
-            fetch_projects_meta
-          when "import"
-            import
-          when "configure"
-            configure
-          when "revert"
-            revert
-          when "finalize"
-            finalize
-          end
-        end
-
-        render_wizard_frame
+        change_step(params[:step]) unless @jira_import.status_running?
+        stream_wizard
       rescue StandardError => e
-        respond_to do |format|
-          format.turbo_stream do
-            render_error_flash_message_via_turbo_stream(message: e.message)
-            respond_with_turbo_streams(status: :unprocessable_entity)
-          end
-          format.html do
-            flash[:error] = e.message
-            render_wizard_frame
-          end
-        end
+        handle_error(e)
       end
 
       def select_projects
-        @jira_import.update!(projects: params[:projects])
+        @jira_import.update!(projects: select_projects_params[:projects])
         redirect_to(admin_import_jira_run_path(jira_id: @jira.id, id: @jira_import.id))
       end
 
@@ -103,6 +86,49 @@ module Admin
       end
 
       private
+
+      def change_step(step)
+        return if step.blank?
+
+        method_name = VALID_STEPS[step]
+        raise ArgumentError, "Invalid step: #{step}" unless method_name
+
+        send(method_name)
+      end
+
+      def handle_error(error)
+        respond_to do |format|
+          format.turbo_stream do
+            render_error_flash_message_via_turbo_stream(message: error.message)
+            respond_with_turbo_streams(status: :unprocessable_entity)
+          end
+          format.html do
+            flash[:error] = error.message
+            redirect_to(admin_import_jira_run_path(jira_id: @jira.id, id: @jira_import.id))
+          end
+        end
+      end
+
+      def stream_wizard
+        respond_to do |format|
+          format.turbo_stream do
+            update_via_turbo_stream(
+              component: Admin::JiraImports::WizardComponent.new(@jira_import),
+              method: "morph"
+            )
+            render turbo_stream: turbo_streams
+          end
+          format.html {
+            redirect_to(admin_import_jira_run_path(jira_id: @jira.id, id: @jira_import.id))
+          }
+        end
+      end
+
+      def select_projects_params
+        permitted = params.permit(projects: [])
+        projects = Array(permitted[:projects]).map(&:to_s).compact_blank
+        { projects: projects }
+      end
 
       def init
         return unless @jira_import.status_between?(JiraImport::INITIAL, JiraImport::CONFIGURING)
@@ -148,10 +174,6 @@ module Admin
         return unless @jira_import.status?(JiraImport::IMPORTED)
 
         @jira_import.update!(status: JiraImport::COMPLETED)
-      end
-
-      def render_wizard_frame
-        render Admin::JiraImports::FrameComponent.new(@jira_import), layout: false
       end
 
       def find_jira_and_jira_import
