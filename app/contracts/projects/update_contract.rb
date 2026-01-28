@@ -38,7 +38,7 @@ module Projects
       elsif allow_all_attributes
         # When all attributes are updated (API-only case), allow writing to all available custom
         # fields (including disabled ones) to maintain backward compatibility with the API.
-        with_all_available_custom_fields_only(super)
+        with_all_available_custom_fields(super)
       else
         []
       end
@@ -67,7 +67,7 @@ module Projects
 
     def with_available_custom_fields_only(changes) = changes & available_custom_fields.map(&:attribute_name)
 
-    def with_all_available_custom_fields_only(changes)
+    def with_all_available_custom_fields(changes)
       allowed_attributes = changes.grep_v(/^custom_field_/)
       allowed_attributes += changes & all_available_custom_fields.map(&:attribute_name)
       allowed_attributes
