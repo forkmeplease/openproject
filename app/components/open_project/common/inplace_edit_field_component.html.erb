@@ -1,4 +1,4 @@
-<%= component_wrapper(tag: :div, class: "op-inplace-edit") do %>
+<%= component_wrapper(tag: :div, class: "op-inplace-edit", data: { test_selector: wrapper_test_selector }) do %>
   <% if display_field_component.present? && !enforce_edit_mode %>
       <%= render display_field_component %>
   <% else %>

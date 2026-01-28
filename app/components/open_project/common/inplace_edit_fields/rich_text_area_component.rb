@@ -63,10 +63,12 @@ module OpenProject
                                 label: I18n.t(:button_cancel),
                                 scheme: :default,
                                 formaction: inplace_edit_field_reset_path(model: model.class.name, id: model.id, attribute:),
-                                formmethod: :get)
+                                formmethod: :get,
+                                test_selector: "op-inplace-edit-field--textarea-cancel")
             button_group.submit(name: :submit,
                                 label: I18n.t(:button_save),
-                                scheme: :primary)
+                                scheme: :primary,
+                                test_selector: "op-inplace-edit-field--textarea-save")
           end
         end
       end

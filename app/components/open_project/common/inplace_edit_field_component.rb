@@ -73,6 +73,10 @@ module OpenProject
         "op-inplace-edit-field-component--#{@model.name.parameterize(separator: '_')}-#{model.id}--#{attribute.name}"
       end
 
+      def wrapper_test_selector
+        "op-inplace-edit-field"
+      end
+
       private
 
       def writable?
