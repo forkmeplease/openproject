@@ -34,7 +34,17 @@ docker run -d \
   openproject/hocuspocus:latest
 ```
 
-## Usage
+## Configuration & Usage
+
+### Configuration
+
+By default the Hoscuspocus server will sync with the instance of OpenProject trying to connect to it. But depending on the setup being used there can be some mismatching URLs. So it's possible to set an explicit configuration to which OpenProject instance the Hocuspocus server will send requests to:
+
+```
+OPENPROJECT_DIRECT_HOSTNAME=https://my.openproject-instance.com/
+```
+
+This ensures the Hocuspocus server uses the defined host for authentication, fetching, and persisting documents. It is useful when the server needs to communicate via localhost or internal networks, or if you want to set an explicit host.
 
 ### Starting the Server
 

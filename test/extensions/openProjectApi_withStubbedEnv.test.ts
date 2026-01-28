@@ -24,8 +24,6 @@ describe("OpenProjectApi with stubbed env", () => {
   });
 
   test("when the url for the OpenProject instance is manually defined", async () => {
-    vi.stubEnv("OPENPROJECT_DIRECT_HOSTNAME", "https://my.op-instance.com");
-
     fetchMock.mockResolvedValueOnce({
       ok: true,
       status: 200,

@@ -52,7 +52,7 @@ export class OpenProjectApi implements Extension {
     }
 
     resourceUrl = replaceWithExplicitHost(resourceUrl);
-    console.log(`fetching resource from: ${resourceUrl}`);
+    printLog(`fetching resource from: ${resourceUrl}`);
 
     const response = await fetch(resourceUrl, {
       method: "GET",
