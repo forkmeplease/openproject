@@ -28,38 +28,42 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module Jiras
-    class Form < ApplicationForm
-      form do |client_form|
-        client_form.text_field(
-          name: :name,
-          label: Jira.human_attribute_name(:name),
-          required: true,
-          input_width: :medium
+module Admin::Import::Jira::ImportRuns
+  class RowComponent < OpPrimer::BorderBoxRowComponent
+    def id
+      render(
+        Primer::Beta::Link.new(
+          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
+          font_weight: :bold
         )
-
-        client_form.text_field(
-          name: :url,
-          label: Jira.human_attribute_name(:url),
-          required: true,
-          input_width: :large,
-          type: :url
-        )
-
-        client_form.text_field(
-          name: :personal_access_token,
-          label: Jira.human_attribute_name(:personal_access_token),
-          required: true,
-          input_width: :large
-        )
-
-        client_form.submit(
-          name: :submit,
-          label: model.persisted? ? I18n.t("admin.jira.form.button_save") : I18n.t("admin.jira.form.button_add"),
-          scheme: :primary
-        )
+      ) do
+        "#{I18n.t('admin.jira.run.title')} ##{model.id}"
       end
+    end
+
+    def status
+      render(Admin::Import::Jira::ImportRuns::StatusBadgeComponent.new(model.status))
+    end
+
+    def last_changed
+      helpers.format_time(model.updated_at)
+    end
+
+    def button_links
+      [
+        edit_button
+      ]
+    end
+
+    def edit_button
+      render(
+        Primer::Beta::IconButton.new(
+          icon: :pencil,
+          tag: :a,
+          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
+          "aria-label": "Edit"
+        )
+      )
     end
   end
 end

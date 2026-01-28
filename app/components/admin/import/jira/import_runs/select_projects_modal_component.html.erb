@@ -7,7 +7,7 @@
   <% d.with_header(variant: :large) %>
   <% d.with_body do %>
     <% settings_primer_form_with(**form_options) do |f| %>
-      <% render(Admin::JiraImports::Form.new(f, jira_import:)) %>
+      <% render(Admin::Import::Jira::Projects::Form.new(f, jira_import:)) %>
     <% end %>
   <% end %>
   <%

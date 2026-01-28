@@ -28,40 +28,30 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin::Jiras
-  class TableComponent < OpPrimer::BorderBoxTableComponent
-    columns :name, :last_change, :added
+module Admin::Import::Jira::ImportRuns
+  class StatusBadgeComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
 
-    def mobile_title
-      Jira.model_name.human(count: 2)
+    def initialize(status, **system_arguments)
+      super
+
+      @title = I18n.t(status.to_s, default: "", scope: "admin.jira.run.status")
+      @system_arguments = system_arguments.merge({ scheme: status_color_scheme(status) })
     end
 
-    def row_class
-      RowComponent
-    end
-
-    def has_header?
-      rows.any?
-    end
-
-    def headers
-      [
-        [:name, { caption: Jira.human_attribute_name(:name) }],
-        [:last_change, { caption: I18n.t(:"admin.jira.columns.last_change") }],
-        [:added, { caption: I18n.t(:"admin.jira.columns.added") }]
-      ]
-    end
-
-    def blank_title
-      I18n.t(:"admin.jira.blank.title")
-    end
-
-    def blank_description
-      I18n.t(:"admin.jira.blank.description")
-    end
-
-    def blank_icon
-      :tools
+    def status_color_scheme(status)
+      case status
+      when JiraImport::IMPORT_ERROR, JiraImport::REVERT_ERROR,
+        JiraImport::INSTANCE_META_ERROR, JiraImport::PROJECTS_META_ERROR
+        :danger
+      when JiraImport::IMPORTED, JiraImport::COMPLETED, JiraImport::REVERTED
+        :success
+      when JiraImport::INSTANCE_META_FETCHING, JiraImport::PROJECTS_META_FETCHING,
+        JiraImport::IMPORTING, JiraImport::REVERTING
+        :accent
+      else
+        :attention
+      end
     end
   end
 end

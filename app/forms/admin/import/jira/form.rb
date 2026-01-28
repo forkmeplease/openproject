@@ -28,41 +28,35 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin::JiraImports
-  class RowComponent < OpPrimer::BorderBoxRowComponent
-    def id
-      render(
-        Primer::Beta::Link.new(
-          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-          font_weight: :bold
-        )
-      ) do
-        "#{I18n.t('admin.jira.run.title')} ##{model.id}"
-      end
-    end
+module Admin::Import::Jira
+  class Form < ApplicationForm
+    form do |client_form|
+      client_form.text_field(
+        name: :name,
+        label: Jira.human_attribute_name(:name),
+        required: true,
+        input_width: :medium
+      )
 
-    def status
-      render(Admin::JiraImports::StatusBadgeComponent.new(model.status))
-    end
+      client_form.text_field(
+        name: :url,
+        label: Jira.human_attribute_name(:url),
+        required: true,
+        input_width: :large,
+        type: :url
+      )
 
-    def last_changed
-      helpers.format_time(model.updated_at)
-    end
+      client_form.text_field(
+        name: :personal_access_token,
+        label: Jira.human_attribute_name(:personal_access_token),
+        required: true,
+        input_width: :large
+      )
 
-    def button_links
-      [
-        edit_button
-      ]
-    end
-
-    def edit_button
-      render(
-        Primer::Beta::IconButton.new(
-          icon: :pencil,
-          tag: :a,
-          href: admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
-          "aria-label": "Edit"
-        )
+      client_form.submit(
+        name: :submit,
+        label: model.persisted? ? I18n.t("admin.jira.form.button_save") : I18n.t("admin.jira.form.button_add"),
+        scheme: :primary
       )
     end
   end

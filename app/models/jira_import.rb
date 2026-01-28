@@ -70,16 +70,16 @@ class JiraImport < ApplicationRecord
     STATUSES.index(status) >= STATUSES.index(check_status)
   end
 
+  def status_equal_or_before?(check_status)
+    STATUSES.index(status) <= STATUSES.index(check_status)
+  end
+
   def status_before?(check_status)
     STATUSES.index(status) < STATUSES.index(check_status)
   end
 
   def status_after?(check_status)
     STATUSES.index(status) > STATUSES.index(check_status)
-  end
-
-  def status_between?(check_from_including, check_to_including)
-    STATUSES.index(status) >= STATUSES.index(check_from_including) && STATUSES.index(status) <= STATUSES.index(check_to_including)
   end
 
   def status?(*check_statuses)

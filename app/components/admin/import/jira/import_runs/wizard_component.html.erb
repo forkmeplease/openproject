@@ -52,7 +52,7 @@ See COPYRIGHT and LICENSE files for more details.
                   })
                 end
               end
-              if model.status_between?(JiraImport::INSTANCE_META_DONE, JiraImport::CONFIGURING)
+              if model.status?(JiraImport::INSTANCE_META_DONE, JiraImport::CONFIGURING)
                 row.with_column do
                   render(
                     Primer::Beta::IconButton.new(
@@ -143,14 +143,14 @@ See COPYRIGHT and LICENSE files for more details.
             box.with_row(mb: 3) do
               flex_layout do |flex|
                 flex.with_column(flex: 1, mr: 1) do
-                  render(Admin::JiraImports::InfoListBoxComponent.new(
+                  render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
                     title: I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_available_data"),
                     list: import_stats_available,
                     h: :full
                   ))
                 end
                 flex.with_column(flex: 1, ml: 1) do
-                  render(Admin::JiraImports::InfoListBoxComponent.new(
+                  render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
                     title: I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_not_available_data"),
                     list: import_stats_unavailable,
                     h: :full
@@ -255,7 +255,7 @@ See COPYRIGHT and LICENSE files for more details.
               }
             end
             box.with_row(mb: 3) do
-              render(Admin::JiraImports::InfoListBoxComponent.new(
+              render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
                 title: I18n.t(:"admin.jira.run.wizard.sections.confirm_import.label_available_data"),
                 list: import_selection
               ))
@@ -298,7 +298,7 @@ See COPYRIGHT and LICENSE files for more details.
               end
             end
             box.with_row(mb: 3) do
-              render(Admin::JiraImports::InfoListBoxComponent.new(
+              render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
                 title: I18n.t(:"admin.jira.run.wizard.sections.confirm_import.label_import_data"),
                 list: import_selection
               ))
@@ -372,9 +372,9 @@ See COPYRIGHT and LICENSE files for more details.
             end
             if model.status?(JiraImport::IMPORTED, JiraImport::COMPLETED)
               box.with_row(mt: 3, mb: 3) do
-                render(Admin::JiraImports::InfoListBoxComponent.new(
+                render(Admin::Import::Jira::ImportRuns::InfoListBoxComponent.new(
                   title: I18n.t(:"admin.jira.run.wizard.sections.import_result.label_results"),
-                  list: import_stats_available
+                  list: import_selection
                 ))
               end
             end

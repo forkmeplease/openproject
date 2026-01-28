@@ -30,6 +30,5 @@
 
 module Jiras
   class UpdateService < BaseServices::Update
-
   end
 end

@@ -28,26 +28,49 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin::Jiras
-  class RowComponent < OpPrimer::BorderBoxRowComponent
-    def name
-      render(Primer::Beta::Link.new(href: admin_import_jira_path(model), font_weight: :bold)) do
-        model.name || model.url
-      end
+module Admin::Import::Jira::ImportRuns
+  class TableComponent < OpPrimer::BorderBoxTableComponent
+    columns :id, :status, :last_changed
+
+    def initialize(jira:, **)
+      @jira = jira
+      super
     end
 
-    def last_change
-      last_run_updated_at = JiraImport.where(jira_id: model.id).maximum(:updated_at)
-      updated_at = last_run_updated_at || model.updated_at
-      updated_at.nil? ? "" : time_ago(updated_at)
+    def mobile_title
+      JiraImport.model_name.human(count: 2)
     end
 
-    def time_ago(date_time)
-      I18n.t(:"admin.jira.columns.label_ago", amount: distance_of_date_in_words(Time.zone.today, date_time))
+    def row_class
+      RowComponent
     end
 
-    def added
-      helpers.format_date(model.created_at)
+    def has_actions?
+      true
+    end
+
+    def has_header?
+      rows.any?
+    end
+
+    def headers
+      [
+        [:id, { caption: I18n.t(:"admin.jira.run.title") }],
+        [:status, { caption: JiraImport.human_attribute_name(:status) }],
+        [:last_changed, { caption: I18n.t(:"admin.jira.columns.last_change") }]
+      ]
+    end
+
+    def blank_title
+      I18n.t(:"admin.jira.run.blank.title")
+    end
+
+    def blank_description
+      I18n.t(:"admin.jira.run.blank.description")
+    end
+
+    def blank_icon
+      :"arrow-down"
     end
   end
 end

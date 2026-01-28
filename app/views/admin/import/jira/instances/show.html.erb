@@ -27,7 +27,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title t(:label_administration), Jira.model_name, @jira.url %>
+<% html_title t(:label_administration), Jira.model_name, @jira.name || @jira.url %>
 
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
@@ -40,7 +40,36 @@ See COPYRIGHT and LICENSE files for more details.
         @jira.name || @jira.url
       ]
     )
+    header.with_description do
+      I18n.t(:"admin.jira.run.index.description")
+    end
+    header.with_action_button(
+      mobile_icon: nil,
+      mobile_label: nil,
+      tag: :a,
+      href: edit_admin_import_jira_path(@jira)
+    ) { I18n.t(:"admin.jira.run.index.button_edit_configuration") }
   end
 %>
 
-<%= render(Admin::Jiras::FormComponent.new(@jira)) %>
+<%=
+  flex_layout(mb: 3, flex_layout: true, justify_content: :flex_end) do |flex|
+    flex.with_column do
+      render(
+        Primer::Beta::Button.new(
+          scheme: :primary,
+          tag: :a,
+          size: :medium,
+          href: new_admin_import_jira_run_path(jira_id: @jira.id)
+        )
+      ) do |button|
+        button.with_leading_visual_icon(icon: :plus)
+        I18n.t(:"admin.jira.run.index.button_import_run")
+      end
+    end
+  end
+%>
+
+<%=
+  render(Admin::Import::Jira::ImportRuns::TableComponent.new(jira: @jira, rows: @jira_imports))
+%>

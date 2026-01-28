@@ -28,27 +28,25 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module JiraImports
-    class RevertConfirmDialogComponent < ApplicationComponent
-      include OpTurbo::Streamable
+module Admin::Import::Jira
+  class FormComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpPrimer::ComponentHelpers
+    include OpTurbo::Streamable
 
-      def initialize(jira_import:)
-        super
-        @jira_import = jira_import
-      end
+    def self.wrapper_key = :jira_form
 
-      def form_arguments
-        {
-          action: url,
-          method: :post
-        }
-      end
+    private
 
-      private
+    def form_options
+      form_target.merge(model:)
+    end
 
-      def url
-        continue_admin_import_jira_run_path(jira_id: @jira_import.jira.id, id: @jira_import.id, step: "revert")
+    def form_target
+      if model.new_record?
+        { method: :post, url: admin_import_jira_index_path }
+      else
+        { method: :patch, url: admin_import_jira_path(model) }
       end
     end
   end

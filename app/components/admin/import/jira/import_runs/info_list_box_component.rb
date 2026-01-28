@@ -28,30 +28,42 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin::JiraImports
-  class StatusBadgeComponent < ApplicationComponent
+module Admin::Import::Jira::ImportRuns
+  class InfoListBoxComponent < Primer::Component
     include OpPrimer::ComponentHelpers
 
-    def initialize(status, **system_arguments)
-      super
+    attr_reader :title, :list, :system_arguments
 
-      @title = I18n.t(status.to_s, default: "", scope: "admin.jira.run.status")
-      @system_arguments = system_arguments.merge({ scheme: status_color_scheme(status) })
+    def initialize(title:, list:, **system_arguments)
+      super()
+      @title = title
+      @list = list
+      @system_arguments = system_arguments
     end
 
-    def status_color_scheme(status)
-      case status
-      when JiraImport::IMPORT_ERROR, JiraImport::REVERT_ERROR,
-        JiraImport::INSTANCE_META_ERROR, JiraImport::PROJECTS_META_ERROR
-        :danger
-      when JiraImport::IMPORTED, JiraImport::COMPLETED, JiraImport::REVERTED
-        :success
-      when JiraImport::INSTANCE_META_FETCHING, JiraImport::PROJECTS_META_FETCHING,
-        JiraImport::IMPORTING, JiraImport::REVERTING
-        :accent
-      else
-        :attention
+    def call
+      render(OpPrimer::InsetBoxComponent.new(border: false, **system_arguments)) do
+        flex_layout do |flex|
+          flex.with_row(mb: 1) do
+            render(Primer::Beta::Text.new(font_weight: :bold)) { title }
+          end
+          list.each do |item|
+            flex.with_row(mt: 2) do
+              render_item(item)
+            end
+          end
+        end
       end
+    end
+
+    def render_item(item)
+      concat(render(
+               Primer::Beta::Octicon.new(
+                 icon: item[:checked] ? :"check-circle" : :"x-circle",
+                 color: item[:checked] ? :success : :danger
+               )
+             ))
+      concat(render(Primer::Beta::Text.new(ml: 1)) { item[:label] })
     end
   end
 end

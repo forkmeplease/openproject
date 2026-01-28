@@ -28,28 +28,26 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module Jiras
-    class FormComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
-
-      def self.wrapper_key = :jira_form
-
-      private
-
-      def form_options
-        form_target.merge(model:)
+module Admin::Import::Jira
+  class RowComponent < OpPrimer::BorderBoxRowComponent
+    def name
+      render(Primer::Beta::Link.new(href: admin_import_jira_path(model), font_weight: :bold)) do
+        model.name || model.url
       end
+    end
 
-      def form_target
-        if model.new_record?
-          { method: :post, url: admin_import_jira_index_path }
-        else
-          { method: :patch, url: admin_import_jira_path(model) }
-        end
-      end
+    def last_change
+      last_run_updated_at = JiraImport.where(jira_id: model.id).maximum(:updated_at)
+      updated_at = last_run_updated_at || model.updated_at
+      updated_at.nil? ? "" : time_ago(updated_at)
+    end
+
+    def time_ago(date_time)
+      I18n.t(:"admin.jira.columns.label_ago", amount: distance_of_date_in_words(Time.zone.today, date_time))
+    end
+
+    def added
+      helpers.format_date(model.created_at)
     end
   end
 end

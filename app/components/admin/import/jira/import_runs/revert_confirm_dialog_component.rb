@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,27 +26,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module Admin
-  module JiraImports
-    class SelectProjectsModalComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpPrimer::ComponentHelpers
-      include OpTurbo::Streamable
+module Admin::Import::Jira::ImportRuns
+  class RevertConfirmDialogComponent < ApplicationComponent
+    include OpTurbo::Streamable
 
-      MODAL_ID = "op-jira-select-projects-list-dialog"
-      FORM_ID = "op-jira-select-projects-list-form"
+    def initialize(jira_import:)
+      super
+      @jira_import = jira_import
+    end
 
-      options :jira_import
+    def form_arguments
+      {
+        action: url,
+        method: :post
+      }
+    end
 
-      def form_options
-        {
-          id: FORM_ID,
-          url: select_projects_admin_import_jira_run_path(jira_id: jira_import.jira.id, id: jira_import.id),
-          method: :post
-        }
-      end
+    private
+
+    def url
+      continue_admin_import_jira_run_path(jira_id: @jira_import.jira.id, id: @jira_import.id, step: "revert")
     end
   end
 end

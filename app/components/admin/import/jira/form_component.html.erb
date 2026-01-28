@@ -27,20 +27,10 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title t(:label_administration), t(:"admin.jira.title") %>
-
 <%=
-  render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title { t(:"admin.jira.configuration.new") }
-    header.with_breadcrumbs(
-      [
-        { href: admin_index_path, text: t(:label_administration) },
-        { href: admin_import_path, text: t(:"admin.import.title") },
-        { href: admin_import_jira_index_path, text: I18n.t(:"admin.jira.title") },
-        t(:"admin.jira.configuration.new")
-      ]
-    )
+  component_wrapper(tag: "turbo-frame") do
+    settings_primer_form_with(**form_options) do |f|
+      render(Admin::Import::Jira::Form.new(f))
+    end
   end
 %>
-
-<%= render(Admin::Jiras::FormComponent.new(@jira)) %>

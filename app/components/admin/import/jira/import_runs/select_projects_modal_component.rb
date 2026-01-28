@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,46 +26,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module Admin
-  module JiraImports
-    class InfoListBoxComponent < Primer::Component
-      include OpPrimer::ComponentHelpers
+module Admin::Import::Jira::ImportRuns
+  class SelectProjectsModalComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpPrimer::ComponentHelpers
+    include OpTurbo::Streamable
 
-      attr_reader :title, :list, :system_arguments
+    MODAL_ID = "op-jira-select-projects-list-dialog"
+    FORM_ID = "op-jira-select-projects-list-form"
 
-      def initialize(title:, list:, **system_arguments)
-        super()
-        @title = title
-        @list = list
-        @system_arguments = system_arguments
-      end
+    options :jira_import
 
-      def call
-        render(OpPrimer::InsetBoxComponent.new(border: false, **system_arguments)) do
-          flex_layout do |flex|
-            flex.with_row(mb: 1) do
-              render(Primer::Beta::Text.new(font_weight: :bold)) { title }
-            end
-            list.each do |item|
-              flex.with_row(mt: 2) do
-                render_item(item)
-              end
-            end
-          end
-        end
-      end
-
-      def render_item(item)
-        concat(render(
-                 Primer::Beta::Octicon.new(
-                   icon: item[:checked] ? :"check-circle" : :"x-circle",
-                   color: item[:checked] ? :success : :danger
-                 )
-               ))
-        concat(render(Primer::Beta::Text.new(ml: 1)) { item[:label] })
-      end
+    def form_options
+      {
+        id: FORM_ID,
+        url: select_projects_admin_import_jira_run_path(jira_id: jira_import.jira.id, id: jira_import.id),
+        method: :post
+      }
     end
   end
 end

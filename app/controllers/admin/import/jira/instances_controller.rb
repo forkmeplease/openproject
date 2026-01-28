@@ -28,8 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  class JirasController < ApplicationController
+module Admin::Import::Jira
+  class InstancesController < ApplicationController
     include OpTurbo::ComponentStream
 
     layout "admin"
@@ -95,7 +95,7 @@ module Admin
     end
 
     def stream_form_component(&)
-      update_via_turbo_stream(component: Admin::Jiras::FormComponent.new(@jira))
+      update_via_turbo_stream(component: Admin::Import::Jira::FormComponent.new(@jira))
       respond_with_turbo_streams(&)
     end
   end

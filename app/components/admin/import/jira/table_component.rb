@@ -28,29 +28,40 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module JiraImports
-    class Form < ApplicationForm
-      attr_reader :jira_import
+module Admin::Import::Jira
+  class TableComponent < OpPrimer::BorderBoxTableComponent
+    columns :name, :last_change, :added
 
-      def initialize(jira_import:)
-        super()
+    def mobile_title
+      Jira.model_name.human(count: 2)
+    end
 
-        @jira_import = jira_import
-      end
+    def row_class
+      RowComponent
+    end
 
-      form do |f|
-        f.check_box_group(name: :projects) do |check_group|
-          (@jira_import.available["projects"] || []).each do |project|
-            check_group.check_box(
-              value: project["id"],
-              label: project["name"],
-              caption: project["key"],
-              checked: @jira_import.projects&.include?(project["id"])
-            )
-          end
-        end
-      end
+    def has_header?
+      rows.any?
+    end
+
+    def headers
+      [
+        [:name, { caption: Jira.human_attribute_name(:name) }],
+        [:last_change, { caption: I18n.t(:"admin.jira.columns.last_change") }],
+        [:added, { caption: I18n.t(:"admin.jira.columns.added") }]
+      ]
+    end
+
+    def blank_title
+      I18n.t(:"admin.jira.blank.title")
+    end
+
+    def blank_description
+      I18n.t(:"admin.jira.blank.description")
+    end
+
+    def blank_icon
+      :tools
     end
   end
 end

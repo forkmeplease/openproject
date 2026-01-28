@@ -27,32 +27,20 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title t(:label_administration), JiraImport.model_name, @jira_import.id %>
+<% html_title t(:label_administration), Jira.model_name, @jira.url %>
+
 <%=
   render(Primer::OpenProject::PageHeader.new) do |header|
-    header.with_title {
-      "#{I18n.t(:"admin.jira.run.title")} #{@jira_import.id.to_s}"
-    }
+    header.with_title { @jira.name || @jira.url }
     header.with_breadcrumbs(
       [
         { href: admin_index_path, text: t(:label_administration) },
         { href: admin_import_path, text: t(:"admin.import.title") },
         { href: admin_import_jira_index_path, text: I18n.t(:"admin.jira.title") },
-        { href: admin_import_jira_path(@jira), text: @jira.name || @jira.url },
-        "#{I18n.t(:"admin.jira.run.title")} #{@jira_import.id.to_s}"
+        @jira.name || @jira.url
       ]
     )
   end
 %>
-<%=
-  render Primer::BaseComponent.new(
-    tag: :div,
-    id: "jira_import_wizard_frame",
-    data: {
-      controller: "jira-import",
-      "jira-import-url-value": continue_admin_import_jira_run_path(jira_id: @jira.id, id: @jira_import.id)
-    }
-  ) do
-    render(Admin::JiraImports::WizardComponent.new(@jira_import))
-  end
-%>
+
+<%= render(Admin::Import::Jira::FormComponent.new(@jira)) %>

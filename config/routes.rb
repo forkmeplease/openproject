@@ -719,8 +719,8 @@ Rails.application.routes.draw do
 
     namespace :import do
       get "/", to: redirect("/admin/import/jira")
-      resources :jira, controller: "/admin/jiras" do
-        resources :run, controller: "/admin/jiras/jira_imports", module: :jiras do
+      resources :jira, controller: "/admin/import/jira/instances" do
+        resources :run, controller: "/admin/import/jira/import_runs", module: :jiras do
           member do
             get :continue
             post :continue
