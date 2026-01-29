@@ -142,9 +142,17 @@ en:
       test:
         success: "Successfully connected to %{server} (version %{version})"
         failed: "Connection failed: Unable to retrieve server information"
-        error: "Connection error: %{message}"
+        error: "An unexpected error occurred while testing the connection"
+        connection_error: "Connection error: %{message}"
+        parse_error: "Failed to parse the response from Jira server. The server may not be a valid Jira instance."
+        api_error: "Jira API returned error status %{status}. Please check your credentials and permissions."
         missing_credentials: "Please provide both URL and Personal Access Token to test the connection"
         invalid_url: "Please provide a valid URL"
+      client:
+        connection_error: "Failed to connect to Jira server: %{message}"
+        connection_timeout: "Connection to Jira server timed out: %{message}"
+        parse_error: "Failed to parse Jira API response: %{message}"
+        api_error: "Jira API returned error status %{status}"
       columns:
         last_change: "Last change"
         added: "Added"

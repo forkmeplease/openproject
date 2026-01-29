@@ -96,8 +96,15 @@ module Admin::Import::Jira
 
     def test
       test_configuration(params[:url], params[:personal_access_token])
+    rescue J::ConnectionError => e
+      render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.connection_error", message: e.message))
+    rescue J::ParseError => e
+      render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.parse_error"))
+    rescue J::ApiError => e
+      render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.api_error", status: e.status))
     rescue StandardError => e
-      render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.error", message: e.message))
+      Rails.logger.error("Unexpected error testing Jira configuration: #{e.class} - #{e.message}")
+      render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.error"))
     ensure
       respond_with_turbo_streams
     end

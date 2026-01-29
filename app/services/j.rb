@@ -1,20 +1,51 @@
-class J
-=begin
-curl --request GET \
-     --url 'https://jira-software.local/rest/api/2/mypermissions' \
-     --header 'Accept: application/json' \
-     --header 'Authorization: Bearer <personal_access_token>'
+# frozen_string_literal: true
 
-curl --request GET \
-     --url 'https://jira-software.local/rest/api/2/search?jql=issuekey=PROCESS1-3' \
-     --user 'pavel.balashou:pavel.balashou' \
-     --header 'Accept: application/json' \
-     --header 'Authorization: Bearer <personal_access_token>'
-=end
-  def initialize(
-        url:,
-        personal_access_token:
-      )
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+class J
+  class Error < StandardError; end
+
+  class ConnectionError < Error; end
+
+  class ParseError < Error; end
+
+  class ApiError < Error
+    attr_reader :status, :response_body
+
+    def initialize(message, status: nil, response_body: nil)
+      super(message)
+      @status = status
+      @response_body = response_body
+    end
+  end
+
+  def initialize(url:, personal_access_token:)
     @httpx = OpenProject
                .httpx
                .plugin(:basic_auth)
@@ -23,38 +54,31 @@ curl --request GET \
     @url = url
   end
 
-  # response["permissions"]["SYSTEM_ADMIN"]["havePermission"] == true
   def mypermissions
-    @httpx.get("#{@url}/rest/api/2/mypermissions").json
+    get("/rest/api/2/mypermissions")
   end
 
   def index_condition_summary
-    @httpx.get("#{@url}/rest/api/2/index/summary").json
+    get("/rest/api/2/index/summary")
   end
 
   def server_info
-    @httpx.get("#{@url}/rest/api/2/serverInfo").json
+    get("/rest/api/2/serverInfo")
   end
 
   def all_cluster_nodes
-    @httpx.get("#{@url}/rest/api/2/cluster/nodes").json
+    get("/rest/api/2/cluster/nodes")
   end
 
-  def issues(jql: nil,
-             start_at: 0,
-             max_results: 100,
-             fields: "*all",
-             expand: "changelog")
-    @httpx.get(
-      "#{@url}/rest/api/2/search",
-      params: {
+  def issues(jql: nil, start_at: 0, max_results: 100, fields: "*all", expand: "changelog")
+    get("/rest/api/2/search", params:
+      {
         jql:,
         startAt: start_at,
         maxResults: max_results,
         fields:,
         expand:
-      }
-    ).json
+      })
   end
 
   def issues_count(jql: nil)
@@ -62,106 +86,146 @@ curl --request GET \
   end
 
   def projects(expand = "description,projectKeys")
-    @httpx.get("#{@url}/rest/api/2/project", params: { "expand" => expand }).json
+    get("/rest/api/2/project", params: { "expand" => expand })
   end
 
   def project_types
-    @httpx.get("#{@url}/rest/api/2/project/type").json
+    get("/rest/api/2/project/type")
   end
 
   def issue_types
-    @httpx.get("#{@url}/rest/api/2/issuetype").json
+    get("/rest/api/2/issuetype")
   end
 
   def issue_types_count
-    response = @httpx.get("#{@url}/rest/api/2/issuetype/page", params: { maxResults: 0 })
+    response = get_response("/rest/api/2/issuetype/page", params: { maxResults: 0 })
     if response.status == 200
-      response.json["total"]
+      parse_json(response)["total"]
     else
       issue_types.count
     end
   end
 
   def issue_types_schemes
-    @httpx.get("#{@url}/rest/api/2/issuetypescheme").json
+    get("/rest/api/2/issuetypescheme")
   end
 
   def workflows
-    @httpx.get("#{@url}/rest/api/2/workflow").json
+    get("/rest/api/2/workflow")
   end
 
   def workflowschemes
-    @httpx.get("#{@url}/rest/api/2/workflowscheme").json
+    get("/rest/api/2/workflowscheme")
   end
 
   def statuses
-    @httpx.get("#{@url}/rest/api/2/status").json
+    get("/rest/api/2/status")
   end
 
   def statuses_count
-    response = @httpx.get("#{@url}/rest/api/2/status/search", params: { maxResults: 0 })
+    response = get_response("/rest/api/2/status/search", params: { maxResults: 0 })
     if response.status == 200
-      response.json["total"]
+      parse_json(response)["total"]
     else
       statuses.count
     end
   end
 
   def status_categories
-    @httpx.get("#{@url}/rest/api/2/statuscategory").json
+    get("/rest/api/2/statuscategory")
   end
 
   def permissions
-    @httpx.get("#{@url}/rest/api/2/permissions").json
+    get("/rest/api/2/permissions")
   end
 
   def permission_schemes
-    @httpx.get("#{@url}/rest/api/2/permissionschemes").json
+    get("/rest/api/2/permissionschemes")
   end
 
   def priorities
-    @httpx.get("#{@url}/rest/api/2/priority").json
+    get("/rest/api/2/priority")
   end
 
-  def permission_schemes
-    @httpx.get("#{@url}/rest/api/2/priorityschemes").json
+  def priority_schemes
+    get("/rest/api/2/priorityschemes")
   end
 
   def roles
-    @httpx.get("#{@url}/rest/api/2/role").json
+    get("/rest/api/2/role")
   end
 
   def fields
-    @httpx.get("#{@url}/rest/api/2/field").json
+    get("/rest/api/2/field")
   end
 
   def users_search(username: ".", start_at: 0, max_results: 50)
-    @httpx.get("#{@url}/rest/api/2/user/search", params: {
-                 "username" => username,
-                 startAt: start_at,
-                 maxResults: max_results,
-                 includeActive: true,
-                 includeInactive: true
-               }).json
+    get("/rest/api/2/user/search", params:
+      {
+        username:,
+        startAt: start_at,
+        maxResults: max_results,
+        includeActive: true,
+        includeInactive: true
+      })
   end
 
   def user_by_key(key:)
-    @httpx.get("#{@url}/rest/api/2/user", params: { key:, expand: "groups" }).json
+    get("/rest/api/2/user", params: { key:, expand: "groups" })
   end
 
   def groups(query: ".", start_at: 0, max_results: 50)
-    @httpx.get("#{@url}/rest/api/2/groups/picker", params: { query:,  startAt: start_at, maxResults: max_results }).json
+    get("/rest/api/2/groups/picker", params: { query:, startAt: start_at, maxResults: max_results })
   end
 
   def project_statuses(project_id_or_key)
-    @httpx.get("#{@url}/rest/api/2/project/#{project_id_or_key}/statuses").json
+    get("/rest/api/2/project/#{project_id_or_key}/statuses")
   end
 
   def project(project_id_or_key, expand:, properties:)
-    @httpx.get(
-      "#{@url}/rest/api/2/project/#{project_id_or_key}", params: {
-      expand:,
-      properties:
-    }).json
+    get("/rest/api/2/project/#{project_id_or_key}", params:
+      {
+        expand:,
+        properties:
+      })
+  end
+
+  private
+
+  def get(path, params: {})
+    response = get_response(path, params:)
+    handle_response(response)
+  end
+
+  def get_response(path, params: {})
+    response = @httpx.get("#{@url}#{path}", params:)
+
+    if response.is_a?(HTTPX::ErrorResponse)
+      raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: response.error.message)
+    end
+
+    response
+  rescue HTTPX::ConnectionError, SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+    raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: e.message)
+  rescue Timeout::Error => e
+    raise ConnectionError, I18n.t("admin.jira.client.connection_timeout", message: e.message)
+  end
+
+  def handle_response(response)
+    if response.status >= 200 && response.status < 300
+      parse_json(response)
+    else
+      raise ApiError.new(
+        I18n.t("admin.jira.client.api_error", status: response.status),
+        status: response.status,
+        response_body: response.body.to_s
+      )
+    end
+  end
+
+  def parse_json(response)
+    response.json
+  rescue JSON::ParserError, HTTPX::Error => e
+    raise ParseError, I18n.t("admin.jira.client.parse_error", message: e.message)
   end
 end
