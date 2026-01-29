@@ -516,9 +516,9 @@ Then, existing users should be able to log in using their Azure identity. Note t
 
 Note that this setting is set to true by default for new installations already.
 
-**Q: How to automatically log out users from OpenProject that I deleted from the SSO provider?**
+**Q: How can I automatically log users out of OpenProject after I delete them from the SSO provider?**
 
-A: OpenProject does not currently revalidate user sessions after the initial login of a user. So even if the session at the SSO provider expires
+A: OpenProject does not currently revalidate user sessions after the initial login of a user. So even if the SSO provider session expires
 or the user is removed from there, this will not immediately have an effect in OpenProject. [A feature request exists](https://community.openproject.org/wp/65072) to improve this.
 
 Workarounds that are available:
