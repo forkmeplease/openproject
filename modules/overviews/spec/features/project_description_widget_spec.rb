@@ -80,9 +80,9 @@ RSpec.describe "Project description widget", :js, with_flag: { new_project_overv
         # Edit the project description within the widget
         within description_widget_area.area do
           # Find the editable description field
-          description_field = TextEditorField.new(page, "description",
-                                                  selector: "op-editable-attribute-field[fieldname='description']")
-
+          description_field = Turbo::TextEditorField.new(page,
+                                                         "description",
+                                                         selector: test_selector("op-overview-widget--project-description"))
           # Activate the field for editing
           description_field.activate!
 
@@ -94,7 +94,7 @@ RSpec.describe "Project description widget", :js, with_flag: { new_project_overv
           description_field.save!
         end
 
-        dashboard_page.expect_and_dismiss_toaster message: I18n.t("js.notice_successful_update")
+        dashboard_page.expect_and_dismiss_flash message: I18n.t("js.notice_successful_update")
 
         dashboard_page.visit!
         expect(page).to have_content("This is a test project description with markdown formatting.")
