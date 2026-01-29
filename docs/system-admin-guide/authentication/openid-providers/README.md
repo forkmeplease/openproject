@@ -519,7 +519,7 @@ Note that this setting is set to true by default for new installations already.
 **Q: How can I automatically log users out of OpenProject after I delete them from the SSO provider?**
 
 A: OpenProject does not currently revalidate user sessions after the initial login of a user. So even if the SSO provider session expires
-or the user is removed from there, this will not immediately have an effect in OpenProject. [A feature request exists](https://community.openproject.org/wp/65072) to improve this.
+or the user is removed from the SSO provider, this will not immediately have an effect in OpenProject. [A feature  was requested](https://community.openproject.org/wp/65072) to improve this flow.
 
 Workarounds that are available:
 * Ensure that the SSO provider performs a backchannel logout for all sessions of the user upon account suspension
