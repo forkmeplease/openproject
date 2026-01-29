@@ -1,7 +1,8 @@
 <%= render(
       Primer::Alpha::Dialog.new(
         title: I18n.t(:"admin.jira.run.wizard.select_projects.title"),
-        id: MODAL_ID
+        id: MODAL_ID,
+        size: :medium_portrait
       )
     ) do |d| %>
   <% d.with_header(variant: :large) %>
