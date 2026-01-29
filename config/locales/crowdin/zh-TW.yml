@@ -2380,6 +2380,7 @@ zh-TW:
       baseline_comparison: 比較差異
       board_view: 進階看板
       calculated_values: 計算值
+      capture_external_links: Capture External Links
       conditional_highlighting: 條件強調
       internal_comments: 內部備註
       custom_actions: 自訂動作
@@ -2436,6 +2437,8 @@ zh-TW:
         description: "建立並組織不同於 PM2 專案週期規劃所提供的專案階段。"
       conditional_highlighting:
         description: "想讓特定工作套件從眾多套件中脫穎而出？在工作套件列表中使用條件式醒目標示功能。"
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "需要在工作套件清單中查看關聯或子套件嗎？"
       edit_attribute_groups:
@@ -3236,6 +3239,7 @@ zh-TW:
   label_journal_diff: "內容對比"
   label_language: "語言"
   label_languages: "語言"
+  label_external_links: "External links"
   label_locale: "語言和地區"
   label_jump_to_a_project: "前往一個專案..."
   label_keyword_plural: "關鍵字"
@@ -4225,6 +4229,9 @@ zh-TW:
   setting_allowed_link_protocols: "允許連結"
   setting_allowed_link_protocols_text_html: >-
     允許在工作套件描述、長文字欄位與留言中，將這些協定顯示為連結。例如：%{tel_code} 或 %{element_code}。每行輸入一個協定。<br/>協定 %{http_code}、%{https_code} 與 %{mailto_code} 一律允許使用。
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "首次登入重新導向"
   setting_after_first_login_redirect_url_text_html: >
     設定使用者首次登入後的重新導向路徑。如果為空，則會重定向到上線導覽的首頁。 <br/> 範例：<code>/my/page</code>
@@ -4538,7 +4545,7 @@ zh-TW:
           project_mandate: "項目任務"
       submission:
         description_template: >
-          **此工作套件是在 %{wizard_name} 工作流程完成後自動建立的。** 一個包含所有提交資訊的 PDF 成品已經生成，並附加到此工作套件中，以供參考和稽核之用。 如果您需要更新或重新執行啟動步驟，您可以隨時使用下方的連結重新開啟該精靈：
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "當使用者提交專案啟動請求時，將會建立一個新的工作套件，並將請求成品以 PDF 檔案的形式附加到其中。下方的設定將定義這個新工作套件的類型、狀態和指派對象。"
         work_package_type: "工作套件類型"
         work_package_type_caption: "應用於儲存已完成成品之工作套件的類型。"
@@ -5201,3 +5208,8 @@ zh-TW:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

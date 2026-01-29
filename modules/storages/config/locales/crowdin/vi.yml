@@ -104,20 +104,20 @@ vi:
         create_folder: 'Tạo thư mục dự án được quản lý:'
         ensure_root_folder_permissions: 'Thiết lập quyền cho thư mục cơ sở:'
         hide_inactive_folders: 'Ẩn bước các thư mục không hoạt động:'
-        remote_folders: 'Đọc nội dung của thư mục nhóm:'
+        remote_folders: 'Read contents of the team folder:'
         remove_user_from_group: 'Xóa người dùng khỏi nhóm:'
         rename_project_folder: 'Đổi tên thư mục dự án được quản lý:'
       one_drive_sync_service:
         create_folder: 'Tạo thư mục dự án được quản lý:'
         ensure_root_folder_permissions: 'Thiết lập quyền cho thư mục cơ sở:'
         hide_inactive_folders: 'Ẩn bước các thư mục không hoạt động:'
-        remote_folders: 'Đọc nội dung của thư mục nhóm:'
+        remote_folders: 'Read contents of the drive root folder:'
         rename_project_folder: 'Đổi tên thư mục dự án được quản lý:'
       sharepoint_sync_service:
         create_folder: 'Tạo thư mục dự án được quản lý:'
         ensure_root_folder_permissions: 'Thiết lập quyền cho thư mục cơ sở:'
         hide_inactive_folders: 'Ẩn bước các thư mục không hoạt động:'
-        remote_folders: 'Đọc nội dung của thư mục nhóm:'
+        remote_folders: 'Read contents of the drive root folder:'
         rename_project_folder: 'Đổi tên thư mục dự án được quản lý:'
     errors:
       messages:
@@ -140,7 +140,7 @@ vi:
               conflict: The folder %{folder_name} already exists on %{parent_location}.
               not_found: "Không tìm thấy %{parent_location}."
             ensure_root_folder_permissions:
-              not_found: "Không tìm thấy %{group_folder}. Vui lòng kiểm tra thiết lập Thư mục nhóm Nextcloud của bạn."
+              not_found: "%{group_folder} wasn't found. Please check your Nextcloud Team Folder setup."
               permission_not_set: không thể thiết lập quyền trên %{group_folder}.
             hide_inactive_folders:
               permission_not_set: không thể thiết lập quyền trên %{path}.
@@ -230,7 +230,7 @@ vi:
       storage_delete_result_3: The automatically-managed project folder and all files in it will be deleted
     dependencies:
       nextcloud:
-        group_folders_app: Group Folders
+        group_folders_app: Team Folders
         integration_app: Tích hợp OpenProject
     enabled_in_projects:
       setup_incomplete_description: Bộ lưu trữ này có thiết lập chưa hoàn chỉnh. Vui lòng hoàn tất thiết lập trước khi bật nó trong nhiều dự án.
@@ -277,11 +277,11 @@ vi:
           client_folder_creation: Automatic folder creation
           client_folder_removal: Automatic folder deletion
           drive_contents: Drive content
-          files_request: Fetching group folder files
-          group_folder_app: 'Dependency: Group Folders'
-          group_folder_contents: Group folder content
-          group_folder_presence: Group folder exists
+          files_request: Fetching team folder files
           header: Các thư mục dự án được quản lý tự động
+          team_folder_app: 'Dependency: Team Folders'
+          team_folder_contents: Team folder content
+          team_folder_presence: Team folder exists
           userless_access: Server-side request authentication
         authentication:
           existing_token: User token
@@ -316,12 +316,12 @@ vi:
         client_secret_invalid: Bí mật khách hàng OAuth 2 cấu hình không hợp lệ. Vui lòng kiểm tra cấu hình.
         nc_dependency_missing: 'Thiếu sự phụ thuộc bắt buộc vào bộ lưu trữ tệp. Vui lòng thêm sự phụ thuộc sau: %{dependency}.'
         nc_dependency_version_mismatch: The %{dependency} app version is not supported. Please update your Nextcloud server.
-        nc_group_folder_not_found: The group folder could not be found.
         nc_host_not_found: Không tìm thấy máy chủ Nextcloud tại url máy chủ được cấu hình. Vui lòng kiểm tra cấu hình.
         nc_oauth_request_not_found: The endpoint to fetch the currently connected user was not found. Please check the server logs for further information.
         nc_oauth_request_unauthorized: The current user isn't authorized to access the remote file storage. Please check the server logs for further information.
         nc_oauth_token_missing: OpenProject cannot test the user level communication with Nextcloud as the user did not yet link their Nextcloud account.
-        nc_unexpected_content: Unexpected content found in the managed group folder.
+        nc_team_folder_not_found: The team folder could not be found.
+        nc_unexpected_content: Unexpected content found in the managed team folder.
         nc_userless_access_denied: The configured app password is invalid.
         not_configured: Kết nối không thể được xác thực. Vui lòng hoàn tất cấu hình trước.
         od_client_cant_delete_folder: The client is having trouble deleting folders. Please check the setup documentation for your storage.

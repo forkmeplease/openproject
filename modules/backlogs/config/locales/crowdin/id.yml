@@ -41,7 +41,7 @@ id:
         sprint:
           cannot_end_before_it_starts: "Sprint tidak bisa berakhir sebelum mulai."
   attributes:
-    task_type: "Task type"
+    task_type: "Jenis tugas"
   backlogs:
     add_new_story: "Cerita baru "
     any: "apapun"
@@ -105,7 +105,7 @@ id:
   errors:
     attributes:
       task_type:
-        cannot_be_story_type: "can not also be a story type"
+        cannot_be_story_type: "bisa juga bukan jenis cerita"
   error_intro_plural: "Kesalahan berikut ini ditemui:"
   error_intro_singular: "Kesalahan berikut ini ditemui:"
   error_outro: "Perbaiki kesalahan di atas sebelum mengirimkannya lagi."
@@ -129,10 +129,10 @@ id:
   label_points_burn_up: "Naik"
   label_product_backlog: "backlog produk"
   label_select_all: "Pilih Semua"
-  label_select_type: "Select a type"
-  label_select_types: "Select types"
-  label_selected_type: "Selected type"
-  label_selected_types: "Selected types"
+  label_select_type: "Pilih jenis"
+  label_select_types: "Pilih jenis"
+  label_selected_type: "Jenis yang dipilih"
+  label_selected_types: "Jenis yang dipilih"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Kartu ekspor"
   label_sprint_impediments: "Hanbatan kekuatan"
@@ -170,6 +170,6 @@ id:
   version_settings_display_option_none: "tidak ada"
   version_settings_display_option_right: "kanan"
   setting_plugin_openproject_backlogs_story_types_caption: |
-    Types treated as backlog stories (e.g., Feature, User story). Must differ from task type.
+    Jenis yang dianggap sebagai cerita backlog (misalnya Fitur, Cerita Pengguna). Harus berbeda dari jenis tugas.
   setting_plugin_openproject_backlogs_task_type_caption: |
-    Type used for story tasks. Must differ from story types.
+    Jenis yang digunakan untuk tugas cerita. Harus berbeda dari jenis tugas.

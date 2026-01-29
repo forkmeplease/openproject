@@ -2526,6 +2526,7 @@ ru:
       baseline_comparison: Сравнение базовых уровней
       board_view: Расширенные доски
       calculated_values: Рассчитываемые значения
+      capture_external_links: Capture External Links
       conditional_highlighting: Условное выделение
       internal_comments: Служебный комментарий
       custom_actions: Пользовательские действия
@@ -2582,6 +2583,8 @@ ru:
         description: "Создание и организация этапов и стадий проекта, отличных от тех, что предусмотрены планированием цикла проекта PM2."
       conditional_highlighting:
         description: "Нужно ли выделять определённые пакеты работ из общего списка? Используйте условное выделение в таблице пакетов работ."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "Нужно видеть отношения или дочерние элементы в списке пакетов работ?"
       edit_attribute_groups:
@@ -3385,6 +3388,7 @@ ru:
   label_journal_diff: "Описание сравнения"
   label_language: "Язык"
   label_languages: "Языки"
+  label_external_links: "External links"
   label_locale: "Язык и регион"
   label_jump_to_a_project: "Перейти к проекту..."
   label_keyword_plural: "Ключевые слова"
@@ -4379,6 +4383,9 @@ ru:
   setting_allowed_link_protocols: "Разрешить ссылки на протоколы"
   setting_allowed_link_protocols_text_html: >-
     Разрешить отображать эти протоколы как ссылки в описаниях пакетов работ, длинных текстовых полях и комментариях. Например, %{tel_code} или %{element_code}. Введите по одному протоколу в строке. <br/>Протоколы %{http_code}, %{https_code} и %{mailto_code} всегда разрешены.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "Перенаправление первого входа"
   setting_after_first_login_redirect_url_text_html: >
     Задайте путь для перенаправления пользователей после их первого входа в систему. Если не задано, то пользователь будет перенаправлен на домашнюю страницу обзорного тура. <br/> Например: <code>/my/page</code>
@@ -4692,7 +4699,7 @@ ru:
           project_mandate: "Мандат проекта"
       submission:
         description_template: >
-          **Этот пакет работ был автоматически создан по завершении рабочего процесса %{wizard_name}.** Артефакт в формате PDF, содержащий всю представленную информацию, был создан и прикреплен к этому рабочему пакету для справки и целей аудита. Если Вам необходимо обновить или повторно выполнить шаги инициации, Вы можете в любой момент снова открыть мастер, воспользовавшись приведенной ниже ссылкой:
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "Когда пользователь подает запрос на инициирование проекта, будет создан новый пакет работ с запросом, прикрепленным в виде PDF-файла. Настройки, приведенные ниже, определяют тип, статус и назначение этого нового рабочего пакета."
         work_package_type: "Тип пакета работ"
         work_package_type_caption: "Тип пакета работ, который должен использоваться для хранения завершенного артефакта."
@@ -5360,3 +5367,8 @@ ru:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

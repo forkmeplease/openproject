@@ -2430,6 +2430,7 @@ fr:
       baseline_comparison: Comparaisons de référence
       board_view: Tableaux avancés
       calculated_values: Valeurs calculées
+      capture_external_links: Capture External Links
       conditional_highlighting: Mise en surbrillance conditionnelle
       internal_comments: Commentaires internes
       custom_actions: Actions personnalisées
@@ -2486,6 +2487,8 @@ fr:
         description: "Créez et organisez des phases de projet différentes de celles fournies par la planification du cycle de projet PM2."
       conditional_highlighting:
         description: "Vous avez besoin que certains lots de travaux se démarquent de la masse ? Utilisez la mise en évidence conditionnelle dans le tableau des lots de travaux."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "Vous avez besoin de voir les relations ou les éléments enfants dans la liste des lots de travaux ?"
       edit_attribute_groups:
@@ -3287,6 +3290,7 @@ fr:
   label_journal_diff: "Comparaison de description"
   label_language: "Langue"
   label_languages: "Langues"
+  label_external_links: "External links"
   label_locale: "Langue et région"
   label_jump_to_a_project: "Aller à un projet…"
   label_keyword_plural: "Mots clés"
@@ -4280,6 +4284,9 @@ fr:
   setting_allowed_link_protocols: "Protocoles de lien autorisés"
   setting_allowed_link_protocols_text_html: >-
     Permettre que ces protocoles soient affichés sous forme de liens dans les descriptions des lots de travaux, les champs de texte long et les commentaires. Par exemple, %{tel_code} ou %{element_code}. Saisissez un protocole par ligne. <br/>Les protocoles %{http_code}, %{https_code} et %{mailto_code} sont toujours autorisés.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "Redirection de première connexion"
   setting_after_first_login_redirect_url_text_html: >
     Définissez un chemin pour rediriger les utilisateurs après leur première connexion. S’il est vide, les utilisateurs seront redirigés vers la page d'accueil de la visite d'intégration. <br/> Exemple : <code>/my/page</code>
@@ -4593,7 +4600,7 @@ fr:
           project_mandate: "Mandat du projet"
       submission:
         description_template: >
-          **Ce lot de travaux a été créé automatiquement à l'issue du flux de travail %{wizard_name}.** Un artefact PDF contenant toutes les informations envoyées a été généré et joint à ce lot de travaux à des fins de référence et d'audit. Si vous avez besoin de mettre à jour ou de réexécuter les étapes de lancement, vous pouvez rouvrir l'assistant à tout moment en utilisant le lien ci-dessous :
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "Lorsqu'un utilisateur envoie une demande de lancement de projet, un nouveau lot de travail est créé avec l'artefact de la demande en pièce jointe au format PDF. Les paramètres ci-dessous définissent le type, le statut et le destinataire de ce nouveau lot de travaux."
         work_package_type: "Type de lot de travaux"
         work_package_type_caption: "Le type de lot de travaux qui doit être utilisé pour stocker l'artefact terminé."
@@ -5257,3 +5264,8 @@ fr:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

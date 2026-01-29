@@ -245,6 +245,16 @@ uk:
         summary_series: "Серію нарад «%{title}» скасував(-ла) %{actor}."
         summary: "«%{title}» скасував(-ла) %{actor}."
         date_time: "Заплановані дата/час"
+      participant_added:
+        header: "Meeting '%{title}' - Participant added"
+        header_series: "Meeting series '%{title}' - Participant added"
+        summary: "%{actor} added %{participant} to the meeting '%{title}'"
+        summary_series: "%{actor} added %{participant} to the meeting series '%{title}'"
+      participant_removed:
+        header: "Meeting '%{title}' - Participant removed"
+        header_series: "Meeting series '%{title}' - Participant removed"
+        summary: "%{actor} removed %{participant} from the meeting '%{title}'"
+        summary_series: "%{actor} removed %{participant} from the meeting series '%{title}'"
       ended:
         header_series: "Завершено: серія нарад «%{title}»"
         summary_series: "Серію нарад «%{title}» завершив(-ла) %{actor}."

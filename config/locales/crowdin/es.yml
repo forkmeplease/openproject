@@ -2429,6 +2429,7 @@ es:
       baseline_comparison: Comparación de base de referencia
       board_view: Tableros avanzados
       calculated_values: Valores calculados
+      capture_external_links: Capture External Links
       conditional_highlighting: Resaltado condicional
       internal_comments: Comentarios Internos
       custom_actions: Acciones personalizadas
@@ -2485,6 +2486,8 @@ es:
         description: "Cree y organice fases de proyecto diferentes a las previstas en la planificación del ciclo del proyecto PM2."
       conditional_highlighting:
         description: "¿Necesita que determinados paquetes de trabajo destaquen entre la masa? Utilice el resaltado condicional en la tabla de paquetes de trabajo."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "¿Necesita ver relaciones o elementos secundarios en la lista de paquetes de trabajo?"
       edit_attribute_groups:
@@ -3286,6 +3289,7 @@ es:
   label_journal_diff: "Comparación de la descripción"
   label_language: "Idioma"
   label_languages: "Idiomas"
+  label_external_links: "External links"
   label_locale: "Idioma y región"
   label_jump_to_a_project: "Saltar a un proyecto..."
   label_keyword_plural: "Palabras clave"
@@ -4278,6 +4282,9 @@ es:
   setting_allowed_link_protocols: "Protocolos de enlace permitidos"
   setting_allowed_link_protocols_text_html: >-
     Permita que estos protocolos se muestren como enlaces en las descripciones de los paquetes de trabajo, los campos de texto largos y los comentarios. Por ejemplo, %{tel_code} o %{element_code}. Introduzca un protocolo por línea. <br/> Los protocolos %{http_code}, %{https_code} y %{mailto_code} siempre están permitidos.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "Primera redirección de inicio de sesión"
   setting_after_first_login_redirect_url_text_html: >
     Establezca una ruta para redirigir a los usuarios tras su primer inicio de sesión. Si está vacía, redirige a la página de inicio del recorrido de incorporación. <br/> Ejemplo: <code>/my/page</code>
@@ -4591,7 +4598,7 @@ es:
           project_mandate: "Mandato del proyecto"
       submission:
         description_template: >
-          **Este paquete de trabajo se ha creado automáticamente al completar el flujo de trabajo %{wizard_name}.** Se ha generado un archivo PDF con toda la información enviada y se ha adjuntado a este paquete de trabajo para fines de referencia y auditoría. Si necesitas actualizar o volver a ejecutar los pasos de inicio, puedes volver a abrir el asistente en cualquier momento utilizando el siguiente enlace:
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "Cuando un usuario envía una solicitud de inicio de proyecto, se creará un nuevo paquete de trabajo con el artefacto de solicitud adjunto como archivo PDF. La configuración siguiente define el tipo, el estado y el asignado de este nuevo paquete de trabajo."
         work_package_type: "Tipo de paquete de trabajo"
         work_package_type_caption: "El tipo de paquete de trabajo que debe utilizarse para almacenar el artefacto completado."
@@ -5255,3 +5262,8 @@ es:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

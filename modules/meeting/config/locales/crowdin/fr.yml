@@ -235,6 +235,16 @@ fr:
         summary_series: "La série de réunions « %{title} » a été annulée par %{actor}."
         summary: "« %{title} » a été annulée par %{actor}."
         date_time: "Date/heure prévue"
+      participant_added:
+        header: "Meeting '%{title}' - Participant added"
+        header_series: "Meeting series '%{title}' - Participant added"
+        summary: "%{actor} added %{participant} to the meeting '%{title}'"
+        summary_series: "%{actor} added %{participant} to the meeting series '%{title}'"
+      participant_removed:
+        header: "Meeting '%{title}' - Participant removed"
+        header_series: "Meeting series '%{title}' - Participant removed"
+        summary: "%{actor} removed %{participant} from the meeting '%{title}'"
+        summary_series: "%{actor} removed %{participant} from the meeting series '%{title}'"
       ended:
         header_series: "Terminé : Série de rencontres '%{title}'"
         summary_series: "La série de réunions '%{title}' a été clôturée par %{actor}."

@@ -2384,6 +2384,7 @@ ko:
       baseline_comparison: 기준선 비교
       board_view: 고급 보드
       calculated_values: 계산된 값
+      capture_external_links: Capture External Links
       conditional_highlighting: 조건부 강조 표시
       internal_comments: 내부 코멘트
       custom_actions: 사용자 지정 작업
@@ -2440,6 +2441,8 @@ ko:
         description: "PM2 프로젝트 사이클 계획에서 제공되는 것과는 다른 프로젝트 단계를 만들고 구성합니다."
       conditional_highlighting:
         description: "대다수와 차별화되는 특정 작업 패키지가 필요하신가요? 작업 패키지 테이블에서 조건부 강조 표시를 사용하세요."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "작업 패키지 목록에서 관계 또는 자식 요소를 확인해야 하나요?"
       edit_attribute_groups:
@@ -3240,6 +3243,7 @@ ko:
   label_journal_diff: "설명 비교"
   label_language: "언어"
   label_languages: "언어"
+  label_external_links: "External links"
   label_locale: "언어 및 지역"
   label_jump_to_a_project: "프로젝트로 이동..."
   label_keyword_plural: "키워드"
@@ -4228,6 +4232,9 @@ ko:
   setting_allowed_link_protocols: "허용된 링크 프로토콜"
   setting_allowed_link_protocols_text_html: >-
     이러한 프로토콜이 작업 패키지 설명, 긴 텍스트 필드 및 코멘트에서 링크로 렌더링되도록 허용합니다. 예: %{tel_code} 또는 %{element_code}. 라인별로 하나의 프로토콜을 입력합니다. <br/> %{http_code}, %{https_code} 및 %{mailto_code} 프로토콜은 항상 허용됩니다.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "첫 번째 로그인 리디렉션"
   setting_after_first_login_redirect_url_text_html: >
     첫 로그인 후 사용자를 리디렉션할 경로를 설정하세요. 비어 있으면 온보딩 투어의 홈페이지로 리디렉션됩니다. <br/> 예: <code>/my/page</code>
@@ -4541,7 +4548,7 @@ ko:
           project_mandate: "프로젝트 위임"
       submission:
         description_template: >
-          **이 작업 패키지는 %{wizard_name} 워크플로를 완료하면 자동으로 생성됩니다.** 제출된 모든 정보가 포함된 PDF 아티팩트가 생성되어 참조 및 감사 목적으로 이 작업 패키지에 첨부되었습니다. 시작 단계를 업데이트하거나 다시 실행해야 하는 경우 아래 링크를 사용하여 언제든지 마법사를 다시 열 수 있습니다.
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "사용자가 프로젝트 시작 요청을 제출하면 요청 아티팩트가 PDF 파일로 첨부된 새 작업 패키지가 생성됩니다. 아래 설정은 이 새 작업 패키지의 유형, 상태 및 담당자를 정의합니다."
         work_package_type: "작업 패키지 유형"
         work_package_type_caption: "완료된 아티팩트를 저장하는 데 사용할 작업 패키지 유형입니다."
@@ -5204,3 +5211,8 @@ ko:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

@@ -2432,6 +2432,7 @@ tr:
       baseline_comparison: Temel Karşılaştırmalar
       board_view: Gelişmiş Panolar
       calculated_values: Calculated values
+      capture_external_links: Capture External Links
       conditional_highlighting: Koşullu Vurgulama
       internal_comments: Dahili Yorumlar
       custom_actions: Özel Eylemler
@@ -2488,6 +2489,8 @@ tr:
         description: "PM2 proje döngüsü planlaması tarafından sağlananlardan farklı proje aşamaları oluşturun ve düzenleyin."
       conditional_highlighting:
         description: "Need certain work packages to stand out from the mass? Use conditional highlighting in the work packages table."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "Need to see relations or child elements in the work package list?"
       edit_attribute_groups:
@@ -3289,6 +3292,7 @@ tr:
   label_journal_diff: "Açıklama Karşılaştırması"
   label_language: "Dil"
   label_languages: "Diller"
+  label_external_links: "External links"
   label_locale: "Dil ve bölge"
   label_jump_to_a_project: "Projeye git..."
   label_keyword_plural: "Anahtar kelimeler"
@@ -4280,6 +4284,9 @@ tr:
   setting_allowed_link_protocols: "İzin verilen bağlantı protokolleri"
   setting_allowed_link_protocols_text_html: >-
     Bu protokollerin iş paketi açıklamalarında, uzun metin alanlarında ve yorumlarda bağlantı olarak gösterilmesine izin verin. Örneğin, %{tel_code} veya %{element_code}. Her satıra bir protokol girin. <br/> %{http_code}, %{https_code} ve %{mailto_code} protokollerine her zaman izin verilir.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "İlk giriş yönlendirmesi"
   setting_after_first_login_redirect_url_text_html: >
     Set a path to redirect users after their first login. If empty, redirects to the home page for the onboarding tour. <br/> Example: <code>/my/page</code>
@@ -4593,7 +4600,7 @@ tr:
           project_mandate: "Project mandate"
       submission:
         description_template: >
-          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artefact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "When a user submits a project initiation request, a new work package will be created with the request artifact attached as a PDF file. The settings below define the type, status and assignee for this new work package."
         work_package_type: "Work package type"
         work_package_type_caption: "The work package type that should be used to store the completed artifact."
@@ -5257,3 +5264,8 @@ tr:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

@@ -230,6 +230,16 @@ zh-CN:
         summary_series: "%{actor} 已取消会议系列 '%{title}'。"
         summary: "%{actor} 已取消 '%{title}'。"
         date_time: "预定日期/时间"
+      participant_added:
+        header: "Meeting '%{title}' - Participant added"
+        header_series: "Meeting series '%{title}' - Participant added"
+        summary: "%{actor} added %{participant} to the meeting '%{title}'"
+        summary_series: "%{actor} added %{participant} to the meeting series '%{title}'"
+      participant_removed:
+        header: "Meeting '%{title}' - Participant removed"
+        header_series: "Meeting series '%{title}' - Participant removed"
+        summary: "%{actor} removed %{participant} from the meeting '%{title}'"
+        summary_series: "%{actor} removed %{participant} from the meeting series '%{title}'"
       ended:
         header_series: "结束：会议系列 '%{title}'"
         summary_series: "会议系列 '%{title}' 已由 %{actor} 结束。"

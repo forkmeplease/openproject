@@ -2380,6 +2380,7 @@ zh-CN:
       baseline_comparison: 基线比较
       board_view: 高级面板
       calculated_values: 计算值
+      capture_external_links: Capture External Links
       conditional_highlighting: 条件高亮
       internal_comments: 内部评论
       custom_actions: 自定义操作
@@ -2436,6 +2437,8 @@ zh-CN:
         description: "创建和组织与PM2项目周期规划不同的项目阶段。"
       conditional_highlighting:
         description: "想让工作包脱颖而出吗？在工作包表中使用条件高亮显示。"
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "需要在工作包列表中看到关系或子项吗？"
       edit_attribute_groups:
@@ -3236,6 +3239,7 @@ zh-CN:
   label_journal_diff: "描述的对比"
   label_language: "语言"
   label_languages: "语言"
+  label_external_links: "External links"
   label_locale: "语言和地区"
   label_jump_to_a_project: "跳转到一个项目..."
   label_keyword_plural: "关键词"
@@ -4222,6 +4226,9 @@ zh-CN:
   setting_allowed_link_protocols: "允许的链接协议"
   setting_allowed_link_protocols_text_html: >-
     允许这些协议在工作包描述、长文本字段和评论中显示为链接。例如，%{tel_code} 或 %{element_code}。每行输入一个协议。<br/> 协议 %{http_code}、%{https_code} 和 %{mailto_code} 始终允许。
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "首次登录重定向"
   setting_after_first_login_redirect_url_text_html: >
     设置用户首次登录后的重定向路径。如果该路径为空，则重定向到主页以进行导览介绍。 <br/> 示例： <code>/my/page</code>
@@ -4535,7 +4542,7 @@ zh-CN:
           project_mandate: "项目授权"
       submission:
         description_template: >
-          **此工作包是在 %{wizard_name} 工作流完成后自动创建的**。 包含所有提交信息的 PDF 工件已生成并附加到此工作包，供参考和审核。 如果需要更新或重新运行初始化步骤，您可以随时使用下方链接重新打开向导：
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "当用户提交项目启动请求时，将创建一个新的工作包，并以 PDF 文件形式附上请求工件。以下设置定义了新工作包的类型、状态和受理人。"
         work_package_type: "工作包类型"
         work_package_type_caption: "应当用于存储已完成工件的工作包类型。"
@@ -5197,3 +5204,8 @@ zh-CN:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"

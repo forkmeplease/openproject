@@ -2429,6 +2429,7 @@ it:
       baseline_comparison: Confronti della base di riferimento
       board_view: Schede avanzate
       calculated_values: Valori calcolati
+      capture_external_links: Capture External Links
       conditional_highlighting: Evidenziazione condizionale
       internal_comments: Commenti interni
       custom_actions: Azioni personalizzate
@@ -2485,6 +2486,8 @@ it:
         description: "Crea e organizza fasi di progetto diverse da quelle forniti dalla pianificazione del ciclo di progetto PM2."
       conditional_highlighting:
         description: "Hai bisogno di alcune macro-attività per distinguerti dalla massa? Usa l'evidenziazione condizionale nella tabella delle macro-attività."
+      capture_external_links:
+        description: "Prevent social engineering attacks by capturing and warning about external links before users visit them."
       work_package_query_relation_columns:
         description: "Vuoi visualizzare le relazioni o gli elementi figlio nell'elenco di macro-attività?"
       edit_attribute_groups:
@@ -3286,6 +3289,7 @@ it:
   label_journal_diff: "Confronto Descrizione"
   label_language: "Lingua"
   label_languages: "Lingue"
+  label_external_links: "External links"
   label_locale: "Lingua e paese"
   label_jump_to_a_project: "Salta ad altro progetto..."
   label_keyword_plural: "Parole chiave"
@@ -4279,6 +4283,9 @@ it:
   setting_allowed_link_protocols: "Protocolli di collegamento consentiti"
   setting_allowed_link_protocols_text_html: >-
     Consenti che questi protocolli vengano visualizzati come link nelle descrizioni delle macro-attività, nei campi di testo lunghi e nei commenti. Ad esempio, %{tel_code} o %{element_code}. Inserisci un protocollo per riga. <br/> I protocolli %{http_code}, %{https_code} e %{mailto_code} sono sempre consentiti.
+  setting_capture_external_links: "Capture external links"
+  setting_capture_external_links_text: >
+    When enabled, all external links in formatted text will redirect through a warning page before leaving the application. This helps protect users from potentially malicious external websites.
   setting_after_first_login_redirect_url: "Reindirizzamento di primo accesso"
   setting_after_first_login_redirect_url_text_html: >
     Imposta un percorso per reindirizzare gli utenti dopo il loro primo accesso. Se vuoto, reindirizza alla home page per il tour di onboarding. <br/> Esempio: <code>/my/page</code>
@@ -4592,7 +4599,7 @@ it:
           project_mandate: "Mandato del progetto"
       submission:
         description_template: >
-          **Questa macro-attività è stata creata automaticamente al completamento del flusso di lavoro %{wizard_name}.** È stato generato un artefatto PDF contenente tutte le informazioni inviate ed è stato allegato a questa macro-attività a fini di consultazione e audit. Se devi aggiornare o rieseguire i passaggi di avvio, puoi riaprire la procedura guidata in qualsiasi momento utilizzando il link qui sotto:
+          **This work package was automatically created upon completion of the %{wizard_name} workflow.** A PDF artifact containing all submitted information has been generated and attached to this work package for reference and audit purposes. If you need to update or re-run the initiation steps, you can reopen the wizard at any time by using the link below:
         description: "Quando un utente invia una richiesta di avvio del progetto, viene creata una nuova macro-attività con l'artefatto della richiesta allegato come file PDF. Le impostazioni di seguito definiscono il tipo, lo stato e l'assegnatario di questa nuova macro-attività."
         work_package_type: "Tipo di macro-attività"
         work_package_type_caption: "Il tipo di macro-attività che dovrebbe essere utilizzato per memorizzare l'artefatto completato."
@@ -5257,3 +5264,8 @@ it:
   token:
     hashed_token:
       display_value_placeholder: "***"
+  external_link_warning:
+    title: "Leaving OpenProject"
+    warning_message: "You are about to leave OpenProject and visit an external website. Please be aware that external websites are not under our control and may have different privacy and security policies."
+    continue_message: "Are you sure you want to proceed to the following external link?"
+    continue_button: "Continue to external website"
