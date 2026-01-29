@@ -28,34 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module MeetingAgendaItems
-  class BaseContract < ::ModelContract
-    include EditableItem
-
-    def self.model
-      MeetingAgendaItem
-    end
-
-    validate :presenter_can_participate
-
-    attribute :meeting
-    attribute :work_package
-    attribute :meeting_section
-
-    attribute :position
-    attribute :title
-    attribute :duration_in_minutes
-    attribute :notes
-    attribute :presenter
-
-    private
-
-    def presenter_can_participate
-      return if model.meeting.nil?
-      return if model.presenter.nil?
-      return if model.presenter.allowed_in_project?(:view_meetings, model.meeting.project)
-
-      errors.add(:presenter, :invalid_user)
+module API
+  module V3
+    module Projects
+      module Configuration
+        class ProjectConfigurationAPI < ::API::OpenProjectAPI
+          resource :configuration do
+            get do
+              ProjectConfigurationRepresenter.new(
+                ProjectConfiguration.new(@project),
+                current_user:
+              )
+            end
+          end
+        end
+      end
     end
   end
 end

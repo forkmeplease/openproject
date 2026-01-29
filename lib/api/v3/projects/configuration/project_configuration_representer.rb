@@ -28,34 +28,40 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module MeetingAgendaItems
-  class BaseContract < ::ModelContract
-    include EditableItem
+module API
+  module V3
+    module Projects
+      module Configuration
+        # Extends Setting (global config) with project-specific settings.
+        # All global configuration is delegated to Setting, with project-specific
+        # settings overridden.
+        class ProjectConfiguration < SimpleDelegator
+          attr_reader :project
 
-    def self.model
-      MeetingAgendaItem
-    end
+          delegate :id, to: :project
 
-    validate :presenter_can_participate
+          def initialize(project)
+            super(Setting)
+            @project = project
+          end
 
-    attribute :meeting
-    attribute :work_package
-    attribute :meeting_section
+          def enabled_internal_comments
+            project.enabled_internal_comments || false
+          end
+        end
 
-    attribute :position
-    attribute :title
-    attribute :duration_in_minutes
-    attribute :notes
-    attribute :presenter
+        class ProjectConfigurationRepresenter < ::API::V3::Configuration::ConfigurationRepresenter
+          link :self do
+            {
+              href: api_v3_paths.project_configuration(represented.id)
+            }
+          end
 
-    private
-
-    def presenter_can_participate
-      return if model.meeting.nil?
-      return if model.presenter.nil?
-      return if model.presenter.allowed_in_project?(:view_meetings, model.meeting.project)
-
-      errors.add(:presenter, :invalid_user)
+          # Project-specific settings
+          property :enabled_internal_comments,
+                   render_nil: true
+        end
+      end
     end
   end
 end
