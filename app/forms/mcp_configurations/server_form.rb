@@ -28,12 +28,45 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class McpConfiguration < ApplicationRecord
-  SERVER_CONFIGURATION_IDENTIFIER = "mcp_server"
+module McpConfigurations
+  class ServerForm < ApplicationForm
+    include Redmine::I18n
 
-  class << self
-    def server_config
-      McpConfiguration.find_or_initialize_by(identifier: SERVER_CONFIGURATION_IDENTIFIER)
+    form do |f|
+      # TODO: Hide rest of form (and rest of page) when disabled, show when enabled (only after pressing "Update")
+      f.check_box(
+        name: :enabled,
+        label: McpConfiguration.human_attribute_name(:enabled)
+      )
+
+      if server_enabled?
+        f.text_field(
+          name: :title,
+          label: McpConfiguration.human_attribute_name(:title),
+          caption: I18n.t("admin.mcp_configurations.server_form.title_caption"),
+          input_width: :large
+        )
+
+        f.text_area(
+          name: :description,
+          label: McpConfiguration.human_attribute_name(:description),
+          caption: I18n.t("admin.mcp_configurations.server_form.description_caption"),
+          input_width: :large,
+          rows: 4
+        )
+      end
+
+      f.submit(
+        name: :submit,
+        label: I18n.t(:button_update),
+        scheme: :secondary
+      )
+    end
+
+    private
+
+    def server_enabled?
+      model.enabled?
     end
   end
 end

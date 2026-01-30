@@ -28,12 +28,25 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class McpConfiguration < ApplicationRecord
-  SERVER_CONFIGURATION_IDENTIFIER = "mcp_server"
+module McpConfigurations
+  class EditTableComponent < OpPrimer::BorderBoxTableComponent
+    columns :name, :title, :description, :enabled
 
-  class << self
-    def server_config
-      McpConfiguration.find_or_initialize_by(identifier: SERVER_CONFIGURATION_IDENTIFIER)
+    def headers
+      [
+        [:name, { caption: McpConfiguration.human_attribute_name(:name) }],
+        [:title, { caption: McpConfiguration.human_attribute_name(:title) }],
+        [:description, { caption: McpConfiguration.human_attribute_name(:description) }],
+        [:enabled, { caption: McpConfiguration.human_attribute_name(:enabled) }]
+      ]
+    end
+
+    def mobile_title
+      "TODO: Does mobile even make sense?"
+    end
+
+    def row_class
+      EditRowComponent
     end
   end
 end

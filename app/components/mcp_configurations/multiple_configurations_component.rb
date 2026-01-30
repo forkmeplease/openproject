@@ -28,12 +28,18 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class McpConfiguration < ApplicationRecord
-  SERVER_CONFIGURATION_IDENTIFIER = "mcp_server"
+module McpConfigurations
+  class MultipleConfigurationsComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
 
-  class << self
-    def server_config
-      McpConfiguration.find_or_initialize_by(identifier: SERVER_CONFIGURATION_IDENTIFIER)
+    attr_reader :submit_label
+
+    alias_method :configurations, :model
+
+    def initialize(*, submit_label:, **)
+      super(*, **)
+
+      @submit_label = submit_label
     end
   end
 end
