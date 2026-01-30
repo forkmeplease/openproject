@@ -127,7 +127,7 @@ module Redmine
           return unless values.is_a?(Hash) && values.any?
 
           values.with_indifferent_access.each do |custom_field_id, val|
-            existing_cv_by_value = custom_values_for_custom_field(id: custom_field_id, all: true)
+            existing_cv_by_value = custom_values_for_custom_field(custom_field_id, all: true)
                                      .group_by(&:value)
                                      .transform_values(&:first)
             new_values = Array(val).map { |v| v.respond_to?(:id) ? v.id.to_s : v.to_s }
@@ -140,8 +140,10 @@ module Redmine
           end
         end
 
-        def custom_values_for_custom_field(id:, all: false)
-          custom_field_values(all:).select { |cv| cv.custom_field_id == id.to_i }
+        def custom_values_for_custom_field(custom_field_or_id, all: false)
+          id = custom_field_or_id.is_a?(CustomField) ? custom_field_or_id.id : custom_field_or_id.to_i
+
+          custom_field_values(all:).select { |cv| cv.custom_field_id == id }
         end
 
         def custom_field_values(all: false) = cached_custom_field_values[all ? :all_available : :available]
