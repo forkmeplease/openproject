@@ -385,7 +385,9 @@ Rails.application.routes.draw do
     # this could probably be rewritten with a resource as: 'roadmap'
     get "/roadmap" => "versions#index"
 
-    resources :news, only: %i[index new create]
+    resources :news do
+      resources :comments, controller: "news/comments", only: %i[create destroy]
+    end
 
     # Match everything to be the ID of the wiki page except the part that
     # is reserved for the format. This assumes that we have only two formats:
@@ -911,9 +913,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :news, only: %i[index destroy update edit show] do
-    resources :comments, controller: "news/comments", only: %i[create destroy], shallow: true
-  end
+  resources :news, only: %i[index]
 
   # redirect for backwards compatibility
   scope "attachments",
