@@ -38,7 +38,9 @@ module StaticLinksHelper
     link_to label_text,
             href,
             class: "openproject--static-link",
-            target: "_blank", rel: "noopener"
+            data: { allow_external_link: true },
+            target: "_blank",
+            rel: "noopener"
   end
 
   ##

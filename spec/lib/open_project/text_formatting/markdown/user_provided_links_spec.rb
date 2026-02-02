@@ -53,6 +53,24 @@ RSpec.describe OpenProject::TextFormatting,
     end
   end
 
+  context "strips data-allow-external-link attribute to prevent bypassing link capture" do
+    it_behaves_like "format_text produces" do
+      let(:raw) do
+        <<~RAW
+          this is a <a href="http://external.com" data-allow-external-link="true">external link</a>
+        RAW
+      end
+
+      let(:expected) do
+        <<~EXPECTED
+          <p class="op-uc-p">
+            this is a <a href="http://external.com" rel="noopener noreferrer" target="_top" class="op-uc-link">external link</a>
+          </p>
+        EXPECTED
+      end
+    end
+  end
+
   context "autolinks" do
     context "for urls" do
       it_behaves_like "format_text produces" do

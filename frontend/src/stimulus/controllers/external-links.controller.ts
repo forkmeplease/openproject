@@ -129,7 +129,7 @@ function updateExternalLink(link:HTMLAnchorElement) {
 
   // Capture external links through redirect page
   // The backend controller will redirect directly if the feature is disabled
-  if (!link.dataset.externalLinkCaptured) {
+  if (!link.dataset.allowExternalLink) {
     const originalHref = link.href;
     const basePath = window.appBasePath ?? '';
     link.href = `${basePath}/external_redirect?url=${encodeURIComponent(originalHref)}`;
