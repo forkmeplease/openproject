@@ -30,8 +30,8 @@
 
 class News::CommentsController < ApplicationController
   default_search_scope :news
-  model_object Comment, scope: [News => :commented]
-  before_action :find_object_and_scope
+  before_action :find_project_news_and_comment, only: %i[destroy]
+  before_action :find_news, only: %i[create]
   before_action :authorize
 
   def create
@@ -47,5 +47,18 @@ class News::CommentsController < ApplicationController
   def destroy
     @comment.destroy
     redirect_to news_path(@news), status: :see_other
+  end
+
+  private
+
+  def find_project_news_and_comment
+    @comment = Comment.find(params[:id])
+    @news = News.visible.find(@comment.commented_id)
+    @project = @news.project
+  end
+
+  def find_news
+    @news = News.visible.find(params[:news_id])
+    @project = @news.project
   end
 end

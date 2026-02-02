@@ -31,8 +31,7 @@
 class MembersController < ApplicationController
   include MemberHelper
 
-  model_object Member
-  before_action :find_model_object_and_project, except: %i[autocomplete_for_member destroy_by_principal]
+  before_action :find_member, except: %i[autocomplete_for_member destroy_by_principal]
   before_action :find_project_by_project_id, only: %i[autocomplete_for_member destroy_by_principal]
   before_action :authorize
 
@@ -117,6 +116,10 @@ class MembersController < ApplicationController
   end
 
   private
+
+  def find_member
+    @member = @project.members.visible.find(params[:id])
+  end
 
   def authorize_for(controller, action)
     current_user.allowed_in_project?({ controller:, action: }, @project)
@@ -205,6 +208,7 @@ class MembersController < ApplicationController
 
   def possible_members(criteria, limit, type: nil)
     Principal
+      .visible
       .possible_member(@project, type:)
       .like(criteria, email: user_allowed_to_view_emails?)
       .limit(limit)

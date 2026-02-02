@@ -30,12 +30,8 @@ module OpenProject::Backlogs::Patches::VersionsControllerPatch
   def self.included(base)
     base.class_eval do
       include VersionSettingsHelper
-      helper :version_settings
 
-      # Find project explicitly on update and edit
-      skip_before_action :find_project_from_association, only: %i[edit update]
-      skip_before_action :find_model_object, only: %i[edit update]
-      prepend_before_action :find_project_and_version, only: %i[edit update]
+      helper :version_settings
 
       before_action :add_project_to_version_settings_attributes, only: %i[update create]
 
@@ -53,15 +49,6 @@ module OpenProject::Backlogs::Patches::VersionsControllerPatch
             # In this else branch we want the `version` to be an empty hash.
             permitted_params.define_singleton_method :version, lambda { {} }
           end
-        end
-      end
-
-      def find_project_and_version
-        find_model_object
-        if params[:project_id]
-          find_project
-        else
-          find_project_from_association
         end
       end
 

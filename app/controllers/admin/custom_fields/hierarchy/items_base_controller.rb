@@ -36,9 +36,8 @@ module Admin
         include Dry::Monads[:result]
 
         layout :admin_or_frame_layout
-        model_object CustomField
 
-        before_action :require_admin, :find_model_object, :find_active_item
+        before_action :require_admin, :find_custom_field, :find_active_item
 
         # See https://github.com/hotwired/turbo-rails?tab=readme-ov-file#a-note-on-custom-layouts
         def admin_or_frame_layout
@@ -223,11 +222,6 @@ module Admin
           else
             Failure("Invalid input: #{new_parent_input}")
           end
-        end
-
-        def find_model_object
-          @object = find_custom_field
-          @custom_field = @object
         end
 
         def find_custom_field

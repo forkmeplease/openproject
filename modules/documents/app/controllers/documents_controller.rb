@@ -35,11 +35,8 @@ class DocumentsController < ApplicationController
   include OpTurbo::ComponentStream
 
   default_search_scope :documents
-  model_object Document
 
   before_action :find_project_by_project_id, only: %i[index search new create]
-  before_action :find_model_object, except: %i[index search new create]
-  before_action :find_project_from_association, except: %i[index search new create]
   before_action :authorize
 
   def index
@@ -188,6 +185,11 @@ class DocumentsController < ApplicationController
   end
 
   private
+
+  def find_document
+    @document = Document.visible.find(params[:id])
+    @project = @document.project
+  end
 
   def document_params
     params.fetch(:document, {}).permit("type_id", "title", "description", "content_binary", "kind")

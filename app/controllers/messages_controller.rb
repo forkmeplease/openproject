@@ -31,8 +31,7 @@
 class MessagesController < ApplicationController
   menu_item :forums
   default_search_scope :messages
-  model_object Message, scope: Forum
-  before_action :find_object_and_scope
+  before_action :find_project_forum_and_message
   before_action :authorize, except: %i[edit update destroy]
   # Checked inside the method.
   no_authorization_required! :edit, :update, :destroy
@@ -156,6 +155,12 @@ class MessagesController < ApplicationController
   end
 
   private
+
+  def find_project_forum_and_message
+    @message = Message.visible(find_params[:id])
+    @forum = @message.forum
+    @project = @forum.project
+  end
 
   def update_message(message)
     Messages::UpdateService
