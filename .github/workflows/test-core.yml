@@ -36,6 +36,10 @@ jobs:
       with:
         metrics: cpu,memory,disk,io,network
     - uses: actions/checkout@v6
+      with:
+        repository: opf/op-blocknote-hocuspocus
+        ref: dev
+        path: vendor/hocuspocus
     - name: Cache DOCKER
       id: cache_docker
       uses: runs-on/cache@v4

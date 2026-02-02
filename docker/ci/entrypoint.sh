@@ -23,6 +23,8 @@ cleanup() {
 	echo "CLEANUP"
 	rm -rf tmp/cache/parallel*
 
+	# kill hocuspocus running in background:
+	killall node || true
 	if [ ! $exit_code -eq "0" ]; then
 		echo "ERROR: exit code $exit_code"
 		tail -n 1000 $LOG_FILE
@@ -95,6 +97,26 @@ reset_dbs() {
 	done
 }
 
+setup_hocuspocus() {
+  if [ -d "vendor/hocuspocus" ]; then
+    cd vendor/hocuspocus
+    npm install --omit=dev
+    cd -
+  else
+    echo 'Could not find Hocuspocus in vendor/hocuspocus!'
+  fi
+}
+
+start_hocuspocus() {
+  if [ -d "vendor/hocuspocus" ]; then
+    cd vendor/hocuspocus
+    execute "SECRET=secret12345 npm run start"
+    cd -
+  else
+    echo 'Could not find Hocuspocus in vendor/hocuspocus!'
+  fi
+}
+
 backend_stuff() {
 	# create test database "app" and dump schema because db/structure.sql is not checked in
 	execute_quiet "time bundle exec rails db:create db:migrate db:schema:dump zeitwerk:check"
@@ -122,6 +144,7 @@ setup_tests() {
 	run_background execute "JOBS=8 time npm install --quiet && npm prune --quiet && echo NPM DONE"
 	wait_for_background
 
+	setup_hocuspocus
 	run_background backend_stuff
 	run_background frontend_stuff
 	# pre-cache browsers and their drivers binaries
@@ -138,6 +161,7 @@ run_units() {
 }
 
 run_features() {
+	run_background start_hocuspocus
 	reset_dbs
 	execute "time bundle exec turbo_tests --verbose -n $JOBS --runtime-log spec/support/runtime-logs/turbo_runtime_features.log {,modules/*/}spec/features"
 	cleanup
@@ -149,7 +173,7 @@ run_all() {
 	cleanup
 }
 
-export -f cleanup execute execute_quiet run_psql create_db_cluster reset_dbs setup_tests backend_stuff frontend_stuff run_units run_features run_all
+export -f cleanup execute execute_quiet run_psql create_db_cluster reset_dbs setup_tests setup_hocuspocus start_hocuspocus backend_stuff frontend_stuff run_units run_features run_all
 
 if [ "$1" == "setup-tests" ]; then
 	shift
