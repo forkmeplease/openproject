@@ -34,7 +34,10 @@ module WorkPackages
     include AssignableValuesContract
     include WorkPackages::SetAttributesService::ProgressValuesCalculations
 
-    attribute :subject
+    attribute :subject,
+              writable: ->(*) {
+                !model.type&.replacement_pattern_defined_for?(:subject)
+              }
     attribute :description
     attribute :status_id,
               permission: %i[edit_work_packages change_work_package_status],

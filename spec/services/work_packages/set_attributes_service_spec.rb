@@ -2286,16 +2286,16 @@ RSpec.describe WorkPackages::SetAttributesService,
     let(:type) { build_stubbed(:type, patterns: { subject: { blueprint: "{{type}} {{project_name}}", enabled: true } }) }
     let(:work_package) { WorkPackage.new(type:) }
 
-    it "assigns a placeholder value to the field" do
+    it "assigns a placeholder value to the field when subject is blank" do
       instance.call({})
 
       expect(work_package.subject).to eq(I18n.t("work_packages.templated_subject_hint", type: type.name))
     end
 
-    it "overrides even a passed subject" do
-      instance.call(subject: "I will be overwritten")
+    it "does not override a passed subject" do
+      instance.call(subject: "My custom subject")
 
-      expect(work_package.subject).to eq(I18n.t("work_packages.templated_subject_hint", type: type.name))
+      expect(work_package.subject).to eq("My custom subject")
     end
 
     context "when the pattern is disabled" do
@@ -2307,6 +2307,38 @@ RSpec.describe WorkPackages::SetAttributesService,
         instance.call(subject: "I will be kept")
 
         expect(work_package.subject).to eq("I will be kept")
+      end
+    end
+
+    context "when the work package is persisted" do
+      let(:work_package) { build_stubbed(:work_package, type:, project:, subject: "Original subject") }
+      let(:resolved_subject) { "#{type.name} #{project.name}" }
+      let(:pattern_resolver) { instance_double(WorkPackageTypes::PatternResolver, resolve: resolved_subject) }
+
+      before do
+        allow(WorkPackageTypes::PatternResolver).to receive(:new).and_return(pattern_resolver)
+      end
+
+      it "does not override existing subject" do
+        instance.call({})
+
+        expect(work_package.subject).to eq("Original subject")
+      end
+
+      context "when subject is explicitly cleared" do
+        it "sets the resolved subject from the pattern" do
+          work_package.subject = nil
+          instance.call({})
+
+          expect(work_package.subject).to eq(resolved_subject)
+        end
+
+        it "marks the subject change as changed by system" do
+          work_package.subject = nil
+          instance.call({})
+
+          expect(work_package.changed_by_system).to include("subject" => [anything, resolved_subject])
+        end
       end
     end
   end

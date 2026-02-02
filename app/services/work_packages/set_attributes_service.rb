@@ -43,18 +43,22 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
 
     model.change_by_system do
       set_calculated_attributes(attributes)
+      set_templated_subject
     end
 
     set_custom_attributes(attributes)
     set_custom_values_to_validate(attributes, validate_custom_fields)
-
-    mark_templated_subject
   end
 
-  def mark_templated_subject
-    if work_package.type&.replacement_pattern_defined_for?(:subject)
-      work_package.subject = I18n.t("work_packages.templated_subject_hint", type: work_package.type.name)
-    end
+  def set_templated_subject
+    return unless work_package.type&.replacement_pattern_defined_for?(:subject)
+    return if work_package.subject.present?
+
+    work_package.subject = if work_package.new_record?
+                             I18n.t("work_packages.templated_subject_hint", type: work_package.type.name)
+                           else
+                             work_package.type.enabled_patterns[:subject].resolve(work_package)
+                           end
   end
 
   def set_custom_values_to_validate(attributes, validate_custom_fields = nil)

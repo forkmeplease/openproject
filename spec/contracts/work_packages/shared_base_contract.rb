@@ -81,6 +81,44 @@ RSpec.shared_examples "work package contract" do
       it_behaves_like "contract is valid"
     end
 
+    describe "subject" do
+      context "when the type has no replacement pattern for subject" do
+        before do
+          work_package.subject = "Allowed to change subject"
+        end
+
+        it_behaves_like "contract is valid"
+      end
+
+      context "when the type has an enabled replacement pattern for subject" do
+        let(:type_with_pattern) do
+          create(:type, patterns: { subject: { blueprint: "{{type}} {{project_name}}", enabled: true } })
+        end
+
+        before do
+          work_package.project.types << type_with_pattern
+          work_package.type = type_with_pattern
+          work_package.subject = "Trying to change subject"
+        end
+
+        it_behaves_like "contract is invalid", subject: :error_readonly
+      end
+
+      context "when the type has a disabled replacement pattern for subject" do
+        let(:type_with_disabled_pattern) do
+          create(:type, patterns: { subject: { blueprint: "{{type}} {{project_name}}", enabled: false } })
+        end
+
+        before do
+          work_package.project.types << type_with_disabled_pattern
+          work_package.type = type_with_disabled_pattern
+          work_package.subject = "Allowed to change subject"
+        end
+
+        it_behaves_like "contract is valid"
+      end
+    end
+
     describe "assigned_to_id" do
       context "if the assigned user is a possible assignee" do
         before do
