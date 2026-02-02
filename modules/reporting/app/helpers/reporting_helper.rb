@@ -107,7 +107,7 @@ module ReportingHelper
     when :project_id
       link_to_project Project.find(value.to_i)
     when :user_id, :assigned_to_id, :author_id, :logged_by_id
-      link_to_user(User.find_by(id: value.to_i) || DeletedUser.first)
+      link_to_user(User.visible.find_by(id: value.to_i) || DeletedUser.first)
     when :tweek
       "#{I18n.t(:label_week)} ##{h value}"
     when :tmonth

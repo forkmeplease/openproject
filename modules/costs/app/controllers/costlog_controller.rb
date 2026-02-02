@@ -73,7 +73,7 @@ class CostlogController < ApplicationController
     elsif @cost_entry.save
 
       flash[:notice] = t(:notice_successful_update)
-      redirect_back fallback_location: polymorphic_path(@cost_entry.entity)
+      redirect_back_or_to(polymorphic_path(@cost_entry.entity))
 
     else
       render action: "edit"
@@ -90,7 +90,7 @@ class CostlogController < ApplicationController
     if request.referer.include?("cost_reports")
       redirect_to controller: "/cost_reports", action: :index
     else
-      redirect_back fallback_location: polymorphic_path(@cost_entry.entity)
+      redirect_back_or_to(polymorphic_path(@cost_entry.entity))
     end
   end
 
@@ -117,7 +117,7 @@ class CostlogController < ApplicationController
     @user = if @cost_entry.present? && @cost_entry.user_id == user_id
               @cost_entry.user
             else
-              User.find_by(id: user_id)
+              User.visible.find_by(id: user_id)
             end
 
     entity_id = cost_entry_params.delete(:entity_id)

@@ -182,7 +182,7 @@ module Projects::CreationWizard
     end
 
     def assignee_mention_tag
-      principal = Principal.find(assigned_to_id)
+      principal = Principal.visible.find(assigned_to_id)
 
       ApplicationController.helpers.content_tag(
         "mention",
