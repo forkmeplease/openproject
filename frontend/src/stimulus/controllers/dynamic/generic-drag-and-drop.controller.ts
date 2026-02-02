@@ -49,6 +49,9 @@ export default class GenericDragAndDropController extends Controller {
   static metaNames = ['csrf-token'];
   declare readonly csrfToken:string;
 
+  static values = { handleSelector: { type: String, default: '.DragHandle' } };
+  declare readonly handleSelectorValue:string;
+
   private drake:Drake|null = null;
   private containers:HTMLElement[] = [];
   private targetConfigs:TargetConfig[] = [];
@@ -98,11 +101,19 @@ export default class GenericDragAndDropController extends Controller {
     this.drake = dragula(
       this.containers,
       {
-        moves: (_el, _source, handle, _sibling) => !!handle?.classList.contains('octicon-grabber'),
+        moves: (_el, _source, handle, _sibling) => !!handle && !!handle.closest(this.handleSelectorValue),
         accepts: (el:Element, target:Element, source:Element, sibling:Element) => this.accepts(el, target, source, sibling),
         revertOnSpill: true, // enable reverting of elements if they are dropped outside of a valid target
       },
     )
+      .on('drag', (el) => {
+        const handle = el.querySelector(this.handleSelectorValue)!;
+        handle.setAttribute('aria-pressed', 'true');
+      })
+      .on('dragend', (el) => {
+        const handle = el.querySelector(this.handleSelectorValue)!;
+        handle.setAttribute('aria-pressed', 'false');
+       })
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       .on('drop', this.drop.bind(this));
 
