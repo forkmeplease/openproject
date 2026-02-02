@@ -45,10 +45,12 @@ export default class extends Controller {
     declare readonly csrfToken:string;
 
     static values = {
-        url: String
+        url: String,
+        id: String
     };
 
     declare urlValue:string;
+    declare idValue:string;
 
     connect():void {
         useMeta(this, {suffix: false});
@@ -68,6 +70,9 @@ export default class extends Controller {
             const formData = new FormData();
             formData.append('url', url);
             formData.append('personal_access_token', token);
+            if (this.idValue) {
+                formData.append('id', this.idValue);
+            }
 
             const response = await fetch(this.urlValue, {
                 method: 'POST',

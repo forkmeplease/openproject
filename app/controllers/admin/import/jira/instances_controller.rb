@@ -95,10 +95,14 @@ module Admin::Import::Jira
     end
 
     def test
-      test_configuration(params[:url], params[:personal_access_token])
+      token = params[:personal_access_token]
+      if token.blank? && params[:id].present?
+        token = Jira.find(params[:id]).personal_access_token
+      end
+      test_configuration(params[:url], token)
     rescue J::ConnectionError => e
       render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.connection_error", message: e.message))
-    rescue J::ParseError => e
+    rescue J::ParseError
       render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.parse_error"))
     rescue J::ApiError => e
       render_error_flash_message_via_turbo_stream(message: t(:"admin.jira.test.api_error", status: e.status))
@@ -116,7 +120,11 @@ module Admin::Import::Jira
     end
 
     def jira_params
-      params.expect(jira: %i[name url personal_access_token])
+      permitted = params.expect(jira: %i[name url personal_access_token])
+      if action_name == "update" && permitted[:personal_access_token].blank?
+        permitted.delete(:personal_access_token)
+      end
+      permitted
     end
 
     def stream_form_component(&)

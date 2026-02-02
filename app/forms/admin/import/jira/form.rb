@@ -50,8 +50,10 @@ module Admin::Import::Jira
       client_form.text_field(
         name: :personal_access_token,
         label: Jira.human_attribute_name(:personal_access_token),
-        required: true,
+        required: !model.persisted?,
         input_width: :large,
+        value: model.persisted? ? "" : model.personal_access_token,
+        placeholder: model.persisted? && model.personal_access_token.present? ? I18n.t("admin.jira.form.token_placeholder") : nil,
         data: { "admin--jira-configuration-form-target": "tokenInput" }
       )
 

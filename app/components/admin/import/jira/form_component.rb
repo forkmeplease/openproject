@@ -39,12 +39,12 @@ module Admin::Import::Jira
     private
 
     def wrapper_options
-      {
-        data: {
-          controller: "admin--jira-configuration-form",
-          "admin--jira-configuration-form-url-value": test_admin_import_jira_index_path
-        }
+      data = {
+        controller: "admin--jira-configuration-form",
+        "admin--jira-configuration-form-url-value": test_admin_import_jira_index_path
       }
+      data[:"admin--jira-configuration-form-id-value"] = model.id.to_s if model.persisted?
+      { data: }
     end
 
     def form_options

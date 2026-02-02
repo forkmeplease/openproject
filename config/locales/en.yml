@@ -139,6 +139,7 @@ en:
         button_save: "Save configuration"
         button_test: "Test configuration"
         label_testing: "Testing configuration..."
+        token_placeholder: "Leave blank to keep current token"
       test:
         success: "Successfully connected to %{server} (version %{version})"
         failed: "Connection failed: Unable to retrieve server information"
