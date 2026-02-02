@@ -34,7 +34,7 @@ class ExternalLinkWarningController < ApplicationController
   skip_before_action :check_if_login_required
   no_authorization_required! :show
 
-  before_action :parse_redirect_url, only: [:show]
+  before_action :parse_external_url, only: [:show]
   before_action :verify_capture_enabled, only: [:show]
 
   def show; end
@@ -43,7 +43,7 @@ class ExternalLinkWarningController < ApplicationController
 
   def verify_capture_enabled
     unless capture_enabled?
-      redirect_to @redirect_url, allow_other_host: true, status: :see_other
+      redirect_to @external_url, allow_other_host: true, status: :see_other
     end
   end
 
@@ -51,21 +51,23 @@ class ExternalLinkWarningController < ApplicationController
     Setting.capture_external_links? && EnterpriseToken.allows_to?(:capture_external_links)
   end
 
-  def parse_redirect_url
+  def parse_external_url
     external_url = params[:url]
-    @redirect_url = parse_url(CGI.unescape(external_url)) if external_url.present?
+    @external_url = parse_url(CGI.unescape(external_url)) if external_url.present?
 
-    if @redirect_url.nil?
+    if @external_url.nil?
       redirect_to home_path, status: :see_other
     end
   end
 
   def parse_url(url)
-    return false if url.blank?
+    return nil if url.blank?
 
     uri = URI.parse(url)
-    uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    return url if uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+
+    nil
   rescue URI::InvalidURIError
-    false
+    nil
   end
 end

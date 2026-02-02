@@ -115,8 +115,7 @@ module Redmine
     # @param links [Hash] Link names mapped to URLs.
     # @param external [Boolean] Whether the links should be opened as external links, i.e. in a new tab (default: true)
     # @param underline [Boolean] Whether to underline links inserted into the text (default: true)
-    def link_translate(i18n_key, links: {}, external: true, underline: true)
-      # rubocop:disable Metrics/AbcSize
+    def link_translate(i18n_key, links: {}, external: true, underline: true) # rubocop:disable Metrics/AbcSize
       translation = ::I18n.t(i18n_key.to_s)
       result = translation.scan(link_regex).inject(translation) do |t, matches|
         link, text, key = matches

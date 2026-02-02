@@ -31,11 +31,10 @@
 require "spec_helper"
 require_relative "expected_markdown"
 
-RSpec.describe OpenProject::TextFormatting,
-               "user provided links" do
+RSpec.describe OpenProject::TextFormatting, "user provided links" do # rubocop:disable RSpec/SpecFilePathFormat
   include_context "expected markdown modules"
 
-  context "hardened against tabnabbing" do
+  describe "hardened against tabnabbing" do
     it_behaves_like "format_text produces" do
       let(:raw) do
         <<~RAW
@@ -53,7 +52,7 @@ RSpec.describe OpenProject::TextFormatting,
     end
   end
 
-  context "strips data-allow-external-link attribute to prevent bypassing link capture" do
+  describe "strips data-allow-external-link attribute to prevent bypassing link capture" do
     it_behaves_like "format_text produces" do
       let(:raw) do
         <<~RAW
@@ -71,7 +70,7 @@ RSpec.describe OpenProject::TextFormatting,
     end
   end
 
-  context "autolinks" do
+  describe "autolinks" do
     context "for urls" do
       it_behaves_like "format_text produces" do
         let(:raw) do
@@ -109,8 +108,8 @@ RSpec.describe OpenProject::TextFormatting,
     end
   end
 
-  context "relative URLS" do
-    context "path_only is true (default)" do
+  describe "relative URLS" do
+    context "when path_only is true (default)" do
       it_behaves_like "format_text produces" do
         let(:raw) do
           <<~RAW
@@ -128,7 +127,7 @@ RSpec.describe OpenProject::TextFormatting,
       end
     end
 
-    context "path_only is false", with_settings: { host_name: "openproject.org" } do
+    context "when path_only is false", with_settings: { host_name: "openproject.org" } do
       let(:options) { { only_path: false } }
 
       it_behaves_like "format_text produces" do
