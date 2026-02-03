@@ -39,6 +39,8 @@ module Redmine
         def acts_as_customizable(options = {}) # rubocop:disable Metrics/AbcSize
           return if included_modules.include?(Redmine::Acts::Customizable::InstanceMethods)
 
+          send :include, Redmine::Acts::Customizable::InstanceMethods
+
           cattr_accessor :customizable_options
           self.customizable_options = options
 
@@ -78,7 +80,6 @@ module Redmine
           end
 
           validate :validate_custom_values, **validation_options
-          send :include, Redmine::Acts::Customizable::InstanceMethods
 
           before_save :ensure_custom_values_complete
           after_save :touch_customizable,
