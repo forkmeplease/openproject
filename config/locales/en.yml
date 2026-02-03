@@ -134,6 +134,7 @@ en:
       banner:
         title: "Limited import"
         description: "This import tool is currently in beta and can only import basic data: projects, issues (name, title, description), users (name, email, project membership), statuses, and types. It cannot import custom workflows, custom fields, attachments, issue relations, or permissions."
+        restriction: "We currently support only Jira Server/Data Center versions 9.x and 10.x."
       form:
         button_add: "Add configuration"
         button_save: "Save configuration"
@@ -1618,7 +1619,7 @@ en:
         authentication_method: "Authentication method"
         jwt_sub: "Subject claim"
       jira:
-        url: "Jira host URL"
+        url: "Jira Server/Data Center URL"
         personal_access_token: "Personal Access Token"
       status:
         is_closed: "Work package closed"

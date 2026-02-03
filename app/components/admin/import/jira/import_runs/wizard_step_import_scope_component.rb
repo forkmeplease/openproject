@@ -51,6 +51,15 @@ module Admin::Import::Jira::ImportRuns
       ].map { |label| { label:, checked: false } }
     end
 
+    def server_info
+      info = model.available["server_info"]
+      [
+        info["serverTitle"],
+        info["version"],
+        "(#{info['baseUrl']})"
+      ].join(" ")
+    end
+
     def selected_projects_count
       model.projects&.count || 0
     end

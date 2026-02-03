@@ -48,6 +48,11 @@ See COPYRIGHT and LICENSE files for more details.
         I18n.t(:"admin.jira.run.wizard.sections.import_scope.label_info")
       }
     end
+    box.with_row(mb: 1) do
+      render(Primer::Beta::Text.new(font_size: :small, color: :muted)) {
+        server_info
+      }
+    end
     box.with_row(mb: 3) do
       flex_layout do |flex|
         flex.with_column(flex: 1, mr: 1) do
