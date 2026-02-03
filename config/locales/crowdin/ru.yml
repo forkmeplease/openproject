@@ -2949,19 +2949,17 @@ ru:
         learn_about: "Узнайте больше о всех новых функциях"
         missing: "Нет выделенных функций."
         #We need to include the version to invalidate outdated translations in other locales
-        "17_0":
+        "17_1":
           new_features_title: >
-            Релиз содержит различные новые функции и улучшения, такие как:
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: Совместная работа с документами в режиме реального времени.
-            line_1: Возможность структурировать связанные проекты в программы и портфели, чтобы направить их на достижение стратегических целей.
-            line_2: Улучшенное управление совещаниями с режимом черновика, режимом презентации, улучшенными результатами и подпиской на iCal.
-            line_3: Обновленная интеграция с SharePoint с более строгими разрешениями.
-            line_4: Переработанный обзор проекта с новыми вкладками, настраиваемыми виджетами и улучшенным макетом.
-            line_5: Возможность более строго охранять конфиденциальность пользователей, не работающих в одном проекте.
-            line_6: Улучшенный процесс создания проекта с более удобным выбором шаблона.
-            line_7: Более удобный глобальный поиск, включая тип и статус, улучшение точности нескольких автозаполнений.
-            line_8: Улучшена доступность текстов ALT и улучшены цвета графиков.
+            line_0: Automated project initiation (Enterprise add-on).
+            line_1: "Meetings: add new or existing work packages as outcomes."
+            line_2: "Meetings: show participant responses in iCal subscriptions."
+            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
+            line_4: "Release to Community: Attribute highlighting."
+            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
+            line_6: Improved performance and user experience, including the Activity tab and Documents module.
     links:
       upgrade_enterprise_edition: "Обновить до корпоративной версии"
       postgres_migration: "Перенос вашей установки в PostgreSQL"

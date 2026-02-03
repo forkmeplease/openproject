@@ -2850,19 +2850,17 @@ it:
         learn_about: "Scopri di più su tutte le nuove funzionalità"
         missing: "Non ci sono ancora caratteristiche evidenziate."
         #We need to include the version to invalidate outdated translations in other locales
-        "17_0":
+        "17_1":
           new_features_title: >
-            Questa versione contiene diverse nuove funzionalità e miglioramenti, come ad esempio:
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: Collaborazione in tempo reale sui documenti.
-            line_1: Capacità di strutturare i progetti correlati in programmi e portfolio per focalizzarli su obiettivi strategici (componente aggiuntivo Enterprise).
-            line_2: Migliore gestione delle riunioni con modalità bozza, modalità di presentazione, risultati migliorati e iscrizione iCal.
-            line_3: Integrazione SharePoint aggiornata con autorizzazioni più restrittive (componente aggiuntivo Enterprise).
-            line_4: Panoramica del progetto ridisegnata con nuove schede, widget configurabili e un layout migliorato.
-            line_5: Opzione per tutelare in modo più rigoroso la privacy degli utenti che non lavorano nello stesso progetto.
-            line_6: Flusso di creazione dei progetti migliorato con una selezione dei modelli più efficace.
-            line_7: Ricerca globale più intelligente che include tipo e stato, migliorando la precisione in diversi completamenti automatici.
-            line_8: Miglioramenti di accessibilità con testi ALT e colori grafici migliorati.
+            line_0: Automated project initiation (Enterprise add-on).
+            line_1: "Meetings: add new or existing work packages as outcomes."
+            line_2: "Meetings: show participant responses in iCal subscriptions."
+            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
+            line_4: "Release to Community: Attribute highlighting."
+            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
+            line_6: Improved performance and user experience, including the Activity tab and Documents module.
     links:
       upgrade_enterprise_edition: "Aggiorna ad Enterprise edition"
       postgres_migration: "Migrazione dell'installazione su PostgreSQL"

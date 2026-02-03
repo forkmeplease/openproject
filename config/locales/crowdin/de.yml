@@ -2845,19 +2845,17 @@ de:
         learn_about: "Erfahren Sie mehr über die neuen Funktionen"
         missing: "Es gibt noch keine hervorgehobenen Funktionen."
         #We need to include the version to invalidate outdated translations in other locales
-        "17_0":
+        "17_1":
           new_features_title: >
             Dieses Release enthält verschiedene neue Funktionen und Verbesserungen, wie z. B:
           new_features_list:
-            line_0: Zusammenarbeit an Dokumenten in Echtzeit.
-            line_1: Strukturierung zusammenhängender Projekte in Programme und Portfolios, um sie auf strategische Ziele auszurichten (Enterprise Add-on).
-            line_2: Bessere Verwaltung von Besprechungen mit Entwurfsmodus, Präsentationsmodus, verbesserten Ergebnissen und iCal-Abonnement.
-            line_3: Aktualisierte SharePoint-Integration mit flexibleren Berechtigungen (Enterprise Add-on).
-            line_4: Neu gestaltete Projektübersicht mit neuen Tabs, konfigurierbaren Widgets und einem verbesserten Layout.
-            line_5: Option zum Trennen der Sichtbarkeit von Benutzern innerhalb der Instanz, die nicht am selben Projekt oder derselben Gruppe arbeiten.
-            line_6: Verbesserter Ablauf der Projekterstellung mit neuer Vorlagenauswahl.
-            line_7: Eine intelligentere Suche, die Typ und Status einschließt, verbessert die Präzision in der globalen Suche und in Auswahlfeldern.
-            line_8: Verbesserungen der Zugänglichkeit mit ALT-Texten und verbesserten Diagrammfarben.
+            line_0: Automatisierte Projektinitiierung (Enterprise Add-on).
+            line_1: "Meetings: Fügen Sie neue oder bestehende Arbeitspakete als Ergebnisse hinzu."
+            line_2: "Besprechungen: Zeigen Sie Teilnehmerantworten in iCal-Abonnements an."
+            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
+            line_4: "Release to Community: Attribute highlighting."
+            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
+            line_6: Improved performance and user experience, including the Activity tab and Documents module.
     links:
       upgrade_enterprise_edition: "Auf Enterprise Edition upgraden"
       postgres_migration: "Migration Ihrer Installation zu PostgreSQL"

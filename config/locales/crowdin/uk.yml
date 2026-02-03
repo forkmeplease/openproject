@@ -2945,19 +2945,17 @@ uk:
         learn_about: "Дізнайтеся більше про всі нові функції"
         missing: "Ще немає виділених функцій."
         #We need to include the version to invalidate outdated translations in other locales
-        "17_0":
+        "17_1":
           new_features_title: >
-            Випуск включає різноманітні нові функції і покращення, такі як:
+            The release contains various new features and improvements, such as:
           new_features_list:
-            line_0: спільна робота з документами в реальному часі;
-            line_1: можливість структурувати пов’язані проєкти за допомогою програм і портфелів, щоб узгодити їх зі стратегічними цілями (доповнення версії Enterprise);
-            line_2: зручніше керування нарадами завдяки режиму чернетки, режиму презентації, покращеним результатам і підписці iCal;
-            line_3: оновлена інтеграція із SharePoint із суворішими дозволами (доповнення версії Enterprise);
-            line_4: 'оновлений дизайн сторінки «Огляд проєкту»: нові вкладки, віджети, які можна налаштовувати, і покращений макет;'
-            line_5: можливість застосовувати суворіший захист конфіденційність користувачів, які не працюють в одному проєкті;
-            line_6: зручніший процес створення проєктів завдяки кращому вибору шаблонів;
-            line_7: 'зручніший глобальний пошук: ураховує тип і статус, підвищено точність автозаповнення кількох типів даних;'
-            line_8: 'покращення для людей з обмеженими фізичними можливостями: вдосконалено тексти ALT і кольори діаграм.'
+            line_0: Automated project initiation (Enterprise add-on).
+            line_1: "Meetings: add new or existing work packages as outcomes."
+            line_2: "Meetings: show participant responses in iCal subscriptions."
+            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
+            line_4: "Release to Community: Attribute highlighting."
+            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
+            line_6: Improved performance and user experience, including the Activity tab and Documents module.
     links:
       upgrade_enterprise_edition: "Оновлення до версії Enterprise"
       postgres_migration: "Міграція інсталяції в PostgreSQL"
