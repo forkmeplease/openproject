@@ -114,7 +114,10 @@ module API
           schema :subject,
                  type: "String",
                  min_length: 1,
-                 max_length: 255
+                 max_length: 255,
+                 has_default: -> {
+                   represented.type&.replacement_pattern_defined_for?(:subject)
+                 }
 
           schema :description,
                  type: "Formattable",

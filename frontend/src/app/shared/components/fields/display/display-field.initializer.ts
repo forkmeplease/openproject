@@ -89,6 +89,9 @@ import { LinkDisplayField } from 'core-app/shared/components/fields/display/fiel
 import {
   ProjectPhaseDisplayField,
 } from 'core-app/shared/components/fields/display/field-types/project-phase-display-field.module';
+import {
+  SubjectDisplayField,
+} from 'core-app/shared/components/fields/display/field-types/subject-display-field.module';
 
 export function initializeCoreDisplayFields(displayFieldService:DisplayFieldService) {
   return () => {
@@ -130,6 +133,7 @@ export function initializeCoreDisplayFields(displayFieldService:DisplayFieldServ
       .addSpecificFieldType('WorkPackage', WorkPackageIdDisplayField, 'id', ['id'])
       .addSpecificFieldType('WorkPackage', WorkPackageSpentTimeDisplayField, 'spentTime', ['spentTime'])
       .addSpecificFieldType('WorkPackage', CombinedDateDisplayField, 'combinedDate', ['combinedDate'])
+      .addSpecificFieldType('WorkPackage', SubjectDisplayField, 'subject', ['String'])
       .addSpecificFieldType('TimeEntry', PlainFormattableDisplayField, 'comment', ['comment'])
       .addSpecificFieldType('Project', ProjectStatusDisplayField, 'status', ['status'])
       .addSpecificFieldType('TimeEntry', WorkPackageDisplayField, 'work_package', ['workPackage']);
