@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -30,5 +31,54 @@
 module MeetingAgendaItems
   class UpdateService < ::BaseServices::Update
     include AfterPerformHook
+
+    private
+
+    def before_perform(params)
+      @old_meeting_id = model.meeting_id if model.persisted?
+
+      super
+    end
+
+    def after_perform(call)
+      super
+
+      if call.success? && @old_meeting_id != call.result.meeting_id
+        copy_attachments_to_new_meeting(call.result, @old_meeting_id)
+      end
+
+      call
+    end
+
+    def copy_attachments_to_new_meeting(agenda_item, old_meeting_id)
+      return if agenda_item.notes.blank?
+
+      old_meeting = Meeting.find(old_meeting_id)
+      old_meeting.attachments.each do |attachment|
+        next unless agenda_item.notes.include?("/attachments/#{attachment.id}/")
+
+        copy_attachment(attachment, agenda_item.meeting, agenda_item)
+      end
+    end
+
+    def copy_attachment(source_attachment, target_meeting, agenda_item)
+      copy = Attachment.new(
+        source_attachment
+          .dup
+          .attributes
+          .except("file")
+          .merge("author_id" => user.id, "container_id" => target_meeting.id)
+      )
+
+      source_attachment.file.copy_to(copy)
+      copy.save!
+
+      updated_notes = agenda_item.notes.gsub(
+        "/api/v3/attachments/#{source_attachment.id}/content",
+        "/api/v3/attachments/#{copy.id}/content"
+      )
+
+      agenda_item.update!(notes: updated_notes)
+    end
   end
 end
