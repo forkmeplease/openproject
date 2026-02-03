@@ -233,14 +233,19 @@ module MeetingAgendaItems
     def next_meeting_action_item(menu, label:, action:, icon:)
       return unless has_next_occurrence?
 
-      next_date = @series.next_occurrence(from_time: next_occurrence_from_time)
+      from_time = @meeting.start_time.past? ? Time.current : @meeting.start_time
+      result = @series.first_non_cancelled_occurrence(from_time:)
+      return if result.nil?
+
+      next_date = result[:occurrence]
+      skipped_dates = result[:skipped]
 
       menu.with_item(
         label:,
         tag: :button,
         content_arguments: { data: {
           action: "click->meetings--submit#intercept",
-          href: path_for_next_button(action: action, next_date: next_date),
+          href: path_for_next_button(action:, next_date:, skipped_dates:),
           method: "GET"
         } }
       ) do |item|
@@ -424,18 +429,22 @@ module MeetingAgendaItems
       end
     end
 
-    def path_for_next_button(action:, next_date:)
+    def path_for_next_button(action:, next_date:, skipped_dates:)
+      skipped_iso_dates = skipped_dates.map(&:iso8601) if skipped_dates.present?
+
       case action
       when :move_to_next
         move_to_next_dialog_project_meeting_agenda_item_path(@meeting.project,
                                                              @meeting,
                                                              @meeting_agenda_item,
-                                                             datetime: next_date.iso8601)
+                                                             datetime: next_date.iso8601,
+                                                             skipped: skipped_iso_dates)
       when :duplicate_in_next
         duplicate_in_next_dialog_project_meeting_agenda_item_path(@meeting.project,
                                                                   @meeting,
                                                                   @meeting_agenda_item,
-                                                                  datetime: next_date.iso8601)
+                                                                  datetime: next_date.iso8601,
+                                                                  skipped: skipped_iso_dates)
       end
     end
   end
