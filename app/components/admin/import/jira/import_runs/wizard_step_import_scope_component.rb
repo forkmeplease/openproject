@@ -53,6 +53,8 @@ module Admin::Import::Jira::ImportRuns
 
     def server_info
       info = model.available["server_info"]
+      return "" unless info
+
       [
         info["serverTitle"],
         info["version"],
