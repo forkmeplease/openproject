@@ -288,12 +288,19 @@ module Redmine
           self.custom_values_to_validate = []
         end
 
+        def custom_field_changes
+          {}.tap do |changes|
+            custom_value_changes(into: changes)
+            custom_comment_changes(into: changes) if can_have_custom_comments?
+          end
+        end
+
         # Build the changes hash similar to ActiveRecord::Base#changes,
         # but for the custom field values that have been changed.
-        def custom_field_changes # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+        def custom_value_changes(into: {}) # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
           all_fields_grouped = custom_field_values.group_by(&:custom_field)
 
-          all_fields_grouped.each_with_object({}) do |(custom_field, new_custom_field_values), changes|
+          all_fields_grouped.each_with_object(into) do |(custom_field, new_custom_field_values), changes|
             old_value = custom_value_was_for(custom_field)
 
             # Skip when only setting the default value
@@ -308,7 +315,16 @@ module Redmine
             # Skip when the old value equals the new value (no change happened).
             next if old_value == new_value
 
-            changes["custom_field_#{custom_field.id}"] = [old_value, new_value]
+            changes[custom_field.attribute_name] = [old_value, new_value]
+          end
+        end
+
+        def custom_comment_changes(into: {})
+          custom_comments.each_with_object(into) do |comment, changes|
+            next unless comment.changed_for_autosave?
+            next unless (attribute_name = comment.custom_field.comment_attribute_name)
+
+            changes[attribute_name] = comment.text_change
           end
         end
 
@@ -521,11 +537,8 @@ module Redmine
           return unless custom_field
 
           if comment
-            if text.present?
-              comment.text = text
-            else
-              custom_comments.delete(comment)
-            end
+            comment.text = text.presence # for text_change also when removing
+            comment.mark_for_destruction unless comment.text
           elsif text.present?
             custom_comments.build(custom_field:, text:)
           end
