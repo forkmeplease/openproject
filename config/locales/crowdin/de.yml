@@ -2849,13 +2849,13 @@ de:
           new_features_title: >
             Dieses Release enthält verschiedene neue Funktionen und Verbesserungen, wie z. B:
           new_features_list:
-            line_0: Automated project initiation (Enterprise add-on).
-            line_1: "Meetings: add new or existing work packages as outcomes."
-            line_2: "Meetings: show participant responses in iCal subscriptions."
-            line_3: "Recurring meetings: duplicate agenda items to the next occurrence."
-            line_4: "Release to Community: Attribute highlighting."
-            line_5: Warning before opening external links in user-provided content (Enterprise add-on).
-            line_6: Improved performance and user experience, including the Activity tab and Documents module.
+            line_0: Automatisierte Projektinitiierung (Enterprise Add-on).
+            line_1: "Besprechungen: Fügen Sie neue oder bestehende Arbeitspakete als Ergebnisse hinzu."
+            line_2: "Besprechungen: Zeigen Sie Teilnehmerantworten in iCal-Abonnements an."
+            line_3: "Wiederkehrende Besprechungen: Kopieren Sie Tagesordnungspunkte zur nächsten Besprechung."
+            line_4: "Freigabe für die Community-Edition: Hervorhebung von Attributen."
+            line_5: Warnung vor dem Öffnen externer Links in von Benutzern erstellten Texten (Enterprise Add-on).
+            line_6: Verbesserte Leistung und Benutzerfreundlichkeit, einschließlich des Aktivität-Tabs und des Dokumenten-Moduls.
     links:
       upgrade_enterprise_edition: "Auf Enterprise Edition upgraden"
       postgres_migration: "Migration Ihrer Installation zu PostgreSQL"
@@ -2933,7 +2933,7 @@ de:
       label: "Hinzufügen…"
   my_account:
     access_tokens:
-      description: "Provider tokens are issued by OpenProject, allowing other applications to access it. Client tokens are issued by other applications, allowing OpenProject to access them."
+      description: "Provider-Tokens werden von OpenProject ausgestellt und ermöglichen anderen Anwendungen den Zugriff darauf. Client-Tokens werden von anderen Anwendungen ausgestellt und ermöglichen OpenProject den Zugriff auf sie."
       no_results:
         title: "Kein Zugangs-Token kann angezeigt werden"
         description: "Alle wurden deaktiviert. Sie können im Administrations-Menü wieder aktiviert werden."
@@ -4319,16 +4319,16 @@ de:
     Wenn CORS aktiviert ist, sind dies die Origins, die auf die OpenProject API zugreifen dürfen. <br/> Bitte überprüfen Sie die <a href="%{origin_link}" target="_blank">Dokumentation über den Origin Header</a>, wie die Werte anzugeben sind.
   setting_apiv3_write_readonly_attributes: "Schreibzugriff auf schreibgeschützte Attribute"
   setting_apiv3_write_readonly_attributes_instructions: >
-    If enabled, the API will allow administrators to write static read-only attributes during creation, such as createdAt and author.
+    Wenn diese Option aktiviert ist, erlaubt die API Administratoren, bei der Erstellung statische schreibgeschützte Attribute wie createdAt und author zu schreiben.
   setting_apiv3_write_readonly_attributes_warning: >
-    This setting has a use-case for e.g., importing data, but allows administrators to impersonate the creation of items as other users. All creation requests are being logged however with the true author.
+    Diese Einstellung ist z.B. für den Import von Daten nützlich, ermöglicht es aber auch Administratoren, sich bei der Erstellung von Artikeln als andere Benutzer auszugeben. Alle Erstellungsanfragen werden jedoch mit dem wahren Autor protokolliert.
   setting_apiv3_write_readonly_attributes_additional: >
-    For more information on attributes and supported resources, please see the %{api_documentation_link}.
+    Weitere Informationen zu Attributen und unterstützten Ressourcen finden Sie unter %{api_documentation_link}.
   setting_apiv3_max_page_size: "Maximale API-Seitengröße"
   setting_apiv3_max_page_size_instructions: >
-    Set the maximum page size the API will respond with. It will not be possible to perform API requests that return more values on a single page.
+    Legen Sie die maximale Anzahl von Ressourcen fest, mit der die API antworten wird. API-Anfragen werden nie mehr Ressourcen auf einer einzigen Seite zurückgeben.
   setting_apiv3_max_page_size_warning: >
-    Please only change this value if you are sure why you need it. Setting to a high value will result in significant performance impacts, while a value lower than the per page options will cause errors in paginated views.
+    Bitte ändern Sie diesen Wert nur, wenn Sie sich sicher sind, warum Sie ihn benötigen. Ein hoher Wert führt zu erheblichen Leistungseinbußen, während ein Wert, der niedriger als die Ressourcen pro Seite ist, zu Fehlern in paginierten Ansichten führt.
   setting_apiv3_docs: "Dokumentation"
   setting_apiv3_docs_enabled: "Dokumentationsseite aktivieren"
   setting_apiv3_docs_enabled_instructions_html: >
@@ -4513,7 +4513,7 @@ de:
       omniauth_direct_login_hint_html: >
         Wenn diese Option aktiviert ist, werden die Anmeldeanfragen an den konfigurierten SSO-Anbieter weitergeleitet. Das Login-Dropdown und die Anmeldeseite sind dann deaktiviert. <br/> <strong>Hinweis:</strong> Sofern Sie nicht auch die Passwortanmeldung deaktivieren, können sich Benutzer bei aktivierter Option immer noch intern anmelden, indem sie die interne Anmeldeseite <code>%{internal_path}</code> verwenden.
       remapping_existing_users_hint: >
-        If enabled, allows any configured identity provider to login existing users based on their username, even if the user never signed in through that provider before. This can be useful when migrating the OpenProject instance to a new SSO provider, but is not recommended when using a provider that is not trusted by all users of your instance.
+        Wenn diese Option aktiviert ist, kann jeder konfigurierte Identitätsanbieter bestehende Benutzer anhand ihrer E-Mail-Adresse oder Login erzeugen, auch wenn sich der Benutzer noch nie über diesen Anbieter angemeldet hat. Dies kann bei der Migration der OpenProject-Instanz zu einem neuen SSO-Anbieter nützlich sein, wird aber nicht empfohlen, wenn Sie einen Anbieter verwenden, dem nicht alle Benutzer Ihrer Instanz vertrauen.
     attachments:
       whitelist_text_html: >
         Legen Sie eine Liste gültiger Dateierweiterungen und/oder Mime-Typen für hochgeladene Dateien fest. <br/> Dateierweiterungen (z. B. <code>%{ext_example}</code>) oder Mime-Typen (z. ., <code>%{mime_example}</code>). <br/> Lassen Sie diese Liste leer, um das Hochladen beliebiger Dateitypen zu erlauben. Mehrere Werte erlaubt (eine Zeile pro Wert).
