@@ -33,9 +33,20 @@ module OpenProject::Backlogs::Patches::VersionsControllerPatch
 
       helper :version_settings
 
-      before_action :add_project_to_version_settings_attributes, only: %i[update create]
+      before_action :override_project_from_id, only: %i[edit update]
 
-      before_action :whitelist_update_params, only: :update
+      append_before_action :add_project_to_version_settings_attributes, only: %i[update create]
+      append_before_action :whitelist_update_params, only: :update
+
+      private
+
+      def override_project_from_id
+        # @project is already set by the VersionsController's find_version before action to the version's project
+        # here we want to add that we always set it to the project from params if present
+        if params[:project_id].present?
+          @project = Project.visible.find(params[:project_id])
+        end
+      end
 
       def whitelist_update_params
         if @project != @version.project
