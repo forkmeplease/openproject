@@ -16,8 +16,8 @@ describe("fetchResource with overriden OpenProject URL", () => {
 
   test("Overrides the base URL protocol and host", async () => {
     const resourceUrl = "https://test.openproject.com/api/v3/documents/42";
-    const response = await fetchResource(resourceUrl, "__valid_oauth_token");
+    const response = await fetchResource(resourceUrl, "__valid_oauth_token").then(r => r.json());
 
-    expect(response.data).toMatchObject({ __echo: { url: 'http://web/api/v3/documents/42' }});
+    expect(response).toMatchObject({ __echo: { url: 'http://web/api/v3/documents/42' }});
   });
 });

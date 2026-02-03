@@ -6,8 +6,8 @@ import { fetchResource } from "../../src/services/resourceService";
 describe("fetchResource", () => {
   test("requests the resource at the original URL, with the original host header", async () => {
     const resourceUrl = "https://test.openproject.com/api/v3/documents/42";
-    const response = await fetchResource(resourceUrl, "__valid_oauth_token");
+    const response = await fetchResource(resourceUrl, "__valid_oauth_token").then(r => r.json());
 
-    expect(response.data).toMatchObject({ __echo: { url: resourceUrl }})
+    expect(response).toMatchObject({ __echo: { url: resourceUrl }})
   });
 });

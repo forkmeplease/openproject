@@ -55,7 +55,7 @@ export class OpenProjectApi implements Extension {
     if (response.status != 200) {
       throw new Error(`Unauthorized: Invalid token or document access denied. (${response.status}: ${response.statusText})`);
     }
-    const jsonData = await response.data as ApiResponseDocument;
+    const jsonData = await response.json() as ApiResponseDocument;
 
     data.context.resourceUrl = resourceUrl;
     data.context.token = oauth_token;
@@ -79,7 +79,7 @@ export class OpenProjectApi implements Extension {
       return;
     }
 
-    const jsonData = await response.data as ApiResponseDocument;
+    const jsonData = await response.json() as ApiResponseDocument;
     if (jsonData.contentBinary) {
       const update = new Uint8Array(Buffer.from(jsonData.contentBinary, 'base64'));
       Y.applyUpdate(data.document, update);
@@ -116,10 +116,10 @@ export class OpenProjectApi implements Extension {
 
     const response = await fetchResource(resourceUrl, data.context.token, {
       method: "PATCH",
-      data: {
+      body: JSON.stringify({
         content_binary: base64Data,
         description: markdownData,
-      },
+      }),
     });
 
     if (response.status != 200) {

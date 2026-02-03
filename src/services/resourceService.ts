@@ -1,5 +1,3 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-
 const OPENPROJECT_URL = process.env.OPENPROJECT_URL?.trim() || null;
 
 if (OPENPROJECT_URL) {
@@ -13,7 +11,7 @@ if (OPENPROJECT_URL) {
 
 /**
  * Fetches an OpenProject resource while automatically adjusting request URL and host header
- * based on the values of OPENPROJECT_URL and OPENPROJECT_HOST in the environment.
+ * based on the value of OPENPROJECT_URL in the environment.
  * 
  * @param resourceUrl URL of OpenProject resource to fetch
  * @param oauthToken OAuth Bearer token to authenticate with
@@ -23,31 +21,27 @@ if (OPENPROJECT_URL) {
 export async function fetchResource(
   resourceUrl: string,
   oauthToken: string,
-  override?: AxiosRequestConfig
-): Promise<AxiosResponse> {
+  override?: RequestInit
+): Promise<Response> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${oauthToken}`
   };
-
-  const params = {
-    url: overrideUrl(resourceUrl),
+  const url = overrideUrl(resourceUrl);
+  const init = {
     method: 'GET',
     headers: headers,
-    ...override,
-    validateStatus: (status: number) => {
-      return status < 500; // throw exception for internal server errors only, otherwise we check `response.status`
-    }
+    ...override
   }
 
-  console.log(`[${new Date().toISOString()}] ${params.method} ${resourceUrl}`);
+  console.log(`[${new Date().toISOString()}] ${init.method} ${resourceUrl}`);
 
-  return axios(params);
+  return fetch(url, init);
 }
 
 /**
- * Get the effective OpenProject resource URL considering the values of
- * OPENPROJECT_URL and OPENPROJECT_HOST in the environment.
+ * Get the effective OpenProject resource URL considering the value of
+ * OPENPROJECT_URL in the environment.
  * 
  * @param resourceUrl URL of OpenProject resource
  * @returns Either the given resource URL if no override has been configured, or the adjusted URL.
