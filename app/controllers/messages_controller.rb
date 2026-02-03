@@ -88,7 +88,7 @@ class MessagesController < ApplicationController
     if call.success?
       call_hook(:controller_messages_new_after_save, params:, message: @message)
 
-      redirect_to topic_path(@message)
+      redirect_to project_forum_topic_path(@project, @forum, @message)
     else
       render action: :new, status: :unprocessable_entity
     end
