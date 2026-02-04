@@ -31,7 +31,8 @@
 class MessagesController < ApplicationController
   menu_item :forums
   default_search_scope :messages
-  before_action :find_project_forum_and_message
+  before_action :find_project_and_forum
+  before_action :find_message, only: %i[show edit update destroy reply quote]
   before_action :authorize, except: %i[edit update destroy]
   # Checked inside the method.
   no_authorization_required! :edit, :update, :destroy
@@ -156,10 +157,13 @@ class MessagesController < ApplicationController
 
   private
 
-  def find_project_forum_and_message
-    @message = Message.visible.find(params[:id])
-    @forum = @message.forum
-    @project = @forum.project
+  def find_project_and_forum
+    @project = Project.visible.find(params[:project_id])
+    @forum = @project.forums.find(params[:forum_id])
+  end
+
+  def find_message
+    @message = @forum.messages.find(params[:id])
   end
 
   def update_message(message)
