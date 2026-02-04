@@ -141,6 +141,16 @@ RSpec.describe Project, "acts_as_journalized" do
         it "contains no change for the disabled custom field" do
           expect(project.last_journal.details).not_to have_key(custom_field_key)
         end
+
+        context "if custom field is marked for all" do
+          before do
+            custom_field.update_attribute(:is_for_all, true)
+          end
+
+          it "contains the expected change" do
+            expect(project.last_journal.details).to include(custom_field_key => expected_change)
+          end
+        end
       end
     end
 
