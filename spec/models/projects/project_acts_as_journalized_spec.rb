@@ -124,10 +124,8 @@ RSpec.describe Project, "acts_as_journalized" do
     end
     let(:custom_field_key) { "custom_fields_#{custom_field.id}" }
 
-    shared_context "for project with new custom value" do
-      before do
-        project.update(custom_values: [custom_value])
-      end
+    before do
+      project.update(custom_values: [custom_value])
     end
 
     shared_examples "contains no change for disabled custom field" do
@@ -141,8 +139,6 @@ RSpec.describe Project, "acts_as_journalized" do
     end
 
     context "for new custom value" do
-      include_context "for project with new custom value"
-
       it "contains the new custom value change" do
         expect(project.last_journal.details)
           .to include(custom_field_key => [nil, custom_value.value])
@@ -152,8 +148,6 @@ RSpec.describe Project, "acts_as_journalized" do
     end
 
     context "for updated custom value" do
-      include_context "for project with new custom value"
-
       let(:modified_custom_value) do
         build(:custom_value,
               value: "some modified value for project custom field",
@@ -173,8 +167,6 @@ RSpec.describe Project, "acts_as_journalized" do
     end
 
     context "when project saved without any changes" do
-      include_context "for project with new custom value"
-
       let(:unmodified_custom_value) do
         build(:custom_value,
               value: custom_value.value,
@@ -189,8 +181,6 @@ RSpec.describe Project, "acts_as_journalized" do
     end
 
     context "when custom value removed" do
-      include_context "for project with new custom value"
-
       before do
         project.update(custom_values: [])
       end
