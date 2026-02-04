@@ -37,6 +37,11 @@ module WorkPackages
     attribute :done_ratio,
               writable: true
 
+    # Subject must always be writable during copy even when the type auto-generates it.
+    # Setting the value is ok because it will be regenerated after saving.
+    attribute :subject,
+              writable: true
+
     # Use the default permission for the create contract, which is :add_work_packages.
     attribute_permission :project_phase_definition_id, :add_work_packages
 
