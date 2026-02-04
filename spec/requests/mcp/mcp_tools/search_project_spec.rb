@@ -101,6 +101,7 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
       let(:page_size) { 10 }
       let(:overspilling_projects) { 5 }
       let(:project_count) { page_size + overspilling_projects }
+      let(:call_args) { { name: "Death Star" } }
 
       before do
         allow(described_class).to receive(:page_size).and_return(page_size)
@@ -113,21 +114,17 @@ RSpec.describe McpTools::SearchProject, with_flag: { mcp_server: true } do
         end
       end
 
-      context "if there are more projects then the page size allows" do
-        let(:call_args) { { name: "Death Star" } }
+      it "returns only results up to the page size" do
+        subject
+        expect(parsed_results.dig("structuredContent", "items").count).to eq(page_size)
+      end
 
-        it "paginates the results" do
+      context "if another page is requested" do
+        let(:call_args) { { name: "Death Star", page: 1 } }
+
+        it "returns the requested page" do
           subject
-          expect(parsed_results.dig("structuredContent", "items").count).to eq(page_size)
-        end
-
-        context "and the next page is requested" do
-          let(:call_args) { { name: "Death Star", page: 1 } }
-
-          it "returns the next page on request" do
-            subject
-            expect(parsed_results.dig("structuredContent", "items").count).to eq(overspilling_projects)
-          end
+          expect(parsed_results.dig("structuredContent", "items").count).to eq(overspilling_projects)
         end
       end
     end
