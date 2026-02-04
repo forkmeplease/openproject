@@ -112,76 +112,56 @@ RSpec.describe Backlogs::StoryMenuComponent, type: :component do
 
   describe "position logic" do
     context "when item is first (position=1)" do
-      it "disables Move to top and Move up" do
+      it "hides Move to top and Move up" do
         render_component(position: 1, max_position: 3)
 
-        # Move to top should be disabled
-        move_to_top = page.find("li", text: I18n.t(:label_sort_highest))
-        expect(move_to_top[:class]).to include("ActionListItem--disabled")
-
-        # Move up should be disabled
-        move_up = page.find("li", text: I18n.t(:label_sort_higher))
-        expect(move_up[:class]).to include("ActionListItem--disabled")
+        expect(page).to have_no_text(I18n.t(:label_sort_highest))
+        expect(page).to have_no_text(I18n.t(:label_sort_higher))
       end
 
-      it "enables Move down and Move to bottom" do
+      it "shows Move down and Move to bottom" do
         render_component(position: 1, max_position: 3)
 
-        # Move down should be enabled
-        move_down = page.find("li", text: I18n.t(:label_sort_lower))
-        expect(move_down[:class]).not_to include("ActionListItem--disabled")
-
-        # Move to bottom should be enabled
-        move_to_bottom = page.find("li", text: I18n.t(:label_sort_lowest))
-        expect(move_to_bottom[:class]).not_to include("ActionListItem--disabled")
+        expect(page).to have_text(I18n.t(:label_sort_lower))
+        expect(page).to have_text(I18n.t(:label_sort_lowest))
       end
     end
 
     context "when item is last (position=max)" do
-      it "disables Move down and Move to bottom" do
+      it "hides Move down and Move to bottom" do
         render_component(position: 3, max_position: 3)
 
-        # Move down should be disabled
-        move_down = page.find("li", text: I18n.t(:label_sort_lower))
-        expect(move_down[:class]).to include("ActionListItem--disabled")
-
-        # Move to bottom should be disabled
-        move_to_bottom = page.find("li", text: I18n.t(:label_sort_lowest))
-        expect(move_to_bottom[:class]).to include("ActionListItem--disabled")
+        expect(page).to have_no_text(I18n.t(:label_sort_lower))
+        expect(page).to have_no_text(I18n.t(:label_sort_lowest))
       end
 
-      it "enables Move to top and Move up" do
+      it "shows Move to top and Move up" do
         render_component(position: 3, max_position: 3)
 
-        # Move to top should be enabled
-        move_to_top = page.find("li", text: I18n.t(:label_sort_highest))
-        expect(move_to_top[:class]).not_to include("ActionListItem--disabled")
-
-        # Move up should be enabled
-        move_up = page.find("li", text: I18n.t(:label_sort_higher))
-        expect(move_up[:class]).not_to include("ActionListItem--disabled")
+        expect(page).to have_text(I18n.t(:label_sort_highest))
+        expect(page).to have_text(I18n.t(:label_sort_higher))
       end
     end
 
     context "when item is in the middle" do
-      it "enables all move options" do
+      it "shows all move options" do
         render_component(position: 2, max_position: 3)
 
-        expect(page.find("li", text: I18n.t(:label_sort_highest))[:class]).not_to include("ActionListItem--disabled")
-        expect(page.find("li", text: I18n.t(:label_sort_higher))[:class]).not_to include("ActionListItem--disabled")
-        expect(page.find("li", text: I18n.t(:label_sort_lower))[:class]).not_to include("ActionListItem--disabled")
-        expect(page.find("li", text: I18n.t(:label_sort_lowest))[:class]).not_to include("ActionListItem--disabled")
+        expect(page).to have_text(I18n.t(:label_sort_highest))
+        expect(page).to have_text(I18n.t(:label_sort_higher))
+        expect(page).to have_text(I18n.t(:label_sort_lower))
+        expect(page).to have_text(I18n.t(:label_sort_lowest))
       end
     end
 
     context "when there is only one item (position=1, max=1)" do
-      it "disables all move options" do
+      it "hides all move options" do
         render_component(position: 1, max_position: 1)
 
-        expect(page.find("li", text: I18n.t(:label_sort_highest))[:class]).to include("ActionListItem--disabled")
-        expect(page.find("li", text: I18n.t(:label_sort_higher))[:class]).to include("ActionListItem--disabled")
-        expect(page.find("li", text: I18n.t(:label_sort_lower))[:class]).to include("ActionListItem--disabled")
-        expect(page.find("li", text: I18n.t(:label_sort_lowest))[:class]).to include("ActionListItem--disabled")
+        expect(page).to have_no_text(I18n.t(:label_sort_highest))
+        expect(page).to have_no_text(I18n.t(:label_sort_higher))
+        expect(page).to have_no_text(I18n.t(:label_sort_lower))
+        expect(page).to have_no_text(I18n.t(:label_sort_lowest))
       end
     end
   end

@@ -45,43 +45,22 @@ module Backlogs
     private
 
     def build_move_menu(menu)
-      build_move_item(
-        menu,
-        label: I18n.t(:label_sort_highest),
-        direction: "highest",
-        icon: :"move-to-top",
-        disabled: first_item?
-      )
-      build_move_item(
-        menu,
-        label: I18n.t(:label_sort_higher),
-        direction: "higher",
-        icon: :"chevron-up",
-        disabled: first_item?
-      )
-      build_move_item(
-        menu,
-        label: I18n.t(:label_sort_lower),
-        direction: "lower",
-        icon: :"chevron-down",
-        disabled: last_item?
-      )
-      build_move_item(
-        menu,
-        label: I18n.t(:label_sort_lowest),
-        direction: "lowest",
-        icon: :"move-to-bottom",
-        disabled: last_item?
-      )
+      unless first_item?
+        build_move_item(menu, label: I18n.t(:label_sort_highest), direction: "highest", icon: :"move-to-top")
+        build_move_item(menu, label: I18n.t(:label_sort_higher), direction: "higher", icon: :"chevron-up")
+      end
+      unless last_item?
+        build_move_item(menu, label: I18n.t(:label_sort_lower), direction: "lower", icon: :"chevron-down")
+        build_move_item(menu, label: I18n.t(:label_sort_lowest), direction: "lowest", icon: :"move-to-bottom")
+      end
     end
 
-    def build_move_item(menu, label:, direction:, icon:, **)
+    def build_move_item(menu, label:, direction:, icon:)
       menu.with_item(
         label:,
         tag: :button,
         href: reorder_backlogs_project_sprint_story_path(project, sprint, story),
-        form_arguments: { method: :post, inputs: [{ name: "direction", value: direction }] },
-        **
+        form_arguments: { method: :post, inputs: [{ name: "direction", value: direction }] }
       ) do |item|
         item.with_leading_visual_icon(icon:)
       end
