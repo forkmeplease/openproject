@@ -31,12 +31,17 @@ import * as Turbo from '@hotwired/turbo';
 
 export default class StoryController extends Controller<HTMLElement> implements EventListenerObject {
   static values = {
+    id: Number,
     splitUrl: String,
     fullUrl: String,
   };
 
+  declare idValue:number;
   declare splitUrlValue:string;
   declare fullUrlValue:string;
+
+  static classes = ['selected'];
+  declare readonly selectedClass:string;
 
   private abortController:AbortController|null = null;
   private clickTimeout:number|null = null;
@@ -58,6 +63,16 @@ export default class StoryController extends Controller<HTMLElement> implements 
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
     }
+  }
+
+  markAsSelected(_event:Event) {
+    this.element.classList.add(this.selectedClass);
+    this.element.setAttribute('aria-current', 'true');
+  }
+
+  unmarkAsSelected(_event:Event) {
+    this.element.classList.remove(this.selectedClass);
+    this.element.removeAttribute('aria-current');
   }
 
   handleEvent(event:Event):void {
