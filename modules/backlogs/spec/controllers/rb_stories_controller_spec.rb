@@ -47,16 +47,6 @@ RSpec.describe RbStoriesController do
       .and_return({ "story_types" => [type_feature.id], "task_type" => type_task.id })
   end
 
-  describe "POST #create" do
-    it "responds with success", :aggregate_failures do
-      post :create, params: { project_id: project.id, sprint_id: sprint.id },
-                    format: :turbo_stream
-
-      expect(response).to be_successful
-      expect(response).to have_http_status :ok
-    end
-  end
-
   describe "PUT #move" do
     let(:other_sprint) { create(:sprint, name: "Sprint 2", project:) }
 
@@ -86,16 +76,6 @@ RSpec.describe RbStoriesController do
       expect(response).to be_successful
       expect(response).to have_http_status :ok
       expect(response).to have_turbo_stream action: "replace", target: "backlogs-backlog-component-#{sprint.id}"
-    end
-  end
-
-  describe "PATCH #update" do
-    it "responds with success", :aggregate_failures do
-      patch :update, params: { project_id: project.id, sprint_id: sprint.id, id: story.id },
-                     format: :turbo_stream
-
-      expect(response).to be_successful
-      expect(response).to have_http_status :ok
     end
   end
 end

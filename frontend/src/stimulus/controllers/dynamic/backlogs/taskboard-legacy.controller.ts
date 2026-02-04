@@ -8,7 +8,6 @@ import './model';
 import './editable_inplace';
 import './sprint';
 import './work_package';
-import './story';
 import './task';
 import './impediment';
 import './taskboard';

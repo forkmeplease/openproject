@@ -31,38 +31,6 @@
 class RbStoriesController < RbApplicationController
   include OpTurbo::ComponentStream
 
-  # This is a constant here because we will recruit it elsewhere to whitelist
-  # attributes. This is necessary for now as we still directly use `attributes=`
-  # in non-controller code.
-  PERMITTED_PARAMS = %i[id status_id version_id
-                        story_points type_id subject author_id
-                        sprint_id].freeze
-
-  def create
-    call = Stories::CreateService
-           .new(user: current_user)
-           .call(attributes: story_params,
-                 prev: params[:prev])
-
-    respond_with_story(call)
-  end
-
-  def update
-    story = Story.find(params[:id])
-
-    call = Stories::UpdateService
-           .new(user: current_user, story:)
-           .call(attributes: story_params,
-                 prev: params[:prev])
-
-    unless call.success?
-      # reload the story to be able to display it correctly
-      call.result.reload
-    end
-
-    respond_with_story(call)
-  end
-
   def move
     story = Story.find(params[:id])
 
@@ -113,13 +81,6 @@ class RbStoriesController < RbApplicationController
 
   private
 
-  def respond_with_story(call)
-    status = call.success? ? 200 : 400
-    story = call.result
-
-    respond_with_turbo_streams
-  end
-
   def move_params
     params.require(%i[position target_id])
     params.permit(:position, :target_id)
@@ -127,9 +88,5 @@ class RbStoriesController < RbApplicationController
 
   def reorder_param
     params.expect(:direction)
-  end
-
-  def story_params
-    params.permit(PERMITTED_PARAMS).merge(project: @project).to_h
   end
 end

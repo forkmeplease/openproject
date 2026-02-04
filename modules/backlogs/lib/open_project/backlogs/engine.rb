@@ -54,7 +54,6 @@ module OpenProject::Backlogs
              settings:) do
       Rails.application.reloader.to_prepare do
         OpenProject::AccessControl.permission(:add_work_packages).tap do |add|
-          add.controller_actions << "rb_stories/create"
           add.controller_actions << "rb_tasks/create"
           add.controller_actions << "rb_impediments/create"
         end
@@ -62,13 +61,8 @@ module OpenProject::Backlogs
         OpenProject::AccessControl.permission(:edit_work_packages).tap do |edit|
           edit.controller_actions << "rb_stories/move"
           edit.controller_actions << "rb_stories/reorder"
-          edit.controller_actions << "rb_stories/update"
           edit.controller_actions << "rb_tasks/update"
           edit.controller_actions << "rb_impediments/update"
-        end
-
-        OpenProject::AccessControl.permission(:change_work_package_status).tap do |edit|
-          edit.controller_actions << "rb_stories/update"
         end
       end
 

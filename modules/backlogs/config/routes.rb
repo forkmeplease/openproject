@@ -52,7 +52,7 @@ Rails.application.routes.draw do
 
         resources :tasks,            controller: :rb_tasks,            only: %i[create update]
 
-        resources :stories, controller: :rb_stories, only: %i[create update] do
+        resources :stories, controller: :rb_stories, only: [] do
           member do
             put :move
             post :reorder
