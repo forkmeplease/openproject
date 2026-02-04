@@ -54,9 +54,6 @@ class Journals::CreateService
           custom_comments.custom_field_id,
           custom_comments.text
         FROM custom_comments
-        INNER JOIN custom_fields
-          ON custom_fields.id = custom_comments.custom_field_id
-          AND custom_fields.has_comment = TRUE
         #{availability_join}
         WHERE
           #{only_if_created_sql}
@@ -79,9 +76,6 @@ class Journals::CreateService
         FULL JOIN
           (SELECT custom_comments.*
            FROM custom_comments
-           INNER JOIN custom_fields
-             ON custom_fields.id = custom_comments.custom_field_id
-             AND custom_fields.has_comment = TRUE
            #{availability_join}
            WHERE custom_comments.customized_id = :journable_id
              AND custom_comments.customized_type = :customized_type) custom_comments
@@ -98,9 +92,13 @@ class Journals::CreateService
       return "" unless journable.is_a?(Project)
 
       <<~SQL # rubocop:disable Rails/SquishedSQLHeredocs
-        INNER JOIN project_custom_field_project_mappings
-          ON project_custom_field_project_mappings.custom_field_id = custom_fields.id
+        LEFT OUTER JOIN project_custom_field_project_mappings
+          ON project_custom_field_project_mappings.custom_field_id = custom_comments.custom_field_id
           AND project_custom_field_project_mappings.project_id = :journable_id
+        INNER JOIN custom_fields
+          ON custom_fields.id = custom_comments.custom_field_id
+          AND custom_fields.has_comment = TRUE
+          AND (custom_fields.is_for_all = TRUE OR project_custom_field_project_mappings.project_id IS NOT NULL)
       SQL
     end
   end
