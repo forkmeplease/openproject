@@ -69,14 +69,28 @@ RSpec.describe "MCP tools/list", with_flag: { mcp_server: true } do
       expect(tool.fetch("description")).to eq(tool_config.description)
     end
 
-    context "when not passing a Bearer token" do
+    context "when not passing a token" do
       subject do
+        # TODO: It's actually a hack that we expect clients to provide this header for proper WWW-Authenticate responses
+        # Regular clients will never see the extended WWW-Authenticate headers with resource_metadata hints
         header "X-Authentication-Scheme", "Bearer"
         header "Content-Type", "application/json"
         post "/mcp", request_body.to_json
       end
 
       it_behaves_like "MCP unauthenticated response"
+    end
+
+    context "when passing an API token via Bearer authentication" do
+      subject do
+        header "Authorization", "Bearer #{apikey.plain_value}"
+        header "Content-Type", "application/json"
+        post "/mcp", request_body.to_json
+      end
+
+      let(:apikey) { create(:api_token) }
+
+      it_behaves_like "MCP result response"
     end
 
     context "when passing a Bearer token with a wrong scope" do
