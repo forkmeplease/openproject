@@ -32,7 +32,7 @@ module McpTools
   class << self
     def all
       [
-        McpTools::SearchProject,
+        McpTools::SearchProjects,
         McpTools::SearchWorkPackages
       ]
     end

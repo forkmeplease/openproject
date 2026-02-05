@@ -50,7 +50,7 @@ RSpec.describe "MCP tools/list", with_flag: { mcp_server: true } do
   let(:parsed_results) { JSON.parse(last_response.body).fetch("result") }
 
   let(:server_config) { create(:mcp_configuration, identifier: "mcp_server") }
-  let(:tool_config) { create(:mcp_configuration, identifier: McpTools::SearchProject.qualified_name) }
+  let(:tool_config) { create(:mcp_configuration, identifier: McpTools::SearchProjects.qualified_name) }
 
   before do
     server_config.save!
@@ -60,10 +60,10 @@ RSpec.describe "MCP tools/list", with_flag: { mcp_server: true } do
   context "when the mcp_server enterprise feature is enabled", with_ee: %i[mcp_server] do
     it_behaves_like "MCP result response"
 
-    it "includes the search_project tool" do
+    it "includes the search_projects tool" do
       subject
 
-      tool = parsed_results.fetch("tools").find { |t| t.fetch("name") == "search_project" }
+      tool = parsed_results.fetch("tools").find { |t| t.fetch("name") == "search_projects" }
       expect(tool).not_to be_nil
       expect(tool.fetch("title")).to eq(tool_config.title)
       expect(tool.fetch("description")).to eq(tool_config.description)
@@ -94,15 +94,15 @@ RSpec.describe "MCP tools/list", with_flag: { mcp_server: true } do
       end
     end
 
-    context "when the search_project tool is disabled" do
-      let(:tool_config) { create(:mcp_configuration, identifier: McpTools::SearchProject.qualified_name, enabled: false) }
+    context "when the search_projects tool is disabled" do
+      let(:tool_config) { create(:mcp_configuration, identifier: McpTools::SearchProjects.qualified_name, enabled: false) }
 
       it_behaves_like "MCP result response"
 
-      it "does not include the search_project tool" do
+      it "does not include the search_projects tool" do
         subject
 
-        tool = parsed_results.fetch("tools").find { |t| t.fetch("name") == "search_project" }
+        tool = parsed_results.fetch("tools").find { |t| t.fetch("name") == "search_projects" }
         expect(tool).to be_nil
       end
     end
