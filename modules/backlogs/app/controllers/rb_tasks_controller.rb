@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -31,7 +33,7 @@ class RbTasksController < RbApplicationController
   # attributes. This is necessary for now as we still directly use `attributes=`
   # in non-controller code.
   PERMITTED_PARAMS = ["id", "subject", "assigned_to_id", "remaining_hours", "parent_id",
-                      "estimated_hours", "status_id", "sprint_id"]
+                      "estimated_hours", "status_id", "sprint_id"].freeze
 
   def create
     call = ::Tasks::CreateService
