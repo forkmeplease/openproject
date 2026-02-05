@@ -54,8 +54,9 @@ See COPYRIGHT and LICENSE files for more details.
       item.with_leading_visual_icon(icon: :"screen-full")
     end
 
-    menu.with_divider
-
-    build_move_menu(menu)
+    if show_move_items?
+      menu.with_divider
+      build_move_menu(menu)
+    end
   end
 %>

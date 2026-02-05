@@ -170,6 +170,12 @@ RSpec.describe Backlogs::StoryMenuComponent, type: :component do
         expect(page).to have_no_text(I18n.t(:label_sort_lower))
         expect(page).to have_no_text(I18n.t(:label_sort_lowest))
       end
+
+      it "hides the divider" do
+        render_component(position: 1, max_position: 1)
+
+        expect(page).to have_no_css(".ActionList-sectionDivider")
+      end
     end
   end
 end

@@ -44,6 +44,10 @@ module Backlogs
 
     private
 
+    def show_move_items?
+      !(first_item? && last_item?)
+    end
+
     def build_move_menu(menu)
       unless first_item?
         build_move_item(menu, label: I18n.t(:label_sort_highest), direction: "highest", icon: :"move-to-top")
