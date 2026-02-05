@@ -29,7 +29,7 @@
 class Story < WorkPackage
   extend OpenProject::Backlogs::Mixins::PreventIssueSti
 
-  def self.backlogs(project_id, sprint_ids, options = {})
+  def self.backlogs(project_id, sprint_ids, options = {}) # rubocop:disable Metrics/AbcSize
     options.reverse_merge!(order: Story::ORDER,
                            conditions: Story.condition(project_id, sprint_ids))
 
