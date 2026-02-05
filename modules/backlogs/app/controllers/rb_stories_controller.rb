@@ -33,13 +33,16 @@ class RbStoriesController < RbApplicationController
 
   def move
     story = Story.visible.find(params[:id])
+    # The #move_after called in update service required reloading the story, hence
+    # it is required to memoize the previous version_id.
+    version_id_was = story.version_id
 
     call = Stories::UpdateService
             .new(user: current_user, story:)
-            .call(attributes: {
-                    version_id: move_params[:target_id],
-                    position: move_params[:position]
-                  })
+            .call(
+              attributes: { version_id: move_params[:target_id] },
+              position: move_params[:position].to_i
+            )
 
     unless call.success?
       render_error_flash_message_via_turbo_stream(message: I18n.t(:notice_unsuccessful_update)) # TODO: display reason
@@ -48,7 +51,7 @@ class RbStoriesController < RbApplicationController
     backlog = Backlog.for(sprint: @sprint, project: @project)
     replace_via_turbo_stream(component: Backlogs::BacklogComponent.new(backlog:, project: @project))
 
-    if story.saved_change_to_version_id?
+    if story.version_id != version_id_was
       new_sprint  = story.version.becomes(Sprint)
       new_backlog = Backlog.for(sprint: new_sprint, project: @project)
 

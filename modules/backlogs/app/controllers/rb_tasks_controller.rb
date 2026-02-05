@@ -36,7 +36,7 @@ class RbTasksController < RbApplicationController
   def create
     call = ::Tasks::CreateService
            .new(user: current_user)
-           .call(attributes: task_params.merge(project: @project), prev: params[:prev])
+           .call(attributes: task_params.merge(project: @project), prev_id: params[:prev])
 
     respond_with_task call
   end
@@ -46,7 +46,7 @@ class RbTasksController < RbApplicationController
 
     call = ::Tasks::UpdateService
            .new(user: current_user, task:)
-           .call(attributes: task_params, prev: params[:prev])
+           .call(attributes: task_params, prev_id: params[:prev])
 
     respond_with_task call
   end
