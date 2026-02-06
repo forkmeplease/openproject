@@ -45,7 +45,9 @@ class RbStoriesController < RbApplicationController
             )
 
     unless call.success?
-      render_error_flash_message_via_turbo_stream(message: I18n.t(:notice_unsuccessful_update)) # TODO: display reason
+      render_error_flash_message_via_turbo_stream(
+        message: I18n.t(:notice_unsuccessful_update_with_reason, reason: call.message)
+      )
     end
 
     backlog = Backlog.for(sprint: @sprint, project: @project)
@@ -72,7 +74,9 @@ class RbStoriesController < RbApplicationController
         .call(attributes: { move_to: reorder_param })
 
     unless call.success?
-      render_error_flash_message_via_turbo_stream(message: I18n.t(:notice_unsuccessful_update)) # TODO: display reason
+      render_error_flash_message_via_turbo_stream(
+        message: I18n.t(:notice_unsuccessful_update_with_reason, reason: call.message)
+      )
     end
 
     backlog = Backlog.for(sprint: @sprint, project: @project)
