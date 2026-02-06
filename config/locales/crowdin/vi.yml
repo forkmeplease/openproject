@@ -2808,7 +2808,7 @@ vi:
           new_features_list:
             line_0: Khởi tạo dự án tự động (Phần mở rộng doanh nghiệp).
             line_1: "Họp: Thêm các gói công việc mới hoặc hiện có làm kết quả."
-            line_2: "Meetings: show iCal responses in OpenProject."
+            line_2: "Họp: Hiển thị phản hồi của người tham gia trong các đăng ký iCal."
             line_3: "Cuộc họp định kỳ: Sao chép các mục trong chương trình nghị sự sang lần họp tiếp theo."
             line_4: "Phát hành cho cộng đồng: Tính năng làm nổi bật thuộc tính."
             line_5: Cảnh báo trước khi mở các liên kết bên ngoài trong nội dung do người dùng cung cấp (Phần mở rộng doanh nghiệp).

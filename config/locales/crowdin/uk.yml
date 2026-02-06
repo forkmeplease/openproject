@@ -2951,7 +2951,7 @@ uk:
           new_features_list:
             line_0: Автоматизований запуск проєктів (надбудова Enterprise).
             line_1: "Наради: додавайте нові або наявні пакети робіт як підсумки."
-            line_2: "Meetings: show iCal responses in OpenProject."
+            line_2: "Наради: показуйте відповіді учасників у підписках iCal."
             line_3: "Повторювані наради: копіюйте пункти порядку денного в наступну нараду."
             line_4: "Випуск Community: виділення атрибутів."
             line_5: Попередження перед відкриттям зовнішніх посилань у контенті, створеному користувачем (надбудова Enterprise).
@@ -3391,7 +3391,7 @@ uk:
   label_index_by_title: "Індекс за назвою"
   label_information: "Інформація"
   label_information_plural: "Інформація"
-  label_installation_guides: "Інструкції із встановлення"
+  label_installation_guides: "Інструкції зі встановлення"
   label_integer: "Ціле число"
   label_interface: "Інтерфейс"
   label_internal: "Власне"
