@@ -241,9 +241,9 @@ uk:
         header: "Скасовано: нарада «%{title}»"
         header_occurrence: "Скасовано: нарада серії «%{title}»"
         header_series: "Скасовано: серія нарад «%{title}»"
-        summary_occurrence: "Нараду серії %{title} скасував(-ла) %{actor}."
-        summary_series: "Серію нарад «%{title}» скасував(-ла) %{actor}."
-        summary: "«%{title}» скасував(-ла) %{actor}."
+        summary_occurrence: "An occurrence of '%{title}' has been cancelled by %{actor}, or you have been removed as a participant"
+        summary_series: "Meeting series '%{title}' has been cancelled by %{actor}, or you have been removed as a participant"
+        summary: "'%{title}' has been cancelled by %{actor}, or you have been removed as a participant"
         date_time: "Заплановані дата/час"
       participant_added:
         header: "Нарада «%{title}» — додано учасника"
@@ -257,7 +257,7 @@ uk:
         summary_series: "Виконавець %{actor} вилучив учасника %{participant} із серії нарад «%{title}»"
       ended:
         header_series: "Завершено: серія нарад «%{title}»"
-        summary_series: "Серію нарад «%{title}» завершив(-ла) %{actor}."
+        summary_series: "Meeting series '%{title}' has been ended by %{actor}"
       updated:
         header: "Нараду «%{title}» оновлено"
         summary: "Нараду «%{title}» оновив(-ла) %{actor}"
@@ -544,8 +544,8 @@ uk:
   label_agenda_item_move_up: "Перемістити вгору"
   label_agenda_item_move_down: "Перемістити вниз"
   label_agenda_item_duplicate: "Дублювати"
-  label_agenda_item_duplicate_in_next: "Дублювати в наступній нараді серії"
-  label_agenda_item_duplicate_in_next_title: "Дублювати в наступній нараді серії?"
+  label_agenda_item_duplicate_in_next: "Duplicate in next meeting"
+  label_agenda_item_duplicate_in_next_title: "Duplicate in next meeting?"
   label_agenda_item_add_notes: "Додати примітки"
   label_agenda_item_add_outcome: "Додати результат"
   label_agenda_item_work_package_add: "Додати пакет робіт"
@@ -635,10 +635,10 @@ uk:
   my_account:
     access_tokens:
       token/ical_meeting:
-        blank_description: "Ви можете створити нараду, натиснувши кнопку нижче."
-        blank_title: "Немає маркера наради в iCalendar"
+        blank_description: "Щоб створити нараду, натисніть кнопку нижче."
+        blank_title: "Немає маркера наради для iCalendar"
         title: "iCalendar для нарад"
-        table_title: "Маркери нарад в iCalendar"
+        table_title: "Маркери нарад для iCalendar"
         text_hint: "Маркери iCalendar для нарад дають змогу користувачам підписуватися на всі свої наради й переглядати актуальну інформацію про них у зовнішніх клієнтах."
         disabled_text: "Підписки на наради iCalendar не активував адміністратор. Зв’яжіться з ним, щоб використовувати цю функцію."
         add_button: "Підписатися на календар"

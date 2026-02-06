@@ -104,7 +104,7 @@ uk:
         create_folder: 'Створення керованої папки проєкту'
         ensure_root_folder_permissions: 'Установіть дозволи для основної папки:'
         hide_inactive_folders: 'Етап «Приховайте неактивні папки»:'
-        remote_folders: 'Читання вмісту папки групи:'
+        remote_folders: 'Читання вмісту папки команди:'
         remove_user_from_group: 'Вилучення користувача з групи:'
         rename_project_folder: 'Перейменування керованої папки проєкту:'
       one_drive_sync_service:
