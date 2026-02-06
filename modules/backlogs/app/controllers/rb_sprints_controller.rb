@@ -63,17 +63,6 @@ class RbSprintsController < RbApplicationController
     respond_with_turbo_streams(status:)
   end
 
-  # Overwrite load_sprint_and_project to load the sprint from the :id instead of
-  # :sprint_id
-  def load_sprint_and_project
-    if params[:id]
-      @sprint = Sprint.visible.find(params[:id])
-      @project = @sprint.project
-    end
-    # This overrides sprint's project if we set another project, say a subproject
-    @project = Project.visible.find(params[:project_id]) if params[:project_id]
-  end
-
   private
 
   def update_header_component_via_turbo_stream(state: :show)
@@ -86,6 +75,14 @@ class RbSprintsController < RbApplicationController
         state:
       )
     )
+  end
+
+  # Overrides load_sprint_and_project to load the sprint from :id instead of :sprint_id
+  def load_sprint_and_project
+    @sprint = Sprint.visible.find(params[:id])
+    @project = @sprint.project
+    # This overrides sprint's project if we set another project, say a subproject
+    @project = Project.visible.find(params[:project_id])
   end
 
   def sprint_params
