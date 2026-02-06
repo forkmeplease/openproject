@@ -32,61 +32,34 @@ class RbSprintsController < RbApplicationController
   include OpTurbo::ComponentStream
 
   def edit_name
-    @backlog = Backlog.for(sprint: @sprint, project: @project)
-
-    update_via_turbo_stream(
-      component: Backlogs::BacklogHeaderComponent.new(
-        backlog: @backlog,
-        project: @project,
-        state: :edit
-      )
-    )
-
+    update_header_component_via_turbo_stream(state: :edit)
     respond_with_turbo_streams
   end
 
   def show_name
-    @backlog = Backlog.for(sprint: @sprint, project: @project)
-
-    update_via_turbo_stream(
-      component: Backlogs::BacklogHeaderComponent.new(
-        backlog: @backlog,
-        project: @project,
-        state: :show
-      )
-    )
-
+    update_header_component_via_turbo_stream(state: :show)
     respond_with_turbo_streams
   end
 
   def update
     call = Versions::UpdateService
-           .new(user: current_user, model: @sprint)
-           .call(attributes: sprint_params)
+      .new(user: current_user, model: @sprint)
+      .call(attributes: sprint_params)
 
     if call.success?
       status = 200
       state = :show
-
       @sprint = call.result
-
       render_success_flash_message_via_turbo_stream(message: I18n.t(:notice_successful_update))
     else
       status = 422
       state = :edit
-
-      render_error_flash_message_via_turbo_stream(message: I18n.t(:notice_unsuccessful_update_with_reason, reason: call.message))
+      render_error_flash_message_via_turbo_stream(
+        message: I18n.t(:notice_unsuccessful_update_with_reason, reason: call.message)
+      )
     end
 
-    @backlog = Backlog.for(sprint: @sprint, project: @project)
-
-    update_via_turbo_stream(
-      component: Backlogs::BacklogHeaderComponent.new(
-        backlog: @backlog,
-        project: @project,
-        state:
-      )
-    )
+    update_header_component_via_turbo_stream(state:)
     respond_with_turbo_streams(status:)
   end
 
@@ -102,6 +75,18 @@ class RbSprintsController < RbApplicationController
   end
 
   private
+
+  def update_header_component_via_turbo_stream(state: :show)
+    @backlog = Backlog.for(sprint: @sprint, project: @project)
+
+    update_via_turbo_stream(
+      component: Backlogs::BacklogHeaderComponent.new(
+        backlog: @backlog,
+        project: @project,
+        state:
+      )
+    )
+  end
 
   def sprint_params
     params.expect(sprint: %i[name start_date effective_date])
