@@ -45,7 +45,7 @@ module Backlogs
     end
 
     def breadcrumb_items
-      [{ href: project_overview_path(@project.id), text: @project.name },
+      [{ href: project_overview_path(@project), text: @project.name },
        { href: backlogs_project_backlogs_path(@project), text: t(:label_backlogs) },
        @sprint.name]
     end

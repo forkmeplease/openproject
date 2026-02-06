@@ -38,7 +38,7 @@ See COPYRIGHT and LICENSE files for more details.
     render Primer::OpenProject::PageHeader.new do |header|
       header.with_title { t(:label_backlogs) }
       header.with_breadcrumbs(
-        [{ href: project_overview_path(@project.id), text: @project.name },
+        [{ href: project_overview_path(@project), text: @project.name },
          t(:label_backlogs)]
       )
     end

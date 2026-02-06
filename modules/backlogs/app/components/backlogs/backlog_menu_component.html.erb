@@ -107,7 +107,7 @@ See COPYRIGHT and LICENSE files for more details.
       menu.with_item(
         label: t(".action_menu.properties"),
         tag: :a,
-        href: edit_version_path(sprint, back_url: backlogs_project_backlogs_path(project), project_id: project.id)
+        href: edit_version_path(sprint, back_url: backlogs_project_backlogs_path(project), project_id: project)
       ) do |item|
         item.with_leading_visual_icon(icon: :gear)
       end

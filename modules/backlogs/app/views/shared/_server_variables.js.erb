@@ -38,13 +38,13 @@ RB.constants = {
 
 RB.urlFor = (function () {
   const routes = {
-    update_sprint: '<%= backlogs_project_sprint_path(project_id: @project.identifier, id: ":id") %>',
+    update_sprint: '<%= backlogs_project_sprint_path(project_id: @project, id: ":id") %>',
 
-    create_task: '<%= backlogs_project_sprint_tasks_path(project_id: @project.identifier, sprint_id: ":sprint_id") %>',
-    update_task: '<%= backlogs_project_sprint_task_path(project_id: @project.identifier, sprint_id: ":sprint_id", id: ":id") %>',
+    create_task: '<%= backlogs_project_sprint_tasks_path(project_id: @project, sprint_id: ":sprint_id") %>',
+    update_task: '<%= backlogs_project_sprint_task_path(project_id: @project, sprint_id: ":sprint_id", id: ":id") %>',
 
-    create_impediment: '<%= backlogs_project_sprint_impediments_path(project_id: @project.identifier, sprint_id: ":sprint_id") %>',
-    update_impediment: '<%= backlogs_project_sprint_impediment_path(project_id: @project.identifier, sprint_id: ":sprint_id", id: ":id") %>'
+    create_impediment: '<%= backlogs_project_sprint_impediments_path(project_id: @project, sprint_id: ":sprint_id") %>',
+    update_impediment: '<%= backlogs_project_sprint_impediment_path(project_id: @project, sprint_id: ":sprint_id", id: ":id") %>'
   };
 
   return function (routeName, options) {
