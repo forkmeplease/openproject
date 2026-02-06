@@ -38,7 +38,7 @@ module McpTools
 
     name "search_projects"
     annotations read_only: true, idempotent: true, destructive: false
-    pagination_enabled? true
+    enable_pagination
 
     filter :name, filter_class: Queries::Projects::Filters::NameFilter, operator: "~"
     filter :identifier

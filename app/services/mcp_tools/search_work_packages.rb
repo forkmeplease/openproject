@@ -39,7 +39,7 @@ module McpTools
 
     name "search_work_packages"
     annotations read_only: true, idempotent: true, destructive: false
-    pagination_enabled? true
+    enable_pagination
 
     # We can't use subclasses of WorkPackageFilter as filter_class, because they overwrite apply_to badly and rely on using
     # an instantiated Query to be used.

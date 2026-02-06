@@ -57,10 +57,12 @@ module McpTools
         @name
       end
 
-      def pagination_enabled?(enabled = nil)
-        @pagination_enabled = enabled if enabled.present?
-
+      def pagination_enabled?
         @pagination_enabled || false
+      end
+
+      def enable_pagination
+        @pagination_enabled = true
       end
 
       def input_schema(schema = nil)
