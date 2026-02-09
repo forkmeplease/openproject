@@ -91,10 +91,6 @@ module Pages
     def edit_story_in_details_view(story, **attributes)
       click_in_story_menu(story, "Open details view")
 
-      wait_for { find("turbo-frame#content-bodyRight")[:complete] }.to be_truthy
-
-      expect(page).to have_current_path details_backlogs_project_backlogs_path(story.project, story)
-
       alter_attributes_in_details_view(story, **attributes)
     end
 
@@ -194,6 +190,8 @@ module Pages
       details_view = Pages::PrimerizedSplitWorkPackage.new(story)
       details_view.expect_tab :overview
       details_view.expect_subject
+
+      expect(page).to have_current_path details_backlogs_project_backlogs_path(story.project, story)
 
       yield details_view
     end
