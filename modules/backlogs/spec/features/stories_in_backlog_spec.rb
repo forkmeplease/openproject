@@ -31,7 +31,7 @@
 require "spec_helper"
 require_relative "../support/pages/backlogs"
 
-RSpec.describe "Stories in backlog", :js, :selenium, :settings_reset do
+RSpec.describe "Stories in backlog", :js, :settings_reset do
   let!(:project) do
     create(:project,
            types: [story, task, other_story],

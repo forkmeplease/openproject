@@ -29,7 +29,7 @@
 require "spec_helper"
 require_relative "../../support/pages/backlogs"
 
-RSpec.describe "Backlogs", :js, :selenium, driver: :firefox_de do # using FF due to regression #64158
+RSpec.describe "Backlogs", :js do
   let(:story_type) do
     create(:type_feature)
   end
