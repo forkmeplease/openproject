@@ -4,7 +4,10 @@
       scheme: :primary,
       tag: :a,
       href: admin_import_jira_run_select_projects_path(jira_id: jira_import.jira.id, run_id: jira_import.id),
-      data: { "close-dialog-id": modal_id }
+      data: {
+        turbo_stream: true,
+        turbo_method: :put
+      }
     )
   ) do |button|
     button.with_trailing_visual_counter(count: count)

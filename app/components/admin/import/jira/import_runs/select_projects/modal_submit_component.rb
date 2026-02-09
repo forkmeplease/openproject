@@ -35,11 +35,11 @@ module Admin::Import::Jira::ImportRuns::SelectProjects
 
     attr_reader :jira_import, :count, :modal_id
 
-    def initialize(jira_import:, count:, modal_id: Admin::Import::Jira::ImportRuns::SelectProjects::ModalComponent::MODAL_ID)
+    def initialize(jira_import:, count:)
       super()
       @jira_import = jira_import
       @count = count
-      @modal_id = modal_id
+      @modal_id = Admin::Import::Jira::ImportRuns::SelectProjects::ModalComponent::MODAL_ID
     end
   end
 end

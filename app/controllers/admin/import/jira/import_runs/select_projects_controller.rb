@@ -60,7 +60,9 @@ module Admin::Import::Jira::ImportRuns
       end
 
       @jira_import.update!(projects:)
-      stream_wizard
+      stream_wizard do
+        close_dialog_via_turbo_stream("##{Admin::Import::Jira::ImportRuns::SelectProjects::ModalComponent::MODAL_ID}")
+      end
     end
 
     def filter
@@ -220,8 +222,7 @@ module Admin::Import::Jira::ImportRuns
       count = selected_ids.count
       Admin::Import::Jira::ImportRuns::SelectProjects::ModalSubmitComponent.new(
         jira_import: @jira_import,
-        count:,
-        modal_id: Admin::Import::Jira::ImportRuns::SelectProjects::ModalComponent::MODAL_ID
+        count:
       )
     end
   end

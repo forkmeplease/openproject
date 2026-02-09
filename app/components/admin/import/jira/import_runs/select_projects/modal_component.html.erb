@@ -41,8 +41,7 @@
         modal_footer.with_component(
           Admin::Import::Jira::ImportRuns::SelectProjects::ModalSubmitComponent.new(
             jira_import: @jira_import,
-            count: selected_count,
-            modal_id: MODAL_ID
+            count: selected_count
           )
         )
       end

@@ -34,9 +34,10 @@ module Admin::Import::Jira::ImportRuns
 
     private
 
-    def stream_wizard
+    def stream_wizard(&block)
       respond_to do |format|
         format.turbo_stream do
+          yield if block_given?
           update_via_turbo_stream(
             component: ::Admin::Import::Jira::ImportRuns::WizardComponent.new(@jira_import),
             method: "morph"
