@@ -29,41 +29,32 @@
 #++
 
 module Documents
-  module OAuth
-    class EncryptTokenService < BaseServices::BaseCallable
-      ALGORITHM = "aes-256-gcm"
+  class RefreshTokensController < ApplicationController
+    model_object Document
 
-      def initialize(token:)
-        super()
+    before_action :find_model_object
+    before_action :find_project_from_association
+    before_action :authorize
 
-        @token = token
+    def create
+      token_result = Documents::OAuth::TokenWithMetadataService.new(
+        user: current_user,
+        document: @document,
+        project: @project
+      ).call
+
+      if token_result.success?
+        render json: token_result.result.slice(:encrypted_token, :expires_in_seconds), status: :ok
+      else
+        render json: { error: token_result.message }, status: :unprocessable_entity
       end
+    end
 
-      def perform
-        encryptor = ActiveSupport::MessageEncryptor.new(
-          key,
-          cipher: ALGORITHM,
-          serializer: ActiveSupport::MessageEncryptor::NullSerializer
-        )
-        encrypted = encryptor.encrypt_and_sign(token)
+    private
 
-        ServiceResult.success(result: encrypted)
-      rescue StandardError => e
-        ServiceResult.failure(errors: e)
-      end
-
-      private
-
-      attr_reader :token
-
-      def key
-        @key ||= begin
-          secret = Setting.collaborative_editing_hocuspocus_secret
-          raise "Collaborative editing secret is not set. Cannot encrypt token." if secret.blank?
-
-          Digest::SHA256.digest(secret)
-        end
-      end
+    def find_model_object(object_id = :document_id)
+      super
+      @document = @object
     end
   end
 end
