@@ -31,8 +31,7 @@
 require "spec_helper"
 require_relative "../support/pages/backlogs"
 
-RSpec.describe "Stories in backlog", :js,
-               :selenium do
+RSpec.describe "Stories in backlog", :js, :selenium, :settings_reset do
   let!(:project) do
     create(:project,
            types: [story, task, other_story],
@@ -135,10 +134,11 @@ RSpec.describe "Stories in backlog", :js,
 
   before do
     login_as current_user
-    allow(Setting)
-      .to receive(:plugin_openproject_backlogs)
-            .and_return("story_types" => [story.id.to_s, other_story.id.to_s],
-                        "task_type" => task.id.to_s)
+
+    Setting.plugin_openproject_backlogs = {
+      "story_types" => [story.id.to_s, other_story.id.to_s],
+      "task_type" => task.id.to_s
+    }
   end
 
   it "displays stories which are editable via details view" do
@@ -186,5 +186,11 @@ RSpec.describe "Stories in backlog", :js,
 
     backlogs_page.expect_story_not_in_sprint(sprint_story1, sprint)
     backlogs_page.expect_story_in_sprint(sprint_story1, backlog)
+
+    # Changing type to TASK will remove the item from the list
+    backlogs_page
+      .edit_story_in_details_view(sprint_story2, type: task.name)
+
+    backlogs_page.expect_story_not_in_sprint(sprint_story2, sprint)
   end
 end
