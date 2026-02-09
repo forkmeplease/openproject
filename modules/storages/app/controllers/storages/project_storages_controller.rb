@@ -34,8 +34,8 @@ class Storages::ProjectStoragesController < ApplicationController
   menu_item :overview
 
   before_action :require_login
-  before_action :find_project_stroage
   before_action :find_project_by_project_id
+  before_action :find_project_stroage
   before_action :render_403, unless: -> { User.current.allowed_in_project?(:view_file_links, @project) }
   no_authorization_required! :open
 
@@ -121,7 +121,7 @@ class Storages::ProjectStoragesController < ApplicationController
   end
 
   def project_storage_scope
-    Storages::ProjectStorage.where(id: @project_storage.id)
+    Storages::ProjectStorage.where(project_id: @project.id, id: @project_storage.id)
   end
 
   def test_folder_access

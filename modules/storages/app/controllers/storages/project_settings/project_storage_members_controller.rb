@@ -36,6 +36,7 @@ class Storages::ProjectSettings::ProjectStorageMembersController < Projects::Set
 
   menu_item :settings_project_storages
 
+  before_action :find_project_by_project_id
   before_action :find_project_storage, only: %i[index]
 
   def index
@@ -53,7 +54,7 @@ class Storages::ProjectSettings::ProjectStorageMembersController < Projects::Set
   private
 
   def find_project_storage
-    @project_storage = Storages::ProjectStorage.find(params[:project_storage_id])
+    @project_storage = Storages::ProjectStorage.where(project: @project).find(params[:project_storage_id])
     @storage = @project_storage.storage
   end
 end
