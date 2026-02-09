@@ -607,6 +607,7 @@ uk:
         is_for_all_blank_slate:
           heading: Для всіх проєктів
           description: Цей атрибут проєкту активовано в усіх проєктах, оскільки встановлено прапорець «Для всіх проєктів». Його не можна деактивувати для окремих проєктів.
+        enabled_via_assignee_when_submitted_html: This project attribute cannot be disabled since it is set as <a href=%{pir_submission_url} target="_blank">assignee when submitted</a> for project initiation requests.
       types:
         no_results_title_text: Наразі немає доступних типів.
         form:
@@ -634,6 +635,7 @@ uk:
         label_request_submission: "Подання запиту"
         project_attributes_description: >
           Виберіть атрибути проєкту, які слід включити в запит на ініціювання проєкту. Цей список містить лише [атрибути проєкту](project_attributes_url), увімкнені для цього проєкту.
+        enabled_because_required_html: This project attribute cannot be disabled for this project initiation request since it is defined as required. This can be changed in the <a href=%{admin_settings_url} target="_blank">administration settings</a> by the administrator of the instance.
     status:
       button_edit: Редагувати статус
     wizard:
