@@ -131,7 +131,7 @@ en:
         success: "MCP configurations were updated successfully."
       server_form:
         description_caption: "How the MCP server will be described to other applications who connect to it."
-        title_caption: "A short title shown to applicatons that connect to the MCP server."
+        title_caption: "A short title shown to applications that connect to the MCP server."
       update:
         failure: "MCP configuration could not be updated."
         success: "MCP configuration was updated successfully."
