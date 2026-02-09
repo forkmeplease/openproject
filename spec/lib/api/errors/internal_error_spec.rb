@@ -28,39 +28,32 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module API
-  module Errors
-    # A representation for internal server errors that's safe to be used to wrap unexpected errors received in rescue_from.
-    # It will hide the detailed error message of some exception classes that are known to risk exposing internal details.
-    class InternalError < ErrorBase
-      identifier "InternalServerError"
-      code 500
+require "spec_helper"
 
-      def initialize(error_message = nil, exception:)
-        error = I18n.t("api_v3.errors.code_500")
+RSpec.describe API::Errors::InternalError do
+  subject { described_class.new(sensitive_message, exception:) }
 
-        if error_message && visible_exception?(exception)
-          error += " #{error_message}"
-        end
+  let(:sensitive_message) { "This message might contain sensitive information" }
+  let(:exception) { nil }
+  let(:generic_message) { I18n.t("api_v3.errors.code_500") }
 
-        super(error)
-      end
+  context "when the exception is known to be problematic" do
+    let(:exception) { ActiveRecord::StatementInvalid.new }
 
-      private
+    it "hides the sensitive message" do
+      expect(subject.message).to eq(generic_message)
+    end
+  end
 
-      ##
-      # Hide internal database errors in production
-      def visible_exception?(exception)
-        exception_blocklist.none? do |clz|
-          exception.is_a?(clz)
-        end
-      end
+  context "when the exception is something else" do
+    let(:exception) { StandardError.new }
 
-      def exception_blocklist
-        [
-          ActiveRecord::StatementInvalid
-        ]
-      end
+    it "includes the sensitive message" do
+      expect(subject.message).to include(sensitive_message)
+    end
+
+    it "Starts with the generic message" do
+      expect(subject.message).to start_with(generic_message)
     end
   end
 end
