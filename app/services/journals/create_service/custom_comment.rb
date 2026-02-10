@@ -56,9 +56,9 @@ class Journals::CreateService
           custom_comments.custom_field_id,
           custom_comments.text
         FROM custom_comments
-        #{availability_join}
         WHERE
           #{only_if_created_sql}
+          AND #{availability_condition}
           AND custom_comments.customized_id = :journable_id
           AND custom_comments.customized_type = :journable_class_name
           AND custom_comments.text != ''
@@ -78,8 +78,9 @@ class Journals::CreateService
         FULL JOIN
           (SELECT custom_comments.*
            FROM custom_comments
-           #{availability_join}
-           WHERE custom_comments.customized_id = :journable_id
+           WHERE
+             #{availability_condition}
+             AND custom_comments.customized_id = :journable_id
              AND custom_comments.customized_type = :customized_type) custom_comments
         ON
           custom_comments.custom_field_id = custom_comment_journals.custom_field_id
@@ -90,17 +91,20 @@ class Journals::CreateService
 
     private
 
-    def availability_join
-      return "" unless journable.is_a?(Project)
+    def availability_condition
+      return "1 = 1" unless journable.is_a?(Project)
 
       <<~SQL # rubocop:disable Rails/SquishedSQLHeredocs
-        LEFT OUTER JOIN project_custom_field_project_mappings
-          ON project_custom_field_project_mappings.custom_field_id = custom_comments.custom_field_id
-          AND project_custom_field_project_mappings.project_id = :journable_id
-        INNER JOIN custom_fields
-          ON custom_fields.id = custom_comments.custom_field_id
+        EXISTS (
+          SELECT 1
+          FROM custom_fields
+          LEFT JOIN project_custom_field_project_mappings
+            ON project_custom_field_project_mappings.custom_field_id = custom_fields.id
+            AND project_custom_field_project_mappings.project_id = :journable_id
+          WHERE custom_fields.id = custom_comments.custom_field_id
           AND custom_fields.has_comment = TRUE
           AND (custom_fields.is_for_all = TRUE OR project_custom_field_project_mappings.project_id IS NOT NULL)
+        )
       SQL
     end
   end
