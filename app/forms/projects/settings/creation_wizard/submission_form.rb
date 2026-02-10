@@ -78,7 +78,7 @@ module Projects
             name: :project_creation_wizard_assignee_custom_field_id,
             label: I18n.t("settings.project_initiation_request.submission.assignee"),
             caption: I18n.t("settings.project_initiation_request.submission.assignee_caption_html").html_safe,
-            required: true,
+            required: false,
             input_width: :large,
             autocomplete_options: {
               component: "opce-autocompleter",
@@ -99,7 +99,7 @@ module Projects
             name: :project_creation_wizard_work_package_comment,
             label: I18n.t("settings.project_initiation_request.submission.work_package_comment"),
             caption: I18n.t("settings.project_initiation_request.submission.work_package_comment_caption"),
-            required: true,
+            required: false,
             value: model.project_creation_wizard_work_package_comment.presence || I18n.t(
               "settings.project_initiation_request.submission.work_package_comment_default", project_name: model.name
             ),

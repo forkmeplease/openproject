@@ -155,7 +155,7 @@ module Projects::CreationWizard
     end
 
     def assigned_to_id
-      project.custom_value_for(assignee_custom_field).value
+      project.custom_value_for(assignee_custom_field).value if assignee_custom_field
     end
 
     def assignee_custom_field
@@ -182,6 +182,8 @@ module Projects::CreationWizard
     end
 
     def assignee_mention_tag
+      return if assigned_to_id.nil?
+
       principal = Principal.find(assigned_to_id)
 
       ApplicationController.helpers.content_tag(
