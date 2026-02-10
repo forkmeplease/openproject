@@ -35,54 +35,74 @@ RSpec.describe NewsController do
 
   include BecomeMember
 
-  let(:news) { create(:news) }
+  let!(:news) { create(:news, project: project) }
+  let!(:news_in_other_project) { create(:news) }
 
   shared_let(:project) { create(:project) }
   shared_current_user { create(:admin) }
 
   describe "#index" do
-    it "renders index" do
-      get :index
+    context "when requesting the global index" do
+      it "renders index" do
+        get :index
 
-      expect(response).to be_successful
-      expect(response).to render_template "index"
+        expect(response).to be_successful
+        expect(response).to render_template "index"
 
-      expect(assigns(:project)).to be_nil
-      expect(assigns(:news)).not_to be_nil
+        expect(assigns(:project)).to be_nil
+        expect(assigns(:news)).to contain_exactly(news, news_in_other_project)
+      end
     end
 
-    it "renders index with project" do
-      get :index, params: { project_id: project.id }
+    context "when requesting the project index" do
+      it "renders index with project" do
+        get :index, params: { project_id: project.id }
 
-      expect(response).to be_successful
-      expect(response).to render_template "index"
-      expect(assigns(:news)).not_to be_nil
+        expect(response).to be_successful
+        expect(response).to render_template "index"
+        expect(assigns(:news)).to contain_exactly(news)
+        expect(assigns(:project)).to eq(project)
+      end
     end
   end
 
   describe "#show" do
-    it "renders show" do
-      get :show, params: { project_id: news.project_id, id: news.id }
+    context "when routed through the global news path" do
+      it "renders show" do
+        get :show, params: { id: news.id }
 
-      expect(response).to be_successful
-      expect(response).to render_template "show"
+        expect(response).to be_successful
+        expect(response).to render_template "show"
 
-      expect(assigns(:news)).to eq news
+        expect(assigns(:news)).to eq news
+        expect(assigns(:project)).to eq news.project
+      end
     end
 
-    it "renders show with slug" do
-      get :show, params: { project_id: news.project_id, id: "#{news.id}-some-news-title" }
+    context "when routed through the project" do
+      it "renders show" do
+        get :show, params: { project_id: news.project_id, id: news.id }
 
-      expect(response).to be_successful
-      expect(response).to render_template "show"
+        expect(response).to be_successful
+        expect(response).to render_template "show"
 
-      expect(assigns(:news)).to eq news
-    end
+        expect(assigns(:news)).to eq news
+      end
 
-    it "renders error if news item is not found" do
-      get :show, params: { project_id: news.project_id, id: -1 }
+      it "renders show with slug" do
+        get :show, params: { project_id: news.project_id, id: "#{news.id}-some-news-title" }
 
-      expect(response).to be_not_found
+        expect(response).to be_successful
+        expect(response).to render_template "show"
+
+        expect(assigns(:news)).to eq news
+      end
+
+      it "renders error if news item is not found" do
+        get :show, params: { project_id: news.project_id, id: -1 }
+
+        expect(response).to be_not_found
+      end
     end
   end
 

@@ -42,6 +42,12 @@ RSpec.describe NewsController, "routing" do
                                           format: "atom")
   end
 
+  it do
+    expect(subject).to route(:get, "/news/123").to(controller: "news",
+                                                   action: "show",
+                                                   id: "123")
+  end
+
   context "with project scoped routes" do
     it do
       expect(subject).to route(:get, "/projects/567/news").to(controller: "news",

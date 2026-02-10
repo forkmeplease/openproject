@@ -118,6 +118,11 @@ class NewsController < ApplicationController
   private
 
   def find_news_object
-    @news = @project.news.visible.find(params[:id].to_i)
+    if @project
+      @news = @project.news.visible.find(params[:id].to_i)
+    else
+      @news = News.visible.find(params[:id].to_i)
+      @project = @news.project
+    end
   end
 end

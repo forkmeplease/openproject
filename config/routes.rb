@@ -911,7 +911,7 @@ Rails.application.routes.draw do
   # The show page of groups is public and thus moved out of the admin scope
   resources :groups, only: %i[show], as: :show_group
 
-  resources :news, only: %i[index]
+  resources :news, only: %i[index show]
 
   # redirect for backwards compatibility
   scope "attachments",
