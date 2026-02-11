@@ -622,6 +622,9 @@ vi:
       work_package_priorities:
         new_label: "Ưu tiên mới"
       creation_wizard:
+        errors:
+          no_work_package_type: "Failed to enable project initiation request because it requires at least one active work package type and this project has none. Please add at least one work package type to this project."
+          no_status_when_submitted: "Failed to enable project initiation request because work package type %{type} requires at least one status associated with it. Please enable at least one status workflow for this work package type."
         export:
           description_attachment_export: "Tạo tác được tạo sẽ được lưu dưới dạng tệp đính kèm PDF vào gói tác phẩm tạo tác."
           description_file_link_export: "Gói công việc tạo tác sẽ có liên kết tệp tới tệp PDF được lưu trữ trong bộ lưu trữ tệp bên ngoài. Yêu cầu lưu trữ tệp đang hoạt động với các thư mục dự án được quản lý tự động cho dự án này. Hiện tại chỉ hỗ trợ lưu trữ tệp Nextcloud."

@@ -623,6 +623,9 @@ fr:
       work_package_priorities:
         new_label: "Nouvelle priorité"
       creation_wizard:
+        errors:
+          no_work_package_type: "Failed to enable project initiation request because it requires at least one active work package type and this project has none. Please add at least one work package type to this project."
+          no_status_when_submitted: "Failed to enable project initiation request because work package type %{type} requires at least one status associated with it. Please enable at least one status workflow for this work package type."
         export:
           description_attachment_export: "L'artefact généré sera enregistré en tant que pièce jointe au format PDF dans le lot de travaux de l'artefact."
           description_file_link_export: "Le lot de travaux de l'artefact contient un lien vers un fichier PDF stocké dans un espace de stockage de fichiers externe. Nécessite un stockage de fichiers de travail avec des dossiers de projet gérés automatiquement pour ce projet. Pour le moment, seuls les espaces de stockage de fichiers Nextcloud sont pris en charge."

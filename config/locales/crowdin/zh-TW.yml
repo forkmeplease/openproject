@@ -621,6 +621,9 @@ zh-TW:
       work_package_priorities:
         new_label: "新優先權"
       creation_wizard:
+        errors:
+          no_work_package_type: "Failed to enable project initiation request because it requires at least one active work package type and this project has none. Please add at least one work package type to this project."
+          no_status_when_submitted: "Failed to enable project initiation request because work package type %{type} requires at least one status associated with it. Please enable at least one status workflow for this work package type."
         export:
           description_attachment_export: "產生的產物將會以 PDF 附件的形式，儲存到該產物的工作套件中。"
           description_file_link_export: "該成品工作套件將會包含一個檔案連結，指向儲存在外部檔案儲存空間中的 PDF 檔案。這要求有一個具備檔案儲存功能的空間，並且其中有為此專案自動化管理的專案資料夾。目前僅支援 Nextcloud 檔案儲存空間。"

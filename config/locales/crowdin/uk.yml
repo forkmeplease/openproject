@@ -622,6 +622,9 @@ uk:
       work_package_priorities:
         new_label: "Новий пріоритет"
       creation_wizard:
+        errors:
+          no_work_package_type: "Failed to enable project initiation request because it requires at least one active work package type and this project has none. Please add at least one work package type to this project."
+          no_status_when_submitted: "Failed to enable project initiation request because work package type %{type} requires at least one status associated with it. Please enable at least one status workflow for this work package type."
         export:
           description_attachment_export: "Створений артефакт буде збережено як вкладення у форматі PDF у пакеті робіт артефакту."
           description_file_link_export: "Пакет робіт артефакту міститиме посилання на файл PDF, що зберігатиметься в зовнішньому сховищі. Знадобиться робоче файлове сховище з папками проєкту з автоматичним керуванням для цього проєкту. Зараз підтримуються лише файлові сховища Nextcloud."

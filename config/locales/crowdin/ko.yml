@@ -622,6 +622,9 @@ ko:
       work_package_priorities:
         new_label: "새로운 우선 순위"
       creation_wizard:
+        errors:
+          no_work_package_type: "Failed to enable project initiation request because it requires at least one active work package type and this project has none. Please add at least one work package type to this project."
+          no_status_when_submitted: "Failed to enable project initiation request because work package type %{type} requires at least one status associated with it. Please enable at least one status workflow for this work package type."
         export:
           description_attachment_export: "생성된 아티팩트는 아티팩트 작업 패키지에 PDF 첨부 파일로 저장됩니다."
           description_file_link_export: "아티팩트 작업 패키지에는 외부 파일 저장소에 저장된 PDF에 대한 파일 링크가 있습니다. 이 프로젝트에 대해 자동으로 관리되는 프로젝트 폴더가 있는 작업 파일 저장소가 필요합니다. 현재는 Nextcloud 파일 저장소만 지원됩니다."
