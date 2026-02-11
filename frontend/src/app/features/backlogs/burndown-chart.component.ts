@@ -27,7 +27,7 @@
 //++
 
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, computed, inject, input } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import PrimerColorsPlugin from 'core-app/shared/components/work-package-graphs/plugin.primer-colors';
@@ -60,7 +60,7 @@ export class BurndownChartComponent {
       .reduce((a, b) => Math.max(a, b), 0);
   });
 
-  readonly lineChartOptions = computed<ChartOptions<'line'>>(() => ({
+  readonly lineChartOptions:Signal<ChartOptions<'line'>> = computed<ChartOptions<'line'>>(() => ({
     scales: {
       x: {
         title: {

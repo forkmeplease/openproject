@@ -29,6 +29,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Signal,
   computed,
   input,
 } from '@angular/core';
@@ -51,7 +52,7 @@ export class ActualCostsComponent {
 
   readonly barChartData = computed<ChartData<'bar'>>(() => JSON.parse(this.chartData()) as ChartData<'bar'>);
 
-  readonly barChartOptions = computed<ChartConfiguration<'bar'>['options']>(() => ({
+  readonly barChartOptions:Signal<ChartConfiguration<'bar'>['options']> = computed<ChartConfiguration<'bar'>['options']>(() => ({
     font: chartFont,
     aspectRatio: 1.5,
     scales: {

@@ -29,6 +29,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Signal,
   computed,
   input,
 } from '@angular/core';
@@ -50,7 +51,7 @@ export class BudgetByCostTypeComponent {
 
   readonly pieChartData = computed<ChartData<'pie'>>(() => JSON.parse(this.chartData()) as ChartData<'pie'>);
 
-  readonly pieChartOptions = computed<ChartConfiguration<'pie'>['options']>(() => ({
+  readonly pieChartOptions:Signal<ChartConfiguration<'pie'>['options']> = computed<ChartConfiguration<'pie'>['options']>(() => ({
     font: chartFont,
     plugins: {
       ...chartLegend,
