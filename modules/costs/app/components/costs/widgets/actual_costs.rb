@@ -54,7 +54,7 @@ module Costs
       def chart_datasets
         return [] unless months.any?
 
-        [labor_dataset] + material_datasets
+        [labor_dataset, *material_datasets].compact
       end
 
       private
@@ -64,18 +64,18 @@ module Costs
       end
 
       def labor_dataset
-        {
-          label: t(:caption_labor),
-          data: months.map { |month| spent_labor_by_month.fetch(month, 0).to_f }
-        }
+        data = months.map { |month| spent_labor_by_month.fetch(month, 0).to_f }
+        return unless data.sum.positive?
+
+        { label: t(:caption_labor), data: }
       end
 
       def material_datasets
-        cost_type_names.map do |cost_type_name|
-          {
-            label: cost_type_name,
-            data: months.map { |month| spent_material_by_month_and_type.fetch([month, cost_type_name], 0).to_f }
-          }
+        cost_type_names.filter_map do |cost_type_name|
+          data = months.map { |month| spent_material_by_month_and_type.fetch([month, cost_type_name], 0).to_f }
+          next unless data.sum.positive?
+
+          { label: cost_type_name, data: }
         end
       end
     end

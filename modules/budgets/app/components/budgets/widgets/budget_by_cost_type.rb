@@ -48,17 +48,26 @@ module Budgets
       end
 
       def chart_labels
-        [t(:caption_labor)] + budgeted_material_by_type.keys
+        chart_entries.keys
       end
 
       def chart_data
-        [budgeted_labor] + budgeted_material_by_type.values.map(&:to_f)
+        chart_entries.values
       end
 
       private
 
       def has_required_permissions?
         REQUIRED_PERMISSIONS.all? { |perm| current_user.allowed_in_project?(perm, project) }
+      end
+
+      def chart_entries
+        @chart_entries ||= {}.tap do |entries|
+          entries[t(:caption_labor)] = budgeted_labor.to_f if budgeted_labor.positive?
+          budgeted_material_by_type.each do |name, value|
+            entries[name] = value.to_f if value.positive?
+          end
+        end
       end
     end
   end
