@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-      - release
+      - release/*
     paths:
       - 'blocknote/hocuspocus/**'
     tags:
@@ -151,7 +151,7 @@ jobs:
           token: "${{ steps.generate-gha-token.outputs.token }}"
 
       - name: Deploy STAGE
-        if: github.ref == 'refs/heads/release'
+        if: startsWith(github.ref, 'refs/heads/release/')
         uses: benc-uk/workflow-dispatch@e2e5e9a103e331dad343f381a29e654aea3cf8fc
         with:
           workflow: stage-deploy-shards.yml
