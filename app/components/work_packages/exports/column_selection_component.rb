@@ -37,7 +37,10 @@ module WorkPackages
 
       def initialize(export_settings, id, caption,
                      label = I18n.t(:"queries.configure_view.columns.input_label"),
-                     required: true)
+                     required: true,
+                     excluded_columns: [],
+                     allow_relation_columns: false
+        )
         super()
 
         @export_settings = export_settings
@@ -46,11 +49,14 @@ module WorkPackages
         @caption = caption
         @label = label
         @required = required
+        @excluded_columns = excluded_columns.map(&:to_s)
+        @allow_relation_columns = allow_relation_columns
       end
 
       def available_columns
-        query
+        @available_columns = query
           .displayable_columns
+          .reject { |column| excluded_column?(column) }
           .sort_by(&:caption)
           .map { |column| { id: column.name.to_s, name: column.caption } }
       end
@@ -64,7 +70,13 @@ module WorkPackages
 
         query
           .columns
+          .reject { |column| excluded_column?(column) }
           .map { |column| { id: column.name.to_s, name: column.caption } }
+      end
+
+      def excluded_column?(column)
+        @excluded_columns.include?(column.name.to_s) ||
+          (!@allow_relation_columns && column.is_a?(Queries::WorkPackages::Selects::RelationSelect))
       end
 
       private
