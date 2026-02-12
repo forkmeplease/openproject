@@ -1,5 +1,5 @@
 import { onAuthenticatePayload } from "@hocuspocus/server";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { OpenProjectApi } from "../../src/extensions/openProjectApi";
 import { server } from "../mocks/node";
 
