@@ -102,4 +102,6 @@ jobs:
           EOF
 
       - name: Seed locale ${{ matrix.locale }}
+        env:
+          SILENCE_SQL_LOGS: 1
         run: ruby script/i18n/test_seed_all_locales ${{ matrix.locale }}
