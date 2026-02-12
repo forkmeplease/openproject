@@ -336,10 +336,10 @@ class MeetingsController < ApplicationController
     @meeting.toggle!(:notify)
 
     # Reload to get the updated value
-    @meeting.recurring_meeting.template.reload if @meeting.template?
+    @meeting.recurring_meeting.template.reload if @meeting.series_template?
 
     if @meeting.notify?
-      if @meeting.template?
+      if @meeting.series_template?
         handle_series_notification
       else
         handle_notification(type: :toggle_notifications)

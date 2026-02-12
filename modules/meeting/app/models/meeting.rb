@@ -56,8 +56,8 @@ class Meeting < ApplicationRecord
 
   scope :templated, -> { where(template: true) }
   scope :not_templated, -> { where(template: false) }
-  scope :standalone_templates, -> { where(template: true, recurring_meeting_id: nil) }
-  scope :recurring_templates, -> { where(template: true).where.not(recurring_meeting_id: nil) }
+  scope :onetime_templates, -> { where(template: true, recurring_meeting_id: nil) }
+  scope :series_templates, -> { where(template: true).where.not(recurring_meeting_id: nil) }
 
   scope :not_cancelled, -> { where.not.cancelled }
 
@@ -118,7 +118,6 @@ class Meeting < ApplicationRecord
   accepts_nested_attributes_for :participants, allow_destroy: true
 
   validates :title, :project_id, presence: true
-  validates :start_time, presence: { unless: :standalone_template? }
 
   validates :duration, numericality: { greater_than: 0 }
 
@@ -181,12 +180,12 @@ class Meeting < ApplicationRecord
     !!template
   end
 
-  def standalone_template?
-    template? && recurring_meeting_id.nil?
+  def series_template?
+    template? && recurring_meeting_id.present?
   end
 
-  def recurring_template?
-    template? && recurring_meeting_id.present?
+  def onetime_template?
+    template? && recurring_meeting_id.nil?
   end
 
   # One-time meeting time zone
@@ -205,7 +204,7 @@ class Meeting < ApplicationRecord
   end
 
   def notify?
-    return false if standalone_template?
+    return false if onetime_template?
 
     if recurring?
       recurring_meeting.template.notify
@@ -273,20 +272,21 @@ class Meeting < ApplicationRecord
   end
 
   def send_emails?
-    return false if standalone_template?
+    return false if onetime_template?
     return false if template? && recurring_meeting.scheduled_meetings.none?
 
     persisted? && notify?
   end
 
+  # Override virtual_start_time methods for onetime templates
   def set_initial_values
-    return if template == true && recurring_meeting_id.nil?
+    return if onetime_template?
 
     super
   end
 
   def validate_date_and_time
-    return if standalone_template?
+    return if onetime_template?
 
     super
   end

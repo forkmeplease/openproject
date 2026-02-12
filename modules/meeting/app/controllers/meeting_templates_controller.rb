@@ -38,7 +38,7 @@ class MeetingTemplatesController < ApplicationController
   menu_item :meetings
 
   def index
-    @templates = Meeting.standalone_templates
+    @templates = Meeting.onetime_templates
                         .visible
                         .order(:title)
 
