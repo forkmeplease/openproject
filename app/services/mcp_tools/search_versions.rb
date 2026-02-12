@@ -61,7 +61,7 @@ module McpTools
       properties: {
         items: {
           type: :array,
-          items: JsonSchemaLoader.new.load("version_model")
+          items: JsonSchemaLoader.new.load("version_read_model")
         }
       }
     )

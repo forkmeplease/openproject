@@ -40,7 +40,12 @@ properties:
     format: date
   status:
     type: string
-    description: The current status of the version
+    description: |-
+      The current status of the version. This could be:
+      
+      - *open*: if the version is available to be assigned to work packages in all shared projects
+      - *locked*: if the version is not finished, but locked for further assignments to work packages
+      - *closed*: if the version is finished
     enum:
       - open
       - locked
@@ -49,11 +54,12 @@ properties:
     type: string
     description: |-
       The indicator of how the version is shared between projects. This could be:
-        - *none*: if the version is only available in the defining project
-        - *descendants*: if the version is shared with the descendants of the defining project
-        - *hierarchy*: if the version is shared with the descendants and the ancestors of the defining project
-        - *tree*: if the version is shared with the root project of the defining project and all descendants of the root project
-        - *system*: if the version is shared globally
+      
+      - *none*: if the version is only available in the defining project
+      - *descendants*: if the version is shared with the descendants of the defining project
+      - *hierarchy*: if the version is shared with the descendants and the ancestors of the defining project
+      - *tree*: if the version is shared with the root project of the defining project and all descendants of the root project
+      - *system*: if the version is shared globally
     enum:
       - none
       - descendants

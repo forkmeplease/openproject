@@ -2,7 +2,7 @@
 ---
 type: object
 patternProperties:
-  "^customField\\d+":
+  "^customField\\d+$":
     allOf:
       - $ref: "./link.yml"
       - description: |-

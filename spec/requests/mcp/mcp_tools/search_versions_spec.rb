@@ -78,7 +78,7 @@ RSpec.describe McpTools::SearchVersions, with_flag: { mcp_server: true } do
     it "responds with properly formatted versions" do
       subject
       parsed_results.dig("structuredContent", "items").each do |version|
-        expect(version.to_json).to match_json_schema.from_docs("version_model")
+        expect(version.to_json).to match_json_schema.from_docs("version_read_model")
       end
     end
 
