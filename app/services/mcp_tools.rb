@@ -39,6 +39,7 @@ module McpTools
         McpTools::SearchPrograms,
         McpTools::SearchProjects,
         McpTools::SearchUsers,
+        McpTools::SearchVersions,
         McpTools::SearchWorkPackages
       ]
     end

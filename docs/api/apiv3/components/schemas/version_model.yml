@@ -1,25 +1,16 @@
 # Schema: VersionModel
 ---
 type: object
-required:
-- name
-- status
-- sharing
-- createdAt
-- updatedAt
 properties:
   id:
     type: integer
     description: Version id
-    readOnly: true
-    exclusiveMinimum: 0
+    minimum: 1
   name:
     type: string
     description: Version name
   description:
-    allOf:
-    - "$ref": "./formattable.yml"
-    - {}
+    $ref: "./formattable.yml"
   startDate:
     type:
       - "string"
@@ -40,62 +31,55 @@ properties:
     type: string
     format: date-time
     description: Time of creation
-    readOnly: true
   updatedAt:
     type: string
     format: date-time
     description: Time of the most recent change to the version
-    readOnly: true
   _links:
     type: object
     required:
-    - self
-    - availableInProjects
+      - self
+      - availableInProjects
     properties:
       update:
         allOf:
-        - "$ref": "./link.yml"
-        - description: |-
-            Form endpoint that aids in preparing and performing edits on the version
-
-            # Conditions
-
-            **Permission**: manage versions
-          readOnly: true
+          - $ref: "./link.yml"
+          - description: |-
+              Form endpoint that aids in preparing and performing edits on the version
+              
+              # Conditions
+              
+              **Permission**: manage versions
       updateImmediately:
         allOf:
-        - "$ref": "./link.yml"
-        - description: |-
-            Directly perform edits on the version
-
-            # Conditions
-
-            **Permission**: manage versions
-          readOnly: true
+          - $ref: "./link.yml"
+          - description: |-
+              Directly perform edits on the version
+              
+              # Conditions
+              
+              **Permission**: manage versions
       self:
         allOf:
-        - "$ref": "./link.yml"
-        - description: |-
-            This version
-
-            **Resource**: Version
-          readOnly: true
+          - $ref: "./link.yml"
+          - description: |-
+              This version
+              
+              **Resource**: Version
       definingProject:
         allOf:
-        - "$ref": "./link.yml"
-        - description: |-
-            The workspace to which the version belongs
-
-            **Resource**: Workspace
-          readOnly: true
+          - $ref: "./link.yml"
+          - description: |-
+              The workspace to which the version belongs
+              
+              **Resource**: Workspace
       availableInProjects:
         allOf:
-        - "$ref": "./link.yml"
-        - description: |-
-            Workspaces where this version can be used
-
-            **Resource**: Workspace
-          readOnly: true
+          - $ref: "./link.yml"
+          - description: |-
+              Workspaces where this version can be used
+              
+              **Resource**: Workspace
 example:
   _links:
     self:

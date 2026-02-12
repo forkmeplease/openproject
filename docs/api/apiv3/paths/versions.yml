@@ -9,7 +9,7 @@ get:
 
         + sharing: filters versions by how they are shared within the server (*none*, *descendants*, *hierarchy*, *tree*, *system*).
         + name: filters versions by their name.
-      example: '[{ "sharing": { "operator": "*", "values": ["system"] }" }]'
+      example: '[{ "sharing": { "operator": "=", "values": ["system"] } }]'
       in: query
       name: filters
       required: false
