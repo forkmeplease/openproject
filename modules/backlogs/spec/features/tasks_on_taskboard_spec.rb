@@ -51,7 +51,7 @@ RSpec.describe "Tasks on taskboard", :js,
   end
   let(:role) do
     create(:project_role,
-           permissions: %i(view_taskboards
+           permissions: %i(view_sprints
                            add_work_packages
                            view_work_packages
                            edit_work_packages
