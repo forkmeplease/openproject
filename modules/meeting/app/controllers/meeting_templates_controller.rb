@@ -57,9 +57,10 @@ class MeetingTemplatesController < ApplicationController
       recurring_meeting_id: nil
     )
 
-    respond_with_dialog MeetingTemplates::Index::DialogComponent.new(
-      template: @template,
-      project: @project
+    respond_with_dialog Meetings::Index::DialogComponent.new(
+      meeting: @template,
+      project: @project,
+      template: true
     )
   end
 
@@ -75,9 +76,10 @@ class MeetingTemplatesController < ApplicationController
       redirect_to project_meeting_path(@project, @template), status: :see_other
     else
       update_via_turbo_stream(
-        component: MeetingTemplates::Index::FormComponent.new(
-          template: @template,
-          project: @project
+        component: Meetings::Index::FormComponent.new(
+          meeting: @template,
+          project: @project,
+          template: true
         ),
         status: :bad_request
       )
