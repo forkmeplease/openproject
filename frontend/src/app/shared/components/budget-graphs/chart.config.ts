@@ -68,13 +68,23 @@ function applyTooltipPosition<TType extends 'bar' | 'pie'>(
     return;
   }
 
-  const position = context.chart.canvas.getBoundingClientRect();
+  const { left, top } = context.chart.canvas.getBoundingClientRect();
+  const x = Math.round(left + context.tooltip.caretX);
+  const y = Math.round(top + context.tooltip.caretY);
+
+  const wasHidden = !tooltipEl.style.opacity || tooltipEl.style.opacity === '0';
+  if (wasHidden) {
+    // Snap to position before fading in (avoids sliding from initial 0,0)
+    tooltipEl.style.transition = 'none';
+    tooltipEl.style.transform = `translate(${x}px, ${y}px)`;
+    void tooltipEl.offsetHeight; // force reflow so transform is committed
+    tooltipEl.style.transition = 'transform 0.1s ease, opacity 0.15s ease';
+  } else {
+    tooltipEl.style.transition = 'transform 0.1s ease, opacity 0.15s ease';
+    tooltipEl.style.transform = `translate(${x}px, ${y}px)`;
+  }
 
   tooltipEl.style.opacity = '1';
-  tooltipEl.style.position = 'absolute';
-  tooltipEl.style.left = `${position.left + window.pageXOffset + context.tooltip.caretX}px`;
-  tooltipEl.style.top = `${position.top + window.pageYOffset + context.tooltip.caretY}px`;
-  tooltipEl.style.pointerEvents = 'none';
 }
 
 function renderColorDot(color:string) {
@@ -99,7 +109,7 @@ function renderTooltipItem(
 
 function renderTooltipPopover(tooltipId:string, items:ReturnType<typeof html>[]):ReturnType<typeof html> {
   return html`
-    <div class="Popover" id="${tooltipId}">
+    <div class="Popover" id="${tooltipId}" style="position: fixed; top: 0; left: 0; pointer-events: none">
       <div class="Box Popover-message Popover-message--left-top ml-2 mx-auto p-2 text-left text-small">
         <ul class="list-style-none ml-0">
           ${items}
