@@ -32,6 +32,6 @@ export const ICON_MAP:Record<string, SVGData> = {
   x: xIconData,
   star: starIconData,
   'circle-slash': circleSlashIconData,
-  graph: graphIconData
+  graph: graphIconData,
   // TODO add more icons
 };
