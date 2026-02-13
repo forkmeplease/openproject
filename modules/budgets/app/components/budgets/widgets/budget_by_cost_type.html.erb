@@ -59,6 +59,9 @@ See COPYRIGHT and LICENSE files for more details.
             }.to_json
           )
         end
+        flex.with_row(mt: 3) do
+          render(Primer::Beta::Link.new(href: projects_budgets_path(project))) { t(".view_details") }
+        end
       end
     else
       render(Primer::Beta::Blankslate.new) do |blankslate|

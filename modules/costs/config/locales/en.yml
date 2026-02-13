@@ -258,6 +258,7 @@ en:
           heading: "Start tracking your time and costs"
           description: "Get an overview of your costs and logged time to monitor progress of your project"
           action: "Log time"
+        view_details: "View actual costs details"
 
   ee:
     features:
