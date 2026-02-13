@@ -1,17 +1,45 @@
-# Schema: Meeting_PageModel
+# Schema: MeetingModel
 ---
 type: object
 required:
   - title
 properties:
+  _type:
+    type: string
+    enum:
+      - Meeting
   id:
     type: integer
     description: Identifier of this meeting
-    readOnly: true
-    exclusiveMinimum: 0
+    minimum: 1
   title:
     type: string
     description: The meeting's title
+  location:
+    type: string
+    description: The meeting's location
+  lockVersion:
+    type: integer
+    description: The version of the item as used for optimistic locking
+  startTime:
+    type: string
+    format: date-time
+    description: The start time of the meeting
+  endTime:
+    type: string
+    format: date-time
+    description: The end time of the meeting
+  duration:
+    type: number
+    description: The duration of the meeting in hours. The difference between `startTime` and `endTime`
+  createdAt:
+    type: string
+    format: date-time
+    description: Timestamp of the creation datetime of the meeting
+  updatedAt:
+    type: string
+    format: date-time
+    description: Timestamp of the last modification datetime of the meeting
   _links:
     type: object
     properties:
@@ -22,7 +50,6 @@ properties:
               This meeting
               
               **Resource**: Meeting
-            readOnly: true
       author:
         allOf:
           - "$ref": "./link.yml"
@@ -30,7 +57,6 @@ properties:
               The user having created the meeting
               
               **Resource**: User
-            readOnly: true
       project:
         allOf:
           - "$ref": "./link.yml"
@@ -54,35 +80,3 @@ properties:
               # Conditions
               
               **Permission**: edit meeting
-            readOnly: true
-example:
-  _type: Meeting
-  id: 72
-  lockVersion: 5
-  title: A meeting
-  startTime: '2014-05-21T08:00:00.000Z'
-  endTime: '2014-05-21T10:00:00.000Z'
-  duration: 120
-  createdAt: '2014-05-21T08:51:20.396Z'
-  updatedAt: '2014-05-21T09:14:02.776Z'
-  _embedded:
-    project:
-      _type: Project...
-      id: 12
-    author:
-      _type: User...
-      id: 2
-  _links:
-    addAttachment:
-      href: "/api/v3/meetings/72/attachments"
-      method: post
-    attachments:
-      href: "/api/v3/meetings/72/attachments"
-    project:
-      href: "/api/v3/projects/12"
-      title: some project
-    author:
-      href: "/api/v3/users/2"
-      title: Peggie Feeney
-    self:
-      href: "/api/v3/meetings/72"  

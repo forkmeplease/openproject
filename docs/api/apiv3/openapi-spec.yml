@@ -569,6 +569,8 @@ components:
       $ref: "./components/examples/hierarchy_item_collection_response.yml"
     HierarchyItemResponse:
       $ref: "./components/examples/hierarchy_item_response.yml"
+    MeetingSimpleResponse:
+      $ref: "./components/examples/meeting_simple_response.yml"
     MembershipCreateRequestCustomMessage:
       $ref: "./components/examples/membership-create-request-custom-message.yml"
     MembershipCreateRequestGlobalRole:
@@ -582,9 +584,9 @@ components:
     MembershipSimpleCollectionResponse:
       $ref: "./components/examples/membership-simple-collection-response.yml"
     MembershipSimpleResponse:
-      $ref: "./components/examples/membership-simple-response.yml"
+      $ref: "./components/examples/membership_simple_response.yml"
     MembershipUpdateAdditionalRoles:
-      $ref: "./components/examples/membership-update-additional-roles.yml"
+      $ref: "./components/examples/membership_update_additional_roles.yml"
     MentionedNotification:
       $ref: "./components/examples/mentioned_notification.yml"
     NotificationCollection:
