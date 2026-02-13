@@ -31,6 +31,8 @@
 module Budgets
   module Widgets
     class BudgetTotals < Budgets::WidgetComponent
+      REQUIRED_PERMISSIONS = %i[view_budgets view_cost_entries view_cost_rates view_time_entries view_hourly_rates].freeze
+
       delegate :has_budgets?, :budgeted_total, :spent_total, :spent_ratio, :remaining,
                to: :@aggregated_budgets_with_spend
 
@@ -66,6 +68,10 @@ module Budgets
       end
 
       private
+
+      def has_required_permissions?
+        REQUIRED_PERMISSIONS.all? { |perm| current_user.allowed_in_project?(perm, project) }
+      end
 
       def render_currency(value)
         color = value.negative? ? :danger : :default
