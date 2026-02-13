@@ -153,7 +153,7 @@ module Redmine
           when Array
             super
           when Hash
-            commentable_fields_by_id = available_custom_fields.select(&:has_comment?).index_by(&:id)
+            commentable_fields_by_id = available_custom_fields.index_by(&:id)
             comments_by_field_id = custom_comments.index_by(&:custom_field_id)
 
             set_custom_comments(values:, commentable_fields_by_id:, comments_by_field_id:)
@@ -331,7 +331,6 @@ module Redmine
         def custom_comment_changes(into: {})
           custom_comments.each_with_object(into) do |comment, changes|
             next unless comment.changed_for_autosave?
-            next unless comment.custom_field.has_comment?
 
             changes[comment.custom_field.comment_attribute_name] = comment.text_change
           end
