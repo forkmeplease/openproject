@@ -36,6 +36,14 @@ module OpenProject
           system_arguments[:type] = :date
           super
         end
+
+        def call
+          form.text_field name: attribute,
+                          data: { controller: "inplace-edit",
+                                  inplace_edit_url_value: reset_url,
+                                  action: "keydown.esc->inplace-edit#request change->inplace-edit#submitForm" },
+                          **@system_arguments
+        end
       end
     end
   end
