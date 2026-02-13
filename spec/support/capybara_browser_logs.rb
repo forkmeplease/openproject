@@ -9,6 +9,7 @@ module Capybara::BrowserLogs
 
     class << self
       def after_failed_example(example)
+        return if ENV["SKIP_CAPYBARA_BROWSER_LOGS"] == "true"
         return unless failed?(example)
         return unless example.example_group.include?(Capybara::DSL)
         return if Capybara.page.current_url.blank?
