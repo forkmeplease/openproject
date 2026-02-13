@@ -3,5 +3,5 @@
     <canvas baseChart [data]="pieChartData()" [options]="pieChartOptions()" type="pie"></canvas>
   </div>
 } @else {
-  <op-no-results></op-no-results>
+  <op-no-results [title]="text.noResults.title" [message]="text.noResults.description" />
 }

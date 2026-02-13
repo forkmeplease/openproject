@@ -49,6 +49,6 @@ import {
 export class NoResultsComponent {
   private readonly i18n = inject(I18nService);
 
-  readonly name = input(this.i18n.t('js.label_no_data'));
+  readonly title = input(this.i18n.t('js.label_no_data'));
   readonly message = input<string>();
 }

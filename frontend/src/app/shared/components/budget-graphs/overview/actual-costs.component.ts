@@ -31,10 +31,12 @@ import {
   Component,
   Signal,
   computed,
+  inject,
   input,
 } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import 'chartjs-adapter-luxon';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { NoResultsComponent } from 'core-app/shared/components/blankslate/no-results.component';
 import { chartFont, chartLegend, createBarTooltipRenderer } from 'core-app/shared/components/budget-graphs/chart.config';
 import PrimerColorsPlugin from 'core-app/shared/components/work-package-graphs/plugin.primer-colors';
@@ -48,8 +50,17 @@ import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2
   providers: [provideCharts(withDefaultRegisterables(PrimerColorsPlugin))],
 })
 export class ActualCostsComponent {
+  private readonly i18n = inject(I18nService);
+
   readonly chartData = input.required<string>();
   readonly currency = input<string>('EUR');
+
+  readonly text = {
+    noResults: {
+      title: this.i18n.t('js.costs.widgets.actual_costs.blankslate.title'),
+      description: this.i18n.t('js.costs.widgets.actual_costs.blankslate.description'),
+    },
+  };
 
   readonly barChartData = computed<ChartData<'bar'>>(() => JSON.parse(this.chartData()) as ChartData<'bar'>);
   readonly hasChartData = computed(() => this.barChartData().datasets.length > 0);
