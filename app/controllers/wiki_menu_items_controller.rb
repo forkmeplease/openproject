@@ -193,6 +193,6 @@ class WikiMenuItemsController < ApplicationController
                 end
 
     menu_item.options = options
-    menu_item.save
+    menu_item.save!
   end
 end
