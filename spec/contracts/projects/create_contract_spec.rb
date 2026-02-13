@@ -243,8 +243,9 @@ RSpec.describe Projects::CreateContract do
                  public: other_project_public,
                  members: { current_user => role })
         end
-        let(:mapping) { create(:project_custom_field_project_mapping, project: other_project) }
-        let!(:custom_field) { mapping.project_custom_field }
+        let!(:custom_field) do
+          create(:project_custom_field, projects: other_project)
+        end
         let!(:non_member_custom_field) do
           create(:project_custom_field_project_mapping).project_custom_field
         end
@@ -261,6 +262,12 @@ RSpec.describe Projects::CreateContract do
 
             include_examples "can not access custom field"
           end
+
+          context "for project attribute" do
+            let(:attribute) { custom_field.attribute_name }
+
+            include_examples "can not write"
+          end
         end
 
         context "with view_project_attributes permission" do
@@ -268,8 +275,10 @@ RSpec.describe Projects::CreateContract do
 
           include_examples "can access custom field"
 
-          it_behaves_like "can not write" do
+          context "for project attribute" do
             let(:attribute) { custom_field.attribute_name }
+
+            include_examples "can not write"
           end
         end
 
@@ -278,12 +287,16 @@ RSpec.describe Projects::CreateContract do
 
           include_examples "can access custom field"
 
-          it_behaves_like "can write" do
+          context "for project attribute" do
             let(:attribute) { custom_field.attribute_name }
+
+            include_examples "can write"
           end
 
-          it_behaves_like "can not write" do
+          context "for non member project attribute" do
             let(:attribute) { non_member_custom_field.attribute_name }
+
+            include_examples "can not write"
           end
         end
 
@@ -292,12 +305,16 @@ RSpec.describe Projects::CreateContract do
 
           include_examples "can access custom field"
 
-          it_behaves_like "can write" do
+          context "for project attribute" do
             let(:attribute) { custom_field.attribute_name }
+
+            include_examples "can write"
           end
 
-          it_behaves_like "can write" do
+          context "for non member project attribute" do
             let(:attribute) { non_member_custom_field.attribute_name }
+
+            include_examples "can write"
           end
         end
       end
