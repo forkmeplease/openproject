@@ -74,7 +74,7 @@ class MeetingsController < ApplicationController
         if @meeting.state == "cancelled"
           render_404
         else
-          render(Meetings::ShowComponent.new(meeting: @meeting), layout: true)
+          render(Meetings::ShowComponent.new(meeting: @meeting, state: show_edit_state), layout: true)
         end
       end
     end
@@ -612,5 +612,9 @@ class MeetingsController < ApplicationController
     end
 
     render_success_flash_message_via_turbo_stream(message: I18n.t(:notice_successful_notification))
+  end
+
+  def show_edit_state
+    params[:state] == "edit" ? :edit : :show
   end
 end

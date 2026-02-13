@@ -47,10 +47,18 @@ module MeetingTemplates
 
     def create_path
       if @project
-        new_dialog_template_project_meetings_path(@project)
+        create_template_project_meetings_path(@project)
       else
         new_dialog_template_meetings_path
       end
+    end
+
+    def use_dialog?
+      @project.nil?
+    end
+
+    def button_data
+      use_dialog? ? { controller: "async-dialog" } : { turbo_method: :post }
     end
 
     def id

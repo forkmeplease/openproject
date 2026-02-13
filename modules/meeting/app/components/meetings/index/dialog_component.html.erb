@@ -8,7 +8,7 @@
     )
   ) do |dialog|
     dialog.with_header(variant: :large)
-    dialog.with_body do
+    dialog.with_body(classes: "Overlay-body_autocomplete_height") do
       render(
         Meetings::Index::FormComponent.new(
           meeting: @meeting,

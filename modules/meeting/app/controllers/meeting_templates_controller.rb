@@ -66,13 +66,15 @@ class MeetingTemplatesController < ApplicationController
   def create
     call = ::Meetings::CreateService
       .new(user: current_user)
-      .call(template_params)
+      .call(create_template_params)
 
     @template = call.result
 
     if call.success?
-      flash[:notice] = I18n.t(:notice_meeting_template_created)
-      redirect_to controller: "/meetings", action: "show", id: @template, status: :see_other
+      redirect_to project_meeting_path(@template.project, @template, state: :edit), status: :see_other
+    elsif @project
+      flash[:error] = call.errors.full_messages.join(", ")
+      redirect_to action: :index, status: :unprocessable_entity
     else
       update_via_turbo_stream(
         component: Meetings::Index::FormComponent.new(
@@ -88,18 +90,6 @@ class MeetingTemplatesController < ApplicationController
   end
 
   # TODO
-  # def show
-  # end
-  #
-  # def edit
-  # end
-  #
-  # def update
-  # end
-  #
-  # def update_title
-  # end
-  #
   # def delete_dialog
   # end
   #
@@ -112,14 +102,15 @@ class MeetingTemplatesController < ApplicationController
     render_404 unless @project
   end
 
-  def template_params
-    permitted = params.expect(meeting: %i[title project_id])
+  def create_template_params
+    project_id = @project&.id || params.dig(:meeting, :project_id)
+    project = project_id ? Project.find_by(id: project_id) : nil
 
-    permitted.merge(
+    {
+      title: I18n.t(:label_meeting_template_new),
+      project:,
       template: true,
       recurring_meeting_id: nil
-    ).tap do |p|
-      p[:project_id] = @project.id if @project.present?
-    end
+    }
   end
 end

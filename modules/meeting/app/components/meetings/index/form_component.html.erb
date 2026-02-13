@@ -35,8 +35,10 @@
           end
         end
 
-        modal_body.with_row do
-          render(Meeting::Title.new(f))
+        unless @template
+          modal_body.with_row do
+            render(Meeting::Title.new(f))
+          end
         end
 
         unless @template

@@ -9,10 +9,7 @@
       Primer::OpenProject::PageHeader.new(
         test_selector: "meeting-page-header",
         state: @state,
-        data: {
-          poll_for_changes_target: "reference",
-          reference_value: @meeting.changed_hash
-        }
+        data: page_header_data_attributes
       )
     ) do |header|
       header.with_title do |title|

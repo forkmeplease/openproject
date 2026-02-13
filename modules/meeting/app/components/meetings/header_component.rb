@@ -49,6 +49,15 @@ module Meetings
       @state = fetch_or_fallback(STATE_OPTIONS, state)
     end
 
+    def page_header_data_attributes
+      {
+        poll_for_changes_target: "reference",
+        reference_value: @meeting.changed_hash,
+        controller: "editable-page-header-title",
+        "editable-page-header-title-input-id-value": "meeting_title"
+      }
+    end
+
     # Define the interval so it can be overriden through tests
     def check_for_updates_interval
       10_000
