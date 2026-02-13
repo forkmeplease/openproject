@@ -110,3 +110,22 @@ jobs:
           SILENCE_SQL_LOGS: 1
           OPENPROJECT_EDITION: ${{ matrix.edition }}
         run: ruby script/i18n/test_seed_all_locales ${{ matrix.locale }}
+
+  notify:
+    needs: [prepare, seed]
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
+    uses: ./.github/workflows/email-notification.yml
+    secrets: inherit
+    with:
+      to: operations@openproject.com
+      subject: "Seeding with some locales failed on ${{ needs.prepare.outputs.ref }}"
+      body: |
+        The seed-all-locales workflow has failed.
+
+        Branch: ${{ needs.prepare.outputs.ref }}
+        Editions tested: standard, bim
+        Trigger: ${{ github.event_name }}
+
+        Some locale/edition combinations failed to seed correctly.
+        Check the workflow run for details on which locales failed:
+        ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
