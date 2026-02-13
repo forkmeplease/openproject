@@ -113,7 +113,7 @@ zh-TW:
       index:
         description: "模型上下文協定允許 AI 代理向其使用者提供此 OpenProject 實體所揭露的工具與資源。"
         resources_heading: "資源"
-        resources_description: "OpenProject implements the following resources. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
+        resources_description: "OpenProject 實作下列資源。每個資源都可以依您的需求啟用、重新命名及描述。如需詳細資訊，請參閱 [關於 MCP 資源的文件](docs_url)。"
         resources_submit: "更新資源"
         tools_heading: "工具"
         tools_description: "OpenProject 實作下列工具。每個工具都可以依您的需求啟用、重新命名和描述。如需詳細資訊，請參閱 [MCP 工具說明文件](docs_url)。"
@@ -122,7 +122,7 @@ zh-TW:
         success: "MCP 組態已成功更新。"
       server_form:
         description_caption: "MCP 伺服器將如何描述給連線到它的其他應用程式。"
-        title_caption: "A short title shown to applications that connect to the MCP server."
+        title_caption: "顯示給與 MCP 伺服器連線的應用程式的簡短標題。"
       update:
         failure: "無法更新 MCP 設定。"
         success: "MCP 組態已成功更新。"
@@ -622,8 +622,8 @@ zh-TW:
         new_label: "新優先權"
       creation_wizard:
         errors:
-          no_work_package_type: "Failed to enable project initiation request because it requires at least one active work package type and this project has none. Please add at least one work package type to this project."
-          no_status_when_submitted: "Failed to enable project initiation request because work package type %{type} requires at least one status associated with it. Please enable at least one status workflow for this work package type."
+          no_work_package_type: "啟用專案啟動請求失敗，因為它需要至少一個作用中的工作套件類型，而此專案沒有。請為此專案新增至少一個工作套件類型。"
+          no_status_when_submitted: "啟用專案啟動請求失敗，因為工作包類型 %{type} 至少需要一個狀態與之相關。請為此工作包類型啟用至少一個狀態工作流程。"
         export:
           description_attachment_export: "產生的產物將會以 PDF 附件的形式，儲存到該產物的工作套件中。"
           description_file_link_export: "該成品工作套件將會包含一個檔案連結，指向儲存在外部檔案儲存空間中的 PDF 檔案。這要求有一個具備檔案儲存功能的空間，並且其中有為此專案自動化管理的專案資料夾。目前僅支援 Nextcloud 檔案儲存空間。"
@@ -1151,8 +1151,8 @@ zh-TW:
   activerecord:
     attributes:
       agile/sprint:
-        sharing: "Sharing"
-        finish_date: "End date"
+        sharing: "分享"
+        finish_date: "結束日期"
       announcements:
         show_until: "只顯示到"
       attachment:
@@ -1527,7 +1527,7 @@ zh-TW:
         not_available: "由於系統配置所以不可用"
         not_deletable: "無法刪除"
         not_current_user: "不是目前使用者。"
-        only_one_active_sprint_allowed: "only one active sprint is allowed per project."
+        only_one_active_sprint_allowed: "每個專案只允許一個活動衝刺。"
         not_found: "未找到"
         not_a_date: "不是有效的日期。"
         not_a_datetime: "不是有效的日期時間。"
@@ -2070,7 +2070,7 @@ zh-TW:
     role: "角色"
     roles: "角色"
     search: "搜尋"
-    sprint: "Sprint"
+    sprint: "衝刺"
     start_date: "起始日期"
     status: "狀態"
     state: "狀態"
@@ -3923,7 +3923,7 @@ zh-TW:
   notice_successful_delete: "刪除成功"
   notice_successful_cancel: "取消成功"
   notice_successful_update: "更新成功"
-  notice_successful_move: "Successful move from %{from} to %{to}."
+  notice_successful_move: "成功從 %{from} 移至 %{to}."
   notice_unsuccessful_create: "建立失敗。"
   notice_unsuccessful_create_with_reason: "建立失敗：%{reason}"
   notice_unsuccessful_update: "更新失敗。"
@@ -4083,7 +4083,7 @@ zh-TW:
   permission_edit_project_query: "編輯專案查詢"
   placeholders:
     default: "-"
-    templated_hint: Automatically generated through type %{type}
+    templated_hint: 透過類型 %{type}自動產生
   portfolio:
     count:
       zero: "0 個組合"
@@ -4268,9 +4268,9 @@ zh-TW:
   setting_capture_external_links: "擷取外部連結"
   setting_capture_external_links_text: >
     啟用後，格式化文字中的所有外部連結都會在離開應用程式前透過警告頁重定向。這有助於保護使用者遠離潛在的惡意外部網站。
-  setting_capture_external_links_require_login: "Require users to be logged in"
+  setting_capture_external_links_require_login: "要求使用者登入"
   setting_capture_external_links_require_login_text: >
-    When enabled, users wanting to click on external links need to be logged in before being able to continue.
+    啟用後，想要按一下外部連結的使用者必須先登入才能繼續。
   setting_after_first_login_redirect_url: "首次登入重新導向"
   setting_after_first_login_redirect_url_text_html: >
     設定使用者首次登入後的重新導向路徑。如果為空，則會重定向到上線導覽的首頁。 <br/> 範例：<code>/my/page</code>
