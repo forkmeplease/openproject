@@ -79,6 +79,16 @@ module OpenProject
             nil
           end
 
+          def custom_field?
+            attribute.to_s.start_with?("custom_field_")
+          end
+
+          def custom_field
+            return @custom_field if defined?(@custom_field)
+
+            @custom_field = CustomField.find_by(id: attribute.to_s.sub("custom_field_", "").to_i)
+          end
+
           private
 
           def edit_url

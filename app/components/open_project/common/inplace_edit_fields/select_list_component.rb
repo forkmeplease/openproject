@@ -51,12 +51,18 @@ module OpenProject
           @system_arguments[:label] ||= model.class.human_attribute_name(attribute)
 
           @system_arguments[:autocomplete_options] ||= {}
-          @system_arguments[:autocomplete_options][:model] = model
+          @system_arguments[:autocomplete_options][:model] = { id: model.id, name: model.name }
+          @system_arguments[:autocomplete_options][:inputName] = attribute
           @system_arguments[:autocomplete_options][:focusDirectly] = true
+          @system_arguments[:autocomplete_options][:closeOnSelect] = false
         end
 
         def call
-          form.autocompleter(name: attribute, **@system_arguments)
+          if custom_field?
+            render_custom_field_input
+          else
+            form.autocompleter(name: attribute, **@system_arguments)
+          end
 
           form.group(layout: :horizontal, justify_content: :flex_end) do |button_group|
             button_group.submit(name: :reset,
@@ -69,6 +75,31 @@ module OpenProject
                                 label: I18n.t(:button_save),
                                 scheme: :primary)
           end
+        end
+
+        private
+
+        def render_custom_field_input
+          input_class = if custom_field.multi_value?
+                          CustomFields::Inputs::MultiSelectList
+                        else
+                          CustomFields::Inputs::SingleSelectList
+                        end
+
+          # Use fields_for to create the proper context for custom field inputs
+          form.fields_for(:custom_field_values) do |builder|
+            input_class.new(builder, custom_field:, object: model)
+          end
+        end
+
+        def custom_field?
+          attribute.to_s.start_with?("custom_field_")
+        end
+
+        def custom_field
+          return @custom_field if defined?(@custom_field)
+
+          @custom_field = CustomField.find_by(id: attribute.to_s.sub("custom_field_", "").to_i)
         end
       end
     end

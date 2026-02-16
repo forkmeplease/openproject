@@ -107,8 +107,37 @@ class InplaceEditFieldsController < ApplicationController
   end
 
   def permitted_params
-    params
-      .expect(@model.model_name.param_key => [@attribute])
+    if custom_field_via_fields_for?
+      transform_custom_field_values_params
+    else
+      params.expect(@model.model_name.param_key => [@attribute])
+    end
+  end
+
+  def custom_field_via_fields_for?
+    @attribute.to_s.start_with?("custom_field_") &&
+      params[@model.model_name.param_key]&.key?(:custom_field_values)
+  end
+
+  def transform_custom_field_values_params
+    model_key = @model.model_name.param_key
+    custom_field_id = @attribute.to_s.delete_prefix("custom_field_")
+
+    # Strong Parameters doesn't support dynamic keys in nested hashes
+    # So we extract the value directly from the raw params
+    raw_value = params.dig(model_key, :custom_field_values, custom_field_id)
+
+    # Handle both single-select and multi-select
+    processed_value = if raw_value.is_a?(Array)
+                        # Remove empty strings from the hidden field
+                        cleaned_values = raw_value.compact_blank
+                        # For single-select, unwrap the array to get the single value
+                        cleaned_values.size <= 1 ? cleaned_values.first : cleaned_values
+                      else
+                        raw_value
+                      end
+
+    { @attribute => processed_value }
   end
 
   def component(enforce_edit_mode: false)
