@@ -153,10 +153,9 @@ module Redmine
           when Array
             super
           when Hash
-            commentable_fields_by_id = available_custom_fields.index_by(&:id)
             comments_by_field_id = custom_comments.index_by(&:custom_field_id)
 
-            set_custom_comments(values:, commentable_fields_by_id:, comments_by_field_id:)
+            set_custom_comments(values:, comments_by_field_id:)
           else
             raise ArgumentError, "Expected an Array or Hash, got #{values.class}"
           end
@@ -538,22 +537,18 @@ module Redmine
           self.custom_value_destroyed = true
         end
 
-        def set_custom_comments(values:, commentable_fields_by_id:, comments_by_field_id:)
-          values.each do |cf_id, text|
-            cf_id = cf_id.to_s.to_i
+        def set_custom_comments(values:, comments_by_field_id:)
+          values.each do |custom_field_id, text|
+            # to_s is needed as in some cases custom_field_id will be a Symbol which doesn't have to_i method
+            custom_field_id = custom_field_id.to_s.to_i
+            comment = comments_by_field_id[custom_field_id]
 
-            set_custom_comment(commentable_fields_by_id[cf_id], comments_by_field_id[cf_id], text)
-          end
-        end
-
-        def set_custom_comment(custom_field, comment, text)
-          return unless custom_field
-
-          if comment
-            comment.text = text.presence # for text_change also when removing
-            comment.mark_for_destruction unless comment.text
-          elsif text.present?
-            custom_comments.build(custom_field:, text:)
+            if comment
+              comment.text = text.presence # for text_change also when removing
+              comment.mark_for_destruction unless comment.text
+            elsif text.present?
+              custom_comments.build(custom_field_id:, text:)
+            end
           end
         end
 
