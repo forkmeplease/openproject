@@ -190,7 +190,6 @@ module WorkPackage::PDFExport::Report::Attributes
     end
   end
 
-
   def write_relation_field(work_package, field)
     related_wps = related_work_packages_for(work_package, field[:value])
     return if related_wps.empty?

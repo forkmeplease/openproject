@@ -35,12 +35,13 @@ module WorkPackages
 
       attr_reader :export_settings, :query, :id, :caption, :label
 
-      def initialize(export_settings, id, caption,
-                     label = I18n.t(:"queries.configure_view.columns.input_label"),
-                     required: true,
-                     excluded_columns: [],
-                     allow_relation_columns: false
-        )
+      def initialize(
+        export_settings, id, caption,
+        label = I18n.t(:"queries.configure_view.columns.input_label"),
+        required: true,
+        excluded_columns: [],
+        allow_relation_columns: false
+      )
         super()
 
         @export_settings = export_settings
@@ -55,10 +56,10 @@ module WorkPackages
 
       def available_columns
         @available_columns = query
-          .displayable_columns
-          .reject { |column| excluded_column?(column) }
-          .sort_by(&:caption)
-          .map { |column| { id: column.name.to_s, name: column.caption } }
+                               .displayable_columns
+                               .reject { |column| excluded_column?(column) }
+                               .sort_by(&:caption)
+                               .map { |column| { id: column.name.to_s, name: column.caption } }
       end
 
       def protected_options

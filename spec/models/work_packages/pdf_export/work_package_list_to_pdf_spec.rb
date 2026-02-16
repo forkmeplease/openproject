@@ -565,5 +565,4 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageListToPdf do
       end
     end
   end
-
 end
