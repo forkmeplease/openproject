@@ -54,6 +54,10 @@ class BlockNoteElement extends HTMLElement {
 
     // Wrapper div as Stimulus root so both errorContainer and editorMount are in scope
     this.stimulusRoot = document.createElement('div');
+    const browserSpecificClasses = this.getAttribute('browser-specific-classes')?.split(' ') ?? [];
+    if (browserSpecificClasses.length > 0) {
+      this.stimulusRoot.classList.add(...browserSpecificClasses);
+    }
 
     // Container for connection error/recovery messages (rendered by React via fetchConnectionTemplate)
     this.errorContainer = document.createElement('div');
@@ -63,10 +67,6 @@ class BlockNoteElement extends HTMLElement {
 
     this.editorMount = document.createElement('div');
     this.editorMount.dataset.controller = 'external-links';
-    const browserSpecificClasses = this.getAttribute('browser-specific-classes')?.split(' ') ?? [];
-    if (browserSpecificClasses.length > 0) {
-      this.editorMount.classList.add(...browserSpecificClasses);
-    }
 
     this.stimulusRoot.appendChild(this.errorContainer);
     this.stimulusRoot.appendChild(this.editorMount);
