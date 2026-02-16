@@ -70,13 +70,9 @@ class CustomStyle < ApplicationRecord
       end
     end
 
-    define_method :"remove_#{name}" do
-      _mounter(name).remove!
-      write_uploader(name, nil)
-
-      unless new_record?
-        update_columns(name => nil, updated_at: Time.zone.now)
-      end
+    define_method :"remove_#{name}!" do
+      super()
+      save!
     end
   end
 end
