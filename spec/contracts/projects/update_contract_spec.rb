@@ -109,9 +109,9 @@ RSpec.describe Projects::UpdateContract do
             let(:project_changed) { true }
 
             include_examples "contract is invalid",
-                            name: %i(error_readonly),
-                            parent_id: %i(error_readonly),
-                            identifier: %i(error_readonly)
+                             name: %i(error_readonly),
+                             parent_id: %i(error_readonly),
+                             identifier: %i(error_readonly)
           end
         end
 
@@ -162,9 +162,9 @@ RSpec.describe Projects::UpdateContract do
             let(:project_changed) { true }
 
             include_examples "contract is invalid",
-                            name: %i(error_readonly),
-                            parent_id: %i(error_readonly),
-                            identifier: %i(error_readonly)
+                             name: %i(error_readonly),
+                             parent_id: %i(error_readonly),
+                             identifier: %i(error_readonly)
           end
 
           context "and only project_custom_fields are changed" do
@@ -185,9 +185,9 @@ RSpec.describe Projects::UpdateContract do
             end
 
             include_examples "contract is invalid",
-                            name: %i(error_readonly),
-                            parent_id: %i(error_readonly),
-                            identifier: %i(error_readonly)
+                             name: %i(error_readonly),
+                             parent_id: %i(error_readonly),
+                             identifier: %i(error_readonly)
           end
         end
 
