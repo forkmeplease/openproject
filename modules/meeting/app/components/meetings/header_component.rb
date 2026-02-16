@@ -128,13 +128,15 @@ module Meetings
         ({ href: project_overview_path(@project.id), text: @project.name } if @project.present?),
         { href: @project.present? ? project_meetings_path(@project.id) : meetings_path,
           text: I18n.t(:label_meeting_plural) },
-        meeting_series_element,
+        meeting_type_element,
         meeting_element
       ].compact
     end
 
     def meeting_element
-      if @meeting.templated?
+      if @meeting.onetime_template?
+        @meeting.title
+      elsif @meeting.series_template?
         I18n.t(:label_template)
       elsif @series.present?
         format_date(@meeting.start_time)
@@ -143,9 +145,12 @@ module Meetings
       end
     end
 
-    def meeting_series_element
+    def meeting_type_element
       if @series.present?
         { href: project_recurring_meeting_path(@series.project, @series), text: @series.title }
+      elsif @meeting.onetime_template?
+        { href: url_for({ controller: "meeting_templates", action: :index, project_id: @project }),
+          text: I18n.t(:label_meeting_templates) }
       end
     end
 

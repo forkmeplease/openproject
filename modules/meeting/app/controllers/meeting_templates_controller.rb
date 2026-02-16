@@ -63,7 +63,7 @@ class MeetingTemplatesController < ApplicationController
     )
   end
 
-  def create
+  def create # rubocop:disable Metrics/AbcSize
     call = ::Meetings::CreateService
       .new(user: current_user)
       .call(create_template_params)
