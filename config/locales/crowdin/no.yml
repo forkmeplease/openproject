@@ -4908,6 +4908,7 @@
     text_change_disabled_for_ldap_login: "Navnet og e-postadressen er satt av LDAP og kan dermed ikke endres."
     unlock: "Lås opp"
     unlock_and_reset_failed_logins: "Lås opp og nullstill mislykkede innloggingsforsøk"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "lukket"
   version_status_locked: "låst"
   version_status_open: "åpne"

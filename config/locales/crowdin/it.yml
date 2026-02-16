@@ -4906,6 +4906,7 @@ it:
     text_change_disabled_for_ldap_login: "Il nome e l'e-mail sono impostati da LDAP e quindi non possono essere modificati."
     unlock: "Sblocca"
     unlock_and_reset_failed_logins: "Sblocca e azzera gli accessi non riusciti"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "chiuso"
   version_status_locked: "bloccato"
   version_status_open: "aperte"

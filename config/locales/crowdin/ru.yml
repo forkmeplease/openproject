@@ -5008,6 +5008,7 @@ ru:
     text_change_disabled_for_ldap_login: "Имя и адрес электронной почты заданы LDAP и не могут быть изменены."
     unlock: "Разблокировать"
     unlock_and_reset_failed_logins: "Разблокировать и сбросить неудачные попытки входа"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "закрыт"
   version_status_locked: "заблокировано"
   version_status_open: "открыт"

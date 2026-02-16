@@ -4909,6 +4909,7 @@ et:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Aktiveeri"
     unlock_and_reset_failed_logins: "Aktiveeri ja lähtesta ebaõnnestunud sisselogimised"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "suletud"
   version_status_locked: "lukustatud"
   version_status_open: "avatud"

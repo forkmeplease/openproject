@@ -5011,6 +5011,7 @@ sl:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Odkleni"
     unlock_and_reset_failed_logins: "Odklepanje in ponastavitev neuspelih prijav"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "zaprto"
   version_status_locked: "zaklenjeno"
   version_status_open: "odpri"

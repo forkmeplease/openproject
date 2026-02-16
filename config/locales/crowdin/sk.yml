@@ -5012,6 +5012,7 @@ sk:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Odomknúť"
     unlock_and_reset_failed_logins: "Odomknúť a resetovať chybné prihlásenia"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "uzatvorené"
   version_status_locked: "zamknuté"
   version_status_open: "otvorené"

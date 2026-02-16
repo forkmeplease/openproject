@@ -4907,6 +4907,7 @@ sv:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Lås upp"
     unlock_and_reset_failed_logins: "Lås upp och nollställ misslyckade inloggningsförsök"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "stängt"
   version_status_locked: "låst"
   version_status_open: "öppna"

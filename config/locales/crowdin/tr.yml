@@ -4907,6 +4907,7 @@ tr:
     text_change_disabled_for_ldap_login: "İsim ve e-posta LDAP tarafından belirlenir ve bu nedenle değiştirilemez."
     unlock: "Kilidi kaldır"
     unlock_and_reset_failed_logins: "Başarısız oturum açma işlemlerinin kilidini aç ve sıfırla"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "kapalı"
   version_status_locked: "kilitli"
   version_status_open: "açık"

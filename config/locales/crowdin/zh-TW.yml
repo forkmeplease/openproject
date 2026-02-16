@@ -4851,6 +4851,7 @@ zh-TW:
     text_change_disabled_for_ldap_login: "姓名和電子郵件由 LDAP 設定，因此無法變更。"
     unlock: "按此啟用"
     unlock_and_reset_failed_logins: "啟用並清除登入紀錄"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "已關閉"
   version_status_locked: "已停用"
   version_status_open: "開啟"

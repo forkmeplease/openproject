@@ -4855,6 +4855,7 @@ ja:
     text_change_disabled_for_ldap_login: "名前と電子メールはLDAPによって設定されるため、変更することはできない。"
     unlock: "ロックを解除"
     unlock_and_reset_failed_logins: "ロックを解除して、失敗したログイン数をリセットする"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "完了"
   version_status_locked: "ロック済み"
   version_status_open: "未完了"

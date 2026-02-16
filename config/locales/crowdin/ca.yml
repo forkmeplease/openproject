@@ -4900,6 +4900,7 @@ ca:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Desbloquejar"
     unlock_and_reset_failed_logins: "Desbloquejar i reiniciar inicis de sessió fallits"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "tancat"
   version_status_locked: "bloquejat"
   version_status_open: "obrir"

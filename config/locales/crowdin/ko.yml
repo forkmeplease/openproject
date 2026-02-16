@@ -4854,6 +4854,7 @@ ko:
     text_change_disabled_for_ldap_login: "이름과 이메일은 LDAP에 의해 설정되므로 변경할 수 없습니다."
     unlock: "잠금 해제"
     unlock_and_reset_failed_logins: "실패한 로그인 잠금 해제 및 재설정"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "닫음"
   version_status_locked: "잠김"
   version_status_open: "열기"

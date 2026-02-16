@@ -4855,6 +4855,7 @@ vi:
     text_change_disabled_for_ldap_login: "Tên và email do LDAP đặt và do đó không thể thay đổi."
     unlock: "Mở khoá"
     unlock_and_reset_failed_logins: "Mở khóa và đặt lại thông tin đăng nhập thất bại"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "đóng cửa"
   version_status_locked: "bị khóa"
   version_status_open: "mở"

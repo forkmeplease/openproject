@@ -4848,6 +4848,7 @@ zh-CN:
     text_change_disabled_for_ldap_login: "姓名和电子邮件由 LDAP 设置，因此无法更改。"
     unlock: "解锁​​​​"
     unlock_and_reset_failed_logins: "解锁和重置失败的帐户"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "关闭"
   version_status_locked: "锁定"
   version_status_open: "打开"

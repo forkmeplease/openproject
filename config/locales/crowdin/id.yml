@@ -4850,6 +4850,7 @@ id:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Unlock"
     unlock_and_reset_failed_logins: "Unlock dan reset gagal login"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "berakhir"
   version_status_locked: "terkunci"
   version_status_open: "buka"

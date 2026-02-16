@@ -5115,6 +5115,7 @@ ar:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "فتح القفل"
     unlock_and_reset_failed_logins: "فتح وإعادة تعيين تسجيلات الدخول الفاشلة"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "مغلق"
   version_status_locked: "مقفل"
   version_status_open: "افتح"

@@ -4960,6 +4960,7 @@ ro:
     text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
     unlock: "Deblochează"
     unlock_and_reset_failed_logins: "Deblocare şi resetare autentificări eşuate"
+    error_cannot_delete_user: "User cannot be deleted"
   version_status_closed: "închis"
   version_status_locked: "blocat"
   version_status_open: "deschis"
