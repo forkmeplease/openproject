@@ -58,6 +58,12 @@ class BlockNoteElement extends HTMLElement {
     if (browserSpecificClasses.length > 0) {
       this.stimulusRoot.classList.add(...browserSpecificClasses);
     }
+    // Clone the blank-target link description into the shadow DOM
+    // so aria-describedby references resolve for links inside the editor
+    const blankLinkDesc = document.getElementById('open-blank-target-link-description');
+    if (blankLinkDesc) {
+      this.stimulusRoot.appendChild(blankLinkDesc.cloneNode(true));
+    }
 
     // Container for connection error/recovery messages (rendered by React via fetchConnectionTemplate)
     this.errorContainer = document.createElement('div');
