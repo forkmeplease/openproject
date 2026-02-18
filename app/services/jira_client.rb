@@ -52,7 +52,15 @@ class JiraClient
                .httpx
                .plugin(:auth)
                .bearer_auth(personal_access_token)
-               .with(headers: { "accept" => "application/json" })
+               .with(
+                 headers: { "accept" => "application/json" },
+                 timeout: {
+                   connect_timeout: 30,
+                   operation_timeout: 30,
+                   request_timeout: 30,
+                   read_timeout: 30
+                 }
+               )
     @url = url.chomp("/")
   end
 
@@ -220,7 +228,7 @@ class JiraClient
   end
 
   def get_response(path, params: {})
-    response = @httpx.with(timeout: { operation_timeout: 30 }).get("#{@url}#{path}", params:)
+    response = @httpx.get("#{@url}#{path}", params:)
 
     if response.is_a?(HTTPX::ErrorResponse)
       raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: response.error.message)
