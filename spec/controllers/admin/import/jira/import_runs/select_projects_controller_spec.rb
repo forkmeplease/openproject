@@ -32,10 +32,11 @@
 require "spec_helper"
 
 RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
-  let(:admin) { create(:admin) }
-  let(:non_admin) { create(:user) }
-  let(:jira) { create(:jira) }
-  let(:jira_import) { create(:jira_import, jira:, author: admin, status: JiraImport::INITIAL) }
+  shared_let(:admin) { create(:admin) }
+  shared_let(:non_admin) { create(:user) }
+  shared_let(:jira) { create(:jira) }
+
+  let(:jira_import) { create(:jira_import, jira:, author: admin) }
 
   before do
     login_as(admin)
@@ -51,6 +52,31 @@ RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
 
     it "returns forbidden for PATCH #update" do
       patch :update, params: { jira_id: jira.id, run_id: jira_import.id }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns forbidden for POST #filter" do
+      post :filter, params: { jira_id: jira.id, run_id: jira_import.id, filter: "test" }, format: :turbo_stream
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns forbidden for GET #check_all" do
+      get :check_all, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns forbidden for GET #uncheck_all" do
+      get :uncheck_all, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns forbidden for GET #toggle" do
+      get :toggle, params: { jira_id: jira.id, run_id: jira_import.id, project_id: "10001" }, format: :turbo_stream
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns forbidden for GET #switch_page" do
+      get :switch_page, params: { jira_id: jira.id, run_id: jira_import.id, page: 1 }, format: :turbo_stream
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -72,6 +98,14 @@ RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
       get :show, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
       expect(response).to have_http_status(:ok)
     end
+
+    it "initializes session with selected project IDs" do
+      jira_import.update!(projects: [{ "id" => "10001", "name" => "Project One", "key" => "PROJ1" }])
+      get :show, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
+      expect(session[:selected_ids]).to eq(%w[10001])
+      expect(session[:project_page]).to eq(1)
+      expect(session[:project_filter]).to be_nil
+    end
   end
 
   describe "PATCH #update" do
@@ -87,7 +121,6 @@ RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
 
     before do
       jira_import.update!(available: available_projects)
-      # Initialize session with selected project IDs
       session[:selected_ids] = %w[10001 10002]
     end
 
@@ -148,6 +181,12 @@ RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
       post :filter, params: { jira_id: jira.id, run_id: jira_import.id, filter: "Alpha" }, format: :turbo_stream
       expect(session[:project_filter]).to eq("Alpha")
     end
+
+    it "clears filter when blank" do
+      session[:project_filter] = "old"
+      post :filter, params: { jira_id: jira.id, run_id: jira_import.id, filter: "" }, format: :turbo_stream
+      expect(session[:project_filter]).to be_nil
+    end
   end
 
   describe "GET #check_all" do
@@ -170,6 +209,12 @@ RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
 
     it "adds visible projects to session selections" do
       session[:selected_ids] = []
+      get :check_all, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
+      expect(session[:selected_ids]).to contain_exactly("10001", "10002")
+    end
+
+    it "preserves existing selections when adding new ones" do
+      session[:selected_ids] = %w[10001]
       get :check_all, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
       expect(session[:selected_ids]).to contain_exactly("10001", "10002")
     end
@@ -197,6 +242,12 @@ RSpec.describe Admin::Import::Jira::ImportRuns::SelectProjectsController do
       session[:selected_ids] = %w[10001 10002]
       get :uncheck_all, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
       expect(session[:selected_ids]).to be_empty
+    end
+
+    it "preserves selections not in visible projects" do
+      session[:selected_ids] = %w[10001 10002 99999]
+      get :uncheck_all, params: { jira_id: jira.id, run_id: jira_import.id }, format: :turbo_stream
+      expect(session[:selected_ids]).to eq(%w[99999])
     end
   end
 

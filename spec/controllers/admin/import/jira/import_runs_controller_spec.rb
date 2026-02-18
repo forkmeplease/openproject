@@ -32,16 +32,55 @@
 require "spec_helper"
 
 RSpec.describe Admin::Import::Jira::ImportRunsController do
-  let(:admin) { create(:admin) }
-  let(:non_admin) { create(:user) }
-  let(:jira) { create(:jira) }
-  let(:jira_import) { create(:jira_import, jira:, author: admin, status: JiraImport::INITIAL) }
+  shared_let(:admin) { create(:admin) }
+  shared_let(:non_admin) { create(:user) }
+  shared_let(:jira) { create(:jira) }
+
+  # Walks a JiraImport through the state machine to reach the target state.
+  # All after_transition job callbacks are stubbed.
+  def transition_to_state(jira_import, target_state)
+    paths = {
+      "initial" => [],
+      "instance_meta_fetching" => %w[instance_meta_fetching],
+      "instance_meta_error" => %w[instance_meta_fetching instance_meta_error],
+      "instance_meta_done" => %w[instance_meta_fetching instance_meta_done],
+      "configuring" => %w[instance_meta_fetching instance_meta_done configuring],
+      "projects_meta_fetching" => %w[instance_meta_fetching instance_meta_done configuring projects_meta_fetching],
+      "projects_meta_error" => %w[instance_meta_fetching instance_meta_done configuring
+                                  projects_meta_fetching projects_meta_error],
+      "projects_meta_done" => %w[instance_meta_fetching instance_meta_done configuring
+                                 projects_meta_fetching projects_meta_done],
+      "importing" => %w[instance_meta_fetching instance_meta_done configuring
+                        projects_meta_fetching projects_meta_done importing],
+      "import_error" => %w[instance_meta_fetching instance_meta_done configuring
+                           projects_meta_fetching projects_meta_done importing import_error],
+      "imported" => %w[instance_meta_fetching instance_meta_done configuring
+                       projects_meta_fetching projects_meta_done importing imported],
+      "completed" => %w[instance_meta_fetching instance_meta_done configuring
+                        projects_meta_fetching projects_meta_done importing imported completed],
+      "reverting" => %w[instance_meta_fetching instance_meta_done configuring
+                        projects_meta_fetching projects_meta_done importing imported reverting],
+      "revert_error" => %w[instance_meta_fetching instance_meta_done configuring
+                           projects_meta_fetching projects_meta_done importing imported reverting revert_error],
+      "reverted" => %w[instance_meta_fetching instance_meta_done configuring
+                       projects_meta_fetching projects_meta_done importing imported reverting reverted]
+    }
+
+    steps = paths.fetch(target_state.to_s)
+    steps.each { |state| jira_import.transition_to!(state.to_sym) }
+  end
 
   before do
     login_as(admin)
+    allow(JiraInstanceMetaDataJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
+    allow(JiraProjectsMetaDataJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
+    allow(JiraFetchAndImportProjectsJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
+    allow(JiraRevertJiraImportJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
   end
 
   context "when user is not an admin" do
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
+
     before { login_as(non_admin) }
 
     it "returns forbidden for GET #show" do
@@ -64,13 +103,25 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
       expect(response).to have_http_status(:forbidden)
     end
 
+    it "returns forbidden for GET #finalize_modal" do
+      get :finalize_modal, params: { jira_id: jira.id, id: jira_import.id }, format: :turbo_stream
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "returns forbidden for DELETE #remove" do
       delete :remove, params: { jira_id: jira.id, id: jira_import.id }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns forbidden for GET #history" do
+      get :history, params: { jira_id: jira.id, id: jira_import.id }
       expect(response).to have_http_status(:forbidden)
     end
   end
 
   describe "GET #show" do
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
+
     it "renders the show template" do
       get :show, params: { jira_id: jira.id, id: jira_import.id }
       expect(response).to have_http_status(:ok)
@@ -86,177 +137,128 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
       new_import = JiraImport.last
       expect(new_import.author).to eq(admin)
       expect(new_import.jira).to eq(jira)
-      expect(new_import.status).to eq(JiraImport::INITIAL)
+      expect(new_import.current_state).to eq("initial")
       expect(response).to redirect_to(admin_import_jira_run_path(jira_id: jira.id, id: new_import.id))
     end
   end
 
   describe "GET/POST #continue" do
-    context "when step is init" do
-      before do
-        jira_import.update!(status: JiraImport::CONFIGURING)
-      end
-
-      it "resets status to initial" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "init" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::INITIAL)
-      end
-    end
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
 
     context "when step is fetch" do
-      it "starts instance meta fetching job" do
-        allow(JiraInstanceMetaDataJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job123"))
+      it "transitions to instance_meta_fetching and triggers the job" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::INSTANCE_META_FETCHING)
-        expect(jira_import.job_id).to eq("job123")
+        expect(jira_import.current_state).to eq("instance_meta_fetching")
         expect(JiraInstanceMetaDataJob).to have_received(:perform_later).with(jira_import.id)
       end
     end
 
-    context "when step is stats" do
-      before do
-        jira_import.update!(status: JiraImport::CONFIGURING)
-      end
+    context "when step is configure" do
+      before { transition_to_state(jira_import, "instance_meta_done") }
 
-      it "starts projects meta fetching job" do
-        allow(JiraProjectsMetaDataJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job456"))
+      it "transitions to configuring" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "configure" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("configuring")
+      end
+    end
+
+    context "when step is stats" do
+      before { transition_to_state(jira_import, "configuring") }
+
+      it "transitions to projects_meta_fetching and triggers the job" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "stats" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::PROJECTS_META_FETCHING)
-        expect(jira_import.job_id).to eq("job456")
+        expect(jira_import.current_state).to eq("projects_meta_fetching")
         expect(JiraProjectsMetaDataJob).to have_received(:perform_later).with(jira_import.id)
+      end
+    end
+
+    context "when step is stats from projects_meta_error" do
+      before { transition_to_state(jira_import, "projects_meta_error") }
+
+      it "retries projects meta fetching" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "stats" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("projects_meta_fetching")
+        expect(JiraProjectsMetaDataJob).to have_received(:perform_later).with(jira_import.id).twice
       end
     end
 
     context "when step is import" do
-      before do
-        jira_import.update!(status: JiraImport::PROJECTS_META_DONE)
-      end
+      before { transition_to_state(jira_import, "projects_meta_done") }
 
-      it "starts import job" do
-        allow(JiraFetchAndImportProjectsJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job789"))
+      it "transitions to importing and triggers the job" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::IMPORTING)
-        expect(jira_import.job_id).to eq("job789")
+        expect(jira_import.current_state).to eq("importing")
         expect(JiraFetchAndImportProjectsJob).to have_received(:perform_later).with(jira_import.id)
       end
     end
 
-    context "when step is configure" do
-      before do
-        jira_import.update!(status: JiraImport::INSTANCE_META_DONE)
+    context "when step is import from import_error" do
+      before { transition_to_state(jira_import, "import_error") }
+
+      it "retries the import" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("importing")
+        expect(JiraFetchAndImportProjectsJob).to have_received(:perform_later).with(jira_import.id).twice
+      end
+    end
+
+    context "when step is import and another import is in a blocking state" do
+      let(:other_import) { create(:jira_import, jira:, author: admin) }
+
+      before { transition_to_state(jira_import, "projects_meta_done") }
+
+      %w[imported import_error importing reverting revert_error].each do |blocking_state|
+        it "refuses to import when another run is in #{blocking_state} state" do
+          transition_to_state(other_import, blocking_state)
+          post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
+          expect(jira_import.current_state).to eq("projects_meta_done")
+          expect(response.body).to include(I18n.t("admin.jira.run.import_blocked_error"))
+        end
       end
 
-      it "updates status to configuring" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "configure" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::CONFIGURING)
+      %w[initial reverted completed].each do |non_blocking_state|
+        it "allows import when another run is in #{non_blocking_state} state" do
+          transition_to_state(other_import, non_blocking_state)
+          post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
+          expect(jira_import.current_state).to eq("importing")
+        end
       end
     end
 
     context "when step is revert" do
-      before do
-        jira_import.update!(status: JiraImport::IMPORTED)
-      end
+      before { transition_to_state(jira_import, "imported") }
 
-      it "starts revert job" do
-        allow(JiraRevertJiraImportJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job999"))
+      it "transitions to reverting and triggers the job" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "revert" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::REVERTING)
-        expect(jira_import.job_id).to eq("job999")
+        expect(jira_import.current_state).to eq("reverting")
         expect(JiraRevertJiraImportJob).to have_received(:perform_later).with(jira_import.id)
       end
     end
 
-    context "when step is finalize" do
-      before do
-        jira_import.update!(status: JiraImport::IMPORTED)
-      end
+    context "when step is revert from revert_error" do
+      before { transition_to_state(jira_import, "revert_error") }
 
-      it "updates status to completed" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "finalize" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::COMPLETED)
-      end
-    end
-
-    context "when step is blank" do
-      it "does not change status" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::INITIAL)
+      it "is not possible (no transition defined from revert_error to reverting)" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "revert" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("revert_error")
         expect(response).to have_http_status(:ok)
       end
     end
 
-    context "when step guard conditions fail" do
-      it "does not change status for init when status is after CONFIGURING" do
-        jira_import.update!(status: JiraImport::IMPORTED)
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "init" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::IMPORTED)
-      end
+    context "when step is finalize" do
+      before { transition_to_state(jira_import, "imported") }
 
-      it "does not change status for fetch when status is after CONFIGURING" do
-        jira_import.update!(status: JiraImport::IMPORTED)
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::IMPORTED)
+      it "transitions to completed" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "finalize" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("completed")
       end
     end
 
-    context "when step is stats with PROJECTS_META_ERROR status" do
-      before do
-        jira_import.update!(status: JiraImport::PROJECTS_META_ERROR)
-      end
-
-      it "starts projects meta fetching job" do
-        allow(JiraProjectsMetaDataJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job-error-retry"))
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "stats" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::PROJECTS_META_FETCHING)
-        expect(JiraProjectsMetaDataJob).to have_received(:perform_later).with(jira_import.id)
-      end
-    end
-
-    context "when step is import with IMPORT_ERROR status" do
-      before do
-        jira_import.update!(status: JiraImport::IMPORT_ERROR)
-      end
-
-      it "starts import job" do
-        allow(JiraFetchAndImportProjectsJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job-import-retry"))
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::IMPORTING)
-        expect(JiraFetchAndImportProjectsJob).to have_received(:perform_later).with(jira_import.id)
-      end
-    end
-
-    context "when step is revert with REVERT_ERROR status" do
-      before do
-        jira_import.update!(status: JiraImport::REVERT_ERROR)
-      end
-
-      it "starts revert job" do
-        allow(JiraRevertJiraImportJob).to receive(:perform_later)
-          .with(jira_import.id)
-          .and_return(double(job_id: "job-revert-retry"))
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "revert" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::REVERTING)
-        expect(JiraRevertJiraImportJob).to have_received(:perform_later).with(jira_import.id)
-      end
-    end
-
-    context "when requesting html format" do
-      it "redirects to show page" do
-        jira_import.update!(status: JiraImport::IMPORTED)
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "finalize" }, format: :html
-        expect(response).to redirect_to(admin_import_jira_run_path(jira_id: jira.id, id: jira_import.id))
+    context "when step is blank" do
+      it "does not change state" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("initial")
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -269,14 +271,23 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
       end
     end
 
-    context "when import is running" do
-      before do
-        jira_import.update!(status: JiraImport::IMPORTING)
-      end
+    context "when import is running (status_running? is true)" do
+      before { transition_to_state(jira_import, "importing") }
 
       it "does not change the step" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "finalize" }, format: :turbo_stream
-        expect(jira_import.reload.status).to eq(JiraImport::IMPORTING)
+        expect(jira_import.current_state).to eq("importing")
+      end
+    end
+
+    context "when transition is invalid for current state" do
+      before { transition_to_state(jira_import, "imported") }
+
+      it "handles the transition error via turbo_stream" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "init" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("imported")
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq("text/vnd.turbo-stream.html")
       end
     end
 
@@ -297,33 +308,63 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
         expect(response).to redirect_to(admin_import_jira_run_path(jira_id: jira.id, id: jira_import.id))
       end
     end
+
+    context "when requesting html format" do
+      before { transition_to_state(jira_import, "imported") }
+
+      it "redirects to show page" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "finalize" }, format: :html
+        expect(response).to redirect_to(admin_import_jira_run_path(jira_id: jira.id, id: jira_import.id))
+      end
+    end
   end
 
   describe "GET #revert_modal" do
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
+
     it "responds with a dialog component" do
       get :revert_modal, params: { jira_id: jira.id, id: jira_import.id }, format: :turbo_stream
       expect(response).to have_http_status(:ok)
     end
   end
 
+  describe "GET #finalize_modal" do
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
+
+    it "responds with a dialog component" do
+      get :finalize_modal, params: { jira_id: jira.id, id: jira_import.id }, format: :turbo_stream
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "GET #history" do
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
+
+    it "assigns the history" do
+      transition_to_state(jira_import, "instance_meta_fetching")
+      get :history, params: { jira_id: jira.id, id: jira_import.id }
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:history)).to be_present
+    end
+  end
+
   describe "DELETE #remove" do
+    let!(:jira_import) { create(:jira_import, jira:, author: admin) }
+
     it "destroys the jira import and redirects" do
-      import_to_delete = jira_import # Force lazy-loading before the expect block
       expect do
-        delete :remove, params: { jira_id: jira.id, id: import_to_delete.id }
+        delete :remove, params: { jira_id: jira.id, id: jira_import.id }
       end.to change(JiraImport, :count).by(-1)
       expect(response).to redirect_to(admin_import_jira_path(jira))
     end
 
     context "when import is running" do
-      before do
-        jira_import.update!(status: JiraImport::IMPORTING)
-      end
+      before { transition_to_state(jira_import, "importing") }
 
       it "raises an error" do
         expect do
           delete :remove, params: { jira_id: jira.id, id: jira_import.id }
-        end.to raise_error(StandardError)
+        end.to raise_error(StandardError, I18n.t("admin.jira.run.remove_error"))
       end
     end
   end
