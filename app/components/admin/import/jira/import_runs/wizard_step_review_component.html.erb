@@ -90,8 +90,8 @@ See COPYRIGHT and LICENSE files for more details.
           scheme: :primary,
           size: :medium,
           mr: 2,
-          href: continue_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id, step: 'finalize'),
-          data: { turbo_stream: true }
+          href: finalize_modal_admin_import_jira_run_path(jira_id: model.jira.id, id: model.id),
+          data: { controller: "async-dialog" }
         )) { I18n.t(:"admin.jira.run.wizard.sections.import_result.button_done") })
         concat(render(Primer::Beta::Button.new(
           scheme: :default,

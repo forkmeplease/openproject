@@ -48,7 +48,7 @@ module Admin::Import::Jira
     menu_item :jira_import
 
     before_action :require_admin
-    before_action :find_jira_and_jira_import, only: %i[show continue remove revert_modal history]
+    before_action :find_jira_and_jira_import, only: %i[show continue remove revert_modal finalize_modal history]
 
     def show; end
 
@@ -67,6 +67,10 @@ module Admin::Import::Jira
 
     def revert_modal
       respond_with_dialog Admin::Import::Jira::ImportRuns::RevertConfirmDialogComponent.new(jira_import: @jira_import)
+    end
+
+    def finalize_modal
+      respond_with_dialog Admin::Import::Jira::ImportRuns::FinalizeConfirmDialogComponent.new(jira_import: @jira_import)
     end
 
     def remove
