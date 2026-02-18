@@ -117,7 +117,25 @@ module Admin::Import::Jira
     end
 
     def import
+      raise StandardError.new(I18n.t(:"admin.jira.run.import_blocked_error")) if blocking_run
+
       @jira_import.transition_to!(:importing)
+    end
+
+    def blocking_run
+      JiraImport
+        .joins(:transitions)
+        .where.not(id: @jira_import.id)
+        .where(
+          jira_import_transitions: {
+            # Filtering by most_recent: true ensures the query checks each import's current state, not its history.
+            # Without it, an import that once passed through importing but has since moved to reverted
+            # would still match — giving a false positive.
+            most_recent: true,
+            to_state: %w[imported import_error importing reverting revert_error]
+          }
+        )
+        .first
     end
 
     def configure
