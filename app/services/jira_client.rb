@@ -220,7 +220,7 @@ class JiraClient
   end
 
   def get_response(path, params: {})
-    response = @httpx.get("#{@url}#{path}", params:)
+    response = @httpx.with(timeout: { operation_timeout: 30 }).get("#{@url}#{path}", params:)
 
     if response.is_a?(HTTPX::ErrorResponse)
       raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: response.error.message)
