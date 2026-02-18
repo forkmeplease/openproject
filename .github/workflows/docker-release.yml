@@ -12,6 +12,7 @@ on:
 
 jobs:
   compute-inputs:
+    if: github.repository == 'opf/openproject'
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.compute.outputs.tag }}
