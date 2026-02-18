@@ -60,7 +60,7 @@ jobs:
           SPECIFIC_TAG=$BRANCH-${{ steps.short-sha.outputs.short_sha }}
           LATEST_TAG=$BRANCH-latest
 
-          if [ "${{ inputs.tag }}" ]; then
+          if [ -n "${{ inputs.tag }}" ]; then
             SPECIFIC_TAG=$(echo '${{ inputs.tag }}' | tr -d v)
           fi
 
