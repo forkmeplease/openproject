@@ -35,8 +35,14 @@
       render_inline_settings_form(f) do |form|
         form.html_content do
           if some_unwritable_settings?
-            render(Primer::Alpha::Banner.new(icon: :info)) do
-              I18n.t("documents.admin.collaboration_settings.banner.#{none_writable_settings? ? 'none_writable' : 'some_unwritable'}")
+            if invalid_hocuspocus_url?
+              render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert)) do
+                I18n.t("documents.admin.collaboration_settings.banner.invalid_env_url")
+              end
+            else
+              render(Primer::Alpha::Banner.new(icon: :info)) do
+                I18n.t("documents.admin.collaboration_settings.banner.#{none_writable_settings? ? 'none_writable' : 'some_unwritable'}")
+              end
             end
           end
         end

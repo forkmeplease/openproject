@@ -127,6 +127,22 @@ RSpec.describe "Document collaboration settings admin",
     end
   end
 
+  context "with an invalid URL scheme set via environment variable",
+          with_env: { "OPENPROJECT_COLLABORATIVE_EDITING_HOCUSPOCUS_URL" => "https://env-hocuspocus.example.com" },
+          with_settings: { collaborative_editing_hocuspocus_secret: "secret1234" } do
+    before do
+      reset(:collaborative_editing_hocuspocus_url)
+      visit admin_settings_document_collaboration_settings_path
+    end
+
+    it "shows a warning banner about the invalid URL scheme" do
+      expect(page).to have_css(".Banner--warning", text: "unsupported protocol")
+      expect(page).to have_field("Hocuspocus server URL",
+                                 with: "https://env-hocuspocus.example.com",
+                                 disabled: true)
+    end
+  end
+
   context "with secret set via environment variable",
           with_env: { "OPENPROJECT_COLLABORATIVE_EDITING_HOCUSPOCUS_SECRET" => "envsupersecret" },
           with_settings: { collaborative_editing_hocuspocus_url: "wss://env-hocuspocus.example.com" } do

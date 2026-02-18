@@ -45,6 +45,14 @@ module Documents
           settings.any? { !writable_setting?(it) }
         end
 
+        def invalid_hocuspocus_url?
+          return false if Setting.collaborative_editing_hocuspocus_url.blank?
+
+          !Documents::Admin::Settings::CollaborationServerSettingsParamsContract.valid_hocuspocus_url?(
+            Setting.collaborative_editing_hocuspocus_url
+          )
+        end
+
         private
 
         def settings
