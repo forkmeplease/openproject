@@ -8,6 +8,7 @@ on:
       - code-maintenance/71761-include-op-blocknote-hocuspocus-in-openproject-core-repository
     paths:
       - 'extensions/op-blocknote-hocuspocus/**'
+      - '.github/workflows/hocuspocus-docker.yml'
   workflow_call:
     inputs:
       branch:
