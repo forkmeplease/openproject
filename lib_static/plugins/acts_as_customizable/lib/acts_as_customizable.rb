@@ -97,7 +97,7 @@ module Redmine
           true
         end
 
-        delegate :can_have_custom_comments?, to: :class
+        delegate :admin_only_custom_fields_allowed?, :can_have_custom_comments?, to: :class
 
         def available_custom_fields
           self.class.available_custom_fields(self)
@@ -565,6 +565,8 @@ module Redmine
             end
           end
 
+          # TODO: move both settings from model level, as it is business logic?
+          def admin_only_custom_fields_allowed? = customizable_options[:admin_only_allowed]
           def can_have_custom_comments? = customizable_options[:comments]
         end
       end

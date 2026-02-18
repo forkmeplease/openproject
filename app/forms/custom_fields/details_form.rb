@@ -278,7 +278,7 @@ module CustomFields
     end
 
     def show_admin_only_field?
-      model.is_a?(ProjectCustomField) || model.is_a?(UserCustomField)
+      model.class.customized_class&.admin_only_custom_fields_allowed?
     end
 
     def show_editable_field?

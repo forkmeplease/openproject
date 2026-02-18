@@ -154,6 +154,7 @@ module JournalChanges
 
   def filter_admin_only_custom_fields(relation)
     return relation if User.current.admin?
+    return relation unless journable.admin_only_custom_fields_allowed?
 
     relation.joins(:custom_field).where(custom_fields: { admin_only: false })
   end

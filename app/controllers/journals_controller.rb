@@ -137,10 +137,13 @@ class JournalsController < ApplicationController
 
   def allowed_to_view_custom_field_changes?(custom_field)
     return true if User.current.admin?
-    return !custom_field.admin_only if custom_field
 
-    # don't reveal changes of deleted custom fields if those could have admin_only mark
-    !@journable.is_a?(Project) && !@journable.is_a?(User)
+    if @journable.admin_only_custom_fields_allowed?
+      # don't reveal changes of deleted custom fields if those could have admin_only mark
+      custom_field && !custom_field.admin_only
+    else
+      true
+    end
   end
 
   def journals_index_title

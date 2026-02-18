@@ -130,7 +130,7 @@ class Project < ApplicationRecord
 
   acts_as_favoritable
 
-  acts_as_customizable validate_on: :saving_custom_fields, comments: true
+  acts_as_customizable validate_on: :saving_custom_fields, comments: true, admin_only_allowed: true
   # extended in Projects::CustomFields in order to support sections
   # and project-level activation of custom fields
 
