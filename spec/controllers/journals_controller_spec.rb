@@ -126,14 +126,17 @@ RSpec.describe JournalsController do
 
     context "for project custom field" do
       let(:params) { { id: project.last_journal.id.to_s, field: "custom_fields_#{custom_field.id}", format: "js" } }
+      let(:custom_field) { create(factory_name, admin_only:, projects: [project]) }
 
       before do
         project.update custom_field.attribute_name => "bar"
       end
 
       context "with format text" do
+        let(:factory_name) { :text_project_custom_field }
+
         context "when visible to everyone" do
-          let!(:custom_field) { create(:text_project_custom_field, projects: [project]) }
+          let(:admin_only) { false }
 
           describe "with a user being project member" do
             include_examples "the diff is shown", "bar"
@@ -147,9 +150,9 @@ RSpec.describe JournalsController do
         end
 
         context "when admin only" do
-          let!(:custom_field) { create(:text_project_custom_field, :admin_only, projects: [project]) }
+          let(:admin_only) { true }
 
-          describe "with a non admin user being a project member" do
+          describe "with a user being a project member" do
             it { expect(response).to have_http_status(:forbidden) }
           end
 
@@ -162,7 +165,8 @@ RSpec.describe JournalsController do
       end
 
       context "with format string" do
-        let!(:custom_field) { create(:string_project_custom_field, projects: [project]) }
+        let(:factory_name) { :string_project_custom_field }
+        let(:admin_only) { false }
 
         it { expect(response).to have_http_status(:not_found) }
       end
