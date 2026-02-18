@@ -155,7 +155,8 @@ class MeetingsController < ApplicationController
   def new_dialog
     respond_with_dialog Meetings::Index::DialogComponent.new(
       meeting: @meeting,
-      project: @project
+      project: @project,
+      copy_from: @copy_from
     )
   end
 
@@ -447,6 +448,11 @@ class MeetingsController < ApplicationController
       .call(project: @project)
 
     @meeting = call.result
+
+    # Load template if template_id is provided
+    @copy_from = if params[:template_id].present?
+                   Meeting.onetime_templates.visible.find_by(id: params[:template_id])
+                 end
   end
 
   def global_upcoming_meetings
@@ -484,6 +490,9 @@ class MeetingsController < ApplicationController
 
     # Recurring meeting occurrences can only be copied as one-time meetings
     @converted_params[:recurring_meeting_id] = nil
+
+    # Onetime templates can only be copied as one-time meetings
+    @converted_params[:template] = false if @copy_from&.onetime_template?
   end
 
   def meeting_params
@@ -541,11 +550,25 @@ class MeetingsController < ApplicationController
   end
 
   def copy_attributes
-    {
-      copy_agenda: copy_param(:copy_agenda),
-      copy_attachments: copy_param(:copy_attachments),
-      send_notifications: @converted_params[:send_notifications]
-    }
+    if @copy_from&.onetime_template?
+      {
+        copy_agenda: true,
+        copy_attachments: true,
+        send_notifications: @converted_params[:send_notifications]
+      }
+    elsif @copy_from&.series_template?
+      {
+        copy_agenda: true,
+        copy_attachments: false,
+        send_notifications: @converted_params[:send_notifications]
+      }
+    else
+      {
+        copy_agenda: copy_param(:copy_agenda),
+        copy_attachments: copy_param(:copy_attachments),
+        send_notifications: @converted_params[:send_notifications]
+      }
+    end
   end
 
   def prevent_series_template_destruction

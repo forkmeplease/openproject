@@ -38,6 +38,13 @@
         end
       end
 
+      if create_from_template_enabled?
+        header.with_action_button(**create_from_template_button_params) do |button|
+          button.with_leading_visual_icon(icon: :plus)
+          I18n.t("label_meeting_create_from_template")
+        end
+      end
+
       if can_start_presentation?
         header.with_action_button(
           tag: :a,

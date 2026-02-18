@@ -135,6 +135,7 @@ en:
   label_meeting_template_create: "Create template"
   label_meeting_template_delete: "Delete template"
   label_meeting_template_edit: "Edit template"
+  label_meeting_create_from_template: "Create meeting from template"
   label_meeting_new: "New Meeting"
   label_meeting_new_dynamic: "New one-time meeting"
   label_meeting_new_recurring: "New recurring meeting"
