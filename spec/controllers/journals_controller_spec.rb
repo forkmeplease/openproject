@@ -108,6 +108,12 @@ RSpec.describe JournalsController do
 
         describe "with a user having :view_work_package permission" do
           include_examples "the diff is shown", "foo"
+
+          context "when field gets deleted" do
+            before { custom_field.destroy }
+
+            include_examples "the diff is shown", "foo"
+          end
         end
 
         describe "with a user not having the :view_work_package permission" do
@@ -121,6 +127,12 @@ RSpec.describe JournalsController do
         let(:factory_name) { :string_wp_custom_field }
 
         it { expect(response).to have_http_status(:not_found) }
+
+        context "when field gets deleted (and we loose format information)" do
+          before { custom_field.destroy }
+
+          include_examples "the diff is shown", "foo"
+        end
       end
     end
 
@@ -140,12 +152,37 @@ RSpec.describe JournalsController do
 
           describe "with a user being project member" do
             include_examples "the diff is shown", "bar"
+
+            context "when field gets deleted" do
+              before { custom_field.destroy }
+
+              it { expect(response).to have_http_status(:forbidden) }
+            end
           end
 
           describe "with a user not being project member" do
             let(:user) { build_stubbed(:user) }
 
             it { expect(response).to have_http_status(:forbidden) }
+
+            context "when field gets deleted" do
+              before { custom_field.destroy }
+
+              it { expect(response).to have_http_status(:forbidden) }
+            end
+          end
+
+          describe "with an admin user" do
+            let(:user) { build_stubbed(:admin) }
+
+            include_examples "the diff is shown", "bar"
+
+            context "when field gets deleted" do
+              before { custom_field.destroy }
+
+              # this should be 200, see https://community.openproject.org/wp/72230
+              it { expect(response).to have_http_status(:bad_request) }
+            end
           end
         end
 
@@ -154,12 +191,25 @@ RSpec.describe JournalsController do
 
           describe "with a user being a project member" do
             it { expect(response).to have_http_status(:forbidden) }
+
+            context "when field gets deleted (and we loose format information, but also admin_only mark)" do
+              before { custom_field.destroy }
+
+              it { expect(response).to have_http_status(:forbidden) }
+            end
           end
 
           describe "with an admin user" do
             let(:user) { build_stubbed(:admin) }
 
             include_examples "the diff is shown", "bar"
+
+            context "when field gets deleted (and we loose format information)" do
+              before { custom_field.destroy }
+
+              # this should be 200, see https://community.openproject.org/wp/72230
+              it { expect(response).to have_http_status(:bad_request) }
+            end
           end
         end
       end
