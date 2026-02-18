@@ -93,8 +93,8 @@ jobs:
 
       - name: Summarize build
         run: |
-          echo "Built and pushed the following image:" > $GITHUB_STEP_SUMMARY
-          echo "${{ steps.build.outputs.imageid }}" > $GITHUB_STEP_SUMMARY
+          echo "Built and pushed the following tags:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.tags.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate GHA token
         id: generate-gha-token
@@ -111,6 +111,7 @@ jobs:
           HOCUSPOCUS_IMAGE: ${{ steps.tags.outputs.tags[0] }}
           THIS_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
+          echo "HOCUSPOCUS_IMAGE is ${{ steps.tags.outputs.tags[0] }}"
           HOCUSPOCUS_TAG=$(echo $HOCUSPOCUS_IMAGE | cut -d':' -f 2)
 
           inputs_json=$(jq -cn \
