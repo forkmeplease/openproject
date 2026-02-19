@@ -34,17 +34,18 @@ module CustomFields
       comment_form.text_area(**attributes)
     end
 
-    def initialize(custom_field:, object:)
+    def initialize(custom_field:, object:, complete_label: false)
       super()
 
       @custom_field = custom_field
       @object = object
+      @complete_label = complete_label
     end
 
     def attributes
       {
         name: @custom_field.id.to_s,
-        label: I18n.t("attributes.comment"),
+        label: @complete_label ? I18n.t(:label_custom_comment, name: @custom_field.name) : I18n.t("attributes.comment"),
         value: @custom_field.comment_for(@object)&.text,
         rows: 5
       }

@@ -37,6 +37,14 @@ RSpec.describe CustomFields::CommentField, type: :forms do
 
   it_behaves_like "rendering label", "Comment"
 
+  context "when showing complete label" do
+    def build_form(builder)
+      described_class.new(builder, custom_field:, object: model, complete_label: true)
+    end
+
+    it_behaves_like "rendering label", "Project custom field comment"
+  end
+
   context "without a value" do
     it "renders field" do
       expect(rendered_form).to have_field "Comment", type: :textarea, with: ""
