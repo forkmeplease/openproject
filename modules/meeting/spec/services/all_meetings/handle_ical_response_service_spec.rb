@@ -381,7 +381,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
 
       context "when no meeting occurrence is found for the recurrence ID" do
         let(:partstat) { "ACCEPTED" }
-        let(:recurrence_date) { 2.years.from_now.change(usec: 0) }
+        let(:recurrence_date) { (recurring_meeting.start_time + 14.days).change(usec: 0) }
 
         let(:additional_ical_properties) do
           "RECURRENCE-ID:#{recurrence_date.utc.strftime('%Y%m%dT%H%M%SZ')}"
@@ -402,7 +402,7 @@ RSpec.describe AllMeetings::HandleICalResponseService, type: :model do
 
       context "when an interim response already for this recurrence (the user has already responded and changes)" do
         let(:partstat) { "DECLINED" }
-        let(:recurrence_date) { recurring_meeting.start_time + 1.month }
+        let(:recurrence_date) { recurring_meeting.start_time + 21.days }
         let!(:existing_response) do
           RecurringMeetingInterimResponse.create!(
             user: user,
