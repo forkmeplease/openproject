@@ -93,13 +93,14 @@ RSpec.describe "Document collaboration settings admin",
             collaborative_editing_hocuspocus_url: "wss://hocuspocus.example.com",
             collaborative_editing_hocuspocus_secret: "secret1234"
           } do
-    it "rejects https:// URLs and shows an error" do
+    it "rejects https:// URLs and shows inline validation error" do
       visit admin_settings_document_collaboration_settings_path
 
       fill_in "Hocuspocus server URL", with: "https://hocuspocus.example.com"
       click_on("Save")
 
-      expect_flash(type: :error, message: "Hocuspocus server URL is not a supported protocol (allowed: ws, wss).")
+      # Inline validation shown on the field
+      expect(page).to have_content("is not a supported protocol")
 
       # Setting unchanged
       expect(Setting.collaborative_editing_hocuspocus_url).to eq("wss://hocuspocus.example.com")
