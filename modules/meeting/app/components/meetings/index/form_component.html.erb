@@ -35,7 +35,11 @@
           end
         end
 
-        # TODO: Add template autocompleter
+        if creating_onetime_meeting? && no_preselection? && available_templates.any?
+          modal_body.with_row(mb: 3) do
+            render(Meeting::TemplateAutocompleter.new(f, project: @project))
+          end
+        end
 
         unless @template
           modal_body.with_row do

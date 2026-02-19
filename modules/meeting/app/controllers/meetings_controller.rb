@@ -434,7 +434,7 @@ class MeetingsController < ApplicationController
     end
   end
 
-  def build_meeting
+  def build_meeting # rubocop:disable Metrics/AbcSize
     meeting =
       if params[:type] == "recurring"
         RecurringMeeting.new
@@ -449,10 +449,8 @@ class MeetingsController < ApplicationController
 
     @meeting = call.result
 
-    # Load template if template_id is provided
-    @copy_from = if params[:template_id].present?
-                   Meeting.onetime_templates.visible.find_by(id: params[:template_id])
-                 end
+    # When coming from the "Create from template" button, load the template to hide the form field
+    @copy_from = Meeting.onetime_templates.visible.find_by(id: params[:template_id]) if params[:template_id].present?
   end
 
   def global_upcoming_meetings
@@ -543,7 +541,15 @@ class MeetingsController < ApplicationController
   end
 
   def find_copy_from_meeting
-    copied_from_meeting_id = params[:copied_from_meeting_id] || params[:meeting][:copied_from_meeting_id]
+    # Check for template selection from form submission
+    template_id = params[:meeting][:template_id]
+    if template_id.present?
+      @copy_from = Meeting.onetime_templates.visible.find_by(id: template_id)
+      return
+    end
+
+    # Check for regular copy
+    copied_from_meeting_id = params[:meeting][:copied_from_meeting_id]
     return unless copied_from_meeting_id
 
     @copy_from = Meeting.visible.find(copied_from_meeting_id)
