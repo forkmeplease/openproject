@@ -89,13 +89,6 @@ class MeetingTemplatesController < ApplicationController
     end
   end
 
-  # TODO
-  # def delete_dialog
-  # end
-  #
-  # def destroy
-  # end
-
   private
 
   def require_project
