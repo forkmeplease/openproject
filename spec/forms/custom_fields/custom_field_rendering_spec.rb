@@ -48,6 +48,107 @@ RSpec.describe CustomFields::CustomFieldRendering do
   end
 
   describe "#render_custom_fields" do
+    describe "custom values" do
+      let(:values_builder) { instance_double(ActionView::Helpers::FormBuilder) }
+      let(:custom_field) { build(:custom_field, field_format:, multi_value:) }
+      let(:extra_args) { { foo: "bar" } }
+
+      before do
+        allow(builder).to receive(:fields_for).with(:custom_field_values).and_yield(values_builder)
+        allow(builder).to receive(:fields_for).with(:custom_comments)
+        allow(form_instance).to receive_messages(
+          custom_fields: [custom_field],
+          additional_custom_field_input_arguments: extra_args
+        )
+      end
+
+      context "for single value custom fields" do
+        let(:multi_value) { false }
+
+        {
+          "string" => CustomFields::Inputs::String,
+          "link" => CustomFields::Inputs::String,
+          "text" => CustomFields::Inputs::Text,
+          "int" => CustomFields::Inputs::Int,
+          "float" => CustomFields::Inputs::Float,
+          "hierarchy" => CustomFields::Inputs::SingleSelectList,
+          "weighted_item_list" => CustomFields::Inputs::SingleSelectList,
+          "list" => CustomFields::Inputs::SingleSelectList,
+          "date" => CustomFields::Inputs::Date,
+          "bool" => CustomFields::Inputs::Bool,
+          "user" => CustomFields::Inputs::SingleUserSelectList,
+          "version" => CustomFields::Inputs::SingleVersionSelectList,
+          "calculated_value" => CustomFields::Inputs::CalculatedValue
+        }.each do |format, input_class|
+          context "for format '#{format}'" do
+            let(:field_format) { format }
+
+            it "renders using #{input_class}" do
+              allow(input_class).to receive(:new)
+
+              form_instance.render_custom_fields(form: builder)
+
+              expect(input_class).to have_received(:new).with(
+                values_builder,
+                custom_field:,
+                object: model,
+                **extra_args
+              )
+            end
+          end
+        end
+
+        context "for unsupported format" do
+          let(:field_format) { "unknown" }
+
+          it "raises an error" do
+            expect do
+              form_instance.render_custom_fields(form: builder)
+            end.to raise_error("Unhandled custom field format unknown")
+          end
+        end
+      end
+
+      context "for multi value custom fields" do
+        let(:multi_value) { true }
+
+        {
+          "hierarchy" => CustomFields::Inputs::MultiSelectList,
+          "weighted_item_list" => CustomFields::Inputs::MultiSelectList,
+          "list" => CustomFields::Inputs::MultiSelectList,
+          "user" => CustomFields::Inputs::MultiUserSelectList,
+          "version" => CustomFields::Inputs::MultiVersionSelectList
+        }.each do |format, input_class|
+          context "for format '#{format}'" do
+            let(:field_format) { format }
+
+            it "renders using #{input_class}" do
+              allow(input_class).to receive(:new)
+
+              form_instance.render_custom_fields(form: builder)
+
+              expect(input_class).to have_received(:new).with(
+                values_builder,
+                custom_field:,
+                object: model,
+                **extra_args
+              )
+            end
+          end
+        end
+
+        context "for unsupported format" do
+          let(:field_format) { "unknown" }
+
+          it "raises an error" do
+            expect do
+              form_instance.render_custom_fields(form: builder)
+            end.to raise_error("Unhandled custom field format unknown")
+          end
+        end
+      end
+    end
+
     describe "comment fields" do
       let(:comments_builder) { instance_double(ActionView::Helpers::FormBuilder) }
       let(:custom_field) { build(:custom_field, :string) }
@@ -99,93 +200,6 @@ RSpec.describe CustomFields::CustomFieldRendering do
             object: model,
             complete_label: true
           )
-        end
-      end
-    end
-  end
-
-  describe "#custom_field_input" do
-    let(:custom_field) { build(:custom_field, field_format:, multi_value:) }
-    let(:form_args) { { custom_field:, object: model } }
-
-    context "for single value custom field" do
-      let(:multi_value) { false }
-
-      {
-        "string" => CustomFields::Inputs::String,
-        "link" => CustomFields::Inputs::String,
-        "text" => CustomFields::Inputs::Text,
-        "int" => CustomFields::Inputs::Int,
-        "float" => CustomFields::Inputs::Float,
-        "hierarchy" => CustomFields::Inputs::SingleSelectList,
-        "weighted_item_list" => CustomFields::Inputs::SingleSelectList,
-        "list" => CustomFields::Inputs::SingleSelectList,
-        "date" => CustomFields::Inputs::Date,
-        "bool" => CustomFields::Inputs::Bool,
-        "user" => CustomFields::Inputs::SingleUserSelectList,
-        "version" => CustomFields::Inputs::SingleVersionSelectList,
-        "calculated_value" => CustomFields::Inputs::CalculatedValue
-      }.each do |format, input_class|
-        context "for supported format '#{format}'" do
-          let(:input) { instance_double(input_class) }
-          let(:field_format) { format }
-          let(:extra_args) { { foo: "bar" } }
-
-          before do
-            allow(form_instance).to receive(:additional_custom_field_input_arguments).and_return(extra_args)
-          end
-
-          it "instantiates #{class_name} with builder and form arguments" do
-            allow(input_class).to receive(:new).with(builder, **form_args, **extra_args).and_return(input)
-            expect(form_instance.send(:custom_field_input, builder, custom_field)).to eq(input)
-          end
-        end
-      end
-
-      context "for unsupported format" do
-        let(:field_format) { "unknown" }
-
-        it "raises an error" do
-          expect do
-            form_instance.send(:custom_field_input, builder, custom_field)
-          end.to raise_error("Unhandled custom field format unknown")
-        end
-      end
-    end
-
-    context "for multi value custom field" do
-      let(:multi_value) { true }
-
-      {
-        "hierarchy" => CustomFields::Inputs::MultiSelectList,
-        "weighted_item_list" => CustomFields::Inputs::MultiSelectList,
-        "list" => CustomFields::Inputs::MultiSelectList,
-        "user" => CustomFields::Inputs::MultiUserSelectList,
-        "version" => CustomFields::Inputs::MultiVersionSelectList
-      }.each do |format, input_class|
-        context "for supported format '#{format}'" do
-          let(:input) { instance_double(input_class) }
-          let(:field_format) { format }
-          let(:extra_args) { { foo: "bar" } }
-
-          before do
-            allow(form_instance).to receive(:additional_custom_field_input_arguments).and_return(extra_args)
-          end
-
-          it "instantiates #{class_name} with builder and form arguments" do
-            allow(input_class).to receive(:new).with(builder, **form_args, **extra_args).and_return(input)
-            expect(form_instance.send(:custom_field_input, builder, custom_field)).to eq(input)
-          end
-        end
-      end
-
-      context "for unsupported format" do
-        let(:field_format) { "unknown" }
-
-        it "raises an error" do
-          expect do
-            form_instance.send(:custom_field_input, builder, custom_field)
-          end.to raise_error("Unhandled custom field format unknown")
         end
       end
     end
