@@ -6,6 +6,7 @@ ja:
       configure: 'ウィジェットの設定'
       widgets:
         missing_permission: "このウィジェットを表示する権限がありません。"
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'カスタムテキスト'
         documents:

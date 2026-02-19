@@ -6,6 +6,7 @@ uk:
       configure: 'Налаштувати віджет'
       widgets:
         missing_permission: "У вас немає дозволів для перегляду цього віджета."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Текстовий блок'
         documents:

@@ -6,6 +6,7 @@ vi:
       configure: 'Định cấu hình tiện ích'
       widgets:
         missing_permission: "Bạn không có quyền cần thiết để xem tiện ích này."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Văn bản tùy chỉnh'
         documents:

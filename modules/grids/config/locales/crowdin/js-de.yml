@@ -6,6 +6,7 @@ de:
       configure: 'Widget konfigurieren'
       widgets:
         missing_permission: "Sie verfügen nicht über die erforderlichen Berechtigungen, um dieses Steuerelement anzuzeigen."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Benutzerdefinierter Text'
         documents:

@@ -6,6 +6,7 @@ zh-CN:
       configure: '配置微件'
       widgets:
         missing_permission: "您没有查看此微件所需的权限。"
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: '自定义文本'
         documents:
