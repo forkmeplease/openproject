@@ -44,7 +44,64 @@ RSpec.describe CustomFields::CustomFieldRendering do
   let(:builder) { instance_double(ActionView::Helpers::FormBuilder) }
 
   before do
-    allow(form_instance).to receive(:model).and_return(model)
+    allow(form_instance).to receive_messages(model:)
+  end
+
+  describe "#render_custom_fields" do
+    describe "comment fields" do
+      let(:comments_builder) { instance_double(ActionView::Helpers::FormBuilder) }
+      let(:custom_field) { build(:custom_field, :string) }
+      let(:commentable_custom_field) { build(:custom_field, :string, :has_comment) }
+
+      before do
+        allow(builder).to receive(:fields_for).with(:custom_field_values)
+        allow(builder).to receive(:fields_for).with(:custom_comments).and_yield(comments_builder)
+        allow(form_instance).to receive_messages(custom_fields:, additional_custom_field_input_arguments: {})
+        allow(CustomFields::CommentField).to receive(:new)
+      end
+
+      context "when a single custom field has a comment" do
+        let(:custom_fields) { [commentable_custom_field] }
+
+        it "renders a comment field with complete_label: false" do
+          form_instance.render_custom_fields(form: builder)
+
+          expect(CustomFields::CommentField).to have_received(:new).once
+          expect(CustomFields::CommentField).to have_received(:new).with(
+            comments_builder,
+            custom_field: commentable_custom_field,
+            object: model,
+            complete_label: false
+          )
+        end
+      end
+
+      context "when a custom field does not have a comment" do
+        let(:custom_fields) { [custom_field] }
+
+        it "does not render a comment field" do
+          form_instance.render_custom_fields(form: builder)
+
+          expect(CustomFields::CommentField).not_to have_received(:new)
+        end
+      end
+
+      context "when multiple custom fields have comments" do
+        let(:custom_fields) { [custom_field, commentable_custom_field] }
+
+        it "renders comment field only for commentable custom field with complete_label: true" do
+          form_instance.render_custom_fields(form: builder)
+
+          expect(CustomFields::CommentField).to have_received(:new).once
+          expect(CustomFields::CommentField).to have_received(:new).with(
+            comments_builder,
+            custom_field: commentable_custom_field,
+            object: model,
+            complete_label: true
+          )
+        end
+      end
+    end
   end
 
   describe "#custom_field_input" do
