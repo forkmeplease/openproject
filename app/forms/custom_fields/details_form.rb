@@ -61,23 +61,21 @@ module CustomFields
       end
 
       if show_min_max_field?
-        details_form.group(layout: :horizontal) do |g|
-          g.text_field(
-            name: :min_length,
-            type: :number,
-            label: label(:min_length),
-            caption: instructions(:min_max),
-            input_width: :xsmall
-          )
+        details_form.text_field(
+          name: :min_length,
+          type: :number,
+          label: label(:min_length),
+          caption: instructions(:min_max),
+          input_width: :small
+        )
 
-          g.text_field(
-            name: :max_length,
-            type: :number,
-            label: label(:max_length),
-            caption: instructions(:min_max),
-            input_width: :xsmall
-          )
-        end
+        details_form.text_field(
+          name: :max_length,
+          type: :number,
+          label: label(:max_length),
+          caption: instructions(:min_max),
+          input_width: :small
+        )
       end
 
       if show_regex_field?
@@ -220,7 +218,7 @@ module CustomFields
     end
 
     def show_default_text_field?
-      %w[list bool date text user version hierarchy calculated_value].exclude?(model.field_format)
+      %w[list bool date text user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_default_rich_text_field?
@@ -232,11 +230,11 @@ module CustomFields
     end
 
     def show_min_max_field?
-      %w[list bool date user version link hierarchy calculated_value].exclude?(model.field_format)
+      %w[list bool date user version link hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_regex_field?
-      %w[list bool date user version hierarchy calculated_value].exclude?(model.field_format)
+      %w[list bool date user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_right_to_left_field?
@@ -260,7 +258,7 @@ module CustomFields
     end
 
     def show_is_searchable_field?
-      %w[bool date float int user version hierarchy calculated_value].exclude?(model.field_format)
+      %w[bool date float int user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_non_open_versions_field?

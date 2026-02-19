@@ -44,7 +44,11 @@ module CustomFields
     alias_method :custom_field, :model
 
     def form_url
-      model.new_record? ? custom_fields_path : custom_field_path(model)
+      if model.new_record?
+        model.type == "ProjectCustomField" ? admin_settings_project_custom_fields_path : custom_fields_path
+      else
+        model.type == "ProjectCustomField" ? admin_settings_project_custom_field_path(model) : custom_field_path(model)
+      end
     end
 
     def form_method
@@ -65,7 +69,7 @@ module CustomFields
 
     def show_top_banner?
       case custom_field.field_format
-      when "hierarchy", "weighted_item_list"
+      when "hierarchy", "weighted_item_list", "list"
         persisted_cf_has_no_items_or_projects?
       else
         false
@@ -74,12 +78,16 @@ module CustomFields
 
     def top_banner_text
       case custom_field.field_format
-      when "hierarchy", "weighted_item_list"
+      when "hierarchy", "weighted_item_list", "list"
         I18n.t("custom_fields.admin.notice.remember_items_and_projects")
       end
     end
 
     def persisted_cf_has_no_items_or_projects?
+      if custom_field.list? && custom_field.custom_options.empty? && custom_field.projects.empty?
+        return true
+      end
+
       custom_field.persisted? &&
         custom_field.hierarchical_list? &&
         custom_field.hierarchy_root.children.empty? &&
