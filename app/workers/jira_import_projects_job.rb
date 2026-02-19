@@ -227,23 +227,64 @@ class JiraImportProjectsJob < ApplicationJob
 
   def add_history_comment(work_package:, history:, user:)
     notes = history.map do |entry|
-      items = entry["items"]
-      author = entry["author"]
-      created = entry["created"]
-      field_changes = items.map do |item|
-        "### Field: #{item['field']}\n\n#### from\n\n#{item['fromString']}\n\n### to\n\n#{item['toString']}"
-      end.join("\n\n")
-      "## #{author["displayName"]} | #{created}\n\n#{field_changes}"
+      history_entry(entry)
     end.join("\n\n")
     service_call = AddWorkPackageNoteService
-                     .new(user:, work_package: )
+                     .new(user:, work_package:)
                      .call(notes,
-                       send_notifications: false,
-                       internal: false)
+                           send_notifications: false,
+                           internal: false)
 
     if service_call.failure?
       raise service_call.message
     end
+  end
+
+  def history_entry(entry)
+    entry_time = history_time(entry["created"])
+    entry_author = history_author_mention(entry["author"])
+    entry["items"].map do |item|
+      history_item(entry_author, entry_time, item)
+    end.join("\n\n")
+  end
+
+  def history_item(entry_author, entry_time, item)
+    if item["field"] == "description"
+      [
+        "<summary>",
+        history_header(entry_author, entry_time, item),
+        "<details>",
+        "from:",
+        "---",
+        convert_rich_text(item["fromString"]),
+        "---",
+        "to:",
+        "---",
+        convert_rich_text(item["toString"]),
+        "---",
+        "</details>",
+        "</summary>"
+      ].join("\n\n")
+    else
+      "#{history_header(entry_author, entry_time, item)}\nfrom `#{item['fromString']}` to `#{item['toString']}`"
+    end
+  end
+
+  def history_time(entry_time)
+    I18n.l(DateTime.iso8601(entry_time), format: :long)
+  rescue StandardError
+    entry_time
+  end
+
+  def history_header(entry_author, entry_time, item)
+    "#{entry_author} | <b>#{item['field']}</b> | #{entry_time}"
+  end
+
+  def history_author_mention(author)
+    user = User.find_by(login: author["name"])
+    return author["displayName"] unless user
+
+    %(<mention class="mention" data-id="#{user.id}" data-type="user" data-text="@#{user.name}">@#{user.name}</mention>)
   end
 
   def add_comment(work_package:, comment:)
@@ -251,10 +292,10 @@ class JiraImportProjectsJob < ApplicationJob
     body = convert_rich_text(comment["body"])
     notes = "## #{author["displayName"]}\n\n ### Comment\n\n#{body}"
     service_call = AddWorkPackageNoteService
-                     .new(user: author, work_package: )
+                     .new(user: author, work_package:)
                      .call(notes,
-                       send_notifications: false,
-                       internal: false)
+                           send_notifications: false,
+                           internal: false)
 
     if service_call.failure?
       raise service_call.message
