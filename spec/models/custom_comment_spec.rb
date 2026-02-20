@@ -32,7 +32,7 @@ require "spec_helper"
 
 RSpec.describe CustomComment do
   describe "validations" do
-    let(:custom_field) { create(:custom_field) }
+    let(:custom_field) { create(:project_custom_field) }
     let(:customized) { create(:project) }
 
     it { is_expected.to validate_presence_of(:customized) }
@@ -53,6 +53,30 @@ RSpec.describe CustomComment do
     it "normalizes newlines on save to not need to deal with it in journal" do
       expect(comment.text).to eq("Line 1\nLine 2\nLine 3\nLine 4")
       expect(comment.reload.text).to eq("Line 1\nLine 2\nLine 3\nLine 4")
+    end
+  end
+
+  describe "auto enabling custom field for project" do
+    let(:project) { create(:project) }
+
+    context "when custom field is not marked for all" do
+      let(:custom_field) { create(:project_custom_field) }
+
+      it "auto enables it for project" do
+        create(:custom_comment, custom_field:, customized: project)
+
+        expect(project.project_custom_fields).to eq([custom_field])
+      end
+    end
+
+    context "when field is marked for all" do
+      let(:custom_field) { create(:project_custom_field, :is_for_all) }
+
+      it "doesn't auto enable it for project" do
+        create(:custom_comment, custom_field:, customized: project)
+
+        expect(project.project_custom_fields).to eq([])
+      end
     end
   end
 end

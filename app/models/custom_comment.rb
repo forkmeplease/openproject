@@ -37,10 +37,19 @@ class CustomComment < ApplicationRecord
   validates :custom_field, presence: true, uniqueness: { scope: :customized }
   validates :customized, presence: true
 
+  after_create :activate_custom_field_in_customized_project, if: -> { customized.is_a?(Project) }
+
   private
 
   # to not deal with it in Journals::CreateService::CustomComment#changes_sql
   def normalize_newlines
     self.text = text.gsub(/\r\n?/, "\n") if text
+  end
+
+  def activate_custom_field_in_customized_project
+    return if custom_field.is_for_all?
+    return if customized&.project_custom_fields&.include?(custom_field)
+
+    customized.project_custom_fields << custom_field
   end
 end
