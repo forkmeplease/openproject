@@ -60,7 +60,7 @@ de:
         end_date: "Enddatum"
         iterations: "Ereignisse"
       recurring_meeting_interim_response:
-        start_time: "Start time"
+        start_time: "Startzeit"
       meeting_participant:
         invited: "Eingeladen"
         attended: "Teilgenommen"

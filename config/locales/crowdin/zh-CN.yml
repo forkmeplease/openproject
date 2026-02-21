@@ -123,6 +123,16 @@ zh-CN:
       server_form:
         description_caption: "如何向连接到 MCP 服务器的其他应用程序描述该 MCP 服务器。"
         title_caption: "A short title shown to applications that connect to the MCP server."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "MCP 配置无法更新。"
         success: "MCP 配置已成功更新。"
@@ -4856,8 +4866,7 @@ zh-CN:
     reset_failed_logins: "重置失败的帐户"
     status_user_and_brute_force: "%{user} 和 %{brute_force}"
     status_change: "状态更改"
-    text_change_disabled_for_provider_login: "名称由您的登录提供商设置，因此无法更改。"
-    text_change_disabled_for_ldap_login: "姓名和电子邮件由 LDAP 设置，因此无法更改。"
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "解锁​​​​"
     unlock_and_reset_failed_logins: "解锁和重置失败的帐户"
     error_cannot_delete_user: "User cannot be deleted"

@@ -123,6 +123,16 @@ it:
       server_form:
         description_caption: "Come verrà descritto il server MCP alle altre applicazioni che vi si collegheranno."
         title_caption: "A short title shown to applications that connect to the MCP server."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "La configurazione MCP non può essere aggiornata."
         success: "La configurazione MCP è stata aggiornata correttamente."
@@ -4914,8 +4924,7 @@ it:
     reset_failed_logins: "Azzera gli accessi falliti"
     status_user_and_brute_force: "%{user} e %{brute_force}"
     status_change: "Cambiamento di stato"
-    text_change_disabled_for_provider_login: "Il nome è impostato dal servizio con cui hai effettuato l'accesso e non può essere modificato."
-    text_change_disabled_for_ldap_login: "Il nome e l'e-mail sono impostati da LDAP e quindi non possono essere modificati."
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "Sblocca"
     unlock_and_reset_failed_logins: "Sblocca e azzera gli accessi non riusciti"
     error_cannot_delete_user: "User cannot be deleted"

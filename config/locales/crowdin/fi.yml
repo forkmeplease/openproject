@@ -123,6 +123,16 @@ fi:
       server_form:
         description_caption: "How the MCP server will be described to other applications who connect to it."
         title_caption: "A short title shown to applications that connect to the MCP server."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "MCP configuration could not be updated."
         success: "MCP configuration was updated successfully."
@@ -4917,8 +4927,7 @@ fi:
     reset_failed_logins: "Reset failed logins"
     status_user_and_brute_force: "%{user} and %{brute_force}"
     status_change: "Status change"
-    text_change_disabled_for_provider_login: "Nimi on määritetty kirjautumispalveluntarjoajallasi, joten sitä ei voi muuttaa."
-    text_change_disabled_for_ldap_login: "The name and email is set by LDAP and can thus not be changed."
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "Poista lukitus"
     unlock_and_reset_failed_logins: "Unlock and reset failed logins"
     error_cannot_delete_user: "User cannot be deleted"

@@ -123,6 +123,16 @@ vi:
       server_form:
         description_caption: "Cách máy chủ MCP sẽ được mô tả cho các ứng dụng khác kết nối với nó."
         title_caption: "A short title shown to applications that connect to the MCP server."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "Không thể cập nhật cấu hình MCP."
         success: "Cấu hình MCP đã được cập nhật thành công."
@@ -4863,8 +4873,7 @@ vi:
     reset_failed_logins: "Đặt lại thông tin đăng nhập thất bại"
     status_user_and_brute_force: "%{user} và %{brute_force}"
     status_change: "Thay đổi trạng thái"
-    text_change_disabled_for_provider_login: "Tên được thiết lập với người cung cấp đăng nhập của bạn và vì thế không thể thay đổi"
-    text_change_disabled_for_ldap_login: "Tên và email do LDAP đặt và do đó không thể thay đổi."
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "Mở khoá"
     unlock_and_reset_failed_logins: "Mở khóa và đặt lại thông tin đăng nhập thất bại"
     error_cannot_delete_user: "User cannot be deleted"

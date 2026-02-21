@@ -77,17 +77,17 @@ de:
           one: "Data aggregated from %{count} budget."
           other: "Data aggregated from %{count} budgets."
         portfolio:
-          zero: "no portfolios"
-          one: "1 portfolio"
-          other: "%{count} portfolios"
+          zero: "keine Portfolios"
+          one: "1 Portfolio"
+          other: "%{count} Portfolios"
         subprogram:
-          zero: "no subprograms"
-          one: "1 subprogram"
-          other: "%{count} subprograms"
+          zero: "keine Unterprogramme"
+          one: "1 Unterprogramm"
+          other: "%{count} Unterprogramme"
         subproject:
-          zero: "no subprojects"
-          one: "1 subproject"
-          other: "%{count} subprojects"
+          zero: "keine Unterprojekte"
+          one: "1 Unterprojekt"
+          other: "%{count} Unterprojekte"
         view_details: "View budget details"
   events:
     budget: "Budget bearbeitet"

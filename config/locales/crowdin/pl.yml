@@ -123,6 +123,16 @@ pl:
       server_form:
         description_caption: "Sposób, w jaki serwer MCP będzie opisywany innym aplikacjom, które się z nim łączą."
         title_caption: "A short title shown to applications that connect to the MCP server."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "Nie można zaktualizować konfiguracji MCP."
         success: "Konfiguracja MCP została zaktualizowana."
@@ -5014,8 +5024,7 @@ pl:
     reset_failed_logins: "Resetuj nieudane logowania"
     status_user_and_brute_force: "%{user} i %{brute_force}"
     status_change: "Zmiana statusu"
-    text_change_disabled_for_provider_login: "Nazwa jest ustawiana przez dostawcę usług logowania i dlatego nie można jej zmienić."
-    text_change_disabled_for_ldap_login: "Nazwa i adres e-mail są ustawione przez protokół LDAP i dlatego nie można ich zmienić."
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "Odblokuj"
     unlock_and_reset_failed_logins: "Odblokuj i resetuj nieudane logowania"
     error_cannot_delete_user: "User cannot be deleted"

@@ -55,7 +55,7 @@ de:
     label_is_done_status: "Status %{status_name} bedeutet abgeschlossen"
     points_label:
       one: "Punkt"
-      other: "points"
+      other: "Punkte"
     positions_could_not_be_rebuilt: "Positionen konnten nicht neu berechnet werden."
     positions_rebuilt_successfully: "Positionen wurden neu berechnet."
     rebuild: "Neu berechnen"

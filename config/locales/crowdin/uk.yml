@@ -123,6 +123,16 @@ uk:
       server_form:
         description_caption: "Опис сервера MCP для інших додатків, які підключаються до нього."
         title_caption: "A short title shown to applications that connect to the MCP server."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "Не вдалось оновити конфігурацію MCP."
         success: "Конфігурацію MCP оновлено."
@@ -5013,8 +5023,7 @@ uk:
     reset_failed_logins: "Скинути помилки входу"
     status_user_and_brute_force: "%{user} і %{brute_force}"
     status_change: "Зміна стану"
-    text_change_disabled_for_provider_login: "Це ім’я встановив ваш постачальник облікових даних, тому його не можна змінити."
-    text_change_disabled_for_ldap_login: "Назву й електронну адресу отримано за протоколом LDAP, тому їх не можна змінити. "
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "Розблокувати"
     unlock_and_reset_failed_logins: "Розблокувати та скинути помилки входу до системи"
     error_cannot_delete_user: "User cannot be deleted"

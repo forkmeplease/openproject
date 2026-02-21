@@ -123,6 +123,16 @@ ru:
       server_form:
         description_caption: "Как сервер MCP будет описан для других приложений, которые подключатся к нему."
         title_caption: "Краткое название, показываемое приложениям, которые подключаются к серверу MCP."
+        tool_response_format: "Tool response format"
+        tool_response_format_content_only_label: "Content only"
+        tool_response_format_content_only_caption: >
+          Choose this if MCP clients connecting to this instance do not support structured content. Tool responses will only contain plain text content and leave out the structured version.
+        tool_response_format_full_label: "Full"
+        tool_response_format_full_caption: >
+          The most compatible option. Tool responses will include both regular and structured content, allowing MCP clients to choose which format they want to read. This may increase the number of tokens that the language model has to process, potentially increasing cost and decreasing performance.
+        tool_response_format_structured_only_label: "Structured content only"
+        tool_response_format_structured_only_caption: >
+          Choose this if you are certain that MCP clients connecting to this instance support structured content. Tool responses will only include structured content and leave out its text representation.
       update:
         failure: "Конфигурация MCP не может быть обновлена."
         success: "Конфигурация MCP была успешно обновлена."
@@ -5016,8 +5026,7 @@ ru:
     reset_failed_logins: "Сброс неудачных попыток входа"
     status_user_and_brute_force: "%{user} и %{brute_force}"
     status_change: "Смена статуса"
-    text_change_disabled_for_provider_login: "Это имя задано вашим поставщиком авторизации, поэтому его нельзя изменить."
-    text_change_disabled_for_ldap_login: "Имя и адрес электронной почты заданы LDAP и не могут быть изменены."
+    text_change_disabled_for_provider_login: "The name and email is set by your login provider and can thus not be changed."
     unlock: "Разблокировать"
     unlock_and_reset_failed_logins: "Разблокировать и сбросить неудачные попытки входа"
     error_cannot_delete_user: "User cannot be deleted"
