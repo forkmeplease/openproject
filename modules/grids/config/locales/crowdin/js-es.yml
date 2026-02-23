@@ -6,6 +6,7 @@ es:
       configure: 'Configurar widget'
       widgets:
         missing_permission: "No tiene los permisos necesarios para ver este widget."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Texto personalizado'
         documents:

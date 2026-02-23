@@ -6,6 +6,7 @@ ms:
       configure: 'Konfigurasi widget'
       widgets:
         missing_permission: "Anda tidak mempunyai kebenaran yang diperlukan untuk melihat widget ini."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Teks tersuai'
         documents:

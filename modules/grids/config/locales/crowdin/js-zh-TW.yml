@@ -6,6 +6,7 @@ zh-TW:
       configure: '設定小工具'
       widgets:
         missing_permission: "您沒有必要的權限來檢視小工具。"
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: '自訂文字'
         documents:

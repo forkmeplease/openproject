@@ -6,6 +6,7 @@ lt:
       configure: 'Valdiklio nustatymai'
       widgets:
         missing_permission: "Jūs neturite teisų šio valdiklio peržiūrai."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Pritaikytas tekstas'
         documents:

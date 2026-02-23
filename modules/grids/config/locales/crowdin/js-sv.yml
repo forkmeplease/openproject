@@ -6,6 +6,7 @@ sv:
       configure: 'Konfigurera widget'
       widgets:
         missing_permission: "Du har inte de nödvändiga behörigheterna för att visa den här widgeten."
+        not_available: "This widget is currently unavailable."
         custom_text:
           title: 'Egen text'
         documents:
