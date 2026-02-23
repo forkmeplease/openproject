@@ -31,34 +31,31 @@
 module WorkPackage::PDFExport::Report::Attributes
   RELATION_COLUMN_TABLE_COLUMN_NAMES = %i[id type subject status start_date due_date].freeze
 
+  AttributeField = Data.define(:label, :name, :value)
+  RelationField = Data.define(:label, :name, :value)
+  FormattableField = Data.define(:label, :name, :value)
+
   def write_attributes_tables!(work_package)
     field_groups = collect_field_groups(work_package)
     return if field_groups.empty?
 
     field_groups.each do |non_formattable_fields, special_field|
       write_attributes_table(non_formattable_fields)
-      if relation_field?(special_field)
+      case special_field
+      when RelationField
         write_relation_field(work_package, special_field)
-      elsif formattable_field?(special_field)
-        write_markdown_field!(work_package, special_field[:value], special_field[:label])
+      when FormattableField
+        write_markdown_field!(work_package, special_field.value, special_field.label)
       end
     end
   end
 
   private
 
-  def relation_field?(special_field)
-    special_field&.dig(:relation)
-  end
-
-  def formattable_field?(special_field)
-    special_field&.dig(:formattable)
-  end
-
   def collect_field_groups(work_package)
     field_groups = []
     non_formattable_fields_at_end = process_columns(work_package).inject([]) do |non_formattable_field_stack, field|
-      if field[:formattable] || field[:relation]
+      if field.is_a?(RelationField) || field.is_a?(FormattableField)
         field_groups.push([non_formattable_field_stack, field])
         []
       else
@@ -92,29 +89,27 @@ module WorkPackage::PDFExport::Report::Attributes
   end
 
   def attribute_column(work_package, column)
-    {
+    AttributeField.new(
       label: column.caption || "",
       name: column.name,
       value: get_column_value_cell(work_package, column.name)
-    }
+    )
   end
 
   def relation_column(_work_package, column)
-    {
+    RelationField.new(
       label: column.caption || "",
       name: column.name,
-      relation: true,
       value: column
-    }
+    )
   end
 
   def formattable_column(work_package, column)
-    {
+    FormattableField.new(
       label: column.caption || "",
       name: column.name,
-      formattable: true,
       value: formattable_column_value(work_package, column)
-    }
+    )
   end
 
   def formattable_column_value(work_package, column)
@@ -156,8 +151,8 @@ module WorkPackage::PDFExport::Report::Attributes
 
     # get work package attribute table cell data: [label, value]
     [
-      pdf.make_cell(attribute_data[:label], styles.wp_attributes_table_label_cell),
-      attribute_data[:value]
+      pdf.make_cell(attribute_data.label, styles.wp_attributes_table_label_cell),
+      attribute_data.value
     ]
   end
 
@@ -196,11 +191,11 @@ module WorkPackage::PDFExport::Report::Attributes
   end
 
   def write_relation_field(work_package, field)
-    related_wps = related_work_packages_for(work_package, field[:value])
+    related_wps = related_work_packages_for(work_package, field.value)
     return if related_wps.empty?
 
     write_optional_page_break
-    write_attribute_group_label(field[:label])
+    write_attribute_group_label(field.label)
     write_work_packages_table!(related_wps, relation_query)
   end
 
