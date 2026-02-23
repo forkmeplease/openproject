@@ -167,6 +167,8 @@ module CustomFields
       end
 
       def custom_options_attributes
+        return unless params[:custom_field]
+
         params[:custom_field][:custom_options_attributes]
       end
     end

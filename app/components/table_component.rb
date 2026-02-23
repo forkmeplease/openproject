@@ -31,6 +31,8 @@
 ##
 # Abstract view component. Subclass this for a concrete table.
 class TableComponent < ApplicationComponent
+  include Primer::AttributesHelper
+
   def initialize(rows: [], table_arguments: {}, **)
     super(rows, **)
 
@@ -41,7 +43,10 @@ class TableComponent < ApplicationComponent
       "generic-table"
     )
     @system_arguments[:data] ||= {}
-    @system_arguments[:data][:controller] = "table-highlighting"
+    @system_arguments[:data] = merge_data(
+      @system_arguments,
+      data: { controller: "table-highlighting" }
+    )
   end
 
   class << self
