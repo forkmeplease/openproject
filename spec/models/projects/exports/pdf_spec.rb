@@ -188,6 +188,66 @@ RSpec.describe Projects::Exports::PDF do
     end
   end
 
+  describe "custom comment columns selected" do
+    let(:query_columns) do
+      %w[id name] + global_project_custom_fields.map(&:comment_column_name)
+    end
+
+    context "without view_project_attributes permission" do
+      let(:permissions) { super() - %i[view_project_attributes] }
+      let(:expected_document) do
+        [
+          *expected_cover_page,
+          project.name,
+          "ID", project.id.to_s,
+          "1/1", export_time_formatted, query.name
+        ].join(" ")
+      end
+
+      it "does not include custom comments in the export" do
+        expect(subject).to eq expected_document
+      end
+    end
+
+    context "with view_project_attributes permission" do
+      let(:expected_document) do
+        [
+          *expected_cover_page,
+          project.name,
+          "ID", project.id.to_s,
+          "#{version_cf.name} comment", "Comment visible to members",
+          "1/1", export_time_formatted, query.name
+        ].join(" ")
+      end
+
+      it "includes custom comments in the export" do
+        expect(subject).to eq expected_document
+      end
+    end
+
+    context "with admin permission" do
+      let(:current_user) { build_stubbed(:admin) }
+      let(:expected_document) do
+        [
+          *expected_cover_page,
+          project.name,
+          "ID", project.id.to_s,
+          "#{version_cf.name} comment", "Comment visible to members",
+          "#{hidden_cf.name} comment", "Comment visible to admins",
+          "1/1", export_time_formatted, query.name
+        ].join(" ")
+      end
+
+      it "includes custom comments in the export" do
+        expect(subject).to eq expected_document
+      end
+
+      it "doesn't include unused custom comment" do
+        expect(subject).not_to include("#{not_used_string_cf.name} comment")
+      end
+    end
+  end
+
   context "with no project visible" do
     let(:current_user) { User.anonymous }
 

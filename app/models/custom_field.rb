@@ -306,9 +306,9 @@ class CustomField < ApplicationRecord
 
   def comment_attribute_setter = :"#{comment_attribute_name}="
 
-  def column_name
-    "cf_#{id}"
-  end
+  def column_name = "cf_#{id}"
+
+  def comment_column_name = "cfc_#{id}"
 
   def type_name
     nil
