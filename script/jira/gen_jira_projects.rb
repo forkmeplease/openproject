@@ -25,7 +25,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# Script to mass-create projects and issues in a Jira Data Center server for testing.
+# Script to mass-create projects, issues, and users in a Jira Data Center server for testing.
 #
 # Usage:
 #   ruby script/jira/gen_jira_projects.rb [options]
@@ -34,6 +34,9 @@
 #   --projects N       Number of projects to create (default: 1000)
 #   --min-issues N     Minimum issues per project (default: 10)
 #   --max-issues N     Maximum issues per project (default: 100)
+#   --users N          Number of users to create (default: 0, uses existing users only)
+#   --min-comments N   Minimum comments per issue (default: 0)
+#   --max-comments N   Maximum comments per issue (default: 5)
 #   --dry-run          Show what would be created without making API calls
 #   --help             Show this help message
 #
@@ -60,6 +63,78 @@ class JiraProjectCreator
     com.pyxis.greenhopper.jira:gh-kanban-template
     com.pyxis.greenhopper.jira:basic-software-development-template
   ].freeze
+  FIRST_NAMES = %w[
+    James Mary John Patricia Robert Jennifer Michael Linda William Elizabeth
+    David Barbara Richard Susan Joseph Jessica Thomas Sarah Charles Karen
+    Christopher Nancy Daniel Lisa Matthew Betty Anthony Margaret Mark Sandra
+    Donald Ashley Steven Kimberly Paul Emily Andrew Donna Joshua Michelle
+    Kenneth Dorothy Kevin Carol Brian Amanda George Rebecca Timothy Sharon
+    Ronald Cynthia Edward Kathleen Jason Anna Jeffrey Shirley Ryan Amy
+    Jacob Angela Nicholas Brenda Gary Helen Eric Samantha Jonathan Jean
+    Stephen Victoria Frank Katherine Larry Theresa Scott Alice Raymond Nicole
+    Benjamin Marie Patrick Judy Alexander Janet Jack Carolyn Dennis Catherine
+    Jerry Frances Tyler Christine Peter Debra Aaron Janice Jose Maria
+    Adam Rachel Nathan Heather Zachary Diane Kyle Diana Howard Gloria
+    Douglas Sara Ethan Janet Henry Megan Albert Christina Phillip Lauren
+    Roy Andrea Russell Doris Eugene Evelyn Bobby Julia Gabriel Madison
+    Louis Grace Lawrence Kelly Dylan Ashley Willie Amber Carl Lori
+    Jesse Melissa Bruce Christina Alan Cheryl Sean Marie Jordan Christine
+    Ralph Judy Gabriel Paula Roy Amber Oscar Phyllis Louis Jane
+    Randy Norma Philip Stephanie Eugene Ruth Willie Christina Johnny Lillian
+    Billy Deborah Terry Judith Todd Rachel Craig Judith Jesse Deborah
+    Steve Gloria Frank Kathy Timothy Marilyn Edward Diana Danny Rose
+    Philip Nicole Keith Theresa Scott Emily Gerald Christina Marcus Paula
+    Rodney Donna Derrick Julie Eugene Michelle Cody Laura Ricardo Lillian
+    Shane Robin Clarence Gloria Alex Andrea Eduardo Cheryl Marcus Christine
+    Fernando Judith Bryan Ruby Sidney Diana Travis Dolores Geoffrey Frances
+  ].freeze
+
+  LAST_NAMES = %w[
+    Smith Johnson Williams Brown Jones Garcia Miller Davis Rodriguez Martinez
+    Hernandez Lopez Gonzalez Wilson Anderson Thomas Taylor Moore Jackson Martin
+    Lee Perez Thompson White Harris Sanchez Clark Ramirez Lewis Robinson Walker
+    Young Allen King Wright Scott Torres Nguyen Hill Flores Green Adams Nelson
+    Baker Hall Rivera Campbell Mitchell Carter Roberts Turner Phillips Evans
+    Parker Edwards Collins Stewart Morris Morales Murphy Cook Rogers Gutierrez
+    Ortiz Morgan Cooper Peterson Bailey Reed Kelly Howard Ramos Kim Cox Ward
+    Richardson Watson Brooks Chavez Wood James Bennett Gray Mendoza Ruiz Hughes
+    Price Alvarez Castillo Sanders Patel Myers Long Ross Foster Jimenez Powell
+    Jenkins Perry Russell Sullivan Bell Coleman Butler Henderson Barnes Gonzales
+    Fisher Vasquez Simmons Graham Murray Romero Freeman Wells Webb Simpson
+    Stevens Tucker Porter Hunter Hicks Crawford Henry Boyd Mason Moreno Kennedy
+    Warren Dixon Ramos Burns Gordon Shaw Holmes Rice Robertson Hunt Black
+    Daniels Palmer Mills Nichols Grant Knight Ferguson Rose Stone Hawkins Dunn
+    Perkins Hudson Spencer Gardner Stephens Payne Pierce Berry Matthews Arnold
+  ].freeze
+
+  COMMENT_TEMPLATES = [
+    "I've started working on this. Will update once I have more progress.",
+    "Can someone clarify the requirements here? I'm not sure about %s.",
+    "This is blocked by %s. We need to resolve that first.",
+    "I've completed the initial implementation. Ready for review.",
+    "Found an issue with %s during testing. Investigating now.",
+    "This looks good to me. Approving the changes.",
+    "We should consider %s as an alternative approach.",
+    "Updated the documentation for this change.",
+    "Running into some issues with %s. Any suggestions?",
+    "This is more complex than initially estimated. Might need more time.",
+    "Great work on this! The %s implementation is clean.",
+    "I have some concerns about %s. Can we discuss?",
+    "Deployed to staging for testing. Please verify.",
+    "All tests are passing. Ready for production.",
+    "Need to add more test coverage for %s.",
+    "Reverted the previous change due to %s issues.",
+    "This needs a design review before we proceed.",
+    "Performance looks good after the %s optimization.",
+    "Security review completed. No issues found.",
+    "Added logging for better debugging of %s.",
+    "Waiting on feedback from the product team.",
+    "This is a duplicate of the %s issue.",
+    "Closing as won't fix. The %s behavior is expected.",
+    "Reopening this - the fix didn't fully address %s.",
+    "Updated the priority based on customer feedback.",
+  ].freeze
+
   PROJECT_CATEGORIES = [
     { name: "Frontend", description: "User interface and client-side projects" },
     { name: "Backend", description: "Server-side and API projects" },
@@ -388,13 +463,15 @@ class JiraProjectCreator
                .bearer_auth(token)
   end
 
-  def run(num_projects:, min_issues:, max_issues:)
+  def run(num_projects:, min_issues:, max_issues:, num_users: 0, min_comments: 0, max_comments: 5)
     puts "=" * 60
     puts "Jira Project Creator".bold.cyan
     puts "=" * 60
     puts "URL: #{@url.yellow}"
     puts "Projects to create: #{num_projects.to_s.green}"
     puts "Issues per project: #{min_issues}-#{max_issues} (random)"
+    puts "Users to create: #{num_users.to_s.green}"
+    puts "Comments per issue: #{min_comments}-#{max_comments} (random)"
     puts "Mode: #{@dry_run ? 'DRY RUN'.yellow : 'LIVE'.red.bold}"
     puts "=" * 60
     puts
@@ -411,6 +488,23 @@ class JiraProjectCreator
     current_user = @dry_run ? { "name" => "admin" } : get_current_user
     puts "Current user: #{current_user['name'].green}"
     puts
+
+    # Create users if requested
+    @users = [current_user]
+    if num_users.positive?
+      puts "Creating #{num_users} users...".cyan
+      created_users = create_users(num_users)
+      @users += created_users
+      puts "Created #{created_users.length.to_s.green} users"
+      puts
+    else
+      # Fetch existing users to use for assignments
+      puts "Fetching existing users...".cyan
+      existing_users = @dry_run ? sample_users : fetch_users
+      @users += existing_users
+      puts "Found #{existing_users.length.to_s.green} existing users"
+      puts
+    end
 
     # Fetch available statuses
     statuses = @dry_run ? sample_statuses : fetch_statuses
@@ -439,10 +533,12 @@ class JiraProjectCreator
       puts "\n#{"- [#{i + 1}/#{num_projects}]".cyan} Creating project"
       template = PROJECT_TEMPLATES.sample
       category = categories.sample
+      # Pick a random user as project lead
+      project_lead = @users.sample
       project = create_project(
         key: project_key,
         name: project_name,
-        lead: current_user["name"],
+        lead: project_lead["name"],
         template:,
         category:,
         used_keys:
@@ -451,6 +547,7 @@ class JiraProjectCreator
       if project
         created_projects << project
         puts "  Created project: #{project['key'].green.bold} (#{project['name'].yellow})"
+        puts "  Lead: #{project_lead['name'].magenta}"
         puts "  Template: #{template.cyan}"
         puts "  Category: #{category[:name].magenta}" if category
 
@@ -469,7 +566,9 @@ class JiraProjectCreator
           project_key: project["key"],
           count: issue_count,
           issue_types: project_types,
-          statuses:
+          statuses:,
+          min_comments:,
+          max_comments:
         )
       end
     end
@@ -477,6 +576,7 @@ class JiraProjectCreator
     puts "\n#{'=' * 60}"
     puts "Summary".bold.cyan
     puts "=" * 60
+    puts "Users available: #{@users.length.to_s.green.bold}"
     puts "Projects created: #{created_projects.length.to_s.green.bold}"
     puts "Total issues created: #{total_issues.to_s.green.bold}"
     puts "=" * 60
@@ -498,6 +598,78 @@ class JiraProjectCreator
 
   def fetch_issue_types
     get("/rest/api/2/issuetype")
+  end
+
+  def fetch_users(max_results: 200)
+    # Search for users - returns active users
+    result = get("/rest/api/2/user/search?username=.&maxResults=#{max_results}")
+    result.map { |u| { "name" => u["name"], "displayName" => u["displayName"], "emailAddress" => u["emailAddress"] } }
+  rescue StandardError => e
+    puts "⚠ Warning:".yellow + " Could not fetch users: #{e.message}"
+    []
+  end
+
+  def create_user(username:, email:, display_name:, password: nil)
+    password ||= SecureRandom.hex(12)
+    payload = {
+      name: username,
+      password:,
+      emailAddress: email,
+      displayName: display_name
+    }
+
+    if @dry_run
+      puts "[DRY RUN]".yellow.bold + " Would create user: #{username}"
+      return { "name" => username, "displayName" => display_name, "emailAddress" => email, "password" => password }
+    end
+
+    begin
+      result = post("/rest/api/2/user", payload)
+      # Store password for later use with basic auth (for comments)
+      { "name" => result["name"], "displayName" => result["displayName"], "emailAddress" => result["emailAddress"], "password" => password }
+    rescue StandardError => e
+      puts "⚠ Warning:".yellow + " Could not create user #{username}: #{e.message}"
+      nil
+    end
+  end
+
+  def create_users(count)
+    users = []
+    used_usernames = Set.new
+
+    count.times do |i|
+      first_name = FIRST_NAMES.sample
+      last_name = LAST_NAMES.sample
+
+      # Generate unique username
+      base_username = "#{first_name.downcase}.#{last_name.downcase}"
+      username = base_username
+      suffix = 1
+      while used_usernames.include?(username)
+        username = "#{base_username}#{suffix}"
+        suffix += 1
+      end
+      used_usernames << username
+
+      email = "#{username}@example.com"
+      display_name = "#{first_name} #{last_name}"
+
+      user = create_user(username:, email:, display_name:)
+      if user
+        users << user
+        print ".".green if (i + 1) % 10 == 0
+      end
+    end
+    puts " Done!".green.bold if count >= 10
+    users
+  end
+
+  def sample_users
+    [
+      { "name" => "john.smith", "displayName" => "John Smith", "emailAddress" => "john.smith@example.com", "password" => "password123" },
+      { "name" => "jane.doe", "displayName" => "Jane Doe", "emailAddress" => "jane.doe@example.com", "password" => "password123" },
+      { "name" => "bob.wilson", "displayName" => "Bob Wilson", "emailAddress" => "bob.wilson@example.com", "password" => "password123" }
+    ]
   end
 
   def fetch_project_categories
@@ -617,7 +789,7 @@ class JiraProjectCreator
     nil
   end
 
-  def create_issues_for_project(project_key:, count:, issue_types:, statuses:)
+  def create_issues_for_project(project_key:, count:, issue_types:, statuses:, min_comments:, max_comments:)
     print "  "
     count.times do |i|
       issue_type = issue_types.sample || "Task"
@@ -626,16 +798,26 @@ class JiraProjectCreator
       priority = PRIORITIES.sample
       epic_name = issue_type == "Epic" ? EPIC_NAMES.sample : nil
 
+      # Pick random reporter and assignee from available users
+      reporter = @users.sample
+      assignee = @users.sample
+
       issue = create_issue(
         project_key:,
         issue_type:,
         summary:,
         description:,
         priority:,
-        epic_name:
+        epic_name:,
+        reporter: reporter["name"],
+        assignee: assignee["name"]
       )
 
       next unless issue
+
+      # Add random comments
+      comment_count = rand(min_comments..max_comments)
+      add_comments_to_issue(issue["key"], comment_count) if comment_count.positive?
 
       # Transition to random status
       target_status = statuses.sample
@@ -648,7 +830,7 @@ class JiraProjectCreator
     puts " Done!".green.bold
   end
 
-  def create_issue(project_key:, issue_type:, summary:, description:, priority:, epic_name: nil)
+  def create_issue(project_key:, issue_type:, summary:, description:, priority:, epic_name: nil, reporter: nil, assignee: nil)
     payload = {
       fields: {
         project: { key: project_key },
@@ -658,6 +840,10 @@ class JiraProjectCreator
         priority: { name: priority }
       }
     }
+
+    # Add reporter and assignee if provided
+    payload[:fields][:reporter] = { name: reporter } if reporter
+    payload[:fields][:assignee] = { name: assignee } if assignee
 
     # Add epic name field if this is an Epic and we already know the field ID
     if issue_type == "Epic" && epic_name && @epic_name_field
@@ -690,6 +876,56 @@ class JiraProjectCreator
         nil
       end
     end
+  end
+
+  def add_comments_to_issue(issue_key, count)
+    return if @dry_run
+
+    count.times do
+      comment_body = generate_comment
+      # Pick a random user to author the comment
+      author = users_with_credentials.sample
+      add_comment(issue_key, comment_body, author:)
+    end
+  rescue StandardError
+    # Silently ignore comment errors
+  end
+
+  def add_comment(issue_key, body, author: nil)
+    # If author has credentials, use basic auth to post as that user
+    if author && author["password"]
+      post_as_user("/rest/api/2/issue/#{issue_key}/comment", { body: }, username: author["name"], password: author["password"])
+    else
+      post("/rest/api/2/issue/#{issue_key}/comment", { body: })
+    end
+  rescue StandardError
+    # Silently ignore - comments might fail due to permissions
+  end
+
+  def post_as_user(path, payload, username:, password:)
+    # Create a new HTTP client with basic auth for this specific user
+    user_httpx = HTTPX
+                   .plugin(:basic_auth)
+                   .with(
+                     headers: {
+                       "Accept" => "application/json",
+                       "Content-Type" => "application/json"
+                     }
+                   )
+                   .basic_auth(username, password)
+
+    response = user_httpx.post("#{@url}#{path}", json: payload)
+    handle_response(response)
+  end
+
+  def users_with_credentials
+    @users.select { |u| u["password"] }
+  end
+
+  def generate_comment
+    template = COMMENT_TEMPLATES.sample
+    word = WORDS.sample
+    format(template, word)
   end
 
   def extract_custom_field_id(error_message)
@@ -816,6 +1052,9 @@ def main
     projects: 1000,
     min_issues: 10,
     max_issues: 100,
+    users: 0,
+    min_comments: 0,
+    max_comments: 5,
     dry_run: false
   }
 
@@ -832,6 +1071,18 @@ def main
 
     opts.on("--max-issues N", Integer, "Maximum issues per project (default: #{options[:max_issues]})") do |n|
       options[:max_issues] = n
+    end
+
+    opts.on("--users N", Integer, "Number of users to create (default: #{options[:users]}, 0 = use existing)") do |n|
+      options[:users] = n
+    end
+
+    opts.on("--min-comments N", Integer, "Minimum comments per issue (default: #{options[:min_comments]})") do |n|
+      options[:min_comments] = n
+    end
+
+    opts.on("--max-comments N", Integer, "Maximum comments per issue (default: #{options[:max_comments]})") do |n|
+      options[:max_comments] = n
     end
 
     opts.on("--dry-run", "Show what would be created without making API calls") do
@@ -870,7 +1121,10 @@ def main
   creator.run(
     num_projects: options[:projects],
     min_issues: options[:min_issues],
-    max_issues: options[:max_issues]
+    max_issues: options[:max_issues],
+    num_users: options[:users],
+    min_comments: options[:min_comments],
+    max_comments: options[:max_comments]
   )
 rescue Interrupt
   puts "\n#{'Aborted by user'.yellow}"
