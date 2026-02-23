@@ -40,6 +40,11 @@ class WorkPackageCustomField < CustomField
            source: :customized,
            source_type: "WorkPackage"
 
+  include Scopes::Scoped
+
+  scopes :visible,
+         :on_visible_type_and_project
+
   scope :manageable_by_user, ->(user) {
     if user.allowed_in_any_project?(:select_custom_fields)
       all

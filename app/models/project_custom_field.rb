@@ -46,6 +46,10 @@ class ProjectCustomField < CustomField
   has_one :role, through: :custom_fields_role
   accepts_nested_attributes_for :custom_fields_role, allow_destroy: true
 
+  include Scopes::Scoped
+
+  scopes :visible
+
   scope :user_field_with_assigned_role, -> do
     joins(:custom_fields_role)
       .where.not(custom_fields_roles: { role_id: nil })
@@ -53,16 +57,6 @@ class ProjectCustomField < CustomField
   end
 
   class << self
-    def visible(user = User.current, project: nil)
-      if user.admin?
-        all
-      elsif user.allowed_in_any_project?(:select_project_custom_fields) || user.allowed_globally?(:add_project)
-        where(admin_only: false)
-      else
-        where(admin_only: false).where(mappings_with_view_project_attributes_permission(user, project).exists)
-      end
-    end
-
     private
 
     def mappings_with_view_project_attributes_permission(user, project) # rubocop:disable Metrics/AbcSize
