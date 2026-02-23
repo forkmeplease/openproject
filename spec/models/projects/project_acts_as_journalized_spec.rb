@@ -230,7 +230,7 @@ RSpec.describe Project, "acts_as_journalized" do
   end
 
   describe "custom comments" do
-    shared_let(:custom_field) { create(:string_project_custom_field, :has_comment) }
+    let!(:custom_field) { create(:string_project_custom_field, :has_comment, projects: [project]) }
     let(:custom_comment_key) { "custom_comment_#{custom_field.id}" }
     let(:custom_comment_text) { "some descriptive comment" }
     let(:modified_custom_comment_text) { "a more descriptive comment" }
