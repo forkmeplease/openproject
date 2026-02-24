@@ -34,10 +34,12 @@ RSpec.describe CustomFields::Scopes::Visible do
   shared_let(:project_cf) { create(:string_project_custom_field) }
   shared_let(:work_package_cf) { create(:string_wp_custom_field) }
   shared_let(:user_cf) { create(:user_custom_field) }
+  shared_let(:group_cf) { create(:group_custom_field) }
 
   let(:project_cf_visible) { false }
   let(:work_package_cf_visible) { false }
   let(:user_cf_visible) { false }
+  let(:group_cf_visible) { false }
 
   # Since there would be very many tests here, we break the rule of testing
   # the scope as a black box. Knowing that the scope relies on the individual visible scopes of each
@@ -50,7 +52,8 @@ RSpec.describe CustomFields::Scopes::Visible do
     before do
       { ProjectCustomField => project_cf_visible,
         WorkPackageCustomField => work_package_cf_visible,
-        UserCustomField => user_cf_visible }.each do |klass, visible|
+        UserCustomField => user_cf_visible,
+        GroupCustomField => group_cf_visible }.each do |klass, visible|
         allow(klass)
           .to receive(:visible)
                 .with(current_user)
@@ -107,6 +110,24 @@ RSpec.describe CustomFields::Scopes::Visible do
         let(:user_cf_visible) { false }
 
         it "does not return the user custom field" do
+          expect(subject).to be_empty
+        end
+      end
+    end
+
+    context "for a group custom field" do
+      context "if the fields are visible" do
+        let(:group_cf_visible) { true }
+
+        it "returns the group custom field" do
+          expect(subject).to contain_exactly(group_cf)
+        end
+      end
+
+      context "if the fields are invisible" do
+        let(:group_cf_visible) { false }
+
+        it "does not return the group custom field" do
           expect(subject).to be_empty
         end
       end
