@@ -29,8 +29,6 @@
 #++
 
 class UserCustomField < CustomField
-  includes Scopes::Scoped
-
   scopes :visible
 
   def type_name

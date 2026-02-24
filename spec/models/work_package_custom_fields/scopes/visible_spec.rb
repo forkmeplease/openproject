@@ -38,7 +38,9 @@ RSpec.describe WorkPackageCustomFields::Scopes::Visible do
     subject { WorkPackageCustomField.visible(user) }
 
     context "when the user has the select_custom_field_permission in any project" do
-      let!(:project_with_select_permissions) { create(:project, member_with_permissions: { user => :select_custom_fields }) }
+      let!(:project_with_select_permissions) { create(:project) }
+      let(:user) { create(:user, member_with_permissions: { project_with_select_permissions => [:select_custom_fields] }) }
+
 
       it "returns all custom fields" do
         expect(subject).to contain_exactly(type_enabled_and_member_cf,

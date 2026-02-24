@@ -46,8 +46,6 @@ class ProjectCustomField < CustomField
   has_one :role, through: :custom_fields_role
   accepts_nested_attributes_for :custom_fields_role, allow_destroy: true
 
-  include Scopes::Scoped
-
   scopes :visible
 
   scope :user_field_with_assigned_role, -> do

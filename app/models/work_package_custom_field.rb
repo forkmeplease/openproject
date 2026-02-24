@@ -40,8 +40,6 @@ class WorkPackageCustomField < CustomField
            source: :customized,
            source_type: "WorkPackage"
 
-  include Scopes::Scoped
-
   scopes :visible,
          :on_visible_type_and_project
 
