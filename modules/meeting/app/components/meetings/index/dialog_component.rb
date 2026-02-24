@@ -52,7 +52,7 @@ module Meetings
 
     def title
       return I18n.t(:label_meeting_template_new) if @template
-      return I18n.t(:label_meeting_duplicate) if @copy_from
+      return I18n.t(:label_meeting_duplicate) if @copy_from && !@copy_from.onetime_template?
       return I18n.t(:label_meeting_edit) if @meeting.persisted?
 
       case @meeting

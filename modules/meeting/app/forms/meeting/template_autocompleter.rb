@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -27,61 +28,39 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Meetings
-  class Index::FormComponent < ApplicationComponent
-    include ApplicationHelper
-    include OpTurbo::Streamable
-    include OpPrimer::ComponentHelpers
-
-    def initialize(meeting:, project:, copy_from: nil, template: false)
-      super
-
-      @meeting = meeting
-      @project = project
-      @copy_from = copy_from
-      @template = template
-    end
-
-    private
-
-    def form_controller
-      return "meeting_templates" if @template
-
-      if @meeting.is_a?(RecurringMeeting)
-        "/recurring_meetings"
-      else
-        "/meetings"
+class Meeting::TemplateAutocompleter < ApplicationForm
+  form do |f|
+    f.autocompleter(
+      name: :template_id,
+      label: I18n.t(:label_meeting_template),
+      caption: I18n.t(:caption_meeting_template_select),
+      autocomplete_options: {
+        decorated: true,
+        defaultData: false,
+        multiple: false,
+        appendTo: "#new-meeting-dialog",
+        data: {
+          "test-selector": "template_id"
+        }
+      }
+    ) do |select|
+      templates.each do |template|
+        select.option(
+          value: template.id,
+          label: template.title
+        )
       end
     end
+  end
 
-    def form_method
-      if @meeting.new_record?
-        :post
-      else
-        :put
-      end
-    end
+  def initialize(project:)
+    super()
+    @project = project
+  end
 
-    def form_action
-      if @meeting.new_record?
-        :create
-      else
-        :update
-      end
-    end
+  private
 
-    def creating_onetime_meeting?
-      !@meeting.persisted? && !@meeting.is_a?(RecurringMeeting) && !@template
-    end
-
-    def no_preselection?
-      !@copy_from
-    end
-
-    def available_templates
-      return [] unless @project
-
-      @available_templates ||= Meeting.onetime_templates.where(project: @project).visible
-    end
+  def templates
+    Meeting.onetime_templates.where(project: @project).visible.order(:title)
   end
 end

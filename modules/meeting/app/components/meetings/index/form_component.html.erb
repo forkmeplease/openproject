@@ -35,6 +35,12 @@
           end
         end
 
+        if creating_onetime_meeting? && no_preselection? && available_templates.any?
+          modal_body.with_row(mb: 3) do
+            render(Meeting::TemplateAutocompleter.new(f, project: @project))
+          end
+        end
+
         unless @template
           modal_body.with_row do
             render(Meeting::Title.new(f))
@@ -125,16 +131,18 @@
             render(Meeting::CopiedFrom.new(f, id: @copy_from.id))
           end
 
-          modal_body.with_row(mt: 3) do
-            render(Meeting::CopyItems.new(f))
-          end
+          unless @copy_from.onetime_template?
+            modal_body.with_row(mt: 3) do
+              render(Meeting::CopyItems.new(f))
+            end
 
-          modal_body.with_row(mt: 3) do
-            render(Meeting::CopyParticipants.new(f))
-          end
+            modal_body.with_row(mt: 3) do
+              render(Meeting::CopyParticipants.new(f))
+            end
 
-          modal_body.with_row(mt: 3) do
-            render(Meeting::CopyAttachments.new(f))
+            modal_body.with_row(mt: 3) do
+              render(Meeting::CopyAttachments.new(f))
+            end
           end
         end
 

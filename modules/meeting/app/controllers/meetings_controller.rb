@@ -155,7 +155,8 @@ class MeetingsController < ApplicationController
   def new_dialog
     respond_with_dialog Meetings::Index::DialogComponent.new(
       meeting: @meeting,
-      project: @project
+      project: @project,
+      copy_from: @copy_from
     )
   end
 
@@ -433,7 +434,7 @@ class MeetingsController < ApplicationController
     end
   end
 
-  def build_meeting
+  def build_meeting # rubocop:disable Metrics/AbcSize
     meeting =
       if params[:type] == "recurring"
         RecurringMeeting.new
@@ -447,6 +448,9 @@ class MeetingsController < ApplicationController
       .call(project: @project)
 
     @meeting = call.result
+
+    # When coming from the "Create from template" button, load the template to hide the form field
+    @copy_from = Meeting.onetime_templates.visible.find_by(id: params[:template_id]) if params[:template_id].present?
   end
 
   def global_upcoming_meetings
@@ -484,6 +488,9 @@ class MeetingsController < ApplicationController
 
     # Recurring meeting occurrences can only be copied as one-time meetings
     @converted_params[:recurring_meeting_id] = nil
+
+    # Onetime templates can only be copied as one-time meetings
+    @converted_params[:template] = false if @copy_from&.onetime_template?
   end
 
   def meeting_params
@@ -534,18 +541,40 @@ class MeetingsController < ApplicationController
   end
 
   def find_copy_from_meeting
-    copied_from_meeting_id = params[:copied_from_meeting_id] || params[:meeting][:copied_from_meeting_id]
+    # Check for template selection from form submission
+    template_id = params[:meeting][:template_id]
+    if template_id.present?
+      @copy_from = Meeting.onetime_templates.visible.find_by(id: template_id)
+      return
+    end
+
+    # Check for regular copy
+    copied_from_meeting_id = params[:meeting][:copied_from_meeting_id]
     return unless copied_from_meeting_id
 
     @copy_from = Meeting.visible.find(copied_from_meeting_id)
   end
 
   def copy_attributes
-    {
-      copy_agenda: copy_param(:copy_agenda),
-      copy_attachments: copy_param(:copy_attachments),
-      send_notifications: @converted_params[:send_notifications]
-    }
+    if @copy_from&.onetime_template?
+      {
+        copy_agenda: true,
+        copy_attachments: true,
+        send_notifications: @converted_params[:send_notifications]
+      }
+    elsif @copy_from&.series_template?
+      {
+        copy_agenda: true,
+        copy_attachments: false,
+        send_notifications: @converted_params[:send_notifications]
+      }
+    else
+      {
+        copy_agenda: copy_param(:copy_agenda),
+        copy_attachments: copy_param(:copy_attachments),
+        send_notifications: @converted_params[:send_notifications]
+      }
+    end
   end
 
   def prevent_series_template_destruction
