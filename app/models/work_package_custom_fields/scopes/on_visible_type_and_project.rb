@@ -34,12 +34,10 @@ module WorkPackageCustomFields::Scopes
 
     class_methods do
       def on_visible_type_and_project(user = User.current)
-        with(
-          visible_projects: Project.visible(user)
-        ).where(<<~SQL.squish)
+        where(<<~SQL.squish)
           EXISTS (
             SELECT 1
-            FROM visible_projects vp
+            FROM (#{Project.visible(user).select(:id).to_sql}) vp
             JOIN projects_types pt
               ON pt.project_id = vp.id
             JOIN custom_fields_types cft
