@@ -50,7 +50,7 @@ RSpec.describe "Navigate to overview", :js do
     end
 
     within "#content" do
-      expect(page).to have_heading "Project home"
+      expect(page).to have_heading project.name
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe "Navigate to overview", :js do
 
       # Expect page to be loaded
       within "#content" do
-        expect(page).to have_heading "Project home"
+        expect(page).to have_heading project.name
       end
 
       # Navigate to the WP module
@@ -90,7 +90,7 @@ RSpec.describe "Navigate to overview", :js do
         expect(page).to have_field("editable-toolbar-title", with: query.name)
 
         # Expect no page header of the Overview to be shown any more
-        expect(page).to have_no_heading "Project home"
+        expect(page).to have_no_heading project.name
       end
 
       # Navigate back to the Overview page
