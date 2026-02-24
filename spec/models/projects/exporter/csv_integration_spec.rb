@@ -36,8 +36,10 @@ RSpec.describe Projects::Exports::CSV, "integration" do
   include_context "with an instance of the described exporter"
 
   let(:parsed) do
-    CSV.parse(output)
+    CSV.parse(output.delete_prefix(utf8_bom))
   end
+
+  let(:utf8_bom) { "\xEF\xBB\xBF" }
 
   let(:header) { parsed.first }
 
@@ -46,6 +48,10 @@ RSpec.describe Projects::Exports::CSV, "integration" do
   it "performs a successful export" do
     expect(parsed.size).to eq(2)
     expect(parsed.last).to eq [project.name, project.description, "Off track", "false"]
+  end
+
+  it "starts with a UTF-8 BOM" do
+    expect(output).to start_with(utf8_bom)
   end
 
   context "with status_explanation enabled" do
@@ -84,7 +90,7 @@ RSpec.describe Projects::Exports::CSV, "integration" do
       it "does not render project custom fields in the header" do
         expect(parsed.size).to eq 2
 
-        expect(header).to eq ["\xEF\xBB\xBFName", "Description", "Status", "Public"]
+        expect(header).to eq ["Name", "Description", "Status", "Public"]
       end
 
       it "does not render the custom field values in the rows if enabled for a project" do
@@ -102,7 +108,7 @@ RSpec.describe Projects::Exports::CSV, "integration" do
         expect(cf_names).not_to include(not_used_string_cf.name)
         expect(cf_names).not_to include(hidden_cf.name)
 
-        expect(header).to eq ["\xEF\xBB\xBFName", "Description", "Status", "Public", *cf_names]
+        expect(header).to eq ["Name", "Description", "Status", "Public", *cf_names]
       end
 
       it "renders the custom field values in the rows if enabled for a project" do
@@ -134,7 +140,7 @@ RSpec.describe Projects::Exports::CSV, "integration" do
         expect(cf_names).to include(not_used_string_cf.name)
         expect(cf_names).to include(hidden_cf.name)
 
-        expect(header).to eq ["\xEF\xBB\xBFName", "Description", "Status", "Public", *cf_names]
+        expect(header).to eq ["Name", "Description", "Status", "Public", *cf_names]
       end
 
       it "renders the custom field values in the rows if enabled for a project" do
