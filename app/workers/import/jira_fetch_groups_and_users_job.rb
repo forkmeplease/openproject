@@ -37,7 +37,6 @@ module Import
         @jira_client = jira_client
         @group_name = group_name
         @page = @jira_client.group_members(group_name:, start_at: cursor, max_results: page_size)
-        # File.open("progress.txt", "a") { |f| f.write("group: #{group_name}\n") }
         # Jira DC has it is own page limit configuration.
         # Therefore it makes sense to respect it.
         server_page_size = @page["maxResults"]
@@ -61,7 +60,6 @@ module Import
 
           @cursor += @page_size
           @page = @jira_client.group_members(group_name: @group_name, start_at: @cursor, max_results: @page_size)
-          # File.open("progress.txt", "a") { |f| f.write("#{object_id} group: #{@group_name}\n") }
           # Jira DC has it is own page limit configuration.
           # Therefore it makes sense to respect it.
           server_page_size = @page["maxResults"]
@@ -85,7 +83,6 @@ module Import
       block.call
       jira_import = Import::JiraImport.find(job.arguments.first)
       jira_import.update_column(:cursor, cursor_position)
-      # File.open("progress.txt", "a") { |f| f.write("cursor: #{cursor_position}\n") }
     end
 
     rescue_from(StandardError) do |e|
