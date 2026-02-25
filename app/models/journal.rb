@@ -77,6 +77,7 @@ class Journal < ApplicationRecord
                  %i[
                    type
                    feature
+                   import_history
                    work_package_id
                    changed_days
                    status_name
