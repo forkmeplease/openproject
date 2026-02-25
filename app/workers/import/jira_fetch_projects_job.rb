@@ -35,7 +35,7 @@ module Import
       project_ids = jira_import.project_ids
       jira = jira_import.jira
       jira_id = jira.id
-      updated_at = Time.now
+      updated_at = Time.zone.now
       created_at = updated_at
       jira_client = Import::JiraClient.new(url: jira.url, personal_access_token: jira.personal_access_token)
 
@@ -51,7 +51,7 @@ module Import
           updated_at:
         }
       end
-      Import::JiraIssueType.upsert_all(issue_types_upsert_data, unique_by: [:jira_id, :jira_issue_type_id])
+      Import::JiraIssueType.upsert_all(issue_types_upsert_data, unique_by: %i[jira_id jira_issue_type_id])
 
       # PRIORITIES SYNC
       priorities = jira_client.priorities
@@ -65,7 +65,7 @@ module Import
           updated_at:
         }
       end
-      Import::JiraPriority.upsert_all(priorities_upsert_data, unique_by: [:jira_id, :jira_priority_id])
+      Import::JiraPriority.upsert_all(priorities_upsert_data, unique_by: %i[jira_id jira_priority_id])
 
       # STATUSES SYNC
       statuses = jira_client.statuses
@@ -79,7 +79,7 @@ module Import
           updated_at:
         }
       end
-      Import::JiraStatus.upsert_all(statuses_upsert_data, unique_by: [:jira_id, :jira_status_id])
+      Import::JiraStatus.upsert_all(statuses_upsert_data, unique_by: %i[jira_id jira_status_id])
 
       # PROJECTS SYNC
       projects_upsert_data = jira_client.projects.map do |p|
@@ -92,10 +92,10 @@ module Import
           updated_at:
         }
       end
-      Import::JiraProject.upsert_all(projects_upsert_data, unique_by: [:jira_id, :jira_project_id])
+      Import::JiraProject.upsert_all(projects_upsert_data, unique_by: %i[jira_id jira_project_id])
 
       # ISSUES SYNC
-      Import::JiraProject.where(jira_id:, jira_project_id: project_ids).each do |jira_project|
+      Import::JiraProject.where(jira_id:, jira_project_id: project_ids).find_each do |jira_project|
         jql = "project=#{jira_project.payload['key']}"
         result = jira_client.issues(jql:,
                                     start_at: 0,
@@ -114,7 +114,7 @@ module Import
             updated_at:
           }
         end
-        Import::JiraIssue.upsert_all(issues_upsert_data, unique_by: [:jira_id, :jira_issue_id])
+        Import::JiraIssue.upsert_all(issues_upsert_data, unique_by: %i[jira_id jira_issue_id])
         while total > start_at + max_results
           start_at += max_results
           result = jira_client.issues(jql:,
@@ -134,7 +134,7 @@ module Import
               updated_at:
             }
           end
-          Import::JiraIssue.upsert_all(issues_upsert_data, unique_by: [:jira_id, :jira_issue_id])
+          Import::JiraIssue.upsert_all(issues_upsert_data, unique_by: %i[jira_id jira_issue_id])
         end
       end
     end

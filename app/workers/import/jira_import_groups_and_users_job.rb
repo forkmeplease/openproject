@@ -68,7 +68,7 @@ module Import
       call = Users::CreateService
                .new(user: User.system)
                .call(jira_user.to_op_attributes)
-      call.on_success do |result|
+      call.on_success do |_result|
         create_reference!(
           op_leg: call.result,
           jira_leg: jira_user,
@@ -76,7 +76,7 @@ module Import
           uses_existing: false
         )
       end
-      call.on_failure do |result|
+      call.on_failure do |_result|
         if call.errors.find { |error| error.type == :taken }.present?
           user = jira_user.try_to_find_existing_op_users.first
           if user.present?
@@ -94,9 +94,7 @@ module Import
         end
       end
 
-      jira_user_groups = jira_user.payload["groups"]["items"].map do |item|
-        item["name"]
-      end
+      jira_user_groups = jira_user.payload["groups"]["items"].pluck("name")
 
       jira_user_groups.each do |group_name|
         call = Groups::CreateService
@@ -111,7 +109,7 @@ module Import
             uses_existing: false
           )
         end
-        call.on_failure do |result|
+        call.on_failure do |_result|
           if call.errors.find { |error| error.type == :taken }.present?
             group = Group.where(name: group_name).first
             if group.present?
@@ -132,7 +130,7 @@ module Import
           jira_import_id:,
           jira_entity_id: jira_user.id,
           jira_entity_class: jira_user.class.to_s
-        ).pluck(:op_entity_id).first
+        ).pick(:op_entity_id)
         group = Group.find_by!(name: group_name)
         Groups::AddUsersService
           .new(group, current_user: User.system)

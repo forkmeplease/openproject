@@ -78,13 +78,13 @@ module Import
     transition from: GROUPS_AND_USERS_FETCHING,  to: [GROUPS_AND_USERS_FETCHING_ERROR,
                                                       GROUPS_AND_USERS_FETCHING_CANCELLING,
                                                       GROUPS_AND_USERS_FETCHING_DONE]
-    transition from: GROUPS_AND_USERS_FETCHING_CANCELLING,  to: [GROUPS_AND_USERS_FETCHING_CANCELLED]
+    transition from: GROUPS_AND_USERS_FETCHING_CANCELLING, to: [GROUPS_AND_USERS_FETCHING_CANCELLED]
     transition from: GROUPS_AND_USERS_FETCHING_ERROR, to: [GROUPS_AND_USERS_FETCHING]
     transition from: GROUPS_AND_USERS_FETCHING_DONE,  to: [GROUPS_AND_USERS_IMPORTING]
-    transition from: GROUPS_AND_USERS_IMPORTING,  to: [GROUPS_AND_USERS_IMPORTING_ERROR,
-                                                       GROUPS_AND_USERS_IMPORTING_DONE]
-    transition from: GROUPS_AND_USERS_IMPORTING_ERROR,  to: [GROUPS_AND_USERS_IMPORTING]
-    transition from: GROUPS_AND_USERS_IMPORTING_DONE,  to: [IMPORT_SCOPE]
+    transition from: GROUPS_AND_USERS_IMPORTING, to: [GROUPS_AND_USERS_IMPORTING_ERROR,
+                                                      GROUPS_AND_USERS_IMPORTING_DONE]
+    transition from: GROUPS_AND_USERS_IMPORTING_ERROR, to: [GROUPS_AND_USERS_IMPORTING]
+    transition from: GROUPS_AND_USERS_IMPORTING_DONE, to: [IMPORT_SCOPE]
     transition from: IMPORT_SCOPE,           to: [CONFIGURING]
     transition from: CONFIGURING,            to: [PROJECTS_META_FETCHING]
     transition from: PROJECTS_META_FETCHING, to: [PROJECTS_META_DONE, PROJECTS_META_ERROR]
@@ -98,35 +98,35 @@ module Import
     transition from: REVERT_CANCELLED,       to: [REVERTING]
     transition from: REVERT_ERROR,           to: [REVERTING]
 
-    after_transition(to: :groups_and_users_fetching) do |jira_import, transition|
+    after_transition(to: :groups_and_users_fetching) do |jira_import, _transition|
       Import::JiraFetchGroupsAndUsersJob.perform_later(jira_import.id)
     end
 
-    after_transition(to: :groups_and_users_importing) do |jira_import, transition|
+    after_transition(to: :groups_and_users_importing) do |jira_import, _transition|
       Import::JiraImportGroupsAndUsersJob.perform_later(jira_import.id)
     end
 
-    after_transition(to: :groups_and_users_fetching_done) do |jira_import, transition|
+    after_transition(to: :groups_and_users_fetching_done) do |jira_import, _transition|
       jira_import.update_column(:cursor, nil)
     end
 
-    after_transition(to: :groups_and_users_importing_done) do |jira_import, transition|
+    after_transition(to: :groups_and_users_importing_done) do |jira_import, _transition|
       jira_import.update_column(:cursor, nil)
     end
 
-    after_transition(to: :reverted) do |jira_import, transition|
+    after_transition(to: :reverted) do |jira_import, _transition|
       jira_import.update_column(:cursor, nil)
     end
 
-    after_transition(to: :instance_meta_fetching) do |jira_import, transition|
+    after_transition(to: :instance_meta_fetching) do |jira_import, _transition|
       Import::JiraInstanceMetaDataJob.perform_later(jira_import.id)
     end
 
-    after_transition(to: :projects_meta_fetching) do |jira_import, transition|
+    after_transition(to: :projects_meta_fetching) do |jira_import, _transition|
       Import::JiraProjectsMetaDataJob.perform_later(jira_import.id)
     end
 
-    after_transition(to: :importing) do |jira_import, transition|
+    after_transition(to: :importing) do |jira_import, _transition|
       Import::JiraFetchAndImportProjectsJob.perform_later(jira_import.id)
     end
 

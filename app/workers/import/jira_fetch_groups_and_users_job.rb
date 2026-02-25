@@ -33,7 +33,7 @@ module Import
     include JobIteration::Iteration
 
     class GroupMembersEnumerator
-      def initialize(jira_client, group_name:, page_size: 30, cursor:)
+      def initialize(jira_client, group_name:, cursor:, page_size: 30)
         @jira_client = jira_client
         @group_name = group_name
         @page = @jira_client.group_members(group_name:, start_at: cursor, max_results: page_size)
@@ -41,10 +41,10 @@ module Import
         # Jira DC has it is own page limit configuration.
         # Therefore it makes sense to respect it.
         server_page_size = @page["maxResults"]
-        @page_size = if server_page_size != page_size
-                       server_page_size
-                     else
+        @page_size = if server_page_size == page_size
                        page_size
+                     else
+                       server_page_size
                      end
         @cursor = cursor || 0
       end
@@ -65,10 +65,10 @@ module Import
           # Jira DC has it is own page limit configuration.
           # Therefore it makes sense to respect it.
           server_page_size = @page["maxResults"]
-          @page_size = if @page_size != server_page_size
-                         server_page_size
-                       else
+          @page_size = if @page_size == server_page_size
                          @page_size
+                       else
+                         server_page_size
                        end
 
           break if @page["isLast"]
@@ -98,7 +98,7 @@ module Import
 
     def build_enumerator(jira_import_id, cursor:)
       jira_import = Import::JiraImport.find(jira_import_id)
-      group_names = jira_import.client.groups["groups"].map { |g| g["name"] }
+      group_names = jira_import.client.groups["groups"].pluck("name")
       enumerator_builder.nested(
         [
           ->(cursor) { enumerator_builder.array(group_names, cursor:) },
@@ -121,7 +121,7 @@ module Import
     def each_iteration(users_batch, jira_import_id)
       jira_import = Import::JiraImport.find(jira_import_id)
       jira_client = jira_import.client
-      updated_at = Time.now
+      updated_at = Time.zone.now
       created_at = updated_at
       users_upsert_data = users_batch.map do |jira_user|
         jira_user_key = jira_user.fetch("key")
@@ -137,7 +137,7 @@ module Import
           updated_at:
         }
       end
-      Import::JiraUser.upsert_all(users_upsert_data, unique_by: [:jira_id, :jira_user_key])
+      Import::JiraUser.upsert_all(users_upsert_data, unique_by: %i[jira_id jira_user_key])
     end
   end
 end

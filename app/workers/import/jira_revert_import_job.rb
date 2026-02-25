@@ -83,9 +83,9 @@ module Import
         .where(jira_import_id: @jira_import.id)
         .where(op_entity_class: "Project")
         .find_each do |ref|
-        op_leg = ref.op_leg
-        service_call = ::Projects::DeleteService.new(user: @user, model: op_leg).call
-        raise service_call.message if service_call.failure?
+          op_leg = ref.op_leg
+          service_call = ::Projects::DeleteService.new(user: @user, model: op_leg).call
+          raise service_call.message if service_call.failure?
       end
     end
 
@@ -94,9 +94,9 @@ module Import
         .where(jira_import_id: @jira_import.id)
         .where(op_entity_class: ["Type", "IssuePriority", "Status"])
         .find_each do |ref|
-        op_leg = ref.op_leg
-        uses_existing = ref.uses_existing
-        op_leg.destroy! unless uses_existing
+          op_leg = ref.op_leg
+          uses_existing = ref.uses_existing
+          op_leg.destroy! unless uses_existing
       end
     end
 
@@ -105,10 +105,10 @@ module Import
         .where(jira_import_id: @jira_import.id)
         .where(op_entity_class: "User")
         .find_each do |ref|
-        op_leg = ref.op_leg
-        # EmptyContract is used to make deletion not dependent on Setting.users_deletable_by_admins
-        service_call = ::Users::DeleteService.new(user: @user, model: op_leg, contract_class: EmptyContract).call
-        raise service_call.message if service_call.failure?
+          op_leg = ref.op_leg
+          # EmptyContract is used to make deletion not dependent on Setting.users_deletable_by_admins
+          service_call = ::Users::DeleteService.new(user: @user, model: op_leg, contract_class: EmptyContract).call
+          raise service_call.message if service_call.failure?
       end
     end
 
@@ -117,9 +117,9 @@ module Import
         .where(jira_import_id: @jira_import.id)
         .where(op_entity_class: "Group")
         .find_each do |ref|
-        op_leg = ref.op_leg
-        service_call = ::Groups::DeleteService.new(user: @user, model: op_leg).call
-        raise service_call.message if service_call.failure?
+          op_leg = ref.op_leg
+          service_call = ::Groups::DeleteService.new(user: @user, model: op_leg).call
+          raise service_call.message if service_call.failure?
       end
     end
 
@@ -128,9 +128,9 @@ module Import
         .where(jira_import_id: @jira_import.id)
         .where(op_entity_class: "ProjectRole")
         .find_each do |ref|
-        op_leg = ref.op_leg
-        service_call = ::Roles::DeleteService.new(user: @user, model: op_leg).call
-        raise service_call.message if service_call.failure?
+          op_leg = ref.op_leg
+          service_call = ::Roles::DeleteService.new(user: @user, model: op_leg).call
+          raise service_call.message if service_call.failure?
       end
     end
 

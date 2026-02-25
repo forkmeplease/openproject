@@ -40,8 +40,8 @@ module Import
     end
 
     def to_op_attributes
-      firstname = payload["displayName"].split(" ")[0..-2].join(" ")
-      lastname = payload["displayName"].split(" ")[-1]
+      firstname = payload["displayName"].split[0..-2].join(" ")
+      lastname = payload["displayName"].split[-1]
       {
         login: payload["name"],
         password: SecureRandom.uuid,

@@ -132,7 +132,7 @@ class JiraProjectCreator
     "This is a duplicate of the %s issue.",
     "Closing as won't fix. The %s behavior is expected.",
     "Reopening this - the fix didn't fully address %s.",
-    "Updated the priority based on customer feedback.",
+    "Updated the priority based on customer feedback."
   ].freeze
 
   PROJECT_CATEGORIES = [
@@ -496,15 +496,14 @@ class JiraProjectCreator
       created_users = create_users(num_users)
       @users += created_users
       puts "Created #{created_users.length.to_s.green} users"
-      puts
     else
       # Fetch existing users to use for assignments
       puts "Fetching existing users...".cyan
       existing_users = @dry_run ? sample_users : fetch_users
       @users += existing_users
       puts "Found #{existing_users.length.to_s.green} existing users"
-      puts
     end
+    puts
 
     # Fetch available statuses
     statuses = @dry_run ? sample_statuses : fetch_statuses
@@ -626,7 +625,8 @@ class JiraProjectCreator
     begin
       result = post("/rest/api/2/user", payload)
       # Store password for later use with basic auth (for comments)
-      { "name" => result["name"], "displayName" => result["displayName"], "emailAddress" => result["emailAddress"], "password" => password }
+      { "name" => result["name"], "displayName" => result["displayName"], "emailAddress" => result["emailAddress"],
+        "password" => password }
     rescue StandardError => e
       puts "⚠ Warning:".yellow + " Could not create user #{username}: #{e.message}"
       nil
@@ -666,9 +666,12 @@ class JiraProjectCreator
 
   def sample_users
     [
-      { "name" => "john.smith", "displayName" => "John Smith", "emailAddress" => "john.smith@example.com", "password" => "password123" },
-      { "name" => "jane.doe", "displayName" => "Jane Doe", "emailAddress" => "jane.doe@example.com", "password" => "password123" },
-      { "name" => "bob.wilson", "displayName" => "Bob Wilson", "emailAddress" => "bob.wilson@example.com", "password" => "password123" }
+      { "name" => "john.smith", "displayName" => "John Smith", "emailAddress" => "john.smith@example.com",
+        "password" => "password123" },
+      { "name" => "jane.doe", "displayName" => "Jane Doe", "emailAddress" => "jane.doe@example.com",
+        "password" => "password123" },
+      { "name" => "bob.wilson", "displayName" => "Bob Wilson", "emailAddress" => "bob.wilson@example.com",
+        "password" => "password123" }
     ]
   end
 

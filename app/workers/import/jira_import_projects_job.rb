@@ -46,11 +46,11 @@ module Import
 
         service_call = Roles::CreateService.new(user:).call(
           name: "JiraMember",
-          permissions: [:add_work_packages,
-                        :view_work_packages,
-                        :add_work_package_comments,
-                        :add_work_package_attachments,
-                        :work_package_assigned]
+          permissions: %i[add_work_packages
+                          view_work_packages
+                          add_work_package_comments
+                          add_work_package_attachments
+                          work_package_assigned]
         )
         if service_call.success?
           create_reference!(
@@ -64,7 +64,7 @@ module Import
         end
         project_role = Role.find_by!(name: "JiraMember")
 
-        Import::JiraProject.where(jira_id:, jira_project_id: project_ids).each do |jira_project|
+        Import::JiraProject.where(jira_id:, jira_project_id: project_ids).find_each do |jira_project|
           ### PROJECT
           service_call = Projects::CreateService
                            .new(user:)
@@ -90,7 +90,7 @@ module Import
               jira_import:,
               uses_existing: false
             )
-            Import::JiraIssue.where(jira_id:, jira_project_id: jira_project.id).each do |jira_issue|
+            Import::JiraIssue.where(jira_id:, jira_project_id: jira_project.id).find_each do |jira_issue|
               ### TYPE
               issue_type = jira_issue.payload["fields"]["issuetype"]
               type = Type.where("LOWER(name) = LOWER(?)", issue_type["name"]).first

@@ -492,8 +492,9 @@ RSpec.describe Admin::Import::Jira::InstancesController do
 
       it "uses the stored token when personal_access_token param is blank" do
         post :test, params: { id: jira_with_token.id, url: "https://jira.example.com", personal_access_token: "" },
-             format: :turbo_stream
-        expect(Import::JiraClient).to have_received(:new).with(url: "https://jira.example.com", personal_access_token: "stored_token")
+                    format: :turbo_stream
+        expect(Import::JiraClient).to have_received(:new).with(url: "https://jira.example.com",
+                                                               personal_access_token: "stored_token")
       end
     end
 

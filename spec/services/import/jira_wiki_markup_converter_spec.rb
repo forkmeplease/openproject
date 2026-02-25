@@ -466,9 +466,9 @@ RSpec.describe Import::JiraWikiMarkupConverter do
       end
       let(:output) do
         "panel text\n" \
-        "panel text\n" \
-        "panel text\n" \
-        "panel text"
+          "panel text\n" \
+          "panel text\n" \
+          "panel text"
       end
 
       it "does produce all code blocks" do
