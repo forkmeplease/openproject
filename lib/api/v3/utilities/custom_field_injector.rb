@@ -147,6 +147,10 @@ module API
           custom_field.attribute_name(:camel_case).to_sym
         end
 
+        def comment_property_name(custom_field)
+          custom_field.comment_attribute_name(:camel_case).to_sym
+        end
+
         def inject_version_schema(custom_field)
           @class.schema_with_allowed_collection property_name(custom_field),
                                                 type: resource_type(custom_field),
@@ -211,7 +215,7 @@ module API
         def inject_comment_schema(custom_field)
           return unless custom_field.has_comment?
 
-          @class.schema custom_field.comment_attribute_name(:camel_case).to_sym,
+          @class.schema comment_property_name(custom_field),
                         type: "String",
                         name_source: ->(*) { I18n.t(:label_custom_comment, name: custom_field.name) },
                         required: false
@@ -283,7 +287,6 @@ module API
 
         def inject_property_value(custom_field, config)
           @class.property custom_field.attribute_name.to_sym,
-                          as: property_name(custom_field),
                           getter: property_value_getter_for(custom_field),
                           setter: property_value_setter_for(custom_field),
                           cache_if: config[:cache_if],
