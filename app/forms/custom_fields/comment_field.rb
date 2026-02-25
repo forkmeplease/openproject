@@ -46,7 +46,7 @@ module CustomFields
       {
         name: @custom_field.id.to_s,
         label: @complete_label ? I18n.t(:label_custom_comment, name: @custom_field.name) : I18n.t("attributes.comment"),
-        value: @custom_field.comment_for(@object)&.text,
+        value: @object.custom_comment_for(@custom_field)&.text,
         rows: 5
       }
     end
