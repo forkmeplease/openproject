@@ -39,11 +39,7 @@ module WorkPackages
 
         def initialize
           super
-          @projects_data = if Setting::WorkPackageIdentifier.alphanumeric?
-                             WorkPackages::ProjectHandleSuggestionGenerator.call
-                           else
-                             []
-                           end
+          @projects_data = WorkPackages::ProjectHandleSuggestionGenerator.call
         end
 
         def has_problematic_projects?
@@ -53,7 +49,7 @@ module WorkPackages
         private
 
         def show_autofix_section?
-          projects_data.any?
+          Setting::WorkPackageIdentifier.alphanumeric? && has_problematic_projects?
         end
       end
     end
