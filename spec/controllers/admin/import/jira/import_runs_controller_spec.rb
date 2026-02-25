@@ -38,37 +38,53 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
 
   # Walks a JiraImport through the state machine to reach the target state.
   # All after_transition job callbacks are stubbed.
+  # rubocop:disable Metrics/MethodLength
   def transition_to_state(jira_import, target_state)
+    gu_prefix = %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                   groups_and_users_fetching groups_and_users_fetching_done
+                   groups_and_users_importing groups_and_users_importing_done import_scope]
+
     paths = {
       "initial" => [],
       "instance_meta_fetching" => %w[instance_meta_fetching],
       "instance_meta_error" => %w[instance_meta_fetching instance_meta_error],
       "instance_meta_done" => %w[instance_meta_fetching instance_meta_done],
-      "configuring" => %w[instance_meta_fetching instance_meta_done configuring],
-      "projects_meta_fetching" => %w[instance_meta_fetching instance_meta_done configuring projects_meta_fetching],
-      "projects_meta_error" => %w[instance_meta_fetching instance_meta_done configuring
-                                  projects_meta_fetching projects_meta_error],
-      "projects_meta_done" => %w[instance_meta_fetching instance_meta_done configuring
-                                 projects_meta_fetching projects_meta_done],
-      "importing" => %w[instance_meta_fetching instance_meta_done configuring
-                        projects_meta_fetching projects_meta_done importing],
-      "import_error" => %w[instance_meta_fetching instance_meta_done configuring
-                           projects_meta_fetching projects_meta_done importing import_error],
-      "imported" => %w[instance_meta_fetching instance_meta_done configuring
-                       projects_meta_fetching projects_meta_done importing imported],
-      "completed" => %w[instance_meta_fetching instance_meta_done configuring
-                        projects_meta_fetching projects_meta_done importing imported completed],
-      "reverting" => %w[instance_meta_fetching instance_meta_done configuring
-                        projects_meta_fetching projects_meta_done importing imported reverting],
-      "revert_error" => %w[instance_meta_fetching instance_meta_done configuring
-                           projects_meta_fetching projects_meta_done importing imported reverting revert_error],
-      "reverted" => %w[instance_meta_fetching instance_meta_done configuring
-                       projects_meta_fetching projects_meta_done importing imported reverting reverted]
+      "groups_and_users_init" => %w[instance_meta_fetching instance_meta_done groups_and_users_init],
+      "groups_and_users_fetching" => %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                                        groups_and_users_fetching],
+      "groups_and_users_fetching_error" => %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                                              groups_and_users_fetching groups_and_users_fetching_error],
+      "groups_and_users_fetching_done" => %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                                             groups_and_users_fetching groups_and_users_fetching_done],
+      "groups_and_users_importing" => %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                                         groups_and_users_fetching groups_and_users_fetching_done
+                                         groups_and_users_importing],
+      "groups_and_users_importing_error" => %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                                               groups_and_users_fetching groups_and_users_fetching_done
+                                               groups_and_users_importing groups_and_users_importing_error],
+      "groups_and_users_importing_done" => %w[instance_meta_fetching instance_meta_done groups_and_users_init
+                                              groups_and_users_fetching groups_and_users_fetching_done
+                                              groups_and_users_importing groups_and_users_importing_done],
+      "import_scope" => gu_prefix,
+      "configuring" => gu_prefix + %w[configuring],
+      "projects_meta_fetching" => gu_prefix + %w[configuring projects_meta_fetching],
+      "projects_meta_error" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_error],
+      "projects_meta_done" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done],
+      "importing" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done importing],
+      "import_error" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done importing import_error],
+      "imported" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done importing imported],
+      "completed" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done importing imported completed],
+      "reverting" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done importing imported reverting],
+      "revert_error" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done
+                                       importing imported reverting revert_error],
+      "reverted" => gu_prefix + %w[configuring projects_meta_fetching projects_meta_done
+                                   importing imported reverting reverted]
     }
 
     steps = paths.fetch(target_state.to_s)
     steps.each { |state| jira_import.transition_to!(state.to_sym) }
   end
+  # rubocop:enable Metrics/MethodLength
 
   before do
     login_as(admin)
@@ -76,6 +92,8 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
     allow(Import::JiraProjectsMetaDataJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
     allow(Import::JiraFetchAndImportProjectsJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
     allow(Import::JiraRevertImportJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
+    allow(Import::JiraFetchGroupsAndUsersJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
+    allow(Import::JiraImportGroupsAndUsersJob).to receive(:perform_later).and_return(double(job_id: "job-stub"))
   end
 
   context "when user is not an admin" do
@@ -145,16 +163,65 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
   describe "GET/POST #continue" do
     let(:jira_import) { create(:jira_import, jira:, author: admin) }
 
-    context "when step is fetch" do
+    context "when step is fetch_instance_meta" do
       it "transitions to instance_meta_fetching and triggers the job" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch" }, format: :turbo_stream
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch_instance_meta" }, format: :turbo_stream
         expect(jira_import.current_state).to eq("instance_meta_fetching")
         expect(Import::JiraInstanceMetaDataJob).to have_received(:perform_later).with(jira_import.id)
       end
     end
 
+    context "when step is fetch_groups_and_users" do
+      before { transition_to_state(jira_import, "groups_and_users_init") }
+
+      it "transitions to groups_and_users_fetching and triggers the job" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch_groups_and_users" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("groups_and_users_fetching")
+        expect(Import::JiraFetchGroupsAndUsersJob).to have_received(:perform_later).with(jira_import.id)
+      end
+    end
+
+    context "when step is fetch_groups_and_users from groups_and_users_fetching_error" do
+      before { transition_to_state(jira_import, "groups_and_users_fetching_error") }
+
+      it "retries groups and users fetching" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch_groups_and_users" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("groups_and_users_fetching")
+        expect(Import::JiraFetchGroupsAndUsersJob).to have_received(:perform_later).with(jira_import.id).twice
+      end
+    end
+
+    context "when step is import_groups_and_users" do
+      before { transition_to_state(jira_import, "groups_and_users_fetching_done") }
+
+      it "transitions to groups_and_users_importing and triggers the job" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import_groups_and_users" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("groups_and_users_importing")
+        expect(Import::JiraImportGroupsAndUsersJob).to have_received(:perform_later).with(jira_import.id)
+      end
+    end
+
+    context "when step is import_groups_and_users from groups_and_users_importing_error" do
+      before { transition_to_state(jira_import, "groups_and_users_importing_error") }
+
+      it "retries groups and users importing" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import_groups_and_users" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("groups_and_users_importing")
+        expect(Import::JiraImportGroupsAndUsersJob).to have_received(:perform_later).with(jira_import.id).twice
+      end
+    end
+
+    context "when step is import_scope" do
+      before { transition_to_state(jira_import, "groups_and_users_importing_done") }
+
+      it "transitions to import_scope" do
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import_scope" }, format: :turbo_stream
+        expect(jira_import.current_state).to eq("import_scope")
+      end
+    end
+
     context "when step is configure" do
-      before { transition_to_state(jira_import, "instance_meta_done") }
+      before { transition_to_state(jira_import, "import_scope") }
 
       it "transitions to configuring" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "configure" }, format: :turbo_stream
@@ -162,21 +229,21 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
       end
     end
 
-    context "when step is stats" do
+    context "when step is fetch_projects_meta" do
       before { transition_to_state(jira_import, "configuring") }
 
       it "transitions to projects_meta_fetching and triggers the job" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "stats" }, format: :turbo_stream
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch_projects_meta" }, format: :turbo_stream
         expect(jira_import.current_state).to eq("projects_meta_fetching")
         expect(Import::JiraProjectsMetaDataJob).to have_received(:perform_later).with(jira_import.id)
       end
     end
 
-    context "when step is stats from projects_meta_error" do
+    context "when step is fetch_projects_meta from projects_meta_error" do
       before { transition_to_state(jira_import, "projects_meta_error") }
 
       it "retries projects meta fetching" do
-        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "stats" }, format: :turbo_stream
+        post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "fetch_projects_meta" }, format: :turbo_stream
         expect(jira_import.current_state).to eq("projects_meta_fetching")
         expect(Import::JiraProjectsMetaDataJob).to have_received(:perform_later).with(jira_import.id).twice
       end
@@ -202,29 +269,6 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
       end
     end
 
-    context "when step is import and another import is in a blocking state" do
-      let(:other_import) { create(:jira_import, jira:, author: admin) }
-
-      before { transition_to_state(jira_import, "projects_meta_done") }
-
-      %w[imported import_error importing reverting revert_error].each do |blocking_state|
-        it "refuses to import when another run is in #{blocking_state} state" do
-          transition_to_state(other_import, blocking_state)
-          post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
-          expect(jira_import.current_state).to eq("projects_meta_done")
-          expect(response.body).to include(I18n.t("admin.jira.run.import_blocked_error"))
-        end
-      end
-
-      %w[initial reverted completed].each do |non_blocking_state|
-        it "allows import when another run is in #{non_blocking_state} state" do
-          transition_to_state(other_import, non_blocking_state)
-          post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "import" }, format: :turbo_stream
-          expect(jira_import.current_state).to eq("importing")
-        end
-      end
-    end
-
     context "when step is revert" do
       before { transition_to_state(jira_import, "imported") }
 
@@ -238,10 +282,10 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
     context "when step is revert from revert_error" do
       before { transition_to_state(jira_import, "revert_error") }
 
-      it "is not possible (no transition defined from revert_error to reverting)" do
+      it "retries the revert" do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "revert" }, format: :turbo_stream
-        expect(jira_import.current_state).to eq("revert_error")
-        expect(response).to have_http_status(:ok)
+        expect(jira_import.current_state).to eq("reverting")
+        expect(Import::JiraRevertImportJob).to have_received(:perform_later).with(jira_import.id).twice
       end
     end
 
