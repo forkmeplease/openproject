@@ -67,6 +67,21 @@ module OpenProject
                        }
             },
             {
+              name: "working_hours",
+              partial: "users/working_hours/list",
+              path: ->(params) { user_working_hours_path(params[:user]) },
+              label: :label_working_hours,
+              only_if: ->(*) { User.current.allowed_globally?(:manage_working_times) }
+            },
+            {
+              name: "non_working_days",
+              partial: "users/non_working_days/list",
+              path: ->(params) { user_non_working_days_path(params[:user]) },
+              label: :label_non_working_days,
+              only_if: ->(*) { User.current.allowed_globally?(:manage_working_times) }
+            },
+
+            {
               name: "memberships",
               partial: "individual_principals/memberships",
               path: ->(params) { edit_user_path(params[:user], tab: :memberships) },

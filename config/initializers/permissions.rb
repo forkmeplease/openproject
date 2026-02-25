@@ -288,11 +288,17 @@ Rails.application.reloader.to_prepare do
                      require: :loggedin
 
       map.permission :manage_own_working_times,
-                     {},
+                     {
+                       "users/working_hours": %i[index create update destroy],
+                       "users/non_working_days": %i[index create destroy]
+                     },
                      permissible_on: :global
 
       map.permission :manage_working_times,
-                     {},
+                     {
+                       "users/working_hours": %i[index create update destroy],
+                       "users/non_working_days": %i[index create destroy]
+                     },
                      permissible_on: :global
     end
 
