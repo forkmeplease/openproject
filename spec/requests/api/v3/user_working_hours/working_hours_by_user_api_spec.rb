@@ -153,7 +153,7 @@ RSpec.describe API::V3::UserWorkingHours::WorkingHoursByUserAPI do
       end
     end
 
-    context "when 'me' as the user ID with manage_own_working_times permission" do
+    context "with 'me' as the user ID with manage_own_working_times permission" do
       let(:own_user) { create(:user, global_permissions: [:manage_own_working_times]) }
 
       current_user { own_user }

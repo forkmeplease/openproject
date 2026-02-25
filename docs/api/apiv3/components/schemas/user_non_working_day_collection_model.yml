@@ -1,0 +1,59 @@
+# Schema: UserNonWorkingDayCollectionModel
+---
+allOf:
+  - $ref: "./collection_model.yml"
+  - type: object
+    required:
+      - _links
+      - _embedded
+    properties:
+      _links:
+        type: object
+        required:
+          - self
+        properties:
+          self:
+            allOf:
+              - $ref: "./link.yml"
+              - description: |-
+                  This collection of non-working day records.
+                  **Resource**: UserNonWorkingDayCollectionModel
+      _embedded:
+        type: object
+        required:
+          - elements
+        properties:
+          elements:
+            type: array
+            description: |-
+              The array of personal non-working days for the user, ordered by date ascending.
+            items:
+              $ref: "./user_non_working_day_model.yml"
+
+example:
+  _type: Collection
+  total: 2
+  count: 2
+  _links:
+    self:
+      href: /api/v3/users/42/non_working_days
+  _embedded:
+    elements:
+      - _type: UserNonWorkingDay
+        id: 7
+        date: "2025-06-18"
+        _links:
+          self:
+            href: /api/v3/users/42/non_working_days/2025-06-16
+          user:
+            href: /api/v3/users/42
+            title: Jane Doe
+      - _type: UserNonWorkingDay
+        id: 8
+        date: "2025-12-24"
+        _links:
+          self:
+            href: /api/v3/users/42/non_working_days/2025-12-24
+          user:
+            href: /api/v3/users/42
+            title: Jane Doe

@@ -1,0 +1,75 @@
+# /api/v3/users/{id}/non_working_days/{date}
+---
+delete:
+  summary: Delete a personal non-working day
+  operationId: delete_user_non_working_day
+  tags:
+    - User Working Times
+  description: |-
+    Removes the personal non-working day for the given user and date.
+
+    **Required permissions:**
+    - Administrators can delete non-working days for any user.
+    - Users with the global `manage_own_working_times` permission can delete their own records.
+    - Users with the global `manage_working_times` permission can delete non-working days for any user.
+
+    Use `me` as the `id` to reference the current user.
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: |-
+        User id. Use `me` to reference the current user.
+      schema:
+        type: string
+      example: 42
+    - name: date
+      in: path
+      required: true
+      description: |-
+        The date of the personal non-working day to delete, in ISO 8601 format (YYYY-MM-DD).
+      schema:
+        type: string
+        format: date
+      example: "2025-06-16"
+  responses:
+    "204":
+      description: |-
+        No Content.
+        The record was deleted successfully.
+    "401":
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:Unauthenticated
+            message: You need to be authenticated to access this resource.
+      description: Returned if the client is not authenticated.
+    "403":
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+            message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** `manage_working_times` globally (for other users) or
+        `manage_own_working_times` globally (for own records).
+    "404":
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+            message: The requested resource could not be found.
+      description: |-
+        Returned if the user does not exist, is not visible to the requesting user,
+        or no personal non-working day exists for the given date.

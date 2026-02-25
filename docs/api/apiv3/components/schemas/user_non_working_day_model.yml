@@ -1,0 +1,52 @@
+# Schema: UserNonWorkingDayModel
+---
+type: object
+required:
+  - _type
+  - id
+  - date
+properties:
+  _type:
+    type: string
+    enum:
+      - UserNonWorkingDay
+  id:
+    type: integer
+    description: |-
+      The unique identifier of the non-working day record.
+    minimum: 1
+  date:
+    type: string
+    format: date
+    description: |-
+      The date of the non-working day in ISO 8601 format (YYYY-MM-DD).
+      Cannot coincide with a system-wide non-working day.
+  _links:
+    type: object
+    required:
+      - self
+      - user
+    properties:
+      self:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              This non-working day record.
+              **Resource**: UserNonWorkingDay
+      user:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The user this non-working day belongs to.
+              **Resource**: User
+
+example:
+  _type: UserNonWorkingDay
+  id: 7
+  date: '2025-06-16'
+  _links:
+    self:
+      href: /api/v3/users/42/non_working_days/2025-06-16
+    user:
+      href: /api/v3/users/42
+      title: Jane Doe

@@ -482,6 +482,14 @@ paths:
     "$ref": "./paths/user_form.yml"
   "/api/v3/users/{id}/lock":
     "$ref": "./paths/user_lock.yml"
+  "/api/v3/users/{id}/non_working_days":
+    "$ref": "./paths/user_non_working_days.yml"
+  "/api/v3/users/{id}/non_working_days/{date}":
+    "$ref": "./paths/user_non_working_days_date.yml"
+  "/api/v3/users/{id}/working_hours":
+    "$ref": "./paths/user_working_hours.yml"
+  "/api/v3/users/{id}/working_hours/{working_hours_id}":
+    "$ref": "./paths/user_working_hours_record.yml"
   "/api/v3/values/schema/{id}":
     "$ref": "./paths/values_schema.yml"
   "/api/v3/versions":
@@ -1003,8 +1011,16 @@ components:
       "$ref": "./components/schemas/user_create_model.yml"
     UserModel:
       "$ref": "./components/schemas/user_model.yml"
+    UserNonWorkingDayCollectionModel:
+      "$ref": "./components/schemas/user_non_working_day_collection_model.yml"
+    UserNonWorkingDayModel:
+      "$ref": "./components/schemas/user_non_working_day_model.yml"
     UserPreferencesModel:
       "$ref": "./components/schemas/user_preferences_model.yml"
+    UserWorkingHoursCollectionModel:
+      "$ref": "./components/schemas/user_working_hours_collection_model.yml"
+    UserWorkingHoursModel:
+      "$ref": "./components/schemas/user_working_hours_model.yml"
     ValuesPropertyModel:
       "$ref": "./components/schemas/values_property_model.yml"
     VersionCollectionModel:
@@ -1115,6 +1131,7 @@ tags:
   - "$ref": "./tags/types.yml"
   - "$ref": "./tags/userpreferences.yml"
   - "$ref": "./tags/users.yml"
+  - "$ref": "./tags/user_working_times.yml"
   - "$ref": "./tags/values_property.yml"
   - "$ref": "./tags/versions.yml"
   - "$ref": "./tags/views.yml"
