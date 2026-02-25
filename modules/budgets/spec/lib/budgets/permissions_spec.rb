@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -28,14 +30,12 @@
 
 require "spec_helper"
 
-RSpec.describe VersionSettingsHelper do
-  describe "#position_display_options" do
-    before do
-      @expected_options = [[I18n.t("version_settings_display_option_none"), 1],
-                           [I18n.t("version_settings_display_option_left"), 2],
-                           [I18n.t("version_settings_display_option_right"), 3]]
-    end
+RSpec.describe OpenProject::AccessControl, "Budgets module permissions" do # rubocop:disable RSpec/SpecFilePathFormat
+  describe "edit_budgets" do
+    subject { described_class.permission(:edit_budgets) }
 
-    it { expect(helper.send(:position_display_options)).to eql @expected_options }
+    it "depends on view_budgets" do
+      expect(subject.dependencies).to contain_exactly(:view_budgets)
+    end
   end
 end
