@@ -94,7 +94,7 @@ module Admin::Import::Jira
     end
 
     def jira_params
-      permitted = params.expect(jira: %i[name url personal_access_token])
+      permitted = params.expect(import_jira: %i[name url personal_access_token])
       if action_name == "update" && permitted[:personal_access_token].blank?
         permitted.delete(:personal_access_token)
       end

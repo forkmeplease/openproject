@@ -52,8 +52,8 @@ module Import
       jira_import.transition_to!(:instance_meta_done)
       jira_import.transition_to!(:groups_and_users_init)
     rescue StandardError => e
-      jira_import.transition_to!(:instance_meta_error, error: e.message)
-      jira_import.update!(job_id: nil, error: e.message)
+      jira_import&.transition_to!(:instance_meta_error, error: e.message)
+      jira_import&.update!(job_id: nil, error: e.message)
     end
 
     def collect_metadata(client)

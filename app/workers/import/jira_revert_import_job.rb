@@ -41,7 +41,6 @@ module Import
 
     def build_enumerator(jira_import_id, cursor:)
       @jira_import = Import::JiraImport.find(jira_import_id)
-      # File.open("progress.txt", "a") { |f| f.write("cursor1:#{cursor} --- cursor2:#{REVERT_STEPS.index(@jira_import.cursor&.to_sym)}\n") }
       # cursor ||= REVERT_STEPS.index(@jira_import.cursor&.to_sym)
       enumerator_builder.array(REVERT_STEPS, cursor:)
     rescue StandardError => e
@@ -58,7 +57,6 @@ module Import
         send(revert_step)
       end
       @jira_import.update_column(:cursor, revert_step)
-      # File.open("progress.txt", "a") { |f| f.write("#{self.class}:#{job_id}:#{revert_step}\n") }
     rescue StandardError => e
       @jira_import.transition_to!(:revert_error,
                                   job_id: job_id,
