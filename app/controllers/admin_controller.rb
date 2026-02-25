@@ -34,6 +34,7 @@ class AdminController < ApplicationController
 
   before_action :require_admin, except: %i[index]
   before_action :authorize_global, only: %i[index]
+  before_action :validate_email_settings, only: %i[test_email]
 
   menu_item :plugins, only: [:plugins]
   menu_item :info, only: [:info]
@@ -93,6 +94,16 @@ class AdminController < ApplicationController
   end
 
   private
+
+  def validate_email_settings
+    smtp_addr = ActionMailer::Base.smtp_settings[:address]
+
+    if !OpenProject::SsrfProtection.safe_ip_address(smtp_addr)
+      flash[:error] = I18n.t :notice_smtp_address_unsafe, address: smtp_addr
+
+      redirect_to admin_settings_mail_notifications_path, status: :see_other
+    end
+  end
 
   def hidden_admin_menu_items
     OpenProject::Configuration.hidden_menu_items[:admin_menu.to_s] || []

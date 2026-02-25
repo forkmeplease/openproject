@@ -130,4 +130,34 @@ RSpec.describe AdminController do
       expect(response).to render_template "info"
     end
   end
+
+  describe "#test_email" do
+    context "with an unsafe SMTP address" do
+      before do
+        allow(ActionMailer::Base).to receive(:smtp_settings).and_return({ address: "127.0.0.1" })
+
+        get :test_email
+      end
+
+      it "redirects back, showing an error" do
+        expect(response).to redirect_to admin_settings_mail_notifications_path
+        expect(flash[:error]).to match /OPENPROJECT_SSRF_PROTECTION_ALLOWLIST/
+      end
+    end
+
+    context "with an unsafe SMTP adress on the allowlist" do
+      before do
+        allow(OpenProject::Configuration).to receive(:ssrf_protection_ip_allowlist).and_return [IPAddr.new("127.0.0.1")]
+        allow(ActionMailer::Base).to receive(:smtp_settings).and_return({ address: "127.0.0.1" })
+
+        get :test_email
+      end
+
+      it "redirects back, showing an email has been sent" do
+        expect(response).to redirect_to admin_settings_mail_notifications_path
+
+        expect(flash[:notice]).to match /An email was sent/
+      end
+    end
+  end
 end

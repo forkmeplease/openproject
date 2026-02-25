@@ -1179,6 +1179,17 @@ module Settings
         default: 2000,
         writable: false
       },
+      ssrf_protection_ip_allowlist: {
+        description: "
+          Connections to certain IP addresses are blocked to prevent SSRF attacks.
+          Use this setting to explicitly allow given IP addresses which would otherwise be blocked.
+          Takes a list of IPv4 and IPv6 addresses (including masks for ranges), e.g. `192.168.255.255/16`.
+        ".squish,
+        format: :string,
+        default: "",
+        env_alias: "SSRF_PROTECTION_IP_ALLOWLIST",
+        writable: false
+      },
       start_of_week: {
         default: nil,
         format: :integer,
