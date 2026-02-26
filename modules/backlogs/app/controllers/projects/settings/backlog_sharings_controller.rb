@@ -31,6 +31,8 @@
 class Projects::Settings::BacklogSharingsController < Projects::SettingsController
   menu_item :settings_backlogs
 
+  before_action :check_scrum_projects_feature_flag
+
   def show; end
 
   def update
@@ -48,6 +50,10 @@ class Projects::Settings::BacklogSharingsController < Projects::SettingsControll
   end
 
   private
+
+  def check_scrum_projects_feature_flag
+    render_404 unless OpenProject::FeatureDecisions.scrum_projects_active?
+  end
 
   def backlog_settings_params
     params.expect(project: %i[sprint_sharing])
