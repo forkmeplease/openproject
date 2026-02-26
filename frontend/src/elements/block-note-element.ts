@@ -55,7 +55,12 @@ class BlockNoteElement extends HTMLElement {
     this.errorContainer.id = 'documents-show-edit-view-connection-error-notice-component';
     this.errorContainer.dataset.controller = 'flash';
     this.errorContainer.dataset.flashAutohideValue = 'true';
+
     this.mount = document.createElement('div');
+    const browserSpecificClasses = this.getAttribute('browser-specific-classes')?.split(' ') ?? [];
+    if (browserSpecificClasses.length > 0) {
+      this.mount.classList.add(...browserSpecificClasses);
+    }
 
     shadowRoot.appendChild(this.errorContainer);
     shadowRoot.appendChild(this.mount);
@@ -86,12 +91,17 @@ class BlockNoteElement extends HTMLElement {
     this.reactRoot = createRoot(this.mount);
 
     const collaborationEnabled = this.getAttribute('collaboration-enabled') === 'true';
-    if (collaborationEnabled) {
-      LiveCollaborationManager.onReady((hocuspocusProvider) =>
-        this.reactRoot?.render(this.BlockNoteReactContainer(hocuspocusProvider))
+
+    const render = (provider?:HocuspocusProvider) => {
+      this.reactRoot?.render(
+        React.createElement(React.StrictMode, null, this.BlockNoteReactContainer(provider))
       );
+    };
+
+    if (collaborationEnabled) {
+      LiveCollaborationManager.onReady(render);
     } else {
-      this.reactRoot.render(this.BlockNoteReactContainer());
+      render();
     }
   }
 

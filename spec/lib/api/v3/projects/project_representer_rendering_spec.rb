@@ -116,6 +116,10 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
     end
   end
 
+  it "fulfills the documented schema" do
+    expect(generated).to match_json_schema.from_docs("project_model")
+  end
+
   it { is_expected.to include_json("Project".to_json).at_path("_type") }
 
   describe "properties" do
@@ -129,6 +133,10 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
       context "for a portfolio" do
         let(:project) { build_stubbed(:portfolio) }
 
+        it "fulfills the documented schema" do
+          expect(generated).to match_json_schema.from_docs("portfolio_model")
+        end
+
         it_behaves_like "property", :_type do
           let(:value) { "Portfolio" }
         end
@@ -136,6 +144,10 @@ RSpec.describe API::V3::Projects::ProjectRepresenter, "rendering" do
 
       context "for a program" do
         let(:project) { build_stubbed(:program) }
+
+        it "fulfills the documented schema" do
+          expect(generated).to match_json_schema.from_docs("program_model")
+        end
 
         it_behaves_like "property", :_type do
           let(:value) { "Program" }
