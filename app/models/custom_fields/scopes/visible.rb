@@ -1,4 +1,6 @@
-#-- copyright
+# frozen_string_literal: true
+
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -24,12 +26,31 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class TimeEntryCustomField < CustomField
-  scopes :visible
+module CustomFields::Scopes
+  module Visible
+    extend ActiveSupport::Concern
 
-  def type_name
-    :label_spent_time
+    class_methods do
+      def visible(user = User.current)
+        known_subclasses
+          .inject(none) do |scope, klass|
+          scope.or(where(type: klass.name).and(klass.visible(user)))
+        end
+      end
+
+      def known_subclasses
+        # In dev/test without eager loading, subclasses might not be loaded.
+        if Rails.env.local?
+          CustomField
+            .group(:type)
+            .pluck(:type)
+            .map(&:safe_constantize)
+        end
+
+        CustomField.subclasses
+      end
+    end
   end
 end

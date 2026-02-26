@@ -1,4 +1,6 @@
-#-- copyright
+# frozen_string_literal: true
+
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -24,12 +26,19 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class TimeEntryCustomField < CustomField
-  scopes :visible
+require "spec_helper"
+require_relative "visible_setup"
 
-  def type_name
-    :label_spent_time
+RSpec.describe WorkPackageCustomFields::Scopes::OnVisibleTypeAndProject do
+  include_context "given a visible setup"
+
+  describe ".on_visible_type_and_project" do
+    subject { WorkPackageCustomField.on_visible_type_and_project(user) }
+
+    it "returns custom fields for types that are enabled in projects the user can see" do
+      expect(subject).to contain_exactly(type_enabled_and_member_cf, type_enabled_for_all_cf)
+    end
   end
 end

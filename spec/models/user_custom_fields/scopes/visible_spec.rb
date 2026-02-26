@@ -1,4 +1,6 @@
-#-- copyright
+# frozen_string_literal: true
+
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -24,12 +26,36 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class TimeEntryCustomField < CustomField
-  scopes :visible
+require "spec_helper"
 
-  def type_name
-    :label_spent_time
+RSpec.describe UserCustomFields::Scopes::Visible do
+  shared_let(:admin_only_user_cf) { create(:user_custom_field, admin_only: true) }
+  shared_let(:user_cf) { create(:user_custom_field, admin_only: false) }
+
+  shared_let(:admin) { create(:admin) }
+  shared_let(:user) { create(:user) }
+
+  describe ".visible" do
+    subject { UserCustomField.visible(current_user) }
+
+    current_user { build_stubbed(:user) }
+
+    context "for an admin" do
+      current_user { admin }
+
+      it "returns all custom fields" do
+        expect(subject).to contain_exactly(admin_only_user_cf, user_cf)
+      end
+    end
+
+    context "for a non admin" do
+      current_user { user }
+
+      it "returns only the non admin custom fields" do
+        expect(subject).to contain_exactly(user_cf)
+      end
+    end
   end
 end

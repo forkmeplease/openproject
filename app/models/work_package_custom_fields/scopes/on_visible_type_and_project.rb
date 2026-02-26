@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,39 +26,37 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class AttributeHelpText::WorkPackage < AttributeHelpText
-  def self.available_attributes
-    RequestStore.fetch(:attribute_help_text_work_package_attributes) do
-      attributes = ::Type.translated_work_package_form_attributes
+module WorkPackageCustomFields::Scopes
+  module OnVisibleTypeAndProject
+    extend ActiveSupport::Concern
 
-      # Start and finish dates are joined into a single field for non-milestones
-      attributes.delete "start_date"
-      attributes.delete "due_date"
-
-      # Status and project are currently special attribute that we need to add
-      attributes["status"] = WorkPackage.human_attribute_name "status"
-      attributes["project"] = WorkPackage.human_attribute_name "project"
-
-      attributes
+    class_methods do
+      # Returns custom fields that are defined for visible types and projects.
+      #
+      # For a custom field to be returned, it will have to be defined:
+      # * on a type which in turn is active in a project the user has access to
+      # * on a project the user has access to
+      # Both conditions need to be met on the same project.
+      def on_visible_type_and_project(user = User.current)
+        where(<<~SQL.squish)
+          EXISTS (
+            SELECT 1
+            FROM (#{Project.visible(user).select(:id).to_sql}) vp
+            JOIN projects_types pt
+              ON pt.project_id = vp.id
+            JOIN custom_fields_types cft
+              ON cft.type_id = pt.type_id
+             AND cft.custom_field_id = custom_fields.id
+            LEFT JOIN custom_fields_projects cfp
+              ON cfp.project_id = vp.id
+             AND cfp.custom_field_id = custom_fields.id
+            WHERE custom_fields.is_for_all = TRUE
+               OR cfp.custom_field_id IS NOT NULL
+          )
+        SQL
+      end
     end
-  end
-
-  validates :attribute_name, inclusion: { in: ->(*) { available_attributes.keys } }
-
-  def type_caption
-    I18n.t(:label_work_package)
-  end
-
-  def self.visible_condition(user)
-    visible_cf_names = WorkPackageCustomField
-      .visible(user)
-      .pluck(:id)
-      .map { |id| "custom_field_#{id}" }
-
-    ::AttributeHelpText
-      .where(attribute_name: visible_cf_names)
-      .or(::AttributeHelpText.where.not("attribute_name LIKE 'custom_field_%'"))
   end
 end
