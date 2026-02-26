@@ -93,7 +93,11 @@ RSpec.describe WorkPackages::ProjectHandleSuggestionGenerator do
       "Flight Planning Training" => "FPT",
       "A B C D E F G H I J K" => "ABCDEFGHIJ", # truncated to 10 chars
       "Cécile Martin" => "CM", # Unicode: "Cécile" is one word, not ["C","cile"]
-      "étude de cas" => "EDC" # Unicode: é→E via transliteration
+      "étude de cas" => "EDC", # Unicode: é→E via transliteration
+      # Non-Latin scripts have no transliteration entries (I18n.transliterate → "?").
+      # All initials are dropped and the name falls back to FALLBACK_HANDLE.
+      "日本語プロジェクト" => "PROJ", # Japanese: every initial → "?" → fallback
+      "Plan 日本" => "P" # Mixed: Latin "P" survives; "日" is dropped
     }.each do |project_name, expected_handle|
       it "generates '#{expected_handle}' from '#{project_name}'" do
         create(:project, identifier: "bad-id", name: project_name)
