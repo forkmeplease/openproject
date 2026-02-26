@@ -45,16 +45,12 @@ module Sprints
     end
 
     def set_sprint_name
-      model.change_by_system do
-        model.name ||= sprint_name_from_predecessor
-      end
+      model.name ||= sprint_name_from_predecessor
     end
 
     def set_status_and_sharing
-      model.change_by_system do
-        model.status ||= "in_planning"
-        model.sharing ||= "none"
-      end
+      model.status ||= "in_planning"
+      model.sharing ||= "none"
     end
 
     def next_name_in_succession(predecessor)
