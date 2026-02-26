@@ -53,7 +53,7 @@ class RbSprintsController < RbApplicationController
     call = Sprints::SetAttributesService.new(
       user: current_user,
       model: Agile::Sprint.new,
-      contract_class: Sprints::CreateContract
+      contract_class: EmptyContract
     ).call(attributes: converted_agile_sprint_params)
 
     update_via_turbo_stream(component: Backlogs::NewSprintFormComponent.new(sprint: call.result))

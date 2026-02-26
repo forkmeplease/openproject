@@ -37,10 +37,7 @@ module Backlogs
           name: :name,
           required: true,
           autofocus: true,
-          w: :full,
-          data: {
-            action: "change->refresh-on-form-changes#triggerTurboStream"
-          }
+          w: :full
         )
 
         # f.text_area(
@@ -48,10 +45,7 @@ module Backlogs
         #   name: :goal,
         #   required: false,
         #   w: :full,
-        #   rows: 3,
-        #   data: {
-        #     action: "change->refresh-on-form-changes#triggerTurboStream"
-        #   }
+        #   rows: 3
         # )
       end
     end
