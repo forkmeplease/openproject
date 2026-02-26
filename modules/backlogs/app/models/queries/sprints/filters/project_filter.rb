@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,30 +26,26 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module API
-  module V3
-    module Sprints
-      class SprintsAPI < ::API::OpenProjectAPI
-        resources :sprints do
-          before do
-            guard_feature_flag(:scrum_projects)
-          end
+class Queries::Sprints::Filters::ProjectFilter < Queries::Sprints::Filters::SprintFilter
+  def self.key
+    :defining_workspace
+  end
 
-          get &::API::V3::Utilities::Endpoints::Index
-                 .new(model: Agile::Sprint)
-                 .mount
+  def allowed_values
+    @allowed_values ||= ::Project.visible.pluck(:id).map { |id| [id, id.to_s] }
+  end
 
-          route_param :id, type: Integer, desc: "Sprint ID" do
-            after_validation do
-              @sprint = Agile::Sprint.visible(current_user).find(params[:id])
-            end
+  def type
+    :list
+  end
 
-            get &::API::V3::Utilities::Endpoints::Show.new(model: Agile::Sprint).mount
-          end
-        end
-      end
-    end
+  def type_strategy
+    @type_strategy ||= ::Queries::Filters::Strategies::IntegerList.new(self)
+  end
+
+  def where
+    operator_strategy.sql_for_field(values, self.class.model.table_name, :project_id)
   end
 end

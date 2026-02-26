@@ -145,7 +145,7 @@ module OpenProject::Backlogs
     patch_with_namespace :Versions, :RowComponent
 
     config.to_prepare do
-      next if Versions::BaseContract.included_modules.include?(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
+      next if Versions::BaseContract.include?(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
 
       Versions::BaseContract.prepend(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
 
@@ -182,6 +182,10 @@ module OpenProject::Backlogs
 
     add_api_path :sprint do |id|
       "#{root}/sprints/#{id}"
+    end
+
+    add_api_path :sprints do
+      "#{root}/sprints"
     end
 
     add_api_endpoint "API::V3::Root" do

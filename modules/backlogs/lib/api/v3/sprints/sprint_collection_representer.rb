@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,29 +26,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
 module API
   module V3
     module Sprints
-      class SprintsAPI < ::API::OpenProjectAPI
-        resources :sprints do
-          before do
-            guard_feature_flag(:scrum_projects)
-          end
-
-          get &::API::V3::Utilities::Endpoints::Index
-                 .new(model: Agile::Sprint)
-                 .mount
-
-          route_param :id, type: Integer, desc: "Sprint ID" do
-            after_validation do
-              @sprint = Agile::Sprint.visible(current_user).find(params[:id])
-            end
-
-            get &::API::V3::Utilities::Endpoints::Show.new(model: Agile::Sprint).mount
-          end
-        end
+      class SprintCollectionRepresenter < ::API::Decorators::OffsetPaginatedCollection
       end
     end
   end
