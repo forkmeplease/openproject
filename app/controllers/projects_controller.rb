@@ -345,6 +345,5 @@ class ProjectsController < ApplicationController
     portfolio_management_feature_required? && !EnterpriseToken.allows_to?(:portfolio_management)
   end
 
-  helper_method :supported_export_formats,
-                :portfolio_management_feature_missing?
+  helper_method :portfolio_management_feature_missing?
 end

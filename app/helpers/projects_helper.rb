@@ -88,4 +88,8 @@ module ProjectsHelper
   def projects_query_params
     safe_query_params(PROJECTS_QUERY_PARAM_NAMES)
   end
+
+  def supported_export_formats
+    ::Exports::Register.list_formats(Project).map(&:to_s)
+  end
 end
