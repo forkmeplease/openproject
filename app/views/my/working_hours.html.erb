@@ -1,7 +1,17 @@
 <%= render(My::WorkingTimesHeaderComponent.new) %>
 
-<h1>Current Working Hours</h1>
-<pre><%= @current_working_hours.pretty_inspect %></pre>
+<%= render(Users::WorkingHours::CurrentScheduleComponent.new(working_hours: @current_working_hours)) %>
 
-<h1>All Working Hours</h1>
-<pre><%= @working_hours.pretty_inspect %></pre>
+<%= render(Primer::Beta::Subhead.new(mt: 4, hide_border: true)) do |subhead| %>
+  <% subhead.with_heading(tag: :h2) { t("users.working_hours.future_schedules.title") } %>
+  <% subhead.with_description { t("users.working_hours.future_schedules.description") } %>
+<% end %>
+
+<%= render(Users::WorkingHours::ScheduleTableComponent.new(rows: @future_working_hours, variant: :future)) %>
+
+<%= render(Primer::Beta::Subhead.new(mt: 4, hide_border: true)) do |subhead| %>
+  <% subhead.with_heading(tag: :h2) { t("users.working_hours.history.title") } %>
+  <% subhead.with_description { t("users.working_hours.history.description") } %>
+<% end %>
+
+<%= render(Users::WorkingHours::ScheduleTableComponent.new(rows: @past_working_hours, variant: :history)) %>

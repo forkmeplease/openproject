@@ -103,7 +103,18 @@ class MyController < ApplicationController
     render_403 unless OpenProject::FeatureDecisions.user_working_times_active?
 
     @current_working_hours = @user.working_hours.current
-    @working_hours = @user.working_hours
+
+    @future_working_hours = @user.working_hours
+                                  .where(valid_from: (Date.current + 1)..)
+                                  .order(valid_from: :asc)
+
+    @past_working_hours = if @current_working_hours
+                            @user.working_hours
+                                 .where(valid_from: ...@current_working_hours.valid_from)
+                                 .order(valid_from: :desc)
+                          else
+                            UserWorkingHours.none
+                          end
   end
 
   def non_working_days
