@@ -78,6 +78,7 @@ RSpec.describe "Create", :js do
   context "with the feature flag active", with_flag: { scrum_projects: true } do
     context "with the 'create_sprints' permissions" do
       before do
+        click_on "Create"
         new_sprint_button = page.find_test_selector("op-sprints--new-sprint-button")
         new_sprint_button&.click
       end
@@ -157,6 +158,7 @@ RSpec.describe "Create", :js do
             create(:agile_sprint, name: "Be ambitious 42", project:)
 
             backlogs_page.visit!
+            click_on "Create"
             new_sprint_button = page.find_test_selector("op-sprints--new-sprint-button")
             new_sprint_button.click
           end
@@ -174,6 +176,7 @@ RSpec.describe "Create", :js do
       let(:permissions) { all_permissions - [:create_sprints] }
 
       it "is missing the 'new sprint' button" do
+        expect(page).to have_no_button "Create"
         expect(page).not_to have_test_selector("op-sprints--new-sprint-button")
       end
     end
@@ -181,6 +184,7 @@ RSpec.describe "Create", :js do
 
   context "with the feature flag inactive" do
     it "is missing the 'new sprint' button" do
+      expect(page).to have_no_button "Create"
       expect(page).not_to have_test_selector("op-sprints--new-sprint-button")
     end
   end
