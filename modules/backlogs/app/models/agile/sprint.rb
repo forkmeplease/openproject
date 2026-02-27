@@ -38,6 +38,8 @@ module Agile
     belongs_to :project
     has_many :work_packages, dependent: :nullify
 
+    scope :for_project, ->(project) { where(project:) }
+
     enum :status,
          {
            in_planning: "in_planning",
