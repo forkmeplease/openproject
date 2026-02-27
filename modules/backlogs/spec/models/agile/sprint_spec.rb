@@ -114,6 +114,31 @@ RSpec.describe Agile::Sprint do
     end
   end
 
+  describe ".for_project" do
+    let!(:sprint_in_project) { create(:agile_sprint, project:) }
+    let(:other_project) { create(:project) }
+    let!(:sprint_in_other_project) { create(:agile_sprint, project: other_project) }
+
+    context "when no sprint sharer project exists" do
+      it "returns only sprints belonging to the given project" do
+        expect(described_class.for_project(project)).to contain_exactly(sprint_in_project)
+      end
+    end
+
+    context "when a sprint sharer project exists" do
+      let(:sharer_project) { create(:project, sprint_sharing: "share_all_projects") }
+      let!(:shared_sprint) { create(:agile_sprint, project: sharer_project) }
+
+      it "returns sprints from both the given project and the sharer project" do
+        expect(described_class.for_project(project)).to contain_exactly(sprint_in_project, shared_sprint)
+      end
+
+      it "does not return sprints from unrelated projects" do
+        expect(described_class.for_project(project)).not_to include(sprint_in_other_project)
+      end
+    end
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:work_packages).dependent(:nullify) }
     it { is_expected.to belong_to(:project) }
