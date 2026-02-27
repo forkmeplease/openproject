@@ -2629,8 +2629,8 @@ sl:
       - "avgust"
       - "september"
       - "oktober"
-      - "November"
-      - "December"
+      - "november"
+      - "december"
     order:
       - :leto
       - :mesec
