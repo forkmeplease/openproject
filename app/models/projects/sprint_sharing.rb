@@ -29,12 +29,21 @@
 #++
 
 module Projects::SprintSharing
-  SPRINT_SHARING_OPTIONS = %w[share_all_projects share_subprojects no_sharing receive_shared].freeze
-
   extend ActiveSupport::Concern
+
+  NO_SHARING         = "no_sharing"
+  SHARE_ALL_PROJECTS = "share_all_projects"
+  SHARE_SUBPROJECTS  = "share_subprojects"
+  RECEIVE_SHARED     = "receive_shared"
+
+  SPRINT_SHARING_OPTIONS = [NO_SHARING, SHARE_ALL_PROJECTS, SHARE_SUBPROJECTS, RECEIVE_SHARED].freeze
 
   included do
     store_attribute :settings, :sprint_sharing, :string
+
+    scope :sprint_sharing, ->(value) { where("settings->>'sprint_sharing' = ?", value) }
+
+    validate :validate_sprint_sharer_uniqueness
 
     # TODO: Change the store_attribute_unset_values_fallback_to_default to true in the
     # config/initializers/store_attribute.rb.
@@ -43,7 +52,22 @@ module Projects::SprintSharing
     # The method getter override below is required to provide the default value.
 
     def sprint_sharing
-      super.presence || "no_sharing"
+      super.presence || NO_SHARING
+    end
+
+    def validate_sprint_sharer_uniqueness
+      if sprint_sharing == SHARE_ALL_PROJECTS &&
+         (sharer = self.class.sprint_sharer) &&
+         sharer != self
+
+        errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
+      end
+    end
+  end
+
+  class_methods do
+    def sprint_sharer
+      sprint_sharing(SHARE_ALL_PROJECTS).first
     end
   end
 end

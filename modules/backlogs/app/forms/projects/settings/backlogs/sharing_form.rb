@@ -32,71 +32,75 @@ module Projects
   module Settings
     module Backlogs
       class SharingForm < ApplicationForm
-        SHARING_OPTIONS = %w(no_sharing receive_shared).freeze
-        SHARING_SCOPE_OPTIONS = %w(share_all_projects share_subprojects).freeze
-
-        form do |f|
-          f.select_list(
+        form do |sharing_form|
+          sharing_form.radio_button_group(
             name: :sprint_sharing,
-            label: Project.human_attribute_name(:sprint_sharing),
-            input_width: :medium,
-            data: {
-              target_name: "sprint_sharing_scope",
-              "show-when-value-selected-target": "cause"
-            }
-          ) do |list|
-            list.option(
-              value: nil,
-              label: I18n.t("projects.settings.backlog_sharing.options.share_sprints"),
-              selected: model.sprint_sharing.in?(SHARING_SCOPE_OPTIONS)
-            )
-            SHARING_OPTIONS.each do |option|
-              list.option(
-                value: option,
-                label: I18n.t("projects.settings.backlog_sharing.options.#{option}"),
-                selected: option == model.sprint_sharing
-              )
-            end
-          end
-
-          f.radio_button_group(
-            name: :sprint_sharing,
-            label: I18n.t("projects.settings.backlog_sharing.sharing_scope"),
-            # Would have been nicer to use `hidden:` here, but that hides the component wrapper,
-            # while the stimulus `effect` target is bound to the inner fieldset, because `data:`
-            # is forwarded there. Since the hidden state and the stimulus `effect` target end up
-            # on different elements, stimulus cannot unhide the fieldset reliably.
-            # Using `class: "d-none"` ends up on the same fieldset as the stimulus `effect` target.
-            # One advantage of the `effect` target being on the fieldset is that, disabling the
-            # fieldset will also disable the radio buttons inside it.
-            class: ("d-none" if model.sprint_sharing.in?(SHARING_OPTIONS)),
-            data: {
-              target_name: "sprint_sharing_scope",
-              value: "",
-              visibility_class: "d-none",
-              "show-when-value-selected-target": "effect"
-            }
+            label: I18n.t("projects.settings.backlog_sharing.sprint_sharing")
           ) do |group|
-            SHARING_SCOPE_OPTIONS.each do |option|
+            Project::SPRINT_SHARING_OPTIONS.each do |option|
               group.radio_button(
+                label: I18n.t("projects.settings.backlog_sharing.options.#{option}.label"),
                 value: option,
                 checked: checked?(option),
-                label: I18n.t("projects.settings.backlog_sharing.options.#{option}"),
-                caption: I18n.t("projects.settings.backlog_sharing.options.#{option}_caption")
+                disabled: disabled?(option),
+                caption: caption_for(option),
+                data: { "show-when-value-selected-target": "cause" }
               )
             end
           end
 
-          f.submit(
+          sharing_form.html_content { banner_for(Project::SHARE_SUBPROJECTS, type: :info) }
+          sharing_form.html_content { banner_for(Project::RECEIVE_SHARED, type: :warning) }
+
+          sharing_form.submit(
             name: :submit,
             label: I18n.t("button_save"),
             scheme: :primary
           )
         end
 
+        private
+
         def checked?(option)
-          option == model.sprint_sharing ||
-          (option == "share_all_projects" && !model.sprint_sharing.in?(SHARING_SCOPE_OPTIONS))
+          option == model.sprint_sharing
+        end
+
+        def disabled?(option)
+          option == Project::SHARE_ALL_PROJECTS && share_all_projects_disabled?
+        end
+
+        def caption_for(option)
+          if disabled?(option)
+            I18n.t(
+              "projects.settings.backlog_sharing.options.#{option}.disabled_caption",
+              name: sprint_sharer.name
+            )
+          else
+            I18n.t("projects.settings.backlog_sharing.options.#{option}.caption")
+          end
+        end
+
+        def share_all_projects_disabled?
+          sprint_sharer && sprint_sharer != model
+        end
+
+        def sprint_sharer
+          @sprint_sharer ||= Project.sprint_sharer
+        end
+
+        def banner_for(option, type: :info)
+          banner_arguments =
+            type == :warning ? { scheme: :warning } : { icon: :info }
+
+          render(Primer::BaseComponent.new(
+                   tag: :div,
+                   hidden: model.sprint_sharing != option,
+                   data: { value: option, "show-when-value-selected-target": "effect" }
+                 )) do
+            render(Primer::Alpha::Banner.new(**banner_arguments)) do
+              I18n.t("projects.settings.backlog_sharing.options.#{option}.#{type}")
+            end
+          end
         end
       end
     end

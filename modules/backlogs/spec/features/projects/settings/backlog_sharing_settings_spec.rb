@@ -51,55 +51,66 @@ RSpec.describe "Backlogs project settings sprint sharing", :js, with_flag: { scr
         href: project_settings_backlog_sharing_path(project)
       )
 
-      # have all the options in the select with No sharing as default
-      expect(page).to have_select(
-        Project.human_attribute_name(:sprint_sharing),
-        with_options: [
-          I18n.t("projects.settings.backlog_sharing.options.share_sprints"),
-          I18n.t("projects.settings.backlog_sharing.options.no_sharing"),
-          I18n.t("projects.settings.backlog_sharing.options.receive_shared")
-        ],
-        selected: I18n.t("projects.settings.backlog_sharing.options.no_sharing")
-      )
+      # all radio buttons are present with no_sharing checked by default
+      expect(page).to have_checked_field("Don't share")
+      expect(page).to have_unchecked_field("All projects")
+      expect(page).to have_unchecked_field("Subprojects")
+      expect(page).to have_unchecked_field("Receive shared sprints")
 
-      expect(page).to have_no_checked_field(
-        I18n.t("projects.settings.backlog_sharing.options.share_subprojects"),
-        visible: :visible
-      )
+      # no banners visible by default
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.share_subprojects.info"))
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.receive_shared.warning"))
+
+      # selecting share_subprojects shows its info banner
+      choose("Subprojects")
+      expect(page).to have_text(I18n.t("projects.settings.backlog_sharing.options.share_subprojects.info"))
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.receive_shared.warning"))
+
+      # selecting receive_shared shows its warning banner
+      choose("Receive shared sprints")
+      expect(page).to have_text(I18n.t("projects.settings.backlog_sharing.options.receive_shared.warning"))
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.share_subprojects.info"))
 
       # persists receive_shared
-      select(
-        I18n.t("projects.settings.backlog_sharing.options.receive_shared"),
-        from: Project.human_attribute_name(:sprint_sharing)
-      )
-
       click_button I18n.t("button_save")
 
       expect_and_dismiss_flash(type: :success, message: I18n.t(:notice_successful_update))
-      expect(page).to have_select(
-        Project.human_attribute_name(:sprint_sharing),
-        selected: I18n.t("projects.settings.backlog_sharing.options.receive_shared")
-      )
+      expect(page).to have_checked_field("Receive shared sprints")
       expect(project.reload.sprint_sharing).to eq("receive_shared")
 
-      # persists share_subprojects
-      select(
-        I18n.t("projects.settings.backlog_sharing.options.share_sprints"),
-        from: Project.human_attribute_name(:sprint_sharing)
-      )
+      # keeps the banner visible after persisting
+      expect(page).to have_text(I18n.t("projects.settings.backlog_sharing.options.receive_shared.warning"))
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.share_subprojects.info"))
 
-      # share_all_projects is automatically checked when share_sprints is selected
-      expect(page)
-        .to have_checked_field(
-          I18n.t("projects.settings.backlog_sharing.options.share_all_projects")
-        )
+      # selecting no_sharing hides all banners
+      choose("Don't share")
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.share_subprojects.info"))
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.receive_shared.warning"))
 
-      choose(I18n.t("projects.settings.backlog_sharing.options.share_subprojects"))
+      # persists no_sharing
       click_button I18n.t("button_save")
 
       expect_and_dismiss_flash(type: :success, message: I18n.t(:notice_successful_update))
-      expect(page).to have_checked_field(I18n.t("projects.settings.backlog_sharing.options.share_subprojects"))
-      expect(project.reload.sprint_sharing).to eq("share_subprojects")
+      expect(page).to have_checked_field("Don't share")
+      expect(project.reload.sprint_sharing).to eq("no_sharing")
+
+      # keeps the banner hidden after persisting
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.share_subprojects.info"))
+      expect(page).to have_no_text(I18n.t("projects.settings.backlog_sharing.options.receive_shared.warning"))
+    end
+
+    context "when another project already shares with all projects" do
+      let!(:other_project) { create(:project, name: "Sharer Project", sprint_sharing: "share_all_projects") }
+
+      it "disables the all projects option with an explanation" do
+        visit project_settings_backlog_sharing_path(project)
+
+        expect(page).to have_field("All projects", disabled: true)
+        expect(page).to have_text(
+          I18n.t("projects.settings.backlog_sharing.options.share_all_projects.disabled_caption",
+                 name: other_project.name)
+        )
+      end
     end
   end
 
