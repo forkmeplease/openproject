@@ -198,6 +198,128 @@ RSpec.describe UserWorkingHours do
     end
   end
 
+  describe "#working_day_ranges" do
+    def build_hours(**day_minutes)
+      attrs = { monday: 0, tuesday: 0, wednesday: 0, thursday: 0, friday: 0, saturday: 0, sunday: 0 }
+      build(:user_working_hours, **attrs, **day_minutes)
+    end
+
+    it "returns Monday-Friday for a standard work week regardless of hour differences" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 360, thursday: 480, friday: 360)
+      expect(wh.working_day_ranges).to eq("Monday-Friday")
+    end
+
+    it "splits ranges at non-working days" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 0, thursday: 480, friday: 480)
+      expect(wh.working_day_ranges).to eq("Monday-Tuesday, Thursday-Friday")
+    end
+
+    it "returns a single day name when only one day is working" do
+      wh = build_hours(wednesday: 480)
+      expect(wh.working_day_ranges).to eq("Wednesday")
+    end
+
+    it "returns an empty string when no days are working" do
+      wh = build_hours
+      expect(wh.working_day_ranges).to eq("")
+    end
+
+    context "with German locale" do
+      around { |example| I18n.with_locale(:de) { example.run } }
+
+      it "uses full German day names" do
+        wh = build_hours(monday: 480, tuesday: 480, wednesday: 0, thursday: 480, friday: 480)
+        expect(wh.working_day_ranges).to eq("Montag-Dienstag, Donnerstag-Freitag")
+      end
+    end
+  end
+
+  describe "#working_days_summary" do
+    def build_hours(**day_minutes)
+      attrs = { monday: 0, tuesday: 0, wednesday: 0, thursday: 0, friday: 0, saturday: 0, sunday: 0 }
+      build(:user_working_hours, **attrs, **day_minutes)
+    end
+
+    it "returns Mon-Fri 8h when all working days share the same hours" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 480)
+      expect(wh.working_days_summary).to eq("Mon-Fri 8h")
+    end
+
+    it "returns Mon-Thu 8h, Fri 6h when one day differs" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 360)
+      expect(wh.working_days_summary).to eq("Mon-Thu 8h, Fri 6h")
+    end
+
+    it "returns separate segments when multiple groups alternate" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 360, thursday: 480, friday: 360)
+      expect(wh.working_days_summary).to eq("Mon-Tue 8h, Wed 6h, Thu 8h, Fri 6h")
+    end
+
+    it "splits into separate ranges when days are missing in the middle" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 0, thursday: 480, friday: 480)
+      expect(wh.working_days_summary).to eq("Mon-Tue 8h, Thu-Fri 8h")
+    end
+
+    it "returns an empty string when no days are working" do
+      wh = build_hours
+      expect(wh.working_days_summary).to eq("")
+    end
+
+    it "returns a single day label when only one day is working" do
+      wh = build_hours(friday: 480)
+      expect(wh.working_days_summary).to eq("Fri 8h")
+    end
+
+    it "formats fractional hours without trailing zeros" do
+      wh = build_hours(monday: 450, tuesday: 450)
+      expect(wh.working_days_summary).to eq("Mon-Tue 7.5h")
+    end
+
+    it "formats whole hours without a decimal" do
+      wh = build_hours(monday: 480)
+      expect(wh.working_days_summary).to eq("Mon 8h")
+    end
+
+    it "includes weekend days when they are working days" do
+      wh = build_hours(saturday: 240, sunday: 240)
+      expect(wh.working_days_summary).to eq("Sat-Sun 4h")
+    end
+
+    it "handles a single weekend day" do
+      wh = build_hours(saturday: 480)
+      expect(wh.working_days_summary).to eq("Sat 8h")
+    end
+
+    context "with German locale" do
+      around { |example| I18n.with_locale(:de) { example.run } }
+
+      it "uses German abbreviations for a simple Mon-Fri range" do
+        wh = build_hours(monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 480)
+        expect(wh.working_days_summary).to eq("Mo-Fr 8h")
+      end
+
+      it "uses German abbreviations when one day differs" do
+        wh = build_hours(monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 360)
+        expect(wh.working_days_summary).to eq("Mo-Do 8h, Fr 6h")
+      end
+
+      it "uses German abbreviations when days are missing in the middle" do
+        wh = build_hours(monday: 480, tuesday: 480, wednesday: 0, thursday: 480, friday: 480)
+        expect(wh.working_days_summary).to eq("Mo-Di 8h, Do-Fr 8h")
+      end
+
+      it "uses German abbreviations for weekend days" do
+        wh = build_hours(saturday: 240, sunday: 240)
+        expect(wh.working_days_summary).to eq("Sa-So 4h")
+      end
+
+      it "uses a comma as the decimal separator for fractional hours" do
+        wh = build_hours(monday: 450, tuesday: 450)
+        expect(wh.working_days_summary).to eq("Mo-Di 7,5h")
+      end
+    end
+  end
+
   describe ".visible" do
     let(:user) { create(:user) }
     let(:other_user) { create(:user) }

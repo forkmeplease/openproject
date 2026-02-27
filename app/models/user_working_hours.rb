@@ -29,6 +29,10 @@
 #++
 
 class UserWorkingHours < ApplicationRecord
+  DAYS = %i[monday tuesday wednesday thursday friday saturday sunday].freeze
+  # Maps each day symbol to the Rails I18n date.abbr_day_names index (Sunday = 0)
+  DAY_ABBR_INDEX = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 0 }.freeze
+
   belongs_to :user, inverse_of: :working_hours
 
   validates :valid_from, presence: true
@@ -60,7 +64,7 @@ class UserWorkingHours < ApplicationRecord
     end
   end
 
-  %i[monday tuesday wednesday thursday friday saturday sunday].each do |day|
+  DAYS.each do |day|
     define_method("#{day}_hours") do
       (public_send(day) / 60.0).round(2)
     end
@@ -71,10 +75,69 @@ class UserWorkingHours < ApplicationRecord
   end
 
   def weekly_working_hours
-    %i[monday tuesday wednesday thursday friday saturday sunday].sum { |day| public_send("#{day}_hours") }
+    DAYS.sum { |day| public_send("#{day}_hours") }
   end
 
   def effective_weekly_working_hours
     ((weekly_working_hours * availability_factor) / 100.0).round(2)
+  end
+
+  # Returns the ranges of working days without hours, e.g. "Mon-Fri" or "Mon-Tue, Thu-Fri".
+  # Days are grouped by whether they are working days (minutes > 0), ignoring hour differences.
+  def working_day_ranges
+    DAYS
+      .map { |day| [day, public_send(day)] }
+      .chunk_while { |(_, m1), (_, m2)| m1.positive? == m2.positive? }
+      .select { |group| group.first.last.positive? }
+      .map { |group| format_day_range(group) }
+      .join(", ")
+  end
+
+  # Returns a human-readable summary of working days grouped by consecutive days
+  # with the same hours, e.g. "Mon-Thu 8h, Fri 6h" or "Mon-Tue 8h, Thu-Fri 8h".
+  def working_days_summary
+    DAYS
+      .map { |day| [day, public_send("#{day}_hours")] }
+      .chunk_while { |(_, h1), (_, h2)| h1 == h2 }
+      .reject { |group| group.first.last.zero? }
+      .map { |group| format_day_group(group) }
+      .join(", ")
+  end
+
+  private
+
+  def format_day_range(group)
+    first_day = group.first.first
+    last_day = group.last.first
+
+    if group.length == 1
+      full_day_name(first_day)
+    else
+      "#{full_day_name(first_day)}-#{full_day_name(last_day)}"
+    end
+  end
+
+  def format_day_group(group)
+    first_day = group.first.first
+    last_day = group.last.first
+    _, hours = group.first
+    range = group.length == 1 ? abbr_day_name(first_day) : "#{abbr_day_name(first_day)}-#{abbr_day_name(last_day)}"
+    "#{range} #{format_hours_str(hours)}"
+  end
+
+  def format_hours_str(hours)
+    rounded = hours.round(2)
+    return "#{rounded.to_i}h" if rounded == rounded.to_i
+
+    separator = I18n.t("number.format.separator")
+    "#{rounded.to_s.sub('.', separator)}h"
+  end
+
+  def full_day_name(day)
+    I18n.t("date.day_names")[DAY_ABBR_INDEX[day]]
+  end
+
+  def abbr_day_name(day)
+    I18n.t("date.abbr_day_names")[DAY_ABBR_INDEX[day]]
   end
 end
