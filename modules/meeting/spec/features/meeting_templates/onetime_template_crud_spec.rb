@@ -97,6 +97,16 @@ RSpec.describe "Onetime templates CRUD", :js do
   end
 
   describe "creating onetime templates" do
+    context "without enterprise token" do
+      before { visit templates_meetings_path }
+
+      it "does not show the create template button" do
+        expect(page).to have_no_css("#add-template-button")
+      end
+    end
+  end
+
+  describe "creating onetime templates", with_ee: [:meeting_templates] do
     include Components::Autocompleter::NgSelectAutocompleteHelpers
 
     context "when creating from global templates page" do
