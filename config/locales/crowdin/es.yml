@@ -83,8 +83,9 @@ es:
         confirmation: "¿Seguro que desea eliminar este token de soporte de la edición Enterprise?"
       create_dialog:
         title: "Añadir token de Enterprise"
-        type_token_text: "Escribir texto del token de soporte"
+        type_token_text: "Your Enterprise token text"
         token_placeholder: "Pegue su token de soporte de la edición Enterprise aquí"
+        token_caption: "To learn more about how to activate Enterprise edition check our [documentation](docs_url)."
       add_token: "Cargue el token de soporte de Enterprise"
       replace_token: "Reemplace su token de soporte actual"
       order: "Solicitar Enterprise On-Premises"
@@ -1178,7 +1179,7 @@ es:
           automatic_with_children: "Fechas determinadas por paquetes de trabajo secundarios."
           automatic_with_predecessor: "La fecha de inicio la fija un predecesor."
           manual_mobile: "Programado manualmente."
-          manually_scheduled: "Programado manualmente. Fechas no afectadas por relaciones."
+          manually_scheduled: "Programado manualmente. No afectadas por relaciones."
       blankslate:
         title: "Sin predecesores"
         description: "Para activar la programación automática, este paquete de trabajo debe tener al menos un predecesor. Entonces se programará automáticamente para que comience después del predecesor más cercano."
@@ -3194,7 +3195,7 @@ es:
         active_tokens: "Tokens activos"
         blank_description: "No hay ningún acceso a aplicaciones de terceros configurado y activo para usted."
         blank_title: "No hay token de aplicación OAuth"
-        last_used_at: "Utilizado por última vez el"
+        last_refreshed_at: "Last refreshed at"
         title: "OAuth"
         table_title: "Tokens de aplicación OAuth"
         text_hint: "Los tokens de aplicación OAuth permiten a las aplicaciones de terceros conectarse con esta instancia de OpenProject."
