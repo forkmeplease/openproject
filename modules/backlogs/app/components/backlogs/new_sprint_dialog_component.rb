@@ -30,7 +30,6 @@
 
 module Backlogs
   class NewSprintDialogComponent < ApplicationComponent
-    include ApplicationHelper
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
