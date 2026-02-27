@@ -83,6 +83,9 @@ export default class WorkingHoursFormController extends Controller {
     if (hoursSection) {
       hoursSection.hidden = !checkbox.checked;
     }
+    if (this.hoursModeValue === 'same') {
+      this.syncSameHoursToAllDays();
+    }
     this.recalculate();
   }
 

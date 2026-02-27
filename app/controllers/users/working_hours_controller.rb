@@ -48,10 +48,10 @@ class Users::WorkingHoursController < ApplicationController
   def index
     @current_working_hours = @user.working_hours.current
 
-    @future_working_hours = @user.working_hours.upcoming_for_display
+    @future_working_hours = @user.working_hours.upcoming(Date.current + 1)
 
     @past_working_hours = if @current_working_hours
-                            @user.working_hours.past_for_display
+                            @user.working_hours.history_for(@current_working_hours)
                           else
                             UserWorkingHours.none
                           end
@@ -60,7 +60,11 @@ class Users::WorkingHoursController < ApplicationController
   end
 
   def new
-    @user_working_hours = build_working_hours_from_system_settings(@user)
+    @user_working_hours = if current_context?
+                            duplicate_current_working_hours(@user)
+                          else
+                            build_working_hours_from_system_settings(@user)
+                          end
 
     respond_with_dialog(
       Users::WorkingHours::DialogComponent.new(user: @user, working_hours: @user_working_hours,
@@ -168,6 +172,20 @@ class Users::WorkingHoursController < ApplicationController
                         saturday_hours
                         sunday_hours
                         availability_factor]
+    )
+  end
+
+  def duplicate_current_working_hours(user)
+    current = user.working_hours.current
+    return build_working_hours_from_system_settings(user) unless current
+
+    day_attrs = UserWorkingHours::DAYS.to_h { |day| ["#{day}_hours", current.public_send("#{day}_hours")] }
+
+    UserWorkingHours.new(
+      user:,
+      availability_factor: current.availability_factor,
+      valid_from: Date.current,
+      **day_attrs
     )
   end
 

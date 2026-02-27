@@ -35,7 +35,7 @@ class UserWorkingHours < ApplicationRecord
 
   belongs_to :user, inverse_of: :working_hours
 
-  validates :valid_from, presence: true
+  validates :valid_from, presence: true, uniqueness: { scope: :user_id }
   validates :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday,
             presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 24 * 60 }
@@ -48,8 +48,7 @@ class UserWorkingHours < ApplicationRecord
   scope :past, ->(date = Date.current) { where(valid_from: ..date).order(valid_from: :desc) }
   scope :upcoming, ->(date = Date.current) { where(valid_from: date..).order(valid_from: :asc) }
 
-  scope :upcoming_for_display, -> { upcoming(Date.current + 1).order(valid_from: :asc) }
-  scope :past_for_display, -> { past(Date.current).order(valid_from: :desc) }
+  scope :history_for, ->(current_record) { where(valid_from: ..current_record.valid_from).order(valid_from: :desc) }
 
   def self.valid_for_date(date)
     where(valid_from: ..date).order(valid_from: :desc).first

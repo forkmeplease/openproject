@@ -104,10 +104,10 @@ class MyController < ApplicationController
 
     @current_working_hours = @user.working_hours.current
 
-    @future_working_hours = @user.working_hours.upcoming_for_display
+    @future_working_hours = @user.working_hours.upcoming(Date.current + 1)
 
     @past_working_hours = if @current_working_hours
-                            @user.working_hours.past_for_display
+                            @user.working_hours.history_for(@current_working_hours)
                           else
                             UserWorkingHours.none
                           end
