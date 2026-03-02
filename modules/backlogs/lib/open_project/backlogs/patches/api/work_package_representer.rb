@@ -37,14 +37,44 @@ module OpenProject::Backlogs
             property :position,
                      render_nil: true,
                      skip_render: ->(*) do
-                       !(backlogs_enabled? && type && type.passes_attribute_constraint?(:position))
+                       !(backlogs_enabled? && type&.passes_attribute_constraint?(:position))
                      end
 
             property :story_points,
                      render_nil: true,
                      skip_render: ->(*) do
-                       !(backlogs_enabled? && type && type.passes_attribute_constraint?(:story_points))
+                       !(backlogs_enabled? && type&.passes_attribute_constraint?(:story_points))
                      end
+
+            resource :sprint,
+                     link_cache_if: ->(*) {
+                       # TODO: change permission to check for :view_sprints
+                       # TODO: apply the same permission check to position and story_points
+                       current_user.allowed_in_project?(:view_master_backlog, represented.project)
+                     },
+                     link: ->(*) {
+                       next unless represented.type&.passes_attribute_constraint?(:sprint)
+
+                       if represented.sprint.present?
+                         {
+                           href: api_v3_paths.sprint(represented.sprint_id),
+                           title: represented.sprint.name
+                         }
+                       else
+                         {
+                           href: nil
+                         }
+                       end
+                     },
+                     getter: ->(*) do
+                       if embed_links &&
+                          represented.sprint.present? &&
+                          represented.type&.passes_attribute_constraint?(:story_points) &&
+                          current_user.allowed_in_project?(:view_sprints, represented.project)
+                         ::API::V3::Sprints::SprintRepresenter.create(represented.sprint, current_user:)
+                       end
+                     end,
+                     setter: associated_resource_default_setter(:sprint, :sprint, :sprint)
           end
         end
       end

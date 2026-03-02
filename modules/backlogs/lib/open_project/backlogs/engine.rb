@@ -143,6 +143,7 @@ module OpenProject::Backlogs
     patch_with_namespace :WorkPackages, :SetAttributesService
     patch_with_namespace :WorkPackages, :BaseContract
     patch_with_namespace :Versions, :RowComponent
+    patch_with_namespace :API, :V3, :WorkPackages, :EagerLoading, :Checksum
 
     config.to_prepare do
       next if Versions::BaseContract.include?(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
@@ -198,7 +199,7 @@ module OpenProject::Backlogs
     end
 
     config.to_prepare do
-      ::Type.add_constraint :position, ->(type, project: nil) do
+      enabled_backlogs_story = ->(type, project: nil) do
         if project.present?
           project.backlogs_enabled? && type.story?
         else
@@ -207,14 +208,9 @@ module OpenProject::Backlogs
         end
       end
 
-      ::Type.add_constraint :story_points, ->(type, project: nil) do
-        if project.present?
-          project.backlogs_enabled? && type.story?
-        else
-          # Allow globally configuring the attribute if story
-          type.story?
-        end
-      end
+      ::Type.add_constraint :position, enabled_backlogs_story
+      ::Type.add_constraint :story_points, enabled_backlogs_story
+      ::Type.add_constraint :sprint, enabled_backlogs_story
 
       ::Type.add_default_mapping(:estimates_and_progress, :story_points)
       ::Type.add_default_mapping(:other, :position)

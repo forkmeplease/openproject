@@ -80,11 +80,11 @@ module OpenProject::Backlogs::Patches::WorkPackagePatch
     end
 
     def is_task?
-      backlogs_enabled? && (parent_id && type_id == Task.type && Task.type.present?)
+      backlogs_enabled? && parent_id && type_id == Task.type && Task.type.present?
     end
 
     def is_impediment?
-      backlogs_enabled? && (parent_id.nil? && type_id == Task.type && Task.type.present?)
+      backlogs_enabled? && parent_id.nil? && type_id == Task.type && Task.type.present?
     end
 
     def types
@@ -113,7 +113,7 @@ module OpenProject::Backlogs::Patches::WorkPackagePatch
     end
 
     def backlogs_enabled?
-      !!project.try(:module_enabled?, "backlogs")
+      project&.backlogs_enabled?
     end
 
     def in_backlogs_type?
