@@ -48,60 +48,59 @@ module Projects::SprintSharing
     scope :not_sharing_sprints, -> { sprint_sharing(NO_SHARING) }
 
     validate :validate_sprint_sharer_uniqueness
-
-    # TODO: Change the store_attribute_unset_values_fallback_to_default to true in the
-    # config/initializers/store_attribute.rb.
-    # Otherwise defaults set on the setting declaration are not working correctly:
-    # `store_attribute :settings, :sprint_sharing, :string, default: "no_sharing"`.
-    # The method getter override below is required to provide the default value.
-
-    def sprint_sharing
-      super.presence || NO_SHARING
-    end
-
-    def share_sprints_with_all_projects?
-      sprint_sharing == SHARE_ALL_PROJECTS
-    end
-
-    def share_sprints_with_subprojects?
-      sprint_sharing == SHARE_SUBPROJECTS
-    end
-
-    def receive_shared_sprints?
-      sprint_sharing == RECEIVE_SHARED
-    end
-
-    def not_sharing_sprints?
-      sprint_sharing == NO_SHARING
-    end
-
-    def receive_sprints_from
-      # Senders and non-sharing projects only see their own sprints.
-      # Receivers see external sprints from the closest ancestor sharing
-      # subprojects, falling back to the global sharer.
-      case sprint_sharing
-      when nil, NO_SHARING, SHARE_SUBPROJECTS, SHARE_ALL_PROJECTS
-        [self]
-      when RECEIVE_SHARED
-        [ancestors.share_sprints_with_subprojects.last || self.class.sprint_sharer].compact
-      end
-    end
-
-    private
-
-    def validate_sprint_sharer_uniqueness
-      if sprint_sharing == SHARE_ALL_PROJECTS &&
-         (sharer = self.class.sprint_sharer) &&
-         sharer != self
-
-        errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
-      end
-    end
   end
 
   class_methods do
     def sprint_sharer
       share_sprints_with_all_projects.active.first
+    end
+  end
+
+  # TODO: Change the store_attribute_unset_values_fallback_to_default to true in the
+  # config/initializers/store_attribute.rb.
+  # Otherwise defaults set on the setting declaration are not working correctly:
+  # `store_attribute :settings, :sprint_sharing, :string, default: "no_sharing"`.
+  # The method getter override below is required to provide the default value.
+  def sprint_sharing
+    super.presence || NO_SHARING
+  end
+
+  def share_sprints_with_all_projects?
+    sprint_sharing == SHARE_ALL_PROJECTS
+  end
+
+  def share_sprints_with_subprojects?
+    sprint_sharing == SHARE_SUBPROJECTS
+  end
+
+  def receive_shared_sprints?
+    sprint_sharing == RECEIVE_SHARED
+  end
+
+  def not_sharing_sprints?
+    sprint_sharing == NO_SHARING
+  end
+
+  def receive_sprints_from
+    # Senders and non-sharing projects only see their own sprints.
+    # Receivers see external sprints from the closest ancestor sharing
+    # subprojects, falling back to the global sharer.
+    case sprint_sharing
+    when nil, NO_SHARING, SHARE_SUBPROJECTS, SHARE_ALL_PROJECTS
+      [self]
+    when RECEIVE_SHARED
+      [ancestors.share_sprints_with_subprojects.last || self.class.sprint_sharer].compact
+    end
+  end
+
+  private
+
+  def validate_sprint_sharer_uniqueness
+    if sprint_sharing == SHARE_ALL_PROJECTS &&
+        (sharer = self.class.sprint_sharer) &&
+        sharer != self
+
+      errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
     end
   end
 end

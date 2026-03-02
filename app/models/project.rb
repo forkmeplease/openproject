@@ -40,7 +40,6 @@ class Project < ApplicationRecord
   include Projects::Versions
   include Projects::WorkPackageCustomFields
   include Projects::CreationWizard
-  include Projects::SprintSharing
 
   include ::Scopes::Scoped
 
