@@ -61,7 +61,6 @@ module OpenProject
     session = HTTPX
                 .with(headers: { "User-Agent" => "OpenProject #{OpenProject::VERSION.to_semver} HTTPX Client" })
                 .plugin(:auth)
-                .plugin(:persistent)
                 .plugin(:webdav)
                 .with(
                   timeout: {
