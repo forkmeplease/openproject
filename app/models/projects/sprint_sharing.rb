@@ -76,17 +76,14 @@ module Projects::SprintSharing
     end
 
     def receive_sprints_from
-      # If there are multiple projects from which a receiving project could take its sprints
-      # the order of priority is as follows (lowest to highest priority):
-      #   => All projects sharing
-      #   => Subproject sharing higher up the ancestor chain
+      # Senders and non-sharing projects only see their own sprints.
+      # Receivers see external sprints from the closest ancestor sharing
+      # subprojects, falling back to the global sharer.
       case sprint_sharing
-      when NO_SHARING, nil
+      when nil, NO_SHARING, SHARE_SUBPROJECTS, SHARE_ALL_PROJECTS
         [self]
-      when RECEIVE_SHARED, SHARE_SUBPROJECTS
-        [self, ancestors.share_sprints_with_subprojects.last || self.class.sprint_sharer].compact
-      when SHARE_ALL_PROJECTS
-        [self, ancestors.share_sprints_with_subprojects.last].compact
+      when RECEIVE_SHARED
+        [ancestors.share_sprints_with_subprojects.last || self.class.sprint_sharer].compact
       end
     end
 
@@ -104,7 +101,7 @@ module Projects::SprintSharing
 
   class_methods do
     def sprint_sharer
-      share_sprints_with_all_projects.first
+      share_sprints_with_all_projects.active.first
     end
   end
 end

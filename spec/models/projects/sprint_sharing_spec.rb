@@ -103,6 +103,14 @@ RSpec.describe Projects::SprintSharing do
         expect(Project.sprint_sharer).to eq(project)
       end
     end
+
+    context "when the sharing project is archived" do
+      before { project.update!(sprint_sharing: "share_all_projects", active: false) }
+
+      it "returns nil" do
+        expect(Project.sprint_sharer).to be_nil
+      end
+    end
   end
 
   describe "#validate_sprint_sharer_uniqueness" do
@@ -140,37 +148,71 @@ RSpec.describe Projects::SprintSharing do
 
         expect(project).to be_valid
       end
+
+      context "when the other project is archived" do
+        let!(:other_project) { create(:project, :archived, sprint_sharing: "share_all_projects") }
+
+        it "remains valid" do
+          project.sprint_sharing = "share_all_projects"
+
+          expect(project).to be_valid
+        end
+      end
     end
   end
 
   describe "#receive_sprints_from" do
-    let(:global_sprint_sharing) { "no_sharing" }
-    let(:root_sprint_sharing) { "no_sharing" }
-    let(:parent_sprint_sharing) { "no_sharing" }
-    let(:project_sprint_sharing) { "no_sharing" }
+    let(:global_sprint_sharing) { "share_all_projects" }
+    let(:root_sprint_sharing) { "share_subprojects" }
+    let(:parent_sprint_sharing) { "share_subprojects" }
+    let(:project_sprint_sharing) { "receive_shared" }
 
     let!(:global_sharer) { create(:project, sprint_sharing: global_sprint_sharing) }
     let!(:root_project) { create(:project, sprint_sharing: root_sprint_sharing) }
     let!(:parent_project) { create(:project, parent: root_project, sprint_sharing: parent_sprint_sharing) }
     let!(:project) { create(:project, parent: parent_project, sprint_sharing: project_sprint_sharing) }
 
-    context "when sprint_sharing is no_sharing (default)" do
-      let(:global_sprint_sharing) { "share_all_projects" }
-      let(:root_sprint_sharing) { "share_subprojects" }
-      let(:parent_sprint_sharing) { "share_subprojects" }
-      let(:project_sprint_sharing) { "no_sharing" }
+    # Projects that should not be returned
+    shared_let(:other_project) { create(:project, sprint_sharing: "share_subprojects") }
+    shared_let(:archived_global_sharer) { create(:project, :archived, sprint_sharing: "share_all_projects") }
 
+    shared_examples "returns the project itself" do
       it "returns only itself" do
         expect(project.receive_sprints_from).to eq([project])
       end
     end
 
-    shared_examples "returns itself and the closest sharer" do
+    context "when sprint_sharing is no_sharing (default)" do
+      let(:project_sprint_sharing) { "no_sharing" }
+
+      it_behaves_like "returns the project itself"
+    end
+
+    context "when sprint_sharing is share_subprojects" do
+      let(:project_sprint_sharing) { "share_subprojects" }
+
+      it_behaves_like "returns the project itself"
+    end
+
+    context "when sprint_sharing is share_all_projects" do
+      let(:global_sprint_sharing) { "no_sharing" }
+      let(:root_sprint_sharing) { "share_subprojects" }
+      let(:parent_sprint_sharing) { "share_subprojects" }
+      let(:project_sprint_sharing) { "share_all_projects" }
+
+      it_behaves_like "returns the project itself"
+    end
+
+    context "when sprint_sharing is receive_shared" do
+      let(:project_sprint_sharing) { "receive_shared" }
+
       context "with only a global sharer" do
         let(:global_sprint_sharing) { "share_all_projects" }
+        let(:root_sprint_sharing) { "no_sharing" }
+        let(:parent_sprint_sharing) { "no_sharing" }
 
-        it "returns itself and the global sharer" do
-          expect(project.receive_sprints_from).to eq([project, global_sharer])
+        it "returns only the global sharer" do
+          expect(project.receive_sprints_from).to eq([global_sharer])
         end
       end
 
@@ -179,31 +221,19 @@ RSpec.describe Projects::SprintSharing do
         let(:root_sprint_sharing) { "share_subprojects" }
         let(:parent_sprint_sharing) { "share_subprojects" }
 
-        it "returns itself and the closest sharing ancestor" do
-          expect(project.receive_sprints_from).to eq([project, parent_project])
+        it "returns only the closest sharing ancestor" do
+          expect(project.receive_sprints_from).to eq([parent_project])
         end
       end
-    end
 
-    context "when sprint_sharing is receive_shared" do
-      let(:project_sprint_sharing) { "receive_shared" }
+      context "with no sharing sources" do
+        let(:global_sprint_sharing) { "no_sharing" }
+        let(:root_sprint_sharing) { "no_sharing" }
+        let(:parent_sprint_sharing) { "no_sharing" }
 
-      it_behaves_like "returns itself and the closest sharer"
-    end
-
-    context "when sprint_sharing is share_subprojects" do
-      let(:project_sprint_sharing) { "share_subprojects" }
-
-      it_behaves_like "returns itself and the closest sharer"
-    end
-
-    context "when sprint_sharing is share_all_projects" do
-      let(:root_sprint_sharing) { "share_subprojects" }
-      let(:parent_sprint_sharing) { "no_sharing" }
-      let(:project_sprint_sharing) { "share_all_projects" }
-
-      it "returns itself and the root sharer" do
-        expect(project.receive_sprints_from).to eq([project, root_project])
+        it "returns an empty array" do
+          expect(project.receive_sprints_from).to eq([])
+        end
       end
     end
   end

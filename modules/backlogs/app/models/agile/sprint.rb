@@ -38,7 +38,14 @@ module Agile
     belongs_to :project
     has_many :work_packages, dependent: :nullify
 
-    scope :for_project, ->(project) { where(project: project.receive_sprints_from) }
+    scope :for_project, ->(project) do
+      # Ideally the project.work_packages scope would be used, but unfortunately
+      # it has some extra includes that are not necessary in this case.
+      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
+
+      where(project: project.receive_sprints_from)
+      .or(where(id: from_work_packages.select(:sprint_id)))
+    end
     scope :not_completed, -> { !completed }
     scope :order_by_date, -> do
       order(arel_table[:start_date].asc.nulls_last,

@@ -115,27 +115,60 @@ RSpec.describe Agile::Sprint do
   end
 
   describe ".for_project" do
-    let!(:sprint_in_project) { create(:agile_sprint, project:) }
+    let(:global_sharer) { create(:project, sprint_sharing: "share_all_projects") }
     let(:other_project) { create(:project) }
+    let!(:sprint_in_project) { create(:agile_sprint, project:) }
+    let!(:global_sprint) { create(:agile_sprint, project: global_sharer) }
     let!(:sprint_in_other_project) { create(:agile_sprint, project: other_project) }
 
-    context "when no sprint sharer project exists" do
-      it "returns only sprints belonging to the given project" do
-        expect(described_class.for_project(project)).to contain_exactly(sprint_in_project)
+    context "when the project does not receive sprints" do
+      context "and no work package assignments exist" do
+        it "returns own sprint only" do
+          expect(described_class.for_project(project)).to contain_exactly(sprint_in_project)
+        end
+      end
+
+      context "when the project has work packages assigned to a sprint from another project" do
+        let!(:cross_project_sprint) { create(:agile_sprint, project: other_project) }
+        let!(:work_package) { create(:work_package, project:, sprint: cross_project_sprint) }
+
+        it "returns the sprint via work package assignment too" do
+          expect(described_class.for_project(project)).to contain_exactly(sprint_in_project, cross_project_sprint)
+        end
+
+        context "when the cross-project sprint is completed" do
+          let!(:completed_sprint) { create(:agile_sprint, project: other_project, status: "completed") }
+          let!(:work_package) { create(:work_package, project:, sprint: completed_sprint) }
+
+          it "still includes the completed sprint" do
+            expect(described_class.for_project(project)).to include(completed_sprint)
+          end
+        end
       end
     end
 
-    context "when a sprint sharer project exists" do
+    context "when the project receives shared sprints" do
       let(:project) { create(:project, sprint_sharing: "receive_shared") }
-      let(:sharer_project) { create(:project, sprint_sharing: "share_all_projects") }
-      let!(:shared_sprint) { create(:agile_sprint, project: sharer_project) }
 
-      it "returns sprints from both the given project and the sharer project" do
-        expect(described_class.for_project(project)).to contain_exactly(sprint_in_project, shared_sprint)
+      it "returns shared sprints from the sharer project" do
+        # The sprint_in_project (own) and sprint_in_other_project are excluded
+        expect(described_class.for_project(project)).to contain_exactly(global_sprint)
       end
 
-      it "does not return sprints from unrelated projects" do
-        expect(described_class.for_project(project)).not_to include(sprint_in_other_project)
+      context "and its own sprint has a work package assigned" do
+        let!(:work_package) { create(:work_package, project:, sprint: sprint_in_project) }
+
+        it "includes own sprint and the shared sprint" do
+          expect(described_class.for_project(project)).to contain_exactly(global_sprint, sprint_in_project)
+        end
+      end
+
+      context "when the sprint qualifies through both sharing and work package assignment" do
+        let!(:work_package) { create(:work_package, project:, sprint: global_sprint) }
+
+        it "returns the sprint exactly once" do
+          expect(described_class.for_project(project)).to contain_exactly(global_sprint)
+        end
       end
     end
   end
