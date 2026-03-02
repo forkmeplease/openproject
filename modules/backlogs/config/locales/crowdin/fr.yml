@@ -64,7 +64,7 @@ fr:
     show_burndown_chart: "Graphique d'avancement"
     story: "Histoire"
     story_points:
-      one: "%{count} point d'histoire"
+      one: "%{count} story point "
       other: "%{count} story points"
     task: "Tâche"
     task_color: "Couleur des tâches"
