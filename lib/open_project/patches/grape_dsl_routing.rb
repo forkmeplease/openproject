@@ -33,12 +33,12 @@ module OpenProject::Patches::GrapeDslRouting
 
   included do
     # Be reload safe. otherwise, an infinite loop occurs on reload.
-    unless instance_methods.include?(:orig_namespace)
+    unless method_defined?(:orig_namespace)
       alias :orig_namespace :namespace
     end
 
-    def namespace(space = nil, options = {}, &)
-      orig_namespace(space, options) do
+    def namespace(space = nil, **, &)
+      orig_namespace(space, **) do
         instance_eval(&)
         apply_patches(space)
       end
@@ -51,11 +51,11 @@ module OpenProject::Patches::GrapeDslRouting
     end
 
     def patches
-      Constants::APIPatchRegistry.patches_for(base)
+      Constants::APIPatchRegistry.patches_for(self)
     end
   end
 end
 
-OpenProject::Patches.patch_gem_version "grape", "3.0.0" do
+OpenProject::Patches.patch_gem_version "grape", "3.1.1" do
   Grape::DSL::Routing.include OpenProject::Patches::GrapeDslRouting
 end
