@@ -59,7 +59,7 @@ module Import
     transition from: INITIAL,                to: [INSTANCE_META_FETCHING]
     transition from: INSTANCE_META_FETCHING, to: [INSTANCE_META_DONE, INSTANCE_META_ERROR]
     transition from: INSTANCE_META_ERROR,    to: [INSTANCE_META_FETCHING]
-    transition from: INSTANCE_META_DONE,     to: [CONFIGURING]
+    transition from: INSTANCE_META_DONE,     to: [CONFIGURING, INSTANCE_META_FETCHING]
     transition from: CONFIGURING,            to: [PROJECTS_META_FETCHING]
     transition from: PROJECTS_META_FETCHING, to: [PROJECTS_META_DONE, PROJECTS_META_ERROR]
     transition from: PROJECTS_META_ERROR,    to: [PROJECTS_META_FETCHING]
