@@ -54,13 +54,6 @@ export class BudgetByCostTypeComponent {
   readonly chartData = input.required<string>();
   readonly currency = input<string>('€');
 
-  readonly text = {
-    noResults: {
-      title: this.i18n.t('js.budgets.widgets.budget_by_cost_type.blankslate.title'),
-      description: this.i18n.t('js.budgets.widgets.budget_by_cost_type.blankslate.description'),
-    },
-  };
-
   readonly pieChartData = computed<ChartData<'pie'>>(() => JSON.parse(this.chartData()) as ChartData<'pie'>);
   readonly hasChartData = computed(() => this.pieChartData().datasets[0].data.length > 0);
 

@@ -55,6 +55,10 @@ module Budgets
         chart_entries.values
       end
 
+      def has_data?
+        chart_data.any?
+      end
+
       private
 
       def has_required_permissions?

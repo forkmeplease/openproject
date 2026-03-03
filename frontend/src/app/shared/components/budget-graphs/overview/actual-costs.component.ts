@@ -55,13 +55,6 @@ export class ActualCostsComponent {
   readonly chartData = input.required<string>();
   readonly currency = input<string>('€');
 
-  readonly text = {
-    noResults: {
-      title: this.i18n.t('js.costs.widgets.actual_costs.blankslate.title'),
-      description: this.i18n.t('js.costs.widgets.actual_costs.blankslate.description'),
-    },
-  };
-
   readonly barChartData = computed<ChartData<'bar'>>(() => JSON.parse(this.chartData()) as ChartData<'bar'>);
   readonly hasChartData = computed(() => this.barChartData().datasets.length > 0);
 

@@ -61,6 +61,10 @@ module Costs
         [labor_dataset, *material_datasets].compact
       end
 
+      def has_data?
+        chart_datasets.any?
+      end
+
       private
 
       def has_required_permissions?
