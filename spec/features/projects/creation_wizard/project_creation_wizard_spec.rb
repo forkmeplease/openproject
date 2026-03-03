@@ -442,4 +442,43 @@ RSpec.describe "Project creation wizard",
       expect(page).to have_text("You are not authorized to access this page")
     end
   end
+
+  context "with comments enabled for custom fields" do
+    before do
+      string_custom_field.update!(has_comment: true, is_required: true)
+    end
+
+    it "remembers comment between page loads and saves it at the end" do
+      visit wizard_path
+
+      # Fill comment, but not required description
+      fill_in "Project Code comment", with: "foo"
+      click_button "Continue"
+      wait_for_network_idle
+      expect(page).to have_field("Project Code comment", with: "foo")
+
+      # Also fill description and go to next page
+      fill_in "Project Code", type: "text", with: "TEST-001"
+      click_button "Continue"
+      wait_for_network_idle
+      expect(page).to have_no_field("Project Code comment")
+
+      # Check if first page still has comment
+      click_link "Back"
+      wait_for_network_idle
+      expect(page).to have_field("Project Code comment", with: "foo")
+
+      # Finish the wizard
+      click_button "Continue"
+      wait_for_network_idle
+      select_autocomplete page.find("[data-custom-field-id='#{user_custom_field.id}']"),
+                          results_selector: "body",
+                          query: user_assignee.name
+      click_button "Complete"
+      wait_for_network_idle
+
+      # Comment should be saved
+      expect(project.reload.send(string_custom_field.comment_attribute_name)).to eq "foo"
+    end
+  end
 end
