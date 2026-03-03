@@ -33,7 +33,7 @@ require_relative "../../support/pages/backlogs"
 
 RSpec.describe "Create", :js do
   let(:project) { create(:project) }
-  let(:all_permissions) { %i[view_master_backlog view_work_packages create_sprints] }
+  let(:all_permissions) { %i[view_sprints view_work_packages create_sprints] }
   let(:permissions) { all_permissions }
   let(:user) do
     create(:user, member_with_permissions: { project => permissions })
