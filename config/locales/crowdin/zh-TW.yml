@@ -280,7 +280,7 @@ zh-TW:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "模型上下文協定允許 AI 代理向其使用者提供此 OpenProject 實體所揭露的工具與資源。"
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "資源"
         resources_description: "OpenProject 實作下列資源。每個資源都可以依您的需求啟用、重新命名及描述。如需詳細資訊，請參閱 [關於 MCP 資源的文件](docs_url)。"
         resources_submit: "更新資源"
@@ -590,6 +590,10 @@ zh-TW:
   danger_dialog:
     confirmation_live_message_checked: "繼續的按鈕現已啟用。"
     confirmation_live_message_unchecked: "繼續的按鈕現在沒有作用。您需要勾選核取方塊才能繼續。"
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "或"
     errors:
@@ -2614,7 +2618,7 @@ zh-TW:
       edit_attribute_groups: 編輯群組屬性
       gantt_pdf_export: 以PDF匯出甘特圖
       ldap_groups: 同步LDAP使用者與群組
-      mcp_server: MCP 伺服器
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Nextcloud 儲存空間的單一登入(SSO)
       one_drive_sharepoint_file_storage: OneDrive/SharePoint 檔案儲存
@@ -2693,7 +2697,7 @@ zh-TW:
         title: "自訂動作"
         description: "自訂動作是一系列預先定義動作的單鍵捷徑，您可以根據狀態、角色、類型或專案，在特定工作套件上使用這些動作。"
       mcp_server:
-        description: "透過 MCP 將 AI 代理與您的 OpenProject 實例整合。"
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

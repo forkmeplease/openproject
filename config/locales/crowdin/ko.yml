@@ -280,7 +280,7 @@ ko:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "모델 컨텍스트 프로토콜을 통해 AI 에이전트는 이 OpenProject 인스턴스에 의해 노출된 도구와 리소스를 사용자에게 제공할 수 있습니다."
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "리소스"
         resources_description: "OpenProject implements the following resources. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
         resources_submit: "리소스 업데이트"
@@ -591,6 +591,10 @@ ko:
   danger_dialog:
     confirmation_live_message_checked: "진행 버튼이 이제 활성화되었습니다."
     confirmation_live_message_unchecked: "진행 버튼이 이제 비활성화되었습니다. 계속하려면 확인란을 선택해야 합니다."
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "또는"
     errors:
@@ -2618,7 +2622,7 @@ ko:
       edit_attribute_groups: 특성 그룹 편집
       gantt_pdf_export: Gantt PDF 내보내기
       ldap_groups: LDAP 사용자 및 그룹 동기화
-      mcp_server: MCP 서버
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Nextcloud 저장소용 Single Sign-On
       one_drive_sharepoint_file_storage: OneDrive/SharePoint 파일 저장소
@@ -2697,7 +2701,7 @@ ko:
         title: "사용자 지정 작업"
         description: "사용자 지정 작업은 상태, 역할, 유형 또는 프로젝트를 기반으로 특정 작업 패키지에서 사용할 수 있도록 미리 정의된 작업 세트에 대한 원클릭 바로 가기입니다."
       mcp_server:
-        description: "MCP를 통해 AI 에이전트를 OpenProject 인스턴스와 통합합니다."
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

@@ -286,7 +286,7 @@ fr:
             title: "Sélectionner des projets"
     mcp_configurations:
       index:
-        description: "Le protocole de contexte de modèle permet aux agents d'intelligence artificielle de fournir à leurs utilisateurs les outils et les ressources exposés par cette instance d'OpenProject."
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "Ressources"
         resources_description: "OpenProject met en œuvre les ressources suivantes. Chacune d'entre elles peut être activée, renommée et décrite comme vous le souhaitez. Pour plus d'informations, veuillez vous référer à la [documentation sur les ressources MCP](docs_url)."
         resources_submit: "Mettre à jour les ressources"
@@ -597,6 +597,10 @@ fr:
   danger_dialog:
     confirmation_live_message_checked: "Le bouton pour continuer est maintenant actif."
     confirmation_live_message_unchecked: "Le bouton pour continuer est maintenant inactif. Vous devez cocher la case pour continuer."
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "ou"
     errors:
@@ -2671,7 +2675,7 @@ fr:
       edit_attribute_groups: Modifier les groupes d'attributs
       gantt_pdf_export: Exportation PDF de diagramme de Gantt
       ldap_groups: Synchronisation des utilisateurs LDAP et des groupes
-      mcp_server: Serveur MCP
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Modèles de réunion réutilisables
       nextcloud_sso: Authentification unique pour le stockage Nextcloud
       one_drive_sharepoint_file_storage: Stockage de fichiers OneDrive/SharePoint
@@ -2750,7 +2754,7 @@ fr:
         title: "Actions personnalisées"
         description: "Les actions personnalisées sont des raccourcis en un clic vers un ensemble d'actions prédéfinies que vous pouvez rendre disponibles sur certains lots de travaux en fonction de l'état, du rôle, du type ou du projet."
       mcp_server:
-        description: "Intégrez des agents d'intelligence artificielle à votre instance OpenProject grâce à MCP."
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Définissez des modèles de réunion avec une structure d'ordre du jour définie et gagnez du temps en les réutilisant lors de la création de nouvelles réunions."
       nextcloud_sso:

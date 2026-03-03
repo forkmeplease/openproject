@@ -280,7 +280,7 @@ zh-CN:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "Model Context Protocol 允许 AI 智能体向其用户提供此 OpenProject 实例所公开的工具和资源。"
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "资源"
         resources_description: "OpenProject implements the following resources. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
         resources_submit: "更新资源"
@@ -588,6 +588,10 @@ zh-CN:
   danger_dialog:
     confirmation_live_message_checked: "继续按钮现已激活。"
     confirmation_live_message_unchecked: "继续按钮现已失效。您需要勾选复选框才能继续。"
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "或"
     errors:
@@ -2614,7 +2618,7 @@ zh-CN:
       edit_attribute_groups: 编辑属性组
       gantt_pdf_export: 甘特图 PDF 导出
       ldap_groups: LDAP 用户和群组同步
-      mcp_server: MCP 服务器
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Nextcloud存储的单点登录(SSO)
       one_drive_sharepoint_file_storage: OneDrive/SharePoint 文件存储
@@ -2693,7 +2697,7 @@ zh-CN:
         title: "自定义操作"
         description: "自定义操作是一键快捷方式，指向一组预定义的操作，您可以根据状态、角色、类型或项目在某些工作包上使用这些操作。"
       mcp_server:
-        description: "通过 MCP 将 AI 智能体与 OpenProject 实例集成。"
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

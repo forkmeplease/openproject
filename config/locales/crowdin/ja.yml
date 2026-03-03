@@ -280,7 +280,7 @@ ja:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance."
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "Resources"
         resources_description: "OpenProject implements the following resources. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
         resources_submit: "Update resources"
@@ -589,6 +589,10 @@ ja:
   danger_dialog:
     confirmation_live_message_checked: "The button to proceed is now active."
     confirmation_live_message_unchecked: "The button to proceed is now inactive. You need to tick the checkbox to continue."
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "または"
     errors:
@@ -2617,7 +2621,7 @@ ja:
       edit_attribute_groups: 属性グループを編集
       gantt_pdf_export: ガントPDFをエクスポート
       ldap_groups: LDAP ユーザーとグループ同期
-      mcp_server: MCP Server
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Nextcloudストレージのシングルサインオン。
       one_drive_sharepoint_file_storage: OneDrive/SharePointファイルストレージ
@@ -2696,7 +2700,7 @@ ja:
         title: "カスタムアクション"
         description: "カスタムアクションは、ステータスに基づいて特定のワークパッケージで利用できる、事前に定義されたアクションです。"
       mcp_server:
-        description: "Integrate AI agents with your OpenProject instance through MCP."
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

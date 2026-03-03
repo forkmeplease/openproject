@@ -23,27 +23,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class ProjectArtifactsMailer < ApplicationMailer
-  include ProjectsHelper
-  include Exports::PDF::Common::Macro
+module McpConfigurations
+  class ServerUrlComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
 
-  def creation_wizard_submitted(user, project, artifact_work_package)
-    @project = project
-    @work_package = artifact_work_package
-    @notification_text = apply_markdown_field_macros(project.project_creation_wizard_notification_text, { project:, user: })
-
-    open_project_headers "Project" => project.identifier
-
-    message_id project, user
-
-    send_localized_mail(user) do
-      I18n.t("settings.project_initiation_request.status.submitted",
-             wizard_name: project_creation_wizard_name(project))
+    def server_url
+      url_helpers.api_mcp_url
     end
   end
 end

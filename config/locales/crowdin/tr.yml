@@ -286,7 +286,7 @@ tr:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "MCP (Model Bağlam Protokolü), AI ajanlarının bu OpenProject sisteminde sunulan araç ve kaynakları kullanıcılara erişilebilir kılmasını sağlar."
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "Kaynaklar"
         resources_description: "OpenProject aşağıdaki araçları destekler. Her biri etkinleştirilebilir, adı ve açıklaması değiştirilebilir. Daha fazla bilgi için   [documentation on MCP tools](docs_url)."
         resources_submit: "Kaynakları güncelle"
@@ -598,6 +598,10 @@ tr:
   danger_dialog:
     confirmation_live_message_checked: "Devam etmek için düğme artık aktif."
     confirmation_live_message_unchecked: "Devam etmek için düğme artık aktif değil. Devam etmek için işratlemeniz gerekli."
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "ya da"
     errors:
@@ -2673,7 +2677,7 @@ tr:
       edit_attribute_groups: Özellik Grubunu Düzenleme
       gantt_pdf_export: Gantt PDF Dışa Aktarma
       ldap_groups: LDAP kullanıcıları ve grup senkronizasyonu
-      mcp_server:
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Nextcloud Storage için Tek Oturum Açma
       one_drive_sharepoint_file_storage: OneDrive/SharePoint Dosya Depolama
@@ -2752,7 +2756,7 @@ tr:
         title: "Özel eylemler"
         description: "Özel eylemler, duruma, role, türe veya projeye göre belirli iş paketlerinde kullanıma sunabileceğiniz bir dizi önceden tanımlanmış eylemin tek tıkla kısayollarıdır."
       mcp_server:
-        description: "Yapay zeka aracılarını MCP aracılığıyla OpenProject örneğinizle entegre edin."
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

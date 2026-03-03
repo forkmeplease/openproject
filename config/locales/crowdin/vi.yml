@@ -280,7 +280,7 @@ vi:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "Giao thức bối cảnh mô hình cho phép các tác nhân AI cung cấp cho người dùng của mình các công cụ và tài nguyên được cung cấp bởi phiên bản OpenProject này."
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "Tài nguyên"
         resources_description: "OpenProject implements the following resources. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
         resources_submit: "Cập nhật tài nguyên"
@@ -591,6 +591,10 @@ vi:
   danger_dialog:
     confirmation_live_message_checked: "Nút để tiếp tục hiện đang hoạt động."
     confirmation_live_message_unchecked: "Nút để tiếp tục hiện không hoạt động. Bạn cần đánh dấu vào hộp kiểm để tiếp tục."
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "hoặc"
     errors:
@@ -2616,7 +2620,7 @@ vi:
       edit_attribute_groups: Chỉnh sửa nhóm thuộc tính
       gantt_pdf_export: Xuất PDF Gantt
       ldap_groups: Đồng bộ hóa nhóm và người dùng LDAP
-      mcp_server: Máy chủ MCP
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Đăng nhập một lần để lưu trữ Nextcloud
       one_drive_sharepoint_file_storage: Lưu trữ tệp OneDrive/SharePoint
@@ -2695,7 +2699,7 @@ vi:
         title: "Hành động tùy chỉnh"
         description: "Hành động tùy chỉnh là các phím tắt bằng một cú nhấp chuột tới một tập hợp các hành động được xác định trước mà bạn có thể cung cấp trên các gói công việc nhất định dựa trên trạng thái, vai trò, loại hoặc dự án."
       mcp_server:
-        description: "Tích hợp các tác nhân AI với phiên bản OpenProject của bạn thông qua MCP."
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

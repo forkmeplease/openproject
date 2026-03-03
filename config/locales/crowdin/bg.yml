@@ -286,7 +286,7 @@ bg:
             title: "Select projects"
     mcp_configurations:
       index:
-        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance."
+        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
         resources_heading: "Resources"
         resources_description: "OpenProject implements the following resources. Each can be enabled, renamed and described as you want. For more information, please refer to the [documentation on MCP resources](docs_url)."
         resources_submit: "Update resources"
@@ -597,6 +597,10 @@ bg:
   danger_dialog:
     confirmation_live_message_checked: "The button to proceed is now active."
     confirmation_live_message_unchecked: "The button to proceed is now inactive. You need to tick the checkbox to continue."
+  mcp_configurations:
+    server_url_component:
+      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      label: "Server URL"
   op_dry_validation:
     or: "или"
     errors:
@@ -2673,7 +2677,7 @@ bg:
       edit_attribute_groups: Edit Attribute Groups
       gantt_pdf_export: Gantt PDF Export
       ldap_groups: LDAP users and group sync
-      mcp_server: MCP Server
+      mcp_server: Model Context Protocol (MCP)
       meeting_templates: Reusable meeting templates
       nextcloud_sso: Single Sign-On for Nextcloud Storage
       one_drive_sharepoint_file_storage: OneDrive/SharePoint File Storage
@@ -2752,7 +2756,7 @@ bg:
         title: "Персонализирани действия"
         description: "Потребителските действия са преки пътища с едно кликване до набор от предварително дефинирани действия, които можете да направите достъпни за определени работни пакети въз основа на статус, роля, тип или проект."
       mcp_server:
-        description: "Integrate AI agents with your OpenProject instance through MCP."
+        description: "Bring OpenProject into your AI workflows with a secure MCP server."
       meeting_templates:
         description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
       nextcloud_sso:

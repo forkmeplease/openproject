@@ -23,15 +23,24 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ProjectHelper
-  def project_creation_wizard_name(project)
-    I18n.t(project.project_creation_wizard_artifact_name,
-           default: :project_initiation_request,
-           scope: "settings.project_initiation_request.name.options")
+class SetNextcloudDefaultProhibitedCharacters < ActiveRecord::Migration[8.0]
+  disable_ddl_transaction!
+
+  def up
+    execute <<~SQL.squish
+      UPDATE storages
+      SET provider_fields = provider_fields || '{ "forbidden_file_name_characters": "<>:\\"\\\\/|?*" }'::jsonb
+      WHERE provider_type = 'Storages::NextcloudStorage' AND NOT provider_fields ? 'forbidden_file_name_characters'
+    SQL
+  end
+
+  def down
+    # we'll not delete any JSONB data on rollback
+    # though there's also no need to artificially block rollbacks past this version
   end
 end
