@@ -103,7 +103,7 @@ module OpenProject::Backlogs
                    {},
                    permissible_on: :project,
                    require: :member,
-                   dependencies: %i[create_sprints],
+                   dependencies: :create_sprints,
                    visible: -> { OpenProject::FeatureDecisions.scrum_projects_active? }
       end
 
