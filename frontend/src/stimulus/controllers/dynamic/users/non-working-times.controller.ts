@@ -32,6 +32,8 @@ import { Controller } from '@hotwired/stimulus';
 import { Calendar } from '@fullcalendar/core';
 import multiMonthPlugin from '@fullcalendar/multimonth';
 import allLocales from '@fullcalendar/core/locales-all';
+import { renderStreamMessage } from '@hotwired/turbo';
+import { TurboHelpers } from 'core-turbo/helpers';
 
 interface NonWorkingDayEvent {
   date?:string;
@@ -40,6 +42,7 @@ interface NonWorkingDayEvent {
   title:string;
   type:'global' | 'user';
   workingDays?:number;
+  edit_url?:string;
 }
 
 export default class NonWorkingTimesController extends Controller {
@@ -97,9 +100,27 @@ export default class NonWorkingTimesController extends Controller {
         startTime: '00:00',
         endTime: '24:00',
       },
+      eventClick: (info) => {
+        const editUrl = info.event.extendedProps.editUrl as string | undefined;
+        if (editUrl) {
+          info.jsEvent.preventDefault();
+          this.openDialog(editUrl);
+        }
+      },
     });
 
     this.calendar.render();
+  }
+
+  private openDialog(url:string):void {
+    TurboHelpers.showProgressBar();
+
+    void fetch(url, {
+      headers: { Accept: 'text/vnd.turbo-stream.html' },
+    })
+      .then((response) => response.text())
+      .then((html) => { renderStreamMessage(html); })
+      .finally(() => { TurboHelpers.hideProgressBar(); });
   }
 
   private scrollToToday() {
@@ -126,7 +147,7 @@ export default class NonWorkingTimesController extends Controller {
         start: event.start,
         end: event.end,
         title: event.title,
-        extendedProps: { workingDays: event.workingDays },
+        extendedProps: { workingDays: event.workingDays, editUrl: event.edit_url },
         classNames: ['non-working-day--user'],
         allDay: true,
       };

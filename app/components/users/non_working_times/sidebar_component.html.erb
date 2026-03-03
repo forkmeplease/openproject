@@ -4,8 +4,16 @@
   <% end %>
 
   <% user_non_working_times.each do |nwt| %>
-    <%= render(Primer::Box.new(bg: :accent_emphasis, color: :on_emphasis, border_radius: 2, p: 2, mb: 1)) do %>
-      <%= range_label(nwt) %>
+    <% if can_update? %>
+      <%= link_to edit_href(nwt),
+                  class: "color-bg-accent-emphasis color-fg-on-emphasis rounded-2 p-2 mb-1 d-block",
+                  data: { controller: "async-dialog" } do %>
+        <%= range_label(nwt) %>
+      <% end %>
+    <% else %>
+      <%= render(Primer::Box.new(bg: :accent_emphasis, color: :on_emphasis, border_radius: 2, p: 2, mb: 1)) do %>
+        <%= range_label(nwt) %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

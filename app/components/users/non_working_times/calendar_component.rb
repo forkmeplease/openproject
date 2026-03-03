@@ -35,9 +35,14 @@ module Users
       include OpPrimer::ComponentHelpers
 
       options non_working_times: [],
-              year: Date.current.year
+              year: Date.current.year,
+              user: nil
 
       private
+
+      def can_update?
+        user.present? && UserNonWorkingTimes::UpdateContract.can_update?(user: User.current, target_user: user)
+      end
 
       def wrapper_data
         {
@@ -78,8 +83,9 @@ module Users
               end: (clipped.end_date + 1.day).iso8601,
               title: event_title(clipped),
               working_days: clipped.working_days_count,
-              type: "user"
-            }
+              type: "user",
+              edit_url: can_update? ? edit_user_non_working_time_path(user, nwt.id) : nil
+            }.compact
           end
       end
 

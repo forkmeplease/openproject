@@ -34,5 +34,9 @@ module UserNonWorkingTimes
       user.allowed_globally?(:manage_working_times) ||
         (model.user_id == user.id && user.allowed_globally?(:manage_own_working_times))
     }
+
+    def self.can_delete?(user:, target_user:)
+      BaseContract.can_manage?(user:, target_user:)
+    end
   end
 end

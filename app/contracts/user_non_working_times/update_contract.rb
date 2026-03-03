@@ -28,30 +28,10 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module NonWorkingTimes
-    class YearOverviewComponent < ApplicationComponent
-      attr_reader :non_working_times, :year, :user
-
-      def initialize(year:, non_working_times:, user:, **)
-        super(**)
-        @year = year
-        @non_working_times = non_working_times
-        @user = user
-      end
-
-      def call
-        render(Users::NonWorkingTimes::SubHeaderComponent.new(year:, user:)) +
-        render(Primer::Alpha::Layout.new(classes: "users-non-working-times-year-overview")) do |layout|
-          layout.with_main do
-            render(Users::NonWorkingTimes::CalendarComponent.new(non_working_times: non_working_times, year: year, user:))
-          end
-
-          layout.with_sidebar(col_placement: :end) do
-            render(Users::NonWorkingTimes::SidebarComponent.new(non_working_times: non_working_times, year: year, user:))
-          end
-        end
-      end
+module UserNonWorkingTimes
+  class UpdateContract < BaseContract
+    def self.can_update?(user:, target_user:)
+      can_manage?(user:, target_user:)
     end
   end
 end

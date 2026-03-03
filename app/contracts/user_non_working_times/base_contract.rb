@@ -38,6 +38,11 @@ module UserNonWorkingTimes
 
     def self.model = ::UserNonWorkingTime
 
+    def self.can_manage?(user:, target_user:)
+      user.allowed_globally?(:manage_working_times) ||
+        (target_user.id == user.id && user.allowed_globally?(:manage_own_working_times))
+    end
+
     private
 
     def validate_manage_permission

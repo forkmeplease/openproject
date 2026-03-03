@@ -31,7 +31,15 @@
 module Users
   module NonWorkingTimes
     class SubHeaderComponent < ApplicationComponent
-      options :year
+      options :year, :user
+
+      def can_create?
+        UserNonWorkingTimes::CreateContract.can_create?(user: User.current, target_user: user)
+      end
+
+      def new_non_working_time_href
+        new_user_non_working_time_path(user)
+      end
 
       def previous_year_attrs
         {

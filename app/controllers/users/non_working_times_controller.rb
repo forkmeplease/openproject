@@ -30,16 +30,17 @@
 
 class Users::NonWorkingTimesController < ApplicationController
   include WorkingTimesAuthorization
+  include OpTurbo::ComponentStream
 
   layout "admin"
 
   before_action :check_working_times_feature_flag_is_active
 
-  authorization_checked! :index, :create, :destroy
+  authorization_checked! :index, :new, :create, :edit, :update, :destroy, :working_days_preview
 
   before_action :find_user
   before_action :authorize_manage_working_times
-  before_action :find_non_working_time, only: %i[destroy]
+  before_action :find_non_working_time, only: %i[edit update destroy]
 
   def index
     @year = (params[:year].presence || Date.current.year).to_i
@@ -48,32 +49,78 @@ class Users::NonWorkingTimesController < ApplicationController
     render "users/edit"
   end
 
+  def new
+    @non_working_time = @user.non_working_times.build
+
+    respond_with_dialog(
+      Users::NonWorkingTimes::DialogComponent.new(user: @user, non_working_time: @non_working_time)
+    )
+  end
+
+  def edit
+    respond_with_dialog(
+      Users::NonWorkingTimes::DialogComponent.new(user: @user, non_working_time: @non_working_time)
+    )
+  end
+
   def create
     call = UserNonWorkingTimes::CreateService
              .new(user: current_user)
              .call(**non_working_time_params, user: @user)
 
     if call.success?
-      flash[:notice] = I18n.t(:notice_successful_create)
+      close_dialog_via_turbo_stream(Users::NonWorkingTimes::DialogComponent::DIALOG_ID)
+      reload_page_via_turbo_stream
     else
-      flash[:error] = call.errors.full_messages.join(", ")
+      update_via_turbo_stream(
+        component: Users::NonWorkingTimes::FormComponent.new(user: @user, non_working_time: call.result),
+        status: :unprocessable_entity
+      )
     end
 
-    redirect_to user_non_working_times_path(@user)
+    respond_with_turbo_streams
+  end
+
+  def update
+    call = UserNonWorkingTimes::UpdateService
+             .new(model: @non_working_time, user: current_user)
+             .call(**non_working_time_params)
+
+    if call.success?
+      close_dialog_via_turbo_stream(Users::NonWorkingTimes::DialogComponent::DIALOG_ID)
+      reload_page_via_turbo_stream
+    else
+      update_via_turbo_stream(
+        component: Users::NonWorkingTimes::FormComponent.new(user: @user, non_working_time: call.result),
+        status: :unprocessable_entity
+      )
+    end
+
+    respond_with_turbo_streams
   end
 
   def destroy
     call = UserNonWorkingTimes::DeleteService
-             .new(model: @user_non_working_time, user: current_user)
+             .new(model: @non_working_time, user: current_user)
              .call
 
     if call.success?
-      flash[:notice] = I18n.t(:notice_successful_delete)
+      reload_page_via_turbo_stream
     else
-      flash[:error] = call.errors.full_messages.join(", ")
+      render_error_flash_message_via_turbo_stream(message: call.errors.full_messages.join(", "))
     end
 
-    redirect_to user_non_working_times_path(@user)
+    respond_with_turbo_streams
+  end
+
+  def working_days_preview
+    start_date = Date.parse(params[:start_date])
+    end_date   = Date.parse(params[:end_date])
+    nwt = @user.non_working_times.build(start_date:, end_date:)
+
+    render json: { working_days: nwt.working_days_count }
+  rescue ArgumentError, TypeError
+    head :bad_request
   end
 
   private
@@ -85,12 +132,12 @@ class Users::NonWorkingTimesController < ApplicationController
   end
 
   def find_non_working_time
-    @user_non_working_time = @user.non_working_times.find(params[:id])
+    @non_working_time = @user.non_working_times.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
   def non_working_time_params
-    params.expect(non_working_time: [:date])
+    params.expect(user_non_working_time: %i[start_date end_date])
   end
 end

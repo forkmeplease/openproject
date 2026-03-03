@@ -70,6 +70,8 @@ class UserNonWorkingTime < ApplicationRecord
   end
 
   def working_days
+    return [] if start_date.blank? || end_date.blank?
+
     working_days_in(days)
   end
 
@@ -108,6 +110,7 @@ class UserNonWorkingTime < ApplicationRecord
 
   def no_overlapping_ranges
     return unless start_date.present? && end_date.present? && user_id.present?
+    return if end_date < start_date
 
     errors.add(:start_date, :overlapping_range) if overlapping_range_exists?
   end

@@ -921,7 +921,11 @@ Rails.application.routes.draw do
   resources :users, constraints: { id: /(\d+|me)/ }, except: :edit do
     resources :memberships, controller: "users/memberships", only: %i[update create destroy]
     resources :working_hours, controller: "users/working_hours"
-    resources :non_working_times, controller: "users/non_working_times", only: %i[index create destroy]
+    resources :non_working_times, controller: "users/non_working_times", only: %i[index new create edit update destroy] do
+      collection do
+        get :working_days_preview
+      end
+    end
 
     collection do
       get "/invite" => "users/invite#start_dialog"

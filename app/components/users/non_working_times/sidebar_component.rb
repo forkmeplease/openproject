@@ -34,7 +34,8 @@ module Users
       include OpPrimer::ComponentHelpers
 
       options non_working_times: [],
-              year: Date.current.year
+              year: Date.current.year,
+              user: nil
 
       private
 
@@ -57,18 +58,28 @@ module Users
         total_user_days + global_day_count
       end
 
+      def can_update?
+        user.present? && UserNonWorkingTimes::UpdateContract.can_update?(user: User.current, target_user: user)
+      end
+
+      def can_delete?
+        user.present? && UserNonWorkingTimes::DeleteContract.can_delete?(user: User.current, target_user: user)
+      end
+
+      def edit_href(clipped)
+        edit_user_non_working_time_path(user, clipped.id)
+      end
+
       def range_label(clipped)
         date_range = format_date_range(clipped.start_date, clipped.end_date)
         "#{date_range}: #{I18n.t('label_x_working_days', count: clipped.working_days_count)}"
       end
 
       def format_date_range(first, last)
-        if first.month == last.month && first.year == last.year
-          "#{I18n.l(first, format: '%b %d')}-#{last.day}, #{first.year}"
-        elsif first.year == last.year
-          "#{I18n.l(first, format: '%b %d')} - #{I18n.l(last, format: '%b %d')}, #{first.year}"
+        if first.year == last.year
+          "#{I18n.l(first, format: :short)} - #{I18n.l(last, format: :short)}, #{first.year}"
         else
-          "#{I18n.l(first, format: '%b %d, %Y')} - #{I18n.l(last, format: '%b %d, %Y')}"
+          "#{I18n.l(first, format: :long)} - #{I18n.l(last, format: :long)}"
         end
       end
     end

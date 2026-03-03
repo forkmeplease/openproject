@@ -30,27 +30,30 @@
 
 module Users
   module NonWorkingTimes
-    class YearOverviewComponent < ApplicationComponent
-      attr_reader :non_working_times, :year, :user
+    class DialogComponent < ApplicationComponent
+      include OpTurbo::Streamable
+      include OpPrimer::ComponentHelpers
 
-      def initialize(year:, non_working_times:, user:, **)
-        super(**)
-        @year = year
-        @non_working_times = non_working_times
+      DIALOG_ID = "non-working-time-dialog"
+
+      attr_reader :user, :non_working_time
+
+      def initialize(user:, non_working_time:, **)
+        super(nil, **)
         @user = user
+        @non_working_time = non_working_time
       end
 
-      def call
-        render(Users::NonWorkingTimes::SubHeaderComponent.new(year:, user:)) +
-        render(Primer::Alpha::Layout.new(classes: "users-non-working-times-year-overview")) do |layout|
-          layout.with_main do
-            render(Users::NonWorkingTimes::CalendarComponent.new(non_working_times: non_working_times, year: year, user:))
-          end
+      def title
+        non_working_time.persisted? ? t(:button_edit_non_working_time) : t(:button_add_non_working_time)
+      end
 
-          layout.with_sidebar(col_placement: :end) do
-            render(Users::NonWorkingTimes::SidebarComponent.new(non_working_times: non_working_times, year: year, user:))
-          end
-        end
+      def can_delete?
+        UserNonWorkingTimes::DeleteContract.can_delete?(user: User.current, target_user: user)
+      end
+
+      def destroy_url
+        user_non_working_time_path(user, non_working_time)
       end
     end
   end

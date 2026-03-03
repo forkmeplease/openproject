@@ -30,27 +30,34 @@
 
 module Users
   module NonWorkingTimes
-    class YearOverviewComponent < ApplicationComponent
-      attr_reader :non_working_times, :year, :user
+    class FormComponent < ApplicationComponent
+      include OpTurbo::Streamable
+      include OpPrimer::ComponentHelpers
 
-      def initialize(year:, non_working_times:, user:, **)
-        super(**)
-        @year = year
-        @non_working_times = non_working_times
+      FORM_ID = "non-working-time-form"
+
+      attr_reader :user, :non_working_time
+
+      def initialize(user:, non_working_time:, **)
+        super(nil, **)
         @user = user
+        @non_working_time = non_working_time
       end
 
-      def call
-        render(Users::NonWorkingTimes::SubHeaderComponent.new(year:, user:)) +
-        render(Primer::Alpha::Layout.new(classes: "users-non-working-times-year-overview")) do |layout|
-          layout.with_main do
-            render(Users::NonWorkingTimes::CalendarComponent.new(non_working_times: non_working_times, year: year, user:))
-          end
-
-          layout.with_sidebar(col_placement: :end) do
-            render(Users::NonWorkingTimes::SidebarComponent.new(non_working_times: non_working_times, year: year, user:))
-          end
+      def form_url
+        if non_working_time.persisted?
+          user_non_working_time_path(user, non_working_time)
+        else
+          user_non_working_times_path(user)
         end
+      end
+
+      def form_method
+        non_working_time.persisted? ? :patch : :post
+      end
+
+      def working_days_preview_url
+        working_days_preview_user_non_working_times_path(user)
       end
     end
   end

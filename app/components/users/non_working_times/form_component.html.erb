@@ -1,0 +1,20 @@
+<%= component_wrapper do %>
+  <%= primer_form_with(
+        model: non_working_time,
+        url: form_url,
+        method: form_method,
+        id: FORM_ID,
+        data: {
+          controller: "users--non-working-times-form",
+          "users--non-working-times-form-preview-url-value" => working_days_preview_url
+        }
+      ) do |f| %>
+    <%= render(Users::NonWorkingTimes::Form.new(f)) %>
+
+    <% if non_working_time.errors.any? %>
+      <%= render(Primer::Beta::Flash.new(scheme: :danger, mt: 2)) do %>
+        <%= non_working_time.errors.full_messages.join(", ") %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

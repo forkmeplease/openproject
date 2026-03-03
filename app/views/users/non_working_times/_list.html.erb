@@ -27,7 +27,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%= render(Users::NonWorkingTimes::SubHeaderComponent.new(year: @year)) %>
+<%= render(Users::NonWorkingTimes::SubHeaderComponent.new(year: @year, user: @user)) %>
 
 <%= render(Primer::OpenProject::FlexLayout.new(align_items: :flex_start, gap: :normal)) do |layout| %>
   <% layout.with_column(flex: 1) do %>
