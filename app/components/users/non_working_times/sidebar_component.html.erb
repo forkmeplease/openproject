@@ -1,38 +1,32 @@
-<%= render(Primer::Beta::BorderBox.new(mb: 3)) do |box| %>
-  <% box.with_header do %>
-    <%= t(:label_non_working_times_with_count, count: total_user_days) %>
+<%= render(Primer::Box.new(border: true, border_radius: 3, p: 3, mb: 3)) do %>
+  <%= render(Primer::Beta::Heading.new(tag: :h3, mb: 2)) do %>
+    <%= t(:label_non_working_times_with_count, year:, count: total_user_days) %>
   <% end %>
 
-  <% user_ranges.each do |range| %>
-    <% box.with_row(bg: :accent_emphasis, color: :on_emphasis) do %>
-      <%= range_label(range) %>
+  <% user_non_working_times.each do |nwt| %>
+    <%= render(Primer::Box.new(bg: :accent_emphasis, color: :on_emphasis, border_radius: 2, p: 2, mb: 1)) do %>
+      <%= range_label(nwt) %>
     <% end %>
   <% end %>
 <% end %>
 
-<%= render(Primer::Beta::BorderBox.new) do |box| %>
-  <% box.with_header do %>
-    <%= t(:label_non_working_times_summary) %>
+<%= render(Primer::Box.new(border: true, border_radius: 3, p: 3)) do %>
+  <%= render(Primer::Beta::Heading.new(tag: :h3, mb: 2)) do %>
+    <%= t(:label_non_working_times_summary, year:) %>
   <% end %>
 
-  <% box.with_row do %>
-    <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between)) do |row| %>
-      <% row.with_column { t(:label_total_user_non_working_times) } %>
-      <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold, color: :accent)) { total_user_days.to_s } } %>
-    <% end %>
+  <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between, mb: 1)) do |row| %>
+    <% row.with_column { t(:label_total_user_non_working_times) } %>
+    <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold, color: :accent)) { total_user_days.to_s } } %>
   <% end %>
 
-  <% box.with_row do %>
-    <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between)) do |row| %>
-      <% row.with_column { t(:label_total_global_non_working_times) } %>
-      <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold, color: :accent)) { global_day_count.to_s } } %>
-    <% end %>
+  <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between, mb: 2)) do |row| %>
+    <% row.with_column { t(:label_total_global_non_working_days) } %>
+    <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold, color: :sponsors)) { global_day_count.to_s } } %>
   <% end %>
 
-  <% box.with_row do %>
-    <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between)) do |row| %>
-      <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold)) { t(:label_total_days_off) } } %>
-      <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold)) { total_days.to_s } } %>
-    <% end %>
+  <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between)) do |row| %>
+    <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold)) { t(:label_total_days_off) } } %>
+    <% row.with_column { render(Primer::Beta::Text.new(font_weight: :bold)) { total_days.to_s } } %>
   <% end %>
 <% end %>

@@ -38,13 +38,11 @@ module Users
 
       private
 
-      def user_ranges
-        user_days = non_working_times
+      def user_non_working_times
+        non_working_times
           .grep(UserNonWorkingTime)
-          .map(&:date)
-          .sort
-
-        consecutive_ranges(user_days)
+          .sort_by(&:start_date)
+          .map { |nwt| nwt.clip_to_year(year) }
       end
 
       def global_day_count
@@ -52,16 +50,16 @@ module Users
       end
 
       def total_user_days
-        user_ranges.sum(&:count)
+        user_non_working_times.sum(&:working_days_count)
       end
 
       def total_days
         total_user_days + global_day_count
       end
 
-      def range_label(range)
-        count = range.count
-        "#{format_date_range(range.first, range.last)}: #{I18n.t('label_x_days', count:)}"
+      def range_label(clipped)
+        date_range = format_date_range(clipped.start_date, clipped.end_date)
+        "#{date_range}: #{I18n.t('label_x_working_days', count: clipped.working_days_count)}"
       end
 
       def format_date_range(first, last)
@@ -72,25 +70,6 @@ module Users
         else
           "#{I18n.l(first, format: '%b %d, %Y')} - #{I18n.l(last, format: '%b %d, %Y')}"
         end
-      end
-
-      def consecutive_ranges(dates)
-        return [] if dates.empty?
-
-        ranges = []
-        current_range = [dates.first]
-
-        dates.drop(1).each do |date|
-          if date == current_range.last + 1.day
-            current_range << date
-          else
-            ranges << current_range
-            current_range = [date]
-          end
-        end
-
-        ranges << current_range
-        ranges
       end
     end
   end

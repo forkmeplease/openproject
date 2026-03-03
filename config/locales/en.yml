@@ -4206,6 +4206,12 @@ en:
   label_x_days:
     one: "1 day"
     other: "%{count} days"
+  label_x_working_days:
+    one: "1 working day"
+    other: "%{count} working days"
+  label_x_working_days_time_off:
+    one: "Time off: 1 working day"
+    other: "Time off: %{count} working days"
   label_yesterday: "yesterday"
   label_zen_mode: "Zen mode"
   label_role_type: "Type"
@@ -4219,7 +4225,11 @@ en:
   label_non_working_days: "Availability calendar"
   label_non_working_days_with_count: "Non-working days (%{count})"
   label_non_working_days_summary: "Summary"
-  label_total_user_non_working_times: "Total non-working days"
+  label_continued_from_previous_year: "continued from previous year"
+  label_continues_into_next_year: "continues into next year"
+  label_non_working_times_with_count: "%{year} time off (%{count})"
+  label_non_working_times_summary: "%{year} summary"
+  label_total_user_non_working_times: "Personal non-working days"
   label_total_global_non_working_days: "Global non-working days"
   label_total_days_off: "Total days off"
   macro_execution_error: "Error executing the macro %{macro_name}"

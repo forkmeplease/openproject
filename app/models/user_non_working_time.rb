@@ -29,6 +29,16 @@
 #++
 
 class UserNonWorkingTime < ApplicationRecord
+  ClippedNonWorkingTime = Data.define(
+    :non_working_time,
+    :start_date,
+    :end_date,
+    :working_days_count,
+    :continues_from_previous_year,
+    :continues_into_next_year
+  ) do
+    delegate :id, :user, :user_id, to: :non_working_time
+  end
   belongs_to :user, inverse_of: :non_working_times
 
   validates :start_date, :end_date, presence: true
@@ -60,14 +70,35 @@ class UserNonWorkingTime < ApplicationRecord
   end
 
   def working_days
-    working_wdays = Setting.working_days.map { |d| d % 7 }
-    system_wide = NonWorkingDay.where(date: days).pluck(:date).to_set
-    days.select { |date| working_wdays.include?(date.wday) && system_wide.exclude?(date) }
+    working_days_in(days)
   end
 
   delegate :count, to: :working_days, prefix: true
 
+  def clip_to_year(year)
+    year_start = Date.new(year, 1, 1)
+    year_end   = Date.new(year, 12, 31)
+
+    clipped_start = [start_date, year_start].max
+    clipped_end   = [end_date,   year_end].min
+
+    ClippedNonWorkingTime.new(
+      non_working_time: self,
+      start_date: clipped_start,
+      end_date: clipped_end,
+      working_days_count: working_days_in(clipped_start..clipped_end).count,
+      continues_from_previous_year: start_date < year_start,
+      continues_into_next_year: end_date > year_end
+    )
+  end
+
   private
+
+  def working_days_in(date_range)
+    working_wdays = Setting.working_days.map { |d| d % 7 }
+    system_wide = NonWorkingDay.where(date: date_range).pluck(:date).to_set
+    date_range.select { |date| working_wdays.include?(date.wday) && system_wide.exclude?(date) }
+  end
 
   def end_date_not_before_start_date
     return unless start_date.present? && end_date.present?

@@ -39,6 +39,7 @@ interface NonWorkingDayEvent {
   end?:string;
   title:string;
   type:'global' | 'user';
+  workingDays?:number;
 }
 
 export default class NonWorkingTimesController extends Controller {
@@ -62,11 +63,14 @@ export default class NonWorkingTimesController extends Controller {
   private calendar:Calendar;
 
   connect() {
-      this.initializeCalendar();
+    this.initializeCalendar();
 
-      // The stimulus controller gets initialized before the content wrapper is fully shown
-      // so its height might not be set correctly yet.
-      setTimeout(() => this.calendar.updateSize(), 25);
+    // The stimulus controller gets initialized before the content wrapper is fully shown
+    // so its height might not be set correctly yet.
+    setTimeout(() => {
+      this.calendar.updateSize();
+      this.scrollToToday();
+    }, 25);
   }
 
   disconnect() {
@@ -98,6 +102,15 @@ export default class NonWorkingTimesController extends Controller {
     this.calendar.render();
   }
 
+  private scrollToToday() {
+    if (this.yearValue !== new Date().getFullYear()) return;
+
+    this.calendarTarget
+      .querySelector('.fc-day-today')
+      ?.closest('.fc-multimonth-month')
+      ?.scrollIntoView({ block: 'start' });
+  }
+
   private buildEvents() {
     return this.eventsValue.map((event) => {
       if (event.type === 'global') {
@@ -113,6 +126,7 @@ export default class NonWorkingTimesController extends Controller {
         start: event.start,
         end: event.end,
         title: event.title,
+        extendedProps: { workingDays: event.workingDays },
         classNames: ['non-working-day--user'],
         allDay: true,
       };

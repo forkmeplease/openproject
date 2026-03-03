@@ -69,19 +69,29 @@ module Users
       end
 
       def user_events
-        user_days = non_working_times
+        non_working_times
           .grep(UserNonWorkingTime)
-          .map(&:date)
-          .sort
+          .map do |nwt|
+            clipped = nwt.clip_to_year(year)
+            {
+              start: clipped.start_date.iso8601,
+              end: (clipped.end_date + 1.day).iso8601,
+              title: event_title(clipped),
+              working_days: clipped.working_days_count,
+              type: "user"
+            }
+          end
+      end
 
-        consecutive_ranges(user_days).map do |range|
-          days = range.count
-          {
-            start: range.first.iso8601,
-            end: (range.last + 1.day).iso8601,
-            title: I18n.t("label_x_days", count: days),
-            type: "user"
-          }
+      def event_title(clipped)
+        base = I18n.t("label_x_working_days_time_off", count: clipped.working_days_count)
+
+        if clipped.continues_from_previous_year
+          "#{base} (#{I18n.t('label_continued_from_previous_year')})"
+        elsif clipped.continues_into_next_year
+          "#{base} (#{I18n.t('label_continues_into_next_year')})"
+        else
+          base
         end
       end
 
@@ -91,26 +101,6 @@ module Users
       # Nil defaults to 1 (Monday) to match Rails/OpenProject convention.
       def first_day_of_week
         (Setting.start_of_week || 1) % 7
-      end
-
-      # Groups a sorted array of dates into consecutive ranges.
-      def consecutive_ranges(dates)
-        return [] if dates.empty?
-
-        ranges = []
-        current_range = [dates.first]
-
-        dates.drop(1).each do |date|
-          if date == current_range.last + 1.day
-            current_range << date
-          else
-            ranges << current_range
-            current_range = [date]
-          end
-        end
-
-        ranges << current_range
-        ranges
       end
     end
   end
