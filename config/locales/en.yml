@@ -134,7 +134,7 @@ en:
         new: "New configuration"
       banner:
         title: "Limited import"
-        description: "This import tool is currently in beta and can only import basic data: projects, issues (name, title, description, attachments), users (name, email, project membership), statuses, and types. It cannot import custom workflows, custom fields, issue relations, or permissions. We currently only support Jira Server/Data Center versions 10.x and 11.x. Cloud instances are not supported at this time."
+        description: "This import tool is currently in beta and can only import basic data: projects, issues (name, title, description, attachments), users (name, email, project membership), statuses, and types. It cannot import workflows, custom fields, issue relations, or permissions. We currently only support Jira Server/Data Center versions 10.x and 11.x. Cloud instances are not supported at this time."
       form:
         fields:
           name: "Name"
@@ -231,8 +231,8 @@ en:
             fetch_data:
               title: "Fetch instance meta data"
               caption_done: "Completed"
-              description: "Click the button below to query the host to see what data is available to import."
-              button_fetch: "Check available data from host"
+              description: "Check what data is available for import in the host Jira instance."
+              button_fetch: "Check available data"
               label_progress: "Fetching data from Jira..."
             groups_and_users:
               title: "Groups and Users"
@@ -240,8 +240,8 @@ en:
               title: "Import scope"
               caption: "Choose what you want to import into OpenProject"
               caption_done: "Completed"
-              label_info: "Please note that this import tool is in beta and cannot import all types of data. Here is a summary of what the host URL offers for import and what this tool is able to import right now."
-              description: "Select what data you want to import from the available data fetched from the host."
+              label_info: "Please note that this import tool is in beta and cannot import all types of data. Here is a summary of what the host Jira instance URL offers for import and what this tool is able to import right now."
+              description: "Select what data you want to import from the available data fetched from the host Jira instance."
               label_available_data: "Available data"
               label_not_available_data: "Not available for import"
               button_select_projects: "Select projects to import"
@@ -253,11 +253,11 @@ en:
               label_importing: "Currently importing"
               elements:
                 relations: "Relations between issues"
-                workflows: "Custom workflows"
+                workflows: "Project-level workflows"
                 users: "Users"
                 sprints: "Sprints"
                 schemes: "Schemas"
-                permissions: "Permissions, roles"
+                permissions: "User, group and project permissions"
             confirm_import:
               title: "Import data"
               caption: "Review your import settings and start the import"
