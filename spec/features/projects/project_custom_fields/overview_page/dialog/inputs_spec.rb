@@ -42,11 +42,12 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
   end
 
   describe "with correct initialization and input behaviour" do
+    # not using let as dialog is closed every time, so new should be opened
+    def dialog = overview_page.open_modal_for_custom_field(custom_field)
+
     describe "with input fields" do
       shared_examples "a custom field checkbox" do
         it "shows the correct value if given" do
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
-
           dialog.within_async_content(close_after_yield: true) do
             if expected_initial_value
               expect(page).to have_checked_field(custom_field.name)
@@ -59,8 +60,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
         it "is unchecked if no value and no default value is given" do
           custom_field.custom_values.destroy_all
 
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
-
           dialog.within_async_content(close_after_yield: true) do
             expect(page).to have_no_checked_field(custom_field.name)
           end
@@ -71,15 +70,11 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
           custom_field.update!(default_value: true)
 
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
-
           dialog.within_async_content(close_after_yield: true) do
             expect(page).to have_checked_field(custom_field.name)
           end
 
           custom_field.update!(default_value: false)
-
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
 
           dialog.within_async_content(close_after_yield: true) do
             expect(page).to have_no_checked_field(custom_field.name)
@@ -89,8 +84,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
       shared_examples "a custom field input" do
         it "shows the correct value if given" do
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
-
           dialog.within_async_content(close_after_yield: true) do
             expect(page).to have_field(custom_field.name, with: expected_initial_value)
           end
@@ -98,8 +91,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
         it "shows a blank input if no value or default value is given" do
           custom_field.custom_values.destroy_all
-
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
 
           dialog.within_async_content(close_after_yield: true) do
             expect(page).to have_field(custom_field.name, with: expected_blank_value)
@@ -110,8 +101,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           custom_field.custom_values.destroy_all
           custom_field.update!(default_value:)
 
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
-
           dialog.within_async_content(close_after_yield: true) do
             expect(page).to have_field(custom_field.name, with: default_value)
           end
@@ -120,8 +109,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
       shared_examples "a rich text custom field input" do
         it "shows the correct value if given" do
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
-
           dialog.within_async_content(close_after_yield: true) do
             field.expect_value(expected_initial_value)
           end
@@ -129,8 +116,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
         it "shows a blank input if no value or default value is given" do
           custom_field.custom_values.destroy_all
-
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
 
           dialog.within_async_content(close_after_yield: true) do
             field.expect_value(expected_blank_value)
@@ -140,8 +125,6 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
         it "shows the default value if no value is given" do
           custom_field.custom_values.destroy_all
           custom_field.update!(default_value:)
-
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
 
           dialog.within_async_content(close_after_yield: true) do
             field.expect_value(default_value)
