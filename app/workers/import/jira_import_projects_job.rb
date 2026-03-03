@@ -173,9 +173,9 @@ module Import
               # required because otherwise project.types does not include type and then wp creation fails.
               project.reload
               author_key = jira_issue.payload.dig("fields", "creator", "key")
-              author = find_user(author_key)
+              author = find_user(author_key, jira_import)
               assignee_key = jira_issue.payload.dig("fields", "assignee", "key")
-              assigned_to = find_user(assignee_key)
+              assigned_to = find_user(assignee_key, jira_import)
               members = [author, assigned_to]
               members.uniq!
               members.compact!
@@ -242,8 +242,10 @@ module Import
 
     private
 
-    def find_user(jira_user_key)
-      jira_user = Import::JiraUser.find_by(jira_user_key:)
+    def find_user(jira_user_key, jira_import)
+      return if jira_user_key.blank?
+
+      jira_user = Import::JiraUser.find_by(jira_user_key:, jira_import:)
       if jira_user
         JiraOpenProjectReference.find_by!(
           jira_entity_class: "Import::JiraUser",
