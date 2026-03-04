@@ -44,5 +44,6 @@ module Meetings
     attribute :start_time_hour
     attribute :template
     attribute :notify
+    attribute :sharing
   end
 end

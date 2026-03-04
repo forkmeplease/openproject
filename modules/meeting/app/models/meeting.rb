@@ -91,6 +91,10 @@ class Meeting < ApplicationRecord
     joins(:participants).where(meeting_participants: { user_id: user.id })
   }
 
+  scope :available_onetime_templates, -> {
+    onetime_templates.where(project_id: Project.active.select(:id))
+  }
+
   acts_as_attachable(
     after_remove: :attachments_changed,
     order: "#{Attachment.table_name}.file",
@@ -134,6 +138,21 @@ class Meeting < ApplicationRecord
     cancelled: 4,
     closed: 5
   }
+
+  enum :sharing, {
+    none: 0,
+    descendants: 1,
+    system: 2
+  }, prefix: :sharing
+
+  def self.templates_visible_in_project(project, user = User.current)
+    accessible_ids = Project.allowed_to(user, :view_meetings).select(:id)
+
+    available_onetime_templates
+      .where(project_id: project.id).where(project_id: accessible_ids)
+      .or(available_onetime_templates.where(sharing: :descendants, project_id: project.ancestors.select(:id)))
+      .or(available_onetime_templates.where(sharing: :system))
+  end
 
   def recurring?
     recurring_meeting_id.present?

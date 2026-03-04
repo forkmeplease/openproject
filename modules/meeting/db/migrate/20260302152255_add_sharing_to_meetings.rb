@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -27,40 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Meetings
-  class SetAttributesService < ::BaseServices::SetAttributes
-    def set_attributes(params)
-      participants = params.delete(:participants_attributes)
-
-      super
-
-      if participants.present?
-        set_participants(participants)
-      else
-        set_default_participant
-      end
-    end
-
-    def set_default_attributes(_params) # rubocop:disable Metrics/AbcSize
-      model.change_by_system do
-        model.author = user
-        model.duration ||= 1
-        model.state = "draft" if !model.recurring? || model.template?
-        model.notify = false
-        model.sharing = "none"
-      end
-    end
-
-    def set_participants(participants_attributes)
-      model.participants.clear if model.new_record?
-      model.participants_attributes = participants_attributes
-    end
-
-    def set_default_participant
-      return if model.participants.present? || model.persisted?
-      return if user.builtin?
-
-      model.participants.build(user:, invited: true)
-    end
+class AddSharingToMeetings < ActiveRecord::Migration[8.1]
+  def change
+    add_column :meetings, :sharing, :integer, null: false, default: 0
   end
 end

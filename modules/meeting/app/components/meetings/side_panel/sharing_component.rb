@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -28,39 +29,30 @@
 #++
 
 module Meetings
-  class SetAttributesService < ::BaseServices::SetAttributes
-    def set_attributes(params)
-      participants = params.delete(:participants_attributes)
+  class SidePanel::SharingComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
+    def initialize(meeting:)
       super
 
-      if participants.present?
-        set_participants(participants)
-      else
-        set_default_participant
-      end
+      @meeting = meeting
+      @project = meeting.project
     end
 
-    def set_default_attributes(_params) # rubocop:disable Metrics/AbcSize
-      model.change_by_system do
-        model.author = user
-        model.duration ||= 1
-        model.state = "draft" if !model.recurring? || model.template?
-        model.notify = false
-        model.sharing = "none"
-      end
+    def render?
+      User.current.allowed_in_project?(:edit_meetings, @project)
     end
 
-    def set_participants(participants_attributes)
-      model.participants.clear if model.new_record?
-      model.participants_attributes = participants_attributes
+    private
+
+    def sharing_label(sharing)
+      I18n.t("label_meeting_template_sharing_#{sharing}")
     end
 
-    def set_default_participant
-      return if model.participants.present? || model.persisted?
-      return if user.builtin?
-
-      model.participants.build(user:, invited: true)
+    def change_sharing_path(sharing)
+      change_sharing_project_meeting_path(@project, @meeting, sharing:)
     end
   end
 end
