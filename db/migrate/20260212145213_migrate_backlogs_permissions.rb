@@ -13,25 +13,25 @@ class MigrateBacklogsPermissions < ActiveRecord::Migration[8.1]
     ::Migration::MigrationUtils::PermissionRenamer.rename(:update_sprints, :create_sprints)
 
     ::Migration::MigrationUtils::PermissionAdder.add(:assign_versions, :manage_sprint_items)
-    ::Migration::MigrationUtils::PermissionAdder.add(:add_work_packages, :manage_sprint_items)
-    ::Migration::MigrationUtils::PermissionAdder.add(:edit_work_packages, :manage_sprint_items)
   end
 
   def down
-    ::Migration::MigrationUtils::PermissionAdder.add(:view_sprints, :view_taskboards, force: true)
-    ::Migration::MigrationUtils::PermissionRenamer.rename(:view_sprints, :view_master_backlog, force: true)
+    # Note: Ideally the `:view_taskboards`, `:view_master_backlog`, `:manage_versions`,
+    # `:select_done_statuses`, `:update_sprints` permissions should be restored too,
+    # but unfortunately we cannot know which one lead to the user gaining `:view_sprints`
+    # or `:create_sprints` permissions.
+    # There are 2 possible solutions for this issue:
+    #   1. Grant both the `:view_taskboards`, `:view_master_backlog` where `:view_sprints` was granted.
+    #      Respectively, grant `:manage_versions`, `:select_done_statuses`, `:update_sprints` permissions
+    #      where `:create_sprints` was granted. Unfortunately this leads to users gaining permissions
+    #      they didn't possibly had before the migration.
+    #   2. Grant none of the undecisible permissions, which leads to users losing permissions they had
+    #      before the migration.
+    #
+    # The conservative approach here is to pick #2, because it avoids accidentally leaking permissions
+    # to users.
 
-    # Note: Some roles might receive extra permissions on the way down because,
-    # we need to add back all the roles that have been merged on the way up.
-    ::Migration::MigrationUtils::PermissionAdder.add(:create_sprints, :manage_versions)
-    ::Migration::MigrationUtils::PermissionAdder.add(:create_sprints, :select_done_statuses, force: true)
-    ::Migration::MigrationUtils::PermissionAdder.add(:create_sprints, :update_sprints, force: true)
-
-    ::Migration::MigrationUtils::PermissionAdder.add(:manage_sprint_items, :assign_versions)
-    ::Migration::MigrationUtils::PermissionAdder.add(:manage_sprint_items, :add_work_packages)
-    ::Migration::MigrationUtils::PermissionAdder.add(:manage_sprint_items, :edit_work_packages)
-
-    # Remove new permissions that were added during up
-    RolePermission.delete_by(permission: %w(create_sprints manage_sprint_items))
+    # Remove new permissions that were added during the up migration
+    RolePermission.delete_by(permission: %w(view_sprints create_sprints manage_sprint_items))
   end
 end

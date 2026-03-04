@@ -34,82 +34,69 @@ require Rails.root.join("db/migrate/20260212145213_migrate_backlogs_permissions"
 RSpec.describe MigrateBacklogsPermissions, type: :model do
   subject(:migrate) { ActiveRecord::Migration.suppress_messages { described_class.migrate(:up) } }
 
-  let!(:empty_role) { create(:project_role) }
-  # Using add_public_permissions: false to keep permission sets minimal.
-  let!(:backlog_viewer_role) do
-    create(:project_role, permissions: %i[view_master_backlog], add_public_permissions: false)
+  # source permission => expected permissions after up migration.
+  up_mapping = {
+    view_master_backlog: %i[view_sprints],
+    view_taskboards: %i[view_sprints],
+    select_done_statuses: %i[create_sprints],
+    update_sprints: %i[create_sprints],
+    manage_versions: %i[manage_versions create_sprints],
+    assign_versions: %i[assign_versions manage_sprint_items]
+  }
+
+  # source permission => expected permissions after rollback.
+  # Backlogs-specific permissions (view_master_backlog, view_taskboards, select_done_statuses,
+  # update_sprints) are lost because the down migration cannot determine the original source.
+  down_mapping = {
+    view_master_backlog: [],
+    view_taskboards: [],
+    select_done_statuses: [],
+    update_sprints: [],
+    manage_versions: %i[manage_versions],
+    assign_versions: %i[assign_versions]
+  }
+
+  let(:all_source_permissions) do
+    %i(view_master_backlog
+       view_taskboards
+       select_done_statuses
+       update_sprints
+       manage_versions
+       assign_versions)
   end
-  let!(:taskboard_viewer_role) do
-    create(:project_role, permissions: %i[view_taskboards], add_public_permissions: false)
-  end
-  let(:member_role_permissions) do
-    %i[view_master_backlog view_taskboards add_work_packages
-       edit_work_packages assign_versions]
-  end
-  let(:migrated_member_role_permissions) do
-    %i[add_work_packages edit_work_packages assign_versions view_sprints manage_sprint_items]
-  end
-  let!(:member_role) do
-    create(:project_role, permissions: member_role_permissions, add_public_permissions: false)
-  end
-  let(:manager_role_permissions) do
-    %i[view_master_backlog view_taskboards manage_versions select_done_statuses
-       update_sprints assign_versions add_work_packages edit_work_packages]
-  end
-  let(:migrated_manager_role_permissions) do
-    %i[manage_versions add_work_packages edit_work_packages assign_versions
-       view_sprints create_sprints manage_sprint_items]
-  end
-  let!(:manager_role) do
-    create(:project_role, permissions: manager_role_permissions, add_public_permissions: false)
-  end
+
+  let!(:role) { create(:project_role, permissions:, add_public_permissions: false) }
 
   describe "migrating up" do
-    it "does not add any permissions to a role without backlogs permissions" do
-      expect { migrate }.not_to change { empty_role.reload.permissions }
+    context "with a role having no backlogs permissions" do
+      let(:permissions) { [] }
+
+      it "does not change permissions" do
+        expect { migrate }.not_to change { role.reload.permissions }
+      end
     end
 
-    it "migrates manager_role permissions correctly" do
-      expect { migrate }
-        .to change { manager_role.reload.permissions }
-        .from(match_array(manager_role_permissions))
-        .to(match_array(migrated_manager_role_permissions))
+    up_mapping.each do |source_permission, expected_permissions|
+      context "with a role having only :#{source_permission} permission" do
+        let(:permissions) { [source_permission] }
+
+        it "results in #{expected_permissions}" do
+          expect { migrate }
+            .to change { role.reload.permissions }
+            .from(contain_exactly(source_permission))
+            .to(match_array(expected_permissions))
+        end
+      end
     end
 
-    it "migrates backlog_viewer_role permissions correctly" do
-      expect { migrate }
-        .to change { backlog_viewer_role.reload.permissions }
-        .from(match_array(%i[view_master_backlog]))
-        .to(match_array(%i[view_sprints]))
-    end
+    context "with a role combining all source permissions" do
+      let(:permissions) { all_source_permissions }
 
-    it "migrates taskboard_viewer_role permissions correctly" do
-      expect { migrate }
-        .to change { taskboard_viewer_role.reload.permissions }
-        .from(match_array(%i[view_taskboards]))
-        .to(match_array(%i[view_sprints]))
-    end
-
-    it "migrates member_role permissions correctly" do
-      expect { migrate }
-        .to change { member_role.reload.permissions }
-        .from(match_array(member_role_permissions))
-        .to(match_array(migrated_member_role_permissions))
-    end
-
-    it "does not duplicate view_sprints when role had both view_master_backlog and view_taskboards" do
-      migrate
-      expect(manager_role.reload.role_permissions.where(permission: "view_sprints").count).to eq(1)
-    end
-
-    it "does not duplicate create_sprints when role has multiple source permissions" do
-      migrate
-      expect(manager_role.reload.role_permissions.where(permission: "create_sprints").count).to eq(1)
-    end
-
-    it "does not duplicate manage_sprint_items when role has multiple source permissions" do
-      migrate
-      expect(manager_role.reload.role_permissions.where(permission: "manage_sprint_items").count).to eq(1)
+      it "migrates to all new permissions plus retained core permissions" do
+        expect { migrate }
+          .to change { role.reload.permissions }
+          .to(match_array(%i[view_sprints create_sprints manage_sprint_items manage_versions assign_versions]))
+      end
     end
   end
 
@@ -118,25 +105,26 @@ RSpec.describe MigrateBacklogsPermissions, type: :model do
 
     before { migrate }
 
-    it "reverts backlog_viewer_role permissions" do
-      expect { rollback }
-        .to change { backlog_viewer_role.reload.permissions }
-        .from(match_array(%i[view_sprints]))
-        .to(match_array(%i[view_taskboards view_master_backlog]))
+    down_mapping.each do |source_permission, expected_permissions|
+      context "with a role originally having only :#{source_permission} permission" do
+        let(:permissions) { [source_permission] }
+
+        it "retains #{expected_permissions.empty? ? 'no' : expected_permissions} permissions" do
+          expect { rollback }
+            .to change { role.reload.permissions }
+            .to(match_array(expected_permissions))
+        end
+      end
     end
 
-    it "reverts manager_role permissions" do
-      expect { rollback }
-        .to change { manager_role.reload.permissions }
-        .from(match_array(migrated_manager_role_permissions))
-        .to(match_array(manager_role_permissions))
-    end
+    context "with a role combining all source permissions" do
+      let(:permissions) { all_source_permissions }
 
-    it "reverts member_role permissions" do
-      expect { rollback }
-        .to change { member_role.reload.permissions }
-        .from(match_array(migrated_member_role_permissions))
-        .to(match_array(member_role_permissions))
+      it "retains only core permissions that were not deleted during up" do
+        expect { rollback }
+          .to change { role.reload.permissions }
+          .to(match_array(%i[manage_versions assign_versions]))
+      end
     end
   end
 end

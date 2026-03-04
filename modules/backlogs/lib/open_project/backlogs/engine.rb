@@ -97,7 +97,7 @@ module OpenProject::Backlogs
                    { rb_stories: %i[move reorder] },
                    permissible_on: :project,
                    require: :member,
-                   dependencies: %i[view_sprints add_work_packages edit_work_packages]
+                   dependencies: :view_sprints
 
         permission :share_sprint,
                    {},
