@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,17 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module API
-  class OpenProjectAPI < ::Grape::API
-    include ::API::AppsignalAPI
+module OpenProject::Patches::GrapeDslRouting
+  extend ActiveSupport::Concern
 
-    class << self
-      def inherited(api, *)
-        super
+  included do
+    # Be reload safe. otherwise, an infinite loop occurs on reload.
+    unless method_defined?(:orig_namespace)
+      alias :orig_namespace :namespace
+    end
 
-        # run unscoped patches (i.e. patches that are on the class root, not in a namespace)
-        api.apply_patches(nil)
+    def namespace(space = nil, **, &)
+      orig_namespace(space, **) do
+        instance_eval(&)
+        apply_patches(space)
       end
     end
+
+    def apply_patches(path)
+      (patches[path] || []).each do |patch|
+        instance_eval(&patch)
+      end
+    end
+
+    def patches
+      Constants::APIPatchRegistry.patches_for(self)
+    end
   end
+end
+
+OpenProject::Patches.patch_gem_version "grape", "3.1.1" do
+  Grape::DSL::Routing.include OpenProject::Patches::GrapeDslRouting
 end
