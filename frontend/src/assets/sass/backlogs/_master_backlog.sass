@@ -86,19 +86,26 @@ $op-backlogs-header--points-min-width-narrow: 2rem
   flex: 1 1 100%
   overflow: hidden
 
+//------------------ Header form responsive styling -----------------------
 // Note: Using hardcoded values because Sass doesn't interpolate variables in
 // @container query conditions.
-// Note: 655px is between $breakpoint-sm and $breakpoint-md. This was found to
-// be a sensible value after initial testing with different viewports.
-@container backlogsListsContainer (min-width: 655px)
+// Note: 1102px is twice the small breakpoint plus the 16px gap. Since we show two boxes next to each other,
+// we thus assure that the form wraps at the small breakpoint.
+@container backlogsListsContainer (min-width: 1102px)
   .op-backlogs-header-form
     .FormControl-spacingWrapper
       flex-direction: row
       column-gap: 0.5rem
+      flex-wrap: wrap
 
       & > :first-child
-        flex: 1 1 auto
-        min-width: 33%
+        flex: 1 1 33%
+
+@container backlogsListsContainer (min-width: 1550px)
+  .op-backlogs-header-form
+    .FormControl-spacingWrapper
+      & > :first-child
+        flex-basis: 25%
 
 //------------------ Header responsive styling -----------------------
 // Note: 1143px is matching the the breakpoint we use within PVC for the container query.
