@@ -148,6 +148,28 @@ RSpec.describe OpenProject::Bim::BcfXml::IssueReader do
         end
       end
     end
+
+    context "if file references contain invalid formated values" do
+      let(:markup) do
+        <<-MARKUP
+        <Markup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <Topic Guid="#{SecureRandom.uuid}">
+            <Title>Path Traversal Attack</Title>
+            <CreationDate>2026-03-03T11:11:11Z</CreationDate>
+            <CreationAuthor>vader@death.star</CreationAuthor>
+          </Topic>
+          <Viewpoints Guid="#{SecureRandom.uuid}">
+            <Viewpoint>viewpoint.bcfv</Viewpoint>
+            <Snapshot>../../../etc/verysecretfileonserver</Snapshot>
+          </Viewpoints>
+        </Markup>
+        MARKUP
+      end
+
+      it "raises an error" do
+        expect { subject.extract! }.to raise_error("Snapshot file reference is not a file basename.")
+      end
+    end
   end
 
   context "on updating import" do
