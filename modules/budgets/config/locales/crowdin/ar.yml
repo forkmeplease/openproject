@@ -39,6 +39,12 @@ ar:
         base_amount: "Base amount"
       work_package:
         budget_subject: "عنوان الميزانية"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "الميزانية"
       material_budget_item: "الوحدة"

@@ -596,7 +596,7 @@ de:
     confirmation_live_message_unchecked: "Die Schaltfläche zum Fortfahren ist inaktiv. Sie müssen das Kontrollkästchen ankreuzen, um fortzufahren."
   mcp_configurations:
     server_url_component:
-      caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
+      caption: "Die URL, unter der der OpenProject MCP-Server erreichbar sein wird. Erforderlich für die Einrichtung von MCP-Clients."
       label: "Server URL"
   op_dry_validation:
     or: "oder"
@@ -1353,7 +1353,7 @@ de:
   activerecord:
     attributes:
       agile/sprint:
-        sharing: "Sharing"
+        sharing: "Teilen"
         finish_date: "Enddatum"
       jira_import:
         projects: "Projekte"

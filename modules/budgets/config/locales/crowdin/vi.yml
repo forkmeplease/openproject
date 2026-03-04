@@ -39,6 +39,12 @@ vi:
         base_amount: "Số tiền cơ bản"
       work_package:
         budget_subject: "Tiêu đề ngân sách"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "Ngân sách"
       material_budget_item: "Đơn vị"

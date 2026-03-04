@@ -39,6 +39,12 @@ bg:
         base_amount: "Base amount"
       work_package:
         budget_subject: "Заглавие на бюджета"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "Бюджет"
       material_budget_item: "Мерна единица"

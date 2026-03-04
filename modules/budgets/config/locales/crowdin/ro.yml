@@ -39,6 +39,12 @@ ro:
         base_amount: "Suma de bază"
       work_package:
         budget_subject: "Titlul bugetului"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "Buget"
       material_budget_item: "Unitate"

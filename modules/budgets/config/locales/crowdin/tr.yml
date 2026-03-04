@@ -39,6 +39,12 @@ tr:
         base_amount: "Matrah tutarı"
       work_package:
         budget_subject: "Bütçe başlığı"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "Bütçe"
       material_budget_item: "Birim"

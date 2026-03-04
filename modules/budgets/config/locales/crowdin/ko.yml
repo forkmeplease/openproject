@@ -39,6 +39,12 @@ ko:
         base_amount: "기본 금액"
       work_package:
         budget_subject: "예산 제목"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "예산"
       material_budget_item: "단위"

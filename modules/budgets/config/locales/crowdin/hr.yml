@@ -39,6 +39,12 @@ hr:
         base_amount: "Base amount"
       work_package:
         budget_subject: "Naziv proračuna"
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: "is not a member of the budget's project"
     models:
       budget: "Budžet"
       material_budget_item: "Jedinica"
