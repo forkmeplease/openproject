@@ -178,7 +178,7 @@ class BudgetsController < ApplicationController
 
   def update_labor_budget_item
     @element_id = params[:element_id]
-    user = User.where(id: params[:user_id]).first
+    user = User.visible.in_project(@project).find_by(id: params[:user_id])
 
     if user && params[:hours]
       hours = Rate.parse_number_string_to_number(params[:hours])
