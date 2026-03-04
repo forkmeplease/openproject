@@ -133,11 +133,11 @@ ro:
   label_sprint_impediments: "Impedimentele Sprint"
   label_sprint_new: "New sprint"
   label_task_board: "Tablă de sarcini"
+  permission_view_sprints: "View sprints"
   permission_create_sprints: "Create sprints"
-  permission_view_master_backlog: "Vizualizare master backlog"
-  permission_view_taskboards: "Vizualizați tablourile de sarcini"
-  permission_select_done_statuses: "Selectează stările realizate"
-  permission_update_sprints: "Sprinturi"
+  permission_start_complete_sprint: "Start/complete sprint"
+  permission_manage_sprint_items: "Manage sprint items"
+  permission_share_sprint: "Share sprint"
   project_module_backlogs: "Restanțe"
   rb_burndown_charts:
     show:

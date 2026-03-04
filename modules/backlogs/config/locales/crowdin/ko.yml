@@ -129,11 +129,11 @@ ko:
   label_sprint_impediments: "스프린트 제한"
   label_sprint_new: "New sprint"
   label_task_board: "작업 보드"
+  permission_view_sprints: "View sprints"
   permission_create_sprints: "Create sprints"
-  permission_view_master_backlog: "마스터 백로그 보기"
-  permission_view_taskboards: "작업 보드 보기"
-  permission_select_done_statuses: "완료 상태 선택"
-  permission_update_sprints: "스프린트 업데이트"
+  permission_start_complete_sprint: "Start/complete sprint"
+  permission_manage_sprint_items: "Manage sprint items"
+  permission_share_sprint: "Share sprint"
   project_module_backlogs: "백로그"
   rb_burndown_charts:
     show:

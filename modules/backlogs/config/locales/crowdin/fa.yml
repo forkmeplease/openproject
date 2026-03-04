@@ -131,11 +131,11 @@ fa:
   label_sprint_impediments: " موانع تاخت"
   label_sprint_new: "New sprint"
   label_task_board: "تابلوی وظیفه"
+  permission_view_sprints: "View sprints"
   permission_create_sprints: "Create sprints"
-  permission_view_master_backlog: "نمایش بک لاگ اصلی"
-  permission_view_taskboards: "مشاهده تابلو وظایف"
-  permission_select_done_statuses: "انتخاب وضعیت های انجام شده"
-  permission_update_sprints: "بروزرسانی دوره‌ها"
+  permission_start_complete_sprint: "Start/complete sprint"
+  permission_manage_sprint_items: "Manage sprint items"
+  permission_share_sprint: "Share sprint"
   project_module_backlogs: "وظایف"
   rb_burndown_charts:
     show:
