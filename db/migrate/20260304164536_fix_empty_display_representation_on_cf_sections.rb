@@ -28,24 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class CustomFieldSection < ApplicationRecord
-  OVERVIEW__SIDEBAR_KEY = "sidebar"
-  OVERVIEW__MAIN_AREA_KEY = "main_area"
-  DEFAULT_OVERVIEW_KEY = OVERVIEW__SIDEBAR_KEY
-
-  acts_as_list scope: [:type]
-
-  validates :name, presence: true
-
-  default_scope { order(:position) }
-
-  store_attribute :display_representation, :overview, :string, default: DEFAULT_OVERVIEW_KEY
-
-  def shown_in_overview_sidebar?
-    overview == OVERVIEW__SIDEBAR_KEY
+class FixEmptyDisplayRepresentationOnCfSections < ActiveRecord::Migration[8.1]
+  def up
+    execute <<~SQL.squish
+      UPDATE custom_field_sections
+      SET display_representation = '{"overview": "#{CustomFieldSection::DEFAULT_OVERVIEW_KEY}"}'
+      WHERE display_representation = '{}'
+    SQL
   end
 
-  def shown_in_overview_main_area?
-    overview == OVERVIEW__MAIN_AREA_KEY
+  def down
+    # No rollback: we cannot distinguish sections that originally had {}
+    # from ones that legitimately had the default value set.
   end
 end
