@@ -78,7 +78,7 @@ gem "addressable", "~> 2.8.9"
 gem "auto_strip_attributes", "~> 2.5"
 
 # Provide timezone info for TZInfo used by AR
-gem "tzinfo-data", "~> 1.2025.1"
+gem "tzinfo-data", "~> 1.2026.1"
 
 # to generate html-diffs (e.g. for wiki comparison)
 gem "htmldiff"
