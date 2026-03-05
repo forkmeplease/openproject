@@ -53,11 +53,7 @@ module Storages
 
               case response
               in { status: 200..299 }
-                if response.body.to_s.empty?
-                  Failure(error.with(code: :unauthorized))
-                else
-                  build_download_link(response, error)
-                end
+                build_download_link(response, error)
               in { status: 404 }
                 Failure(error.with(code: :not_found))
               in { status: 401 }
@@ -96,6 +92,8 @@ module Storages
               return parsing_error if token.blank?
 
               Success(token)
+            rescue HTTPX::Error
+              parsing_error
             end
 
             def download_link(token, origin_name)
