@@ -222,11 +222,10 @@ en:
           label_autofixed_suggestion: Autofixed suggestion
           label_example_work_package_id: Example work package ID
         autofix_preview:
-          error_too_long: Has to be fewer than 10 characters
+          error_too_long: Has to be fewer than 5 characters
           error_special_characters: Special characters not allowed
-          # FIXME(project_handles): Confirm final copy for these two labels
-          error_handle_reserved: Handle reserved by another project
-          error_identifier_taken: Identifier already used by another project
+          error_in_use: Already in use as another project's active handle
+          error_reserved: Reserved by another project's handle history
           remaining_projects:
             one: "... 1 more project"
             other: "... %{count} more projects"

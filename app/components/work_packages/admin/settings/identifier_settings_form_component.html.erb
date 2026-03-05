@@ -73,7 +73,10 @@
       ) do %>
     <%=
       render(
-        WorkPackages::Admin::Settings::IdentifierAutofixSectionComponent.new(projects_data:)
+        WorkPackages::Admin::Settings::IdentifierAutofixSectionComponent.new(
+          projects_data:,
+          total_count:
+        )
       )
     %>
   <% end %>
