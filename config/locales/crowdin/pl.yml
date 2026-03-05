@@ -1387,6 +1387,10 @@ pl:
     attributes:
       jira_import:
         projects: "Projekty"
+      "import/jira":
+        name: "Jira instance name"
+        url: "Jira instance URL"
+        personal_access_token: "Personal access token"
       announcements:
         show_until: "Wyświetlaj do"
       attachment:
@@ -3205,6 +3209,7 @@ pl:
   journals:
     changes_retracted: "Zmiany zostały wycofane."
     caused_changes:
+      budget_deleted: "Budget has been deleted"
       dates_changed: "Daty zostały zmienione"
       default_attribute_written: "Zapisano atrybuty tylko do odczytu"
       import: "Zaimportowano"
@@ -3230,6 +3235,7 @@ pl:
       work_package_related_changed_times: przez zmiany powiązanego %{link}
       work_package_duplicate_closed: Status został automatycznie zaktualizowany przez zduplikowany pakiet roboczy %{link}
       unaccessable_work_package_changed: poprzez zmiany powiązanego pakietu roboczego
+      budget_deleted: Budget has been deleted
       working_days_changed:
         changed: "przez zmiany dni roboczych (%{changes})"
         days:

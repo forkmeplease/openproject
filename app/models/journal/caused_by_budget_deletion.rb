@@ -28,10 +28,11 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Import
-  module Jiras
-    class CreateContract < BaseContract
-      validates :personal_access_token, presence: true
-    end
+class Journal::CausedByBudgetDeletion < CauseOfChange::Base
+  def initialize(budget:)
+    additional = {
+      "budget_id" => budget.id
+    }
+    super("budget_deleted", additional)
   end
 end

@@ -265,7 +265,7 @@ el:
               label_revert: "Revert import"
               button_revert: "Revert import"
               button_done: "Finalize import"
-              preview_description: "The imported data is currently in review mode. Click \"Finalize import\" to make the import permanent or \"Revert import\" to undo all changes made in this import run."
+              preview_description: 'The imported data is currently in review mode. Click "Finalize import" to make the import permanent or "Revert import" to undo all changes made in this import run.'
               label_finalizing_progress: "Finalizing import..."
               label_finalized: "Import finalized."
               label_revert_progress: "Reverting import..."
@@ -1357,6 +1357,10 @@ el:
     attributes:
       jira_import:
         projects: "Projects"
+      "import/jira":
+        name: "Jira instance name"
+        url: "Jira instance URL"
+        personal_access_token: "Personal access token"
       announcements:
         show_until: "Εμφάνιση μέχρι"
       attachment:
@@ -3093,6 +3097,7 @@ el:
   journals:
     changes_retracted: "Οι αλλαγές αποσύρθηκαν."
     caused_changes:
+      budget_deleted: "Budget has been deleted"
       dates_changed: "Dates changed"
       default_attribute_written: "Read-only attributes written"
       import: "Imported"
@@ -3118,6 +3123,7 @@ el:
       work_package_related_changed_times: by changes to related %{link}
       work_package_duplicate_closed: The status was automatically updated by the duplicated work package %{link}
       unaccessable_work_package_changed: by changes to a related work package
+      budget_deleted: Budget has been deleted
       working_days_changed:
         changed: "by changes to working days (%{changes})"
         days:

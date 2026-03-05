@@ -80,8 +80,8 @@ pl:
           description: "Add details about your planned budget to see data here"
         caption:
           zero: "Brak danych budżetowych."
-          one: "Dane zagregowane z %{count} budżetu zawarte w %{portfolios}, %{subprograms} i %{subprojects}."
-          other: "Dane zagregowane z %{count} budżetów zawarte w %{portfolios}, %{subprograms} i %{subprojects}."
+          one: "Dane zagregowane z %{count} budżetu zawarte w %{workspace}."
+          other: "Dane zagregowane z %{count} budżetów zawarte w %{workspace}."
         caption_simple:
           one: "Dane zagregowane z %{count} budżetu."
           few: "Dane zagregowane z %{count} budżetów."

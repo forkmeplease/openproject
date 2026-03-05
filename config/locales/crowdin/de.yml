@@ -265,7 +265,7 @@ de:
               label_revert: "Import rückgängig machen"
               button_revert: "Import rückgängig machen"
               button_done: "Import abschließen"
-              preview_description: "Die importierten Daten befinden sich derzeit im Überprüfungsmodus. Klicken Sie auf \"Import abschließen\", um den Import dauerhaft zu machen, oder auf \"Import rückgängig machen\", um alle in diesem Importlauf vorgenommenen Änderungen rückgängig zu machen."
+              preview_description: 'Die importierten Daten befinden sich derzeit im Überprüfungsmodus. Klicken Sie auf "Import abschließen", um den Import dauerhaft zu machen, oder auf "Import rückgängig machen", um alle in diesem Importlauf vorgenommenen Änderungen rückgängig zu machen.'
               label_finalizing_progress: "Import wird abgeschlossen..."
               label_finalized: "Import abgeschlossen."
               label_revert_progress: "Import wird rückgängig gemacht..."
@@ -1353,6 +1353,10 @@ de:
     attributes:
       jira_import:
         projects: "Projekte"
+      "import/jira":
+        name: "Jira instance name"
+        url: "Jira instance URL"
+        personal_access_token: "Personal access token"
       announcements:
         show_until: "Anzeigen bis"
       attachment:
@@ -3089,6 +3093,7 @@ de:
   journals:
     changes_retracted: "Die Änderungen wurden zurückgezogen."
     caused_changes:
+      budget_deleted: "Budget has been deleted"
       dates_changed: "Datum geändert"
       default_attribute_written: "Nur-Lese-Attribute wurde geschrieben"
       import: "Importiert"
@@ -3114,6 +3119,7 @@ de:
       work_package_related_changed_times: durch Änderungen an verwandtem Arbeitspaket %{link}
       work_package_duplicate_closed: Der Status wurde automatisch durch das als Duplikat markierte Arbeitspaket %{link} aktualisiert
       unaccessable_work_package_changed: nach Änderungen an einem zugehörigen Arbeitspaket
+      budget_deleted: Budget has been deleted
       working_days_changed:
         changed: "Durch Änderungen an Werktagen (%{changes})"
         days:

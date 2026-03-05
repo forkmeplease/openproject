@@ -265,7 +265,7 @@ fr:
               label_revert: "Annuler l'importation"
               button_revert: "Annuler l'importation"
               button_done: "Finaliser l'importation"
-              preview_description: "Les données importées sont actuellement en mode révision. Cliquez sur \"Finaliser l'importation\" pour rendre l'importation permanente ou sur \"Revenir à l'importation\" pour annuler toutes les modifications apportées lors de cette importation."
+              preview_description: 'Les données importées sont actuellement en mode révision. Cliquez sur "Finaliser l''importation" pour rendre l''importation permanente ou sur "Revenir à l''importation" pour annuler toutes les modifications apportées lors de cette importation.'
               label_finalizing_progress: "Finalisation de l'importation..."
               label_finalized: "Importation finalisée."
               label_revert_progress: "Importation réversible..."
@@ -1359,6 +1359,10 @@ fr:
     attributes:
       jira_import:
         projects: "Projets"
+      "import/jira":
+        name: "Jira instance name"
+        url: "Jira instance URL"
+        personal_access_token: "Personal access token"
       announcements:
         show_until: "Afficher jusqu'à"
       attachment:
@@ -3095,6 +3099,7 @@ fr:
   journals:
     changes_retracted: "Les modifications ont été retirées."
     caused_changes:
+      budget_deleted: "Budget has been deleted"
       dates_changed: "Dates modifiées"
       default_attribute_written: "Attributs en lecture seule écrits"
       import: "Importé"
@@ -3120,6 +3125,7 @@ fr:
       work_package_related_changed_times: par changement vers %{link} connexe
       work_package_duplicate_closed: Le statut a été mis à jour automatiquement par le doublon de lot de travaux %{link}
       unaccessable_work_package_changed: par changement vers un lot de travaux connexe
+      budget_deleted: Budget has been deleted
       working_days_changed:
         changed: "par changement vers des jours ouvrables (%{changes})"
         days:
