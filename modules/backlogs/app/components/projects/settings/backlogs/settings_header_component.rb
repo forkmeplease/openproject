@@ -41,6 +41,10 @@ module Projects
           @selected_tab = selected_tab
         end
 
+        def selected_tab?(tab_name)
+          selected_tab == tab_name
+        end
+
         private
 
         attr_reader :project, :selected_tab
