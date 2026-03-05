@@ -28,24 +28,10 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class CustomFieldSection < ApplicationRecord
-  OVERVIEW__SIDEBAR_KEY = "sidebar"
-  OVERVIEW__MAIN_AREA_KEY = "main_area"
-  DEFAULT_OVERVIEW_KEY = OVERVIEW__SIDEBAR_KEY
+require "spec_helper"
 
-  acts_as_list scope: [:type]
-
-  validates :name, presence: true
-
-  default_scope { order(:position) }
-
-  store_attribute :display_representation, :overview, :string, default: DEFAULT_OVERVIEW_KEY
-
-  def shown_in_overview_sidebar?
-    overview == OVERVIEW__SIDEBAR_KEY
-  end
-
-  def shown_in_overview_main_area?
-    overview == OVERVIEW__MAIN_AREA_KEY
+RSpec.describe CustomFieldSection do
+  it "uses the sidebar as default overview" do
+    expect(described_class.new).to be_shown_in_overview_sidebar
   end
 end
