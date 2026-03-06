@@ -490,6 +490,7 @@ RSpec.describe Version do
   end
 
   it_behaves_like "acts_as_customizable included" do
+    let(:admin_only_custom_fields_allowed) { false }
     let(:can_have_custom_comments) { false }
     let!(:model_instance) { create(:version) }
     let!(:new_model_instance) { version }

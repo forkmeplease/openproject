@@ -1080,6 +1080,7 @@ RSpec.describe User do
   end
 
   it_behaves_like "acts_as_customizable included" do
+    let(:admin_only_custom_fields_allowed) { true }
     let(:can_have_custom_comments) { false }
     let!(:model_instance) { create(:user) }
     let!(:new_model_instance) { user }
