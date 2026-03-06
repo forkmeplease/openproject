@@ -38,19 +38,17 @@ RSpec.describe MigrateBacklogsPermissions, type: :model do
   up_mapping = {
     view_master_backlog: %i[view_sprints],
     view_taskboards: %i[view_sprints],
-    select_done_statuses: %i[create_sprints],
     update_sprints: %i[create_sprints],
     manage_versions: %i[manage_versions create_sprints],
     assign_versions: %i[assign_versions manage_sprint_items]
   }
 
   # source permission => expected permissions after rollback.
-  # Backlogs-specific permissions (view_master_backlog, view_taskboards, select_done_statuses,
-  # update_sprints) are lost because the down migration cannot determine the original source.
+  # Backlogs-specific permissions (view_master_backlog, view_taskboards, update_sprints)
+  # are lost because the down migration cannot determine the original source.
   down_mapping = {
     view_master_backlog: [],
     view_taskboards: [],
-    select_done_statuses: [],
     update_sprints: [],
     manage_versions: %i[manage_versions],
     assign_versions: %i[assign_versions]
@@ -59,7 +57,6 @@ RSpec.describe MigrateBacklogsPermissions, type: :model do
   let(:all_source_permissions) do
     %i(view_master_backlog
        view_taskboards
-       select_done_statuses
        update_sprints
        manage_versions
        assign_versions)

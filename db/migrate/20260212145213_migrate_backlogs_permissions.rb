@@ -9,7 +9,6 @@ class MigrateBacklogsPermissions < ActiveRecord::Migration[8.1]
     ::Migration::MigrationUtils::PermissionRenamer.rename(:view_taskboards, :view_sprints)
 
     ::Migration::MigrationUtils::PermissionAdder.add(:manage_versions, :create_sprints)
-    ::Migration::MigrationUtils::PermissionRenamer.rename(:select_done_statuses, :create_sprints)
     ::Migration::MigrationUtils::PermissionRenamer.rename(:update_sprints, :create_sprints)
 
     ::Migration::MigrationUtils::PermissionAdder.add(:assign_versions, :manage_sprint_items)
@@ -17,14 +16,13 @@ class MigrateBacklogsPermissions < ActiveRecord::Migration[8.1]
 
   def down
     # Note: Ideally the `:view_taskboards`, `:view_master_backlog`, `:manage_versions`,
-    # `:select_done_statuses`, `:update_sprints` permissions should be restored too,
-    # but unfortunately we cannot know which one lead to the user gaining `:view_sprints`
-    # or `:create_sprints` permissions.
+    # `:update_sprints` permissions should be restored too, but unfortunately we cannot know
+    #  which one lead to the user gaining `:view_sprints` or `:create_sprints` permissions.
     # There are 2 possible solutions for this issue:
     #   1. Grant both the `:view_taskboards`, `:view_master_backlog` where `:view_sprints` was granted.
-    #      Respectively, grant `:manage_versions`, `:select_done_statuses`, `:update_sprints` permissions
-    #      where `:create_sprints` was granted. Unfortunately this leads to users gaining permissions
-    #      they didn't possibly had before the migration.
+    #      Respectively, grant `:manage_versions`, `:update_sprints` permissions where `:create_sprints`
+    #      was granted. Unfortunately this leads to users gaining permissions they didn't possibly had
+    #      before the migration.
     #   2. Grant none of the undecisible permissions, which leads to users losing permissions they had
     #      before the migration.
     #
