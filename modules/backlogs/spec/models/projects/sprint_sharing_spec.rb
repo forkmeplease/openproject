@@ -113,54 +113,6 @@ RSpec.describe Projects::SprintSharing do
     end
   end
 
-  describe "#validate_global_sprint_sharer_uniqueness" do
-    context "when no other project shares with all projects" do
-      it "allows setting share_all_projects" do
-        project.sprint_sharing = "share_all_projects"
-
-        expect(project).to be_valid
-      end
-    end
-
-    context "when the project already has share_all_projects" do
-      before { project.update!(sprint_sharing: "share_all_projects") }
-
-      it "remains valid on re-save" do
-        expect(project.reload).to be_valid
-      end
-    end
-
-    context "when another project already shares with all projects" do
-      let!(:other_project) { create(:project, sprint_sharing: "share_all_projects") }
-
-      it "is invalid" do
-        project.sprint_sharing = "share_all_projects"
-
-        expect(project).not_to be_valid
-        expect(project.errors[:sprint_sharing]).to include(
-          I18n.t("activerecord.errors.models.project.attributes.sprint_sharing.share_all_projects_already_taken",
-                 name: other_project.name)
-        )
-      end
-
-      it "allows other sharing options" do
-        project.sprint_sharing = "share_subprojects"
-
-        expect(project).to be_valid
-      end
-
-      context "when the other project is archived" do
-        let!(:other_project) { create(:project, :archived, sprint_sharing: "share_all_projects") }
-
-        it "remains valid" do
-          project.sprint_sharing = "share_all_projects"
-
-          expect(project).to be_valid
-        end
-      end
-    end
-  end
-
   describe "#receive_sprints_from" do
     let(:global_sprint_sharing) { "share_all_projects" }
     let(:root_sprint_sharing) { "share_subprojects" }

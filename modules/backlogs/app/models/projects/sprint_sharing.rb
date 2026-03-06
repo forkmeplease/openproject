@@ -46,8 +46,6 @@ module Projects::SprintSharing
     scope :share_sprints_with_subprojects, -> { sprint_sharing(SHARE_SUBPROJECTS) }
     scope :receive_shared_sprints, -> { sprint_sharing(RECEIVE_SHARED) }
     scope :not_sharing_sprints, -> { sprint_sharing(NO_SHARING) }
-
-    validate :validate_global_sprint_sharer_uniqueness
   end
 
   class_methods do
@@ -89,17 +87,6 @@ module Projects::SprintSharing
       ancestors.share_sprints_with_subprojects.last || self.class.global_sprint_sharer
     else
       self
-    end
-  end
-
-  private
-
-  def validate_global_sprint_sharer_uniqueness
-    if sprint_sharing == SHARE_ALL_PROJECTS &&
-        (sharer = self.class.global_sprint_sharer) &&
-        sharer != self
-
-      errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
     end
   end
 end
