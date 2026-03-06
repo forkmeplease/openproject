@@ -208,6 +208,7 @@ RSpec.describe Group do
   end
 
   it_behaves_like "acts_as_customizable included" do
+    let(:can_have_custom_comments) { false }
     let!(:model_instance) { group }
     let!(:new_model_instance) { new_group }
     let!(:custom_field) { create(:group_custom_field, :string, is_required: false) }

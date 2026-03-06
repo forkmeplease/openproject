@@ -493,6 +493,7 @@ RSpec.describe Project do
   end
 
   it_behaves_like "acts_as_customizable included" do
+    let(:can_have_custom_comments) { true }
     let!(:model_instance) { project }
     let!(:new_model_instance) { build_project }
     let!(:custom_field) { create(:string_project_custom_field) }

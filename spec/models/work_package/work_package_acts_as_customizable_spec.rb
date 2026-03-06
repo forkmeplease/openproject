@@ -186,6 +186,7 @@ RSpec.describe WorkPackage, "acts_as_customizable" do
   end
 
   it_behaves_like "acts_as_customizable included" do
+    let(:can_have_custom_comments) { false }
     let(:model_instance) { work_package }
     let(:new_model_instance) { new_work_package }
     let(:custom_field) { create(:string_wp_custom_field) }

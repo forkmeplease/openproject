@@ -29,6 +29,18 @@
 #++
 
 RSpec.shared_examples_for "acts_as_customizable included" do
+  describe "can_have_custom_comments? instance and class methods" do
+    let(:expectation) { can_have_custom_comments ? be_truthy : be_falsey }
+
+    describe ".can_have_custom_comments?" do
+      it { expect(described_class.can_have_custom_comments?).to expectation }
+    end
+
+    describe "#can_have_custom_comments?" do
+      it { expect(model_instance.can_have_custom_comments?).to expectation }
+    end
+  end
+
   describe ".custom_field_class" do
     it "returns the corresponding CustomField subclass" do
       expect(described_class.custom_field_class)
