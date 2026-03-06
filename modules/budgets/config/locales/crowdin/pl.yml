@@ -44,7 +44,7 @@ pl:
         labor_budget_item:
           attributes:
             principal:
-              not_a_member_of_budget_project: "is not a member of the budget's project"
+              not_a_member_of_budget_project: "nie jest członkiem projektu budżetu"
     models:
       budget: "Budżet"
       material_budget_item: "Jednostka"
@@ -76,29 +76,16 @@ pl:
           heading: "Rozpocznij kontrolowanie projektu"
           description: "Uzyskaj przegląd swoich budżetów i kosztów, aby skutecznie śledzić stan projektu"
         blankslate_zero:
-          heading: "Budget details missing"
-          description: "Add details about your planned budget to see data here"
+          heading: "Brak szczegółów budżetu"
+          description: "Aby zobaczyć tutaj dane, dodaj szczegóły dotyczące planowanego budżetu"
         caption:
           zero: "Brak danych budżetowych."
-          one: "Dane zagregowane z %{count} budżetu zawarte w %{workspace}."
-          other: "Dane zagregowane z %{count} budżetów zawarte w %{workspace}."
-        caption_simple:
-          one: "Dane zagregowane z %{count} budżetu."
-          few: "Dane zagregowane z %{count} budżetów."
-          many: "Dane zagregowane z %{count} budżetów."
-          other: "Dane zagregowane z %{count} budżetu."
-        portfolio:
-          zero: "brak portfoliów"
-          one: "1 portfolio"
-          other: "Liczba portfoliów: %{count}"
-        subprogram:
-          zero: "brak podprogramów"
-          one: "1 podprogram"
-          other: "Liczba podprogramów: %{count}"
-        subproject:
-          zero: "brak podprojektów"
-          one: "1 podprojekt"
-          other: "Liczba podprojektów: %{count}"
+          one: "Dane zagregowane z %{count} budżetu zawarte w tej %{workspace}."
+          other: "Dane zagregowane z %{count} budżetów zawartych na tej %{workspace}."
+        caption_with_subitems:
+          zero: "Brak danych budżetowych."
+          one: "Dane zagregowane z %{count} budżetu zawarte w tej %{workspace} i jej podpozycjach."
+          other: "Dane zagregowane z %{count} budżetów zawarte w tej %{workspace} i jej podpozycjach."
         view_details: "Wyświetl szczegóły budżetu"
   events:
     budget: "Budżet edytowany"
