@@ -28,7 +28,7 @@
 
 require "spec_helper"
 
-RSpec.describe Webhooks::Outgoing::RequestWebhookService, type: :model do
+RSpec.describe Webhooks::Outgoing::RequestWebhookService, :webmock, type: :model do
   let(:user) { build_stubbed(:user) }
   let(:instance) { described_class.new(webhook, event_name: :created, current_user: user) }
 
@@ -37,15 +37,73 @@ RSpec.describe Webhooks::Outgoing::RequestWebhookService, type: :model do
   subject { instance.call!(body: "body", headers: {}) }
 
   describe "#call!" do
-    context "when request_url fails with SSL errors" do
-      it "still logs the exception" do
-        allow(Faraday)
-          .to receive(:post)
-          .with(webhook.url, *any_args)
-          .and_raise(Faraday::SSLError, "SSL error")
+    context "when the request is successful" do
+      before do
+        stub_request(:post, webhook.url)
+          .with(body: "body", headers: { "X-Custom" => "header" })
+          .to_return(status: 200, body: "OK", headers: { "Content-Type" => "application/json" })
+      end
 
-        expect { subject }
-          .to change(Webhooks::Log, :count).by(1)
+      subject { instance.call!(body: "body", headers: { "X-Custom" => "header" }) }
+
+      it "makes a POST request to the webhook URL with the given body and headers" do
+        subject
+        expect(WebMock).to have_requested(:post, webhook.url)
+          .with(body: "body", headers: { "X-Custom" => "header" }).once
+      end
+
+      it "creates a log entry" do
+        expect { subject }.to change(Webhooks::Log, :count).by(1)
+      end
+
+      it "logs the response code, body, and URL" do
+        subject
+        log = Webhooks::Log.last
+        expect(log.response_code).to eq(200)
+        expect(log.response_body).to eq("OK")
+        expect(log.url).to eq(webhook.url)
+      end
+    end
+
+    context "when the request times out" do
+      before do
+        stub_request(:post, webhook.url).to_timeout
+      end
+
+      it "re-raises the timeout error" do
+        expect { subject }.to raise_error(Faraday::TimeoutError)
+      end
+
+      it "still creates a log entry before re-raising" do
+        subject rescue nil
+        expect(Webhooks::Log.count).to eq(1)
+      end
+    end
+
+    context "when request_url fails with SSL errors" do
+      before do
+        stub_request(:post, webhook.url).to_raise(OpenSSL::SSL::SSLError)
+      end
+
+      it "still logs the exception" do
+        expect { subject }.to change(Webhooks::Log, :count).by(1)
+      end
+    end
+
+    context "when an unexpected error occurs" do
+      before do
+        stub_request(:post, webhook.url).to_raise(StandardError.new("something went wrong"))
+      end
+
+      it "creates a log entry" do
+        expect { subject }.to change(Webhooks::Log, :count).by(1)
+      end
+
+      it "logs response_code -1 and the error message as the response body" do
+        subject
+        log = Webhooks::Log.last
+        expect(log.response_code).to eq(-1)
+        expect(log.response_body).to eq("something went wrong")
       end
     end
   end

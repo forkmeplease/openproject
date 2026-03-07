@@ -30,7 +30,7 @@ module Webhooks
 
         # We want to re-raise timeout exceptions
         # but log the request beforehand
-        raise exception if exception.is_a?(Faraday::TimeoutError)
+        raise exception if exception.cause.is_a? Net::OpenTimeout
       end
 
       def log!(body:, headers:, response:, exception:)
