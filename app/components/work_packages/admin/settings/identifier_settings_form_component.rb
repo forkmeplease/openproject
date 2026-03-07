@@ -56,6 +56,8 @@ module WorkPackages
 
         private
 
+        def form_id = "wp-identifier-settings-form"
+
         def show_autofix_section?
           state == :edit && Setting::WorkPackageIdentifier.alphanumeric? && has_problematic_projects?
         end
@@ -64,20 +66,24 @@ module WorkPackages
         def completed?          = state == :completed
 
         def wrapper_data_attrs
-          return {} unless change_in_progress?
+          if change_in_progress?
+            poll_for_changes_controller_attrs
+          else
+            work_package_identifier_controller_attrs
+          end
+        end
 
+        def poll_for_changes_controller_attrs
           {
             data: {
               controller: "poll-for-changes",
-              poll_for_changes_url_value: helpers.status_admin_settings_work_packages_identifier_path,
+              poll_for_changes_url_value: url_helpers.status_admin_settings_work_packages_identifier_path,
               poll_for_changes_interval_value: 5000
             }
           }
         end
 
-        def stimulus_div_data_attrs
-          return {} if change_in_progress?
-
+        def work_package_identifier_controller_attrs
           {
             data: {
               controller: "admin--work-packages-identifier",

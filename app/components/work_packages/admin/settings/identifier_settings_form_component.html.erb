@@ -30,66 +30,59 @@
 %>
 
 <%= component_wrapper(**wrapper_data_attrs) do %>
-  <%= tag.div(**stimulus_div_data_attrs) do %>
+  <%=
+    settings_primer_form_with(
+      scope: :settings, action: :update, method: :patch,
+      html: change_in_progress? ? {} : { id: form_id }
+    ) do |f|
+      render_inline_settings_form(f) do |form|
+        form.radio_button_group(
+          name: :work_packages_identifier,
+          label: I18n.t("settings.work_packages.work_package_identifier"),
+          required: true,
+          **radio_button_options
+        )
 
-    <%=
-      settings_primer_form_with(
-        scope: :settings, action: :update, method: :patch,
-        html: change_in_progress? ? {} : { id: "wp-identifier-settings-form" }
-      ) do |f|
-        render_inline_settings_form(f) do |form|
-          form.radio_button_group(
-            name: :work_packages_identifier,
-            label: I18n.t("settings.work_packages.work_package_identifier"),
-            required: true,
-            **radio_button_options
-          )
-
-          form.html_content do
-            if change_in_progress?
-              render(Primer::Beta::Text.new(my: 3)) do
-                render(Primer::Beta::Spinner.new(size: :small, mr: 2)).to_s +
-                  I18n.t("admin.settings.work_packages_identifier.in_progress.banner_message")
-              end
-            elsif completed?
-              render(Primer::Alpha::Banner.new(scheme: :success, dismiss_scheme: :remove, mb: 3)) do
-                I18n.t("admin.settings.work_packages_identifier.success_banner")
-              end
+        form.html_content do
+          if change_in_progress?
+            render(Primer::Beta::Text.new(my: 3)) do
+              render(Primer::Beta::Spinner.new(size: :small, mr: 2)).to_s +
+                I18n.t("admin.settings.work_packages_identifier.in_progress.banner_message")
+            end
+          elsif completed?
+            render(Primer::Alpha::Banner.new(scheme: :success, dismiss_scheme: :remove, mb: 3)) do
+              I18n.t("admin.settings.work_packages_identifier.success_banner")
             end
           end
         end
       end
-    %>
+    end
+  %>
 
-    <% unless change_in_progress? %>
-      <%= tag.div(
-            hidden: !show_autofix_section?,
-            data: { admin__work_packages_identifier_target: "autofixSection" }
-          ) do %>
-        <%=
-          render(
+  <% unless change_in_progress? %>
+    <%= tag.div(
+          hidden: !show_autofix_section?,
+          data: { admin__work_packages_identifier_target: "autofixSection" }
+        ) do %>
+      <%= render(
             WorkPackages::Admin::Settings::IdentifierAutofixSectionComponent.new(
               projects_data:,
               total_count:
             )
-          )
-        %>
-      <% end %>
-
-      <div class="op-admin-settings-form-wrapper">
-        <%=
-          render(
+          ) %>
+    <% end %>
+    <div class="op-admin-settings-form-wrapper">
+      <%= render(
             Primer::Beta::Button.new(
               scheme: :primary,
               type: :submit,
-              form: "wp-identifier-settings-form",
+              form: form_id,
               hidden: show_autofix_section?,
               data: { admin__work_packages_identifier_target: "saveButton" }
             )
-          ) { t("button_save") }
-        %>
-        <%=
-          render(
+          ) { t("button_save") } %>
+
+      <%= render(
             Primer::Beta::Button.new(
               scheme: :primary,
               type: :button,
@@ -99,11 +92,8 @@
                 action: "click->admin--work-packages-identifier#openConfirmDialog"
               }
             )
-          ) { t("admin.settings.work_packages_identifier.button_autofix") }
-        %>
-      </div>
-      <%= render(WorkPackages::Admin::Settings::ChangeIdentifiersDialogComponent.new) %>
-    <% end %>
-
+          ) { t("admin.settings.work_packages_identifier.button_autofix") } %>
+    </div>
+    <%= render(WorkPackages::Admin::Settings::ChangeIdentifiersDialogComponent.new) %>
   <% end %>
 <% end %>

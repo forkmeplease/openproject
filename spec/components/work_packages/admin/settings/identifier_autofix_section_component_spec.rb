@@ -159,5 +159,4 @@ RSpec.describe WorkPackages::Admin::Settings::IdentifierAutofixSectionComponent,
       expect(page).to have_text(I18n.t("admin.settings.work_packages_identifier.box_header.label_example_work_package_id"))
     end
   end
-
 end

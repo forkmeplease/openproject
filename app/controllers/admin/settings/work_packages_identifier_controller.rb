@@ -43,9 +43,9 @@ module Admin::Settings
     end
 
     def update
-      return unless params[:settings]
+      return render_400 unless params[:settings]
 
-      if ActiveRecord::Type::Boolean.new.cast(params[:confirm_dangerous_action])
+      if autofix_requested?
         call = update_service.new(user: current_user).call(settings_params)
         call.on_success do
           WorkPackages::IdentifierAutofix::ApplyHandlesJob.perform_later
@@ -72,6 +72,10 @@ module Admin::Settings
 
     def check_feature_flag
       render_404 unless OpenProject::FeatureDecisions.semantic_work_package_ids_active?
+    end
+
+    def autofix_requested?
+      ActiveRecord::Type::Boolean.new.cast(params[:confirm_dangerous_action])
     end
   end
 end

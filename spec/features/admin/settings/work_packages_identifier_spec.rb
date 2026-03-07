@@ -42,8 +42,8 @@ RSpec.describe "Work packages identifier admin settings", :js do
 
   def visit_settings
     visit settings_path
-    # Wait for the page heading to confirm the page has loaded
-    expect(page).to have_css("h2, h1", text: I18n.t("settings.work_packages.work_package_identifier"),
+    # Wait for the radio group legend to confirm the page has loaded
+    expect(page).to have_css("legend", text: I18n.t("settings.work_packages.work_package_identifier"),
                                        wait: 10)
   end
 
@@ -67,7 +67,8 @@ RSpec.describe "Work packages identifier admin settings", :js do
 
         # The autofix section is hidden when numeric is selected
         expect(page).to have_css(
-          "[data-admin--work-packages-identifier-target=autofixSection][hidden]"
+          "[data-admin--work-packages-identifier-target=autofixSection][hidden]",
+          visible: :all
         )
         click_button I18n.t("button_save")
 
