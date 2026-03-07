@@ -13,14 +13,11 @@ module Webhooks
 
       def call!(body:, headers:)
         begin
-          response = Faraday.post(
+          response = SsrfFilter.post(
             webhook.url,
-            body,
-            headers
+            headers:,
+            body:
           )
-        rescue Faraday::Error => e
-          response = e.response
-          exception = e
         rescue StandardError => e
           op_handle_error(e.message, reference: :webhook_job)
           exception = e
@@ -30,7 +27,7 @@ module Webhooks
 
         # We want to re-raise timeout exceptions
         # but log the request beforehand
-        raise exception if exception.cause.is_a? Net::OpenTimeout
+        raise exception if exception.is_a?(Net::OpenTimeout) || exception.is_a?(Net::ReadTimeout)
       end
 
       def log!(body:, headers:, response:, exception:)
@@ -50,8 +47,8 @@ module Webhooks
 
       def response_attributes(response:, exception:)
         {
-          response_code: response&.status || -1,
-          response_headers: response&.headers&.to_h&.transform_keys { |k| k.underscore.to_sym },
+          response_code: response&.code&.to_i || -1,
+          response_headers: response&.to_hash&.transform_keys { |k| k.underscore.to_sym },
           response_body: response&.body || exception&.message
         }
       end

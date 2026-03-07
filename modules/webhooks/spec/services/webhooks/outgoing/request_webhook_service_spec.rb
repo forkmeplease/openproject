@@ -32,7 +32,10 @@ RSpec.describe Webhooks::Outgoing::RequestWebhookService, :webmock, type: :model
   let(:user) { build_stubbed(:user) }
   let(:instance) { described_class.new(webhook, event_name: :created, current_user: user) }
 
-  shared_let(:webhook) { create(:webhook, all_projects: true, url: "https://example.net/test/42", secret: nil) }
+  # Use an IP-based URL so SsrfFilter (which replaces hostnames with resolved IPs before calling
+  # Net::HTTP) makes a request that WebMock can stub by URL. DNS resolution of "93.184.216.34"
+  # returns itself, and it is not in SsrfFilter's private-address blacklist.
+  shared_let(:webhook) { create(:webhook, all_projects: true, url: "https://93.184.216.34/test/42", secret: nil) }
 
   subject { instance.call!(body: "body", headers: {}) }
 
@@ -71,7 +74,7 @@ RSpec.describe Webhooks::Outgoing::RequestWebhookService, :webmock, type: :model
       end
 
       it "re-raises the timeout error" do
-        expect { subject }.to raise_error(Faraday::TimeoutError)
+        expect { subject }.to raise_error(Net::OpenTimeout)
       end
 
       it "still creates a log entry before re-raising" do
