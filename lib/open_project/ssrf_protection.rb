@@ -55,8 +55,8 @@ module OpenProject
       # @raise [SsrfFilter::CRLFInjection] If CRLF characters are detected in headers
       # @raise [SsrfFilter::TooManyRedirects] If the redirect limit is exceeded (not possible with the default of 0)
       #
-      # Redirects are disabled by default (max_redirects: 0) for POST requests. Following a redirect
-      # on a POST is almost always wrong: SsrfFilter re-POSTs the full body to the redirect target
+      # Redirects are disabled by default (max_redirects: 0). Following a redirect
+      # on a POST is almost always wrong: SsrfFilter (which we inherit from) re-POSTs the full body to the redirect target
       # regardless of the redirect status code, which can leak the payload to an unintended server.
       # RFC 7231 only requires re-posting on 307/308; 301/302 should switch to GET. Override
       # max_redirects only if you fully understand the implications.

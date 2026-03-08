@@ -108,6 +108,7 @@ RSpec.describe Webhooks::Outgoing::RequestWebhookService, :webmock, type: :model
         log = Webhooks::Log.last
         expect(log.response_code).to eq(-1)
         expect(log.response_body).to include("192.168.1.1")
+        expect(log.response_body).to include("OPENPROJECT_SSRF_PROTECTION_IP_ALLOWLIST")
       end
     end
 
