@@ -19,16 +19,24 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
       .and_return(can_share_sprint)
   end
 
-  it_behaves_like "contract is valid"
+  it "is expected to be a subclass of ModelContract" do
+    expect(described_class).to be < ModelContract
+  end
 
   describe "validations" do
     it_behaves_like "contract is valid"
+
+    it { expect(subject).to validate_presence_of(:sprint_sharing) }
 
     it do
       expect(subject)
         .to validate_inclusion_of(:sprint_sharing).in_array(Project::SPRINT_SHARING_OPTIONS)
     end
 
+    # This spec of explicitly setting sprint_sharing to empty is required because the
+    # simple presence validation spec is not sufficient to catch certain corner cases.
+    # For example, when the sprint_sharing getter is overriden to provide a default value,
+    # and the user submits an empty value, the contract should be invalid.
     context "when sprint_sharing is empty" do
       before { project.sprint_sharing = "" }
 
@@ -89,6 +97,29 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
       expect(contract.writable_attributes).to include("sprint_sharing")
       expect(contract.writable_attributes).not_to include("settings")
       expect(contract.writable_attributes).not_to include("deactivate_work_package_attachments")
+    end
+
+    context "when sprint_sharing is the only changed setting" do
+      before { project.sprint_sharing = "share_subprojects" }
+
+      it "includes the settings column too" do
+        expect(contract.writable_attributes).to include("settings")
+      end
+
+      it_behaves_like "contract is valid"
+    end
+
+    context "when other settings keys are also changed" do
+      before do
+        project.sprint_sharing = "share_subprojects"
+        project.deactivate_work_package_attachments = true
+      end
+
+      it "excludes the settings column" do
+        expect(contract.writable_attributes).not_to include("settings")
+      end
+
+      it_behaves_like "contract is invalid", settings: :error_readonly
     end
   end
 end

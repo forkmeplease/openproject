@@ -29,13 +29,20 @@
 #++
 
 module Projects
-  class BacklogSettingsContract < ::BaseContract
+  class BacklogSettingsContract < ::ModelContract
+    # The sprint_sharing setting is stored on the settings column. Hence writing
+    # the settings column should be allowed, but only for the sprint_sharing setting.
+    attribute :settings, writable: -> do
+      model.settings_change&.none? { it.except("sprint_sharing").any? }
+    end
     attribute :sprint_sharing
 
     validate :validate_permissions
     validate :validate_global_sprint_sharer_uniqueness
     validates :sprint_sharing, presence: true
     validates :sprint_sharing, inclusion: { in: Project::SPRINT_SHARING_OPTIONS }, allow_blank: true
+
+    def validate_model? = false
 
     protected
 
