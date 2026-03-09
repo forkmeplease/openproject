@@ -255,11 +255,11 @@ uk:
               label_progress: "Отримання даних із Jira…"
               elements:
                 relations: "Зв’язки між проблемами"
-                workflows: "Project-level workflows"
+                workflows: "Робочі процеси на рівні проєктів"
                 users: "Користувачі"
                 sprints: "Спринти"
                 schemes: "Схеми"
-                permissions: "User, group and project permissions"
+                permissions: "Дозволи для користувачів, груп і проєктів"
             confirm_import:
               title: "Імпортуйте дані"
               caption: "Перегляньте налаштування імпорту й запустіть його"
@@ -285,11 +285,11 @@ uk:
           select_dialog:
             filter_projects: "Фільтрування за текстом"
           import_dialog:
-            title: "Start this import?"
-            confirm_button: "Start import"
+            title: "Почати цей імпорт?"
+            confirm_button: "Почати імпорт"
             description: >
               This importer is an alpha feature. It is not yet able to import all data from Jira and might leave incomplete data on this OpenProject instance. <b>Do not use a production environment and create a backup of your OpenProject data before starting.</b>
-            confirm: "I understand and made the necessary preparations"
+            confirm: "Я розумію; відповідну підготовку виконано"
           revert_dialog:
             title: "Остаточно скасувати цей імпорт?"
             description: "Буде видалено всі імпортовані об’єкти (зокрема цілі проєкти), навіть якщо користувачі виконували з ними дії в OpenProject після імпорту."
@@ -591,8 +591,8 @@ uk:
         all: "eg. ^[A-Z0-9]+$"
         project: "eg. ^[A-Z0-9]+$"
       min_max:
-        all: "0 means no restriction"
-        project: "0 means no restriction"
+        all: "0 означає відсутність обмежень"
+        project: "0 означає відсутність обмежень"
       has_comment:
         project: "Allows the user to add a comment related to the project attribute when selecting the value in the project overview."
     tab:
@@ -614,7 +614,7 @@ uk:
   mcp_configurations:
     server_url_component:
       caption: "The URL at which the OpenProject MCP server will be reachable. Required for setting up MCP clients."
-      label: "Server URL"
+      label: "URL-адреса сервера"
   op_dry_validation:
     or: "або"
     errors:
@@ -1391,13 +1391,13 @@ uk:
     attributes:
       agile/sprint:
         sharing: "Sharing"
-        finish_date: "End date"
+        finish_date: "Дата завершення"
       jira_import:
-        projects: "Projects"
+        projects: "Проєкти"
       "import/jira":
-        name: "Jira instance name"
-        url: "Jira instance URL"
-        personal_access_token: "Personal access token"
+        name: "Назва екземпляра Jira"
+        url: "URL-адреса екземпляра Jira"
+        personal_access_token: "Персональний маркер доступу"
       announcements:
         show_until: "Показувати до"
       attachment:
@@ -1772,7 +1772,7 @@ uk:
         not_available: "– недоступно через налаштування системи."
         not_deletable: "не можна видалити."
         not_current_user: "не поточний користувач."
-        only_one_active_sprint_allowed: "only one active sprint is allowed per project."
+        only_one_active_sprint_allowed: "дозволяється лише один активний спринт для кожного проєкту."
         not_found: "не знайдено."
         not_a_date: "не є дійсною датою."
         not_a_datetime: "не є дійсним датою."
@@ -1882,7 +1882,7 @@ uk:
         meeting:
           error_conflict: "Не вдалося зберегти, тому що зустріч була оновлена кимось іншим в цей час. Будь ласка, перезавантажте сторінку."
         message:
-          cannot_move_message_to_forum_of_different_project: "A message cannot be moved to a forum of a different project."
+          cannot_move_message_to_forum_of_different_project: "Повідомлення не можна перенести на форум іншого проєкту."
         notifications:
           at_least_one_channel: "Необхідно вказати принаймні один канал для надсилання сповіщень."
           attributes:
@@ -2141,7 +2141,7 @@ uk:
               in_use: "Це ім’я маркера вже використовується; виберіть інше"
               format: "%{message}"
         jira:
-          invalid_protocol: "Please provide a valid protocol (http or https)"
+          invalid_protocol: "Укажіть дійсний протокол (http або https)"
       template:
         body: "Перевірте наступні поля:"
         header:
@@ -2166,7 +2166,7 @@ uk:
       comment: "Коментар"
       custom_action: "Спеціальні дії"
       custom_field: "Користувацьке поле"
-      customized: "Customized"
+      customized: "Персоналізовано"
       "doorkeeper/application": "Програма OAuth"
       enterprise_token:
         one: "Маркер Enterprise"
@@ -2382,7 +2382,7 @@ uk:
     role: "роль"
     roles: "Роль"
     search: "Пошук"
-    sprint: "Sprint"
+    sprint: "Спринт"
     start_date: "Початок"
     status: "Статус"
     state: "Стан"
@@ -2794,7 +2794,7 @@ uk:
       gantt_pdf_export: Експорт діаграми Ґантта в PDF
       ldap_groups: Синхронізація користувачів і груп LDAP
       mcp_server: Model Context Protocol (MCP)
-      meeting_templates: Reusable meeting templates
+      meeting_templates: Шаблони нарад, які можна використовувати повторно
       nextcloud_sso: Єдиний вхід для сховища Nextcloud
       one_drive_sharepoint_file_storage: Сховище файлів OneDrive / SharePoint
       placeholder_users: Прототипи користувачів
@@ -3219,7 +3219,7 @@ uk:
       budget_deleted: "Budget has been deleted"
       dates_changed: "Дати змінено"
       default_attribute_written: "Атрибути лише для читання записано"
-      import: "Imported"
+      import: "Імпортовано"
       progress_mode_changed_to_status_based: "Обчислення прогресу оновлено"
       status_changed: "Статус «%{status_name}»"
       system_update: "Оновлення системи OpenProject"

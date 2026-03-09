@@ -78,14 +78,23 @@ pt-BR:
         blankslate_zero:
           heading: "Detalhes de orçamento ausentes"
           description: "Adicione os detalhes do orçamento planejado para visualizar os dados aqui"
-        caption:
-          zero: "Nenhum dado de orçamento."
-          one: "Dados agregados de %{count} orçamento incluídos neste %{workspace}."
-          other: "Dados agregados de %{count} orçamentos incluídos neste %{workspace}."
-        caption_with_subitems:
-          zero: "Sem dados de orçamento."
-          one: "Dados agregados de %{count} orçamento incluídos neste %{workspace} e em seus subitens."
-          other: "Dados agregados de %{count} orçamentos incluídos neste %{workspace} e em seus subitens."
+        count_caption:
+          zero: "No budget data."
+          one: "Data aggregated from %{count} budget"
+          other: "Data aggregated from %{count} budgets"
+        count_caption_with_subitems:
+          project:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this project and its subitems."
+            other: "Data aggregated from %{count} budgets included in this project and its subitems."
+          program:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this program and its subitems."
+            other: "Data aggregated from %{count} budgets included in this program and its subitems."
+          portfolio:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this portfolio and its subitems."
+            other: "Data aggregated from %{count} budgets included in this portfolio and its subitems."
         view_details: "Ver detalhes do orçamento"
   events:
     budget: "Orçamento editado"

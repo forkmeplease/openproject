@@ -88,7 +88,7 @@ es:
         new_story: "Nueva historia"
         stories_tasks: "Historias/tareas"
         task_board: "Panel de tareas"
-        burndown_chart: "Burndown chart"
+        burndown_chart: "Diagrama Burndown"
         wiki: "Wiki"
         properties: "Propiedades"
     story_component:

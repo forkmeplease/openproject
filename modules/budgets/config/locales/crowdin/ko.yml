@@ -78,14 +78,23 @@ ko:
         blankslate_zero:
           heading: "예산 세부 정보 누락"
           description: "계획된 예산에 대한 세부 정보를 추가하여 여기에서 데이터를 확인합니다"
-        caption:
-          zero: "예산 데이터가 없습니다."
-          one: "이 %{workspace}에 포함된 %{count} 예산에서 집계된 데이터입니다."
-          other: "이 %{workspace}에 포함된 %{count} 예산에서 집계된 데이터입니다."
-        caption_with_subitems:
-          zero: "예산 데이터가 없습니다."
-          one: "이 %{workspace} 및 해당 하위 항목에 포함된 %{count} 예산에서 집계된 데이터입니다."
-          other: "이 %{workspace} 및 해당 하위 항목에 포함된 %{count} 예산에서 집계된 데이터입니다."
+        count_caption:
+          zero: "No budget data."
+          one: "Data aggregated from %{count} budget"
+          other: "Data aggregated from %{count} budgets"
+        count_caption_with_subitems:
+          project:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this project and its subitems."
+            other: "Data aggregated from %{count} budgets included in this project and its subitems."
+          program:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this program and its subitems."
+            other: "Data aggregated from %{count} budgets included in this program and its subitems."
+          portfolio:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this portfolio and its subitems."
+            other: "Data aggregated from %{count} budgets included in this portfolio and its subitems."
         view_details: "예산 세부 정보 보기"
   events:
     budget: "예산 편집됨"

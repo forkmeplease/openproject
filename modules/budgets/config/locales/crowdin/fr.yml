@@ -78,14 +78,23 @@ fr:
         blankslate_zero:
           heading: "Détails du budget manquant"
           description: "Ajoutez les détails de votre budget prévisionnel pour voir les données ici"
-        caption:
-          zero: "Aucune donnée budgétaire."
-          one: "Données agrégées à partir de %{count} budget inclus dans ce %{workspace}."
-          other: "Données agrégées à partir des %{count} budgets inclus dans ce %{workspace}."
-        caption_with_subitems:
-          zero: "Pas de données budgétaires."
-          one: "Les données agrégées à partir du budget %{count} sont incluses dans ce %{workspace} et ses sous-points."
-          other: "Les données agrégées à partir des %{count} budgets sont incluses dans ce %{workspace} et ses sous-éléments."
+        count_caption:
+          zero: "No budget data."
+          one: "Data aggregated from %{count} budget"
+          other: "Data aggregated from %{count} budgets"
+        count_caption_with_subitems:
+          project:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this project and its subitems."
+            other: "Data aggregated from %{count} budgets included in this project and its subitems."
+          program:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this program and its subitems."
+            other: "Data aggregated from %{count} budgets included in this program and its subitems."
+          portfolio:
+            zero: "No budget data."
+            one: "Data aggregated from %{count} budget included in this portfolio and its subitems."
+            other: "Data aggregated from %{count} budgets included in this portfolio and its subitems."
         view_details: "Voir les détails du budget"
   events:
     budget: "Budget modifié"
