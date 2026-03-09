@@ -33,11 +33,44 @@ class RbTaskboardsController < RbApplicationController
 
   helper :taskboards
 
+  before_action :load_or_create_board, if: -> { OpenProject::FeatureDecisions.scrum_projects_active? }
+
   def show
-    @statuses     = Type.find(Task.type).statuses
-    @story_ids    = @sprint.stories(@project).map(&:id)
-    @last_updated = Task.children_of(@story_ids)
-                        .order(Arel.sql("updated_at DESC"))
-                        .first
+    if OpenProject::FeatureDecisions.scrum_projects_active?
+      redirect_to project_work_package_board_path(@project, @board)
+    else
+      @statuses     = Type.find(Task.type).statuses
+      @story_ids    = @sprint.stories(@project).map(&:id)
+      @last_updated = Task.children_of(@story_ids)
+                          .order(Arel.sql("updated_at DESC"))
+                          .first
+    end
+  end
+
+  private
+
+  def load_or_create_board
+    result = Boards::SprintTaskBoardCreateService
+      .new(user: current_user)
+      .call(project: @project, sprint: @sprint, name: @sprint.board_name)
+
+    if result.success?
+      @board = result.result
+    else
+      flash[:error] = t(:error_task_board_creation_failed)
+      return redirect_back_or_to(backlogs_project_backlogs_path(@project)) # rubocop:disable Style/RedundantReturn
+    end
+  end
+
+  def load_sprint_and_project
+    @project = Project.visible.find(params[:project_id])
+
+    return unless (@sprint_id = params.delete(:sprint_id))
+
+    @sprint = if OpenProject::FeatureDecisions.scrum_projects_active?
+                Agile::Sprint.for_project(@project).visible.find(@sprint_id)
+              else
+                Sprint.visible.apply_to(@project).find(@sprint_id)
+              end
   end
 end

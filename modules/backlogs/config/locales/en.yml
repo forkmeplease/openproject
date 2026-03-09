@@ -187,6 +187,7 @@ en:
   label_sprint_impediments: "Sprint Impediments"
   label_sprint_new: "New sprint"
   label_task_board: "Task board"
+  error_task_board_creation_failed: "The task board could not be created automatically."
 
   permission_create_sprints: "Create sprints"
   permission_manage_sprint_items: "Manage sprint items"

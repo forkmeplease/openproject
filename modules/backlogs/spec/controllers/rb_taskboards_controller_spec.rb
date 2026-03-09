@@ -49,39 +49,104 @@ RSpec.describe RbTaskboardsController do
   end
 
   describe "GET show" do
-    before do
-      get :show, params: { project_id: project.identifier, sprint_id: sprint.id }
+    context "with the feature flag active", with_flag: { scrum_projects: true } do
+      let(:sprint) { create(:agile_sprint, project:) }
+      let(:board) { build_stubbed(:board_grid) }
+      let(:service_result) { ServiceResult.success(result: board) }
+      let(:service) { instance_double(Boards::SprintTaskBoardCreateService, call: service_result) }
+
+      before do
+        allow(Boards::SprintTaskBoardCreateService)
+          .to receive(:new)
+          .with(user:)
+          .and_return(service)
+
+        get :show, params: { project_id: project.identifier, sprint_id: sprint.id }
+      end
+
+      it "redirects to the board" do
+        expect(response).to redirect_to(project_work_package_board_path(project, board))
+      end
+
+      context "as a member with view_sprints permission" do
+        let(:user) { create(:user) }
+        let(:permissions) { %i[view_sprints view_work_packages show_board_views] }
+
+        it "grants access" do
+          expect(response).to redirect_to(project_work_package_board_path(project, board))
+        end
+      end
+
+      context "as a member without view_sprints permission" do
+        let(:user) { create(:user) }
+        let(:permissions) { [:view_project] }
+
+        it "denies access" do
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+
+      context "as a non-member" do
+        current_user { create(:user) }
+
+        it "denies access" do
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context "when board creation fails" do
+        let(:permissions) { %i[view_sprints view_work_packages show_board_views] }
+        let(:service_result) { ServiceResult.failure(message: "something went wrong") }
+
+        before do
+          get :show, params: { project_id: project.identifier, sprint_id: sprint.id }
+        end
+
+        it "redirects to the backlogs page" do
+          expect(response).to redirect_to(backlogs_project_backlogs_path(project))
+        end
+
+        it "sets a flash error" do
+          expect(flash[:error]).to be_present
+        end
+      end
     end
 
-    it "performs that request" do
-      expect(response).to be_successful
-      expect(response).to render_template :show
-    end
+    context "with the feature flag inactive", with_flag: { scrum_projects: false } do
+      before do
+        get :show, params: { project_id: project.identifier, sprint_id: sprint.id }
+      end
 
-    context "as a member with view_sprints permission" do
-      let(:user) { create(:user) }
-      let(:permissions) { %i[view_sprints view_work_packages] }
-
-      it "grants access" do
+      it "renders the legacy show template" do
         expect(response).to be_successful
         expect(response).to render_template :show
       end
-    end
 
-    context "as a member without view_sprints permission" do
-      let(:user) { create(:user) }
-      let(:permissions) { [:view_project] }
+      context "as a member with view_sprints permission" do
+        let(:user) { create(:user) }
+        let(:permissions) { %i[view_sprints view_work_packages] }
 
-      it "denies access" do
-        expect(response).to have_http_status(:not_found)
+        it "grants access" do
+          expect(response).to be_successful
+          expect(response).to render_template :show
+        end
       end
-    end
 
-    context "as a non-member" do
-      current_user { create(:user) }
+      context "as a member without view_sprints permission" do
+        let(:user) { create(:user) }
+        let(:permissions) { [:view_project] }
 
-      it "denies access" do
-        expect(response).to have_http_status(:not_found)
+        it "denies access" do
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context "as a non-member" do
+        current_user { create(:user) }
+
+        it "denies access" do
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
   end
