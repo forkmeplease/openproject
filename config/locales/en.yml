@@ -281,7 +281,7 @@ en:
               button_done: "Finalize import"
               preview_description: 'The imported data is currently in review mode. Click "Finalize import" to make the import permanent or "Revert import" to undo all changes made in this import run.'
               label_finalize_import: "Finalize import"
-              label_finalizing_progress: "Finalizing import..."
+              label_finalizing: "Finalizing import..."
               label_finalizing_done: "Import finalized."
               label_revert_progress: "Reverting import..."
               label_reverted: "Import reverted."
@@ -1482,6 +1482,9 @@ en:
         name: "Jira instance name"
         url: "Jira instance URL"
         personal_access_token: "Personal access token"
+      "import/jira_open_project_reference":
+        jira: "Jira"
+        jira_import: "Jira import"
       announcements:
         show_until: "Display until"
       attachment:

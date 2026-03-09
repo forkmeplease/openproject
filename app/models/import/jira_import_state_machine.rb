@@ -99,8 +99,8 @@ module Import
       transition.save!
     end
 
-    after_transition(to: :finalizing) do |jira_import, transition|
-      job = Import::JiraFinalizeImportJob.perform_later(jira_import.id)
+    after_transition(to: :finalizing) do |jira_import, _transition|
+      Import::JiraFinalizeImportJob.perform_later(jira_import.id)
     end
 
     def status_running?

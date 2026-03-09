@@ -70,6 +70,7 @@ module Import
       (projects || []).pluck("id")
     end
 
+    # rubocop:disable Metrics/AbcSize
     def destroy_jira_objects
       Import::JiraField.where(jira_import_id: id).destroy_all
       Import::JiraIssue.where(jira_import_id: id).destroy_all
@@ -79,5 +80,6 @@ module Import
       Import::JiraStatus.where(jira_import_id: id).destroy_all
       Import::JiraUser.where(jira_import_id: id).destroy_all
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

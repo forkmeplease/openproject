@@ -28,40 +28,31 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Import
-  class JiraFinalizeImportJob < ApplicationJob
-    def perform(jira_import_id)
-      jira_import = Import::JiraImport.find(jira_import_id)
+require "spec_helper"
+require "contracts/shared/model_contract_shared_context"
 
-      unlock_active_jira_users(jira_import)
-      jira_import.destroy_jira_objects
-      jira_import.transition_to!(:finalizing_done)
-    rescue StandardError => e
-      jira_import&.transition_to!(:finalizing_error, error: e.message)
-      jira_import&.update!(job_id: nil, error: e.message)
+RSpec.describe Users::JiraImportUpdateContract do
+  include_context "ModelContract shared context"
+
+  let(:current_user) { build_stubbed(:admin) }
+  let(:user) { build_stubbed(:user) }
+  let(:contract) { described_class.new(user, current_user) }
+
+  describe "validation" do
+    context "when user limit is not reached" do
+      before do
+        allow(OpenProject::Enterprise).to receive(:user_limit_reached?).and_return(false)
+      end
+
+      it_behaves_like "contract is valid"
     end
 
-    private
+    context "when user limit is reached" do
+      before do
+        allow(OpenProject::Enterprise).to receive(:user_limit_reached?).and_return(true)
+      end
 
-    def unlock_active_jira_users(jira_import)
-      Import::JiraOpenProjectReference
-        .where(
-          jira_import_id: jira_import.id,
-          jira_entity_class: "Import::JiraUser",
-          uses_existing: false
-        )
-        .find_each do |ref|
-          jira_user = ref.jira_leg
-          next unless jira_user.payload["active"]
-
-          op_user = ref.op_leg
-          Journal::NotificationConfiguration.with(false) do
-            Users::UpdateService
-              .new(model: op_user, user: User.system, contract_class: Users::JiraImportUpdateContract)
-              .call(status: :active)
-              .on_failure { |result| raise result.message }
-          end
-        end
+      it_behaves_like "contract is invalid", base: :user_limit_reached
     end
   end
 end

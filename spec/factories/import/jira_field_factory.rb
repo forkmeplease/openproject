@@ -28,40 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Import
-  class JiraFinalizeImportJob < ApplicationJob
-    def perform(jira_import_id)
-      jira_import = Import::JiraImport.find(jira_import_id)
-
-      unlock_active_jira_users(jira_import)
-      jira_import.destroy_jira_objects
-      jira_import.transition_to!(:finalizing_done)
-    rescue StandardError => e
-      jira_import&.transition_to!(:finalizing_error, error: e.message)
-      jira_import&.update!(job_id: nil, error: e.message)
-    end
-
-    private
-
-    def unlock_active_jira_users(jira_import)
-      Import::JiraOpenProjectReference
-        .where(
-          jira_import_id: jira_import.id,
-          jira_entity_class: "Import::JiraUser",
-          uses_existing: false
-        )
-        .find_each do |ref|
-          jira_user = ref.jira_leg
-          next unless jira_user.payload["active"]
-
-          op_user = ref.op_leg
-          Journal::NotificationConfiguration.with(false) do
-            Users::UpdateService
-              .new(model: op_user, user: User.system, contract_class: Users::JiraImportUpdateContract)
-              .call(status: :active)
-              .on_failure { |result| raise result.message }
-          end
-        end
-    end
+FactoryBot.define do
+  factory :jira_field, class: "Import::JiraField" do
+    sequence(:jira_field_id) { |n| "field_#{n}" }
   end
 end
