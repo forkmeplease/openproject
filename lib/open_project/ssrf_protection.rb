@@ -74,8 +74,8 @@ module OpenProject
       #     body: payload,
       #     http_options: { open_timeout: 5, read_timeout: 10 }
       #   )
-      def post(url, options = {}, &block)
-        super(url, { max_redirects: 0 }.merge(options), &block)
+      def post(url, options = {}, &)
+        super(url, { max_redirects: 0 }.merge(options), &)
       end
 
       ##

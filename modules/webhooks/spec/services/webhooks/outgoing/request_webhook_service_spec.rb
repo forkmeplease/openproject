@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -73,12 +75,9 @@ RSpec.describe Webhooks::Outgoing::RequestWebhookService, :webmock, type: :model
         stub_request(:post, webhook.url).to_timeout
       end
 
-      it "re-raises the timeout error" do
+      it "re-raises the timeout error while still creating a log entry" do
         expect { subject }.to raise_error(Net::OpenTimeout)
-      end
 
-      it "still creates a log entry before re-raising" do
-        subject rescue nil
         expect(Webhooks::Log.count).to eq(1)
       end
     end
