@@ -40,7 +40,7 @@ module OpenProject
       #
       # @param hostname_or_ip_address [String] The hostname (e.g. localhost) or IP address (e.g. 127.0.0.1) to check
       # @return [IPAddr] The first safe IP address which can be used for a request, or `nil` if there aren't any
-      def safe_ip(hostname_or_ip_address)
+      def safe_ip?(hostname_or_ip_address)
         if hostname_or_ip_address.is_a? IPAddr
           safe_ip_address hostname_or_ip_address
         elsif [Resolv::IPv4::Regex, Resolv::IPv6::Regex].any? { |regex| hostname_or_ip_address =~ regex }

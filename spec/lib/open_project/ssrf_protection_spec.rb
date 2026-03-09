@@ -31,8 +31,8 @@
 require "spec_helper"
 
 RSpec.describe OpenProject::SsrfProtection do
-  describe ".safe_ip" do
-    subject { described_class.safe_ip(input) }
+  describe ".safe_ip?" do
+    subject { described_class.safe_ip?(input) }
 
     context "with a public IPv4 string" do
       let(:input) { "1.1.1.1" }

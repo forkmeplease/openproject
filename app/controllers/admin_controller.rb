@@ -98,7 +98,7 @@ class AdminController < ApplicationController
   def validate_email_settings
     smtp_addr = ActionMailer::Base.smtp_settings[:address]
 
-    if !OpenProject::SsrfProtection.safe_ip(smtp_addr)
+    if !OpenProject::SsrfProtection.safe_ip?(smtp_addr)
       flash[:error] = I18n.t :notice_smtp_address_unsafe, address: smtp_addr
 
       redirect_to admin_settings_mail_notifications_path, status: :see_other
