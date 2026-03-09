@@ -29,7 +29,8 @@
 #++
 
 module Admin::Import::Jira::ImportRuns
-  class FinalizeConfirmDialogComponent < ApplicationComponent
+  class ImportConfirmDialogComponent < ApplicationComponent
+    include ApplicationHelper
     include OpTurbo::Streamable
 
     def initialize(jira_import:)
@@ -37,7 +38,7 @@ module Admin::Import::Jira::ImportRuns
       @jira_import = jira_import
     end
 
-    def id = "finalize-jira-import-run-dialog"
+    def id = "import-jira-import-run-dialog"
 
     def form_arguments
       {
@@ -47,25 +48,25 @@ module Admin::Import::Jira::ImportRuns
     end
 
     def title
-      I18n.t("admin.jira.run.wizard.finalize_dialog.title")
+      I18n.t("admin.jira.run.wizard.import_dialog.title")
     end
 
     def description
-      I18n.t("admin.jira.run.wizard.finalize_dialog.description")
+      I18n.t("admin.jira.run.wizard.import_dialog.description")
     end
 
     def confirm_button_text
-      I18n.t("admin.jira.run.wizard.finalize_dialog.confirm_button")
+      I18n.t("admin.jira.run.wizard.import_dialog.confirm_button")
     end
 
     def confirm
-      I18n.t("admin.jira.run.wizard.finalize_dialog.confirm")
+      I18n.t("admin.jira.run.wizard.import_dialog.confirm")
     end
 
     private
 
     def url
-      continue_admin_import_jira_run_path(jira_id: @jira_import.jira.id, id: @jira_import.id, step: "finalize")
+      continue_admin_import_jira_run_path(jira_id: @jira_import.jira.id, id: @jira_import.id, step: "import")
     end
   end
 end

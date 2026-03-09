@@ -93,6 +93,11 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
       expect(response).to have_http_status(:forbidden)
     end
 
+    it "returns forbidden for GET #import_modal" do
+      get :import_modal, params: { jira_id: jira.id, id: jira_import.id }, format: :turbo_stream
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "returns forbidden for GET #revert_modal" do
       get :revert_modal, params: { jira_id: jira.id, id: jira_import.id }, format: :turbo_stream
       expect(response).to have_http_status(:forbidden)
@@ -308,6 +313,15 @@ RSpec.describe Admin::Import::Jira::ImportRunsController do
         post :continue, params: { jira_id: jira.id, id: jira_import.id, step: "finalize" }, format: :html
         expect(response).to redirect_to(admin_import_jira_run_path(jira_id: jira.id, id: jira_import.id))
       end
+    end
+  end
+
+  describe "GET #import_modal" do
+    let(:jira_import) { create(:jira_import, jira:, author: admin) }
+
+    it "responds with a dialog component" do
+      get :import_modal, params: { jira_id: jira.id, id: jira_import.id }, format: :turbo_stream
+      expect(response).to have_http_status(:ok)
     end
   end
 
