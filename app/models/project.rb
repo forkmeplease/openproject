@@ -128,6 +128,18 @@ class Project < ApplicationRecord
   store_attribute :settings, :enabled_internal_comments, :boolean
   store_attribute :settings, :excluded_role_ids_on_copy, :json, default: []
 
+  scope :with_settings, ->(**kwargs) do
+    raise ArgumentError, "Provide at least one setting" if kwargs.empty?
+
+    kwargs.reduce(all) do |scope, (key, value)|
+      if value.nil?
+        scope.where("settings->>? IS NULL", key)
+      else
+        scope.where("settings->>? = ?", key, value)
+      end
+    end
+  end
+
   acts_as_favoritable
 
   acts_as_customizable validate_on: :saving_custom_fields, comments: true, admin_only_allowed: true

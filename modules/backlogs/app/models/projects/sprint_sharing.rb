@@ -45,20 +45,31 @@ module Projects::SprintSharing
     # `store_attribute :settings, :sprint_sharing, :string, default: "no_sharing"`.
     # The method getter override below is required to provide the default value.
     # self.store_attribute_unset_values_fallback_to_default = true
+    # Ideally the store_attribute :settings, :sprint_sharing, :string, default: NO_SHARING
+    # would be used, but using the `default` from the store_attribute triggers an unusual behaviour.
+    # Whenever the default value is assigned directly (ie self.sprint_sharing = NO_SHARING),
+    # the value is considered not changed and the settings field is not updated upon saving.
+    # This means, it is not possible to save the NO_SHARING value to the database as a default.
+    store_attribute :settings, :sprint_sharing, :string
 
-    store_attribute :settings, :sprint_sharing, :string, default: NO_SHARING
-
-    scope :sprint_sharing, ->(value) { where("settings->>'sprint_sharing' = ?", value) }
-    scope :share_sprints_with_all_projects, -> { sprint_sharing(SHARE_ALL_PROJECTS) }
-    scope :share_sprints_with_subprojects, -> { sprint_sharing(SHARE_SUBPROJECTS) }
-    scope :receive_shared_sprints, -> { sprint_sharing(RECEIVE_SHARED) }
-    scope :not_sharing_sprints, -> { sprint_sharing(NO_SHARING) }
+    scope :share_sprints_with_all_projects, -> { with_settings(sprint_sharing: SHARE_ALL_PROJECTS) }
+    scope :share_sprints_with_subprojects, -> { with_settings(sprint_sharing: SHARE_SUBPROJECTS) }
+    scope :receive_shared_sprints, -> { with_settings(sprint_sharing: RECEIVE_SHARED) }
+    scope :not_sharing_sprints, -> do
+      with_settings(sprint_sharing: NO_SHARING)
+      .or(with_settings(sprint_sharing: ""))
+      .or(with_settings(sprint_sharing: nil))
+    end
   end
 
   class_methods do
     def global_sprint_sharer
       share_sprints_with_all_projects.active.first
     end
+  end
+
+  def sprint_sharing
+    super || NO_SHARING
   end
 
   def share_sprints_with_all_projects?

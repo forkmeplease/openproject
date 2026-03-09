@@ -30,6 +30,8 @@ RSpec.describe Projects::SprintSharing do
   end
 
   describe "scopes" do
+    shared_let(:project_without_settings) { create(:project, sprint_sharing: nil) }
+    shared_let(:project_with_empty_settings) { create(:project, sprint_sharing: "") }
     shared_let(:no_sharing_project) { create(:project, sprint_sharing: "no_sharing") }
     shared_let(:all_projects_sharer) { create(:project, sprint_sharing: "share_all_projects") }
     shared_let(:subprojects_sharer) { create(:project, sprint_sharing: "share_subprojects") }
@@ -55,7 +57,11 @@ RSpec.describe Projects::SprintSharing do
 
     describe ".not_sharing_sprints" do
       it "returns projects with no sharing" do
-        expect(Project.not_sharing_sprints).to contain_exactly(no_sharing_project)
+        expect(Project.not_sharing_sprints).to contain_exactly(
+          project_without_settings,
+          project_with_empty_settings,
+          no_sharing_project
+        )
       end
     end
   end
