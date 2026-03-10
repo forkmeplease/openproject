@@ -32,7 +32,7 @@ require "spec_helper"
 
 # Only tests the links/properties added by the backlogs plugin. It does not retest the properties already
 # covered in the core.
-RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
+RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering", with_flag: { scrum_projects: true } do
   include API::V3::Utilities::PathHelper
 
   let(:work_package) do
@@ -121,6 +121,10 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
         it_behaves_like "has no link"
       end
 
+      context "when the feature flag is inactive", with_flag: { scrum_projects: false } do
+        it_behaves_like "has no link"
+      end
+
       context "when it is a task" do
         let(:type) { task_type }
 
@@ -158,6 +162,10 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
       context "when lacking the permission" do
         let(:permissions) { [] }
 
+        it_behaves_like "has the resource not embedded"
+      end
+
+      context "when the feature flag is inactive", with_flag: { scrum_projects: false } do
         it_behaves_like "has the resource not embedded"
       end
 
