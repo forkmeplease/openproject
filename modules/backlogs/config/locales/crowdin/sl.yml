@@ -56,6 +56,7 @@ sl:
     any: "katerikoli"
     column_width: "Column width"
     definition_of_done: "Opredelitev opravljenega"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Ovira"
     label_versions_default_fold_state: "Pokaži različice zložene"
     caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."

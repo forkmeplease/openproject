@@ -56,6 +56,7 @@ fi:
     any: "kaikki"
     column_width: "Column width"
     definition_of_done: "Valmiin määritelmä"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Este"
     label_versions_default_fold_state: "Näytä versiot ryhmiteltyinä"
     caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."

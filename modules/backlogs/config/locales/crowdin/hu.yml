@@ -56,6 +56,7 @@ hu:
     any: "bármely"
     column_width: "Column width"
     definition_of_done: "A \"Kész\" meghatározása"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Akadály"
     label_versions_default_fold_state: "Összecsukott verziók mutatása"
     caption_versions_default_fold_state: "A verziók alapértelmezés szerint nem lesznek kibontva a várólista (backlog) megtekintésekor. Mindegyiket manuálisan kell kibontani."

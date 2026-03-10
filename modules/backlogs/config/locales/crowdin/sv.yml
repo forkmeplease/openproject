@@ -56,6 +56,7 @@ sv:
     any: "någon"
     column_width: "Column width"
     definition_of_done: "Definition av klart"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Hinder"
     label_versions_default_fold_state: "Visa ihopfällda versioner"
     caption_versions_default_fold_state: "Versioner kommer inte att utökas som standard när du visar backloggar. Var och en måste utökas manuellt."

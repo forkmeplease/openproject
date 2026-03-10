@@ -56,6 +56,7 @@ id:
     any: "apapun"
     column_width: "Column width"
     definition_of_done: "Definisi Selesai"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Halangan"
     label_versions_default_fold_state: "Tampilkan versi terlipat"
     caption_versions_default_fold_state: "Versi tidak akan diperluas secara default saat melihat daftar tugas yang tertunda. Setiap versi harus diperluas secara manual."

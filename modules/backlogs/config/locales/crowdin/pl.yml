@@ -56,6 +56,7 @@ pl:
     any: "którekolwiek"
     column_width: "Szerokość kolumny"
     definition_of_done: "Definicja Zrobione"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Przeszkoda"
     label_versions_default_fold_state: "Pokaż zwinięte wersje"
     caption_versions_default_fold_state: "Wersje nie będą domyślnie rozwijane podczas przeglądania backlogów. Każdą z nich należy rozwinąć ręcznie."

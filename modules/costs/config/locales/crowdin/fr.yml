@@ -26,14 +26,14 @@ fr:
   activerecord:
     attributes:
       cost_entry:
-        work_package: "Lot de Travaux"
+        work_package: "Lot de travaux"
         overridden_costs: "Coûts outrepassés"
         spent: "Consommé"
         spent_on: "Date"
         logged_by: "Saisi par"
         entity: Connecté(e) pour
-        entity_id: Connecté(e) pendant
-        entity_gid: Connecté(e) pendant
+        entity_id: Consigné pour
+        entity_gid: Consigné pour
       cost_type:
         unit: "Nom de l'unité"
         unit_plural: "Nom pluriel de l'unité"
@@ -61,9 +61,9 @@ fr:
         start_time: Heure de début
         end_time: Heure de fin
         time: Heure 
-        entity: Connecté(e) pendant
-        entity_id: Connecté(e) pendant
-        entity_gid: Connecté(e) pendant
+        entity: Consigné pour
+        entity_id: Consigné pour
+        entity_gid: Consigné pour
     models:
       time_entry:
         one: "Saisie du temps"

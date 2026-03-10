@@ -56,6 +56,7 @@ ca:
     any: "qualsevol"
     column_width: "Column width"
     definition_of_done: "Definició de fet"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Impediment"
     label_versions_default_fold_state: "Mostra les versions contretes"
     caption_versions_default_fold_state: "Les versions no s'expandiran per defecte quan es visualitzin els registres enrere. Cada un ha d'ampliar-se manualment."

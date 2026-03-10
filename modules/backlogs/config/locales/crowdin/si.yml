@@ -56,6 +56,7 @@ si:
     any: "ඔනෑම"
     column_width: "Column width"
     definition_of_done: "සිදු කරන ලද අර්ථ දැක්වීම"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "බාධාවන්"
     label_versions_default_fold_state: "නවනු අනුවාද පෙන්වන්න"
     caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."

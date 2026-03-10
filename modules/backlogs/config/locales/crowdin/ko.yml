@@ -56,6 +56,7 @@ ko:
     any: "모두"
     column_width: "열 너비"
     definition_of_done: "완료 정의"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "제한"
     label_versions_default_fold_state: "접힌 버전 표시"
     caption_versions_default_fold_state: "백로그를 볼 때 버전은 기본적으로 확장되지 않습니다. 각 버전을 수동으로 확장해야 합니다."

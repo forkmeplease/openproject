@@ -56,6 +56,7 @@ vi:
     any: "bất kỳ"
     column_width: "Column width"
     definition_of_done: "Định nghĩa về Hoàn thành"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Trở ngại"
     label_versions_default_fold_state: "Hiển thị các phiên bản \n"
     caption_versions_default_fold_state: "Các phiên bản sẽ không được mở rộng theo mặc định khi xem hồ sơ tồn đọng. Mỗi cái phải được mở rộng bằng tay."

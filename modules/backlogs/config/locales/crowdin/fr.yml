@@ -56,6 +56,7 @@ fr:
     any: "tout"
     column_width: "Largeur de colonne"
     definition_of_done: "Définition de Fait"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Obstacle"
     label_versions_default_fold_state: "Afficher les versions de manière repliée"
     caption_versions_default_fold_state: "Les versions ne seront pas développées par défaut lors de l'affichage des backlogs. Chacune devra être développée manuellement."

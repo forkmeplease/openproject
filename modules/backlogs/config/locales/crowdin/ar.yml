@@ -56,6 +56,7 @@ ar:
     any: "أي"
     column_width: "Column width"
     definition_of_done: "تعريف ما تم"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "عائق"
     label_versions_default_fold_state: "إظهار الإصدارات مطوية"
     caption_versions_default_fold_state: ""

@@ -56,6 +56,7 @@ th:
     any: "ทั้งหมด"
     column_width: "ความกว้างของคอลัมน์"
     definition_of_done: "นิยามของคำว่าเสร็จสิ้น"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "รายการอุปสรรค"
     label_versions_default_fold_state: "แสดงเวอร์ชันที่พับอยู่"
     caption_versions_default_fold_state: "เวอร์ชันจะถูกพับไว้เป็นค่าเริ่มต้น กรุณาคลิกเพื่อขยายดูทีละรายการ"

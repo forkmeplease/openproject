@@ -56,6 +56,7 @@ tr:
     any: "herhangi bir"
     column_width: "Sütun genişliği"
     definition_of_done: "Bitti Tanımı"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Engel"
     label_versions_default_fold_state: "Katlanmış sürümleri göster"
     caption_versions_default_fold_state: "Birikmiş işler görüntülenirken sürümler öntanımlı olarak genişletilmeyecektir. Her birinin ayrı ayrı genişletilmesi gerekir."

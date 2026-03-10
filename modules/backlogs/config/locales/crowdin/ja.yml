@@ -56,6 +56,7 @@ ja:
     any: "全て"
     column_width: "Column width"
     definition_of_done: "「終了」の定義"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "障害事項"
     label_versions_default_fold_state: "バージョンを折り畳んで表示"
     caption_versions_default_fold_state: "バックログを表示する場合、デフォルトではバージョンは展開されません。各バージョンは手動で展開する必要があります。"

@@ -56,6 +56,7 @@ zh-TW:
     any: "任何"
     column_width: "欄寬"
     definition_of_done: "定義"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "阻礙"
     label_versions_default_fold_state: "顯示精簡版本"
     caption_versions_default_fold_state: "檢視待辦清單時，版本預設不會展開，需手動逐一展開。"

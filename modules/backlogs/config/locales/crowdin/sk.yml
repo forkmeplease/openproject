@@ -56,6 +56,7 @@ sk:
     any: "akékoľvek"
     column_width: "Šírka stĺpca"
     definition_of_done: "Definícia pojmu Hotovo"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Prekážka"
     label_versions_default_fold_state: "Zobrazenie zložených verzií"
     caption_versions_default_fold_state: "Verzie sa pri prezeraní nevybavených dokumentov nebudú predvolene rozbaľovať. Každú z nich je potrebné rozbaliť manuálne."

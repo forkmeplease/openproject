@@ -56,6 +56,7 @@ es:
     any: "cualquiera"
     column_width: "Ancho de columna"
     definition_of_done: "Criterio de Aceptación"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Impedimento"
     label_versions_default_fold_state: "Mostrar versiones colapsadas"
     caption_versions_default_fold_state: "Las versiones no se expandirán por defecto al visualizar los trabajos pendientes. Cada una deberá expandirse manualmente."

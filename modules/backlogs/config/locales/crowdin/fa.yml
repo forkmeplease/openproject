@@ -56,6 +56,7 @@ fa:
     any: "any"
     column_width: "عرض ستون"
     definition_of_done: "Definition of Done"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Impediment"
     label_versions_default_fold_state: "Show versions folded"
     caption_versions_default_fold_state: "در هنگام مشاهده backlog ها، نسخه‌ها به صورت پیش‌فرض بازنخواهندشد. هر کدام باید به صورت دستی باز شوند."

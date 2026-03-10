@@ -56,6 +56,7 @@ pt-BR:
     any: "qualquer"
     column_width: "Largura da coluna"
     definition_of_done: "Definição de pronto"
+    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
     impediment: "Impedimento"
     label_versions_default_fold_state: "Mostrar versões em modo fechado"
     caption_versions_default_fold_state: "As versões não serão expandidas por padrão ao visualizar backlogs. Cada uma deve ser expandida manualmente."
