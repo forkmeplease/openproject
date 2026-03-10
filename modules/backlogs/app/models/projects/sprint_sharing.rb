@@ -41,14 +41,10 @@ module Projects::SprintSharing
   included do
     store_attribute :settings, :sprint_sharing, :string
 
-    scope :share_sprints_with_all_projects, -> { with_settings(sprint_sharing: SHARE_ALL_PROJECTS) }
-    scope :share_sprints_with_subprojects, -> { with_settings(sprint_sharing: SHARE_SUBPROJECTS) }
-    scope :receive_shared_sprints, -> { with_settings(sprint_sharing: RECEIVE_SHARED) }
-    scope :not_sharing_sprints, -> do
-      with_settings(sprint_sharing: NO_SHARING)
-      .or(with_settings(sprint_sharing: ""))
-      .or(with_settings(sprint_sharing: nil))
-    end
+    scopes :share_sprints_with_all_projects,
+           :share_sprints_with_subprojects,
+           :receive_shared_sprints,
+           :not_sharing_sprints
   end
 
   class_methods do
