@@ -28,27 +28,10 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkflowHelper
-  def workflow_tabs(type)
-    [
-      {
-        name: "always",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.default_transitions")
-      },
-      {
-        name: "author",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.user_author")
-      },
-      {
-        name: "assignee",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.user_assignee")
-      }
-    ]
+module Workflows
+  class RowComponent < ::OpPrimer::BorderBoxRowComponent
+    def name
+      link_to model.name, edit_workflow_path(model)
+    end
   end
 end

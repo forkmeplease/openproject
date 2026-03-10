@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,29 +26,48 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module WorkflowHelper
-  def workflow_tabs(type)
-    [
-      {
-        name: "always",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.default_transitions")
-      },
-      {
-        name: "author",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.user_author")
-      },
-      {
-        name: "assignee",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.user_assignee")
-      }
-    ]
+require "spec_helper"
+
+RSpec.describe "Workflows index" do
+  include Toasts::Expectations
+
+  let(:admin)  { create(:admin) }
+  let!(:types) { create_list(:type, 3) }
+
+  current_user { admin }
+
+  before do
+    visit url_for(controller: "/workflows", action: :index)
+  end
+
+  it "lists all the types" do
+    expect(page).to have_heading("Workflows")
+
+    within "[role=table]" do
+      expect(page).to have_css(".Box-row[role=row]", count: 3)
+      types.each do |type|
+        expect(page).to have_css(".Box-row[role=row] a[href='#{edit_workflow_path(type)}']", text: type.name)
+      end
+    end
+  end
+
+  it "allows navigating to Workflow summary page" do
+    within ".PageHeader-actions" do
+      click_on "Summary"
+    end
+
+    expect(page).to have_heading "Summary"
+    expect(page).to have_current_path(summarized_workflows_path)
+  end
+
+  it "allows navigating to Workflow copy page" do
+    within ".PageHeader-actions" do
+      click_on "Copy"
+    end
+
+    expect(page).to have_heading "Copy workflow"
+    expect(page).to have_current_path(copy_workflows_path)
   end
 end

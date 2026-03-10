@@ -34,15 +34,16 @@ class WorkflowsController < ApplicationController
   before_action :require_admin
 
   before_action :find_roles, except: :update
-  before_action :find_types, except: :update
+  before_action :find_types, except: %i[edit update]
 
   before_action :find_role, only: :update
-  before_action :find_type, only: :update
+  before_action :find_type, only: %i[edit update]
 
   before_action :find_optional_role, only: :edit
-  before_action :find_optional_type, only: :edit
 
-  def show
+  def index; end
+
+  def summarized
     @workflow_counts = Workflow.count_by_type_and_role
     @roles = @workflow_counts.first&.last&.map(&:first)
   end
@@ -133,10 +134,6 @@ class WorkflowsController < ApplicationController
 
   def find_optional_role
     @role = eligible_roles.find_by(id: params[:role_id])
-  end
-
-  def find_optional_type
-    @type = ::Type.find_by(id: params[:type_id])
   end
 
   def eligible_roles

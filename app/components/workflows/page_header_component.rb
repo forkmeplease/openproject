@@ -41,13 +41,12 @@ module Workflows
     def breadcrumb_items
       [{ href: admin_index_path, text: t("label_administration") },
        { href: admin_settings_work_packages_general_path, text: t(:label_work_package_plural) },
-       { href: edit_workflows_path, text: t(:label_workflow) },
        title]
     end
 
     def title
       case @state
-      when :show
+      when :summarized
         t(:label_workflow_summary)
       when :copy
         t(:label_workflow_copy)

@@ -28,27 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkflowHelper
-  def workflow_tabs(type)
-    [
-      {
-        name: "always",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.default_transitions")
-      },
-      {
-        name: "author",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.user_author")
-      },
-      {
-        name: "assignee",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id, :used_statuses_only))),
-        label: I18n.t(:"admin.workflows.tabs.user_assignee")
-      }
-    ]
+module Workflows
+  class TableComponent < ::OpPrimer::BorderBoxTableComponent
+    def columns
+      headers.map(&:first)
+    end
+
+    def headers
+      [
+        [:name, { caption: Type.model_name.human }]
+      ]
+    end
+
+    def empty_row_message
+      I18n.t :no_results_title_text
+    end
+
+    def mobile_title
+      Type.model_name.human
+    end
   end
 end
