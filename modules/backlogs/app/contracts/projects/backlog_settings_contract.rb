@@ -57,7 +57,11 @@ module Projects
           (sharer = Project.global_sprint_sharer) &&
           sharer != model
 
-        errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
+        if user.allowed_in_project?(:view_project, sharer)
+          errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
+        else
+          errors.add :sprint_sharing, :share_all_projects_already_taken_anonymous
+        end
       end
     end
   end

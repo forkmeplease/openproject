@@ -55,6 +55,7 @@ en:
           attributes:
             sprint_sharing:
               share_all_projects_already_taken: "cannot be set because project \"%{name}\" is already sharing with all projects."
+              share_all_projects_already_taken_anonymous: "cannot be set because another project is already sharing with all projects."
         work_package:
           attributes:
             blocks_ids:
@@ -211,6 +212,7 @@ en:
             label: "All projects"
             caption: "Sprints created in this project will be available to all projects in this instance. If you select this option, it will no longer be available to other projects."
             disabled_caption: "Option not available since project \"%{name}\" is currently sharing with all projects and only one project can do this."
+            disabled_caption_anonymous: "Option not available since another project is currently sharing with all projects and only one project can do this."
           share_subprojects:
             label: "Subprojects"
             caption: "Sprints created in this project will be available to all subprojects of the current project."

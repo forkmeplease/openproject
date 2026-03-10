@@ -85,7 +85,11 @@ module Projects
 
         def caption_for(option)
           if disabled?(option)
-            sharing_option_text(option, :disabled_caption, name: global_sprint_sharer.name)
+            if User.current.allowed_in_project?(:view_project, global_sprint_sharer)
+              sharing_option_text(option, :disabled_caption, name: global_sprint_sharer.name)
+            else
+              sharing_option_text(option, :disabled_caption_anonymous)
+            end
           else
             sharing_option_text(option, :caption)
           end

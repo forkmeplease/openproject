@@ -111,6 +111,20 @@ RSpec.describe "Backlogs project settings sprint sharing", :js, with_flag: { scr
                  name: other_project.name)
         )
       end
+
+      context "when the current user cannot see the other project" do
+        let!(:other_project) { create(:project, public: false, name: "Sharer Project", sprint_sharing: "share_all_projects") }
+
+        it "disables the all projects option without revealing the project name" do
+          visit project_settings_backlog_sharing_path(project)
+
+          expect(page).to have_field("All projects", disabled: true)
+          expect(page).to have_text(
+            I18n.t("projects.settings.backlog_sharing.options.share_all_projects.disabled_caption_anonymous")
+          )
+          expect(page).to have_no_text("Sharer Project")
+        end
+      end
     end
   end
 

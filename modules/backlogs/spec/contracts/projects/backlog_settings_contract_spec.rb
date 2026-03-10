@@ -9,6 +9,7 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
   let(:current_user) { build_stubbed(:user) }
   let(:project) { create(:project) }
   let(:can_share_sprint) { true }
+  let(:can_view_sharer) { true }
 
   subject(:contract) { described_class.new(project, current_user) }
 
@@ -17,6 +18,10 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
       .to receive(:allowed_in_project?)
       .with(:share_sprint, project)
       .and_return(can_share_sprint)
+    allow(current_user)
+      .to receive(:allowed_in_project?)
+      .with(:view_project, anything)
+      .and_return(can_view_sharer)
   end
 
   it "is expected to be a subclass of ModelContract" do
@@ -87,6 +92,12 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
           let!(:other_project) { create(:project, :archived, sprint_sharing: "share_all_projects") }
 
           it_behaves_like "contract is valid"
+        end
+
+        context "when the current user cannot see the other project" do
+          let(:can_view_sharer) { false }
+
+          it_behaves_like "contract is invalid", sprint_sharing: :share_all_projects_already_taken_anonymous
         end
       end
     end
