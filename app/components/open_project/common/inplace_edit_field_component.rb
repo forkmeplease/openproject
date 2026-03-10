@@ -35,8 +35,14 @@ module OpenProject
 
       attr_reader :model, :attribute, :enforce_edit_mode, :open_in_dialog, :show_action_buttons, :truncated
 
-      def initialize(model:, attribute:, enforce_edit_mode: false, open_in_dialog: false, show_action_buttons: true,
-                     truncated: false, **system_arguments)
+      def initialize(model:,
+                     attribute:,
+                     enforce_edit_mode: false,
+                     open_in_dialog: false,
+                     show_action_buttons: true,
+                     truncated: false,
+                     update_registry: OpenProject::InplaceEdit::UpdateRegistry.default,
+                     **system_arguments)
         super()
         @model = model
         @attribute = attribute
@@ -44,7 +50,9 @@ module OpenProject
         @open_in_dialog = open_in_dialog
         @show_action_buttons = show_action_buttons
         @truncated = truncated
+        @update_registry = update_registry
         @system_arguments = system_arguments
+
         @system_arguments[:id] = system_arguments[:id] || SecureRandom.uuid
         @system_arguments[:required] ||= required?
         @system_arguments[:label] ||= field_label
@@ -144,7 +152,7 @@ module OpenProject
       def writable?
         return @writable if defined?(@writable)
 
-        contract_class = OpenProject::InplaceEdit::UpdateRegistry.fetch_contract(model)
+        contract_class = @update_registry.fetch_contract(model)
         @writable =
           if contract_class.present?
             contract_class.new(model, User.current).writable?(attribute)

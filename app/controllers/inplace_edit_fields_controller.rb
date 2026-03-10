@@ -45,7 +45,7 @@ class InplaceEditFieldsController < ApplicationController
   end
 
   def update
-    handler = OpenProject::InplaceEdit::UpdateRegistry.fetch_handler(@model)
+    handler = update_registry.fetch_handler(@model)
 
     if handler.present?
       success = handler.call(
@@ -101,7 +101,7 @@ class InplaceEditFieldsController < ApplicationController
     return nil if model_param.blank?
 
     model_class =
-      OpenProject::InplaceEdit::UpdateRegistry.resolve_model_class(model_param)
+      update_registry.resolve_model_class(model_param)
 
     unless model_class &&
            model_class < ApplicationRecord &&
@@ -155,8 +155,13 @@ class InplaceEditFieldsController < ApplicationController
       model: @model,
       attribute: @attribute,
       enforce_edit_mode:,
+      update_registry:,
       **system_arguments.to_h.symbolize_keys
     )
+  end
+
+  def update_registry
+    @update_registry ||= OpenProject::InplaceEdit::UpdateRegistry.default
   end
 
   def system_arguments
