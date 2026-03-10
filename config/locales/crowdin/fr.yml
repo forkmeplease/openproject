@@ -1590,7 +1590,7 @@ fr:
         jwt_sub: "Revendication de sujet"
       status:
         is_closed: "Lot de travaux clôturé"
-        is_readonly: "Paquet de travail en lecture seule"
+        is_readonly: "Lot de travaux en lecture seule"
         excluded_from_totals: "Exclure du calcul des totaux dans la hiérarchie"
         default_done_ratio: "% Réalisé"
       token/named:
@@ -3342,7 +3342,7 @@ fr:
   label_available_project_repositories: "Dépôts disponibles"
   label_available_project_versions: "Versions disponibles"
   label_available_project_work_package_categories: "Catégories de lots de travaux disponibles"
-  label_available_project_work_package_types: "Types de paquet de travail disponible"
+  label_available_project_work_package_types: "Types de lot de travaux disponibles"
   label_available_projects: "Projets disponibles"
   label_api_doc: "Documentation de l'API"
   label_backup: "Sauvegarde"
@@ -4053,9 +4053,9 @@ fr:
     sharing:
       work_packages:
         allowed_actions: "Vous pouvez %{allowed_actions} ce lot de travaux. Cela peut changer en fonction de votre rôle dans le projet et de vos droits."
-        create_account: "Pour accéder à ce paquet de travail, vous aurez besoin de créer et activer un compte sur %{instance}."
+        create_account: "Pour accéder à ce lot de travaux, vous aurez besoin de créer et activer un compte sur %{instance}."
         open_work_package: "Ouvrir ce lot de travaux"
-        subject: "Le lot des travaux #%{id} a été partagé avec vous"
+        subject: "Le lot de travaux #%{id} a été partagé avec vous"
         enterprise_text: "Partagez les lots de travaux avec des utilisateurs qui ne sont pas membres du projet."
         summary:
           user: "%{user} a partagé un lot de travaux avec vous avec les droits %{role_rights}"

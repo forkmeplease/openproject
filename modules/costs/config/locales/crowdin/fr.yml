@@ -181,7 +181,7 @@ fr:
   label_today_capitalized: "Aujourd'hui"
   label_view_mode_switcher: "Changer la vue"
   label_timer_since: "Commencé à %{time}"
-  placeholder_activity_select_work_package_first: La sélection d'un paquet de travail est requise en premier
+  placeholder_activity_select_work_package_first: La sélection préalable d'un lot de travaux est requise
   notice_something_wrong: "Quelque chose s'est mal passé. Veuillez réessayer."
   notice_successful_restore: "Restauration réussie."
   notice_successful_lock: "Bloqué avec succès."

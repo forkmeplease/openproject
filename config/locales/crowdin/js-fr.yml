@@ -845,7 +845,7 @@ fr:
       message_successful_bulk_delete: Les lots de travaux ont été correctement supprimés.
       message_successful_show_in_fullscreen: "Cliquez ici pour ouvrir ce lot de travaux en affichage plein écran."
       message_view_spent_time: "Afficher le temps passé pour ce lot de travaux"
-      message_work_package_read_only: "Paquet de travail est verrouillé. Aucun attribut autre que l’État ne peut être modifié."
+      message_work_package_read_only: "Le lot de travaux est verrouillé dans ce statut. Aucun autre attribut que le statut ne peut être modifié."
       message_work_package_status_blocked: "Le statut du lot de travail n'est pas modifiable en raison de la fermeture du statut et de la version assignés."
       placeholder_filter_by_text: "Objet, description, commentaires, ..."
       progress:
