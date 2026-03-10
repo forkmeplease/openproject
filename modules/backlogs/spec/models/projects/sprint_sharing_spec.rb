@@ -99,7 +99,7 @@ RSpec.describe Projects::SprintSharing do
 
     shared_examples "returns the project itself" do
       it "returns only itself" do
-        expect(project.receive_sprints_from).to eq(project)
+        expect(project.receive_sprints_from).to contain_exactly(project)
       end
     end
 
@@ -133,7 +133,7 @@ RSpec.describe Projects::SprintSharing do
         let(:parent_sprint_sharing) { "no_sharing" }
 
         it "returns only the global sharer" do
-          expect(project.receive_sprints_from).to eq(global_sharer)
+          expect(project.receive_sprints_from).to contain_exactly(global_sharer)
         end
       end
 
@@ -143,7 +143,7 @@ RSpec.describe Projects::SprintSharing do
         let(:parent_sprint_sharing) { "share_subprojects" }
 
         it "returns only the closest sharing ancestor" do
-          expect(project.receive_sprints_from).to eq(parent_project)
+          expect(project.receive_sprints_from).to contain_exactly(parent_project)
         end
       end
 
@@ -152,8 +152,8 @@ RSpec.describe Projects::SprintSharing do
         let(:root_sprint_sharing) { "no_sharing" }
         let(:parent_sprint_sharing) { "no_sharing" }
 
-        it "returns an empty array" do
-          expect(project.receive_sprints_from).to be_nil
+        it "returns an empty scope" do
+          expect(project.receive_sprints_from).to be_empty
         end
       end
     end

@@ -80,9 +80,20 @@ module Projects::SprintSharing
     # Receivers see external sprints from the closest ancestor sharing
     # subprojects, falling back to the global sharer.
     if receive_shared_sprints?
-      ancestors.share_sprints_with_subprojects.last || self.class.global_sprint_sharer
+      closest_ancestor = ancestors
+        .share_sprints_with_subprojects
+        .reorder(lft: :desc)
+        .limit(1)
+
+      self.class
+        .where(id: closest_ancestor)
+        .or(
+          self.class.share_sprints_with_all_projects
+            .active
+            .where.not(Arel::Nodes::Exists.new(closest_ancestor.select(:id).arel))
+        )
     else
-      self
+      self.class.where(id:)
     end
   end
 end
