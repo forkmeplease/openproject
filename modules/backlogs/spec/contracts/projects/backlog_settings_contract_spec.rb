@@ -8,20 +8,15 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
 
   let(:current_user) { build_stubbed(:user) }
   let(:project) { create(:project) }
-  let(:can_share_sprint) { true }
-  let(:can_view_sharer) { true }
+  let(:permissions) { %i(share_sprint) }
 
   subject(:contract) { described_class.new(project, current_user) }
 
   before do
-    allow(current_user)
-      .to receive(:allowed_in_project?)
-      .with(:share_sprint, project)
-      .and_return(can_share_sprint)
-    allow(current_user)
-      .to receive(:allowed_in_project?)
-      .with(:view_project, anything)
-      .and_return(can_view_sharer)
+    mock_permissions_for(current_user) do |mock|
+      mock.allow_in_project(*permissions, project:)
+      mock.allow_in_project(*other_permissions, project: other_project) if defined?(other_project)
+    end
   end
 
   it "is expected to be a subclass of ModelContract" do
@@ -50,13 +45,13 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
 
     describe "permissions" do
       context "when user can share sprint" do
-        let(:can_share_sprint) { true }
+        let(:permissions) { %i(share_sprint) }
 
         it_behaves_like "contract is valid"
       end
 
       context "when user cannot share sprint" do
-        let(:can_share_sprint) { false }
+        let(:permissions) { [] }
 
         it_behaves_like "contract user is unauthorized"
       end
@@ -79,6 +74,7 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
 
       context "when another project already shares with all projects" do
         let!(:other_project) { create(:project, sprint_sharing: "share_all_projects") }
+        let(:other_permissions) { %i(view_project) }
 
         it_behaves_like "contract is invalid", sprint_sharing: :share_all_projects_already_taken
 
@@ -95,7 +91,7 @@ RSpec.describe Projects::BacklogSettingsContract, type: :model do
         end
 
         context "when the current user cannot see the other project" do
-          let(:can_view_sharer) { false }
+          let(:other_permissions) { [] }
 
           it_behaves_like "contract is invalid", sprint_sharing: :share_all_projects_already_taken_anonymous
         end
