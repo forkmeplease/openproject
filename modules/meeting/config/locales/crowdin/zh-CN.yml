@@ -211,8 +211,8 @@ zh-CN:
         heading: "沒有与会者"
         description: "还没有参加者。"
     attachments:
-      onetime_template: "These attached files will be included in all future meetings using this template."
-      series_template: "These attached files will be included in all future meetings in the series."
+      onetime_template: "今后所有使用此模板的会议都将包含这些随附文件。"
+      series_template: "今后此系列中的所有会议都将包含这些随附文件。"
       text: "所有与会者都可以查看附件。您还可以将这些文件拖放到议程项目注释中。"
     copy:
       title: "复制会议： %{title}"
@@ -289,7 +289,7 @@ zh-CN:
           title: "删除模板"
           heading: "是否删除此模板？"
           confirmation_message_html: >
-            This action is not reversible. Please proceed with caution. Existing meetings that were created using this template will not be affected.
+            此操作无法撤消。请谨慎操作。使用此模板创建的现有会议将不受影响。
       occurrence:
         title: "取消会议事件"
         heading: "取消此会议事件？"
@@ -620,7 +620,7 @@ zh-CN:
   label_meeting_template_sharing_none: "仅此项目"
   label_meeting_template_sharing_descendants: "子项目"
   label_meeting_template_sharing_system: "所有项目"
-  text_meeting_template_sharing_description: "在这种情况下，此模板可以与此实例中的子项目或其他项目共享。仅复制议程条目和附件。"
+  text_meeting_template_sharing_description: "此模板可以与此实例中的子项目或其他项目共享。仅复制议程条目和附件。"
   text_meeting_not_editable_anymore: "本次会议已不可编辑。"
   text_meeting_not_present_anymore: "此次会议已被删除。请选择另一次会议。"
   label_add_work_package_to_meeting_dialog_title: "选择会议"

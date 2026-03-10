@@ -110,9 +110,9 @@ zh-CN:
       label_actions: "冲刺操作"
       action_menu:
         edit_sprint: "编辑冲刺"
-        new_story: "新故事"
+        new_story: "新建故事"
         stories_tasks: "故事/任务"
-        task_board: "任务板"
+        task_board: "任务面板"
         burndown_chart: "燃尽图"
     story_component:
       label_drag_story: "移动 %{name}"

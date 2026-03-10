@@ -32,7 +32,7 @@ de:
         name: "Sprint-Name"
         sharing: "Teilen"
       sprint:
-        duration: "Sprintdauer"
+        duration: "Sprint-Dauer"
       work_package:
         position: "Position"
         story_points: "Story-Punkte"
@@ -155,7 +155,7 @@ de:
   permission_select_done_statuses: "Abgeschlossene Status auswählen"
   permission_share_sprint: "Sprint teilen"
   permission_start_complete_sprint: "Sprint starten/abschließen"
-  permission_view_sprints: "Sprints sehen"
+  permission_view_sprints: "Sprints ansehen"
   project_module_backlogs: "Backlogs"
   rb_burndown_charts:
     show:
