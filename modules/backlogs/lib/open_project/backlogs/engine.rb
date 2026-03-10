@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -145,7 +147,7 @@ module OpenProject::Backlogs
     patch_with_namespace :Versions, :RowComponent
 
     config.to_prepare do
-      next if Versions::BaseContract.included_modules.include?(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
+      next if Versions::BaseContract.include?(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
 
       Versions::BaseContract.prepend(OpenProject::Backlogs::Patches::Versions::BaseContractPatch)
 
@@ -224,6 +226,7 @@ module OpenProject::Backlogs
 
       ::Queries::Register.register(::Query) do
         filter OpenProject::Backlogs::WorkPackageFilter
+        filter OpenProject::Backlogs::SprintFilter
 
         select OpenProject::Backlogs::QueryBacklogsSelect
       end
