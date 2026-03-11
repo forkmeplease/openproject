@@ -98,7 +98,7 @@ class Users::WorkingHours::DaysAndHoursForm < ApplicationForm
     form.text_field name: :total_work_hours,
                     label: I18n.t("users.working_hours.form.total_work_hours"),
                     input_width: :large,
-                    disabled: true,
+                    readonly: true,
                     data: { "users--working-hours-form-target": "totalWorkHoursDisplay" },
                     trailing_visual: { text: { text: I18n.t("users.working_hours.form.per_week") } }
   end

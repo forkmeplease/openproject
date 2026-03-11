@@ -40,7 +40,7 @@
             g.text_field(
               name: :working_days_display,
               label: I18n.t(:label_working_days),
-              disabled: true,
+              readonly: true,
               value: model.working_days_count,
               datepicker_options: { inDialog: Users::NonWorkingTimes::DialogComponent::DIALOG_ID },
               data: { "users--non-working-times-form-target": "workingDaysInput" }
