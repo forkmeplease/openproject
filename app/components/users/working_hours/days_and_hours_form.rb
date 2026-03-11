@@ -29,9 +29,14 @@
 #++
 
 class Users::WorkingHours::DaysAndHoursForm < ApplicationForm
+  def initialize(is_first_form:)
+    super()
+    @is_first_form = is_first_form
+  end
+
   form do |form|
     form.html_content do
-      render(Primer::Beta::Subhead.new(spacious: true)) do |component|
+      render(Primer::Beta::Subhead.new(spacious: !@is_first_form)) do |component|
         component.with_heading(tag: :div, size: :medium) do
           I18n.t("users.working_hours.form.title_days_and_hours")
         end
@@ -53,7 +58,8 @@ class Users::WorkingHours::DaysAndHoursForm < ApplicationForm
       end
     end
 
-    form.radio_button_group(name: "hours_mode", label: I18n.t("users.working_hours.form.hours_mode_label"), mb: 2) do |group|
+    form.radio_button_group(name: "hours_mode", label: I18n.t("users.working_hours.form.hours_mode_label"),
+                            mb: 2) do |group|
       group.radio_button(
         label: I18n.t("users.working_hours.form.same_hours_mode"),
         value: "same",
