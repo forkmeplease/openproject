@@ -74,6 +74,10 @@ module Agile
       Day.working.from_range(from: start_date, to: finish_date).count
     end
 
+    def board_name
+      "#{project.name}: #{name}"
+    end
+
     private
 
     # TODO: consider moving this validation to the database level to ensure data integrity.

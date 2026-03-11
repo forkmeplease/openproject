@@ -119,6 +119,12 @@ RSpec.describe Agile::Sprint do
     it { is_expected.to belong_to(:project) }
   end
 
+  describe "#board_name" do
+    it "returns the project and sprint name" do
+      expect(sprint.board_name).to eq("#{project.name}: Sprint 1")
+    end
+  end
+
   describe "work_package association" do
     let(:sprint) { create(:agile_sprint, project:) }
     let(:work_package) { create(:work_package, project:, sprint:) }
