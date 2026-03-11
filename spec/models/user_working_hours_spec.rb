@@ -38,13 +38,32 @@ RSpec.describe UserWorkingHours do
 
     it { is_expected.to validate_presence_of(:valid_from) }
 
+    # The *_hours virtual attributes have a converting setter (hours → minutes), so
+    # shoulda-matchers cannot induce invalid states through it. We bypass the setter
+    # and write directly to the underlying minute column instead.
     %i[monday tuesday wednesday thursday friday saturday sunday].each do |day|
-      it { is_expected.to validate_presence_of(:"#{day}_hours") }
+      describe "##{day}_hours" do
+        it "is invalid when exceeding 24 hours" do
+          subject.public_send(:"#{day}=", (24.5 * 60).round)
+          expect(subject).not_to be_valid
+          expect(subject.errors[:"#{day}_hours"]).to be_present
+        end
 
-      it do
-        expect(subject).to validate_numericality_of(:"#{day}_hours")
-                                                    .is_greater_than_or_equal_to(0)
-                                                    .is_less_than_or_equal_to(24)
+        it "is invalid when negative" do
+          subject.public_send(:"#{day}=", -60)
+          expect(subject).not_to be_valid
+          expect(subject.errors[:"#{day}_hours"]).to be_present
+        end
+
+        it "is valid at 0 hours" do
+          subject.public_send(:"#{day}=", 0)
+          expect(subject).to be_valid
+        end
+
+        it "is valid at 24 hours" do
+          subject.public_send(:"#{day}=", 24 * 60)
+          expect(subject).to be_valid
+        end
       end
     end
 

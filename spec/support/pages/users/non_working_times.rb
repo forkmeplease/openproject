@@ -135,7 +135,7 @@ module Pages
       end
 
       def expect_working_days_count(count)
-        expect(page).to have_field(I18n.t(:label_working_days), disabled: true, with: count.to_s)
+        expect(page).to have_field(I18n.t(:label_working_days), with: count.to_s)
       end
 
       def expect_sidebar_entry(text)
