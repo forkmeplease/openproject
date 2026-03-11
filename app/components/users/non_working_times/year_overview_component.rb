@@ -44,7 +44,7 @@ module Users
         render(Users::NonWorkingTimes::SubHeaderComponent.new(year:, user:)) +
         render(Primer::Alpha::Layout.new(classes: "users-non-working-times-year-overview")) do |layout|
           layout.with_main { render_calendar }
-          layout.with_sidebar(col_placement: :end) { render_sidebar }
+          layout.with_sidebar(col_placement: :end, width: :wide) { render_sidebar }
         end
       end
 
