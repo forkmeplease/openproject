@@ -484,7 +484,7 @@ paths:
     "$ref": "./paths/user_lock.yml"
   "/api/v3/users/{id}/non_working_times":
     "$ref": "./paths/user_non_working_times.yml"
-  "/api/v3/users/{id}/non_working_times/{date}":
+  "/api/v3/users/{id}/non_working_times/{non_working_time_id}":
     "$ref": "./paths/user_non_working_times_date.yml"
   "/api/v3/users/{id}/working_hours":
     "$ref": "./paths/user_working_hours.yml"

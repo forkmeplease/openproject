@@ -53,6 +53,11 @@ RSpec.describe API::V3::UserNonWorkingTimes::NonWorkingTimesByUserAPI do
       expect(last_response).to have_http_status(404)
     end
 
+    it "returns 404 for PATCH /api/v3/users/:user_id/non_working_times/:id" do
+      patch api_v3_paths.user_non_working_time(target_user.id, non_working_time.id), {}.to_json, headers
+      expect(last_response).to have_http_status(404)
+    end
+
     it "returns 404 for DELETE /api/v3/users/:user_id/non_working_times/:id" do
       delete api_v3_paths.user_non_working_time(target_user.id, non_working_time.id)
       expect(last_response).to have_http_status(404)
@@ -195,6 +200,60 @@ RSpec.describe API::V3::UserNonWorkingTimes::NonWorkingTimesByUserAPI do
         current_user { create(:user) }
 
         before { post path, valid_params.to_json, headers }
+
+        it "returns 404 since the target user is not visible" do
+          expect(last_response).to have_http_status(404)
+        end
+      end
+    end
+
+    describe "PATCH /api/v3/users/:user_id/non_working_times/:id" do
+      let(:path) { api_v3_paths.user_non_working_time(target_user.id, non_working_time.id) }
+      let(:new_start_date) { (Date.tomorrow + 2.months).iso8601 }
+      let(:new_end_date) { (Date.tomorrow + 2.months + 4.days).iso8601 }
+      let(:valid_params) { { startDate: new_start_date, endDate: new_end_date } }
+
+      context "with admin user" do
+        current_user { admin_user }
+
+        before { patch path, valid_params.to_json, headers }
+
+        it "returns 200 OK" do
+          expect(last_response).to have_http_status(200)
+        end
+
+        it "updates the non-working time" do
+          parsed = JSON.parse(last_response.body)
+          expect(parsed["_type"]).to eq("UserNonWorkingTime")
+          expect(parsed["startDate"]).to eq(new_start_date)
+          expect(parsed["endDate"]).to eq(new_end_date)
+        end
+      end
+
+      context "with 'me' as the user ID with manage_own_working_times permission" do
+        let(:own_user) { create(:user, global_permissions: [:manage_own_working_times]) }
+        let!(:own_time) { create(:user_non_working_time, user: own_user, start_date: Date.tomorrow + 2.weeks) }
+
+        current_user { own_user }
+
+        before { patch api_v3_paths.user_non_working_time("me", own_time.id), valid_params.to_json, headers }
+
+        it "returns 200 OK" do
+          expect(last_response).to have_http_status(200)
+        end
+
+        it "updates the non-working time for the current user" do
+          parsed = JSON.parse(last_response.body)
+          expect(parsed["_type"]).to eq("UserNonWorkingTime")
+          expect(parsed["startDate"]).to eq(new_start_date)
+          expect(parsed["endDate"]).to eq(new_end_date)
+        end
+      end
+
+      context "with regular user (no access to other users)" do
+        current_user { create(:user) }
+
+        before { patch path, valid_params.to_json, headers }
 
         it "returns 404 since the target user is not visible" do
           expect(last_response).to have_http_status(404)

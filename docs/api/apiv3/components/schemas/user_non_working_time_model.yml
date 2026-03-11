@@ -4,7 +4,8 @@ type: object
 required:
   - _type
   - id
-  - date
+  - startDate
+  - endDate
 properties:
   _type:
     type: string
@@ -13,14 +14,19 @@ properties:
   id:
     type: integer
     description: |-
-      The unique identifier of the non-working day record.
+      The unique identifier of the non-working time record.
     minimum: 1
-  date:
+  startDate:
     type: string
     format: date
     description: |-
-      The date of the non-working day in ISO 8601 format (YYYY-MM-DD).
-      Cannot coincide with a system-wide non-working day.
+      The first date of the non-working time range in ISO 8601 format (YYYY-MM-DD).
+  endDate:
+    type: string
+    format: date
+    description: |-
+      The last date of the non-working time range in ISO 8601 format (YYYY-MM-DD).
+      Must be greater than or equal to `startDate`.
   _links:
     type: object
     required:
@@ -31,22 +37,23 @@ properties:
         allOf:
           - $ref: './link.yml'
           - description: |-
-              This non-working day record.
+              This non-working time record.
               **Resource**: UserNonWorkingTime
       user:
         allOf:
           - $ref: './link.yml'
           - description: |-
-              The user this non-working day belongs to.
+              The user this non-working time belongs to.
               **Resource**: User
 
 example:
   _type: UserNonWorkingTime
   id: 7
-  date: '2025-06-16'
+  startDate: '2025-06-16'
+  endDate: '2025-06-20'
   _links:
     self:
-      href: /api/v3/users/42/non_working_times/2025-06-16
+      href: /api/v3/users/42/non_working_times/7
     user:
       href: /api/v3/users/42
       title: Jane Doe

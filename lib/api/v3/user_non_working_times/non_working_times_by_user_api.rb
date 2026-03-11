@@ -68,6 +68,8 @@ module API
                                          .find(declared_params[:non_working_time_id])
             end
 
+            patch &::API::V3::Utilities::Endpoints::Update.new(model: ::UserNonWorkingTime).mount
+
             delete &::API::V3::Utilities::Endpoints::Delete.new(model: ::UserNonWorkingTime).mount
           end
         end
