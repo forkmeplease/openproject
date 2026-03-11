@@ -27,7 +27,7 @@ You can now place a work package directly into a specific agenda section when ad
 
 In the *Notes* section, you can add text that will be displayed together with the meeting title in the *Meetings* tab of the work package.
 
-[See our user guide to learn more about how to add work packages to meetings](../../user-guide/work-packages/add-work-packages-to-meetings).
+[See our user guide to learn more about how to add work packages to meetings](../../../user-guide/work-packages/add-work-packages-to-meetings).
 
 ![OpenProject work package, Meetings tab: Modal to "Select a meeting" with the Meeting selected being a Marketing daily and a "Add to section" dropdown with two sections to choose from.](openproject-16-5-meeting-tab-highlighted.png)
 
@@ -42,7 +42,7 @@ Additionally, **checkboxes for high contrast** are now displayed, depending on t
 
 This new feature is particularly helpful for the automatic mode, where you can now differentiate whether you want high contrast to be displayed only in dark mode or only in light mode, for example.
 
-[Learn more about the *Look and feel* options in OpenProject](../../user-guide/account-settings/#look-and-feel).
+[Learn more about the *Look and feel* options in OpenProject](../../../user-guide/account-settings/#look-and-feel).
 
 ![OpenProject account settings / Interface: Look and feel options reduced to "Dark", "Light" and "Automatic". Automatic is selected and below two checkboxes are displayed:" Force high contrast when in Light mode" and "Force high-contrast when in Dark mode".](openproject-16-5-increase-contrast-automatic.png)
 
@@ -178,4 +178,4 @@ Last but not least, we are very grateful for our very engaged translation contri
 - [Samo](https://crowdin.com/profile/SamoE), for a great number of translations into Turkish.
 - [Kuma Yamashita](https://crowdin.com/profile/dredgk), for a great number of translations into Japanese.
 
-Would you like to help out with translations yourself? Then take a look at our [translation guide](../../contributions-guide/translate-openproject/) and find out exactly how you can contribute. It is very much appreciated!
+Would you like to help out with translations yourself? Then take a look at our [translation guide](../../../contributions-guide/translate-openproject/) and find out exactly how you can contribute. It is very much appreciated!
