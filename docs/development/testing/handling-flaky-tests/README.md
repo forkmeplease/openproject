@@ -37,7 +37,6 @@ To aggregate recent `Test suite` failures and highlight specs that skew outside 
 use:
 
 ```bash
-export GITHUB_USERNAME=...
 export GITHUB_TOKEN=...
 script/report_out_of_hours_ci_failures --days 30
 ```

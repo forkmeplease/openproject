@@ -114,8 +114,9 @@ module OutOfHoursCiFailures
     def http
       @http ||= HTTPX
         .plugin(:follow_redirects)
-        .plugin(:basic_auth)
-        .basic_auth(ENV.fetch("GITHUB_USERNAME"), ENV.fetch("GITHUB_TOKEN"))
+        .with_headers(
+          "Authorization" => "Bearer #{ENV.fetch('GITHUB_TOKEN')}"
+        )
     end
 
     def github_url(path)
@@ -351,9 +352,7 @@ module OutOfHoursCiFailures
 end
 
 if $PROGRAM_NAME == __FILE__
-  if !ENV["GITHUB_USERNAME"]
-    raise "Missing GITHUB_USERNAME env"
-  elsif !ENV["GITHUB_TOKEN"]
+  if !ENV["GITHUB_TOKEN"]
     raise "Missing GITHUB_TOKEN env, go to https://github.com/settings/tokens and create one with 'repo' access"
   end
 
