@@ -52,24 +52,104 @@ RSpec.describe "Projects", "editing settings", :js do
   end
 
   describe "identifier edit" do
-    before { with_flags(semantic_work_package_ids: true) }
-
-    it "updates the project identifier via dialog" do
-      visit project_settings_general_path(project)
-
+    it "updates the project identifier" do
+      visit projects_path
+      click_on project.name
+      click_on "Project settings"
       click_on "Change identifier"
 
-      expect(page).to have_dialog "Change project identifier"
+      expect(page).to have_content "Change the project's identifier".upcase
+      expect(page).to have_current_path "/projects/foo-project/identifier"
 
-      within "dialog" do
-        expect(page).to have_text "This will permanently change identifiers and URLs"
-        fill_in "project[identifier]", with: "foo-bar"
-        click_on "Change identifier"
-      end
+      fill_in "project[identifier]", with: "foo-bar"
+      click_on "Update"
 
       expect(page).to have_content "Successful update."
-      expect(page).to have_current_path %r{/projects/foo-bar/settings/general}
-      expect(project.reload.identifier).to eq "foo-bar"
+      expect(page)
+        .to have_current_path %r{/projects/foo-bar/settings/general}
+      expect(Project.first.identifier).to eq "foo-bar"
+    end
+
+    it "displays error messages on invalid input" do
+      visit project_identifier_path(project)
+
+      fill_in "project[identifier]", with: "FOOO"
+      click_on "Update"
+
+      expect(page).to have_content "Identifier is invalid."
+      expect(page).to have_current_path "/projects/foo-project/identifier"
+    end
+
+    context "with the semantic work package IDs flag enabled", with_flag: { semantic_work_package_ids: true } do
+      context "with numerical IDs", with_settings: { work_packages_identifier: "numeric" } do
+        it "updates the project identifier via dialog" do
+          visit project_settings_general_path(project)
+
+          click_on "Change identifier"
+
+          expect(page).to have_dialog "Change project identifier"
+
+          within "dialog" do
+            expect(page).to have_text "This will permanently change identifiers and URLs"
+            fill_in "project[identifier]", with: "foo-bar"
+            click_on "Change identifier"
+          end
+
+          expect(page).to have_content "Successful update."
+          expect(page).to have_current_path %r{/projects/foo-bar/settings/general}
+          expect(project.reload.identifier).to eq "foo-bar"
+        end
+      end
+
+      context "with alphanumeric IDs", with_settings: { work_packages_identifier: "alphanumeric" } do
+        it "updates the project identifier via dialog" do
+          visit project_settings_general_path(project)
+
+          click_on "Change identifier"
+
+          expect(page).to have_dialog "Change project identifier"
+
+          within "dialog" do
+            expect(page).to have_text "This will permanently change identifiers and URLs"
+            fill_in "project[identifier]", with: "FOOBAR"
+            click_on "Change identifier"
+          end
+
+          expect(page).to have_content "Successful update."
+          expect(page).to have_current_path %r{/projects/FOOBAR/settings/general}
+          expect(project.reload.identifier).to eq "FOOBAR"
+        end
+
+        it "displays an error when the identifier does not start with a letter" do
+          visit project_settings_general_path(project)
+
+          click_on "Change identifier"
+
+          expect(page).to have_dialog "Change project identifier"
+
+          within "dialog" do
+            fill_in "project[identifier]", with: "123ABC"
+            click_on "Change identifier"
+
+            expect(page).to have_text "The first character has to be a letter."
+          end
+        end
+
+        it "displays an error when the identifier contains special characters" do
+          visit project_settings_general_path(project)
+
+          click_on "Change identifier"
+
+          expect(page).to have_dialog "Change project identifier"
+
+          within "dialog" do
+            fill_in "project[identifier]", with: "FOO@BAR"
+            click_on "Change identifier"
+
+            expect(page).to have_text "Special characters not allowed."
+          end
+        end
+      end
     end
   end
 
