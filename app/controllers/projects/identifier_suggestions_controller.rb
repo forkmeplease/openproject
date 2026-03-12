@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2010-2024 the OpenProject GmbH
+# Copyright (C) the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -26,27 +26,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
 module Projects
-  class CopyFormComponent < ApplicationComponent
-    include ApplicationHelper
-    include OpPrimer::ComponentHelpers
-    include OpTurbo::Streamable
+  class IdentifierSuggestionsController < ApplicationController
+    before_action :require_login
+    no_authorization_required! :show
 
-    options :source_project, :target_project, :copy_options
+    def show
+      unless OpenProject::FeatureDecisions.semantic_work_package_ids_active?
+        render json: {}, status: :not_found and return
+      end
 
-    def identifier_suggestion_data
-      data = {
-        controller: "projects--identifier-suggestion",
-        "projects--identifier-suggestion-mode-value": semantic_identifier? ? "semantic" : "legacy"
-      }
-      data[:"projects--identifier-suggestion-url-value"] = projects_identifier_suggestion_path if semantic_identifier?
-      data
-    end
+      name = params[:name].to_s.strip
+      return render json: {}, status: :unprocessable_entity if name.blank?
 
-    def semantic_identifier?
-      Project.semantic_alphanumeric_identifier?
+      identifier = WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator.suggest_for_name(name)
+      render json: { identifier: }
     end
   end
 end

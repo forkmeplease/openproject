@@ -44,6 +44,19 @@ module Projects
       { display: :none } unless step == 3
     end
 
+    def identifier_suggestion_data
+      data = {
+        controller: "projects--identifier-suggestion",
+        "projects--identifier-suggestion-mode-value": semantic_identifier? ? "semantic" : "legacy"
+      }
+      data[:"projects--identifier-suggestion-url-value"] = projects_identifier_suggestion_path if semantic_identifier?
+      data
+    end
+
+    def semantic_identifier?
+      Project.semantic_alphanumeric_identifier?
+    end
+
     def workspaces_path
       workspace_type = if Project.workspace_types.key?(project.workspace_type)
                          project.workspace_type

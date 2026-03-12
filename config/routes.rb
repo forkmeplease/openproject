@@ -288,6 +288,8 @@ Rails.application.routes.draw do
                              defaults: { format: :turbo_stream }
   end
 
+  get "projects/identifier_suggestion", to: "projects/identifier_suggestions#show", as: :projects_identifier_suggestion
+
   %w[portfolio project program].each do |workspace_type|
     resources workspace_type.pluralize,
               only: %i[new create],
