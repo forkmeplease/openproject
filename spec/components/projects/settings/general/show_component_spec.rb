@@ -76,6 +76,17 @@ RSpec.describe Projects::Settings::General::ShowComponent, type: :component do
     end
   end
 
+  describe "Identifier" do
+    before { with_flags(semantic_work_package_ids: true) }
+
+    it_behaves_like "section with heading", "Identifier"
+
+    it "renders a Change identifier button" do
+      render_component
+      expect(page.find(:section, "Identifier")).to have_link "Change identifier"
+    end
+  end
+
   describe "Project relations" do
     it_behaves_like "section with heading", "Project relations"
 

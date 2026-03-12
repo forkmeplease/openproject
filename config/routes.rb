@@ -283,6 +283,9 @@ Rails.application.routes.draw do
   namespace :projects do
     resource :menu, only: %i[show]
     resource :filters, only: %i[show]
+    get "identifier_dialog", to: "/projects#identifier_dialog",
+                             as: :identifier_dialog,
+                             defaults: { format: :turbo_stream }
   end
 
   %w[portfolio project program].each do |workspace_type|

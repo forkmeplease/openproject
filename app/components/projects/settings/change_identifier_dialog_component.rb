@@ -28,25 +28,18 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Projects::IdentifierController < ApplicationController
-  include OpTurbo::ComponentStream
+module Projects
+  module Settings
+    class ChangeIdentifierDialogComponent < ApplicationComponent
+      include OpPrimer::ComponentHelpers
+      include OpTurbo::Streamable
 
-  before_action :find_project_by_project_id
-  before_action :authorize
+      attr_reader :project
 
-  def show; end
-
-  def update
-    service_call = Projects::UpdateService
-                     .new(user: current_user,
-                          model: @project)
-                     .call(identifier: permitted_params.project[:identifier])
-
-    if service_call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to project_settings_general_path(@project)
-    else
-      render action: "show", status: :unprocessable_entity
+      def initialize(project:)
+        super
+        @project = project
+      end
     end
   end
 end

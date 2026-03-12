@@ -27,26 +27,36 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+module Projects
+  module Settings
+    class EditableIdentifierForm < ApplicationForm
+      form do |f|
+        if Project.semantic_alphanumeric_identifier?
+          f.text_field(
+            name: :identifier,
+            label: attribute_name(:identifier),
+            caption: I18n.t("projects.settings.change_identifier_format_hint_semantic"),
+            required: true,
+            maxlength: 10,
+            validation_message: validation_message_for(:identifier)
+          )
+        else
+          f.text_field(
+            name: :identifier,
+            label: attribute_name(:identifier),
+            caption: I18n.t("projects.settings.change_identifier_format_hint_legacy"),
+            required: true,
+            maxlength: Project::IDENTIFIER_MAX_LENGTH,
+            validation_message: validation_message_for(:identifier)
+          )
+        end
+      end
 
-class Projects::IdentifierController < ApplicationController
-  include OpTurbo::ComponentStream
+      private
 
-  before_action :find_project_by_project_id
-  before_action :authorize
-
-  def show; end
-
-  def update
-    service_call = Projects::UpdateService
-                     .new(user: current_user,
-                          model: @project)
-                     .call(identifier: permitted_params.project[:identifier])
-
-    if service_call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to project_settings_general_path(@project)
-    else
-      render action: "show", status: :unprocessable_entity
+      def validation_message_for(attribute)
+        model.errors.messages_for(attribute).to_sentence.presence
+      end
     end
   end
 end
