@@ -84,8 +84,10 @@ module OpenProject
       def display_field_component
         return nil if display_field_class.nil?
 
-        additional_args = open_in_dialog? ? dialog_display_arguments : {}
-        display_field_class.new(model:, attribute:, writable: writable?, truncated:, **@system_arguments.merge(additional_args))
+        @display_field_component ||= begin
+          additional_args = open_in_dialog? ? dialog_display_arguments : {}
+          display_field_class.new(model:, attribute:, writable: writable?, truncated:, **@system_arguments.merge(additional_args))
+        end
       end
 
       def wrapper_key
