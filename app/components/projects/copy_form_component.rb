@@ -35,18 +35,5 @@ module Projects
     include OpTurbo::Streamable
 
     options :source_project, :target_project, :copy_options
-
-    def identifier_suggestion_data
-      data = {
-        controller: "projects--identifier-suggestion",
-        "projects--identifier-suggestion-mode-value": semantic_identifier? ? "semantic" : "legacy"
-      }
-      data[:"projects--identifier-suggestion-url-value"] = projects_identifier_suggestion_path if semantic_identifier?
-      data
-    end
-
-    def semantic_identifier?
-      Project.semantic_alphanumeric_identifier?
-    end
   end
 end
