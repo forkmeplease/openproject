@@ -86,10 +86,12 @@ class Type < ApplicationRecord
     name <=> other.name
   end
 
-  def self.statuses(types)
+  def self.statuses(types, role: nil) # rubocop:disable Metrics/AbcSize
     workflow_table, status_table = [Workflow, Status].map(&:arel_table)
     old_id_subselect, new_id_subselect = %i[old_status_id new_status_id].map do |foreign_key|
-      workflow_table.project(workflow_table[foreign_key]).where(workflow_table[:type_id].in(types))
+      subquery = workflow_table.project(workflow_table[foreign_key]).where(workflow_table[:type_id].in(types))
+      subquery = subquery.where(workflow_table[:role_id].eq(role.id)) if role
+      subquery
     end
     Status.where(status_table[:id].in(old_id_subselect).or(status_table[:id].in(new_id_subselect)))
   end
@@ -102,13 +104,13 @@ class Type < ApplicationRecord
     includes(:projects).where(projects: { id: project })
   end
 
-  def statuses(include_default: false)
+  def statuses(include_default: false, role: nil)
     if new_record?
       Status.none
     elsif include_default
-      self.class.statuses([id]).or(Status.where_default)
+      self.class.statuses([id], role:).or(Status.where_default)
     else
-      self.class.statuses([id])
+      self.class.statuses([id], role:)
     end
   end
 

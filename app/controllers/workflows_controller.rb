@@ -48,8 +48,6 @@ class WorkflowsController < ApplicationController
   end
 
   def edit
-    @used_statuses_only = params[:used_statuses_only] == "1"
-
     statuses_for_form
 
     if @type && @role && @statuses.any?
@@ -100,7 +98,9 @@ class WorkflowsController < ApplicationController
   private
 
   def statuses_for_form
-    @statuses = if @type && @used_statuses_only && @type.statuses.any?
+    @statuses = if @type && @role
+                  @type.statuses(role: @role)
+                elsif @type
                   @type.statuses
                 else
                   Status.all
@@ -132,11 +132,11 @@ class WorkflowsController < ApplicationController
   end
 
   def find_optional_role
-    @role = eligible_roles.find_by(id: params[:role_id])
+    @role = eligible_roles.find_by(id: params[:role_id]) || eligible_roles.order(:builtin, :position).first
   end
 
   def find_optional_type
-    @type = ::Type.find_by(id: params[:type_id])
+    @type = ::Type.find_by(id: params[:type_id]) || ::Type.order(:position).first
   end
 
   def eligible_roles
