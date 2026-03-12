@@ -56,7 +56,7 @@ ru:
     any: "любой"
     column_width: "Ширина столбца"
     definition_of_done: "Определение термина \"Завершено\""
-    definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
+    definition_of_done_caption: "Пакеты работ с такими статусами рассматриваются как завершенные в представлениях бэклога и отчетах."
     impediment: "Препятствие"
     label_versions_default_fold_state: "Показать свернутые версии"
     caption_versions_default_fold_state: "Версии не будут разворачиваться по умолчанию при просмотре бэклогов. Каждая версия должна быть развернута вручную."

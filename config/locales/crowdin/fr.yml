@@ -615,11 +615,13 @@ fr:
   op_dry_validation:
     or: "ou"
     errors:
+      unexpected_key: "is not allowed."
       array?: "doit être un tableau."
       decimal?: "doit être une décimale."
       defined: "ne doit pas être défini."
       eql?: "doit être égal à %{left}."
       filled?: "doit être rempli."
+      format?: "is in invalid format."
       greater_or_equal_zero: "doit être supérieur ou égal à 0."
       gteq?: "doit être supérieur ou égal à %{num}."
       hash?: "doit être un hachage."
@@ -646,7 +648,9 @@ fr:
         parent:
           not_descendant: "doit être un descendant de la racine de la hiérarchie."
       str?: "doit être une chaîne de caractères."
+      time?: "must be a time."
       type?: "doit être de type : %{type}."
+      uri?: "is not a valid URI."
     rules:
       copy_workflow_from: "Type de copie du flux de travail"
       enabled: "Activé"
@@ -1051,7 +1055,7 @@ fr:
         next_button: "Envoyer une invitation"
       success_message:
         user: "L'utilisateur peut maintenant se connecter pour accéder à %{project}. En attendant, vous pouvez déjà compter sur cet utilisateur et l'assigner à des lots de travaux, par exemple."
-        placeholder_user: "L'utilisateur fictif peut maintenant être utilisé dans %{project}. En attendant, vous pouvez déjà planifier des taches avec cet utilisateur et l'assigner à des lots de travaux, par exemple."
+        placeholder_user: "L'utilisateur fictif peut maintenant être utilisé dans %{project}. En attendant, vous pouvez déjà planifier des tâches avec cet utilisateur et l'assigner à des lots de travaux, par exemple."
         group: "Le groupe fait maintenant partie du projet %{project}. En attendant, vous pouvez déjà compter sur ce groupe et l'assigner à des lots de travaux, par exemple."
   page:
     text: "Texte"
@@ -1178,7 +1182,7 @@ fr:
       matrix_check_uncheck_all_in_col_label_html: "Activer/désactiver les transitions de tous les anciens statuts vers <em>%{new_status}</em>"
   work_flows:
     index:
-      no_results_title_text: Il n'y a actuellement aucun flux de travaux.
+      no_results_title_text: Il n'y a actuellement aucun flux de travail.
   work_packages:
     datepicker_modal:
       banner:
@@ -1871,7 +1875,7 @@ fr:
             reason:
               no_notification_reason: "ne peut pas être vide car IAN est choisi comme canal."
             reason_mail_digest:
-              no_notification_reason: "ne peut pas être vide car le digest d'email est est choisi comme un canal."
+              no_notification_reason: "ne peut pas être vide car le digest d'email est choisi comme un canal."
         non_working_day:
           attributes:
             date:
@@ -2207,9 +2211,9 @@ fr:
       created_on: "créé le %{datetime}"
       created_on_time_entry: "temps enregistré le %{datetime}"
       updated_by_on: "mis à jour par %{user} le %{datetime}"
-      updated_by_on_time_entry: "temps enregistré mis à jour par %{user} le %{datetime}"
+      updated_by_on_time_entry: "temps consigné mis à jour par %{user} le %{datetime}"
       updated_on: "mis à jour le %{datetime}"
-      updated_on_time_entry: "temps enregistré mis à jour le %{datetime}"
+      updated_on_time_entry: "temps consigné mis à jour le %{datetime}"
       deleted_on: "supprimé le %{datetime}"
       deleted_by_on: "supprimé par %{user} le %{datetime}"
       added_on: "ajouté le %{datetime}"
@@ -2633,7 +2637,7 @@ fr:
         other: "%{count} ans"
       x_seconds:
         one: "une seconde"
-        other: "%{count} seconde"
+        other: "%{count} secondes"
       x_seconds_abbreviated:
         one: "1 s"
         other: "%{count} s"
@@ -2890,8 +2894,8 @@ fr:
   error_unable_to_connect: "Impossible de se connecter (%{value})"
   error_unable_delete_wiki: "Impossible de supprimer la page wiki."
   error_unable_update_wiki: "Impossible de mettre la page wiki à jour."
-  error_workflow_copy_source: "Veuillez sélectioner un type de source ou rôle"
-  error_workflow_copy_target: "Veuillez sélectioner une cible type(s) et rôle(s)"
+  error_workflow_copy_source: "Veuillez sélectionner un type de source ou rôle"
+  error_workflow_copy_target: "Veuillez sélectionner une cible type(s) et rôle(s)"
   error_menu_item_not_created: L'élément de menu n'a pas pu être ajouté
   error_menu_item_not_saved: L'élément de menu n'a pas pu être sauvegardé
   error_wiki_root_menu_item_conflict: >
@@ -3140,7 +3144,7 @@ fr:
       work_package_related_changed_times: par changement vers %{link} connexe
       work_package_duplicate_closed: Le statut a été mis à jour automatiquement par le doublon de lot de travaux %{link}
       unaccessable_work_package_changed: par changement vers un lot de travaux connexe
-      budget_deleted: La budget a été supprimé
+      budget_deleted: Le budget a été supprimé
       working_days_changed:
         changed: "par changement vers des jours ouvrables (%{changes})"
         days:
@@ -3675,7 +3679,7 @@ fr:
   label_not_configured: "Non configuré"
   label_not_found: "non trouvé"
   label_none: "aucune"
-  label_none_parentheses: "(none)"
+  label_none_parentheses: "(aucun)"
   label_not_contains: "ne contient pas"
   label_not_equals: "n'est pas"
   label_life_cycle_step_plural: "Cycle de vie du projet"
@@ -3948,7 +3952,7 @@ fr:
   label_work_package_tracking: "Suivi des lots de travaux"
   label_work_package_view_all: "Afficher tous les lots de travaux"
   label_workflow: "Flux de travail"
-  label_workflow_copy: "Copier le processus d'entreprise"
+  label_workflow_copy: "Copier le flux de travail"
   label_workflow_plural: "Flux de travail"
   label_workflow_summary: "Résumé"
   label_working_days_and_hours: "Jours et heures travaillés"
@@ -4212,7 +4216,7 @@ fr:
   notice_project_not_deleted: "Le projet n'a pas été supprimé."
   notice_project_not_found: "Projet introuvable."
   notice_smtp_address_unsafe: "L'adresse SMTP %{address} n'est pas sûre. Veuillez l'ajouter à OPENPROJECT_SSRF_PROTECTION_ALLOWLIST."
-  notice_successful_connection: "Connection réussie."
+  notice_successful_connection: "Connexion réussie."
   notice_successful_create: "Création réussie."
   notice_successful_delete: "Suppression réussie."
   notice_successful_cancel: "Annulation réussie."
@@ -4234,7 +4238,7 @@ fr:
   notice_wont_delete_auth_source: La connexion LDAP ne peut pas être supprimée tant que des utilisateurs l'utilisent.
   notice_project_cannot_update_custom_fields: "Vous ne pouvez pas mettre à jour les champs personnalisés disponibles du projet. Le projet n’est pas valide : %{errors}"
   notice_attachment_migration_wiki_page: >
-    Cette page a été générée automatiquement durant la mise à jour de OpenProject. Il contient toutes les pièces jointes précédemment associées à la %{container_type} « %{container_name} ».
+    Cette page a été générée automatiquement durant la mise à jour de OpenProject. Elle contient toutes les pièces jointes précédemment associées à la %{container_type} « %{container_name} ».
   #Default format for numbers
   number:
     format:
@@ -4630,9 +4634,9 @@ fr:
   setting_use_wysiwyg_description: "Sélectionnez cette option pour activer l’éditeur CKEditor5 WYSIWYG pour tous les utilisateurs par défaut. CKEditor a des fonctionnalités limitées pour GFM Markdown."
   setting_column_options: "Colonnes de listes du lot de travaux par défaut"
   setting_commit_fix_keywords: "Réparer les mots clés"
-  setting_commit_logs_encoding: "Encoding of the Commit messages"
-  setting_commit_logtime_activity_id: "Activité pour les « Logged Time »"
-  setting_commit_logtime_enabled: "Activer « time logging »"
+  setting_commit_logs_encoding: "Encodage des messages de commit"
+  setting_commit_logtime_activity_id: "Activité pour le temps consignés"
+  setting_commit_logtime_enabled: "Activer la consignation de temps"
   setting_commit_ref_keywords: "Referencement des mots clés"
   setting_consent_time: "Moment de l'accord"
   setting_consent_info: "Texte d'information sur l'accord"
@@ -4682,7 +4686,7 @@ fr:
   setting_work_package_startdate_is_adddate: "Utiliser la date actuelle comme date de début des nouveaux lots de travaux"
   setting_work_packages_projects_export_limit: "Limite d'exportation des lots de travaux/projets"
   setting_journal_aggregation_time_minutes: "Actions utilisateur agrégées dans"
-  setting_log_requesting_user: "Enregister le login utilisateur, nom et adresse e-mail pour toutes les requêtes"
+  setting_log_requesting_user: "Enregistrer le login utilisateur, nom et adresse e-mail pour toutes les requêtes"
   setting_login_required: "Authentification requise"
   setting_login_required_caption: "Lorsque cette case est cochée, toutes les requêtes envoyées à l'application doivent être authentifiées."
   setting_lost_password: "Activer la réinitialisation du mot de passe"
@@ -4696,7 +4700,7 @@ fr:
   setting_new_project_send_confirmation_email: "Envoyer une notification à l'auteur lors de la création d'un nouveau projet"
   setting_new_project_notification_text: "Texte de la notification"
   setting_password_active_rules: "Les classes de caractère activées"
-  setting_password_count_former_banned: "Nombre des plus récent mots des passe utilisé qui sont interdit de réutilisation."
+  setting_password_count_former_banned: "Nombre de mots de passe récents interdits de réutilisation"
   setting_password_days_valid: "Nombre de jours après lequel le changement de mot de passe est obligatoire"
   setting_password_min_length: "Longueur minimale"
   setting_password_min_adhered_rules: "Nombre minimale des classe de caractère requise"
@@ -4722,7 +4726,7 @@ fr:
   setting_repository_checkout_base_url: "URL de base de « checkout »"
   setting_repository_checkout_text: "Texte d'instruction de « checkout »"
   setting_repository_log_display_limit: "Nombre maximal des révisions affichées sur « file log »"
-  setting_repository_truncate_at: "Le nombre maiximum de fichiers exposes au navigateur"
+  setting_repository_truncate_at: "Le nombre maximum de fichiers affichés dans le navigateur de dépôt"
   setting_self_registration: "Auto-enregistrement"
   setting_self_registration_caption: >
     Choisissez le mécanisme d'auto-inscription pour les utilisateurs. Faites attention au paramètre que vous choisissez, car certaines options permettent aux utilisateurs d'activer leurs propres comptes pour cette instance.
@@ -5042,7 +5046,7 @@ fr:
   text_load_default_configuration: "Charger la configuration par défaut"
   text_no_roles_defined: Il n'y a pas de rôles définis.
   text_no_access_tokens_configurable: "Il n'y a aucun jeton d'accès qui puisse être configuré."
-  text_no_configuration_data: "Les rôles, les types, l'état des lots de travaux et les flux de travaux n'ont pas encore été configurés.\nIl est fortement recommandé de charger la configuration par défaut. Vous serez capable de la modifier une fois chargée."
+  text_no_configuration_data: "Les rôles, les types, l'état des lots de travaux et les flux de travail n'ont pas encore été configurés.\nIl est fortement recommandé de charger la configuration par défaut. Vous serez capable de la modifier une fois chargée."
   text_no_notes: "Il n'existe aucun commentaire pour ce lot de travaux."
   text_notice_too_many_values_are_inperformant: "Remarque : L'affichage de plus de 100 articles par page peut augmenter le temps de chargement de la page."
   text_notice_security_badge_displayed_html: >
@@ -5471,7 +5475,7 @@ fr:
       none_given: "Aucune application OAuth n'a été autorisée à accéder à votre compte utilisateur."
     x_active_tokens:
       one: "un jeton actif"
-      other: "un jeton actif %{count}"
+      other: "%{count} jetons actifs"
     flows:
       authorization_code: "Flux de code d'autorisation"
       client_credentials: "Flux des informations d'identification client"
@@ -5527,8 +5531,8 @@ fr:
         invalid_scope: "Vous n'êtes pas autorisé à accéder à la ressource demandée (invalid_scope)."
   http:
     request:
-      failed_authorization: "La requête côté serveur a échoué en s'autorisant elle-même."
-      missing_authorization: "La requête latérale du serveur a échoué en raison de l'absence d'informations d'autorisation."
+      failed_authorization: "La requête côté serveur a échoué lors de l'authentification."
+      missing_authorization: "La requête côté serveur a échoué en raison de l'absence d'informations d'autorisation."
     response:
       unexpected: "Réponse inattendue reçue."
   you: vous
