@@ -39,7 +39,8 @@ module OpenProject
         def initialize(form:, attribute:, model:, **system_arguments)
           system_arguments ||= {}
           system_arguments[:readonly] = true
-          super
+
+          super(form:, attribute:, model:, show_action_buttons: false, **system_arguments)
         end
       end
     end

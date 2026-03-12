@@ -80,6 +80,8 @@ module OpenProject
           end
 
           def dialog_field_arguments
+            return {} unless writable?
+
             {
               data: {
                 controller: "inplace-edit async-dialog",
@@ -97,6 +99,8 @@ module OpenProject
           end
 
           def inline_edit_field_arguments
+            return {} unless writable?
+
             {
               data: {
                 controller: "inplace-edit",

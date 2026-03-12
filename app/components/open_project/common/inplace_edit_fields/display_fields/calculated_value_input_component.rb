@@ -37,9 +37,8 @@ module OpenProject
 
           attr_reader :model, :attribute
 
-          def initialize(model:, attribute:, **system_arguments)
-            @system_arguments = system_arguments
-            super(model:, attribute:, writable: false, **system_arguments)
+          def initialize(model:, attribute:, writable: nil, truncated: false, **system_arguments)
+            super(model:, attribute:, writable: false, truncated:, **system_arguments)
           end
 
           def render_tooltip

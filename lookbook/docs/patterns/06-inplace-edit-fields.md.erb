@@ -12,7 +12,7 @@ The InplaceEdit system consists of:
 - **A base class for edit field components**
   (`BaseFieldComponent`)
 - **Edit field components**
-  (e.g. `TextInputComponent`, `RichTextAreaComponent`)
+  (e.g. `TextInputComponent`, `RichTextAreaComponent`, `HierarchyListComponent`)
 - **Optional display field components**
 - **A dialog component**
   (`InplaceEditFieldDialogComponent`)
@@ -52,7 +52,12 @@ The component resolves the edit field via the `FieldRegistry` and optionally a d
 
 **Automatic dialog mode:**
 
-The component switches to dialog mode automatically (regardless of the `open_in_dialog` parameter) when the attribute is a custom field that has comments enabled (`custom_field.has_comment?`). This ensures that the comment field is always presented alongside the value field in a dialog.
+The component switches to dialog mode automatically (regardless of the `open_in_dialog` parameter) in any of these cases:
+
+- The registered edit field component returns `true` from `self.open_in_dialog?`
+- The attribute is a custom field that has comments enabled (`custom_field.has_comment?`)
+
+This allows individual field components to declare that they always require a dialog (e.g. because they embed a complex tree picker), without the caller needing to know about it.
 
 **Simplified HTML of the `InplaceEditFieldComponent`:**
 ```html
@@ -100,6 +105,13 @@ OpenProject::InplaceEdit::FieldRegistry.register(
 
 It handles the optional rendering of a comment field for custom fields with comments enabled.
 
+**Class-level API:**
+
+| Method | Default | Description |
+|---|---|---|
+| `self.display_class` | `DisplayFields::DisplayFieldComponent` | The display component class to use for the read-only view |
+| `self.open_in_dialog?` | `false` | Return `true` to force the field to always open in a dialog regardless of the caller's settings |
+
 ```ruby
 module OpenProject
   module Common
@@ -107,6 +119,10 @@ module OpenProject
       class MyCustomComponent < BaseFieldComponent
         def self.display_class
           DisplayFields::DisplayFieldComponent
+        end
+
+        def self.open_in_dialog?
+          false  # override to true for dialog-only fields
         end
 
         def call
@@ -166,6 +182,64 @@ module OpenProject
 end
 ```
 
+#### HierarchyListComponent (example of a dialog-only field)
+
+`HierarchyListComponent` is the edit field for hierarchy-type custom fields. It uses `Primer::OpenProject::FilterableTreeView` to render a filterable, hierarchical tree picker. Because the tree picker is a complex, non-inline widget, the component declares `self.open_in_dialog? = true` so it always opens in a dialog.
+
+**Key patterns used:**
+
+- **`self.open_in_dialog?` → `true`**: Tells `InplaceEditFieldComponent` to always use dialog mode for this field.
+- **`form.html_content`**: Embeds arbitrary rendered HTML (the `FilterableTreeView`) within the Primer form DSL `call` method.
+- **`rails_builder`**: `FilterableTreeView` requires an ActionView `FormBuilder` (not a Primer `FormObject`). The underlying builder is accessed via `form.instance_variable_get(:@builder)`.
+- **Array form encoding**: The hidden sentinel field and tree view items both use `project[custom_field_values][]` (array format). The controller handles this with `extract_tree_view_value` (see below).
+
+```ruby
+class HierarchyListComponent < BaseFieldComponent
+  include CustomFieldHierarchyTreeViewHelper
+
+  def self.display_class
+    DisplayFields::HierarchyListComponent
+  end
+
+  def self.open_in_dialog?
+    true
+  end
+
+  def call
+    # Hidden sentinel so the param key is always present even with nothing selected
+    form.hidden(name: "project[custom_field_values][]", value: "", scope_name_to_model: false)
+    filterable_tree_view(form)
+    comment_field_if_enabled(form)
+  end
+
+  private
+
+  def filterable_tree_view(form)
+    form.html_content do
+      render(Primer::OpenProject::FilterableTreeView.new(
+               form_arguments: { builder: rails_builder, name: "custom_field_values" },
+               include_sub_items_check_box_arguments: { hidden: true },
+               filter_mode_control_arguments: { hidden: true }
+             )) do |tree_view|
+        item_options = {
+          expanded_fn: ->(*) { true },
+          label_fn:, checked_fn:,
+          select_variant: custom_field.multi_value? ? :multiple : :single
+        }
+        populate_tree_view(tree_view, custom_field, item_options:)
+      end
+    end
+  end
+
+  def rails_builder
+    # Primer's FormObject stores the underlying ActionView/Primer form builder
+    # as @builder. FilterableTreeView requires an ActionView::FormBuilder to
+    # generate its hidden form inputs via hidden_field.
+    form.instance_variable_get(:@builder)
+  end
+end
+```
+
 #### DisplayFieldComponents
 
 `DisplayFieldComponents` render the attribute value in read-only mode. They handle formatting and attach the Stimulus controller that triggers the switch to edit mode.
@@ -215,6 +289,12 @@ Display component (with dialog trigger)
                     │    │              └─ comment textarea (if has_comment?)
                     │    └─ footer: Save / Cancel buttons
 ```
+
+**`page_component_id` convention:**
+
+Each `InplaceEditFieldComponent` generates a UUID and stores it in `@system_arguments[:id]`. This UUID is part of the `wrapper_key` that Turbo Stream uses to target the correct DOM element when replacing the component after an update.
+
+When building the dialog URL, the component passes this UUID as `page_component_id` inside `system_arguments_json` (while excluding its own `:id` key to avoid a clash with the dialog's UUID). On a successful `update`, the controller restores `page_component_id` as `:id` before constructing the response component, so the `wrapper_key` matches the original element on the page and the Turbo Stream replacement lands in the right place. The controller also closes the dialog via `close_dialog_via_turbo_stream` on success, and strips dialog-specific arguments (`wrapper_id`, `form_id`) so they do not bleed into the display component.
 
 ### Update behaviour
 
