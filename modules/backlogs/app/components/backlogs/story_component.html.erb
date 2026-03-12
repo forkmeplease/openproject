@@ -32,12 +32,8 @@ See COPYRIGHT and LICENSE files for more details.
     <%=
       render(
         Primer::OpenProject::DragHandle.new(
-          role: "button",
           classes: "op-backlogs-story--drag_handle_button",
-          tabindex: 0,
-          aria: {
-            label: t(".label_drag_story", name: story.subject)
-          }
+          label: t(".label_drag_story", name: story.subject)
         )
       )
     %>
