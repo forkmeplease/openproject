@@ -31,18 +31,9 @@ See COPYRIGHT and LICENSE files for more details.
   <%= render(
         Projects::Settings::Backlogs::SettingsHeaderComponent.new(
           project: @project,
-          selected_tab: :done_status
+          selected_tab: :sharing
         )
       ) %>
 
-  <%=
-    settings_primer_form_with(
-      url: project_settings_backlogs_path(@project),
-      model: @project,
-      method: :patch,
-      data: { turbo_frame: "_top" }
-    ) do |f|
-  %>
-    <%= render Projects::Settings::BacklogsSettingsForm.new(f) %>
-  <% end %>
+  <%= render(Projects::Settings::Backlogs::SharingFormComponent.new(project: @project)) %>
 <% end %>

@@ -28,46 +28,41 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Sprints
-  class SetAttributesService < ::BaseServices::SetAttributes
-    private
-
-    def sprint_name_from_predecessor
-      return model.name unless model.new_record?
-
-      predecessor = model.project.sprints.last
-      next_name_in_succession(predecessor)
+module Projects
+  class BacklogSettingsContract < ::ModelContract
+    # The sprint_sharing setting is stored on the settings column. Hence writing
+    # the settings column should be allowed, but only for the sprint_sharing setting.
+    attribute :settings, writable: -> do
+      model.settings_change&.none? { it.except("sprint_sharing").any? }
     end
+    attribute :sprint_sharing
 
-    def set_default_attributes(_params)
-      set_sprint_name
-      set_default_status
-    end
+    validate :validate_permissions
+    validate :validate_global_sprint_sharer_uniqueness
+    validates :sprint_sharing, presence: true
+    validates :sprint_sharing, inclusion: { in: Project::SPRINT_SHARING_MODES }, allow_blank: true
 
-    def set_sprint_name
-      model.name ||= sprint_name_from_predecessor
-    end
+    def validate_model? = false
 
-    def set_default_status
-      model.status ||= "in_planning"
-    end
+    protected
 
-    def next_name_in_succession(predecessor)
-      if predecessor.nil?
-        default_sprint_name
-      elsif (match = predecessor.name.match(/\A(.*)\s(\d+)\z/))
-        # If the predecessor's name ends with a number, increment that number for the new sprint's name.
-        # E.g., if the previous sprint was called "Be ambitious 42", the next one will be "Be ambitious 43".
-        [match[1], match[2].to_i + 1].join(" ")
-      else
-        # The predecessor's name doesn't end with a number. The user has chosen a custom name. Do not assume
-        # how the next sprint should be called. Return an empty string and let the user choose.
-        ""
+    def validate_permissions
+      unless user.allowed_in_project?(:share_sprint, model)
+        errors.add :base, :error_unauthorized
       end
     end
 
-    def default_sprint_name
-      [I18n.t("activerecord.models.sprint"), 1].join(" ")
+    def validate_global_sprint_sharer_uniqueness
+      if model.share_sprints_with_all_projects? &&
+          (sharer = Project.global_sprint_sharer) &&
+          sharer != model
+
+        if user.allowed_in_project?(:view_project, sharer)
+          errors.add :sprint_sharing, :share_all_projects_already_taken, name: sharer.name
+        else
+          errors.add :sprint_sharing, :share_all_projects_already_taken_anonymous
+        end
+      end
     end
   end
 end

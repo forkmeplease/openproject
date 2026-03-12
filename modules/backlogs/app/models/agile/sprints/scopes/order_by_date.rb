@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,14 +26,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-# From v1.0 to v2.0 of store_attribute, the value for store_attribute_unset_values_fallback_to_default changed from
-# false to true. This initializer sets it back to false to keep the behavior consistent with the previous version.
+module Agile::Sprints::Scopes::OrderByDate
+  extend ActiveSupport::Concern
 
-# Keeping this false also avoids a subtle dirty-tracking issue with the `default:` option: assigning the
-# default value to an attribute that has never been persisted is a no-op from dirty-tracking's perspective,
-# so the store column is never written. Concretely, `create(:project, sprint_sharing: "no_sharing")` leaves
-# `project.settings` as `{}` because "no_sharing" equals the declared default and is never saved.
-
-StoreAttribute.store_attribute_unset_values_fallback_to_default = false
+  class_methods do
+    def order_by_date
+      order(arel_table[:start_date].asc.nulls_last,
+            arel_table[:finish_date].asc.nulls_last)
+    end
+  end
+end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,14 +26,36 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-# From v1.0 to v2.0 of store_attribute, the value for store_attribute_unset_values_fallback_to_default changed from
-# false to true. This initializer sets it back to false to keep the behavior consistent with the previous version.
+class Projects::Settings::BacklogSharingsController < Projects::SettingsController
+  menu_item :settings_backlogs
 
-# Keeping this false also avoids a subtle dirty-tracking issue with the `default:` option: assigning the
-# default value to an attribute that has never been persisted is a no-op from dirty-tracking's perspective,
-# so the store column is never written. Concretely, `create(:project, sprint_sharing: "no_sharing")` leaves
-# `project.settings` as `{}` because "no_sharing" equals the declared default and is never saved.
+  before_action :check_scrum_projects_feature_flag
 
-StoreAttribute.store_attribute_unset_values_fallback_to_default = false
+  def show; end
+
+  def update
+    call = Projects::UpdateService
+      .new(model: @project, user: current_user, contract_class: Projects::BacklogSettingsContract)
+      .call(backlog_settings_params)
+
+    if call.success?
+      flash[:notice] = I18n.t(:notice_successful_update)
+      redirect_to project_settings_backlog_sharing_path(@project)
+    else
+      flash.now[:error] = I18n.t(:notice_unsuccessful_update_with_reason, reason: call.message)
+      render action: :show, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def check_scrum_projects_feature_flag
+    render_404 unless OpenProject::FeatureDecisions.scrum_projects_active?
+  end
+
+  def backlog_settings_params
+    params.expect(project: %i[sprint_sharing])
+  end
+end

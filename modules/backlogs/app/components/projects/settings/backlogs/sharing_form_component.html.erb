@@ -27,22 +27,19 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%= turbo_frame_tag "backlogs-settings" do %>
-  <%= render(
-        Projects::Settings::Backlogs::SettingsHeaderComponent.new(
-          project: @project,
-          selected_tab: :done_status
-        )
-      ) %>
+<%=
+  render(Primer::Beta::Text.new(tag: :div, color: :muted, mb: 3)) do
+    I18n.t("backlogs.sharing_description")
+  end
+%>
 
-  <%=
-    settings_primer_form_with(
-      url: project_settings_backlogs_path(@project),
-      model: @project,
-      method: :patch,
-      data: { turbo_frame: "_top" }
-    ) do |f|
-  %>
-    <%= render Projects::Settings::BacklogsSettingsForm.new(f) %>
-  <% end %>
-<% end %>
+<%=
+  settings_primer_form_with(
+    model: project,
+    url: project_settings_backlog_sharing_path(project),
+    method: :patch,
+    data: { turbo_frame: "_top", controller: "show-when-value-selected" }
+  ) do |f|
+    render(Projects::Settings::Backlogs::SharingForm.new(f))
+  end
+%>

@@ -88,6 +88,8 @@ Rails.application.routes.draw do
 
   scope "projects/:project_id", as: "project", module: "projects" do
     namespace "settings" do
+      resource :backlog_sharing, only: %i[show update]
+
       resource :backlogs, only: %i[show update] do
         member do
           post "rebuild_positions" => "backlogs#rebuild_positions"
