@@ -20,7 +20,7 @@
 #See COPYRIGHT and LICENSE files for more details.
 #++
 fr:
-  no_results_title_text: Il n'y a présentement rien à afficher.
+  no_results_title_text: Il n'y a actuellement rien à afficher.
   activities:
     index:
       no_results_title_text: Il n’y a pas eu d'activité pour le projet pendant cette période.
@@ -108,7 +108,7 @@ fr:
     jemalloc_allocator: Allocateur de mémoire Jemalloc
     journal_aggregation:
       explanation:
-        text: "Les actions individuelles d'un utilisateur (par ex. mis à jour un lot de travaux deux fois) sont agrégés en une seule action si leur différence d'âge est inférieure à la période spécifiée. Elles seront affichées en une seule action dans l'application. Cela retardera également les notifications du même temps réduisant donc le nombre d'e-mails envoyés et affectera également le délai %{webhook_link}."
+        text: "Les actions individuelles d'un utilisateur (par ex. un lot de travaux mis à jour deux fois) sont agrégées en une seule action si leur différence d'âge est inférieure à la période spécifiée. Elles seront affichées en une seule action dans l'application. Cela retardera également les notifications du même temps réduisant donc le nombre d'e-mails envoyés et affectera également le délai %{webhook_link}."
         link: "webhook"
     import:
       title: "Importation"
@@ -446,7 +446,7 @@ fr:
         Si vous cochez cette case, OpenProject créera automatiquement de nouveaux utilisateurs à partir de leurs entrées LDAP
         lorsqu'ils s'authentifieront pour la première fois avec OpenProject.
         Laissez ceci non coché pour permettre uniquement aux comptes existants dans OpenProject de s'authentifier via LDAP!
-    connection_encryption: "Cryptage de la connexion"
+    connection_encryption: "Chiffrement de la connexion"
     encryption_details: "Options LDAPS / STARTTLS"
     system_account: "Compte système"
     system_account_legend: |
@@ -2654,7 +2654,7 @@ fr:
   description_active: "Actif ?"
   description_attachment_toggle: "Afficher/Masquer les pièces jointes"
   description_autocomplete: >
-    Ce champ utilise la saisie semi-automatique. Lorsque vous tapez le titre d'un lot de travaux, vous recevrez une liste de choix possibles. Choisissez-en un en utilisant les flèches haut et bas et selectionnez-le avec Tab ou Entrée. Sinon, vous pouvez entrer le numéro de lot de travaux directement.
+    Ce champ utilise la saisie semi-automatique. Lorsque vous tapez le titre d'un lot de travaux, vous recevrez une liste de choix possibles. Choisissez-en un en utilisant les flèches haut et bas et sélectionnez-le avec Tab ou Entrée. Sinon, vous pouvez entrer le numéro de lot de travaux directement.
   description_available_columns: "Colonnes disponibles"
   description_choose_project: "Projets"
   description_compare_from: "Comparer avec"
@@ -3061,7 +3061,7 @@ fr:
     no_results_text: "Aucun résultat"
   toggle_switch:
     label_on: "Activé"
-    label_off: "Désactiver"
+    label_off: "Désactivé"
   general_csv_decimal_separator: ","
   general_csv_encoding: "UTF-8"
   general_csv_separator: "."
@@ -3309,11 +3309,11 @@ fr:
   label_all_words: "Tous les mots"
   label_all_open_wps: "Tous les ouverts"
   label_always_visible: "Toujours affiché"
-  label_announcement: "Annonce ou avis. "
+  label_announcement: "Annonce"
   label_angular: "AngularJS"
   label_app_modules: "Modules %{app_title}"
   label_api_access_key: "Clé d'accès API"
-  label_api_access_key_created_on: "Clé d'accès API créé il y a %{value}"
+  label_api_access_key_created_on: "Clé d'accès API créée il y a %{value}"
   label_api_access_key_type: "API"
   label_auto_option: "(auto)"
   label_ical_access_key_type: "iCalendar"
@@ -3362,7 +3362,7 @@ fr:
   label_branch: "Branche"
   label_browse: "Parcourir"
   label_builtin: "Intégré"
-  label_bulk_edit_selected_work_packages: "Edition en masse des Lots de Travaux selectionnés"
+  label_bulk_edit_selected_work_packages: "Édition en masse des lots de travaux sélectionnés"
   label_bundled: "(Inclus)"
   label_calendar: "Calendrier"
   label_calendars_and_dates: "Calendriers et dates"
@@ -3496,7 +3496,7 @@ fr:
   label_f_hour: "%{value} heure"
   label_f_hour_plural: "%{value} heures"
   label_favorite: "Favori"
-  label_feed_plural: "Fluxs"
+  label_feed_plural: "Flux"
   label_feeds_access_key: "Clé d'accès RSS"
   label_feeds_access_key_created_on: "Clé d'accès RSS créé il y a %{value}"
   label_feeds_access_key_type: "RSS"
@@ -3888,16 +3888,10 @@ fr:
   label_user_named: "Utilisateur %{name}"
   label_user_activity: "Activité de %{value}"
   label_user_anonymous: "Anonyme"
-  label_user_mail_option_all: "Tout évènement dans tous mes projets"
-  label_user_mail_option_none: "Aucun évènement"
-  label_user_mail_option_only_assigned: "Les éléments qui me sont assignés"
-  label_user_mail_option_only_my_events: "Uniquement pour les éléments que je suis ou auxquels je participe"
-  label_user_mail_option_only_owner: "Les éléments dont je suis le propriétaire"
-  label_user_mail_option_selected: "Pour chaque événement sur le projet selectionné seulement"
   label_user_menu: "Menu utilisateur"
   label_user_new: "Nouvel utilisateur"
   label_user_plural: "Utilisateurs"
-  label_user_search: "Recherche d'Utilisateurs"
+  label_user_search: "Recherche d'utilisateurs"
   label_user_settings: "Paramètres de l'utilisateur"
   label_users_settings: "Paramètres des utilisateurs"
   label_value_x: "Valeur : %{x}"
@@ -4699,11 +4693,11 @@ fr:
   setting_new_project_user_role_id: "Rôle donné à un utilisateur non administrateur qui crée un projet"
   setting_new_project_send_confirmation_email: "Envoyer une notification à l'auteur lors de la création d'un nouveau projet"
   setting_new_project_notification_text: "Texte de la notification"
-  setting_password_active_rules: "Les classes de caractère activées"
+  setting_password_active_rules: "Classes de caractères actives"
   setting_password_count_former_banned: "Nombre de mots de passe récents interdits de réutilisation"
   setting_password_days_valid: "Nombre de jours après lequel le changement de mot de passe est obligatoire"
   setting_password_min_length: "Longueur minimale"
-  setting_password_min_adhered_rules: "Nombre minimale des classe de caractère requise"
+  setting_password_min_adhered_rules: "Nombre minimal de classes de caractères requises"
   setting_per_page_options: "Options des objets par page"
   setting_percent_complete_on_status_closed: "% d'achèvement lorsque le statut est fermé"
   setting_percent_complete_on_status_closed_no_change: "Aucun changement"
