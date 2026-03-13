@@ -46,6 +46,17 @@ RSpec.describe "Workflows index" do
     expect(page).to be_axe_clean.within("#content")
   end
 
+  it "allows quick-filtering by type name", :js do
+    some_type = types.sample
+
+    fill_in "Filter by type name…", with: some_type.name
+
+    within_role :table do
+      expect(page).to have_css %{[data-filter--filter-list-target="searchItem"]}, count: 1
+      expect(page).to have_row some_type.name
+    end
+  end
+
   it "allows navigating to any Edit page" do
     expect(page).to have_heading("Workflows")
 
