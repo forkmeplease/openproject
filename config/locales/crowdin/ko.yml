@@ -3873,7 +3873,6 @@ ko:
   label_wiki_show_index_page_link: "하위 메뉴 항목 '목차' 표시"
   label_wiki_show_menu_item: "프로젝트 탐색에서 메뉴 항목으로 표시"
   label_wiki_show_new_page_link: "하위 메뉴 항목 '새 자식 페이지 만들기' 표시"
-  label_wiki_show_submenu_item: "다음의 하위 메뉴 항목으로 표시: "
   label_wiki_start: "시작 페이지"
   label_work: "작업"
   label_work_package: "작업 패키지"

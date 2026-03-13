@@ -3929,7 +3929,6 @@ fi:
   label_wiki_show_index_page_link: "Näytä alivalikon vaihtoehto \"Sisällysluettelo\""
   label_wiki_show_menu_item: "Näytä valikon kohta projekti navigaatio"
   label_wiki_show_new_page_link: "Show submenu item 'Create new child page'"
-  label_wiki_show_submenu_item: "Show as submenu item of "
   label_wiki_start: "Aloitussivu"
   label_work: "Work"
   label_work_package: "Työpaketti"

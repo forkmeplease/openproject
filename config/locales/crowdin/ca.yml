@@ -3926,7 +3926,6 @@ ca:
   label_wiki_show_index_page_link: "Mostra l'element del submenú 'Taula de continguts'"
   label_wiki_show_menu_item: "Mostrar com a element de menú en la navegació del projecte"
   label_wiki_show_new_page_link: "Mostra l'element submenú 'Crea nova pàgina fill'"
-  label_wiki_show_submenu_item: "Mostrar com element de submenú de "
   label_wiki_start: "Pàgina d'inici"
   label_work: "Treball"
   label_work_package: "Paquet de treball"

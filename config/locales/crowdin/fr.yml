@@ -3927,7 +3927,6 @@ fr:
   label_wiki_show_index_page_link: "Montrer l'entrée de sous-menu 'Table des Matières'"
   label_wiki_show_menu_item: "Afficher en tant qu'élément dans le menu de navigation du projet"
   label_wiki_show_new_page_link: "Montrer le sous-menu 'Créer une nouvelle page enfant'"
-  label_wiki_show_submenu_item: "Montrer comme sous-menu de "
   label_wiki_start: "Page d'accueil"
   label_work: "Travail"
   label_work_package: "Lot de travaux"

@@ -3926,7 +3926,6 @@ es:
   label_wiki_show_index_page_link: "Mostrar el elemento de submenú 'Tabla de contenidos'"
   label_wiki_show_menu_item: "Mostrar como elemento de menú de navegación de proyecto"
   label_wiki_show_new_page_link: "Mostrar el elemento de submenú 'Crear nueva página hija'"
-  label_wiki_show_submenu_item: "Mostrar como elemento de submenú de "
   label_wiki_start: "Página de inicio"
   label_work: "Trabajo"
   label_work_package: "Paquete de trabajo"

@@ -3929,7 +3929,6 @@ tr:
   label_wiki_show_index_page_link: "Alt menü öğesini göster 'İçindekiler tablosu'"
   label_wiki_show_menu_item: "Proje gezintisinde menü öğesi olarak göster"
   label_wiki_show_new_page_link: "Alt menü öğesini göster 'Yeni alt sayfa oluştur'"
-  label_wiki_show_submenu_item: "Alt menü öğesi olarak göster "
   label_wiki_start: "Başlangıç sayfası"
   label_work: "Çalışma"
   label_work_package: "İş paketi"

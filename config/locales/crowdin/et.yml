@@ -3929,7 +3929,6 @@ et:
   label_wiki_show_index_page_link: "Kuva alammenüü valik \"Sisukord\""
   label_wiki_show_menu_item: "Näita lehe nime projektimenüüs"
   label_wiki_show_new_page_link: "Näita alammenüüs valikut 'Loo uus alamleht'"
-  label_wiki_show_submenu_item: "Näita kui alammenüüd (<--) "
   label_wiki_start: "Esileht"
   label_work: "Töö"
   label_work_package: "Teema"

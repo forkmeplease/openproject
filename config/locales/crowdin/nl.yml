@@ -3925,7 +3925,6 @@ nl:
   label_wiki_show_index_page_link: "Toon submenu item 'Inhoudsopgave'"
   label_wiki_show_menu_item: "Weergeven als menu-item in project navigatie"
   label_wiki_show_new_page_link: "Vervolgmenu-item 'Maken nieuwe onderliggende pagina' weergeven"
-  label_wiki_show_submenu_item: "Toon als submenu-item van "
   label_wiki_start: "Startpagina"
   label_work: "Werk"
   label_work_package: "Werkpakket"

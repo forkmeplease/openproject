@@ -3929,7 +3929,6 @@ sv:
   label_wiki_show_index_page_link: "Visa undermenyn \"Innehållsförteckning\""
   label_wiki_show_menu_item: "Visa som menyobjekt i projektets meny"
   label_wiki_show_new_page_link: "Visa undermenyn \"Skapa ny underordnad sida\""
-  label_wiki_show_submenu_item: "Visa som undermenyalternativ för "
   label_wiki_start: "Startsida"
   label_work: "Arbete"
   label_work_package: "Arbetspaket"

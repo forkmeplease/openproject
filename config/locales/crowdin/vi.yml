@@ -3871,7 +3871,6 @@ vi:
   label_wiki_show_index_page_link: "Hiển thị mục menu con 'Mục lục'"
   label_wiki_show_menu_item: "Hiển thị dưới dạng mục menu trong điều hướng dự án"
   label_wiki_show_new_page_link: "Hiển thị mục menu con 'Tạo trang con mới'"
-  label_wiki_show_submenu_item: "Hiển thị dưới dạng mục menu con của"
   label_wiki_start: "Trang bắt đầu"
   label_work: "làm việc"
   label_work_package: "Work Package"

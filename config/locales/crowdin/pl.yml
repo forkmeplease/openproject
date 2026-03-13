@@ -4037,7 +4037,6 @@ pl:
   label_wiki_show_index_page_link: "Pokaż element podmenu \"Spis treści\""
   label_wiki_show_menu_item: "Pokaż jako element menu w nawigacji projektu"
   label_wiki_show_new_page_link: "Pokaż element podmenu \"Utwórz nową stronę podrzędną\""
-  label_wiki_show_submenu_item: "Pokaż jako pozycję podmenu "
   label_wiki_start: "Strona startowa"
   label_work: "Praca"
   label_work_package: "Zadanie"
