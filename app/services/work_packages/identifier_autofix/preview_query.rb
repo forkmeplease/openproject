@@ -59,13 +59,13 @@ module WorkPackages
       def problematic_scope
         @problematic_scope ||= Project.where(
           "length(identifier) > ? OR identifier ~ ?",
-          ProjectIdentifierSuggestionGenerator::MAX_IDENTIFIER_LENGTH,
+          ProjectIdentifierSuggestionGenerator::IDENTIFIER_LENGTH[:max],
           "[^a-zA-Z0-9_]"
         )
       end
 
       def error_reason(identifier)
-        if identifier.length > ProjectIdentifierSuggestionGenerator::MAX_IDENTIFIER_LENGTH
+        if identifier.length > ProjectIdentifierSuggestionGenerator::IDENTIFIER_LENGTH[:max]
           :too_long
         elsif identifier.match?(/[^a-zA-Z0-9_]/)
           :special_characters

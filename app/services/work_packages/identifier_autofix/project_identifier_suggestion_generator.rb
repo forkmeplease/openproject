@@ -37,11 +37,11 @@ module WorkPackages
     #
     # == Algorithm
     #
-    # *Multi-word names* use word initials, truncated to +DEFAULT_IDENTIFIER_BASE_LENGTH+ (5):
+    # *Multi-word names* use word initials, truncated to +IDENTIFIER_LENGTH[:base]+ (5):
     #   "Flight Planning Algorithm" → "FPA"
     #   "A B C D E F G H I J K"   → "ABCDE"
     #
-    # *Single-word names* use the first +SINGLE_WORD_BASE_LENGTH+ (3) characters:
+    # *Single-word names* use the first +IDENTIFIER_LENGTH[:single_word]+ (3) characters:
     #   "Banana" → "BAN"
     #
     # *Accented characters* are transliterated ("Cécile" → "CEC").
@@ -50,7 +50,7 @@ module WorkPackages
     # == Collision resolution
     #
     # When a candidate is already taken, the identifier is progressively widened
-    # with more characters from the name, up to +MAX_IDENTIFIER_LENGTH+ (10):
+    # with more characters from the name, up to +IDENTIFIER_LENGTH[:max]+ (10):
     #
     #   Multi-word:  "SC" → "STC" → "STCO" → "STRCO" → … → "STREACOMMU"
     #   Single-word: "BAN" → "BANA" → "BANAN" → "BANANA"
@@ -60,10 +60,7 @@ module WorkPackages
     # as a last resort ("GO" → "GO2").
     #
     class ProjectIdentifierSuggestionGenerator
-      MAX_IDENTIFIER_LENGTH = 10
-      DEFAULT_IDENTIFIER_BASE_LENGTH = 5
-      MIN_IDENTIFIER_LENGTH = 2
-      SINGLE_WORD_BASE_LENGTH = 3
+      IDENTIFIER_LENGTH = { min: 2, max: 10, base: 5, single_word: 3 }.freeze
       FALLBACK_IDENTIFIER = "PROJ"
       SUFFIX_LIMIT = 10_000
 
@@ -113,7 +110,7 @@ module WorkPackages
 
         candidates = words.size == 1 ? single_word_candidates(words.first) : multi_word_candidates(words)
         candidates = candidates.filter_map { ensure_starts_with_letter(it) }
-        candidates = candidates.select { it.length >= MIN_IDENTIFIER_LENGTH }
+        candidates = candidates.select { it.length >= IDENTIFIER_LENGTH[:min] }
         candidates.presence || [FALLBACK_IDENTIFIER]
       end
 
@@ -133,24 +130,24 @@ module WorkPackages
       # "Banana" → ["BAN", "BANA", "BANAN", "BANANA"]
       def single_word_candidates(word)
         chars = word.upcase
-        max_len = [chars.length, MAX_IDENTIFIER_LENGTH].min
-        return [] if max_len < MIN_IDENTIFIER_LENGTH
+        max_len = [chars.length, IDENTIFIER_LENGTH[:max]].min
+        return [] if max_len < IDENTIFIER_LENGTH[:min]
 
-        start_len = SINGLE_WORD_BASE_LENGTH.clamp(MIN_IDENTIFIER_LENGTH, max_len)
+        start_len = IDENTIFIER_LENGTH[:single_word].clamp(IDENTIFIER_LENGTH[:min], max_len)
         (start_len..max_len).map { |len| chars[0, len] }
       end
 
       # "Stream Communicator" → ["SC", "STC", "STCO", "STRCO", …]
       # "A B C D E F G H I J K" → ["ABCDE", "ABCDEF", …, "ABCDEFGHIJ"]
       #
-      # Phase 1: Truncate initials to DEFAULT_IDENTIFIER_BASE_LENGTH, then
-      #          progressively include more initials up to MAX_IDENTIFIER_LENGTH.
+      # Phase 1: Truncate initials to IDENTIFIER_LENGTH[:base], then
+      #          progressively include more initials up to IDENTIFIER_LENGTH[:max].
       # Phase 2: If still room, expand words beyond single chars.
       def multi_word_candidates(words)
         clean_words = words.map { |w| w.upcase.chars }
         candidates = initial_truncation_candidates(clean_words)
 
-        return candidates if candidates.last&.length.to_i >= MAX_IDENTIFIER_LENGTH
+        return candidates if candidates.last&.length.to_i >= IDENTIFIER_LENGTH[:max]
 
         chars_per_word = clean_words.map { 1 }
         append_expansion_candidates(candidates, clean_words, chars_per_word)
@@ -158,10 +155,10 @@ module WorkPackages
       end
 
       # Phase 1: progressively longer slices of the initials string,
-      # starting at DEFAULT_IDENTIFIER_BASE_LENGTH.
+      # starting at IDENTIFIER_LENGTH[:base].
       def initial_truncation_candidates(clean_words)
-        initials = clean_words.map(&:first).join[0, MAX_IDENTIFIER_LENGTH]
-        start = [DEFAULT_IDENTIFIER_BASE_LENGTH, initials.length].min
+        initials = clean_words.map(&:first).join[0, IDENTIFIER_LENGTH[:max]]
+        start = [IDENTIFIER_LENGTH[:base], initials.length].min
         (start..initials.length).map { |len| initials[0, len] }
       end
 
@@ -169,7 +166,7 @@ module WorkPackages
       def append_expansion_candidates(candidates, clean_words, chars_per_word)
         expand_word_candidates(clean_words, chars_per_word).each do |c|
           candidates << c unless candidates.include?(c)
-          break if c.length >= MAX_IDENTIFIER_LENGTH
+          break if c.length >= IDENTIFIER_LENGTH[:max]
         end
       end
 
@@ -179,7 +176,7 @@ module WorkPackages
         loop do
           candidate = build_candidate(clean_words, chars_per_word)
           candidates << candidate unless candidates.include?(candidate)
-          break if candidate.length >= MAX_IDENTIFIER_LENGTH
+          break if candidate.length >= IDENTIFIER_LENGTH[:max]
 
           expandable = clean_words.index.with_index { |cw, i| chars_per_word[i] < cw.length }
           break unless expandable
@@ -191,7 +188,7 @@ module WorkPackages
       end
 
       def build_candidate(clean_words, chars_per_word)
-        clean_words.each_with_index.map { |cw, i| cw.first(chars_per_word[i]).join }.join[0, MAX_IDENTIFIER_LENGTH]
+        clean_words.each_with_index.map { |cw, i| cw.first(chars_per_word[i]).join }.join[0, IDENTIFIER_LENGTH[:max]]
       end
 
       # Strips leading digits so identifiers always start with a letter.
@@ -218,7 +215,7 @@ module WorkPackages
             if counter > SUFFIX_LIMIT
 
           suffix = counter.to_s
-          candidate = "#{base[0, MAX_IDENTIFIER_LENGTH - suffix.length]}#{suffix}"
+          candidate = "#{base[0, IDENTIFIER_LENGTH[:max] - suffix.length]}#{suffix}"
           return candidate unless used_identifiers.include?(candidate)
 
           counter += 1

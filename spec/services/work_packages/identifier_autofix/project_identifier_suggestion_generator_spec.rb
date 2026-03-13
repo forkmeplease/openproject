@@ -47,7 +47,7 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGener
         expect(result.first[:project]).to eq(project)
         expect(result.first[:current_identifier]).to eq("verylongidentifier")
         expect(result.first[:suggested_identifier]).to be_present
-        expect(result.first[:suggested_identifier].length).to be <= described_class::MAX_IDENTIFIER_LENGTH
+        expect(result.first[:suggested_identifier].length).to be <= described_class::IDENTIFIER_LENGTH[:max]
       end
     end
 
@@ -81,12 +81,12 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGener
 
   describe "identifier generation from project name" do
     {
-      # Single-word names: first SINGLE_WORD_BASE_LENGTH (3) transliterated chars
+      # Single-word names: first IDENTIFIER_LENGTH[:single_word] (3) transliterated chars
       "Banana" => "BAN",
       "Kiwi" => "KIW",
       "Strawberry" => "STR",
       "Cécile" => "CEC",
-      # Multi-word names: initials (truncated to DEFAULT_IDENTIFIER_BASE_LENGTH = 5)
+      # Multi-word names: initials (truncated to IDENTIFIER_LENGTH[:base] = 5)
       "Flight Planning Algorithm" => "FPA",
       "Fly & Sky" => "FS",
       "Social media marketing" => "SMM",
@@ -126,7 +126,7 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGener
       # Single letter word — too short on its own
       project = create(:project, identifier: "bad-id", name: "A")
       result = described_class.call([project]).first[:suggested_identifier]
-      expect(result.length).to be >= described_class::MIN_IDENTIFIER_LENGTH
+      expect(result.length).to be >= described_class::IDENTIFIER_LENGTH[:min]
     end
   end
 
@@ -156,7 +156,7 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGener
       p1 = create(:project, identifier: "a-b-c-d-e-f-g-h-i-j", name: "A B C D E F G H I J")
       p2 = create(:project, identifier: "a-b-c-d-e-f-g-h-i-j-x", name: "A B C D E F G H I J")
       identifiers = described_class.call([p1, p2]).pluck(:suggested_identifier)
-      expect(identifiers.all? { it.length <= described_class::MAX_IDENTIFIER_LENGTH }).to be true
+      expect(identifiers.all? { it.length <= described_class::IDENTIFIER_LENGTH[:max] }).to be true
       expect(identifiers.uniq.size).to eq(2)
     end
 
