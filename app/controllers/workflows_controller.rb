@@ -29,6 +29,8 @@
 #++
 
 class WorkflowsController < ApplicationController
+  include OpTurbo::ComponentStream
+
   layout "admin"
 
   before_action :require_admin
@@ -39,8 +41,8 @@ class WorkflowsController < ApplicationController
   before_action :find_role, only: :update
   before_action :find_type, only: :update
 
-  before_action :find_optional_role, only: :edit
-  before_action :find_optional_type, only: :edit
+  before_action :find_optional_role, only: %i[edit status_dialog confirm_statuses]
+  before_action :find_optional_type, only: %i[edit status_dialog confirm_statuses]
 
   def show
     @workflow_counts = Workflow.count_by_type_and_role
@@ -57,6 +59,7 @@ class WorkflowsController < ApplicationController
 
   def update
     tab = params[:tab] || "always"
+
     call = Workflows::BulkUpdateService
            .new(role: @role, type: @type, tab:)
            .call(permitted_status_params)
@@ -95,16 +98,61 @@ class WorkflowsController < ApplicationController
     end
   end
 
+  def status_dialog
+    all_statuses = Status.order(:position)
+    current_statuses = @type && @role ? role_type_statuses : Status.none
+
+    respond_with_dialog Workflows::StatusDialogComponent.new(
+      all_statuses:,
+      current_statuses:,
+      role: @role,
+      type: @type,
+      tab: params[:tab] || "always"
+    )
+  end
+
+  def confirm_statuses # rubocop:disable Metrics/AbcSize
+    current_status_ids = Array(params[:status_ids]).flatten.map(&:to_i)
+    original_ids = Array(params[:original_status_ids]).flatten.map(&:to_i)
+    removed_count = (original_ids - current_status_ids).size
+
+    if removed_count > 0
+      respond_with_dialog Workflows::StatusRemovalDangerDialogComponent.new(
+        role: @role,
+        type: @type,
+        tab: params[:tab] || "always",
+        status_ids: current_status_ids,
+        removed_count: removed_count
+      )
+    else
+      redirect_to edit_workflows_path(
+        role_id: params[:role_id],
+        type_id: params[:type_id],
+        tab: params[:tab] || "always",
+        status_ids: current_status_ids
+      ), status: :see_other
+    end
+  end
+
   private
 
   def statuses_for_form
-    @statuses = if @type && @role
-                  @type.statuses(role: @role)
+    @added_status_ids = []
+    @statuses = if @type && params[:status_ids].present?
+                  status_ids = params[:status_ids].map(&:to_i)
+                  @added_status_ids = status_ids - role_type_statuses.pluck(:id)
+                  Status.where(id: status_ids).order(:position)
+                elsif @type && @role
+                  role_type_statuses
                 elsif @type
                   @type.statuses
                 else
                   Status.all
                 end
+  end
+
+  def role_type_statuses
+    @type.statuses(role: @role)
   end
 
   def workflows_for_form

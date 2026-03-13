@@ -800,6 +800,8 @@ Rails.application.routes.draw do
     member do
       # We should fix this crappy routing (split up and rename controller methods)
       match "copy", action: "copy", via: %i[get post]
+      get :status_dialog
+      post :confirm_statuses
     end
   end
 

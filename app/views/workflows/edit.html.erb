@@ -65,18 +65,29 @@ See COPYRIGHT and LICENSE files for more details.
   </fieldset>
 <% end %>
 
-<% if @type && @role && @statuses.any? %>
-  <%= form_tag({ action: :update }, id: "workflow_form", method: :patch) do %>
-    <%= hidden_field_tag "type_id", @type.id %>
-    <%= hidden_field_tag "role_id", @role.id %>
-    <%= hidden_field_tag "tab", params[:tab] || "always" %>
+<%= render Workflows::EditSubHeaderComponent.new(tab: params[:tab], role: @role, type: @type) %>
 
-    <%= render_tabs workflow_tabs %>
+<% if @type && @role %>
+  <%= turbo_frame_tag "workflow-table" do %>
+    <% if @statuses.any? %>
+      <%= form_tag(
+            { action: :update },
+            id: "workflow_form",
+            method: :patch,
+            data: { turbo_frame: "_top" }
+          ) do %>
+          <%= hidden_field_tag "type_id", @type.id %>
+          <%= hidden_field_tag "role_id", @role.id %>
+          <%= hidden_field_tag "tab", params[:tab] || "always" %>
 
-    <%=
-      render Primer::Beta::Button.new(scheme: :primary, type: :submit, id: "work-flow-save-button") do
-        t(:button_save)
-      end
-    %>
+          <%= render_tabs workflow_tabs %>
+
+          <%=
+            render Primer::Beta::Button.new(scheme: :primary, type: :submit, id: "work-flow-save-button") do
+              t(:button_save)
+            end
+          %>
+        <% end %>
+      <% end %>
   <% end %>
 <% end %>
