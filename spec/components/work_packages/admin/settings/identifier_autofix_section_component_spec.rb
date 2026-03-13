@@ -38,7 +38,7 @@ RSpec.describe WorkPackages::Admin::Settings::IdentifierAutofixSectionComponent,
     {
       project:,
       current_identifier: identifier,
-      suggested_handle: handle,
+      suggested_identifier: handle,
       error_reason:
     }
   end

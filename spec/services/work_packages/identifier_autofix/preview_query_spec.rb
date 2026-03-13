@@ -90,8 +90,8 @@ RSpec.describe WorkPackages::IdentifierAutofix::PreviewQuery do
     let!(:second_project) { create_problematic_project(name: "Foxtrot Papa", identifier: "foxtrot-papa") }
 
     it "does not assign the same handle to both" do
-      handles = result.projects_data.pluck(:suggested_handle)
-      expect(handles.uniq.size).to eq(handles.size)
+      identifiers = result.projects_data.pluck(:suggested_identifier)
+      expect(identifiers.uniq.size).to eq(identifiers.size)
     end
   end
 
@@ -99,6 +99,6 @@ RSpec.describe WorkPackages::IdentifierAutofix::PreviewQuery do
     create_problematic_project(name: "Alpha Beta", identifier: "alpha-beta")
 
     entry = result.projects_data.first
-    expect(entry).to include(:project, :current_identifier, :suggested_handle, :error_reason)
+    expect(entry).to include(:project, :current_identifier, :suggested_identifier, :error_reason)
   end
 end

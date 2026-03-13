@@ -39,111 +39,111 @@ module WorkPackages
     #
     # Each result entry includes an error_reason classifying why the project's
     # current identifier is problematic:
-    #   - :too_long            — identifier length exceeds HANDLE_MAX_LENGTH
+    #   - :too_long            — identifier length exceeds IDENTIFIER_MAX_LENGTH
     #   - :special_characters  — identifier contains characters outside [a-zA-Z0-9]
-    #   - :in_use              — identifier is another project's active handle
-    #   - :reserved            — identifier appears in another project's handle history
+    #   - :in_use              — identifier is another project's active identifier
+    #   - :reserved            — identifier appears in another project's identifier history
     #
-    class ProjectHandleSuggestionGenerator
-      HANDLE_MAX_LENGTH = 5
+    class ProjectIdentifierSuggestionGenerator
+      IDENTIFIER_MAX_LENGTH = 5
       SINGLE_WORD_LENGTH = 3
-      FALLBACK_HANDLE = "PROJ"
+      FALLBACK_IDENTIFIER = "PROJ"
       SUFFIX_LIMIT = 10_000
 
-      def self.call(projects, reserved_handles: Set.new, in_use_handles: Set.new)
-        new.call(projects, reserved_handles:, in_use_handles:)
+      def self.call(projects, reserved_identifiers: Set.new, in_use_identifiers: Set.new)
+        new.call(projects, reserved_identifiers:, in_use_identifiers:)
       end
 
-      # Returns a single suggested handle string for the given project name.
+      # Returns a single suggested identifier string for the given project name.
       #
-      def self.suggest_handle(name, reserved_handles: Set.new, in_use_handles: Set.new)
-        new.suggest_handle(name, reserved_handles:, in_use_handles:)
+      def self.suggest_identifier(name, reserved_identifiers: Set.new, in_use_identifiers: Set.new)
+        new.suggest_identifier(name, reserved_identifiers:, in_use_identifiers:)
       end
 
-      def call(projects, reserved_handles:, in_use_handles:)
-        generate_suggestions(projects, reserved_handles:, in_use_handles:)
+      def call(projects, reserved_identifiers:, in_use_identifiers:)
+        generate_suggestions(projects, reserved_identifiers:, in_use_identifiers:)
       end
 
-      def suggest_handle(name, reserved_handles: Set.new, in_use_handles: Set.new)
-        base = handle_from_name(name)
-        unique_handle(base, combined_handles(reserved_handles, in_use_handles))
+      def suggest_identifier(name, reserved_identifiers: Set.new, in_use_identifiers: Set.new)
+        base = identifier_from_name(name)
+        unique_identifier(base, combined_identifiers(reserved_identifiers, in_use_identifiers))
       end
 
       private
 
-      def generate_suggestions(projects, reserved_handles:, in_use_handles:)
-        used_handles = combined_handles(reserved_handles, in_use_handles)
+      def generate_suggestions(projects, reserved_identifiers:, in_use_identifiers:)
+        used_identifiers = combined_identifiers(reserved_identifiers, in_use_identifiers)
 
         projects.map do |project|
-          base   = handle_from_name(project.name)
-          handle = unique_handle(base, used_handles)
-          used_handles << handle
+          base       = identifier_from_name(project.name)
+          identifier = unique_identifier(base, used_identifiers)
+          used_identifiers << identifier
 
           {
             project:,
             current_identifier: project.identifier,
-            suggested_handle: handle,
-            error_reason: error_reason(project.identifier, reserved_handles:, in_use_handles:)
+            suggested_identifier: identifier,
+            error_reason: error_reason(project.identifier, reserved_identifiers:, in_use_identifiers:)
           }
         end
       end
 
-      def handle_from_name(name)
+      def identifier_from_name(name)
         # Use POSIX [[:alpha:]] so accented letters (é, ñ, ü…) are kept inside
         # their word rather than treated as separators by the ASCII-only [a-zA-Z].
         words = name.to_s.scan(/[[:alpha:][:digit:]]+/)
-        return FALLBACK_HANDLE if words.empty?
+        return FALLBACK_IDENTIFIER if words.empty?
 
-        words.size == 1 ? handle_from_single_word(words.first) : handle_from_words(words)
+        words.size == 1 ? identifier_from_single_word(words.first) : identifier_from_words(words)
       end
 
-      def handle_from_single_word(word)
-        # e.g. "Banana" → "BAN", "Kiwi" → "KIW", "日本語" → FALLBACK_HANDLE
+      def identifier_from_single_word(word)
+        # e.g. "Banana" → "BAN", "Kiwi" → "KIW", "日本語" → FALLBACK_IDENTIFIER
         t = I18n.with_locale(:en) { I18n.transliterate(word) }
         chars = t.scan(/[A-Za-z0-9]/).first(SINGLE_WORD_LENGTH).map(&:upcase).join
-        chars.empty? ? FALLBACK_HANDLE : chars
+        chars.empty? ? FALLBACK_IDENTIFIER : chars
       end
 
-      def handle_from_words(words)
+      def identifier_from_words(words)
         # Multi-word names: take initials (first letter of each word), truncated.
         acronym = words.filter_map do |word|
           ch = I18n.with_locale(:en) { I18n.transliterate(word[0]) }.upcase[0]
           ch if ch&.match?(/\A[A-Z0-9]\z/)
         end.join
-        return FALLBACK_HANDLE if acronym.empty?
+        return FALLBACK_IDENTIFIER if acronym.empty?
 
-        acronym.slice(0, HANDLE_MAX_LENGTH)
+        acronym.slice(0, IDENTIFIER_MAX_LENGTH)
       end
 
-      def unique_handle(base, used_handles)
-        return base unless used_handles.include?(base)
+      def unique_identifier(base, used_identifiers)
+        return base unless used_identifiers.include?(base)
 
         counter = 2
         loop do
-          raise "Could not find a unique handle for base '#{base}' within #{SUFFIX_LIMIT} attempts" \
+          raise "Could not find a unique identifier for base '#{base}' within #{SUFFIX_LIMIT} attempts" \
             if counter > SUFFIX_LIMIT
 
           suffix    = counter.to_s
-          candidate = "#{base.slice(0, HANDLE_MAX_LENGTH - suffix.length)}#{suffix}"
-          break candidate unless used_handles.include?(candidate)
+          candidate = "#{base.slice(0, IDENTIFIER_MAX_LENGTH - suffix.length)}#{suffix}"
+          break candidate unless used_identifiers.include?(candidate)
 
           counter += 1
         end
       end
 
-      def error_reason(identifier, reserved_handles:, in_use_handles:)
-        if identifier.length > HANDLE_MAX_LENGTH
+      def error_reason(identifier, reserved_identifiers:, in_use_identifiers:)
+        if identifier.length > IDENTIFIER_MAX_LENGTH
           :too_long
         elsif identifier.match?(/[^a-zA-Z0-9]/)
           :special_characters
-        elsif in_use_handles.include?(identifier)
+        elsif in_use_identifiers.include?(identifier)
           :in_use
-        elsif reserved_handles.include?(identifier)
+        elsif reserved_identifiers.include?(identifier)
           :reserved
         end
       end
 
-      def combined_handles(*sets)
+      def combined_identifiers(*sets)
         sets.reduce(Set.new, :merge)
       end
     end

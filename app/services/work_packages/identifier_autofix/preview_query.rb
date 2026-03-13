@@ -41,10 +41,10 @@ module WorkPackages
                     .limit(DISPLAY_COUNT)
                     .to_a
 
-        suggestions = WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator.call(
+        suggestions = WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator.call(
           preview,
-          in_use_handles:,
-          reserved_handles:
+          in_use_identifiers:,
+          reserved_identifiers:
         )
 
         Result.new(projects_data: suggestions, total_count: total)
@@ -58,16 +58,16 @@ module WorkPackages
       def problematic_scope
         @problematic_scope ||= Project.where(
           "length(identifier) > ? OR identifier ~ ?",
-          WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator::HANDLE_MAX_LENGTH,
+          WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator::IDENTIFIER_MAX_LENGTH,
           "[^a-zA-Z0-9]"
         )
       end
 
-      def in_use_handles
+      def in_use_identifiers
         Project.where.not(id: problematic_scope.select(:id)).pluck(:identifier).to_set
       end
 
-      def reserved_handles
+      def reserved_identifiers
         # TODO: OldProjectIdentifier.pluck(:identifier).to_set
         # once the OldProjectIdentifier model and migration are added.
         Set.new
