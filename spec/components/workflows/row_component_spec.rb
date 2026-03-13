@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,52 +26,39 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
+#
+require "rails_helper"
 
-require "spec_helper"
+RSpec.describe Workflows::RowComponent, type: :component do
+  include Rails.application.routes.url_helpers
 
-RSpec.describe "Workflows index" do
-  include Toasts::Expectations
-
-  let(:admin)  { create(:admin) }
-  let!(:types) { create_list(:type, 3) }
-
-  current_user { admin }
-
-  before do
-    visit url_for(controller: "/workflows", action: :index)
+  def render_component(...)
+    render_inline(described_class.new(...))
   end
 
-  it "is accessible", :js, :selenium do
-    expect(page).to be_axe_clean.within("#content")
+  let(:type) { build_stubbed(:type) }
+  let(:table) do
+    instance_double(
+      Workflows::TableComponent,
+      columns: %i[name],
+      main_column?: false,
+      mobile_columns: %i[name],
+      mobile_labels: %i[name],
+      column_title: "Type",
+      has_actions?: false
+    )
   end
 
-  it "allows navigating to any Edit page" do
-    expect(page).to have_heading("Workflows")
+  subject(:rendered_component) do
+    render_component(row: type, table:)
+  end
 
-    some_type = types.sample
-    within_role :table do
-      click_link some_type.name
+  describe "Type name and link to edit" do
+    it "renders the project name as a link" do
+      expect(rendered_component).to have_role(:cell, text: type.name) do |cell|
+        expect(cell).to have_link(type.name, href: edit_workflow_path(type))
+      end
     end
-
-    expect(page).to have_heading some_type.name
-  end
-
-  it "allows navigating to Workflow summary page" do
-    within ".PageHeader-actions" do
-      click_on "Summary"
-    end
-
-    expect(page).to have_heading "Summary"
-    expect(page).to have_current_path(summarized_workflows_path)
-  end
-
-  it "allows navigating to Workflow copy page" do
-    within ".PageHeader-actions" do
-      click_on "Copy"
-    end
-
-    expect(page).to have_heading "Copy workflow"
-    expect(page).to have_current_path(copy_workflows_path)
   end
 end
