@@ -643,4 +643,44 @@ RSpec.describe Project do
       end
     end
   end
+
+  describe ".suggest_identifier" do
+    context "with alphanumeric identifiers", with_settings: { work_packages_identifier: "alphanumeric" } do
+      it "returns initials for multi-word names" do
+        expect(described_class.suggest_identifier("Flight Planning Algorithm")).to eq("FPA")
+      end
+
+      it "returns the first 3 characters for single-word names" do
+        expect(described_class.suggest_identifier("Banana")).to eq("BAN")
+      end
+
+      it "returns an identifier starting with a letter even for digit-prefixed names" do
+        expect(described_class.suggest_identifier("3D Printing Lab")).to match(/\A[A-Z]/)
+      end
+
+      it "transliterates accented characters" do
+        result = described_class.suggest_identifier("Équipe Réseau")
+        expect(result).to match(/\A[A-Z][A-Z0-9_]*\z/)
+      end
+
+      it "falls back to PROJ for non-transliterable names" do
+        expect(described_class.suggest_identifier("日本語プロジェクト")).to eq("PROJ")
+      end
+    end
+
+    context "with numeric (legacy) identifiers", with_settings: { work_packages_identifier: "numeric" } do
+      it "returns a slugified lowercase identifier" do
+        expect(described_class.suggest_identifier("My Cool Project")).to eq("my-cool-project")
+      end
+
+      it "truncates to IDENTIFIER_MAX_LENGTH" do
+        long_name = "a" * 300
+        expect(described_class.suggest_identifier(long_name).length).to be <= described_class::IDENTIFIER_MAX_LENGTH
+      end
+
+      it "falls back to 'project' for blank names" do
+        expect(described_class.suggest_identifier("")).to eq("project")
+      end
+    end
+  end
 end
