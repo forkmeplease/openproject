@@ -212,7 +212,7 @@ class Project < ApplicationRecord
   validates :identifier,
             format: { with: /\A(?!^\d+\z)[a-z0-9\-_]+\z/ },
             if: ->(p) {
-                  p.identifier_changed? && p.identifier.present? && !Setting::WorkPackageIdentifier.alphanumeric?
+              p.identifier_changed? && p.identifier.present? && !Setting::WorkPackageIdentifier.alphanumeric?
             }
 
   # When semantic work package IDs with alphanumeric mode are active, identifiers must follow JIRA-style key rules.
