@@ -34,8 +34,6 @@ class Projects::IdentifierController < ApplicationController
   before_action :find_project_by_project_id
   before_action :authorize
 
-  def show; end
-
   def update
     service_call = Projects::UpdateService
                      .new(user: current_user,
