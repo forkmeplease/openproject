@@ -86,10 +86,10 @@
             end
           end
           row.with_column(flex: 1) do
-            render(Primer::Beta::Text.new) { entry[:suggested_handle] }
+            render(Primer::Beta::Text.new) { entry[:suggested_identifier] }
           end
           row.with_column(flex: 1) do
-            render(Primer::Beta::Text.new) { sample_wp_id(entry[:suggested_handle]) }
+            render(Primer::Beta::Text.new) { sample_wp_id(entry[:suggested_identifier]) }
           end
         end
       end
