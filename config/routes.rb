@@ -283,9 +283,6 @@ Rails.application.routes.draw do
   namespace :projects do
     resource :menu, only: %i[show]
     resource :filters, only: %i[show]
-    get "identifier_dialog", to: "/projects#identifier_dialog",
-                             as: :identifier_dialog,
-                             defaults: { format: :turbo_stream }
   end
 
   %w[portfolio project program].each do |workspace_type|
@@ -357,7 +354,9 @@ Rails.application.routes.draw do
           get :dialog
         end
       end
-      resource :identifier, only: %i[show update], controller: "identifier"
+      resource :identifier, only: %i[show update], controller: "identifier" do
+        get :identifier_update_dialog, on: :member, defaults: { format: :turbo_stream }
+      end
       resource :status, only: %i[update destroy], controller: "status"
       resource :creation_wizard, only: %i[show update], controller: "creation_wizard" do
         get :help_text, on: :member

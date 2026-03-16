@@ -34,12 +34,11 @@ class ProjectsController < ApplicationController
   menu_item :overview
   menu_item :roadmap, only: :roadmap
 
-  before_action :find_project, except: %i[index new create destroy destroy_info identifier_dialog]
-  before_action :find_project_by_project_id, only: %i[identifier_dialog]
+  before_action :find_project, except: %i[index new create destroy destroy_info]
   before_action :find_project_including_archived, only: %i[destroy destroy_info]
   before_action :load_query_or_deny_access, only: %i[index]
   before_action :authorize,
-                only: %i[copy_form copy deactivate_work_package_attachments export_project_initiation_pdf identifier_dialog]
+                only: %i[copy_form copy deactivate_work_package_attachments export_project_initiation_pdf]
   before_action :authorize_global, only: %i[new create]
   before_action :require_admin, only: %i[destroy destroy_info]
   before_action :find_optional_parent, only: :new
@@ -160,10 +159,6 @@ class ProjectsController < ApplicationController
 
   def destroy_info
     respond_with_dialog Projects::DeleteDialogComponent.new(project: @project)
-  end
-
-  def identifier_dialog
-    respond_with_dialog Projects::Settings::ChangeIdentifierDialogComponent.new(project: @project)
   end
 
   def deactivate_work_package_attachments

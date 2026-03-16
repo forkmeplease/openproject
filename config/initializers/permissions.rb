@@ -137,8 +137,7 @@ Rails.application.reloader.to_prepare do
                        "projects/settings/subitems": %i[show update],
                        "projects/settings/template": %i[show update toggle_template],
                        "projects/templated": %i[create destroy],
-                       "projects/identifier": %i[show update update_identifier_dialog],
-                       projects: %i[identifier_dialog],
+                       "projects/identifier": %i[show update identifier_update_dialog],
                        "projects/status": %i[update destroy]
                      },
                      permissible_on: :project,

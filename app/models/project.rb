@@ -48,7 +48,7 @@ class Project < ApplicationRecord
   SEMANTIC_IDENTIFIER_MAX_LENGTH = 10
 
   # reserved identifiers
-  RESERVED_IDENTIFIERS = %w[new menu queries filters identifier_dialog].freeze
+  RESERVED_IDENTIFIERS = %w[new menu queries filters identifier_update_dialog].freeze
 
   enum :workspace_type, {
     project: "project",
