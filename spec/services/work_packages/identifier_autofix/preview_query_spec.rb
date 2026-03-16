@@ -52,6 +52,15 @@ RSpec.describe WorkPackages::IdentifierAutofix::PreviewQuery do
     end
   end
 
+  context "when a project has underscores in its identifier" do
+    before { create_valid_project(name: "My Project", identifier: "my_proj") }
+
+    it "does not flag it as problematic" do
+      expect(result.total_count).to eq(0)
+      expect(result.projects_data).to be_empty
+    end
+  end
+
   context "when there are fewer than DISPLAY_COUNT problematic projects" do
     let!(:problematic) do
       [
@@ -90,15 +99,32 @@ RSpec.describe WorkPackages::IdentifierAutofix::PreviewQuery do
     let!(:second_project) { create_problematic_project(name: "Foxtrot Papa", identifier: "foxtrot-papa") }
 
     it "does not assign the same handle to both" do
-      handles = result.projects_data.pluck(:suggested_handle)
-      expect(handles.uniq.size).to eq(handles.size)
+      identifiers = result.projects_data.pluck(:suggested_identifier)
+      expect(identifiers.uniq.size).to eq(identifiers.size)
     end
   end
 
-  it "returns Result entries shaped like generator output" do
+  it "returns Result entries with project, current_identifier, suggested_identifier, and error_reason" do
     create_problematic_project(name: "Alpha Beta", identifier: "alpha-beta")
 
     entry = result.projects_data.first
-    expect(entry).to include(:project, :current_identifier, :suggested_handle, :error_reason)
+    expect(entry).to include(:project, :current_identifier, :suggested_identifier, :error_reason)
+  end
+
+  describe "error_reason classification" do
+    it "assigns :too_long when identifier length exceeds MAX_IDENTIFIER_LENGTH" do
+      create_problematic_project(name: "Test", identifier: "averylongidentifier")
+      expect(result.projects_data.first[:error_reason]).to eq(:too_long)
+    end
+
+    it "assigns :special_characters when identifier has non-alphanumeric chars but is short" do
+      create_problematic_project(name: "Test", identifier: "ab-c")
+      expect(result.projects_data.first[:error_reason]).to eq(:special_characters)
+    end
+
+    it "assigns :too_long (priority) when identifier is both too long and has special chars" do
+      create_problematic_project(name: "Test", identifier: "my-very-long-identifier")
+      expect(result.projects_data.first[:error_reason]).to eq(:too_long)
+    end
   end
 end

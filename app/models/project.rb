@@ -48,7 +48,7 @@ class Project < ApplicationRecord
   SEMANTIC_IDENTIFIER_MAX_LENGTH = 10
 
   # reserved identifiers
-  RESERVED_IDENTIFIERS = %w[new menu queries filters identifier_dialog identifier_suggestion].freeze
+  RESERVED_IDENTIFIERS = %w[new menu queries filters identifier_update_dialog identifier_suggestion].freeze
 
   enum :workspace_type, {
     project: "project",
@@ -211,18 +211,20 @@ class Project < ApplicationRecord
   # Contains only a-z, 0-9, dashes and underscores but cannot consist of numbers only as it would clash with the id.
   validates :identifier,
             format: { with: /\A(?!^\d+\z)[a-z0-9\-_]+\z/ },
-            if: ->(p) { p.identifier_changed? && p.identifier.present? && !Project.semantic_alphanumeric_identifier? }
+            if: ->(p) {
+              p.identifier_changed? && p.identifier.present? && !Setting::WorkPackageIdentifier.alphanumeric?
+            }
 
   # When semantic work package IDs with alphanumeric mode are active, identifiers must follow JIRA-style key rules.
   validates :identifier,
             format: { with: /\A[A-Z]/, message: :must_start_with_letter },
-            if: ->(p) { p.identifier_changed? && p.identifier.present? && Project.semantic_alphanumeric_identifier? }
+            if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
 
   validates :identifier,
             format: { with: /\A[A-Z][A-Z0-9_]*\z/, message: :no_special_characters },
             length: { maximum: SEMANTIC_IDENTIFIER_MAX_LENGTH },
             if: ->(p) {
-              p.identifier_changed? && p.identifier.present? && Project.semantic_alphanumeric_identifier? &&
+              p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? &&
                           p.identifier.match?(/\A[A-Z]/)
             }
 
@@ -280,12 +282,8 @@ class Project < ApplicationRecord
     User.current.allowed_in_project?(:copy_projects, self)
   end
 
-  def self.semantic_alphanumeric_identifier?
-    OpenProject::FeatureDecisions.semantic_work_package_ids_active? && Setting::WorkPackageIdentifier.alphanumeric?
-  end
-
   def self.suggest_identifier(name)
-    if semantic_alphanumeric_identifier?
+    if Setting::WorkPackageIdentifier.alphanumeric?
       WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator.suggest_for_name(name)
     else
       name.to_url.first(IDENTIFIER_MAX_LENGTH).presence || "project"

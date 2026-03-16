@@ -31,7 +31,7 @@ module Projects
   module Settings
     class IdentifierForm < ApplicationForm
       form do |f|
-        caption_key = if Project.semantic_alphanumeric_identifier?
+        caption_key = if Setting::WorkPackageIdentifier.alphanumeric?
                         :text_project_identifier_description
                       else
                         :text_project_identifier_url_description

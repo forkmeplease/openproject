@@ -131,7 +131,7 @@ RSpec.describe WorkPackages::Admin::Settings::IdentifierSettingsFormComponent, t
       let(:problematic_result) do
         WorkPackages::IdentifierAutofix::PreviewQuery::Result.new(
           projects_data: [
-            { project:, current_identifier: "bad-proj", suggested_handle: "BP", error_reason: :special_characters }
+            { project:, current_identifier: "bad-proj", suggested_identifier: "BP", error_reason: :special_characters }
           ],
           total_count: 1
         )

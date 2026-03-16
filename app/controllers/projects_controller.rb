@@ -34,8 +34,7 @@ class ProjectsController < ApplicationController
   menu_item :overview
   menu_item :roadmap, only: :roadmap
 
-  before_action :find_project, except: %i[index new create destroy destroy_info identifier_dialog]
-  before_action :find_project_by_project_id, only: %i[identifier_dialog]
+  before_action :find_project, except: %i[index new create destroy destroy_info]
   before_action :find_project_including_archived, only: %i[destroy destroy_info]
   before_action :load_query_or_deny_access, only: %i[index]
   before_action :authorize,
@@ -46,7 +45,6 @@ class ProjectsController < ApplicationController
   before_action :find_optional_template, only: %i[new create]
 
   no_authorization_required! :index
-  no_authorization_required! :identifier_dialog
 
   include SortHelper
   include PaginationHelper
@@ -161,12 +159,6 @@ class ProjectsController < ApplicationController
 
   def destroy_info
     respond_with_dialog Projects::DeleteDialogComponent.new(project: @project)
-  end
-
-  def identifier_dialog
-    return render_404 unless OpenProject::FeatureDecisions.semantic_work_package_ids_active?
-
-    respond_with_dialog Projects::Settings::ChangeIdentifierDialogComponent.new(project: @project)
   end
 
   def deactivate_work_package_attachments

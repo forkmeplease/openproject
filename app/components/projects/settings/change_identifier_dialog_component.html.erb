@@ -39,7 +39,7 @@ See COPYRIGHT and LICENSE files for more details.
     <%= settings_primer_form_with(model: project,
                                   url: project_identifier_path(project),
                                   id: "change-identifier-form",
-                                  class: "mt-4") do |f| %>
+                                  mt: 4) do |f| %>
       <%= render(Primer::Forms::FormList.new(Projects::Settings::EditableIdentifierForm.new(f))) %>
     <% end %>
   <% end %>

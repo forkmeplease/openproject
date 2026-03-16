@@ -41,33 +41,46 @@ module WorkPackages
                     .limit(DISPLAY_COUNT)
                     .to_a
 
-        suggestions = WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator.call(
+        suggestions = WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator.call(
           preview,
-          in_use_handles:,
-          reserved_handles:
+          in_use_identifiers:,
+          reserved_identifiers:
         )
 
-        Result.new(projects_data: suggestions, total_count: total)
+        projects_data = suggestions.map do |entry|
+          entry.merge(error_reason: error_reason(entry[:current_identifier]))
+        end
+
+        Result.new(projects_data:, total_count: total)
       end
 
       private
 
-      # FIXME: Replace WHERE clause with:
-      #   Project.where.not(id: OldProjectIdentifier.where(current: true).select(:project_id))
-      # once all valid identifiers have been migrated to handle rows.
       def problematic_scope
         @problematic_scope ||= Project.where(
           "length(identifier) > ? OR identifier ~ ?",
-          WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator::HANDLE_MAX_LENGTH,
-          "[^a-zA-Z0-9]"
+          ProjectIdentifierSuggestionGenerator::IDENTIFIER_LENGTH[:max],
+          "[^a-zA-Z0-9_]"
         )
       end
 
-      def in_use_handles
-        Project.where.not(id: problematic_scope.select(:id)).pluck(:identifier).to_set
+      def error_reason(identifier)
+        if identifier.length > ProjectIdentifierSuggestionGenerator::IDENTIFIER_LENGTH[:max]
+          :too_long
+        elsif identifier.match?(/[^a-zA-Z0-9_]/)
+          :special_characters
+        elsif in_use_identifiers.include?(identifier)
+          :in_use
+        elsif reserved_identifiers.include?(identifier)
+          :reserved
+        end
       end
 
-      def reserved_handles
+      def in_use_identifiers
+        @in_use_identifiers ||= Project.where.not(id: problematic_scope.select(:id)).pluck(:identifier).to_set
+      end
+
+      def reserved_identifiers
         # TODO: OldProjectIdentifier.pluck(:identifier).to_set
         # once the OldProjectIdentifier model and migration are added.
         Set.new
