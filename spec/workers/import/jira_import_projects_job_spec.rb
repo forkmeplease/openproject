@@ -114,7 +114,7 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
                op_entity_id: op_user.id.to_s)
       end
 
-      let(:attachment_content) { Rails.root.join("spec/fixtures/import/jira/solid-color-image.png").binread }
+      let(:attachment_content) { Rails.root.join("spec/fixtures/files/image.png").binread }
 
       before do
         stub_request(:get, "https://jira-software.local/secure/attachment/10000/solid-color-image.png")
