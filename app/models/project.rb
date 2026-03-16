@@ -284,7 +284,7 @@ class Project < ApplicationRecord
 
   def self.suggest_identifier(name)
     if Setting::WorkPackageIdentifier.alphanumeric?
-      WorkPackages::IdentifierAutofix::ProjectHandleSuggestionGenerator.suggest_for_name(name)
+      WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator.suggest_identifier(name)
     else
       name.to_url.first(IDENTIFIER_MAX_LENGTH).presence || "project"
     end

@@ -34,10 +34,6 @@ module Projects
     no_authorization_required! :show
 
     def show
-      unless OpenProject::FeatureDecisions.semantic_work_package_ids_active?
-        render json: {}, status: :not_found and return
-      end
-
       name = params[:name].to_s.strip
       return render json: {}, status: :unprocessable_entity if name.blank?
 
