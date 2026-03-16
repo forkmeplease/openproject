@@ -116,7 +116,7 @@ RSpec.describe "Projects", "editing settings", :js do
           fill_in "project[identifier]", with: "FOO@BAR"
           click_on "Change identifier"
 
-          expect(page).to have_text "Special characters not allowed."
+          expect(page).to have_text "Identifier may only contain uppercase letters, numbers, and underscores"
         end
       end
     end
