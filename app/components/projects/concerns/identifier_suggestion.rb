@@ -32,13 +32,14 @@ module Projects
   module Concerns
     module IdentifierSuggestion
       def identifier_suggestion_data
-        flag_active = OpenProject::FeatureDecisions.semantic_work_package_ids_active?
-        data = {
+        suggestion_mode = Setting::WorkPackageIdentifier.alphanumeric? ? "semantic" : "legacy"
+
+        {
           controller: "projects--identifier-suggestion",
-          "projects--identifier-suggestion-mode-value": Project.semantic_alphanumeric_identifier? ? "semantic" : "legacy"
+          "projects--identifier-suggestion-mode-value": suggestion_mode,
+          "projects--identifier-suggestion-url-value": projects_identifier_suggestion_path,
+          "projects--identifier-suggestion-set-name-first-value": I18n.t("js.projects.identifier_suggestion.set_name_first")
         }
-        data[:"projects--identifier-suggestion-url-value"] = projects_identifier_suggestion_path if flag_active
-        data
       end
     end
   end

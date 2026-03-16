@@ -45,17 +45,6 @@ module Projects
       { display: :none } unless step == 3
     end
 
-    def identifier_suggestion_data
-      suggestion_mode = Setting::WorkPackageIdentifier.alphanumeric? ? "semantic" : "legacy"
-
-      {
-        controller: "projects--identifier-suggestion",
-        "projects--identifier-suggestion-mode-value": suggestion_mode,
-        "projects--identifier-suggestion-url-value": projects_identifier_suggestion_path,
-        "projects--identifier-suggestion-set-name-first-value": I18n.t("js.projects.identifier_suggestion.set_name_first")
-      }
-    end
-
     def workspaces_path
       workspace_type = if Project.workspace_types.key?(project.workspace_type)
                          project.workspace_type
