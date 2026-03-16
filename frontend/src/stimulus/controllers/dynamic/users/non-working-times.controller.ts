@@ -71,14 +71,11 @@ export default class NonWorkingTimesController extends Controller {
   private calendar:Calendar;
 
   connect() {
-    this.initializeCalendar();
-
-    // The stimulus controller gets initialized before the content wrapper is fully shown
-    // so its height might not be set correctly yet.
+    // Delay initialization to ensure the calendar container is fully rendered
     setTimeout(() => {
-      this.calendar.updateSize();
+      this.initializeCalendar();
       this.scrollToToday();
-    }, 25);
+    }, 5);
   }
 
   disconnect() {
