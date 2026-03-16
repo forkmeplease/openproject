@@ -9,7 +9,7 @@ title: OpenProject Version 16 Release Notes
 
 | Version                       | Release date |
 |-------------------------------|--------------|
-| [OpenProject 16.6.8](16-6-9/) | 2026-03-16   |
+| [OpenProject 16.6.9](16-6-9/) | 2026-03-16   |
 | [OpenProject 16.6.8](16-6-8/) | 2026-02-18   |
 | [OpenProject 16.6.7](16-6-7/) | 2026-02-06   |
 | [OpenProject 16.6.6](16-6-6/) | 2026-01-27   |
