@@ -81,6 +81,16 @@ RSpec.describe HasPrincipalDetails do
     it "aliases the concrete association to #detail" do
       expect(group.detail).to eq(group.group_detail)
     end
+
+    it "duplicates the detail when the principal is dup'ed" do
+      group.update!(organizational_unit: true)
+      copy = group.dup
+
+      expect(copy.detail).to be_present
+      expect(copy.detail).to be_new_record
+      expect(copy.detail.id).to be_nil
+      expect(copy.organizational_unit).to be true
+    end
   end
 
   describe "attribute delegation" do
