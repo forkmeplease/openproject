@@ -33,10 +33,20 @@ module OpenProject
     class FieldRegistry
       def initialize
         @registry = {}
+        @custom_field_format_mappings = {}
       end
 
       def register(attribute_name, field_component)
         @registry[attribute_name.to_s] = field_component
+      end
+
+      def register_custom_field_format_mappings(mappings)
+        @custom_field_format_mappings = mappings
+      end
+
+      def register_custom_field(id, field_format)
+        component = @custom_field_format_mappings[field_format]
+        register("custom_field_#{id}", component) if component
       end
 
       def fetch(attribute_name)
@@ -48,7 +58,7 @@ module OpenProject
       class << self
         attr_reader :default
 
-        delegate :register, :fetch, to: :@default
+        delegate :register, :fetch, :register_custom_field_format_mappings, :register_custom_field, to: :@default
       end
     end
   end

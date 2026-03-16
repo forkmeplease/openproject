@@ -29,7 +29,7 @@
 #++
 
 require "spec_helper"
-require_relative "../shared_context"
+require_relative "shared_context"
 
 RSpec.describe "Edit project custom fields on project overview page", :js do
   include_context "with seeded projects, members and project custom fields"

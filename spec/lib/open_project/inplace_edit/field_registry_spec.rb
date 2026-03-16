@@ -61,4 +61,36 @@ RSpec.describe OpenProject::InplaceEdit::FieldRegistry do
       expect(registry.fetch(:description)).to eq(rich_text_component)
     end
   end
+
+  describe "#register_custom_field_format_mappings" do
+    it "stores format-to-component mappings used by register_custom_field" do
+      text_component = Class.new
+      registry.register_custom_field_format_mappings("text" => text_component)
+
+      registry.register_custom_field(42, "text")
+
+      expect(registry.fetch("custom_field_42")).to eq(text_component)
+    end
+  end
+
+  describe "#register_custom_field" do
+    let(:text_component) { Class.new }
+
+    before do
+      registry.register_custom_field_format_mappings("text" => text_component)
+    end
+
+    it "registers the correct component for the given field format" do
+      registry.register_custom_field(1, "text")
+
+      expect(registry.fetch("custom_field_1")).to eq(text_component)
+    end
+
+    it "does nothing when the format has no mapping" do
+      registry.register_custom_field(2, "unknown_format")
+
+      expect(registry.fetch("custom_field_2"))
+        .to eq(OpenProject::Common::InplaceEditFields::TextInputComponent)
+    end
+  end
 end

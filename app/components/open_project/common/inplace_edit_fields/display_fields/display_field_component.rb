@@ -51,8 +51,14 @@ module OpenProject
 
             if value.is_a?(TrueClass) || value.is_a?(FalseClass)
               boolean_display_value(value)
+            elsif value.is_a?(Date) || value.is_a?(Time)
+              helpers.format_date(value)
             elsif value.present? && value != [nil]
-              value.to_s
+              if custom_field?
+                helpers.format_value(value, custom_field)
+              else
+                value.to_s
+              end
             else
               t("placeholders.default")
             end
@@ -87,7 +93,7 @@ module OpenProject
                 controller: "inplace-edit async-dialog",
                 inplace_edit_dialog_url_value: @system_arguments[:dialog_url],
                 action: dialog_controller_actions,
-                test_selector: @system_arguments[:dialog_test_selector]
+                test_selector: "inplace-edit-dialog-button-#{model.id}"
               },
               aria: {
                 label: [
@@ -105,7 +111,8 @@ module OpenProject
               data: {
                 controller: "inplace-edit",
                 inplace_edit_url_value: edit_url,
-                action: inline_controller_actions
+                action: inline_controller_actions,
+                test_selector: "inplace-edit-field-button-#{model.id}"
               }
             }
           end
@@ -146,7 +153,7 @@ module OpenProject
           end
 
           def boolean_display_value(value)
-            I18n.t("general_text_#{value ? 'yes' : 'no'}")
+            I18n.t("general_text_#{value ? 'Yes' : 'No'}")
           end
 
           def writable?

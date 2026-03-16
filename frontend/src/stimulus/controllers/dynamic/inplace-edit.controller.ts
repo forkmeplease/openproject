@@ -42,6 +42,24 @@ export default class extends Controller {
   declare dialogUrlValue:string;
   declare hasDialogUrlValue:boolean;
 
+  private boundFormDataHandler: ((e: FormDataEvent) => void) | null = null;
+
+  connect() {
+    const form = this.element.closest('form');
+    if (form) {
+      this.boundFormDataHandler = (e: FormDataEvent) => this.appendStableKeySystemArguments(e);
+      form.addEventListener('formdata', this.boundFormDataHandler);
+    }
+  }
+
+  disconnect() {
+    const form = this.element.closest('form');
+    if (form && this.boundFormDataHandler) {
+      form.removeEventListener('formdata', this.boundFormDataHandler);
+      this.boundFormDataHandler = null;
+    }
+  }
+
   async request(e:Event):Promise<void> {
     // Don't trigger edit mode if the user is selecting text or just finished a selection
     if (window.getSelection()?.toString()) {
@@ -91,6 +109,22 @@ export default class extends Controller {
     if (form) {
       form.requestSubmit();
     }
+  }
+
+  private appendStableKeySystemArguments(e: FormDataEvent): void {
+    const result: Record<string, unknown> = {};
+    document.querySelectorAll<HTMLElement>('[data-inplace-edit-stable-key][data-inplace-edit-system-arguments]').forEach((el) => {
+      const key = el.dataset.inplaceEditStableKey;
+      const raw = el.dataset.inplaceEditSystemArguments;
+      if (key && raw) {
+        try {
+          result[key] = JSON.parse(raw);
+        } catch {
+          // ignore malformed JSON
+        }
+      }
+    });
+    e.formData.append('stable_key_system_arguments', JSON.stringify(result));
   }
 
   private isInteractiveElement(element:HTMLElement):boolean {

@@ -51,12 +51,11 @@ Rails.application.config.to_prepare do
     "calculated_value" => OpenProject::Common::InplaceEditFields::CalculatedValueInputComponent
   }
 
+  OpenProject::InplaceEdit::FieldRegistry.register_custom_field_format_mappings(custom_field_format_mappings)
+
   if CustomField.table_exists?
     CustomField.pluck(:id, :field_format).each do |id, field_format|
-      component_class = custom_field_format_mappings[field_format]
-      if component_class
-        OpenProject::InplaceEdit::FieldRegistry.register("custom_field_#{id}", component_class)
-      end
+      OpenProject::InplaceEdit::FieldRegistry.register_custom_field(id, field_format)
     end
   end
 

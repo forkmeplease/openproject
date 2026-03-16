@@ -53,14 +53,14 @@ RSpec.describe OpenProject::Common::InplaceEditFields::DisplayFields::DisplayFie
       project = build_stubbed(:project, public: true)
       render_inline(described_class.new(model: project, attribute: :public, writable: false, truncated: false))
 
-      expect(rendered_content).to have_text(I18n.t("general_text_yes"))
+      expect(rendered_content).to have_text(I18n.t("general_text_Yes"))
     end
 
     it "renders 'No' for a false boolean value" do
       project = build_stubbed(:project, public: false)
       render_inline(described_class.new(model: project, attribute: :public, writable: false, truncated: false))
 
-      expect(rendered_content).to have_text(I18n.t("general_text_no"))
+      expect(rendered_content).to have_text(I18n.t("general_text_No"))
     end
   end
 

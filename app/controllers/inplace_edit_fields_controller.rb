@@ -210,11 +210,7 @@ class InplaceEditFieldsController < ApplicationController
     affected = affected_calculated_fields
     return if affected.empty?
 
-    # Inherit presentation args from the submitted system_arguments.
-    # Fields in the same container share the same context (e.g. both truncated
-    # in the sidebar), so this preserves the correct display for dependents.
-    presentation_args = system_arguments.to_h.symbolize_keys.slice(:truncated, :open_in_dialog)
-    affected.each { |custom_field| turbo_streams << calculated_field_turbo_stream(custom_field, presentation_args) }
+    affected.each { |custom_field| turbo_streams << calculated_field_turbo_stream(custom_field) }
   end
 
   def affected_calculated_fields
@@ -222,21 +218,40 @@ class InplaceEditFieldsController < ApplicationController
     @model.available_custom_fields.affected_calculated_fields([cf_id])
   end
 
-  def calculated_field_turbo_stream(custom_field, presentation_args)
+  def calculated_field_turbo_stream(custom_field)
     attribute = custom_field.attribute_name.to_sym
+    stable_key = "#{@model.class.name.parameterize(separator: '_')}_#{@model.id}_#{attribute}"
+
+    # Use the field's own system_arguments sent by the client from the DOM data attribute.
+    # Fall back to an empty hash if not present (e.g. in tests or non-JS contexts).
+    field_args = stable_key_system_arguments
+                   .fetch(stable_key, {})
+                   .symbolize_keys
+                   .except(:id) # exclude UUID so the component generates a fresh one
+
     comp = OpenProject::Common::InplaceEditFieldComponent.new(
       model: @model,
       attribute:,
       update_registry:,
-      **presentation_args
+      **field_args
     )
-    stable_key = "#{@model.class.name.parameterize(separator: '_')}_#{@model.id}_#{attribute}"
     comp.render_as_turbo_stream(
       view_context:,
       action: :replace,
       target: nil,
       targets: "[data-inplace-edit-stable-key='#{stable_key}']"
     )
+  end
+
+  def stable_key_system_arguments
+    @stable_key_system_arguments ||= begin
+      raw = params[:stable_key_system_arguments]
+      return {} if raw.blank?
+
+      JSON.parse(raw)
+    rescue JSON::ParserError
+      {}
+    end
   end
 
   def update_registry

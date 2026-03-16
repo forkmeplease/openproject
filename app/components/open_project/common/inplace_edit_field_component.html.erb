@@ -5,7 +5,8 @@
       data: {
         test_selector: wrapper_test_selector,
         turbo_stream_target: wrapper_id,
-        inplace_edit_stable_key: wrapper_uniq_by
+        inplace_edit_stable_key: wrapper_uniq_by,
+        inplace_edit_system_arguments: @system_arguments.to_json
       }
     ) do %>
   <% if display_field_component.present? && !enforce_edit_mode %>

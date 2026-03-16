@@ -91,16 +91,15 @@ module OpenProject
       end
 
       def wrapper_key
-        model_class = @model.class.name.parameterize(separator: "_")
         "op-inplace-edit-field--#{model_class}-#{model.id}--#{attribute.name}--#{@system_arguments[:id]}"
       end
 
       def wrapper_test_selector
-        "op-inplace-edit-field"
+        "op-inplace-edit-field--#{model_class}-#{model.id}--#{attribute.name}"
       end
 
       def wrapper_uniq_by
-        "#{@model.class.name.parameterize(separator: '_')}_#{@model.id}_#{@attribute}"
+        "#{model_class}_#{@model.id}_#{@attribute}"
       end
 
       def form_id
@@ -120,7 +119,9 @@ module OpenProject
             attribute: @attribute
           ),
           method: :patch,
-          data: { turbo_stream: true }
+          data: { turbo_stream: true,
+                  test_selector: "op-inplace-edit-field--form" }
+
         }
 
         options[:id] = form_id if form_id.present?
@@ -142,13 +143,16 @@ module OpenProject
         )
       end
 
+      def model_class
+        @model_class ||= @model.class.name.parameterize(separator: "_")
+      end
+
       private
 
       def dialog_display_arguments
         {
           dialog_controller_name: "inplace-edit",
-          dialog_url: dialog_edit_url,
-          dialog_test_selector: "inplace-edit-dialog-button-#{model.id}"
+          dialog_url: dialog_edit_url
         }
       end
 

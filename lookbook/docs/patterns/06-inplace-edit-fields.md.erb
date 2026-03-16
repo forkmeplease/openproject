@@ -99,6 +99,10 @@ OpenProject::InplaceEdit::FieldRegistry.register(
 )
 ```
 
+**Custom field registration:**
+
+Custom fields are registered automatically. The format-to-component mappings (e.g. `"text"` → `RichTextAreaComponent`) are configured once in `config/initializers/inplace_edit_fields.rb` via `register_custom_field_format_mappings`. At startup, all existing custom fields are pre-registered. Whenever a new custom field is created, an `after_create` callback on `CustomField` calls `FieldRegistry.register_custom_field(id, field_format)` automatically — no manual registration is needed.
+
 #### BaseFieldComponent
 
 `BaseFieldComponent` is the **base class for all edit field components**. It provides shared functionality that concrete field components can use, and should be inherited from when building new field components.

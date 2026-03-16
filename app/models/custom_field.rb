@@ -86,6 +86,7 @@ class CustomField < ApplicationRecord
   validates :has_comment, absence: true, unless: :can_have_comment?
 
   before_validation :check_searchability
+  after_create :register_inplace_edit_component
   after_destroy :destroy_help_text
 
   # make sure int, float, date, and bool are not searchable
@@ -478,5 +479,9 @@ class CustomField < ApplicationRecord
     AttributeHelpText
       .where(attribute_name:)
       .destroy_all
+  end
+
+  def register_inplace_edit_component
+    OpenProject::InplaceEdit::FieldRegistry.register_custom_field(id, field_format)
   end
 end
