@@ -65,7 +65,7 @@ module HasPrincipalDetails
 
       setup_detail_association(association_name, detail_class)
       setup_detail_aliases(association_name)
-      setup_detail_delegation(association_name, detail_class)
+      setup_detail_delegation(detail_class)
     end
 
     private
@@ -123,17 +123,17 @@ module HasPrincipalDetails
       alias_method :build_detail, :"build_#{association_name}"
     end
 
-    def setup_detail_delegation(association_name, detail_class)
+    def setup_detail_delegation(detail_class)
       # Try to set up delegation eagerly so that writer methods exist
       # during assign_attributes in new/create. Requires DB + table.
       if ActiveRecord::Base.connected? && detail_class.table_exists?
-        finalize_detail_delegation!(association_name, detail_class)
+        finalize_detail_delegation!(detail_class)
       end
 
       # Fallback for when eager setup was skipped (db:create, db:migrate).
       # finalize_detail_delegation! is idempotent via @_detail_delegation_set_up.
       after_initialize do
-        self.class.send(:finalize_detail_delegation!, association_name, detail_class)
+        self.class.send(:finalize_detail_delegation!, detail_class)
       end
     end
 
@@ -141,37 +141,37 @@ module HasPrincipalDetails
     # This is necessary because `assign_attributes` runs before
     # `after_initialize`, so `allow_nil: true` delegation would
     # silently discard values when the detail hasn't been built yet.
-    def define_detail_writer(association_name, writer)
+    def define_detail_writer(writer)
       define_method(writer) do |value|
-        record = send(association_name) || send(:"build_#{association_name}")
-        record.send(writer, value)
+        record = detail || build_detail
+        record.public_send(writer, value)
       end
     end
 
-    def finalize_detail_delegation!(association_name, detail_class)
+    def finalize_detail_delegation!(detail_class)
       return if @_detail_delegation_set_up
 
       @_detail_delegation_set_up = true
 
-      delegate_detail_columns(association_name, detail_class)
-      delegate_detail_associations(association_name, detail_class)
+      delegate_detail_columns(detail_class)
+      delegate_detail_associations(detail_class)
     end
 
-    def delegate_detail_columns(association_name, detail_class)
+    def delegate_detail_columns(detail_class)
       (detail_class.column_names - DETAIL_INTERNAL_COLUMNS).each do |col|
-        delegate col.to_sym, to: association_name
-        define_detail_writer(association_name, :"#{col}=")
+        delegate col.to_sym, to: :detail
+        define_detail_writer(:"#{col}=")
       end
     end
 
     # Delegate belongs_to object readers/writers from the detail.
     # Column-level keys (e.g. parent_id) are already covered by delegate_detail_columns.
-    def delegate_detail_associations(association_name, detail_class)
+    def delegate_detail_associations(detail_class)
       detail_class.reflect_on_all_associations(:belongs_to).each do |reflection|
         next if reflection.name == model_name.element.to_sym # skip the back-reference
 
-        delegate reflection.name, to: association_name
-        define_detail_writer(association_name, :"#{reflection.name}=")
+        delegate reflection.name, to: :detail
+        define_detail_writer(:"#{reflection.name}=")
       end
     end
   end
