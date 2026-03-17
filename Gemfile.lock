@@ -1671,7 +1671,7 @@ DEPENDENCIES
   openproject-reporting!
   openproject-storages!
   openproject-team_planner!
-  openproject-token (~> 8.8.0)
+  openproject-token (~> 8.8.2)
   openproject-two_factor_authentication!
   openproject-webhooks!
   openproject-xls_export!
