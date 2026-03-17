@@ -35,14 +35,6 @@ module HasPrincipalDetails
   # and should not be delegated to the principal.
   DETAIL_INTERNAL_COLUMNS = %w[id principal_id created_at updated_at].freeze
 
-  # AR's dup doesn't copy associations, so the detail would be lost.
-  # Duplicate it so the copy behaves like a normal AR dup with all attributes.
-  def dup
-    super.tap do |copy|
-      copy.detail = detail.dup if detail.present?
-    end
-  end
-
   class_methods do
     # Declares a detail table for this principal subclass.
     # The detail model class is generated automatically — no separate file needed.
@@ -66,9 +58,20 @@ module HasPrincipalDetails
       setup_detail_association(association_name, detail_class)
       setup_detail_aliases(association_name)
       setup_detail_delegation(detail_class)
+      setup_detail_dup
     end
 
     private
+
+    # AR's dup doesn't copy associations, so the detail would be lost.
+    # Duplicate it so the copy behaves like a normal AR dup with all attributes.
+    def setup_detail_dup
+      define_method(:dup) do
+        super().tap do |copy|
+          copy.detail = detail.dup if detail.present?
+        end
+      end
+    end
 
     def build_detail_class(&block)
       owner_name = model_name.element.to_sym # e.g. :group
