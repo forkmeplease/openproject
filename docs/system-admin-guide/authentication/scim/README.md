@@ -23,7 +23,7 @@ SCIM client is a system (e.g. Keycloak with [SCIM plugin](https://github.com/mit
 A SCIM client sends requests to a SCIM server (in this case OpenProject), asking it to create, update, retrieve, or delete users and groups.
 
 > [!NOTE]
-> A SCIM client is able to update and delete **all users and groups** of an OpenProject instance. This allows you to fully centralize user management using SCIM, but also puts SCIM clients into a very privileged position inside your OpenProject instance.
+> A SCIM client is able to update and delete **all users and groups** of an OpenProject instance. This not only allows you to fully centralize user management using SCIM, but also puts SCIM clients into a very privileged position inside your OpenProject instance.
 
 To add a new SCIM client, click the **+ SCIM client** button in the upper right corner.
 
