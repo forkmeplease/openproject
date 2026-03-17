@@ -3413,7 +3413,7 @@ fr:
   label_copy_source: "Source"
   label_copy_target: "Cible"
   label_copy_workflow_from: "Copier flux de travail à partir de"
-  label_copy_project: "Copier projet"
+  label_copy_project: "Copie du projet"
   label_core_version: "Version du cœur"
   label_core_build: "Construction de base"
   label_created_by: "Créé par %{user}"
@@ -4890,7 +4890,7 @@ fr:
           project_mandate: "Mandat du projet"
       submission:
         description_template: >
-          **Ce dossier de travail a été créé automatiquement à l'issue du flux de travail %{wizard_name} .** Un artefact PDF contenant toutes les informations soumises a été généré et joint à ce dossier de travail à des fins de référence et d'audit. Si vous avez besoin de mettre à jour ou de réexécuter les étapes d'initiation, vous pouvez rouvrir l'assistant à tout moment en utilisant le lien ci-dessous :
+          **Ce dossier de travail a été créé automatiquement à l'issue du flux de travail %{wizard_name}.** Un artefact PDF contenant toutes les informations soumises a été généré et joint à ce dossier de travail à des fins de référence et d'audit. Si vous avez besoin de mettre à jour ou de réexécuter les étapes d'initiation, vous pouvez rouvrir l'assistant à tout moment en utilisant le lien ci-dessous :
         description: "Lorsqu'un utilisateur envoie une demande de lancement de projet, un nouveau lot de travail est créé avec l'artefact de la demande en pièce jointe au format PDF. Les paramètres ci-dessous définissent le type, le statut et le destinataire de ce nouveau lot de travaux."
         work_package_type: "Type de lot de travaux"
         work_package_type_caption: "Le type de lot de travaux qui doit être utilisé pour stocker l'artefact terminé."
