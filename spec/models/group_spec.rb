@@ -78,7 +78,7 @@ RSpec.describe Group do
       context "if it does not exist" do
         it "does not create a group user" do
           count = group.group_users.count
-          gu = group.group_users.create user_id: User.maximum(:id).to_i + 1
+          gu = group.group_users.create! user_id: User.maximum(:id).to_i + 1
 
           expect(gu).not_to be_valid
           expect(group.group_users.count).to eq count
@@ -87,7 +87,7 @@ RSpec.describe Group do
 
       it "updates the timestamp" do
         updated_at = group.updated_at
-        group.group_users.create(user:)
+        group.group_users.create!(user:)
 
         expect(updated_at < group.reload.updated_at)
           .to be_truthy
@@ -96,7 +96,7 @@ RSpec.describe Group do
 
     context "when removing a user" do
       it "updates the timestamp" do
-        group.group_users.create(user:)
+        group.group_users.create!(user:)
         updated_at = group.reload.updated_at
 
         group.group_users.destroy_all
@@ -149,12 +149,12 @@ RSpec.describe Group do
 
     before do
       # Add user1 to group1 and group2
-      group1.group_users.create(user: user1)
-      group2.group_users.create(user: user1)
+      group1.group_users.create!(user: user1)
+      group2.group_users.create!(user: user1)
 
       # Add user2 to group2 and group3
-      group2.group_users.create(user: user2)
-      group3.group_users.create(user: user2)
+      group2.group_users.create!(user: user2)
+      group3.group_users.create!(user: user2)
     end
 
     it "returns groups that contain the given user" do
@@ -185,11 +185,11 @@ RSpec.describe Group do
 
       before do
         # target_user is in both groups
-        shared_group.group_users.create(user: target_user)
-        other_group.group_users.create(user: target_user)
+        shared_group.group_users.create!(user: target_user)
+        other_group.group_users.create!(user: target_user)
 
         # viewer is only in shared_group
-        shared_group.group_users.create(user: viewer)
+        shared_group.group_users.create!(user: viewer)
       end
 
       it "returns only the groups the viewer can see from the user's groups" do
@@ -280,6 +280,48 @@ RSpec.describe Group do
 
       it "is false when there is a parent" do
         expect(child).not_to be_root
+      end
+    end
+
+    describe ".in_tree_order" do
+      it "returns groups in depth-first order, alphabetical within each level" do
+        result = described_class.in_tree_order
+
+        grandparent_idx = result.index(grandparent)
+        parent_idx = result.index(parent_group)
+        child_idx = result.index(child)
+        grandchild_idx = result.index(grandchild)
+
+        expect(grandparent_idx).to be < parent_idx
+        expect(parent_idx).to be < child_idx
+        expect(child_idx).to be < grandchild_idx
+      end
+
+      it "sets hierarchy_depth on each group" do
+        result = described_class.in_tree_order
+        depths = result.to_h { |g| [g.id, g.hierarchy_depth] }
+
+        expect(depths[grandparent.id]).to eq(0)
+        expect(depths[parent_group.id]).to eq(1)
+        expect(depths[child.id]).to eq(2)
+        expect(depths[grandchild.id]).to eq(3)
+        expect(depths[unrelated.id]).to eq(0)
+      end
+
+      it "includes all groups" do
+        result = described_class.in_tree_order
+        expect(result).to contain_exactly(grandparent, parent_group, child, grandchild, unrelated)
+      end
+
+      it "sorts siblings alphabetically" do
+        sibling_a = create(:group, lastname: "AAA Sibling", parent_id: grandparent.id)
+        sibling_z = create(:group, lastname: "ZZZ Sibling", parent_id: grandparent.id)
+
+        result = described_class.in_tree_order
+        sibling_a_idx = result.index(sibling_a)
+        sibling_z_idx = result.index(sibling_z)
+
+        expect(sibling_a_idx).to be < sibling_z_idx
       end
     end
 

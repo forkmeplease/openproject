@@ -32,6 +32,8 @@ class Group < Principal
   include ::Scopes::Scoped
   include Groups::Hierarchy
 
+  attr_accessor :hierarchy_depth
+
   has_principal_details do
     belongs_to :parent, class_name: "Group", optional: true
 

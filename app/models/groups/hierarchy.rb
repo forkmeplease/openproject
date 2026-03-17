@@ -69,6 +69,25 @@ module Groups::Hierarchy
     parent_id.nil?
   end
 
+  class_methods do
+    # Returns all groups in depth-first tree order, alphabetical within each level.
+    # Each group has its `hierarchy_depth` set to its nesting level (0 for roots).
+    def in_tree_order
+      all_groups = with_detail.order(Arel.sql("lastname ASC")).to_a
+      children_by_parent = all_groups.group_by(&:parent_id)
+      walk_tree(children_by_parent, nil, 0)
+    end
+
+    private
+
+    def walk_tree(children_by_parent, parent_id, depth)
+      (children_by_parent[parent_id] || []).flat_map do |group|
+        group.hierarchy_depth = depth
+        [group, *walk_tree(children_by_parent, group.id, depth + 1)]
+      end
+    end
+  end
+
   private
 
   def descendant_ids
