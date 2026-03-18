@@ -35,15 +35,15 @@ module Agile
   class Sprint < ApplicationRecord
     self.table_name = "sprints"
 
+    include ::Scopes::Scoped
+
     belongs_to :project
     has_many :work_packages, dependent: :nullify
 
-    scope :for_project, ->(project) { where(project:) }
-    scope :not_completed, -> { !completed }
-    scope :order_by_date, -> do
-      order(arel_table[:start_date].asc.nulls_last,
-            arel_table[:finish_date].asc.nulls_last)
-    end
+    scopes :for_project,
+           :not_completed,
+           :order_by_date,
+           :visible
 
     enum :status,
          {
@@ -52,16 +52,6 @@ module Agile
            completed: "completed"
          },
          default: "in_planning",
-         validate: true
-
-    enum :sharing,
-         {
-           none: "none",
-           descendants: "descendants",
-           system: "system"
-         },
-         default: "none",
-         prefix: :sharing_with,
          validate: true
 
     validates :name, presence: true
@@ -73,13 +63,6 @@ module Agile
               if: :start_date?
 
     validate :validate_only_one_active_sprint_per_project
-
-    include ::Scopes::Scoped
-
-    scopes :visible
-
-    # TODO: validate sharing is set to an allowed value, e.g. only admins may share systemwide (#71374, #71253)
-    # TODO: implement sharing logic once it has been defined (#71374)
 
     def date_range_set?
       start_date? && finish_date?
