@@ -81,7 +81,31 @@ module Backlogs
       }
     end
 
+    def story_classes_attribute
+      classes = "Box-row--hover-blue Box-row--focus-gray Box-row--clickable"
+
+      if work_package_draggable?
+        classes += " Box-row--draggable"
+      end
+
+      classes
+    end
+
+    def story_data_attribute(story)
+      draggable_item_config(story).merge(
+        story: true,
+        controller: "backlogs--story",
+        backlogs__story_id_value: story.id,
+        backlogs__story_split_url_value: details_backlogs_project_backlogs_path(project, story),
+        backlogs__story_full_url_value: work_package_path(story),
+        backlogs__story_selected_class: "Box-row--blue",
+        test_selector: card_test_selector(story)
+      )
+    end
+
     def draggable_item_config(story)
+      return {} unless work_package_draggable?
+
       {
         draggable_id: story.id,
         draggable_type: "story",
@@ -91,6 +115,10 @@ module Backlogs
 
     def card_test_selector(story)
       "work-package-#{story.id}"
+    end
+
+    def work_package_draggable?
+      current_user.allowed_in_project?(:manage_sprint_items, project)
     end
   end
 end

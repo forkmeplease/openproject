@@ -178,6 +178,11 @@ module Pages
       end
     end
 
+    def expect_work_package_not_draggable(work_package)
+      expect(page)
+        .to have_no_css("#{work_package_selector(work_package)} .DragHandle")
+    end
+
     def expect_and_dismiss_error(message)
       expect(page).to have_content message
 

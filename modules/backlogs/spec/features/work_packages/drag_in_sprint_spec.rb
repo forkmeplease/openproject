@@ -128,6 +128,22 @@ RSpec.describe "Dragging work packages in and between sprints",
     end
   end
 
+  context "when lacking the permission to manage sprint items" do
+    current_user do
+      create(:user,
+             member_with_roles: {
+               project => edit_role_without_manage_sprint_items
+             })
+    end
+
+    it "displays work packages in correct order but does not allow dragging them around" do
+      backlogs_page.expect_work_package_not_draggable(sprint1_wp1)
+      backlogs_page.expect_work_package_not_draggable(sprint1_wp2)
+      backlogs_page.expect_work_package_not_draggable(sprint1_wp3)
+      backlogs_page.expect_work_package_not_draggable(sprint1_wp4)
+    end
+  end
+
   context "in a shared sprint" do
     let(:backlogs_page) { Pages::Backlogs.new(project2) }
 
