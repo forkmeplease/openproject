@@ -33,10 +33,10 @@ class RbStoriesController < RbApplicationController
 
   NEW_SPRINT_ACTIONS = %i[move].freeze
 
-  skip_before_action :load_sprint_and_project, only: NEW_SPRINT_ACTIONS
+  skip_before_action :load_sprint_and_project, :authorize, only: NEW_SPRINT_ACTIONS
 
   before_action :legacy_load_story, except: NEW_SPRINT_ACTIONS
-  prepend_before_action :load_sprint, :load_project, :load_story, only: NEW_SPRINT_ACTIONS
+  before_action :load_project, :authorize, :load_sprint, :load_story, only: NEW_SPRINT_ACTIONS
 
   # Move a story from a Sprint to another Sprint or an Agile::Sprint.
   def move_legacy

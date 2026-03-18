@@ -189,6 +189,13 @@ module Pages
       click_on "Cancel"
     end
 
+    def expect_no_sprint_menu_item(sprint, item_name)
+      within_sprint_menu(sprint) do |_menu|
+        expect(page)
+          .to have_no_selector(:menuitem, text: item_name)
+      end
+    end
+
     def path
       backlogs_project_backlogs_path(project)
     end
@@ -230,6 +237,18 @@ module Pages
 
     def expect_create_work_package_dialog
       expect(page).to have_css("#create-work-package-dialog")
+    end
+
+    def within_sprint_menu(backlog, &)
+      within_sprint(backlog) do
+        find(:button, accessible_name: "Sprint actions").click
+
+        within(:menu, &)
+      end
+    end
+
+    def within_work_package_row(work_package, &)
+      within(work_package_selector(work_package), &)
     end
 
     private

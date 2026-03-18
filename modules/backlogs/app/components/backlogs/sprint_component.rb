@@ -55,7 +55,7 @@ module Backlogs
     end
 
     def stories
-      sprint.work_packages.where(project: @project).order(:position)
+      sprint.work_packages.where(project:).order(:position)
     end
 
     def wrapper_uniq_by
