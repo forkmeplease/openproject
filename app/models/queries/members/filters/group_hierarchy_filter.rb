@@ -28,30 +28,53 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Groups
-  class BaseContract < ::ModelContract
-    include RequiresAdminGuard
+# Like GroupFilter but hierarchy-aware: matches members who are users of the
+# given group or any of its descendant groups, as well as the descendant
+# groups themselves (which carry inherited Member records).
+class Queries::Members::Filters::GroupHierarchyFilter < Queries::Members::Filters::MemberFilter
+  def self.key
+    :group_hierarchy
+  end
 
-    # attribute_alias is broken in the sense
-    # that `model#changed` includes only the non-aliased name
-    # hence we need to put "lastname" as an attribute here
-    attribute :name
-    attribute :lastname
-    attribute :parent_id
-    attribute :organizational_unit
+  def allowed_values
+    @allowed_values ||= ::Group.pluck(:id).map { |g| [g, g.to_s] }
+  end
 
-    validate :validate_unique_users
+  def available?
+    ::Group.exists?
+  end
 
-    private
+  def type
+    :list_optional
+  end
 
-    # Validating on the group_users since those are dealt with in the
-    # corresponding services.
-    def validate_unique_users
-      user_ids = model.group_users.map(&:user_id)
+  def human_name
+    I18n.t("query_fields.member_of_group")
+  end
 
-      if user_ids.uniq.length < user_ids.length
-        errors.add(:group_users, :taken)
-      end
+  def joins
+    :principal
+  end
+
+  def where
+    case operator
+    when "="
+      "users.id IN (#{hierarchy_subselect})"
+    when "!"
+      "users.id NOT IN (#{hierarchy_subselect})"
+    when "*"
+      "users.id IN (#{User.within_group([]).select(:id).to_sql})"
+    when "!*"
+      "users.id NOT IN (#{User.within_group([]).select(:id).to_sql})"
     end
+  end
+
+  private
+
+  def hierarchy_subselect
+    groups = Group.where(id: values.map(&:to_i))
+    all_group_ids = groups.flat_map { |g| g.self_and_descendants.pluck(:id) }.uniq
+    user_ids = User.in_group(all_group_ids).pluck(:id)
+    (user_ids + all_group_ids).uniq.join(",").presence || "NULL"
   end
 end
