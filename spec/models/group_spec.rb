@@ -78,9 +78,10 @@ RSpec.describe Group do
       context "if it does not exist" do
         it "does not create a group user" do
           count = group.group_users.count
-          gu = group.group_users.create! user_id: User.maximum(:id).to_i + 1
+          gu = group.group_users.create(user_id: User.maximum(:id).to_i + 1)
 
           expect(gu).not_to be_valid
+          expect(gu).not_to be_persisted
           expect(group.group_users.count).to eq count
         end
       end
