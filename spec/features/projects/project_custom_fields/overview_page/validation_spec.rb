@@ -46,22 +46,22 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
       it "keeps showing only activated custom fields (tricky regression)" do
         custom_field = string_project_custom_field
         custom_field.update!(is_required: true)
-        field = FormFields::Primerized::InputField.new(custom_field)
+        form_field = FormFields::Primerized::InputField.new(custom_field)
 
-        dialog = overview_page.open_modal_for_custom_field(custom_field)
+        field = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
 
-        dialog.within_async_content do
+        field.within_field do
           expect(page).to have_text("String field")
           expect(page).to have_no_text(boolean_project_custom_field_activated_in_other_project.name)
         end
 
-        field.fill_in(with: "") # this will trigger the validation
+        form_field.fill_in(with: "") # this will trigger the validation
 
-        dialog.submit
+        field.submit
 
-        field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+        form_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
 
-        dialog.within_async_content do
+        field.within_field do
           expect(page).to have_text("String field")
           expect(page).to have_no_text(boolean_project_custom_field_activated_in_other_project.name)
         end
@@ -71,9 +71,10 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
         shared_examples "keeps the unpersisted values" do
           it "keeps the value" do
             invalid_custom_field.update!(is_required: true)
-            dialog = overview_page.open_modal_for_custom_field(invalid_custom_field)
+            refresh
+            field = overview_page.open_inplace_edit_field_for_custom_field(invalid_custom_field)
             invalid_field.clear
-            dialog.submit
+            field.submit
 
             invalid_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
             invalid_field.expect_blank
@@ -81,6 +82,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
           it "keeps the custom comment value" do
             invalid_custom_field.update!(is_required: true, has_comment: true)
+            refresh
             dialog = overview_page.open_modal_for_custom_field(invalid_custom_field)
             invalid_field.clear
             fill_in "Comment", with: "A helpful comment"
@@ -147,25 +149,19 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
     end
 
     describe "editing multiple fields" do
-      let(:input_fields_dialog) do
-        Components::Projects::ProjectCustomFields::Dialog.new(project, section_for_input_fields)
-      end
-      let(:select_fields_dialog) do
-        Components::Projects::ProjectCustomFields::Dialog.new(project, section_for_select_fields)
-      end
-      let(:field) { FormFields::Primerized::AutocompleteField.new(list_project_custom_field) }
+      let(:form_field) { FormFields::Primerized::AutocompleteField.new(list_project_custom_field) }
 
       it "displays validation errors, when the previous modal was canceled (Regression)" do
         list_project_custom_field.update!(is_required: true)
         list_project_custom_field.custom_values.destroy_all
 
-        dialog = overview_page.open_modal_for_custom_field(string_project_custom_field)
-        dialog.close
+        field = overview_page.open_inplace_edit_field_for_custom_field(string_project_custom_field)
+        field.close
 
-        dialog = overview_page.open_modal_for_custom_field(list_project_custom_field)
-        dialog.submit
+        field = overview_page.open_inplace_edit_field_for_custom_field(list_project_custom_field)
+        field.submit
 
-        field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+        form_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
       end
 
       context "with required custom fields in different sections" do
@@ -185,44 +181,44 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
         it "validates required fields only within their respective sections" do
           # Test 1: Multi-select field can be saved even when other required fields are invalid
-          multi_list_field_dialog =
-            overview_page.open_modal_for_custom_field(multi_list_project_custom_field)
+          multi_list_inplace_field =
+            overview_page.open_inplace_edit_field_for_custom_field(multi_list_project_custom_field)
 
-          multi_list_field_dialog.submit
-          multi_list_field_dialog.expect_closed
+          multi_list_inplace_field.submit
+          multi_list_inplace_field.expect_close
 
           # Test 2: Edit the required string field
-          string_field_dialog =
-            overview_page.open_modal_for_custom_field(string_project_custom_field)
+          string_field_inplace_field =
+            overview_page.open_inplace_edit_field_for_custom_field(string_project_custom_field)
 
           # Submit without filling - should show error
-          string_field_dialog.submit
+          string_field_inplace_field.submit
           string_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
-          string_field_dialog.close
+          string_field_inplace_field.close
 
           # Test 3: Edit the required list field
-          list_field_dialog =
-            overview_page.open_modal_for_custom_field(list_project_custom_field)
+          list_field_inplace_field =
+            overview_page.open_inplace_edit_field_for_custom_field(list_project_custom_field)
 
           # Submit without filling - should show error
-          list_field_dialog.submit
+          list_field_inplace_field.submit
           list_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
 
           # Test 4: Fill required field and submit successfully
           list_field.select_option("Option 1")
-          list_field_dialog.submit
-          list_field_dialog.expect_closed
+          list_field_inplace_field.submit
+          list_field_inplace_field.expect_close
 
           # Test 5: The required string field dialog still fails validation when empty
-          string_field_dialog =
-            overview_page.open_modal_for_custom_field(string_project_custom_field)
-          string_field_dialog.submit
+          string_field_inplace_field =
+            overview_page.open_inplace_edit_field_for_custom_field(string_project_custom_field)
+          string_field_inplace_field.submit
           string_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
 
           # Test 6: Complete the required string field and expect to pass validation
           string_field.fill_in(with: "Test value")
-          string_field_dialog.submit
-          string_field_dialog.expect_closed
+          string_field_inplace_field.submit
+          string_field_inplace_field.expect_close
         end
       end
     end
@@ -233,11 +229,11 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           custom_field.update!(is_required: true)
           custom_field.custom_values.destroy_all
 
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
+          field = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
 
-          dialog.submit
+          field.submit
 
-          field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+          form_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
         end
       end
 
@@ -245,37 +241,51 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
       describe "with string CF" do
         let(:custom_field) { string_project_custom_field }
-        let(:field) { FormFields::Primerized::InputField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::InputField.new(custom_field) }
 
         it_behaves_like "a custom field input"
       end
 
       describe "with integer CF" do
         let(:custom_field) { integer_project_custom_field }
-        let(:field) { FormFields::Primerized::InputField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::InputField.new(custom_field) }
 
         it_behaves_like "a custom field input"
       end
 
       describe "with float CF" do
         let(:custom_field) { float_project_custom_field }
-        let(:field) { FormFields::Primerized::InputField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::InputField.new(custom_field) }
 
         it_behaves_like "a custom field input"
       end
 
       describe "with date CF" do
         let(:custom_field) { date_project_custom_field }
-        let(:field) { FormFields::Primerized::InputField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::InputField.new(custom_field) }
 
         it_behaves_like "a custom field input"
       end
 
       describe "with text CF" do
         let(:custom_field) { text_project_custom_field }
-        let(:field) { FormFields::Primerized::EditorFormField.new(custom_field) }
+        let(:form_field) do
+          FormFields::Primerized::EditorFormField.new(
+            custom_field,
+            selector: "[data-test-selector='augmented-text-area-custom_field_#{custom_field.id}']"
+          )
+        end
 
-        it_behaves_like "a custom field input"
+        it "shows an error if the value is invalid" do
+          custom_field.update!(is_required: true)
+          custom_field.custom_values.destroy_all
+
+          dialog = overview_page.open_modal_for_custom_field(custom_field).dialog
+
+          dialog.submit
+
+          form_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+        end
       end
 
       describe "with calculated value CFs" do
@@ -283,17 +293,11 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           it "allows saving the dialog even if the calculated custom field is invalid" do
             custom_field.custom_values.destroy_all
 
-            dialog = overview_page.open_modal_for_custom_field(custom_field)
+            field = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
 
-            dialog.submit
+            field.submit
 
-            dialog.expect_closed
-          end
-
-          it "displays the custom field label without the required asterisk" do
-            expect(page).to have_css("span", text: calculated_field.name) do |label|
-              expect(label).to have_no_css("span", text: "*")
-            end
+            field.expect_close
           end
         end
 
@@ -314,7 +318,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           before do
             # prevent calculation from happening
             calculated_from_int_and_float_project_custom_field.custom_values.delete_all
-            calculated_from_int_and_float_project_custom_field.update(is_required: true)
+            calculated_from_int_and_float_project_custom_field.update!(is_required: true)
           end
 
           let(:custom_field) { integer_project_custom_field }
@@ -331,31 +335,31 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           custom_field.update!(is_required: true)
           custom_field.custom_values.destroy_all
 
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
+          dialog = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
 
           dialog.submit
 
-          field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+          form_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
         end
       end
 
       describe "with list CF" do
         let(:custom_field) { list_project_custom_field }
-        let(:field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
 
         it_behaves_like "a custom field select"
       end
 
       describe "with version CF" do
         let(:custom_field) { version_project_custom_field }
-        let(:field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
 
         it_behaves_like "a custom field select"
       end
 
       describe "with user CF" do
         let(:custom_field) { user_project_custom_field }
-        let(:field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
 
         it_behaves_like "a custom field select"
       end
@@ -367,31 +371,31 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           custom_field.update!(is_required: true)
           custom_field.custom_values.destroy_all
 
-          dialog = overview_page.open_modal_for_custom_field(custom_field)
+          field = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
 
-          dialog.submit
+          field.submit
 
-          field.expect_error(I18n.t("activerecord.errors.messages.blank"))
+          form_field.expect_error(I18n.t("activerecord.errors.messages.blank"))
         end
       end
 
       describe "with multi list CF" do
         let(:custom_field) { multi_list_project_custom_field }
-        let(:field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
 
         it_behaves_like "a custom field multi select"
       end
 
       describe "with multi version CF" do
         let(:custom_field) { multi_version_project_custom_field }
-        let(:field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
 
         it_behaves_like "a custom field multi select"
       end
 
       describe "with multi user CF" do
         let(:custom_field) { multi_user_project_custom_field }
-        let(:field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::AutocompleteField.new(custom_field) }
 
         it_behaves_like "a custom field multi select"
       end

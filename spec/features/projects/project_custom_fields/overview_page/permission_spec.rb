@@ -140,7 +140,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
     it "shows the modal buttons" do
       overview_page.within_project_attributes_sidebar do
-        expect(page).to have_css("[data-test-selector*='inplace-edit-dialog-button-']", count: 13)
+        expect(page).to have_css("[data-test-selector*='inplace-edit-dialog-button-']", count: 1)
       end
     end
 
@@ -156,23 +156,23 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
   end
 
   describe "with insufficient Edit attribute permission on the update dialog" do
-    let(:member) { member_with_project_attributes_edit_permissions }
+    let(:member) { member_in_project }
     let(:custom_field) { boolean_project_custom_field }
-    let(:dialog) { Components::Projects::ProjectCustomFields::Dialog.new(project, custom_field) }
+    let(:enable_comments) { true }
 
     before do
       login_as member
       overview_page.visit_page
     end
 
-    it "responds with a permission denied message" do
-      overview_page.open_modal_for_custom_field(custom_field)
-      # Change role to project edit, so the user won't have the project attributes edit role
-      member_with_project_attributes_edit_permissions.memberships.first.update(roles: [edit_project_role])
-      member_with_project_attributes_edit_permissions.reload
-      dialog.submit
+    it "opens the dialog in readonly mode" do
+      dialog = overview_page.open_modal_for_custom_field(custom_field)
 
-      expect_flash(type: :error, message: I18n.t(:notice_not_authorized))
+      dialog.expect_open
+
+      dialog.within_dialog do
+        expect(page).not_to have_test_selector("op-inplace-edit-field--form")
+      end
     end
   end
 end

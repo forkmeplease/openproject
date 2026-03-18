@@ -45,17 +45,7 @@ class InplaceEditFieldsController < ApplicationController
   end
 
   def update
-    handler = update_registry.fetch_handler(@model)
-
-    if handler.present?
-      success = handler.call(
-        model: @model,
-        params: permitted_params,
-        user: current_user
-      )
-    else
-      raise ArgumentError, "Missing update handler for #{@model}"
-    end
+    success = invoke_update_handler
 
     if success
       render_success_flash_message_via_turbo_stream(
@@ -65,10 +55,17 @@ class InplaceEditFieldsController < ApplicationController
       refresh_calculated_dependents
     end
 
-    replace_via_turbo_stream(
-      component: component(enforce_edit_mode: !success),
-      status: success ? :ok : :unprocessable_entity
-    )
+    if !success && dialog_id
+      replace_via_turbo_stream(
+        component: dialog_field_component,
+        status: :unprocessable_entity
+      )
+    else
+      replace_via_turbo_stream(
+        component: component(enforce_edit_mode: !success),
+        status: success ? :ok : :unprocessable_entity
+      )
+    end
 
     respond_with_turbo_streams
   rescue ArgumentError
@@ -91,6 +88,13 @@ class InplaceEditFieldsController < ApplicationController
   end
 
   private
+
+  def invoke_update_handler
+    handler = update_registry.fetch_handler(@model)
+    raise ArgumentError, "Missing update handler for #{@model}" if handler.blank?
+
+    handler.call(model: @model, params: permitted_params, user: current_user)
+  end
 
   def find_model
     model_class = resolve_model_class(params[:model])
@@ -158,19 +162,18 @@ class InplaceEditFieldsController < ApplicationController
     cf_values = params.dig(model_key, :custom_field_values)
     raw_value = cf_values.is_a?(Array) ? cf_values : cf_values&.dig(custom_field_id)
 
-    # Handle both single-select and multi-select
-    processed_value = if raw_value.is_a?(Array)
-                        # Remove empty strings from the hidden field, then extract the actual value.
-                        # FilterableTreeView encodes each selected item as a JSON payload
-                        # {"path":[...],"value":"<id>"} — extract only the "value" field.
-                        cleaned_values = raw_value.compact_blank.filter_map { |v| extract_tree_view_value(v) }
-                        # For single-select, unwrap the array to get the single value
-                        cleaned_values.size <= 1 ? cleaned_values.first : cleaned_values
-                      else
-                        raw_value
-                      end
+    { @attribute => process_cf_raw_value(raw_value) }
+  end
 
-    { @attribute => processed_value }
+  def process_cf_raw_value(raw_value)
+    return raw_value unless raw_value.is_a?(Array)
+
+    # Remove empty strings from the hidden field, then extract the actual value.
+    # FilterableTreeView encodes each selected item as a JSON payload
+    # {"path":[...],"value":"<id>"} — extract only the "value" field.
+    cleaned_values = raw_value.compact_blank.filter_map { |v| extract_tree_view_value(v) }
+    # For single-select, unwrap the array to get the single value
+    cleaned_values.size <= 1 ? cleaned_values.first : cleaned_values
   end
 
   def extract_tree_view_value(raw)
@@ -193,6 +196,25 @@ class InplaceEditFieldsController < ApplicationController
       model: @model,
       attribute: @attribute,
       enforce_edit_mode:,
+      update_registry:,
+      **args
+    )
+  end
+
+  # Builds the edit-mode component targeting the field *inside* the dialog.
+  # Used when an update fails while submitting from a dialog: the error state
+  # should be shown within the dialog, not at the page trigger location.
+  # Keeps the dialog field's own :id (not page_component_id) so the Turbo
+  # Stream targets the correct wrapper inside the dialog, and preserves
+  # :wrapper_id / :form_id so the re-rendered form still submits via the dialog.
+  def dialog_field_component
+    args = system_arguments.to_h.symbolize_keys
+
+    OpenProject::Common::InplaceEditFieldComponent.new(
+      model: @model,
+      attribute: @attribute,
+      enforce_edit_mode: true,
+      show_action_buttons: false,
       update_registry:,
       **args
     )
@@ -244,14 +266,16 @@ class InplaceEditFieldsController < ApplicationController
   end
 
   def stable_key_system_arguments
-    @stable_key_system_arguments ||= begin
-      raw = params[:stable_key_system_arguments]
-      return {} if raw.blank?
+    @stable_key_system_arguments ||= parse_stable_key_system_arguments
+  end
 
-      JSON.parse(raw)
-    rescue JSON::ParserError
-      {}
-    end
+  def parse_stable_key_system_arguments
+    raw = params[:stable_key_system_arguments]
+    return {} if raw.blank?
+
+    JSON.parse(raw)
+  rescue JSON::ParserError
+    {}
   end
 
   def update_registry

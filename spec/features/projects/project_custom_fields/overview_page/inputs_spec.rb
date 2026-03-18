@@ -50,6 +50,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
     shared_examples "shows comment input only when comments are allowed by custom field" do
       it "shows comment input only when comments are allowed by custom field" do
         custom_field.update!(has_comment: true)
+        refresh
 
         dialog.within_async_content(close_after_yield: true) do
           expect(page).to have_field("Comment", with: "")
@@ -158,7 +159,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
       shared_examples "a rich text custom field input" do
         it "shows the correct value if given" do
           dialog.within_async_content(close_after_yield: true) do
-            field.expect_value(expected_initial_value)
+            form_field.expect_value(expected_initial_value)
           end
         end
 
@@ -166,7 +167,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           custom_field.custom_values.destroy_all
 
           dialog.within_async_content(close_after_yield: true) do
-            field.expect_value(expected_blank_value)
+            form_field.expect_value(expected_blank_value)
           end
         end
 
@@ -175,7 +176,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
           custom_field.update!(default_value:)
 
           dialog.within_async_content(close_after_yield: true) do
-            field.expect_value(default_value)
+            form_field.expect_value(default_value)
           end
         end
 
@@ -244,7 +245,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
         let(:default_value) { "https://openproject.org" }
         let(:expected_blank_value) { "" }
         let(:expected_initial_value) { "https://www.openproject.org" }
-        let(:field) { FormFields::Primerized::InputField.new(custom_field) }
+        let(:form_field) { FormFields::Primerized::InputField.new(custom_field) }
 
         it_behaves_like "a custom field input"
 

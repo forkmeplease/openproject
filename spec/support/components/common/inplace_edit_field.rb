@@ -54,8 +54,9 @@ module Components
         within_field do
           # Link and user type custom fields might contain a clickable link inside the edit container.
           # Use JavaScript to directly trigger the click event on the container to avoid nested links.
+          selector = "op-inplace-edit-field--#{model_class}-#{model.id}--#{attribute.name}"
           page.execute_script(
-            "document.querySelector('[data-test-selector=\"op-inplace-edit-field--#{model_class}-#{model.id}--#{attribute.name}\"] .op-inplace-edit--display-field').click()"
+            "document.querySelector('[data-test-selector=\"#{selector}\"] .op-inplace-edit--display-field').click()"
           )
         end
       end
@@ -93,6 +94,19 @@ module Components
       def click_help_text_link_for_label(label_text)
         link = find_field_label(label_text).find(:link, accessible_name: "Show help text")
         link.click
+      end
+
+      def expect_error(string)
+        within_field do
+          expect(page).to have_css(".FormControl-inlineValidation", text: string)
+        end
+      end
+
+      def expect_calculation_error(string)
+        within_field do
+          expect(page).to have_test_selector("error--#{attribute.name}")
+          expect(page).to have_content(string)
+        end
       end
 
       def fill_and_submit_value(name:, val:, ckeditor: false)

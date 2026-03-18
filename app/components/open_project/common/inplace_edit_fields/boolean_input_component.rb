@@ -46,8 +46,8 @@ module OpenProject
 
         private
 
-        def submit_url
-          inplace_edit_field_submit_path(
+        def reset_url
+          inplace_edit_field_reset_path(
             model: model.class.name,
             id: model.id,
             attribute:,
@@ -59,6 +59,7 @@ module OpenProject
           if show_action_buttons
             {
               data: { controller: "inplace-edit",
+                      inplace_edit_url_value: reset_url,
                       action: "click->inplace-edit#submitForm keydown.esc->inplace-edit#request",
                       qa_field_name: }
             }

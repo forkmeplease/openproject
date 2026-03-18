@@ -84,21 +84,7 @@ module OpenProject
       def display_field_component
         return nil if display_field_class.nil?
 
-        @display_field_component ||= begin
-          has_comment = custom_field? && custom_field&.has_comment?
-          additional_args = open_in_dialog? ? dialog_display_arguments : {}
-          display_field_class.new(
-            model:,
-            attribute:,
-            writable: writable?,
-            truncated:,
-            has_comment:,
-            # Show comment as read-only text when a non-writable user opens the dialog.
-            # enforce_edit_mode identifies the dialog context.
-            show_comment: enforce_edit_mode && !writable? && has_comment,
-            **@system_arguments.merge(additional_args)
-          )
-        end
+        @display_field_component ||= build_display_field_component
       end
 
       def wrapper_key
@@ -162,6 +148,22 @@ module OpenProject
       end
 
       private
+
+      def build_display_field_component
+        has_comment = custom_field? && custom_field&.has_comment?
+        additional_args = open_in_dialog? ? dialog_display_arguments : {}
+        display_field_class.new(
+          model:,
+          attribute:,
+          writable: writable?,
+          truncated:,
+          has_comment:,
+          # Show comment as read-only text when a non-writable user opens the dialog.
+          # enforce_edit_mode identifies the dialog context.
+          show_comment: enforce_edit_mode && !writable? && has_comment,
+          **@system_arguments.merge(additional_args)
+        )
+      end
 
       def dialog_trigger_arguments
         {

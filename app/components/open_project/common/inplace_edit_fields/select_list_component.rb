@@ -40,17 +40,7 @@ module OpenProject
           super
 
           @system_arguments[:autocomplete_options] ||= {}
-          @system_arguments[:autocomplete_options][:model] ||= { id: model.id, name: model.name }
-          @system_arguments[:autocomplete_options][:inputName] ||= attribute
-          @system_arguments[:autocomplete_options][:wrapper_id] ||= @system_arguments[:wrapper_id]
-          if @system_arguments[:autocomplete_options][:focusDirectly].nil?
-            @system_arguments[:autocomplete_options][:focusDirectly] =
-              true
-          end
-          if @system_arguments[:autocomplete_options][:closeOnSelect].nil?
-            @system_arguments[:autocomplete_options][:closeOnSelect] =
-              false
-          end
+          set_autocomplete_defaults(model, attribute)
         end
 
         def call
@@ -61,23 +51,33 @@ module OpenProject
           end
 
           comment_field_if_enabled(form)
-
-          if show_action_buttons
-            form.group(layout: :horizontal, justify_content: :flex_end) do |button_group|
-              button_group.submit(name: :reset,
-                                  type: :submit,
-                                  label: I18n.t(:button_cancel),
-                                  scheme: :default,
-                                  formaction: inplace_edit_field_reset_path(model: model.class.name, id: model.id, attribute:),
-                                  formmethod: :get)
-              button_group.submit(name: :submit,
-                                  label: I18n.t(:button_save),
-                                  scheme: :primary)
-            end
-          end
+          render_action_buttons if show_action_buttons
         end
 
         private
+
+        def set_autocomplete_defaults(model, attribute)
+          opts = @system_arguments[:autocomplete_options]
+          opts[:model] ||= { id: model.id, name: model.name }
+          opts[:inputName] ||= attribute
+          opts[:wrapper_id] ||= @system_arguments[:wrapper_id]
+          opts[:focusDirectly] = true if opts[:focusDirectly].nil?
+          opts[:closeOnSelect] = false if opts[:closeOnSelect].nil?
+        end
+
+        def render_action_buttons
+          form.group(layout: :horizontal, justify_content: :flex_end) do |button_group|
+            button_group.submit(name: :reset,
+                                type: :submit,
+                                label: I18n.t(:button_cancel),
+                                scheme: :default,
+                                formaction: inplace_edit_field_reset_path(model: model.class.name, id: model.id, attribute:),
+                                formmethod: :get)
+            button_group.submit(name: :submit,
+                                label: I18n.t(:button_save),
+                                scheme: :primary)
+          end
+        end
 
         def render_custom_field_input
           input_class = if custom_field.multi_value?

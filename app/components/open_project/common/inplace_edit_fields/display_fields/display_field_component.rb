@@ -193,18 +193,22 @@ module OpenProject
           def dialog_controller_actions
             return "" unless writable? || @has_comment
 
-            "click->inplace-edit#openDialog " \
-              "keydown.enter->inplace-edit#openDialog " \
-              "keydown.space->inplace-edit#openDialog " \
+            [
+              "click->inplace-edit#openDialog",
+              "keydown.enter->inplace-edit#openDialog",
+              "keydown.space->inplace-edit#openDialog",
               "inplace-edit:open-dialog->async-dialog#handleOpenDialog"
+            ].join(" ")
           end
 
           def inline_controller_actions
             return "" unless writable?
 
-            "click->inplace-edit#request " \
-              "keydown.enter->inplace-edit#request " \
+            [
+              "click->inplace-edit#request",
+              "keydown.enter->inplace-edit#request",
               "keydown.space->inplace-edit#request"
+            ].join(" ")
           end
         end
       end

@@ -64,7 +64,11 @@ RSpec.describe "Edit project custom fields on project overview page", "attribute
 
       it "shows field labels with help text link" do
         input_fields.each do |custom_field|
-          field = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
+          field = if custom_field == text_project_custom_field
+                    overview_page.open_modal_for_custom_field(custom_field)
+                  else
+                    overview_page.open_inplace_edit_field_for_custom_field(custom_field)
+                  end
           field.expect_field_label_with_help_text custom_field.name
           field.close
         end

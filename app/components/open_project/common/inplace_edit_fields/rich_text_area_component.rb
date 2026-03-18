@@ -54,29 +54,36 @@ module OpenProject
 
         def call
           form.rich_text_area(name: attribute,
-                              wrapper_data_attributes: {
-                                controller: "ckeditor-focus",
-                                ckeditor_focus_target: "editor",
-                                ckeditor_focus_autofocus_value: true
-                              },
+                              wrapper_data_attributes: ckeditor_wrapper_data,
                               **@system_arguments)
 
           comment_field_if_enabled(form)
+          render_action_buttons if show_action_buttons
+        end
 
-          if show_action_buttons
-            form.group(layout: :horizontal, justify_content: :flex_end) do |button_group|
-              button_group.submit(name: :reset,
-                                  type: :submit,
-                                  label: I18n.t(:button_cancel),
-                                  scheme: :default,
-                                  formaction: inplace_edit_field_reset_path(model: model.class.name, id: model.id, attribute:),
-                                  formmethod: :get,
-                                  test_selector: "op-inplace-edit-field--textarea-cancel")
-              button_group.submit(name: :submit,
-                                  label: I18n.t(:button_save),
-                                  scheme: :primary,
-                                  test_selector: "op-inplace-edit-field--textarea-save")
-            end
+        private
+
+        def ckeditor_wrapper_data
+          {
+            controller: "ckeditor-focus",
+            ckeditor_focus_target: "editor",
+            ckeditor_focus_autofocus_value: true
+          }
+        end
+
+        def render_action_buttons
+          form.group(layout: :horizontal, justify_content: :flex_end) do |button_group|
+            button_group.submit(name: :reset,
+                                type: :submit,
+                                label: I18n.t(:button_cancel),
+                                scheme: :default,
+                                formaction: inplace_edit_field_reset_path(model: model.class.name, id: model.id, attribute:),
+                                formmethod: :get,
+                                test_selector: "op-inplace-edit-field--textarea-cancel")
+            button_group.submit(name: :submit,
+                                label: I18n.t(:button_save),
+                                scheme: :primary,
+                                test_selector: "op-inplace-edit-field--textarea-save")
           end
         end
       end
