@@ -30,6 +30,7 @@ See COPYRIGHT and LICENSE files for more details.
 <%=
   render Primer::OpenProject::PageHeader.new(classes: "workflows-page-header") do |header|
     header.with_title { title }
+    header.with_description { description }
     header.with_breadcrumbs(breadcrumb_items)
 
     if @state != :copy
@@ -47,7 +48,7 @@ See COPYRIGHT and LICENSE files for more details.
       end
     end
 
-    unless %i[index edit].include?(@state)
+    unless @state.in?(%i[index edit])
       header.with_action_button(
         tag: :a,
         mobile_icon: :pencil,
