@@ -1565,6 +1565,12 @@ en:
         dependencies: "Dependencies"
 
   activerecord:
+    errors:
+      models:
+        group:
+          attributes:
+            parent_id:
+              circular_dependency: "would create a circular group hierarchy."
     attributes:
       jira_import:
         projects: "Projects"
@@ -1828,6 +1834,11 @@ en:
         consented_at: "Consented at"
       group:
         identity_url: "Identity URL"
+        parent: "Parent group"
+        organizational_unit: "Organizational unit"
+      group_detail:
+        parent: "Parent group"
+        organizational_unit: "Organizational unit"
       user_preference:
         header_look_and_feel: "Look and feel"
         header_alerts: "Alerts"
@@ -3949,6 +3960,7 @@ en:
   label_no_due_date: "no finish date"
   label_no_start_date: "no start date"
   label_no_parent_page: "No parent page"
+  label_no_parent_group: "(No parent group)"
   label_notification_center_plural: "Notifications"
   label_nothing_display: "Nothing to display"
   label_nobody: "nobody"
@@ -3977,6 +3989,9 @@ en:
   label_overall_activity: "Overall activity"
   label_overview: "Overview"
   label_page_title: "Page title"
+  label_parent_group_caption: >
+    Setting a parent group will make this group a subgroup of the selected parent group.
+    This will also inherit all memberships, including permissions of the parent group.
   label_part_of: "part of"
   label_password_lost: "Forgot your password?"
   label_password_rule_lowercase: "Lowercase"

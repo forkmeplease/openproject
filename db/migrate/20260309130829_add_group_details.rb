@@ -28,29 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Groups
-  class BaseContract < ::ModelContract
-    include RequiresAdminGuard
+class AddGroupDetails < ActiveRecord::Migration[8.1]
+  def change
+    create_table :group_details do |t|
+      t.references :principal, null: false, foreign_key: { to_table: :users }, index: { unique: true }
+      t.boolean :organizational_unit, default: false, null: false
+      t.references :parent, foreign_key: { to_table: :users }
 
-    # attribute_alias is broken in the sense
-    # that `model#changed` includes only the non-aliased name
-    # hence we need to put "lastname" as an attribute here
-    attribute :name
-    attribute :lastname
-    attribute :parent_id
-    attribute :organizational_unit
+      t.timestamps
+    end
 
-    validate :validate_unique_users
-
-    private
-
-    # Validating on the group_users since those are dealt with in the
-    # corresponding services.
-    def validate_unique_users
-      user_ids = model.group_users.map(&:user_id)
-
-      if user_ids.uniq.length < user_ids.length
-        errors.add(:group_users, :taken)
+    reversible do |dir|
+      dir.up do
+        execute <<~SQL.squish
+          INSERT INTO group_details (principal_id, organizational_unit, created_at, updated_at)
+          SELECT id, false, NOW(), NOW()
+          FROM users
+          WHERE type = 'Group'
+        SQL
       end
     end
   end
