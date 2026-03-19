@@ -31,7 +31,7 @@
 require "rails_helper"
 
 RSpec.describe "GET /projects/identifier_suggestion", type: :rails_request do
-  current_user { create(:user) }
+  current_user { create(:user, global_permissions: %i[add_project]) }
 
   context "with alphanumeric identifiers", with_settings: { work_packages_identifier: "alphanumeric" } do
     it "returns a suggested identifier derived from the name" do
