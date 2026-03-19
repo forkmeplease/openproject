@@ -37,7 +37,8 @@ module Projects
             label: attribute_name(:identifier),
             caption: I18n.t("projects.settings.change_identifier_format_hint_semantic"),
             required: true,
-            validation_message: validation_message_for(:identifier)
+            validation_message: validation_message_for(:identifier),
+            data: { "projects--identifier-suggestion-target": "identifier" }
           )
         else
           f.text_field(
@@ -45,7 +46,8 @@ module Projects
             label: attribute_name(:identifier),
             caption: I18n.t("projects.settings.change_identifier_format_hint_legacy"),
             required: true,
-            validation_message: validation_message_for(:identifier)
+            validation_message: validation_message_for(:identifier),
+            data: { "projects--identifier-suggestion-target": "identifier" }
           )
         end
       end
