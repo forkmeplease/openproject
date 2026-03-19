@@ -25,7 +25,6 @@ import StemsController from './controllers/dynamic/work-packages/activities-tab/
 import EditorController from './controllers/dynamic/work-packages/activities-tab/editor.controller';
 import LazyPageController from './controllers/dynamic/work-packages/activities-tab/lazy-page.controller';
 import EditablePageHeaderTitleController from './controllers/dynamic/editable-page-header-title.controller';
-import IdentifierSuggestionController from './controllers/dynamic/projects/identifier-suggestion.controller';
 
 import AutoSubmit from '@stimulus-components/auto-submit';
 import RevealController from '@stimulus-components/reveal';
