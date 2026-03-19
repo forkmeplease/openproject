@@ -3449,7 +3449,7 @@ en:
         totals_removed_from_childless_work_packages: >-
           Work and progress totals automatically removed for non-parent work packages with <a href="%{href}" target="_blank">version update</a>.
           This is a maintenance task and can be safely ignored.
-        sprint_migration: "Version '%{version_name}' has been converted to a Sprint."
+        sprint_migration: "Version '%{version_name}' has been copied as a sprint."
       total_percent_complete_mode_changed_to_work_weighted_average: >-
         Child work packages without Work are ignored.
       total_percent_complete_mode_changed_to_simple_average: >-
