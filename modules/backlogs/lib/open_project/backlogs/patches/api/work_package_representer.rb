@@ -68,7 +68,7 @@ module OpenProject::Backlogs
                      getter: ->(*) do
                        if embed_links &&
                           represented.sprint.present? &&
-                          represented.type&.passes_attribute_constraint?(:story_points) &&
+                          represented.type&.passes_attribute_constraint?(:sprint) &&
                           current_user.allowed_in_project?(:view_sprints, represented.project) &&
                           OpenProject::FeatureDecisions.scrum_projects_active?
                          ::API::V3::Sprints::SprintRepresenter.create(represented.sprint, current_user:)
