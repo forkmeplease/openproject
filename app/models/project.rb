@@ -282,7 +282,7 @@ class Project < ApplicationRecord
   def self.suggest_identifier(name)
     if Setting::WorkPackageIdentifier.alphanumeric?
       WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator.suggest_identifier(name)
-    else
+    else # This should closely enough emulate Project models' usage of acts_as_url
       name.to_url.first(IDENTIFIER_MAX_LENGTH).presence || "project"
     end
   end
