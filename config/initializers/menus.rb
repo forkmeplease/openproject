@@ -364,7 +364,7 @@ Redmine::MenuManager.map :admin_menu do |menu|
 
   menu.push :departments,
             { controller: "/admin/departments" },
-            if: ->(_) { User.current.admin? },
+            if: ->(_) { User.current.admin? && OpenProject::FeatureDecisions.departments_active? },
             caption: :label_departments,
             parent: :users_and_permissions
 

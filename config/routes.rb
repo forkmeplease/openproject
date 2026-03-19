@@ -802,7 +802,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :departments, only: %i[index]
+    resources :departments, only: %i[index], constraints: lambda { |_request| OpenProject::FeatureDecisions.departments_active? }
   end
 
   resources :workflows, only: %i[index edit update], param: :type_id do
