@@ -33,6 +33,7 @@ module Projects
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
     include OpTurbo::Streamable
+    include Projects::Concerns::IdentifierSuggestion
 
     options :project, :template, :step
 
@@ -42,17 +43,6 @@ module Projects
 
     def step_3_display
       { display: :none } unless step == 3
-    end
-
-    def identifier_suggestion_data
-      suggestion_mode = Setting::WorkPackageIdentifier.alphanumeric? ? "semantic" : "legacy"
-
-      {
-        controller: "projects--identifier-suggestion",
-        "projects--identifier-suggestion-mode-value": suggestion_mode,
-        "projects--identifier-suggestion-url-value": projects_identifier_suggestion_path,
-        "projects--identifier-suggestion-set-name-first-value": I18n.t("js.projects.identifier_suggestion.set_name_first")
-      }
     end
 
     def workspaces_path

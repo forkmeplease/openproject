@@ -26,25 +26,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-require "rails_helper"
+module Projects
+  module Concerns
+    module IdentifierSuggestion
+      def identifier_suggestion_data
+        suggestion_mode = Setting::WorkPackageIdentifier.alphanumeric? ? "semantic" : "legacy"
 
-RSpec.describe Projects::CopyFormComponent, type: :component do
-  let(:source_project) { build_stubbed(:project) }
-  let(:target_project) { Project.new(attributes_for(:project).except(:name)) }
-  let(:rendered_component) { render_component }
-
-  def render_component(**params)
-    render_inline(described_class.new(source_project:, target_project:, **params))
-    page
-  end
-
-  it "renders a form" do
-    expect(rendered_component).to have_css "form"
-  end
-
-  describe "#identifier_suggestion_data" do
-    it_behaves_like "renders identifier_suggestion_data"
+        {
+          controller: "projects--identifier-suggestion",
+          "projects--identifier-suggestion-mode-value": suggestion_mode,
+          "projects--identifier-suggestion-url-value": projects_identifier_suggestion_path,
+          "projects--identifier-suggestion-set-name-first-value": I18n.t("js.projects.identifier_suggestion.set_name_first")
+        }
+      end
+    end
   end
 end

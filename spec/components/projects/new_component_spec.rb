@@ -83,33 +83,6 @@ RSpec.describe Projects::NewComponent, type: :component do
   end
 
   describe "#identifier_suggestion_data" do
-    subject(:rendered) { render_inline(described_class.new(project:)) }
-
-    it "mounts the Stimulus controller on the wrapper" do
-      expect(rendered).to have_css("[data-controller='projects--identifier-suggestion']")
-    end
-
-    it "includes the suggestion URL" do
-      expect(rendered).to have_css("[data-projects--identifier-suggestion-url-value='/projects/identifier_suggestion']")
-    end
-
-    it "includes the set_name_first translation" do
-      translation = I18n.t("js.projects.identifier_suggestion.set_name_first")
-      expect(rendered).to have_css(
-        "[data-projects--identifier-suggestion-set-name-first-value='#{translation}']"
-      )
-    end
-
-    context "with alphanumeric identifiers", with_settings: { work_packages_identifier: "alphanumeric" } do
-      it "sets mode to semantic" do
-        expect(rendered).to have_css("[data-projects--identifier-suggestion-mode-value='semantic']")
-      end
-    end
-
-    context "with numeric identifiers", with_settings: { work_packages_identifier: "numeric" } do
-      it "sets mode to legacy" do
-        expect(rendered).to have_css("[data-projects--identifier-suggestion-mode-value='legacy']")
-      end
-    end
+    it_behaves_like "renders identifier_suggestion_data"
   end
 end
