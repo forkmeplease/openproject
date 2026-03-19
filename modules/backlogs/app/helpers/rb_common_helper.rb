@@ -132,8 +132,12 @@ module RbCommonHelper
     item.remaining_hours.blank? || item.remaining_hours == 0 ? "" : item.remaining_hours
   end
 
+  def scrum_projects_enabled?
+    OpenProject::FeatureDecisions.scrum_projects_active?
+  end
+
   def allow_sprint_creation?(project)
-    OpenProject::FeatureDecisions.scrum_projects_active? && User.current.allowed_in_project?(:create_sprints, project)
+    scrum_projects_enabled? && current_user.allowed_in_project?(:create_sprints, project)
   end
 
   private
@@ -152,6 +156,8 @@ module RbCommonHelper
   end
 
   def backlogs_types
+    return [] if scrum_projects_enabled?
+
     @backlogs_types ||= begin
       backlogs_ids = Setting.plugin_openproject_backlogs["story_types"]
       backlogs_ids << Setting.plugin_openproject_backlogs["task_type"]
@@ -161,6 +167,8 @@ module RbCommonHelper
   end
 
   def story_types
+    return [] if scrum_projects_enabled?
+
     @story_types ||= begin
       backlogs_type_ids = Setting.plugin_openproject_backlogs["story_types"].map(&:to_i)
 

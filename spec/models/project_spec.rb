@@ -492,7 +492,7 @@ RSpec.describe Project do
     let(:instance) { project }
   end
 
-  it_behaves_like "acts_as_customizable included" do
+  it_behaves_like "acts_as_customizable included", admin_only_allowed: true, comments: true do
     let!(:model_instance) { project }
     let!(:new_model_instance) { build_project }
     let!(:custom_field) { create(:string_project_custom_field) }
@@ -540,6 +540,23 @@ RSpec.describe Project do
     end
   end
 
+  describe "#custom_values_for_custom_field" do
+    let(:custom_field) { create(:list_project_custom_field, multi_value: true) }
+    # intentionally out of order
+    let!(:cv2) { create(:custom_value, id: 1002, customized: project, custom_field:) }
+    let!(:cv1) { create(:custom_value, id: 1001, customized: project, custom_field:) }
+    let!(:cv3) { create(:custom_value, id: 1003, customized: project, custom_field:) }
+
+    before do
+      allow(project).to receive(:available_custom_fields) { ProjectCustomField.all }
+    end
+
+    it "returns values ordered by id" do
+      values = project.custom_values_for_custom_field(custom_field)
+      expect(values).to eq([cv1, cv2, cv3])
+    end
+  end
+
   describe "url identifier" do
     let(:reserved) do
       Rails.application.routes.routes
@@ -568,6 +585,31 @@ RSpec.describe Project do
       end
     end
 
+    it "is not allowed to clash with another project" do
+      create(:project, identifier: "existing")
+
+      project = build(:project, identifier: "existing")
+      expect(project).not_to be_valid
+      expect(project.errors[:identifier]).to include("has already been taken.")
+    end
+
+    it "is not allowed to clash with a former identifier of another project" do
+      other_project = create(:project, identifier: "former-id")
+      other_project.update!(identifier: "new-id")
+
+      project = build(:project, identifier: "former-id")
+      expect(project).not_to be_valid
+      expect(project.errors[:identifier]).to include("has already been taken.")
+    end
+
+    it "is allowed to be the same as its own former identifier" do
+      project = create(:project, identifier: "old-id")
+      project.update!(identifier: "new-id")
+
+      project.identifier = "old-id"
+      expect(project).to be_valid
+    end
+
     # The acts_as_url plugin defines validation callbacks on :create and it is not automatically
     # called when calling a custom context. However we need the acts_as_url callback to set the
     # identifier when the validations are called with the :saving_custom_fields context.
@@ -590,6 +632,44 @@ RSpec.describe Project do
 
           expect(project.identifier).not_to eq(word)
         end
+      end
+    end
+
+    context "with history" do
+      let!(:project) { create(:project, identifier: "sc") }
+
+      it "records the old identifier in friendly_id_slugs when identifier changes" do
+        project.update!(identifier: "scp")
+        expect(FriendlyId::Slug.where(sluggable: project).pluck(:slug)).to include("sc")
+      end
+
+      it "can still find the project via its old identifier" do
+        project.update!(identifier: "scp")
+        expect(described_class.friendly.find("sc")).to eq(project)
+      end
+
+      it "returns the project with its current identifier when found via old identifier" do
+        project.update!(identifier: "scp")
+        found = described_class.friendly.find("sc")
+        expect(found.identifier).to eq("scp")
+      end
+
+      it "locks old identifier to the original project (not reusable by others)" do
+        project.update!(identifier: "scp")
+        slug = FriendlyId::Slug.find_by(slug: "sc")
+        expect(slug.sluggable_id).to eq(project.id)
+      end
+
+      it "allows the project to revert to a previously used identifier" do
+        project.update!(identifier: "scp")
+        expect { project.update!(identifier: "sc") }.not_to raise_error
+        expect(project.identifier).to eq("sc")
+      end
+
+      it "is valid when reverting to own historical identifier" do
+        project.update!(identifier: "scp")
+        project.identifier = "sc"
+        expect(project).to be_valid
       end
     end
   end
@@ -646,40 +726,18 @@ RSpec.describe Project do
 
   describe ".suggest_identifier" do
     context "with alphanumeric identifiers", with_settings: { work_packages_identifier: "alphanumeric" } do
-      it "returns initials for multi-word names" do
-        expect(described_class.suggest_identifier("Flight Planning Algorithm")).to eq("FPA")
-      end
-
-      it "returns the first 3 characters for single-word names" do
-        expect(described_class.suggest_identifier("Banana")).to eq("BAN")
-      end
-
-      it "returns an identifier starting with a letter even for digit-prefixed names" do
-        expect(described_class.suggest_identifier("3D Printing Lab")).to match(/\A[A-Z]/)
-      end
-
-      it "transliterates accented characters" do
-        result = described_class.suggest_identifier("Équipe Réseau")
-        expect(result).to match(/\A[A-Z][A-Z0-9_]*\z/)
-      end
-
-      it "falls back to PROJ for non-transliterable names" do
-        expect(described_class.suggest_identifier("日本語プロジェクト")).to eq("PROJ")
+      it "delegates to ProjectIdentifierSuggestionGenerator" do
+        allow(WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator)
+          .to receive(:suggest_identifier).with("My Project").and_return("MP")
+        expect(described_class.suggest_identifier("My Project")).to eq("MP")
+        expect(WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator)
+          .to have_received(:suggest_identifier).with("My Project")
       end
     end
 
     context "with numeric (legacy) identifiers", with_settings: { work_packages_identifier: "numeric" } do
       it "returns a slugified lowercase identifier" do
         expect(described_class.suggest_identifier("My Cool Project")).to eq("my-cool-project")
-      end
-
-      it "truncates to IDENTIFIER_MAX_LENGTH" do
-        long_name = "a" * 300
-        expect(described_class.suggest_identifier(long_name).length).to be <= described_class::IDENTIFIER_MAX_LENGTH
-      end
-
-      it "falls back to 'project' for blank names" do
-        expect(described_class.suggest_identifier("")).to eq("project")
       end
     end
   end

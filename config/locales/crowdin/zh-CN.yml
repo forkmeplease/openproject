@@ -107,9 +107,8 @@ zh-CN:
         trial: "试用"
     jemalloc_allocator: 使用 jemalloc 内存分配器
     journal_aggregation:
-      explanation:
-        text: "如果用户的多项操作（例如，更新工作包两次）的时间间隔小于指定的时间跨度，则这些操作将被聚合为单个操作，并在应用程序中显示为单个操作。这也会将通知延迟同等的时间，从而减少电子邮件的发送数量，并且还会影响 %{webhook_link} 延迟。"
-        link: "Webhook"
+      caption: >
+        Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect the [webhook](webhook_link) delay.
     import:
       title: "导入"
     jira:
@@ -141,7 +140,7 @@ zh-CN:
       test:
         success: "成功连接到 %{server}（版本 %{version}）"
         failed: "连接失败：无法检索服务器信息"
-        error: "测试连接时意外出错"
+        error: "测试连接时发生意外错误"
         connection_error: "连接错误：%{message}"
         parse_error: "服务器响应解析失败。服务器可能不是有效的 Jira 实例。"
         api_error: "Jira API 返回错误状态 %{status}。请检查您的 Jira 实例 URL 和 API 令牌。"
@@ -149,15 +148,15 @@ zh-CN:
         missing_credentials: "请提供 URL 和个人访问令牌，以测试连接"
         invalid_url: "请提供有效的 URL"
       client:
-        connection_error: "Jira 服务器连接失败：%{message}"
+        connection_error: "无法连接到 Jira 服务器：%{message}"
         connection_timeout: "与 Jira 服务器的连接超时：%{message}"
-        parse_error: "Jira API 响应解析失败：%{message}"
+        parse_error: "无法解析 Jira API 响应：%{message}"
         api_error: "Jira API 返回错误状态 %{status}"
       columns:
         projects: "项目"
         last_change: "上次更改"
         added: "已添加"
-        label_ago: "%{amount} 前"
+        label_ago: "%{amount}前"
       run:
         title: "导入运行"
         history: "历史记录"
@@ -169,12 +168,13 @@ zh-CN:
         index:
           description: "每次导入运行都可以导入不同的数据集。可以在审核模式后立即撤消导入运行，但不能在完成后撤消。"
           button_import_run: "导入运行"
-          button_edit_configuration: "编辑设置"
+          button_edit_configuration: "编辑配置"
         status:
           initial: "开始"
           instance_meta_fetching: "正在获取元数据"
           instance_meta_error: "获取元数据时出错"
           instance_meta_done: "元数据已获取"
+          import_scope: "选择范围"
           configuring: "选择范围"
           projects_meta_fetching: "正在获取项目数据"
           projects_meta_error: "获取项目数据时出错"
@@ -182,10 +182,14 @@ zh-CN:
           importing: "进行中"
           import_error: "导入过程中出错"
           imported: "审核模式"
-          reverting: "撤消中"
+          reverting: "正在撤消"
           revert_error: "撤消过程中出错"
+          revert_cancelling: "正在取消撤消"
+          revert_cancelled: "已取消撤消"
           reverted: "已撤消"
-          completed: "已完成"
+          finalizing: "正在完成"
+          finalizing_error: "完成过程中出错"
+          finalizing_done: "已完成"
         wizard:
           button_retry: "重试"
           parts:
@@ -200,7 +204,7 @@ zh-CN:
             statuses:
               other: "%{count} 种状态"
             users:
-              other: "%{count} 名用户"
+              other: "%{count} 个用户"
           groups:
             fetch:
               title: "获取基础数据"
@@ -225,7 +229,7 @@ zh-CN:
               title: "导入范围"
               caption: "选择要导入 OpenProject 的内容"
               caption_done: "已完成"
-              label_info: "请注意，此导入工具仍处于测试阶段，不能导入所有类型的数据。以下是主机 Jira 实例 URL 提供的导入功能摘要，以及此工具目前能够导入的内容。"
+              label_info: "请注意，此导入工具仍处于测试阶段，不能导入所有类型的数据。以下是主机 Jira 实例提供的导入摘要，以及此工具目前能够导入的内容。"
               description: "在从主机 Jira 实例获取的可用数据中选择要导入的数据。"
               label_available_data: "可用数据"
               label_not_available_data: "不可导入"
@@ -260,12 +264,19 @@ zh-CN:
               button_revert: "撤消导入"
               button_done: "完成导入"
               preview_description: '导入的数据当前处于审核模式。点击“完成导入”可永久导入，点击“撤消导入”可撤消本次导入运行中的所有更改。'
-              label_finalizing_progress: "正在完成导入…"
-              label_finalized: "导入已完成。"
+              label_finalize_import: "完成导入"
+              label_finalizing: "正在完成导入…"
+              label_finalizing_done: "导入已完成。"
               label_revert_progress: "正在撤消导入…"
               label_reverted: "导入已撤消。"
           select_dialog:
             filter_projects: "按文本筛选"
+          import_dialog:
+            title: "是否开始此导入？"
+            confirm_button: "开始导入"
+            description: >
+              此导入功能是一项 alpha 功能。它还不能从 Jira 导入所有数据，可能会在此 OpenProject 实例上留下不完整的数据。 <b>请勿在生产环境中使用，在开始之前，请先创建 OpenProject 数据备份。</b>
+            confirm: "我明白，我已做好了必要的准备"
           revert_dialog:
             title: "是否永久撤消此导入？"
             description: "这将删除所有导入的对象（包括整个项目），即使在 OpenProject 上导入后这些项目中有用户活动。"
@@ -294,13 +305,13 @@ zh-CN:
         tool_response_format: "工具响应格式"
         tool_response_format_content_only_label: "仅内容"
         tool_response_format_content_only_caption: >
-          如果连接到此实例的 MCP 客户端不支持结构化内容，则选中此项。此后，工具响应将只包含纯文本内容，而不包含结构化版本。
+          如果连接到此实例的 MCP 客户端不支持结构化内容，则选中此项。工具响应将只包含纯文本内容，而不包含结构化版本。
         tool_response_format_full_label: "完整"
         tool_response_format_full_caption: >
           最兼容的选项。工具响应将包含常规内容和结构化内容，MCP 客户端可以选择要读取的格式。这可能会增加语言模型需要处理的词元数，从而可能导致成本增加，性能降低。
         tool_response_format_structured_only_label: "仅结构化内容"
         tool_response_format_structured_only_caption: >
-          如果您确定连接到此实例的 MCP 客户端支持结构化内容，则选中此项。此后，工具响应将只包含结构化内容，而不包含其文本表示。
+          如果您确定连接到此实例的 MCP 客户端支持结构化内容，则选中此项。工具响应将只包含结构化内容，而不包含其文本表示。
       update:
         failure: "MCP 配置无法更新。"
         success: "MCP 配置已成功更新。"
@@ -570,7 +581,7 @@ zh-CN:
         all: "0 表示无限制"
         project: "0 表示无限制"
       has_comment:
-        project: "用户可以在项目概览中选择值时添加与项目特性相关的注释。"
+        project: "允许用户在项目概览中选择值时添加与项目特性相关的注释。"
     tab:
       no_results_title_text: 目前没有自定义字段。
       no_results_content_text: 创建新的自定义字段
@@ -589,16 +600,18 @@ zh-CN:
     confirmation_live_message_unchecked: "继续按钮现已失效。您需要勾选复选框才能继续。"
   mcp_configurations:
     server_url_component:
-      caption: "可连接 OpenProject MCP 服务器的 URL。设置 MCP 客户端时需要使用。"
+      caption: "可以访问 OpenProject MCP 服务器的 URL。设置 MCP 客户端时需要使用。"
       label: "服务器 URL"
   op_dry_validation:
     or: "或"
     errors:
+      unexpected_key: "is not allowed."
       array?: "必须为一个数组。"
       decimal?: "必须为小数。"
       defined: "不得定义。"
       eql?: "必须等于 %{left}。"
       filled?: "必须填写"
+      format?: "is in invalid format."
       greater_or_equal_zero: "必须大于或等于 0"
       gteq?: "必须大于或等于 %{num}。"
       hash?: "必须是一个哈希值。"
@@ -625,7 +638,9 @@ zh-CN:
         parent:
           not_descendant: "必须是层级根节点的后代。"
       str?: "必须是一个字符串。"
+      time?: "must be a time."
       type?: "必须是 %{type}。"
+      uri?: "is not a valid URI."
     rules:
       copy_workflow_from: "工作流副本的类型"
       enabled: "已启用"
@@ -810,7 +825,7 @@ zh-CN:
         new_label: "新优先级"
       creation_wizard:
         errors:
-          no_work_package_type: "无法启用项目启动请求，因为它至少需要一个活动的工作包类型，但此项目没有。请为此项目至少添加一种工作包类型。"
+          no_work_package_type: "无法启用项目启动请求，因为它至少需要一个有效工作包类型，但此项目没有。请为此项目至少添加一种工作包类型。"
           no_status_when_submitted: "无法启用项目启动请求，因为工作包类型 %{type} 至少需要一个与之相关的状态。请为此工作包类型至少启用一个状态工作流。"
         export:
           description_attachment_export: "生成的工件将作为 PDF 附件保存到工件工作包中。"
@@ -825,7 +840,7 @@ zh-CN:
         label_request_submission: "请求提交"
         project_attributes_description: >
           选择哪些项目特性应包含在项目启动请求中。此列表仅包含为此项目启用的[项目特性](project_attributes_url)。
-        enabled_because_required_html: 无法为此项目启动请求禁用此项目特性，因为它被定义为必填项。实例管理员可在<a href=%{admin_settings_url} target="_blank">管理设置</a>中更改此设置。
+        enabled_because_required_html: 无法为此项目启动请求禁用此项目特性，因为它被定义为必选项。实例管理员可以在<a href=%{admin_settings_url} target="_blank">管理设置</a>中更改此设置。
     status:
       button_edit: 编辑状态
     wizard:
@@ -1346,6 +1361,9 @@ zh-CN:
         name: "Jira 实例名称"
         url: "Jira 实例 URL"
         personal_access_token: "个人访问令牌"
+      "import/jira_open_project_reference":
+        jira: "Jira"
+        jira_import: "Jira 导入"
       announcements:
         show_until: "显示截止日期"
       attachment:
@@ -1720,7 +1738,7 @@ zh-CN:
         not_available: "因系统配置而不可用。"
         not_deletable: "无法删除。"
         not_current_user: "不是当前用户。"
-        only_one_active_sprint_allowed: "每个项目只允许有一个活跃的冲刺。"
+        only_one_active_sprint_allowed: "每个项目只允许有一个有效冲刺。"
         not_found: "未找到"
         not_a_date: "不是有效的日期。"
         not_a_datetime: "不是有效的日期时间。"
@@ -3016,10 +3034,10 @@ zh-CN:
           new_features_title: >
             此版本包含各种新功能和改进，例如：
           new_features_list:
-            line_0: 通过安全的 MCP 服务器实现的 AI 工作流（专业版及更高版本）
-            line_1: 改进了项目主页，新增了预算微件，提高了可访问性
+            line_0: 通过安全的 MCP 服务器实现的 AI 工作流（专业方案及更高版本）
+            line_1: 改进了项目首页，新增了预算微件，提高了可访问性
             line_2: "会议：会议模板（基本方案及更高版本）"
-            line_3: 通过项目特性注释，提高了透明度。
+            line_3: 通过项目特性注释，提高了透明度
             line_4: PDF 导出增强功能
             line_5: 提高了外部链接的安全性（高级方案及更高版本）
             line_6: 积压工作模块中的 UI/UX 改进
@@ -3054,13 +3072,13 @@ zh-CN:
     cause_descriptions:
       import:
         header: "更改者：%{author}"
-        field_changed: "%{field} 已从 %{old_value} 更改为 %{new_value}"
-        field_set: "%{field} 设置为 %{value}"
-        field_removed: "%{field} 已移除"
-        field_updated: "%{field} 已更新"
-        deleted_with_diff: "%{field} 已删除 (%{link})"
-        changed_with_diff: "%{field} 已更改 (%{link})"
-        set_with_diff: "%{field} 已设置 (%{link})"
+        field_changed: "“%{field}”已从 %{old_value} 更改为 %{new_value}"
+        field_set: "“%{field}”设置为 %{value}"
+        field_removed: "“%{field}”已移除"
+        field_updated: "“%{field}”已更新"
+        deleted_with_diff: "“%{field}”已删除 (%{link})"
+        changed_with_diff: "“%{field}”已更改 (%{link})"
+        set_with_diff: "“%{field}”已设置 (%{link})"
       work_package_predecessor_changed_times: 根据前置任务 %{link}的更改
       work_package_parent_changed_times: 通过对父级的更改 %{link}
       work_package_children_changed_times: 通过对子级的更改 %{link}
@@ -3219,7 +3237,7 @@ zh-CN:
   label_added: "已添加"
   label_added_by: "由%{author}添加"
   label_added_by_on: "由 %{author} 添加 %{date}"
-  label_added_time_by: "由 %{author} %{age} 前添加"
+  label_added_time_by: "由 %{author} %{age}前添加"
   label_additional_workflow_transitions_for_assignee: "当用户是受理人时允许额外的转移"
   label_additional_workflow_transitions_for_author: "当用户是作者时允许额外转移"
   label_administration: "管理"
@@ -3236,7 +3254,7 @@ zh-CN:
   label_angular: "AngularJS"
   label_app_modules: "%{app_title} 模块"
   label_api_access_key: "API 访问键"
-  label_api_access_key_created_on: "API 访问密钥创建于 %{value} 前"
+  label_api_access_key_created_on: "API 访问密钥创建于 %{value}前"
   label_api_access_key_type: "API"
   label_auto_option: "（自动）"
   label_ical_access_key_type: "iCalendar"
@@ -3421,7 +3439,7 @@ zh-CN:
   label_favorite: "收藏夹"
   label_feed_plural: "订阅源"
   label_feeds_access_key: "RSS 访问密钥"
-  label_feeds_access_key_created_on: "RSS 访问密钥创建于 %{value} 前"
+  label_feeds_access_key_created_on: "RSS 访问密钥创建于 %{value}前"
   label_feeds_access_key_type: "RSS 订阅"
   label_file_plural: "文件"
   label_filter: "筛选器"
@@ -3433,7 +3451,6 @@ zh-CN:
   label_float: "浮点数"
   label_folder: "文件夹"
   label_follows: "跟踪"
-  label_force_user_language_to_default: "设置拥有非允许语言的用户的默认语言"
   label_form_configuration: "表格配置"
   label_formula: "公式"
   label_gantt_chart: "甘特图"
@@ -3516,7 +3533,7 @@ zh-CN:
   label_lock_user: "锁定用户"
   label_logged_as: "登录用户名"
   label_login: "登录"
-  label_custom_comment: "%{name} 注释"
+  label_custom_comment: "%{name}注释"
   label_custom_logo: "自定义徽标桌面版"
   label_custom_logo_mobile: "自定义徽标移动版"
   label_custom_export_logo: "自定义导出徽标"
@@ -3800,9 +3817,9 @@ zh-CN:
   label_type_new: "新类型"
   label_type_plural: "类型"
   label_ui: "用户界面"
-  label_updated_time: "%{value} 前更新"
+  label_updated_time: "%{value}前更新"
   label_updated_time_at: "%{author} %{age}"
-  label_updated_time_by: "%{author} 于 %{age} 前更新"
+  label_updated_time_by: "%{author} 于 %{age}前更新"
   label_upgrade_guides: "升级指南"
   label_used_by: "使用于"
   label_used_by_types: "用于类型"
@@ -3812,12 +3829,6 @@ zh-CN:
   label_user_named: "用户 %{name}"
   label_user_activity: "%{value} 的活动"
   label_user_anonymous: "匿名"
-  label_user_mail_option_all: "对于我所有项目的任何事件"
-  label_user_mail_option_none: "没有事件"
-  label_user_mail_option_only_assigned: "仅为指派给我的内容"
-  label_user_mail_option_only_my_events: "仅为我关注或参与的内容"
-  label_user_mail_option_only_owner: "仅为我是所有者的内容"
-  label_user_mail_option_selected: "只对于所选项目的任何事件......"
   label_user_menu: "用户菜单"
   label_user_new: "新用户"
   label_user_plural: "用户"
@@ -3857,7 +3868,6 @@ zh-CN:
   label_wiki_show_index_page_link: "显示‘目录’子菜单项"
   label_wiki_show_menu_item: "显示为项目导航中的菜单项"
   label_wiki_show_new_page_link: "显示‘创建新的子页面’子菜单项"
-  label_wiki_show_submenu_item: "显示为子菜单项"
   label_wiki_start: "起始页"
   label_work: "工时"
   label_work_package: "工作包"
@@ -4136,6 +4146,7 @@ zh-CN:
   notice_parent_item_not_found: "未找到父项"
   notice_project_not_deleted: "项目没有被删除"
   notice_project_not_found: "未找到项目。"
+  notice_smtp_address_unsafe_env_hint: "SMTP address %{address} is not safe. Please add it to the whitelist using the %{env_name} environment variable."
   notice_successful_connection: "成功连接。"
   notice_successful_create: "成功创建。"
   notice_successful_delete: "成功删除。"
@@ -4301,7 +4312,7 @@ zh-CN:
   permission_edit_project_query: "编辑项目查询"
   placeholders:
     default: "-"
-    templated_hint: 通过类型 %{type} 自动生成
+    templated_hint: 通过“%{type}”类型自动生成
   portfolio:
     count:
       zero: "0 个项目组合"
@@ -4921,7 +4932,7 @@ zh-CN:
   text_default_administrator_account_changed: "更改默认管理员帐户"
   text_default_encoding: "默认值： UTF-8"
   text_destroy: "删除"
-  text_destroy_with_associated: "有额外的对象关联到要删除的工作包。这些对象是以下类型："
+  text_destroy_with_associated: "There are additional objects associated with the work package(s) that are to be deleted. Those objects are of the following types:"
   text_destroy_what_to_do: "你想做什么？"
   text_diff_truncated: "...这个比较被截断，因为它超出了可显示的最大大小。"
   text_email_delivery_not_configured: "电子邮件传送未配置，通知已禁用。\n配置您的 SMTP 服务器将其启用。"

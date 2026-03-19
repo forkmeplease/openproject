@@ -44,6 +44,7 @@ pl:
         start_date: "Data"
         start_time: "Data rozpoczęcia"
         start_time_hour: "Godzina rozpoczęcia"
+        sharing: "Udostępnianie"
       meeting_agenda_item:
         title: "Tytuł"
         author: "Autor"
@@ -130,7 +131,6 @@ pl:
   label_meeting_template_edit: "Edytuj szablon"
   label_meeting_create_from_template: "Utwórz spotkanie z szablonu"
   label_meeting_new: "Nowe spotkanie"
-  caption_meeting_template_select: "Wybierz szablon, aby automatycznie skopiować z niego punkty planu spotkania"
   label_meeting_new_dynamic: "Nowe spotkanie jednorazowe"
   label_meeting_new_recurring: "Nowe spotkanie cykliczne"
   label_meeting_create: "Utwórz spotkanie"
@@ -205,6 +205,8 @@ pl:
   label_time_zone: "Strefa czasowa"
   label_start_date: "Data rozpoczęcia"
   label_subscribe_icalendar: "Subskrybuj kalendarz"
+  caption_meeting_template_select: "Wybierz szablon, aby automatycznie skopiować z niego punkty planu spotkania"
+  caption_template_project_select: "Wybierz projekt, w którym ma zostać utworzony ten szablon spotkania"
   meeting:
     participants:
       label:
@@ -224,7 +226,8 @@ pl:
         heading: "Brak uczestników"
         description: "Nie ma jeszcze żadnych uczestników."
     attachments:
-      template: "Załączone pliki zostaną uwzględnione we wszystkich przyszłych spotkaniach z tej serii."
+      onetime_template: "These attached files will be included in all future meetings using this template."
+      series_template: "These attached files will be included in all future meetings in the series."
       text: "Załączone pliki są dostępne dla wszystkich uczestników spotkania. Można je również przeciągać i upuszczać w notatkach do punktów planu spotkania."
     copy:
       title: "Kopiuj spotkanie: %{title}"
@@ -300,6 +303,8 @@ pl:
         template:
           title: "Usuń szablon"
           heading: "Usunąć ten szablon?"
+          confirmation_message_html: >
+            This action is not reversible. Please proceed with caution. Existing meetings that were created using this template will not be affected.
       occurrence:
         title: "Anuluj wystąpienie spotkania"
         heading: "Anulować to wystąpienie spotkania?"
@@ -627,11 +632,16 @@ pl:
   text_meeting_draft_banner: "Jesteś teraz w trybie wersji roboczej. To spotkanie nie wyśle żadnych aktualizacji kalendarza ani zaproszeń, nawet jeśli zmienisz szczegóły spotkania lub dodasz/usuniesz uczestników."
   text_onetime_meeting_template_banner: "Obecnie edytujesz szablon spotkania. Możesz użyć tego szablonu do tworzenia jednorazowych spotkań z predefiniowanym planem spotkania. Zmiany nie będą miały wpływu na już utworzone spotkania."
   text_onetime_meeting_template_empty_heading: "Ten szablon spotkania jest pusty"
-  text_onetime_meeting_template_description: "Dodaj punkty planu spotkania i załączniki do tego szablonu. Będą one dołączane do każdego spotkania opartego na tym szablonie."
+  text_onetime_meeting_template_empty_description: "Dodaj punkty planu spotkania, sekcje i załączniki tutaj. Będą one dołączane do każdego spotkania utworzonego przy użyciu tego szablonu."
   text_exit_draft_mode_dialog_title: "Otworzyć to spotkanie i wysłać zaproszenia?"
   text_exit_draft_mode_dialog_subtitle: "Po zaplanowaniu spotkania nie można powrócić do trybu wersji roboczej."
   text_exit_draft_mode_dialog_template_title: "Otworzyć pierwsze wystąpienie z tej serii spotkań?"
   text_exit_draft_mode_dialog_template_subtitle: "Po tym nie możesz powrócić do trybu wersji roboczej."
+  label_meeting_template_sharing: "Udostępnianie"
+  label_meeting_template_sharing_none: "Tylko ten projekt"
+  label_meeting_template_sharing_descendants: "Podprojekty"
+  label_meeting_template_sharing_system: "Wszystkie projekty"
+  text_meeting_template_sharing_description: "Ten szablon można udostępniać podprojektom lub innym projektom w tym wystąpieniu. Skopiowane zostaną tylko pozycje planu spotkania i załączniki."
   text_meeting_not_editable_anymore: "Tego spotkania nie można już edytować."
   text_meeting_not_present_anymore: "To spotkanie zostało usunięte. Wybierz inne spotkanie."
   label_add_work_package_to_meeting_dialog_title: "Wybierz spotkanie"

@@ -107,9 +107,8 @@ de:
         trial: "Probezeitraum"
     jemalloc_allocator: Jemalloc Speicher allocator
     journal_aggregation:
-      explanation:
-        text: "Individuelle Aktionen eines Benutzers (z.B. ein Arbeitspaket zweimal aktualisieren) werden zu einer einzigen Aktion zusammengefasst, wenn ihr Altersunterschied kleiner ist als der angegebene Zeitraum. Sie werden als eine einzige Aktion innerhalb der Anwendung angezeigt. Dadurch werden Benachrichtigungen um die gleiche Zeit verzögert, wodurch die Anzahl der gesendeten E-Mails verringert wird. Dies wirkt sich auch auf die Verzögerung von %{webhook_link} aus."
-        link: "Webhook"
+      caption: >
+        Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect the [webhook](webhook_link) delay.
     import:
       title: "Import"
     jira:
@@ -175,6 +174,7 @@ de:
           instance_meta_fetching: "Abrufen von Metadaten"
           instance_meta_error: "Fehler beim Abrufen von Metadaten"
           instance_meta_done: "Metadaten abgerufen"
+          import_scope: "Umfang auswählen"
           configuring: "Umfang auswählen"
           projects_meta_fetching: "Abrufen von Projektdaten"
           projects_meta_error: "Fehler beim Abrufen von Projektdaten"
@@ -184,8 +184,12 @@ de:
           imported: "Überprüfungsmodus"
           reverting: "Rückgängig machen"
           revert_error: "Fehler beim Revertieren"
+          revert_cancelling: "Rückgängig machen abbrechen"
+          revert_cancelled: "Rückgängig machen abgebrochen"
           reverted: "Rückgängig gemacht"
-          completed: "Abgeschlossen"
+          finalizing: "Abschließen"
+          finalizing_error: "Fehler beim Abschließen"
+          finalizing_done: "Abgeschlossen"
         wizard:
           button_retry: "Erneut versuchen"
           parts:
@@ -231,7 +235,7 @@ de:
               title: "Umfang des Imports"
               caption: "Wählen Sie, was Sie in OpenProject importieren möchten"
               caption_done: "Abgeschlossen"
-              label_info: "Bitte beachten Sie, dass dieses Import-Tool in der Beta ist und nicht alle Arten von Daten importieren kann. Hier ist eine Zusammenfassung dessen, was der Host Jira Instanz URL für den Import bietet und was dieses Tool gerade importieren kann."
+              label_info: "Bitte beachten Sie, dass dieses Import-Tool in der Beta ist und nicht alle Arten von Daten importieren kann. Hier ist eine Zusammenfassung dessen, was die Jira Instanz für den Import bietet und was dieses Tool gerade importieren kann."
               description: "Wählen Sie aus den verfügbaren Daten, die Sie aus der Host-Jira-Instanz abrufen, die Daten aus, die Sie importieren möchten."
               label_available_data: "Verfügbare Daten"
               label_not_available_data: "Nicht verfügbar für den Import"
@@ -266,12 +270,19 @@ de:
               button_revert: "Import rückgängig machen"
               button_done: "Import abschließen"
               preview_description: 'Die importierten Daten befinden sich derzeit im Überprüfungsmodus. Klicken Sie auf "Import abschließen", um den Import dauerhaft zu machen, oder auf "Import rückgängig machen", um alle in diesem Importlauf vorgenommenen Änderungen rückgängig zu machen.'
-              label_finalizing_progress: "Import wird abgeschlossen..."
-              label_finalized: "Import abgeschlossen."
+              label_finalize_import: "Import abschließen"
+              label_finalizing: "Import wird abgeschlossen..."
+              label_finalizing_done: "Import abgeschlossen."
               label_revert_progress: "Import wird rückgängig gemacht..."
               label_reverted: "Import rückgängig gemacht."
           select_dialog:
             filter_projects: "Nach Text filtern"
+          import_dialog:
+            title: "Diesen Import starten?"
+            confirm_button: "Import starten"
+            description: >
+              Dieser Importer ist eine Alpha-Funktion. Er ist noch nicht in der Lage, alle Daten aus Jira zu importieren und könnte unvollständige Daten auf dieser OpenProject-Instanz hinterlassen. <b>Verwenden Sie keine Produktionsumgebung und erstellen Sie vor dem Start eine Sicherungskopie Ihrer OpenProject-Daten.</b>
+            confirm: "Ich habe verstanden und die notwendigen Vorbereitungen getroffen"
           revert_dialog:
             title: "Diesen Import dauerhaft rückgängig machen?"
             description: "Dadurch werden alle importierten Objekte (einschließlich ganzer Projekte) gelöscht, auch wenn es nach dem Import in OpenProject Nutzeraktivitäten in diesen Projekten gab."
@@ -285,7 +296,7 @@ de:
             title: "Projekte auswählen"
     mcp_configurations:
       index:
-        description: "The model context protocol allows AI agents to provide its users with tools and resources exposed by this OpenProject instance. This feature is still in beta."
+        description: "Das Model Context Protocol ermöglicht es KI-Agenten, ihren Nutzern Tools und Ressourcen bereitzustellen, die diese OpenProject-Instanz zur Verfügung stellt. Die Funktion befindet sich noch in der Beta-Phase."
         resources_heading: "Ressourcen"
         resources_description: "OpenProject stellt die folgenden Ressourcen bereit. Jede Ressource kann nach Wunsch aktiviert, umbenannt und beschrieben werden. Weitere Informationen finden sich in der [Dokumentation zu MCP-Ressourcen](docs_url)."
         resources_submit: "Ressourcen aktualisieren"
@@ -298,13 +309,13 @@ de:
         description_caption: "Wie der MCP-Server gegenüber anderen Anwendungen beschrieben wird, die sich damit verbinden."
         title_caption: "Ein kurzer Titel, der Anwendungen angezeigt wird, die sich mit dem MCP-Server verbinden."
         tool_response_format: "Antwortformat des Tools"
-        tool_response_format_content_only_label: "Nur Inhalt"
+        tool_response_format_content_only_label: "Nur unstrukturiert (content)"
         tool_response_format_content_only_caption: >
           Wählen Sie diese Option, wenn MCP-Clients, die sich mit dieser Instanz verbinden, keine strukturierten Inhalte unterstützen. Die Antworten des Tools enthalten dann nur den reinen Textinhalt und lassen die strukturierte Inhalte aus.
         tool_response_format_full_label: "Vollständig"
         tool_response_format_full_caption: >
           Die kompatibelste Option. Die Antworten des Tools enthalten sowohl reguläre als auch strukturierte Inhalte, so dass MCP-Clients wählen können, welches Format sie lesen möchten. Dies kann die Anzahl der Token erhöhen, die das Sprachmodell verarbeiten muss, was die Kosten erhöhen und die Leistung verringern kann.
-        tool_response_format_structured_only_label: "Nur strukturierte Inhalte"
+        tool_response_format_structured_only_label: "Nur strukturiert (structured content)"
         tool_response_format_structured_only_caption: >
           Wählen Sie diese Option, wenn Sie sicher sind, dass MCP-Clients, die sich mit dieser Instanz verbinden, strukturierte Inhalte unterstützen. Die Antworten des Tools enthalten dann nur strukturierte Inhalte und nicht deren Textdarstellung.
       update:
@@ -600,11 +611,13 @@ de:
   op_dry_validation:
     or: "oder"
     errors:
+      unexpected_key: "is not allowed."
       array?: "muss ein Array sein."
       decimal?: "muss eine Dezimalzahl sein."
       defined: "darf nicht definiert werden."
       eql?: "muss gleich %{left} sein."
       filled?: "muss ausgefüllt werden."
+      format?: "is in invalid format."
       greater_or_equal_zero: "muss größer oder gleich 0 sein."
       gteq?: "muss größer oder gleich %{num} sein."
       hash?: "muss ein Hash sein."
@@ -631,7 +644,9 @@ de:
         parent:
           not_descendant: "muss ein Unterelement der Hierarchiewurzel sein."
       str?: "muss eine Zeichenkette sein."
+      time?: "must be a time."
       type?: "muss %{type} sein."
+      uri?: "is not a valid URI."
     rules:
       copy_workflow_from: "Typ für Workflow-Kopie"
       enabled: "Aktiviert"
@@ -1357,6 +1372,9 @@ de:
         name: "Name der Jira-Instanz"
         url: "URL der Jira-Instanz"
         personal_access_token: "Persönlicher Zugangs-Token"
+      "import/jira_open_project_reference":
+        jira: "Jira"
+        jira_import: "Jira Import"
       announcements:
         show_until: "Anzeigen bis"
       attachment:
@@ -2673,7 +2691,7 @@ de:
       gantt_pdf_export: Gantt PDF Export
       ldap_groups: LDAP-Benutzer- und Gruppensynchronisation
       mcp_server: Model Context Protocol (MCP)
-      meeting_templates: Reusable meeting templates
+      meeting_templates: Wiederverwendbare Besprechungs-Vorlagen
       nextcloud_sso: Single Sign-On für Nextcloud-Speicher
       one_drive_sharepoint_file_storage: OneDrive/SharePoint-Datei-Speicher
       placeholder_users: Platzhalter-Benutzer
@@ -2751,9 +2769,9 @@ de:
         title: "Benutzerdefinierte Aktionen"
         description: "Selbstdefinierte Aktionen sind Verknüpfungen zu einer Reihe von vordefinierten Aktionen, die Sie für bestimmte Arbeitspakete je nach Status, Rolle, Typ oder Projekt mit nur einem Klick auf einen Button auslösen."
       mcp_server:
-        description: "Bring OpenProject into your AI workflows with a secure MCP server."
+        description: "Integrieren Sie OpenProject mittels eines sicheren MCP-Servers in Ihren KI-Workflows."
       meeting_templates:
-        description: "Define meeting templates with a set agenda structure and save time by reusing them when creating new meetings."
+        description: "Definieren Sie Besprechungsvorlagen mit einer festen Agenda-Struktur und sparen Sie Zeit, indem Sie sie bei der Erstellung neuer Besprechungen wiederverwenden."
       nextcloud_sso:
         title: "Single Sign-On für Nextcloud-Speicher"
         description: "Aktivieren Sie nahtlose und sichere Authentifizierung für Ihren Nextcloud-Speicher mit Single Sign-On. Vereinfachen Sie das Zugriffsmanagement und erhöhen Sie den Benutzerkomfort."
@@ -3066,16 +3084,16 @@ de:
         #We need to include the version to invalidate outdated translations in other locales
         "17_2":
           new_features_title: >
-            The release contains various new features and improvements, such as:
+            Dieses Release enthält verschiedene neue Funktionen und Verbesserungen, wie z. B:
           new_features_list:
-            line_0: AI workflows with a secure MCP server (Professional plan and higher)
-            line_1: Improved project home page with new widget for budgets and improved accessibility
-            line_2: "Meetings: Meeting templates (Basic plan and higher)"
-            line_3: Better transparency with project attribute comments.
-            line_4: PDF export enhancements
-            line_5: Increased security for external links (Premium plan and higher)
-            line_6: UI/UX improvements in the Backlogs module
-            line_7: Harmonized custom field forms
+            line_0: KI-Workflows mit einem sicheren MCP-Server (Professional-Plan und höher)
+            line_1: Verbesserte Projekt-Startseite mit neuem Widget für Budgets und verbesserter Barrierefreiheit
+            line_2: "Besprechungen: Besprechungsvorlagen (Basisplan und höher)"
+            line_3: Bessere Transparenz durch Kommentare zu Projektattributen
+            line_4: Verbesserungen beim PDF-Export
+            line_5: Erhöhte Sicherheit für externe Links (Premium Plan und höher)
+            line_6: UI/UX Verbesserungen im Backlogs-Modul
+            line_7: Harmonisierte Formulare für benutzerdefinierte Felder
     links:
       upgrade_enterprise_edition: "Auf Enterprise Edition upgraden"
       postgres_migration: "Migration Ihrer Installation zu PostgreSQL"
@@ -3093,7 +3111,7 @@ de:
   journals:
     changes_retracted: "Die Änderungen wurden zurückgezogen."
     caused_changes:
-      budget_deleted: "Budget has been deleted"
+      budget_deleted: "Budget wurde gelöscht"
       dates_changed: "Datum geändert"
       default_attribute_written: "Nur-Lese-Attribute wurde geschrieben"
       import: "Importiert"
@@ -3119,7 +3137,7 @@ de:
       work_package_related_changed_times: durch Änderungen an verwandtem Arbeitspaket %{link}
       work_package_duplicate_closed: Der Status wurde automatisch durch das als Duplikat markierte Arbeitspaket %{link} aktualisiert
       unaccessable_work_package_changed: nach Änderungen an einem zugehörigen Arbeitspaket
-      budget_deleted: Budget has been deleted
+      budget_deleted: Budget wurde gelöscht
       working_days_changed:
         changed: "Durch Änderungen an Werktagen (%{changes})"
         days:
@@ -3485,7 +3503,6 @@ de:
   label_float: "Gleitkommazahl"
   label_folder: "Ordner"
   label_follows: "folgt"
-  label_force_user_language_to_default: "Setze Sprache für Nutzer, die eine nicht erlaubte Sprache gewählt haben, auf die Standard-Sprache"
   label_form_configuration: "Formularkonfiguration"
   label_formula: "Formel"
   label_gantt_chart: "Gantt-Diagramm"
@@ -3864,12 +3881,6 @@ de:
   label_user_named: "Benutzer %{name}"
   label_user_activity: "Aktivität von %{value}"
   label_user_anonymous: "Anonym"
-  label_user_mail_option_all: "Für alle Ereignisse in all meinen Projekten"
-  label_user_mail_option_none: "Für keine Ereignisse"
-  label_user_mail_option_only_assigned: "Nur für Aufgaben, für die ich zuständig bin."
-  label_user_mail_option_only_my_events: "Nur für Aufgaben, die ich beobachte oder an welchen ich mitarbeite"
-  label_user_mail_option_only_owner: "Nur für Aufgaben, die ich angelegt habe"
-  label_user_mail_option_selected: "Für alle Ereignisse in den ausgewählten Projekten"
   label_user_menu: "Benutzermenü"
   label_user_new: "Neuer Benutzer"
   label_user_plural: "Benutzer"
@@ -3909,7 +3920,6 @@ de:
   label_wiki_show_index_page_link: "'Inhaltsverzeichnis' Link als Untermenüpunkt anzeigen"
   label_wiki_show_menu_item: "als Menüpunkt in der Projektnavigation anzeigen"
   label_wiki_show_new_page_link: "'Neue Unterseite anlegen' Link als Untermenüpunkt anzeigen"
-  label_wiki_show_submenu_item: "als Untermenüpunkt anzeigen von "
   label_wiki_start: "Hauptseite"
   label_work: "Aufwand"
   label_work_package: "Arbeitspaket"
@@ -4191,6 +4201,7 @@ de:
   notice_parent_item_not_found: "Übergeordnetes Element nicht gefunden."
   notice_project_not_deleted: "Das Projekt wurde nicht gelöscht."
   notice_project_not_found: "Projekt nicht gefunden."
+  notice_smtp_address_unsafe_env_hint: "SMTP address %{address} is not safe. Please add it to the whitelist using the %{env_name} environment variable."
   notice_successful_connection: "Verbindung erfolgreich."
   notice_successful_create: "Erfolgreich angelegt."
   notice_successful_delete: "Erfolgreich gelöscht."
@@ -4982,7 +4993,7 @@ de:
   text_default_administrator_account_changed: "Administrator-Kennwort geändert"
   text_default_encoding: "Default: UTF-8"
   text_destroy: "Löschen"
-  text_destroy_with_associated: "Es sind weitere Datenobjekte mit den bzw. dem zu löschenden Arbeitpaket(en) verbunden. Es handelt sich dabei um Objekte der folgenden Typen:"
+  text_destroy_with_associated: "There are additional objects associated with the work package(s) that are to be deleted. Those objects are of the following types:"
   text_destroy_what_to_do: "Was soll mit den Objekten geschehen?"
   text_diff_truncated: "... Dieser Diff wurde abgeschnitten, weil er die maximale Anzahl anzuzeigender Zeilen überschreitet."
   text_email_delivery_not_configured: "E-Mail-Zustellung ist nicht konfiguriert und Benachrichtigungen sind deaktiviert.\nKonfigurieren Sie Ihren SMTP-Server, um sie zu aktivieren."

@@ -116,9 +116,8 @@ en:
         trial: "Trial"
     jemalloc_allocator: Jemalloc memory allocator
     journal_aggregation:
-      explanation:
-        text: "Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect %{webhook_link} delay."
-        link: "webhook"
+      caption: >
+        Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect the [webhook](webhook_link) delay.
     import:
       title: "Import"
     jira:
@@ -184,6 +183,7 @@ en:
           instance_meta_fetching: "Fetching meta data"
           instance_meta_error: "Error fetching meta data"
           instance_meta_done: "Meta data fetched"
+          import_scope: "Select scope"
           configuring: "Select scope"
           projects_meta_fetching: "Fetching project data"
           projects_meta_error: "Error fetching project data"
@@ -193,8 +193,12 @@ en:
           imported: "Review mode"
           reverting: "Reverting"
           revert_error: "Error during revert"
+          revert_cancelling: "Cancelling revert"
+          revert_cancelled: "Revert cancelled"
           reverted: "Reverted"
-          completed: "Completed"
+          finalizing: "Finalizing"
+          finalizing_error: "Error during finalizing"
+          finalizing_done: "Completed"
         wizard:
           button_retry: "Retry"
           parts:
@@ -240,7 +244,7 @@ en:
               title: "Import scope"
               caption: "Choose what you want to import into OpenProject"
               caption_done: "Completed"
-              label_info: "Please note that this import tool is in beta and cannot import all types of data. Here is a summary of what the host Jira instance URL offers for import and what this tool is able to import right now."
+              label_info: "Please note that this import tool is in beta and cannot import all types of data. Here is a summary of what the host Jira instance offers for import and what this tool is able to import right now."
               description: "Select what data you want to import from the available data fetched from the host Jira instance."
               label_available_data: "Available data"
               label_not_available_data: "Not available for import"
@@ -275,12 +279,21 @@ en:
               button_revert: "Revert import"
               button_done: "Finalize import"
               preview_description: 'The imported data is currently in review mode. Click "Finalize import" to make the import permanent or "Revert import" to undo all changes made in this import run.'
-              label_finalizing_progress: "Finalizing import..."
-              label_finalized: "Import finalized."
+              label_finalize_import: "Finalize import"
+              label_finalizing: "Finalizing import..."
+              label_finalizing_done: "Import finalized."
               label_revert_progress: "Reverting import..."
               label_reverted: "Import reverted."
           select_dialog:
             filter_projects: "Filter by text"
+          import_dialog:
+            title: "Start this import?"
+            confirm_button: "Start import"
+            description: >
+              This importer is an alpha feature. It is not yet able to import all data from Jira and might leave incomplete data on this OpenProject instance.
+
+              <b>Do not use a production environment and create a backup of your OpenProject data before starting.</b>
+            confirm: "I understand and made the necessary preparations"
           revert_dialog:
             title: "Permanently revert this import?"
             description: "This will delete all imported objects (including whole projects) even if there was user activity in those projects after the import on OpenProject."
@@ -677,11 +690,13 @@ en:
   op_dry_validation:
     or: "or"
     errors:
+      unexpected_key: "is not allowed."
       array?: "must be an array."
       decimal?: "must be a decimal."
       defined: "must not be defined."
       eql?: "must be equal to %{left}."
       filled?: "must be filled."
+      format?: "is in invalid format."
       greater_or_equal_zero: "must be greater or equal to 0."
       gteq?: "must be greater than or equal to %{num}."
       hash?: "must be a hash."
@@ -708,7 +723,9 @@ en:
         parent:
           not_descendant: "must be a descendant of the hierarchy root."
       str?: "must be a string."
+      time?: "must be a time."
       type?: "must be %{type}."
+      uri?: "is not a valid URI."
     rules:
       copy_workflow_from: "Type for workflow copy"
       enabled: "Enabled"
@@ -1147,6 +1164,61 @@ en:
         user: "The user can now log in to access %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
         placeholder_user: "The placeholder can now be used in %{project}. Meanwhile you can already plan with that user and assign work packages for instance."
         group: "The group is now a part of %{project}. Meanwhile you can already plan with that group and assign work packages for instance."
+    working_hours:
+      current_schedule:
+        title: "Current schedule"
+        work_days: "Work days"
+        work_hours: "Work hours"
+        availability_factor: "Availability factor"
+        availability_subtitle: "Dedicated to project work"
+        effective_hours: "Effective work hours"
+        effective_subtitle: "Per week"
+        not_set: "Not set"
+      future:
+        title: "Future schedules"
+        description: "Plan working schedule changes ahead of time. Once the date arrives your working schedules will be updated automatically."
+        add_button: "Add future schedule"
+        blank_title: "No future schedules planned"
+        blank_description: "Create a future schedule to plan changes ahead of time"
+      history:
+        title: "Schedule history"
+        description: "View your past work schedules."
+        blank_title: "No schedule history yet"
+        blank_description: "Past schedule changes will appear here"
+      destroy:
+        confirm: "Are you sure you want to delete this working schedule?"
+      form:
+        title: "Plan a future work schedule"
+        title_current: "Edit current work schedule"
+        start_date: "Start date"
+        start_date_caption: "Select the date from when the new work schedule will be effective."
+        work_days: "Work days"
+        working_hours_label: "Working hours"
+        hours_mode_label: "Hours mode"
+        same_hours_mode: "Same hours per day"
+        individual_hours_mode: "Individual hours per day"
+        work_hours: "Work hours"
+        hours_per_day: "Hours per day"
+        per_day: "per day"
+        per_week: "per week"
+        total_work_hours: "Total work hours"
+        availability_description: "The availability factor represents the actual percentage of your working time dedicated to project tasks. This accounts for meetings, emails, administrative work, and other non-project activities."
+        availability_factor: "Availability factor"
+        availability_factor_caption: "Define the percentage of your working time dedicated to project work."
+        total_available_hours: "Total available work hours"
+        title_availability_factor: "Availability factor"
+        title_days_and_hours: "Days and hours"
+        title_future_dates: "Future dates"
+      table:
+        mobile_title: "Working schedules"
+        start_date: "Start date"
+        work_days: "Work days"
+        work_hours: "Work hours"
+        availability_factor: "Availability factor"
+        effective_work_hours: "Effective work hours"
+        work_days_count:
+          one: "1 working day"
+          other: "%{count} working days"
   page:
     text: "Text"
   placeholder_users:
@@ -1499,6 +1571,12 @@ en:
         dependencies: "Dependencies"
 
   activerecord:
+    errors:
+      models:
+        group:
+          attributes:
+            parent_id:
+              circular_dependency: "would create a circular group hierarchy."
     attributes:
       jira_import:
         projects: "Projects"
@@ -1506,6 +1584,9 @@ en:
         name: "Jira instance name"
         url: "Jira instance URL"
         personal_access_token: "Personal access token"
+      "import/jira_open_project_reference":
+        jira: "Jira"
+        jira_import: "Jira import"
       announcements:
         show_until: "Display until"
       attachment:
@@ -1759,6 +1840,11 @@ en:
         consented_at: "Consented at"
       group:
         identity_url: "Identity URL"
+        parent: "Parent group"
+        organizational_unit: "Organizational unit"
+      group_detail:
+        parent: "Parent group"
+        organizational_unit: "Organizational unit"
       user_preference:
         header_look_and_feel: "Look and feel"
         header_alerts: "Alerts"
@@ -1789,6 +1875,27 @@ en:
       users/invitation/form_model:
         principal_type: "Invitation type"
         id_or_email: "Name or email address"
+      user_non_working_time:
+        start_date: "Start date"
+        end_date: "End date"
+      user_working_hours:
+        valid_from: "Valid from"
+        monday: "Monday"
+        monday_hours: "Monday hours"
+        tuesday: "Tuesday"
+        tuesday_hours: "Tuesday hours"
+        wednesday: "Wednesday"
+        wednesday_hours: "Wednesday hours"
+        thursday: "Thursday"
+        thursday_hours: "Thursday hours"
+        friday: "Friday"
+        friday_hours: "Friday hours"
+        saturday: "Saturday"
+        saturday_hours: "Saturday hours"
+        sunday: "Sunday"
+        sunday_hours: "Sunday hours"
+        availability_factor: "Availability factor"
+        shared_hours: "Work hours"
       version:
         effective_date: "Finish date"
         sharing: "Sharing"
@@ -1844,6 +1951,8 @@ en:
         before: "must be before %{date}."
         before_or_equal_to: "must be before or equal to %{date}."
         blank: "can't be blank."
+        not_before_start_date: "must not be before the start date."
+        overlapping_range: "overlaps with an existing non-working day range."
         blank_nested: "needs to have the property '%{property}' set."
         cannot_delete_mapping: "is required. Cannot be deleted."
         is_for_all_cannot_modify: "is for all projects and can therefore not be modified."
@@ -1880,7 +1989,9 @@ en:
         less_than_or_equal_to: "must be less than or equal to %{count}."
         not_available: "is not available due to a system configuration."
         not_deletable: "cannot be deleted."
+        not_editable: "cannot be edited because it is already in effect."
         not_current_user: "is not the current user."
+        system_wide_non_working_day_exists: "conflicts with an existing system-wide non-working day for this date."
         only_one_active_sprint_allowed: "only one active sprint is allowed per project."
         not_found: "not found."
         not_a_date: "is not a valid date."
@@ -3270,7 +3381,7 @@ en:
             line_0: AI workflows with a secure MCP server (Professional plan and higher)
             line_1: Improved project home page with new widget for budgets and improved accessibility
             line_2: "Meetings: Meeting templates (Basic plan and higher)"
-            line_3: Better transparency with project attribute comments.
+            line_3: Better transparency with project attribute comments
             line_4: PDF export enhancements
             line_5: Increased security for external links (Premium plan and higher)
             line_6: UI/UX improvements in the Backlogs module
@@ -3694,7 +3805,6 @@ en:
   label_float: "Float"
   label_folder: "Folder"
   label_follows: "follows"
-  label_force_user_language_to_default: "Set language of users having a non allowed language to default"
   label_form_configuration: "Form configuration"
   label_formula: "Formula"
   label_gantt_chart: "Gantt chart"
@@ -3854,11 +3964,13 @@ en:
   label_news_view_all: "View all news"
   label_next: "Next"
   label_next_week: "Next week"
+  label_next_year: "Next year"
   label_no_change_option: "(No change)"
   label_no_data: "No data to display"
   label_no_due_date: "no finish date"
   label_no_start_date: "no start date"
   label_no_parent_page: "No parent page"
+  label_no_parent_group: "(No parent group)"
   label_notification_center_plural: "Notifications"
   label_nothing_display: "Nothing to display"
   label_nobody: "nobody"
@@ -3887,6 +3999,9 @@ en:
   label_overall_activity: "Overall activity"
   label_overview: "Overview"
   label_page_title: "Page title"
+  label_parent_group_caption: >
+    Setting a parent group will make this group a subgroup of the selected parent group.
+    This will also inherit all memberships, including permissions of the parent group.
   label_part_of: "part of"
   label_password_lost: "Forgot your password?"
   label_password_rule_lowercase: "Lowercase"
@@ -3913,6 +4028,7 @@ en:
   label_preview_not_available: "Preview not available"
   label_previous: "Previous"
   label_previous_week: "Previous week"
+  label_previous_year: "Previous year"
   label_principal_invite_via_email: " or invite new users via email"
   label_principal_search: "Add existing users or groups"
   label_privacy_policy: "Data privacy and security policy"
@@ -4052,6 +4168,7 @@ en:
   label_title: "Title"
   label_projects_menu: "Projects"
   label_today: "today"
+  label_today_capitalized: "Today"
   label_token_version: "Token Version"
   label_today_as_start_date: "Select today as start date."
   label_today_as_due_date: "Select today as finish date."
@@ -4074,12 +4191,6 @@ en:
   label_user_named: "User %{name}"
   label_user_activity: "%{value}'s activity"
   label_user_anonymous: "Anonymous"
-  label_user_mail_option_all: "For any event on all my projects"
-  label_user_mail_option_none: "No events"
-  label_user_mail_option_only_assigned: "Only for things I am assigned to"
-  label_user_mail_option_only_my_events: "Only for things I watch or I'm involved in"
-  label_user_mail_option_only_owner: "Only for things I am the owner of"
-  label_user_mail_option_selected: "For any event on the selected projects only"
   label_user_menu: "User menu"
   label_user_new: "New user"
   label_user_plural: "Users"
@@ -4119,7 +4230,6 @@ en:
   label_wiki_show_index_page_link: "Show submenu item 'Table of Contents'"
   label_wiki_show_menu_item: "Show as menu item in project navigation"
   label_wiki_show_new_page_link: "Show submenu item 'Create new child page'"
-  label_wiki_show_submenu_item: "Show as submenu item of "
   label_wiki_start: "Start page"
   label_work: "Work"
   label_work_package: "Work package"
@@ -4166,6 +4276,15 @@ en:
     one: "1 file"
     other: "%{count} files"
     zero: "no files"
+  label_x_days:
+    one: "1 day"
+    other: "%{count} days"
+  label_x_working_days:
+    one: "1 working day"
+    other: "%{count} working days"
+  label_x_working_days_time_off:
+    one: "Time off: 1 working day"
+    other: "Time off: %{count} working days"
   label_yesterday: "yesterday"
   label_zen_mode: "Zen mode"
   label_role_type: "Type"
@@ -4174,6 +4293,22 @@ en:
   label_not_changeable: "(not changeable)"
   label_global: "Global"
   label_seeded_from_env_warning: This record has been created through a setting environment variable. It is not editable through UI.
+  label_schedule_and_availability: "Schedule and availability"
+  label_working_hours: "Work schedule"
+  label_non_working_days: "Availability calendar"
+  label_non_working_days_with_count: "Non-working days (%{count})"
+  label_non_working_days_summary: "Summary"
+  button_add_non_working_time: "Time off"
+  button_edit_non_working_time: "Edit time off"
+  label_continued_from_previous_year: "continued from previous year"
+  label_continues_into_next_year: "continues into next year"
+  label_end_date: "Finish date"
+  label_working_days: "Working days"
+  label_non_working_times_with_count: "%{year} time off (%{count})"
+  label_non_working_times_summary: "%{year} summary"
+  label_total_user_non_working_times: "Personal non-working days"
+  label_total_global_non_working_days: "Global non-working days"
+  label_total_days_off: "Total days off"
   macro_execution_error: "Error executing the macro %{macro_name}"
   macro_unavailable: "Macro %{macro_name} cannot be displayed."
   macros:
@@ -4409,6 +4544,7 @@ en:
   notice_parent_item_not_found: "Parent item not found."
   notice_project_not_deleted: "The project wasn't deleted."
   notice_project_not_found: "Project not found."
+  notice_smtp_address_unsafe_env_hint: "SMTP address %{address} is not safe. Please add it to the whitelist using the %{env_name} environment variable."
   notice_successful_connection: "Successful connection."
   notice_successful_create: "Successful creation."
   notice_successful_delete: "Successful deletion."
@@ -4536,6 +4672,12 @@ en:
   permission_manage_versions: "Manage versions"
   permission_manage_wiki: "Manage wiki"
   permission_manage_wiki_menu: "Manage wiki menu"
+  permission_manage_own_working_times: "Manage own working times"
+  permission_manage_own_working_times_explanation: >
+    Allows users to manage their own working times, and personal non-working days.
+  permission_manage_working_times: "Manage working times for all users"
+  permission_manage_working_times_explanation: >
+    Allows users to manage working times for all users, including personal non-working days.
   permission_move_work_packages: "Move work packages"
   permission_protect_wiki_pages: "Protect wiki pages"
   permission_rename_wiki_pages: "Rename wiki pages"
@@ -5319,7 +5461,7 @@ en:
   text_default_administrator_account_changed: "Default administrator account changed"
   text_default_encoding: "Default: UTF-8"
   text_destroy: "Delete"
-  text_destroy_with_associated: "There are additional objects assossociated with the work package(s) that are to be deleted. Those objects are of the following types:"
+  text_destroy_with_associated: "There are additional objects associated with the work package(s) that are to be deleted. Those objects are of the following types:"
   text_destroy_what_to_do: "What do you want to do?"
   text_diff_truncated: "... This diff was truncated because it exceeds the maximum size that can be displayed."
   text_email_delivery_not_configured: "Email delivery is not configured, and notifications are disabled.\nConfigure your SMTP server to enable them."
@@ -5745,6 +5887,7 @@ en:
       project: Undisclosed - The project is invisible because of lacking permissions.
       ancestor: Undisclosed - The ancestor is invisible because of lacking permissions.
       definingProject: Undisclosed - The project is invisible because of lacking permissions.
+      definingWorkspace: Undisclosed - The workspace is invisible because of lacking permissions.
 
   doorkeeper:
     pre_authorization:

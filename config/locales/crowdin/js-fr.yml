@@ -460,7 +460,7 @@ fr:
     label_children_derived_duration: "Durée dérivée des enfants du lot de travaux"
     label_warning: "Attention"
     label_work_package: "Lot de travaux"
-    label_work_package_parent: "Lot de Travaux parent"
+    label_work_package_parent: "Lot de travaux parent"
     label_work_package_plural: "Lots de Travaux"
     label_watch: "Suivre"
     label_watch_work_package: "Suivre le lot de travaux"
@@ -558,7 +558,7 @@ fr:
       date_alerts:
         milestone_date: "Date jalon"
         overdue: "En retard"
-        overdue_since: "pour %{difference_in_days}."
+        overdue_since: "de %{difference_in_days}."
         property_today: "a lieu aujourd'hui."
         property_is: "a lieu dans %{difference_in_days}."
         property_was: "avait lieu il y a %{difference_in_days}."
@@ -845,7 +845,7 @@ fr:
       message_successful_bulk_delete: Les lots de travaux ont été correctement supprimés.
       message_successful_show_in_fullscreen: "Cliquez ici pour ouvrir ce lot de travaux en affichage plein écran."
       message_view_spent_time: "Afficher le temps passé pour ce lot de travaux"
-      message_work_package_read_only: "Paquet de travail est verrouillé. Aucun attribut autre que l’État ne peut être modifié."
+      message_work_package_read_only: "Le lot de travaux est verrouillé dans ce statut. Aucun autre attribut que le statut ne peut être modifié."
       message_work_package_status_blocked: "Le statut du lot de travail n'est pas modifiable en raison de la fermeture du statut et de la version assignés."
       placeholder_filter_by_text: "Objet, description, commentaires, ..."
       progress:
@@ -993,7 +993,7 @@ fr:
         embedded_tab_disabled: "Cet onglet de configuration n'est pas disponible pour la vue intégrée que vous êtes en train de modifier."
         default: "défaut"
         display_settings: "Paramètres d'affichage"
-        default_mode: "Liste ombrée"
+        default_mode: "Liste"
         hierarchy_mode: "Hiérarchie"
         hierarchy_hint: "Tous les résultats du tableau filtrés seront augmentés de leurs ancêtres . Les hiérarchies peuvent être dépliées et repliées."
         display_sums_hint: "Afficher les sommes de tous les attributs sommables dans une ligne sous les résultats du tableau."

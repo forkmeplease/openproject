@@ -51,7 +51,7 @@ RSpec.describe OpenProject::AccessControl, "Backlogs module permissions" do # ru
     subject { described_class.permission(:manage_sprint_items) }
 
     it "depends on view_sprints, add_work_packages, and edit_work_packages" do
-      expect(subject.dependencies).to contain_exactly(:view_sprints, :add_work_packages, :edit_work_packages)
+      expect(subject.dependencies).to contain_exactly(:view_sprints)
     end
   end
 

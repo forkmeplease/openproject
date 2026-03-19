@@ -78,14 +78,23 @@ de:
         blankslate_zero:
           heading: "Budgetdetails fehlen"
           description: "Fügen Sie Details zu Ihrem geplanten Budget hinzu, um die Daten hier zu sehen"
-        caption:
+        count_caption:
           zero: "Keine Budgetdaten."
-          one: "Daten aggregiert aus %{count} Budget in diesem %{workspace}."
-          other: "Daten aggregiert aus %{count} Budgets in diesem %{workspace}."
-        caption_with_subitems:
-          zero: "Keine Budgetdaten."
-          one: "Daten aggregiert aus %{count} Budget in diesem %{workspace} und seinen Unterelementen."
-          other: "Daten aggregiert aus %{count} Budgets in diesem %{workspace} und seinen Unterelementen."
+          one: "Daten aggregiert aus %{count} Budget"
+          other: "Daten aggregiert aus %{count} Budgets"
+        count_caption_with_subitems:
+          project:
+            zero: "Keine Budgetdaten."
+            one: "Daten aggregiert aus %{count} Budget in diesem Projekt und seinen Unterelementen."
+            other: "Daten aggregiert aus %{count} Budgets in diesem Projekt und seinen Unterelementen."
+          program:
+            zero: "Keine Budgetdaten."
+            one: "Daten aggregiert aus %{count} Budget in diesem Programm und seinen Unterelementen."
+            other: "Daten aggregiert aus %{count} Budgets in diesem Programm und seinen Unterelementen."
+          portfolio:
+            zero: "Keine Budgetdaten."
+            one: "Daten aggregiert aus %{count} Budget in diesem Portfolio und seinen Unterelementen."
+            other: "Daten aggregiert aus %{count} Budgets in diesem Portfolio und seinen Unterelementen."
         view_details: "Budgetdetails anzeigen"
   events:
     budget: "Budget bearbeitet"

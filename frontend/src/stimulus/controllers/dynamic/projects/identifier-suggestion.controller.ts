@@ -28,15 +28,17 @@
  * ++
  */
 
-import {Controller} from '@hotwired/stimulus';
-import {debounce, DebouncedFunc} from 'lodash';
+import {ApplicationController, useDebounce} from 'stimulus-use';
 
 const ALLOWED_CHARS:Record<string, RegExp> = {
   semantic: /[^A-Z0-9_]/g,
   legacy: /[^a-z0-9\-_]/g,
 };
 
-export default class extends Controller {
+export default class extends ApplicationController {
+  static debounces = ['fetchSuggestion'];
+  static targets = ['name', 'identifier'];
+
   static values = {
     url: String,
     debounce: {type: Number, default: 300},
@@ -49,73 +51,63 @@ export default class extends Controller {
   declare modeValue:string;
   declare setNameFirstValue:string;
 
-  private nameInput:HTMLInputElement | null = null;
-  private identifierInput:HTMLInputElement | null = null;
-  private debouncedSuggest:DebouncedFunc<(name:string) => Promise<void>> | null = null;
-  private handleBlur:((event:Event) => void) | null = null;
-  private handleInput:((event:Event) => void) | null = null;
+  declare readonly nameTarget:HTMLInputElement;
+  declare readonly identifierTarget:HTMLInputElement;
+  declare readonly hasNameTarget:boolean;
+  declare readonly hasIdentifierTarget:boolean;
+
+  private abortController:AbortController | null = null;
 
   connect():void {
-    this.nameInput = this.element.querySelector<HTMLInputElement>('[name="project[name]"]');
-    this.identifierInput = this.element.querySelector<HTMLInputElement>('[name="project[identifier]"]');
+    if (!this.hasNameTarget || !this.hasIdentifierTarget) return;
 
-    if (!this.nameInput || !this.identifierInput) return;
+    this.abortController = new AbortController();
+    const { signal } = this.abortController;
 
-    this.handleInput = () => this.filterInput();
-    this.identifierInput.addEventListener('input', this.handleInput);
+    this.identifierTarget.addEventListener('input', () => this.filterInput(), { signal });
 
     if (this.urlValue) {
-      if (!this.identifierInput.value) {
-        this.identifierInput.placeholder = this.setNameFirstValue;
-        this.identifierInput.readOnly = true;
+      if (!this.identifierTarget.value) {
+        this.identifierTarget.placeholder = this.setNameFirstValue;
+        this.identifierTarget.readOnly = true;
       }
 
-      this.debouncedSuggest = debounce(
-        (name:string) => this.fetchSuggestion(name),
-        this.debounceValue,
-      );
+      useDebounce(this, { wait: this.debounceValue });
 
-      this.handleBlur = () => {
-        const name = this.nameInput!.value.trim();
-        if (name) void this.debouncedSuggest!(name);
-      };
-
-      this.nameInput.addEventListener('blur', this.handleBlur);
+      this.nameTarget.addEventListener('blur', () => {
+        void this.fetchSuggestion();
+      }, { signal });
     }
   }
 
   disconnect():void {
-    this.debouncedSuggest?.cancel();
-    if (this.nameInput && this.handleBlur) {
-      this.nameInput.removeEventListener('blur', this.handleBlur);
-    }
-    if (this.identifierInput && this.handleInput) {
-      this.identifierInput.removeEventListener('input', this.handleInput);
-    }
+    this.abortController?.abort();
+    this.abortController = null;
   }
 
   private filterInput():void {
-    if (!this.identifierInput) return;
+    if (!this.hasIdentifierTarget) return;
 
     const pattern = ALLOWED_CHARS[this.modeValue] ?? ALLOWED_CHARS.legacy;
-    const current = this.identifierInput.value;
+    const current = this.identifierTarget.value;
     const filtered = current.replace(pattern, '');
 
     if (filtered !== current) {
-      const pos = this.identifierInput.selectionStart ?? filtered.length;
-      this.identifierInput.value = filtered;
+      const pos = this.identifierTarget.selectionStart ?? filtered.length;
+      this.identifierTarget.value = filtered;
       const newPos = Math.min(pos, filtered.length);
-      this.identifierInput.setSelectionRange(newPos, newPos);
+      this.identifierTarget.setSelectionRange(newPos, newPos);
     }
   }
 
-  private async fetchSuggestion(name:string):Promise<void> {
-    if (!this.urlValue) return;
+  private async fetchSuggestion():Promise<void> {
+    if (!this.urlValue || !this.hasIdentifierTarget || !this.hasNameTarget) return;
 
-    if (this.identifierInput) {
-      this.identifierInput.readOnly = true;
-      this.identifierInput.placeholder = I18n.t('js.projects.identifier_suggestion.loading');
-    }
+    const name = this.nameTarget.value.trim();
+    if (!name) return;
+
+    this.identifierTarget.readOnly = true;
+    this.identifierTarget.placeholder = I18n.t('js.projects.identifier_suggestion.loading');
 
     try {
       const url = `${this.urlValue}?name=${encodeURIComponent(name)}`;
@@ -124,14 +116,10 @@ export default class extends Controller {
       if (!response.ok) return;
 
       const data = await response.json() as { identifier:string };
-      if (this.identifierInput) {
-        this.identifierInput.value = data.identifier;
-      }
+      this.identifierTarget.value = data.identifier;
     } finally {
-      if (this.identifierInput) {
-        this.identifierInput.readOnly = false;
-        this.identifierInput.placeholder = '';
-      }
+      this.identifierTarget.readOnly = false;
+      this.identifierTarget.placeholder = '';
     }
   }
 }
