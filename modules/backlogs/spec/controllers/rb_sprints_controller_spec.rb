@@ -404,7 +404,7 @@ RSpec.describe RbSprintsController do
         context "without the 'start_complete_sprint' permission" do
           let(:permissions) { all_permissions - [:start_complete_sprint] }
 
-          it "responds with forbidden" do
+          it "responds with forbidden", :aggregate_failures do
             patch :start, params: request_params
 
             expect(response).not_to be_successful
@@ -415,7 +415,7 @@ RSpec.describe RbSprintsController do
         context "when the sprint is already active" do
           let!(:sprint) { create(:agile_sprint, project:, status: "active") }
 
-          it "responds with not found" do
+          it "responds with not found", :aggregate_failures do
             patch :start, params: request_params
 
             expect(response).not_to be_successful
@@ -494,7 +494,7 @@ RSpec.describe RbSprintsController do
         context "without the 'start_complete_sprint' permission" do
           let(:permissions) { all_permissions - [:start_complete_sprint] }
 
-          it "responds with forbidden" do
+          it "responds with forbidden", :aggregate_failures do
             patch :finish, params: request_params
 
             expect(response).not_to be_successful
@@ -505,7 +505,7 @@ RSpec.describe RbSprintsController do
         context "when the sprint is already completed" do
           let!(:sprint) { create(:agile_sprint, project:, status: "completed") }
 
-          it "responds with not found" do
+          it "responds with not found", :aggregate_failures do
             patch :finish, params: request_params
 
             expect(response).not_to be_successful
