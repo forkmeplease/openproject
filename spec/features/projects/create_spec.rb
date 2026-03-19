@@ -560,6 +560,46 @@ RSpec.describe "Projects", "creation",
     end
   end
 
+  context "with alphanumeric identifiers", with_settings: { work_packages_identifier: "alphanumeric" } do
+    it "auto-suggests an identifier when the name field is blurred" do
+      projects_page.create_new_workspace
+      click_on "Continue"
+
+      fill_in "Name", with: "Flight Planning Algorithm"
+      find("body").click # blur the name field
+
+      expect(page).to have_field "Identifier", with: "FPA"
+    end
+
+    it "allows overriding the auto-suggested identifier" do
+      projects_page.create_new_workspace
+      click_on "Continue"
+
+      fill_in "Name", with: "Flight Planning Algorithm"
+      find("body").click
+      expect(page).to have_field "Identifier", with: "FPA"
+
+      fill_in "Identifier", with: "MYIDENT"
+      click_on "Complete"
+
+      expect_and_dismiss_flash type: :success, message: "Successful creation."
+      expect(page).to have_current_path %r{/projects/MYIDENT/?}
+    end
+
+    it "shows a validation error for identifiers not starting with a letter" do
+      projects_page.create_new_workspace
+      click_on "Continue"
+
+      fill_in "Name", with: "Flight Planning Algorithm"
+      find("body").click
+
+      fill_in "Identifier", with: "3INVALID"
+      click_on "Complete"
+
+      expect(page).to have_text "Identifier must start with a letter"
+    end
+  end
+
   context "with workspace type badges in parent field", with_flag: { portfolio_models: true } do
     include_context "ng-select-autocomplete helpers"
 

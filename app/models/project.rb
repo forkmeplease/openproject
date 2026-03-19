@@ -45,9 +45,10 @@ class Project < ApplicationRecord
 
   # Maximum length for project identifiers
   IDENTIFIER_MAX_LENGTH = 100
+  SEMANTIC_IDENTIFIER_MAX_LENGTH = 10
 
   # reserved identifiers
-  RESERVED_IDENTIFIERS = %w[new menu queries filters].freeze
+  RESERVED_IDENTIFIERS = %w[new menu queries filters identifier_update_dialog identifier_suggestion].freeze
 
   enum :workspace_type, {
     project: "project",
@@ -200,17 +201,28 @@ class Project < ApplicationRecord
               blacklist: RESERVED_IDENTIFIERS,
               adapter: OpenProject::ActsAsUrl::Adapter::OpActiveRecord # use a custom adapter able to handle edge cases
 
+  ### Validators for the legacy underscored identifier format (e.g. "project_one")
   validates :identifier,
             presence: true,
             uniqueness: { case_sensitive: true },
             length: { maximum: IDENTIFIER_MAX_LENGTH },
             exclusion: RESERVED_IDENTIFIERS,
             if: ->(p) { p.persisted? || p.identifier.present? }
-
   # Contains only a-z, 0-9, dashes and underscores but cannot consist of numbers only as it would clash with the id.
   validates :identifier,
             format: { with: /\A(?!^\d+\z)[a-z0-9\-_]+\z/ },
-            if: ->(p) { p.identifier_changed? && p.identifier.present? }
+            if: ->(p) {
+              p.identifier_changed? && p.identifier.present? && !Setting::WorkPackageIdentifier.alphanumeric?
+            }
+
+  ### Validators for the uppercase identifier format (e.g. "PROJ1")
+  validates :identifier,
+            format: { with: /\A[A-Z]/, message: :must_start_with_letter },
+            if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
+  validates :identifier,
+            format: { with: /\A[A-Z][A-Z0-9_]*\z/, message: :no_special_characters },
+            length: { maximum: SEMANTIC_IDENTIFIER_MAX_LENGTH },
+            if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
 
   # Complements the uniqueness validation above: once an identifier has been used by a
   # project, it remains reserved for that project even after the project moves to a new
@@ -277,6 +289,14 @@ class Project < ApplicationRecord
 
   def copy_allowed?
     User.current.allowed_in_project?(:copy_projects, self)
+  end
+
+  def self.suggest_identifier(name)
+    if Setting::WorkPackageIdentifier.alphanumeric?
+      WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator.suggest_identifier(name)
+    else # This should closely enough emulate Project models' usage of acts_as_url
+      name.to_url.first(IDENTIFIER_MAX_LENGTH).presence || "project"
+    end
   end
 
   def self.selectable_projects

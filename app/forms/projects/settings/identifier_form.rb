@@ -27,29 +27,22 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-
-class Projects::IdentifierController < ApplicationController
-  include OpTurbo::ComponentStream
-
-  before_action :find_project_by_project_id
-  before_action :authorize
-
-  def identifier_update_dialog
-    respond_with_dialog Projects::Settings::ChangeIdentifierDialogComponent.new(project: @project)
-  end
-
-  def update
-    service_call = Projects::UpdateService
-                     .new(user: current_user,
-                          model: @project)
-                     .call(identifier: permitted_params.project[:identifier])
-
-    if service_call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to project_settings_general_path(@project)
-    else
-      respond_with_dialog Projects::Settings::ChangeIdentifierDialogComponent.new(project: service_call.result),
-                          status: :unprocessable_entity
+module Projects
+  module Settings
+    class IdentifierForm < ApplicationForm
+      form do |f|
+        caption_key = if Setting::WorkPackageIdentifier.alphanumeric?
+                        :text_project_identifier_description
+                      else
+                        :text_project_identifier_url_description
+                      end
+        f.text_field(
+          name: :identifier,
+          label: attribute_name(:identifier),
+          caption: I18n.t(caption_key),
+          disabled: true
+        )
+      end
     end
   end
 end

@@ -28,28 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Projects::IdentifierController < ApplicationController
-  include OpTurbo::ComponentStream
+module Projects
+  class IdentifierSuggestionController < ApplicationController
+    before_action :require_login
+    before_action :authorize
 
-  before_action :find_project_by_project_id
-  before_action :authorize
+    def show
+      name = params[:name].to_s.strip
+      return render json: {}, status: :unprocessable_entity if name.blank?
 
-  def identifier_update_dialog
-    respond_with_dialog Projects::Settings::ChangeIdentifierDialogComponent.new(project: @project)
-  end
-
-  def update
-    service_call = Projects::UpdateService
-                     .new(user: current_user,
-                          model: @project)
-                     .call(identifier: permitted_params.project[:identifier])
-
-    if service_call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to project_settings_general_path(@project)
-    else
-      respond_with_dialog Projects::Settings::ChangeIdentifierDialogComponent.new(project: service_call.result),
-                          status: :unprocessable_entity
+      identifier = Project.suggest_identifier(name)
+      render json: { identifier: }
     end
   end
 end

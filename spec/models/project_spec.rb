@@ -723,4 +723,22 @@ RSpec.describe Project do
       end
     end
   end
+
+  describe ".suggest_identifier" do
+    context "with alphanumeric identifiers", with_settings: { work_packages_identifier: "alphanumeric" } do
+      it "delegates to ProjectIdentifierSuggestionGenerator" do
+        allow(WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator)
+          .to receive(:suggest_identifier).with("My Project").and_return("MP")
+        expect(described_class.suggest_identifier("My Project")).to eq("MP")
+        expect(WorkPackages::IdentifierAutofix::ProjectIdentifierSuggestionGenerator)
+          .to have_received(:suggest_identifier).with("My Project")
+      end
+    end
+
+    context "with numeric (legacy) identifiers", with_settings: { work_packages_identifier: "numeric" } do
+      it "returns a slugified lowercase identifier" do
+        expect(described_class.suggest_identifier("My Cool Project")).to eq("my-cool-project")
+      end
+    end
+  end
 end
