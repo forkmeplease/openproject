@@ -32,8 +32,9 @@ class MigrateVersionsToSprints < ActiveRecord::Migration[8.0]
   def up
     wp_version_map = {}
 
-    sprint_versions_with_work_package_ids.each do |version, wp_ids|
+    sprint_versions_with_work_package_ids.find_each do |version|
       sprint = create_sprint(version)
+      wp_ids = version.wp_ids
       migrate_work_packages_to_sprint(sprint, wp_ids)
       wp_ids.each { |wp_id| wp_version_map[wp_id.to_s] = sprint.name }
     end
@@ -54,16 +55,14 @@ class MigrateVersionsToSprints < ActiveRecord::Migration[8.0]
     Version.joins(:version_settings, :work_packages)
            .where(version_settings: { display: VersionSetting::DISPLAY_LEFT })
            .where("work_packages.project_id = version_settings.project_id")
-           .includes(:project)
            .group("versions.id")
            .select("versions.*, array_agg(DISTINCT work_packages.id) AS wp_ids")
-           .map { |version| [version, version.wp_ids] }
   end
 
   def create_sprint(version)
     Agile::Sprint.create!(
       name: version.name,
-      project: version.project,
+      project_id: version.project_id,
       status: version.status == "open" ? "in_planning" : "completed",
       start_date: version.start_date,
       finish_date: version.effective_date
