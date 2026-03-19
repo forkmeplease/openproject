@@ -56,14 +56,15 @@ export default class extends ApplicationController {
   declare readonly hasNameTarget:boolean;
   declare readonly hasIdentifierTarget:boolean;
 
-  private handleBlur:((event:Event) => void) | null = null;
-  private handleInput:((event:Event) => void) | null = null;
+  private abortController:AbortController | null = null;
 
   connect():void {
     if (!this.hasNameTarget || !this.hasIdentifierTarget) return;
 
-    this.handleInput = () => this.filterInput();
-    this.identifierTarget.addEventListener('input', this.handleInput);
+    this.abortController = new AbortController();
+    const { signal } = this.abortController;
+
+    this.identifierTarget.addEventListener('input', () => this.filterInput(), { signal });
 
     if (this.urlValue) {
       if (!this.identifierTarget.value) {
@@ -73,25 +74,21 @@ export default class extends ApplicationController {
 
       useDebounce(this, { wait: this.debounceValue });
 
-      this.handleBlur = () => {
+      this.nameTarget.addEventListener('blur', () => {
         const name = this.nameTarget.value.trim();
         if (name) void this.fetchSuggestion(name);
-      };
-
-      this.nameTarget.addEventListener('blur', this.handleBlur);
+      }, { signal });
     }
   }
 
   disconnect():void {
-    if (this.hasNameTarget && this.handleBlur) {
-      this.nameTarget.removeEventListener('blur', this.handleBlur);
-    }
-    if (this.hasIdentifierTarget && this.handleInput) {
-      this.identifierTarget.removeEventListener('input', this.handleInput);
-    }
+    this.abortController?.abort();
+    this.abortController = null;
   }
 
   private filterInput():void {
+    if (!this.hasIdentifierTarget) return;
+
     const pattern = ALLOWED_CHARS[this.modeValue] ?? ALLOWED_CHARS.legacy;
     const current = this.identifierTarget.value;
     const filtered = current.replace(pattern, '');
@@ -105,7 +102,7 @@ export default class extends ApplicationController {
   }
 
   private async fetchSuggestion(name:string):Promise<void> {
-    if (!this.urlValue) return;
+    if (!this.urlValue || !this.hasIdentifierTarget) return;
 
     this.identifierTarget.readOnly = true;
     this.identifierTarget.placeholder = I18n.t('js.projects.identifier_suggestion.loading');
