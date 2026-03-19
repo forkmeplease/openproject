@@ -10,6 +10,9 @@ jobs:
     # Only run in the private fork, never in the public repo
     if: github.repository == 'opf/openproject-internal-fork'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      workflows: write
 
     steps:
       - name: Checkout repository
