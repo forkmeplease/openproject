@@ -69,7 +69,7 @@ gem "scimitar", "~> 2.13"
 gem "acts_as_list", "~> 1.2.6"
 gem "acts_as_tree", "~> 2.9.0"
 gem "awesome_nested_set", "~> 3.9.0"
-gem "closure_tree", "~> 9.6.0"
+gem "closure_tree", "~> 9.6.1"
 gem "rubytree", "~> 2.2.0"
 
 gem "addressable", "~> 2.8.9"
@@ -87,7 +87,7 @@ gem "htmldiff"
 gem "stringex", "~> 2.8.5"
 
 # CommonMark markdown parser with GFM extension
-gem "commonmarker", "~> 2.6.0"
+gem "commonmarker", "~> 2.7.0"
 
 # HTML pipeline for transformations on text formatter output
 # such as sanitization or additional features
@@ -124,7 +124,7 @@ gem "sys-filesystem", "~> 1.5.0", require: false
 gem "bcrypt", "~> 3.1.6"
 
 gem "multi_json", "~> 1.19.0"
-gem "oj", "~> 3.16.12"
+gem "oj", "~> 3.16.16"
 
 gem "daemons"
 gem "good_job", "~> 4.13.3" # update should be done manually in sync with saas-openproject version.
@@ -163,7 +163,7 @@ gem "matrix", "~> 0.4.3"
 
 gem "mcp", "~> 0.8.0"
 
-gem "meta-tags", "~> 2.22.3"
+gem "meta-tags", "~> 2.23.0"
 
 gem "paper_trail", "~> 17.0.0"
 
@@ -201,13 +201,14 @@ gem "nokogiri", "~> 1.19.1"
 
 gem "carrierwave", "~> 2.2.6"
 gem "carrierwave_direct", "~> 3.0.0"
+gem "ssrf_filter", "~> 1.3"
 gem "fog-aws"
 
 gem "aws-sdk-core", "~> 3.241"
 # File upload via fog + screenshots on travis
 gem "aws-sdk-s3", "~> 1.213"
 
-gem "openproject-token", "~> 8.8.0"
+gem "openproject-token", "~> 8.8.2"
 
 gem "plaintext", "~> 0.3.7"
 
@@ -235,8 +236,8 @@ gem "yabeda-puma-plugin"
 gem "yabeda-rails"
 
 # opentelemetry
-gem "opentelemetry-exporter-otlp", "~> 0.31.0", require: false
-gem "opentelemetry-instrumentation-all", "~> 0.90.0", require: false
+gem "opentelemetry-exporter-otlp", "~> 0.32.0", require: false
+gem "opentelemetry-instrumentation-all", "~> 0.91.0", require: false
 gem "opentelemetry-sdk", "~> 1.10", require: false
 
 gem "view_component", "~> 4.5.0"
@@ -255,7 +256,7 @@ gem "turbo-rails", "~> 2.0.20"
 
 # There is a problem with version 1.4.0. Do not update until you're sure there is no infinite hang
 # happenning in failing tests when WebMock or VCR stub cannot be found.
-gem "httpx", "~> 1.6.3"
+gem "httpx", "~> 1.7.3"
 
 # Brings actual deep-freezing to most ruby objects
 gem "ice_nine"
@@ -273,10 +274,10 @@ group :test do
   gem "rack_session_access"
   gem "rspec", "~> 3.13.2"
   # also add to development group, so 'spec' rake task gets loaded
-  gem "rspec-rails", "~> 8.0.3", group: :development
+  gem "rspec-rails", "~> 8.0.4", group: :development
 
   # Retry failures within the same environment
-  gem "retriable", "~> 3.2.1"
+  gem "retriable", "~> 3.4.1"
   gem "rspec-retry", "~> 0.6.1"
 
   # Accessibility tests

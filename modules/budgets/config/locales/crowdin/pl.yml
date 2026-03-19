@@ -78,14 +78,23 @@ pl:
         blankslate_zero:
           heading: "Brak szczegółów budżetu"
           description: "Aby zobaczyć tutaj dane, dodaj szczegóły dotyczące planowanego budżetu"
-        caption:
+        count_caption:
           zero: "Brak danych budżetowych."
-          one: "Dane zagregowane z %{count} budżetu zawarte w tej %{workspace}."
-          other: "Dane zagregowane z %{count} budżetów zawartych na tej %{workspace}."
-        caption_with_subitems:
-          zero: "Brak danych budżetowych."
-          one: "Dane zagregowane z %{count} budżetu zawarte w tej %{workspace} i jej podpozycjach."
-          other: "Dane zagregowane z %{count} budżetów zawarte w tej %{workspace} i jej podpozycjach."
+          one: "Dane zagregowane z %{count} budżetu"
+          other: "Dane zagregowane z %{count} budżetów"
+        count_caption_with_subitems:
+          project:
+            zero: "Brak danych budżetowych."
+            one: "Dane zagregowane z %{count} budżetu zawarte w tym projekcie i jego podpozycjach."
+            other: "Dane zagregowane z %{count} budżetów zawarte w tym projekcie i jego podpozycjach."
+          program:
+            zero: "Brak danych budżetowych."
+            one: "Dane zagregowane z %{count} budżetu zawarte w tym programie i jego podpozycjach."
+            other: "Dane zagregowane z %{count} budżetów zawarte w tym programie i jego podpozycjach."
+          portfolio:
+            zero: "Brak danych budżetowych."
+            one: "Dane zagregowane z %{count} budżetu zawarte w tym portfolio i jego podpozycjach."
+            other: "Dane zagregowane z %{count} budżetów zawarte w tym portfolio i jego podpozycjach."
         view_details: "Wyświetl szczegóły budżetu"
   events:
     budget: "Budżet edytowany"

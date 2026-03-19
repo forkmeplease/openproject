@@ -759,6 +759,7 @@ Rails.application.routes.draw do
             post :continue
             delete :remove
 
+            get :import_modal
             get :revert_modal
             get :finalize_modal
             get :history

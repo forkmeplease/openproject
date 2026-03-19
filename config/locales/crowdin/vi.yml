@@ -107,9 +107,8 @@ vi:
         trial: "thử nghiệm"
     jemalloc_allocator: Bộ cấp phát bộ nhớ Jemalloc
     journal_aggregation:
-      explanation:
-        text: "Các hành động riêng lẻ của người dùng (ví dụ: cập nhật gói công việc hai lần) được tổng hợp thành một hành động nếu chênh lệch tuổi tác của họ nhỏ hơn khoảng thời gian đã chỉ định. Chúng sẽ được hiển thị dưới dạng một hành động duy nhất trong ứng dụng. Điều này cũng sẽ làm chậm thông báo với cùng một khoảng thời gian làm giảm số lượng email được gửi và cũng sẽ ảnh hưởng đến độ trễ %{webhook_link}."
-        link: "webhook"
+      caption: >
+        Individual actions of a user (e.g. updating a work package twice) are aggregated into a single action if their age difference is less than the specified timespan. They will be displayed as a single action within the application. This will also delay notifications by the same amount of time reducing the number of emails being sent and will also affect the [webhook](webhook_link) delay.
     import:
       title: "Import"
     jira:
@@ -175,6 +174,7 @@ vi:
           instance_meta_fetching: "Fetching meta data"
           instance_meta_error: "Error fetching meta data"
           instance_meta_done: "Meta data fetched"
+          import_scope: "Select scope"
           configuring: "Select scope"
           projects_meta_fetching: "Fetching project data"
           projects_meta_error: "Error fetching project data"
@@ -184,8 +184,12 @@ vi:
           imported: "Review mode"
           reverting: "Reverting"
           revert_error: "Error during revert"
+          revert_cancelling: "Cancelling revert"
+          revert_cancelled: "Revert cancelled"
           reverted: "Reverted"
-          completed: "Completed"
+          finalizing: "Finalizing"
+          finalizing_error: "Error during finalizing"
+          finalizing_done: "Completed"
         wizard:
           button_retry: "Retry"
           parts:
@@ -225,7 +229,7 @@ vi:
               title: "Import scope"
               caption: "Choose what you want to import into OpenProject"
               caption_done: "Completed"
-              label_info: "Please note that this import tool is in beta and cannot import all types of data. Here is a summary of what the host Jira instance URL offers for import and what this tool is able to import right now."
+              label_info: "Please note that this import tool is in beta and cannot import all types of data. Here is a summary of what the host Jira instance offers for import and what this tool is able to import right now."
               description: "Select what data you want to import from the available data fetched from the host Jira instance."
               label_available_data: "Available data"
               label_not_available_data: "Not available for import"
@@ -260,12 +264,19 @@ vi:
               button_revert: "Revert import"
               button_done: "Finalize import"
               preview_description: 'The imported data is currently in review mode. Click "Finalize import" to make the import permanent or "Revert import" to undo all changes made in this import run.'
-              label_finalizing_progress: "Finalizing import..."
-              label_finalized: "Import finalized."
+              label_finalize_import: "Finalize import"
+              label_finalizing: "Finalizing import..."
+              label_finalizing_done: "Import finalized."
               label_revert_progress: "Reverting import..."
               label_reverted: "Import reverted."
           select_dialog:
             filter_projects: "Filter by text"
+          import_dialog:
+            title: "Start this import?"
+            confirm_button: "Start import"
+            description: >
+              This importer is an alpha feature. It is not yet able to import all data from Jira and might leave incomplete data on this OpenProject instance. <b>Do not use a production environment and create a backup of your OpenProject data before starting.</b>
+            confirm: "I understand and made the necessary preparations"
           revert_dialog:
             title: "Permanently revert this import?"
             description: "This will delete all imported objects (including whole projects) even if there was user activity in those projects after the import on OpenProject."
@@ -597,11 +608,13 @@ vi:
   op_dry_validation:
     or: "hoặc"
     errors:
+      unexpected_key: "is not allowed."
       array?: "phải là một mảng."
       decimal?: "phải là số thập phân."
       defined: "không được xác định."
       eql?: "phải bằng %{left}."
       filled?: "phải được lấp đầy."
+      format?: "is in invalid format."
       greater_or_equal_zero: "phải lớn hơn hoặc bằng 0."
       gteq?: "phải lớn hơn hoặc bằng %{num}."
       hash?: "phải là một hàm băm."
@@ -628,7 +641,9 @@ vi:
         parent:
           not_descendant: "phải là hậu duệ của gốc phân cấp."
       str?: "phải là một chuỗi."
+      time?: "must be a time."
       type?: "phải là %{type}."
+      uri?: "is not a valid URI."
     rules:
       copy_workflow_from: "Loại bản sao quy trình công việc"
       enabled: "đã bật"
@@ -1348,6 +1363,9 @@ vi:
         name: "Jira instance name"
         url: "Jira instance URL"
         personal_access_token: "Personal access token"
+      "import/jira_open_project_reference":
+        jira: "Jira"
+        jira_import: "Jira import"
       announcements:
         show_until: "Hiển thị cho đến khi"
       attachment:
@@ -3021,7 +3039,7 @@ vi:
             line_0: AI workflows with a secure MCP server (Professional plan and higher)
             line_1: Improved project home page with new widget for budgets and improved accessibility
             line_2: "Meetings: Meeting templates (Basic plan and higher)"
-            line_3: Better transparency with project attribute comments.
+            line_3: Better transparency with project attribute comments
             line_4: PDF export enhancements
             line_5: Increased security for external links (Premium plan and higher)
             line_6: UI/UX improvements in the Backlogs module
@@ -3435,7 +3453,6 @@ vi:
   label_float: "Số thực"
   label_folder: "Thư mục"
   label_follows: "theo dõi"
-  label_force_user_language_to_default: "Có một ngôn ngữ không được cho phép để mặc định trong thiết lập ngôn ngữ cho người sử dụng"
   label_form_configuration: "Mẫu cấu hình"
   label_formula: "Công thức"
   label_gantt_chart: "Biểu đồ Gantt"
@@ -3814,12 +3831,6 @@ vi:
   label_user_named: "Người dùng %{name}"
   label_user_activity: "%{value} hoạt động"
   label_user_anonymous: "vô danh"
-  label_user_mail_option_all: "Bất kỳ sự kiện trên tất cả dự án của tôi"
-  label_user_mail_option_none: "Không có sự kiện"
-  label_user_mail_option_only_assigned: "Chỉ những thứ tôi được phân công"
-  label_user_mail_option_only_my_events: "Chỉ những thứ tôi theo dõi hoặc liên quan"
-  label_user_mail_option_only_owner: "Chỉ những thứ tôi sở hữu"
-  label_user_mail_option_selected: "Chỉ dành cho bất kỳ sự kiện nào trên các dự án đã chọn"
   label_user_menu: "Trình đơn người dùng"
   label_user_new: "Người dùng mới"
   label_user_plural: "Người dùng"
@@ -3859,7 +3870,6 @@ vi:
   label_wiki_show_index_page_link: "Hiển thị mục menu con 'Mục lục'"
   label_wiki_show_menu_item: "Hiển thị dưới dạng mục menu trong điều hướng dự án"
   label_wiki_show_new_page_link: "Hiển thị mục menu con 'Tạo trang con mới'"
-  label_wiki_show_submenu_item: "Hiển thị dưới dạng mục menu con của"
   label_wiki_start: "Trang bắt đầu"
   label_work: "làm việc"
   label_work_package: "Work Package"
@@ -4140,6 +4150,7 @@ vi:
   notice_parent_item_not_found: "Không tìm thấy mục gốc."
   notice_project_not_deleted: "Dự án không bị xóa."
   notice_project_not_found: "Dự án không được tìm thấy."
+  notice_smtp_address_unsafe_env_hint: "SMTP address %{address} is not safe. Please add it to the whitelist using the %{env_name} environment variable."
   notice_successful_connection: "Kết nối thành công."
   notice_successful_create: "Sáng tạo thành công."
   notice_successful_delete: "Xóa thành công."
@@ -4928,7 +4939,7 @@ vi:
   text_default_administrator_account_changed: "Tài khoản quản trị viên mặc định đã thay đổi"
   text_default_encoding: "Mặc định: UTF-8"
   text_destroy: "xóa"
-  text_destroy_with_associated: "Có các đối tượng bổ sung liên quan đến (các) gói công việc sẽ bị xóa. Các đối tượng đó có các loại sau:"
+  text_destroy_with_associated: "There are additional objects associated with the work package(s) that are to be deleted. Those objects are of the following types:"
   text_destroy_what_to_do: "Bạn muốn làm gì?"
   text_diff_truncated: "... Sự khác biệt này đã bị cắt bớt vì nó vượt quá kích thước tối đa có thể được hiển thị."
   text_email_delivery_not_configured: "Gửi email không được cấu hình và thông báo bị vô hiệu hóa.\nCấu hình máy chủ SMTP của bạn để kích hoạt chúng."

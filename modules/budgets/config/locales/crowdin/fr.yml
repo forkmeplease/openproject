@@ -78,14 +78,23 @@ fr:
         blankslate_zero:
           heading: "Détails du budget manquant"
           description: "Ajoutez les détails de votre budget prévisionnel pour voir les données ici"
-        caption:
+        count_caption:
           zero: "Aucune donnée budgétaire."
-          one: "Données agrégées à partir de %{count} budget inclus dans ce %{workspace}."
-          other: "Données agrégées à partir des %{count} budgets inclus dans ce %{workspace}."
-        caption_with_subitems:
-          zero: "Pas de données budgétaires."
-          one: "Les données agrégées à partir du budget %{count} sont incluses dans ce %{workspace} et ses sous-points."
-          other: "Les données agrégées à partir des %{count} budgets sont incluses dans ce %{workspace} et ses sous-éléments."
+          one: "Données agrégées à partir de %{count} budget"
+          other: "Données agrégées à partir de %{count} budgets"
+        count_caption_with_subitems:
+          project:
+            zero: "Aucune donnée budgétaire."
+            one: "Données agrégées à partir de %{count} budget inclus dans ce projet et ses sous-éléments."
+            other: "Données agrégées à partir de %{count} budgets inclus dans ce projet et leurs sous-éléments."
+          program:
+            zero: "Aucune donnée budgétaire."
+            one: "Données agrégées à partir de %{count} budget inclus dans ce programme et ses sous-éléments."
+            other: "Données agrégées à partir de %{count} budgets inclus dans ce programme et leurs sous-éléments."
+          portfolio:
+            zero: "Aucune donnée budgétaire."
+            one: "Données agrégées à partir de %{count} budget inclus dans ce portefeuille et ses sous-éléments."
+            other: "Données agrégées à partir de %{count} budgets inclus dans ce portefeuille et leurs sous-éléments."
         view_details: "Voir les détails du budget"
   events:
     budget: "Budget modifié"
