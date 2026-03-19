@@ -69,7 +69,7 @@ gem "scimitar", "~> 2.13"
 gem "acts_as_list", "~> 1.2.6"
 gem "acts_as_tree", "~> 2.9.0"
 gem "awesome_nested_set", "~> 3.9.0"
-gem "closure_tree", "~> 9.6.0"
+gem "closure_tree", "~> 9.6.1"
 gem "rubytree", "~> 2.2.0"
 
 gem "addressable", "~> 2.8.9"
@@ -274,7 +274,7 @@ group :test do
   gem "rack_session_access"
   gem "rspec", "~> 3.13.2"
   # also add to development group, so 'spec' rake task gets loaded
-  gem "rspec-rails", "~> 8.0.3", group: :development
+  gem "rspec-rails", "~> 8.0.4", group: :development
 
   # Retry failures within the same environment
   gem "retriable", "~> 3.2.1"
