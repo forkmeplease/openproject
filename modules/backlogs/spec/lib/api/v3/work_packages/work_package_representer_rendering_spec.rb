@@ -54,7 +54,6 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
   let(:story_points) { 23 }
   let(:position) { 123 }
   let(:sprint) { build_stubbed(:agile_sprint) }
-  let(:current_user) { build_stubbed(:user) }
   let(:embed_links) { true }
   let(:representer) do
     described_class.create(work_package, current_user:, embed_links:)
@@ -65,6 +64,8 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
 
   include_context "eager loaded work package representer"
 
+  current_user { build_stubbed(:user) }
+
   before do
     allow(Setting)
       .to receive(:plugin_openproject_backlogs)
@@ -73,7 +74,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
 
     mock_permissions_for(current_user) do |mock|
       permissions.each do |permission|
-        mock.allow_in_project(permission, project:)
+        mock.allow_in_project(*permission, project:) if project
       end
     end
   end
@@ -178,6 +179,12 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter, "rendering" do
         let(:type) { task_type }
 
         it_behaves_like "has a titled link"
+      end
+
+      context "when the project is empty (because the work package is not persisted yet)" do
+        let(:project) { nil }
+
+        it_behaves_like "has no link"
       end
     end
 
