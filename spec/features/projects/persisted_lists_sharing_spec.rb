@@ -367,9 +367,12 @@ RSpec.describe "Project list sharing",
           share_dialog.expect_toggle_public_off
 
           share_dialog.toggle_public
-          wait_for_network_idle
 
-          share_dialog.expect_toggle_public_on
+          retry_block do
+            # dialog body is replaced on toggle by turbo stream, we have to wait for the render to be completed so we
+            # retry the expectation until the toggle is on again
+            share_dialog.expect_toggle_public_on
+          end
           share_dialog.close
 
           # Reopen the dialog and expect the public state to be kept
