@@ -1,0 +1,127 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+
+RSpec.describe Workflows::Copies::FromTypesController do
+  let!(:source_type) do
+    build_stubbed(:type) do |stub|
+      allow(Type)
+        .to receive(:find)
+              .with(stub.id.to_s)
+              .and_return(stub)
+    end
+  end
+
+  let!(:other_types) do
+    build_stubbed_list(:type, 2).tap do |stubs|
+      where_double = instance_double(ActiveRecord::QueryMethods::WhereChain)
+      not_double = instance_double(ActiveRecord::Relation)
+
+      allow(Type).to receive(:where).and_return(where_double)
+      allow(where_double).to receive(:not).and_return(not_double)
+      allow(not_double).to receive(:order).and_return(stubs)
+    end
+  end
+
+  current_user { build_stubbed(:admin) }
+
+  describe "#new" do
+    let(:params) do
+      { workflow_type_id: source_type.id.to_s }
+    end
+
+    before do
+      get :new, params:
+    end
+
+    it "is a success" do
+      expect(response)
+        .to have_http_status(:ok)
+    end
+
+    it "renders the correct template" do
+      expect(response)
+        .to render_template :new
+    end
+
+    it "assigns the source_type" do
+      expect(assigns[:source_type])
+        .to eq source_type
+    end
+
+    it "assigns the source_role" do
+      expect(assigns[:other_types])
+        .to match_array(other_types)
+    end
+  end
+
+  describe "#create" do
+    let!(:target_type) do
+      other_types.last.tap do |stub|
+        allow(Type)
+          .to receive(:find).with(stub.id.to_s).and_return(stub)
+      end
+    end
+
+    let!(:roles) do
+      build_stubbed_list(:project_role, 2).tap do |stubs|
+        allow(Role)
+          .to receive(:where)
+                .with(type: ProjectRole.name)
+                .and_return(stubs)
+      end
+    end
+
+    before do
+      allow(Workflow).to receive(:copy_one)
+
+      post :create, params: {
+        workflow_type_id: source_type.id.to_s,
+        target_type_id: target_type.id.to_s
+      }, format: :turbo_stream
+    end
+
+    it "calls the Workflow.copy_one method on each role" do
+      expect(Workflow)
+        .to have_received(:copy_one).exactly(2).times
+      expect(Workflow)
+        .to have_received(:copy_one)
+              .with(source_type, roles.first, target_type, roles.first)
+      expect(Workflow)
+        .to have_received(:copy_one)
+              .with(source_type, roles.last, target_type, roles.last)
+    end
+
+    it "sets a flash notice" do
+      expect(response).to have_turbo_stream action: "flash", target: "op-primer-flash-component"
+    end
+  end
+end

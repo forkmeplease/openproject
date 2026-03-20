@@ -70,34 +70,6 @@ class WorkflowsController < ApplicationController
     end
   end
 
-  def copy
-    @source_type = if params[:source_type_id].blank? || params[:source_type_id] == "any"
-                     nil
-                   else
-                     ::Type.find(params[:source_type_id])
-                   end
-    @source_role = if params[:source_role_id].blank? || params[:source_role_id] == "any"
-                     nil
-                   else
-                     eligible_roles.find(params[:source_role_id])
-                   end
-
-    @target_types = params[:target_type_ids].blank? ? nil : ::Type.where(id: params[:target_type_ids])
-    @target_roles = params[:target_role_ids].blank? ? nil : eligible_roles.where(id: params[:target_role_ids])
-
-    if request.post?
-      if params[:source_type_id].blank? || params[:source_role_id].blank? || (@source_type.nil? && @source_role.nil?)
-        flash.now[:error] = I18n.t(:error_workflow_copy_source)
-      elsif @target_types.nil? || @target_roles.nil?
-        flash.now[:error] = I18n.t(:error_workflow_copy_target)
-      else
-        Workflow.copy(@source_type, @source_role, @target_types, @target_roles)
-        flash[:notice] = I18n.t(:notice_successful_update)
-        redirect_to action: "copy", source_type_id: @source_type, source_role_id: @source_role
-      end
-    end
-  end
-
   private
 
   def statuses_for_form

@@ -86,6 +86,6 @@ RSpec.describe "Workflows index" do
     end
 
     expect(page).to have_heading "Copy workflow"
-    expect(page).to have_current_path(copy_workflows_path)
+    expect(page).to have_current_path(new_workflows_copy_path)
   end
 end

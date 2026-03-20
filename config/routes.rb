@@ -797,9 +797,14 @@ Rails.application.routes.draw do
   end
 
   resources :workflows, only: %i[index edit update], param: :type_id do
+    resource :copy, only: %i[], module: "workflows/copies" do
+      resource :from_type, only: %i[new create]
+    end
     collection do
-      # We should fix this crappy routing (split up and rename controller methods)
-      match "copy", action: "copy", via: %i[get post]
+      scope module: :workflows, as: :workflows do
+        resource :copy, only: %i[new create]
+      end
+
       get "summarized"
     end
   end

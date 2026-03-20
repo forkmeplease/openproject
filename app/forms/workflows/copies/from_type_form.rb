@@ -28,19 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
+class Workflows::Copies::FromTypeForm < ApplicationForm
+  def initialize(source_type:, other_types:)
+    super()
+    @source_type = source_type
+    @other_types = other_types
+  end
 
-RSpec.describe "workflows routes" do
-  it { expect(get("/workflows")).to route_to("workflows#index") }
-
-  it { expect(get("/workflows/42/edit")).to route_to("workflows#edit", type_id: "42") }
-  it { expect(patch("/workflows/42")).to route_to("workflows#update", type_id: "42") }
-
-  it { expect(get("/workflows/copy/new")).to route_to("workflows/copies#new") }
-  it { expect(post("/workflows/copy")).to route_to("workflows/copies#create") }
-
-  it { expect(get("/workflows/42/copy/from_type/new")).to route_to("workflows/copies/from_types#new", workflow_type_id: "42") }
-  it { expect(post("/workflows/42/copy/from_type")).to route_to("workflows/copies/from_types#create", workflow_type_id: "42") }
-
-  it { expect(get("/workflows/summarized")).to route_to("workflows#summarized") }
+  form do |copy|
+    copy.text_field(name: :source_type_name, label: I18n.t(:label_copy_source), value: @source_type.name, disabled: true)
+    copy.select_list(name: :target_type_id, label: I18n.t(:label_copy_target), required: true) do |target_list|
+      @other_types.each do |other_type|
+        target_list.option(label: other_type.name, value: other_type.id)
+      end
+    end
+    copy.submit(name: :submit_copy, label: I18n.t(:button_copy), scheme: :primary)
+  end
 end

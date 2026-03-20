@@ -36,7 +36,24 @@ See COPYRIGHT and LICENSE files for more details.
     end
     types.each do |type|
       component.with_row(data: { "filter--filter-list-target": "searchItem" }) do
-        link_to type.name, edit_workflow_path(type), class: "text-bold"
+        flex_layout(align_items: :center, justify_content: :space_between) do |type_row|
+          type_row.with_column do
+            link_to type.name, edit_workflow_path(type), class: "text-bold"
+          end
+          type_row.with_column do
+            render(Primer::Beta::Button.new(
+              tag: :a,
+              mobile_icon: :copy,
+              mobile_label: t(:button_copy),
+              href: new_workflow_copy_from_type_path(type),
+              aria: { label: I18n.t(:button_copy) },
+              title: I18n.t(:button_copy)
+            )) do |button|
+              button.with_leading_visual_icon(icon: :copy)
+              t(:button_copy)
+            end
+          end
+        end
       end
     end
     if types.empty?

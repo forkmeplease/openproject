@@ -27,20 +27,29 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-
+#
 require "spec_helper"
 
-RSpec.describe "workflows routes" do
-  it { expect(get("/workflows")).to route_to("workflows#index") }
+RSpec.describe Workflows::Copies::FromTypeForm, type: :forms do
+  include_context "with rendered form"
 
-  it { expect(get("/workflows/42/edit")).to route_to("workflows#edit", type_id: "42") }
-  it { expect(patch("/workflows/42")).to route_to("workflows#update", type_id: "42") }
+  let(:model) { false }
+  let(:params) { { source_type:, other_types: } }
+  let(:source_type) { create(:type) }
+  let(:other_types) { create_list(:type, 4) }
 
-  it { expect(get("/workflows/copy/new")).to route_to("workflows/copies#new") }
-  it { expect(post("/workflows/copy")).to route_to("workflows/copies#create") }
+  it "renders the Source type as disabled" do
+    expect(page).to have_field "Source", with: source_type.name, disabled: true
+  end
 
-  it { expect(get("/workflows/42/copy/from_type/new")).to route_to("workflows/copies/from_types#new", workflow_type_id: "42") }
-  it { expect(post("/workflows/42/copy/from_type")).to route_to("workflows/copies/from_types#create", workflow_type_id: "42") }
+  it "renders the Target type select list" do
+    expect(page).to have_select "Target", required: true do |select|
+      options_text = select.all("option").map(&:text)
+      expect(options_text).to match_array(other_types.map(&:name))
+    end
+  end
 
-  it { expect(get("/workflows/summarized")).to route_to("workflows#summarized") }
+  it "renders submit button" do
+    expect(page).to have_button "Copy", class: "Button--primary"
+  end
 end

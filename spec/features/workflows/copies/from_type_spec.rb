@@ -30,36 +30,22 @@
 
 require "spec_helper"
 
-RSpec.describe "Workflow copy" do
-  let(:role) { create(:project_role) }
-  let(:type) { create(:type) }
+RSpec.describe "Workflow copy from type" do
+  let(:types) { create_list(:type, 3) }
   let(:admin)  { create(:admin) }
-  let(:statuses) { (1..2).map { |_i| create(:status) } }
-  let!(:workflow) do
-    create(:workflow, role_id: role.id,
-                      type_id: type.id,
-                      old_status_id: statuses[0].id,
-                      new_status_id: statuses[1].id,
-                      author: false,
-                      assignee: false)
-  end
 
   current_user { admin }
 
   before do
-    visit url_for(controller: "workflows/copies", action: :new)
+    visit new_workflow_copy_from_type_path(types.first)
   end
 
-  it "shows existing types and roles" do
-    select(role.name, from: :source_role_id)
-    within("#source_role_id") do
-      expect(page).to have_content(role.name)
-      expect(page).to have_content("--- #{I18n.t(:actionview_instancetag_blank_option)} ---")
-    end
-    within("#source_type_id") do
-      expect(page).to have_content(type.name)
-      expect(page).to have_content("--- #{I18n.t(:actionview_instancetag_blank_option)} ---")
-    end
+  it "permits to select another type", :js do
+    expect(page).to have_select("Target", text: types.second.name)
+    select(types.last.name, from: "Target")
+    click_button "Copy"
+
+    expect(page).to have_css(".flash-success", text: "Successful update.")
   end
 
   it "allows navigating to Workflow edit page" do

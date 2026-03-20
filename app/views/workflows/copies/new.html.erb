@@ -30,7 +30,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= render Workflows::PageHeaderComponent.new(state: :copy) %>
 
-<%= styled_form_tag({}, id: "workflow_copy_form") do %>
+<%= styled_form_tag(workflows_copy_path, id: "workflow_copy_form") do %>
   <section class="form--section">
     <div class="form--field -required">
       <label class="form--label" for="source_type_id"><%= t(:label_copy_source) %></label>
