@@ -32,37 +32,25 @@ module OpenProject
   module Common
     module InplaceEditFields
       module DisplayFields
-        class SelectListComponent < DisplayFieldComponent
-          include CustomFieldsHelper
-
-          attr_reader :model, :attribute, :writable
-
+        class HierarchyListComponent < DisplayFieldComponent
           def render_display_value
-            value = model.public_send(attribute)
+            items = hierarchy_items
 
-            if value.present? && value != [nil]
-              render_value(value)
-            else
+            if items.empty?
               t("placeholders.default")
+            elsif custom_field.multi_value?
+              items.join(", ")
+            else
+              items.first.to_s
             end
           end
 
           private
 
-          def render_value(value)
-            if custom_field?
-              formatted_custom_field_values.presence || t("placeholders.default")
-            else
-              value.is_a?(Array) ? value.join(", ") : value.to_s
+          def hierarchy_items
+            custom_field_values.filter_map do |cv|
+              CustomField::Hierarchy::Item.find_by(id: cv.value&.to_i)
             end
-          end
-
-          def formatted_custom_field_values
-            return @formatted_custom_field_values if defined?(@formatted_custom_field_values)
-
-            values = custom_field_values.map { |v| format_value(v.value, custom_field) }
-
-            @formatted_custom_field_values = custom_field&.multi_value? ? values.join(", ") : values.first
           end
         end
       end

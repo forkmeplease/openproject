@@ -34,6 +34,10 @@ module OpenProject
       class HierarchyListComponent < BaseFieldComponent
         include CustomFieldHierarchyTreeViewHelper
 
+        def self.display_class
+          DisplayFields::HierarchyListComponent
+        end
+
         def self.open_in_dialog?
           true
         end

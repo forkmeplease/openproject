@@ -49,10 +49,16 @@ module OpenProject
           end
 
           def render_display_value
-            if custom_field?
-              render_custom_field_display_value
+            value = model.public_send(attribute)
+
+            if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+              boolean_display_value(value)
+            elsif value.is_a?(Date) || value.is_a?(Time)
+              helpers.format_date(value)
+            elsif value.present? && value != [nil]
+              format_present_value(value)
             else
-              render_attribute_display_value
+              t("placeholders.default")
             end
           end
 
@@ -145,22 +151,11 @@ module OpenProject
             "op-inplace-edit--display-field#{' op-inplace-edit--display-field_clickable' if clickable}"
           end
 
-          def render_custom_field_display_value
-            values = custom_field_values.reject { |v| v.value.blank? }
-            values.present? ? values.map(&:formatted_value).join(", ") : t("placeholders.default")
-          end
-
-          def render_attribute_display_value
-            value = model.public_send(attribute)
-
-            if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-              boolean_display_value(value)
-            elsif value.is_a?(Date) || value.is_a?(Time)
-              helpers.format_date(value)
-            elsif value.present?
-              value.to_s
+          def format_present_value(value)
+            if custom_field?
+              helpers.format_value(value, custom_field)
             else
-              t("placeholders.default")
+              value.to_s
             end
           end
 
