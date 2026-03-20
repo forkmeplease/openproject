@@ -111,7 +111,10 @@ RSpec.describe "Dashboard page managing", :js do
       # Actually there are two success messages displayed currently. One for the grid getting updated and one
       # for the query assigned to the new widget being created. A user will not notice it but the automated
       # browser can get confused. Therefore we dismiss it twice.
-      dashboard_page.expect_and_dismiss_toaster message: I18n.t("js.notice_successful_update")
+      # We cannot use expect_and_dismiss_toaster for the first toast because its internal
+      # expect_no_toaster check races with the second toast appearing immediately after dismiss.
+      dashboard_page.expect_toast message: I18n.t("js.notice_successful_update")
+      dashboard_page.dismiss_toaster!
 
       # Fixing flaky spec: for some reason, the second request to load the table is not executed until
       # some activity happens on the page. Sending an enter key to trigger the second request.
