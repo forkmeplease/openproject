@@ -34,6 +34,17 @@ module WorkPackages
     # and provides classification and exclusion sets for suggestion generation.
     #
     # For main use by admin UI preview and batch migration job.
+    #
+    # == Performance notes
+    #
+    # * +#exclusion_set+ loads all non-problematic identifiers and historical slugs
+    #   into memory. Fine for a one-off admin migration; if this ever becomes a hot
+    #   path, consider a DB-backed exclusion check instead.
+    #
+    # * The regex scope conditions (+identifier ~ ?+) and +UPPER(identifier)+ won't
+    #   hit a regular index. If queries get slow on large tables, a functional index
+    #   on +UPPER(identifier)+ or a +pg_trgm+ GIN index would help.
+    #
     class ProblematicIdentifiers
       # Priority-ordered format rules for identifier classification.
       FORMAT_RULES = [
@@ -59,20 +70,11 @@ module WorkPackages
         format_error_reason(identifier) || collision_error_reason(identifier) || :unknown
       end
 
-      # Returns a Set-like object for excluding already-taken identifiers
-      # during suggestion generation.
-      #
-      # By default returns a DB-backed ExclusionSet that avoids loading all
-      # identifiers into memory (suitable for preview with few projects).
-      #
-      # Pass +preload: true+ to eagerly load all identifiers into a plain Set
-      # (suitable for batch jobs processing many projects).
-      def exclusion_set(preload: false)
-        if preload
-          reserved_identifiers | in_use_identifiers_set
-        else
-          ExclusionSet.new(non_problematic_scope, local: reserved_identifiers)
-        end
+      # Returns a Set of identifiers that must not be suggested for new assignments.
+      # Combines currently active identifiers from non-problematic projects with
+      # historically reserved identifiers from FriendlyId slug history.
+      def exclusion_set
+        reserved_identifiers | in_use_identifiers
       end
 
       private
@@ -92,21 +94,15 @@ module WorkPackages
       end
 
       def collision_error_reason(identifier)
-        # rubocop:disable Rails/WhereEquals, Rails/WhereExists -- raw SQL bypasses Rails normalizes on :identifier
-        if non_problematic_scope.where("identifier = ?", identifier).exists?
-          # rubocop:enable Rails/WhereEquals, Rails/WhereExists
+        if in_use_identifiers.include?(identifier)
           :in_use
         elsif reserved_identifiers.include?(identifier)
           :reserved
         end
       end
 
-      def non_problematic_scope
-        @non_problematic_scope ||= Project.where.not(id: scope.select(:id))
-      end
-
-      def in_use_identifiers_set
-        @in_use_identifiers_set ||= non_problematic_scope.pluck(:identifier).to_set
+      def in_use_identifiers
+        @in_use_identifiers ||= Project.where.not(id: scope.select(:id)).pluck(:identifier).to_set
       end
 
       def reserved_identifiers
@@ -115,34 +111,6 @@ module WorkPackages
                                     .where.not(slug: Project.select(:identifier))
                                     .pluck(:slug)
                                     .to_set
-      end
-
-      # A Set-like object backed by an ActiveRecord scope that avoids
-      # loading all identifiers into memory. Supports the interface
-      # required by ProjectIdentifierSuggestionGenerator: include?, <<, dup.
-      class ExclusionSet
-        def initialize(scope, local: Set.new)
-          @scope = scope
-          @local = local
-        end
-
-        def include?(identifier)
-          # Use raw SQL to bypass Rails normalizes on :identifier.
-          @local.include?(identifier) || @scope.exists?(["identifier = ?", identifier])
-        end
-
-        def <<(identifier)
-          @local << identifier
-          self
-        end
-
-        def dup
-          self.class.new(@scope, local: @local.dup)
-        end
-
-        def |(other)
-          self.class.new(@scope, local: @local | other)
-        end
       end
     end
   end

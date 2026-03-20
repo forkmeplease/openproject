@@ -129,68 +129,30 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProblematicIdentifiers do
   end
 
   describe "#exclusion_set" do
+    subject(:exclusion) { analysis.exclusion_set }
+
     let!(:valid_project) { create_valid_project(name: "Alpha", identifier: "ALPHA") }
 
     before do
       create_problematic_project(name: "Beta", identifier: "beta-project")
     end
 
-    context "with default (DB-backed) mode" do
-      subject(:exclusion) { analysis.exclusion_set }
-
-      it "includes identifiers from non-problematic projects" do
-        expect(exclusion.include?("ALPHA")).to be true
-      end
-
-      it "includes historical slugs (reserved identifiers)" do
-        FriendlyId::Slug.create!(slug: "OLDALPHA", sluggable_id: valid_project.id, sluggable_type: "Project")
-
-        expect(exclusion.include?("OLDALPHA")).to be true
-      end
-
-      it "excludes identifiers from problematic projects" do
-        expect(exclusion.include?("beta-project")).to be false
-      end
-
-      it "tracks locally added identifiers via <<" do
-        exclusion << "NEWID"
-        expect(exclusion.include?("NEWID")).to be true
-      end
-
-      it "returns a duplicate that does not share local state" do
-        copy = exclusion.dup
-        copy << "ONLY_IN_COPY"
-        expect(exclusion.include?("ONLY_IN_COPY")).to be false
-        expect(copy.include?("ONLY_IN_COPY")).to be true
-      end
-
-      it "supports | with a Set" do
-        merged = exclusion | Set["EXTRA"]
-        expect(merged.include?("EXTRA")).to be true
-        expect(merged.include?("ALPHA")).to be true
-      end
+    it "returns a Set" do
+      expect(exclusion).to be_a(Set)
     end
 
-    context "with preload: true" do
-      subject(:exclusion) { analysis.exclusion_set(preload: true) }
+    it "includes identifiers from non-problematic projects" do
+      expect(exclusion).to include("ALPHA")
+    end
 
-      it "returns a plain Set" do
-        expect(exclusion).to be_a(Set)
-      end
+    it "includes historical slugs (reserved identifiers)" do
+      FriendlyId::Slug.create!(slug: "OLDALPHA", sluggable_id: valid_project.id, sluggable_type: "Project")
 
-      it "includes identifiers from non-problematic projects" do
-        expect(exclusion).to include("ALPHA")
-      end
+      expect(exclusion).to include("OLDALPHA")
+    end
 
-      it "excludes identifiers from problematic projects" do
-        expect(exclusion).not_to include("beta-project")
-      end
-
-      it "includes historical slugs (reserved identifiers)" do
-        FriendlyId::Slug.create!(slug: "OLDALPHA", sluggable_id: valid_project.id, sluggable_type: "Project")
-
-        expect(exclusion).to include("OLDALPHA")
-      end
+    it "excludes identifiers from problematic projects" do
+      expect(exclusion).not_to include("beta-project")
     end
   end
 end
