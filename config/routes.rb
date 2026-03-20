@@ -283,6 +283,7 @@ Rails.application.routes.draw do
   namespace :projects do
     resource :menu, only: %i[show]
     resource :filters, only: %i[show]
+    resource :identifier_suggestion, only: %i[show], controller: "identifier_suggestion"
   end
 
   %w[portfolio project program].each do |workspace_type|
@@ -354,7 +355,9 @@ Rails.application.routes.draw do
           get :dialog
         end
       end
-      resource :identifier, only: %i[show update], controller: "identifier"
+      resource :identifier, only: %i[show update], controller: "identifier" do
+        get :identifier_update_dialog, on: :member, defaults: { format: :turbo_stream }
+      end
       resource :status, only: %i[update destroy], controller: "status"
       resource :creation_wizard, only: %i[show update], controller: "creation_wizard" do
         get :help_text, on: :member
@@ -925,6 +928,12 @@ Rails.application.routes.draw do
 
   resources :users, constraints: { id: /(\d+|me)/ }, except: :edit do
     resources :memberships, controller: "users/memberships", only: %i[update create destroy]
+    resources :working_hours, controller: "users/working_hours", except: [:index]
+    resources :non_working_times, controller: "users/non_working_times", except: [:index] do
+      collection do
+        get :working_days_preview
+      end
+    end
 
     collection do
       get "/invite" => "users/invite#start_dialog"
@@ -1027,6 +1036,9 @@ Rails.application.routes.draw do
     get "/my/interface", action: "interface"
     get "/my/notifications", action: "notifications"
     get "/my/reminders", action: "reminders"
+
+    get "/my/working_hours", action: "working_hours"
+    get "/my/non_working_times", action: "non_working_times"
 
     patch "/my/account", action: "update_account"
     patch "/my/settings", action: "update_settings"

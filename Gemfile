@@ -121,7 +121,7 @@ gem "csv", "~> 3.3"
 # provide compatible filesystem information for available storage
 gem "sys-filesystem", "~> 1.5.0", require: false
 
-gem "bcrypt", "~> 3.1.6"
+gem "bcrypt", "~> 3.1.22"
 
 gem "multi_json", "~> 1.19.0"
 gem "oj", "~> 3.16.16"
@@ -254,9 +254,7 @@ gem "factory_bot_rails", "~> 6.5.0", require: false
 gem "turbo_power", "~> 0.7.0"
 gem "turbo-rails", "~> 2.0.20"
 
-# There is a problem with version 1.4.0. Do not update until you're sure there is no infinite hang
-# happenning in failing tests when WebMock or VCR stub cannot be found.
-gem "httpx", "~> 1.7.3"
+gem "httpx", "~> 1.7.4"
 
 # Brings actual deep-freezing to most ruby objects
 gem "ice_nine"
@@ -434,4 +432,4 @@ end
 
 gem "openproject-octicons", "~>19.32.0"
 gem "openproject-octicons_helper", "~>19.32.0"
-gem "openproject-primer_view_components", "~>0.82.0"
+gem "openproject-primer_view_components", "~>0.82.1"

@@ -40,14 +40,19 @@ en:
         goal: "Sprint goal"
         name: "Sprint name"
         sharing: "Sharing"
+        statuses:
+          in_planning: "In planning"
+          active: "Active"
+          completed: "Completed"
       project:
         sprint_sharing: "Sprint sharing"
       sprint:
         duration: "Sprint duration"
       work_package:
-        position: "Position"
-        story_points: "Story Points"
         backlogs_work_package_type: "Backlog type"
+        position: "Position"
+        sprint: "Sprint"
+        story_points: "Story Points"
 
     errors:
       models:
@@ -63,6 +68,8 @@ en:
               must_block_at_least_one_work_package: "must contain the ID of at least one ticket."
             version_id:
               task_version_must_be_the_same_as_story_version: "must be the same as the parent story's version."
+            sprint:
+              not_shared_with_project: "is not shared with the project the work package is in."
         sprint:
           cannot_end_before_it_starts: "Sprint cannot end before it starts."
 
