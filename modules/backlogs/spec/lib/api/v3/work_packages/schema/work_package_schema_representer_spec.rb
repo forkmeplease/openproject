@@ -77,13 +77,27 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with
       end
     end
 
-    context "when not a story", with_flag: { scrum_projects: false } do
+    context "when not a story with the feature flag inactive", with_flag: { scrum_projects: false } do
       before do
         allow(schema.type).to receive(:story?).and_return(false)
       end
 
       it "does not show story points" do
         expect(subject).not_to have_json_path("storyPoints")
+      end
+    end
+
+    context "when not a story with the feature flag active" do
+      before do
+        allow(schema.type).to receive(:story?).and_return(false)
+      end
+
+      it_behaves_like "has basic schema properties" do
+        let(:path) { "storyPoints" }
+        let(:type) { "Integer" }
+        let(:name) { I18n.t("activerecord.attributes.work_package.story_points") }
+        let(:required) { false }
+        let(:writable) { true }
       end
     end
   end
@@ -107,13 +121,27 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with
       end
     end
 
-    context "when not a story", with_flag: { scrum_projects: false } do
+    context "when not a story with the feature flag inactive", with_flag: { scrum_projects: false } do
       before do
         allow(schema.type).to receive(:story?).and_return(false)
       end
 
       it "does not show position" do
         expect(subject).not_to have_json_path("position")
+      end
+    end
+
+    context "when not a story with the feature flag active" do
+      before do
+        allow(schema.type).to receive(:story?).and_return(false)
+      end
+
+      it_behaves_like "has basic schema properties" do
+        let(:path) { "position" }
+        let(:type) { "Integer" }
+        let(:name) { I18n.t("activerecord.attributes.work_package.position") }
+        let(:required) { false }
+        let(:writable) { false }
       end
     end
   end
@@ -159,13 +187,27 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with
       end
     end
 
-    context "when not a story", with_flag: { scrum_projects: false } do
+    context "when not a story with the feature flag inactive", with_flag: { scrum_projects: false } do
       before do
         allow(schema.type).to receive(:story?).and_return(false)
       end
 
       it "does not show sprint" do
         expect(subject).not_to have_json_path("sprint")
+      end
+    end
+
+    context "when not a story with the feature flag active" do
+      before do
+        allow(schema.type).to receive(:story?).and_return(false)
+      end
+
+      it_behaves_like "has basic schema properties" do
+        let(:type) { "Sprint" }
+        let(:name) { I18n.t("activerecord.attributes.work_package.sprint") }
+        let(:required) { false }
+        let(:writable) { true }
+        let(:location) { "_links" }
       end
     end
   end

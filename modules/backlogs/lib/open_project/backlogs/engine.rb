@@ -239,12 +239,14 @@ module OpenProject::Backlogs
         project.nil? || User.current.allowed_in_project?(:view_sprints, project)
       end
 
+      # TODO: upon removal of the scrum_projects feature flag, remove these constraints
       ::Type.add_constraint :position, enabled_backlogs_story
       ::Type.add_constraint :story_points, enabled_backlogs_story
       ::Type.add_constraint :sprint, story_and_sprint_permission
 
       ::Type.add_default_mapping(:estimates_and_progress, :story_points)
       ::Type.add_default_mapping(:other, :position)
+      ::Type.add_default_mapping(:details, :sprint)
 
       ::Queries::Register.register(::Query) do
         filter OpenProject::Backlogs::WorkPackageFilter

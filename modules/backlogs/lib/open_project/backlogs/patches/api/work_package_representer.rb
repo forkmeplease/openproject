@@ -37,23 +37,22 @@ module OpenProject::Backlogs
             property :position,
                      render_nil: true,
                      skip_render: ->(*) do
-                       !(backlogs_enabled? && type&.passes_attribute_constraint?(:position))
+                       !(backlogs_enabled? && type&.passes_attribute_constraint?(:position, project:))
                      end
 
             property :story_points,
                      render_nil: true,
                      skip_render: ->(*) do
-                       !(backlogs_enabled? && type&.passes_attribute_constraint?(:story_points))
+                       !(backlogs_enabled? && type&.passes_attribute_constraint?(:story_points, project:))
                      end
 
             resource :sprint,
                      link_cache_if: ->(*) {
-                       current_user.allowed_in_project?(:view_sprints, represented.project) &&
+                       represented.project.present? &&
+                         current_user.allowed_in_project?(:view_sprints, represented.project) &&
                          OpenProject::FeatureDecisions.scrum_projects_active?
                      },
                      link: ->(*) {
-                       next unless represented.type&.passes_attribute_constraint?(:sprint)
-
                        if represented.sprint.present?
                          {
                            href: api_v3_paths.sprint(represented.sprint_id),
@@ -67,8 +66,8 @@ module OpenProject::Backlogs
                      },
                      getter: ->(*) do
                        if embed_links &&
+                          represented.project.present? &&
                           represented.sprint.present? &&
-                          represented.type&.passes_attribute_constraint?(:sprint) &&
                           current_user.allowed_in_project?(:view_sprints, represented.project) &&
                           OpenProject::FeatureDecisions.scrum_projects_active?
                          ::API::V3::Sprints::SprintRepresenter.create(represented.sprint, current_user:)
