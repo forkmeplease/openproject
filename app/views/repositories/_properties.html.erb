@@ -27,17 +27,13 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-{
-  "results":
-  {
-    "items":[
-  <% @roles.each_with_index do |role, ix| %>
-  {
-      "id":   <%= role.id.to_json.html_safe %>,
-      "name": <%= role.name.to_json.html_safe %>
-  } <%= "," unless ix == @roles.length - 1 %>
-<% end %> ],
-    "total": <%= @total || @roles.size %>,
-    "more": <%= @more || 0 %>
-}
-}
+<% if @properties.present? %>
+  <ul class="properties">
+    <% @properties.keys.sort.each do |property| %>
+      <li>
+        <b><%= property %></b>:
+        <span><%= @properties[property] %></span>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
