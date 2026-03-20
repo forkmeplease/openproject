@@ -38,6 +38,14 @@ module Projects::Identifier
   included do
     extend FriendlyId
 
+    ### ID generators
+    # There are two supported formats:
+    # 1. legacy slug identifiers (e.g. "project_one"),
+    #   with work packages identified by global ID (e.g. "#123")
+    # 2. semantic identifiers (e.g. "PROJ1"), with work packages identified by
+    #   a combination of project identifier and local ID (e.g. "PROJ1-123")
+
+    # Generate legacy slug identifier (when in the legacy mode)
     acts_as_url :name,
                 url_attribute: :identifier,
                 sync_url: false, # Don't update identifier when name changes
@@ -46,11 +54,14 @@ module Projects::Identifier
                 blacklist: RESERVED_IDENTIFIERS,
                 adapter: OpenProject::ActsAsUrl::Adapter::OpActiveRecord # use a custom adapter able to handle edge cases
 
+    # Generate semantic identifier (when in the semantic mode)
     before_validation :generate_semantic_identifier,
                       on: :create,
                       if: -> { Setting::WorkPackageIdentifier.alphanumeric? && identifier.blank? }
+    ###
 
-    ### Validators for the legacy underscored identifier format (e.g. "project_one")
+    ### ID validators
+    # Validators for the legacy underscored identifier format (e.g. "project_one")
     validates :identifier,
               presence: true,
               uniqueness: { case_sensitive: true },
@@ -64,7 +75,7 @@ module Projects::Identifier
                 p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.numeric?
               }
 
-    ### Validators for the uppercase identifier format (e.g. "PROJ1")
+    # Validators for the semantic format
     validates :identifier,
               format: { with: /\A[A-Z]/, message: :must_start_with_letter },
               if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
@@ -72,6 +83,7 @@ module Projects::Identifier
               format: { with: /\A[A-Z][A-Z0-9_]*\z/, message: :no_special_characters },
               length: { maximum: SEMANTIC_IDENTIFIER_MAX_LENGTH },
               if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
+    ###
 
     # Complements the uniqueness validation above: once an identifier has been used by a
     # project, it remains reserved for that project even after the project moves to a new
