@@ -366,13 +366,11 @@ RSpec.describe "Project list sharing",
           # Toggle the switch to make the project list query public
           share_dialog.expect_toggle_public_off
 
-          share_dialog.toggle_public
-
-          retry_block do
-            # dialog body is replaced on toggle by turbo stream, we have to wait for the render to be completed so we
-            # retry the expectation until the toggle is on again
-            share_dialog.expect_toggle_public_on
+          wait_for_turbo_stream do
+            share_dialog.toggle_public
           end
+
+          share_dialog.expect_toggle_public_on
           share_dialog.close
 
           # Reopen the dialog and expect the public state to be kept
