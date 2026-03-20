@@ -43,8 +43,11 @@ module Projects::Identifier
                 sync_url: false, # Don't update identifier when name changes
                 only_when_blank: true, # Only generate when identifier not set
                 limit: IDENTIFIER_MAX_LENGTH,
-                blacklist: RESERVED_IDENTIFIERS,
-                adapter: OpenProject::ActsAsUrl::Adapter::OpActiveRecord # use a custom adapter able to handle edge cases
+                blacklist: RESERVED_IDENTIFIERS
+
+    before_validation :generate_semantic_identifier,
+                      on: :create,
+                      if: -> { Setting::WorkPackageIdentifier.alphanumeric? && identifier.blank? }
 
     ### Validators for the legacy underscored identifier format (e.g. "project_one")
     validates :identifier,
@@ -127,5 +130,9 @@ module Projects::Identifier
                          .exists?
 
     errors.add(:identifier, :taken) if already_existing
+  end
+
+  def generate_semantic_identifier
+    self.identifier = self.class.suggest_identifier(name) if name.present?
   end
 end
