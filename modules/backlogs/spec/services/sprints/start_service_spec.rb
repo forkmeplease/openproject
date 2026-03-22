@@ -90,7 +90,7 @@ RSpec.describe Sprints::StartService do
     before do
       allow(Boards::SprintTaskBoardCreateService)
         .to receive(:new)
-        .with(user:)
+        .with(user: User.system)
         .and_return(service)
     end
 
@@ -155,6 +155,50 @@ RSpec.describe Sprints::StartService do
       expect(result).not_to be_success
       expect(result.errors.symbols_for(:base)).to include(:error_unauthorized)
       expect(sprint.reload).to be_in_planning
+    end
+  end
+
+  context "when the sprint source shares with all projects" do
+    let(:project) { create(:project, sprint_sharing: "share_all_projects") }
+    let!(:receiving_project) { create(:project, sprint_sharing: "receive_shared", types: [type_task]) }
+
+    it "creates boards for both owning and receiving projects", :aggregate_failures do
+      expect { result }.to change(Boards::Grid, :count).by(2)
+      expect(result).to be_success
+      expect(sprint.reload).to be_active
+      expect(sprint.task_board_for(project)).to be_present
+      expect(sprint.task_board_for(receiving_project)).to be_present
+    end
+  end
+
+  context "when the user cannot manage boards in a receiving project" do
+    let(:project) { create(:project, sprint_sharing: "share_all_projects") }
+    let!(:receiving_project) { create(:project, sprint_sharing: "receive_shared", types: [type_task]) }
+    let(:user) do
+      create(:user, member_with_permissions: { project => [:start_complete_sprint] })
+    end
+
+    it "still succeeds because boards are created as the system user", :aggregate_failures do
+      expect(result).to be_success
+      expect(sprint.reload).to be_active
+      expect(sprint.task_board_for(project)).to be_present
+      expect(sprint.task_board_for(receiving_project)).to be_present
+    end
+  end
+
+  context "when work packages exist in an additional project" do
+    let!(:receiving_project) { create(:project, types: [type_task]) }
+
+    before do
+      create(:work_package, project: receiving_project, type: type_task, sprint:)
+    end
+
+    it "creates boards for both owning and work package projects", :aggregate_failures do
+      expect { result }.to change(Boards::Grid, :count).by(2)
+      expect(result).to be_success
+      expect(sprint.reload).to be_active
+      expect(sprint.task_board_for(project)).to be_present
+      expect(sprint.task_board_for(receiving_project)).to be_present
     end
   end
 end

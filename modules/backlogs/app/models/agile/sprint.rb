@@ -48,6 +48,7 @@ module Agile
     scopes :for_project,
            :not_completed,
            :order_by_date,
+           :receiving_projects,
            :visible
 
     enum :status,
@@ -82,10 +83,6 @@ module Agile
       return nil unless date_range_set?
 
       Day.working.from_range(from: start_date, to: finish_date).count
-    end
-
-    def board_name
-      "#{project.name}: #{name}"
     end
 
     def task_board_for(project)

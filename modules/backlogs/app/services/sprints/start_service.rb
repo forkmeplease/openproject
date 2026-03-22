@@ -37,7 +37,7 @@ class Sprints::StartService < BaseServices::BaseContracted
   private
 
   def persist(service_call)
-    result = ensure_task_board
+    result = ensure_task_boards
     return result if result.failure?
 
     model.active!
@@ -48,13 +48,31 @@ class Sprints::StartService < BaseServices::BaseContracted
     ServiceResult.failure(result: model, errors: model.errors)
   end
 
-  def ensure_task_board
-    existing_board = model.task_board_for(model.project)
-    return ServiceResult.success(result: existing_board) if existing_board.present?
+  def ensure_task_boards
+    projects = Agile::Sprint.receiving_projects(model)
 
-    Boards::SprintTaskBoardCreateService
-      .new(user:)
-      .call(project: model.project, sprint: model, name: model.board_name)
+    results = projects.map do |project|
+      next ServiceResult.success if model.task_board_for(project).present?
+
+      Boards::SprintTaskBoardCreateService
+        .new(user: User.system)
+        .call(project:, sprint: model, name: board_name)
+    end
+
+    aggregate_failures(results)
+  end
+
+  def aggregate_failures(results)
+    failed = results.select(&:failure?)
+    return ServiceResult.success if failed.empty?
+
+    failed.each_with_object(ServiceResult.failure) do |result, combined|
+      combined.add_dependent!(result)
+    end
+  end
+
+  def board_name
+    "#{model.project.name}: #{model.name}"
   end
 
   def add_only_one_active_sprint_error

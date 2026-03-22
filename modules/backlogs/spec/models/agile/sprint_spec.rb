@@ -120,12 +120,6 @@ RSpec.describe Agile::Sprint do
     it { is_expected.to belong_to(:project) }
   end
 
-  describe "#board_name" do
-    it "returns the project and sprint name" do
-      expect(sprint.board_name).to eq("#{project.name}: Sprint 1")
-    end
-  end
-
   describe "#task_board_for" do
     let(:sprint) { create(:agile_sprint, project:) }
     let(:other_project) { create(:project) }
@@ -151,7 +145,7 @@ RSpec.describe Agile::Sprint do
     end
 
     context "when only same-name or same-filter boards exist" do
-      let!(:same_name_board) { create(:board_grid_with_query, project:, name: sprint.board_name) }
+      let!(:same_name_board) { create(:board_grid_with_query, project:, name: "#{project.name}: #{sprint.name}") }
       let!(:matching_filters_board) do
         create(:board_grid_with_query,
                project:,
