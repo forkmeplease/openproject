@@ -88,7 +88,12 @@ module Boards
         .sort_by(&:start_column)
         .filter_map { |w| w.options.dig("filters", 0, "status_id", "values")&.first }
 
-      Status.where(id: status_ids) if status_ids.present?
+      statuses_in_order(status_ids) if status_ids.present?
+    end
+
+    def statuses_in_order(status_ids)
+      statuses_by_id = Status.where(id: status_ids).index_by(&:id)
+      status_ids.filter_map { |id| statuses_by_id[id.to_i] }
     end
 
     def statuses_from_sprint_work_packages
