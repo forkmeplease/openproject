@@ -32,14 +32,15 @@ module Backlogs
   class SprintMenuComponent < ApplicationComponent
     include RbCommonHelper
 
-    attr_reader :sprint, :project, :current_user
+    attr_reader :sprint, :project, :current_user, :active_sprint_ids
 
-    def initialize(sprint:, project:, current_user: User.current, **system_arguments)
+    def initialize(sprint:, project:, current_user: User.current, active_sprint_ids: nil, **system_arguments)
       super()
 
       @sprint = sprint
       @project = project
       @current_user = current_user
+      @active_sprint_ids = active_sprint_ids
 
       @system_arguments = system_arguments
       @system_arguments[:menu_id] = dom_target(sprint, :menu)
@@ -91,11 +92,11 @@ module Backlogs
     end
 
     def project_has_another_active_sprint?
-      @project_has_another_active_sprint ||= Agile::Sprint
-                                               .for_project(sprint.project)
-                                               .where(status: "active")
-                                               .where.not(id: sprint.id)
-                                               .exists?
+      (resolved_active_sprint_ids - [sprint.id]).any?
+    end
+
+    def resolved_active_sprint_ids
+      active_sprint_ids || Agile::Sprint.for_project(sprint.project).where(status: "active").pluck(:id)
     end
   end
 end

@@ -53,8 +53,8 @@ RSpec.describe Backlogs::SprintMenuComponent, type: :component do
     login_as(user)
   end
 
-  def render_component
-    render_inline(described_class.new(sprint:, project:, current_user: user))
+  def render_component(active_sprint_ids: nil)
+    render_inline(described_class.new(sprint:, project:, current_user: user, active_sprint_ids:))
   end
 
   def menu_items
@@ -164,6 +164,14 @@ RSpec.describe Backlogs::SprintMenuComponent, type: :component do
             disabled: true
           )
           expect(page).to have_text("Another sprint is already active.")
+        end
+
+        it "uses precomputed active sprint ids when provided" do
+          allow(Agile::Sprint).to receive(:for_project).and_call_original
+
+          render_component(active_sprint_ids: [active_sprint.id])
+
+          expect(Agile::Sprint).not_to have_received(:for_project)
         end
       end
 
