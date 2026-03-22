@@ -197,7 +197,6 @@ en:
   label_sprint_impediments: "Sprint Impediments"
   label_sprint_new: "New sprint"
   label_task_board: "Task board"
-  error_task_board_creation_failed: "The task board could not be created automatically."
   notice_successful_start: "The sprint was started."
   notice_successful_finish: "The sprint was completed."
   notice_unsuccessful_start: "The sprint could not be started."
