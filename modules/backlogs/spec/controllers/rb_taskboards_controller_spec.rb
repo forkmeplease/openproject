@@ -118,7 +118,7 @@ RSpec.describe RbTaskboardsController do
         end
 
         it "denies access" do
-          expect(response).to have_http_status(:forbidden)
+          expect(response).to have_http_status(:not_found)
         end
       end
 
