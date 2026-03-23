@@ -42,7 +42,7 @@ module Backlogs
 
     def initialize(
       sprint:,
-      project: sprint.project,
+      project:,
       folded: false,
       current_user: User.current,
       active_sprint_ids: nil
