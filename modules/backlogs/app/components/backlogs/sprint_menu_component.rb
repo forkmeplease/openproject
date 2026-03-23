@@ -92,7 +92,7 @@ module Backlogs
     end
 
     def resolved_active_sprint_ids
-      active_sprint_ids || Agile::Sprint.for_project(sprint.project).where(status: "active").pluck(:id)
+      active_sprint_ids || Agile::Sprint.for_project(sprint.project).active.pluck(:id)
     end
   end
 end
