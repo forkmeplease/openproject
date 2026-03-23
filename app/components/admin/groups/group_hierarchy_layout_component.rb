@@ -29,37 +29,44 @@
 #++
 
 module Admin
-  class DepartmentsController < ::ApplicationController
-    include OpTurbo::ComponentStream
+  module Groups
+    class GroupHierarchyLayoutComponent < ApplicationComponent
+      include OpTurbo::Streamable
+      include OpPrimer::ComponentHelpers
 
-    layout "admin"
+      attr_reader :groups, :active_group
 
-    menu_item :departments
+      def initialize(groups:, active_group: nil)
+        super()
+        @groups = groups
+        @active_group = active_group
+      end
 
-    # TODO: We will check for users permission here
-    before_action :require_admin
+      def render_group_tree(tree, parent_id: nil)
+        children_for(parent_id).each do |group|
+          if children?(group)
+            tree.with_sub_tree(label: group.name) do |sub_tree|
+              render_group_tree(sub_tree, parent_id: group.id)
+            end
+          else
+            tree.with_leaf(label: group.name)
+          end
+        end
+      end
 
-    def index
-      @groups = Group.organizational_units.visible.order(:lastname)
-    end
+      private
 
-    def edit_organization_name
-      replace_via_turbo_stream(component: Admin::Groups::OrganizationNameFormComponent.new)
-      respond_with_turbo_streams
-    end
+      def children_by_parent_id
+        @children_by_parent_id ||= groups.group_by(&:parent_id)
+      end
 
-    def cancel_edit_organization_name
-      replace_via_turbo_stream(component: Admin::Groups::OrganizationNameComponent.new)
-      respond_with_turbo_streams
-    end
+      def children_for(parent_id)
+        children_by_parent_id[parent_id] || []
+      end
 
-    def update_organization_name
-      ::Settings::UpdateService
-        .new(user: current_user)
-        .call(organization_name: params[:organization_name])
-
-      replace_via_turbo_stream(component: Admin::Groups::OrganizationNameComponent.new)
-      respond_with_turbo_streams
+      def children?(group)
+        children_by_parent_id.key?(group.id)
+      end
     end
   end
 end

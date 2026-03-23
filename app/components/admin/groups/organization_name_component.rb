@@ -29,37 +29,19 @@
 #++
 
 module Admin
-  class DepartmentsController < ::ApplicationController
-    include OpTurbo::ComponentStream
+  module Groups
+    class OrganizationNameComponent < ApplicationComponent
+      include ApplicationHelper
+      include OpTurbo::Streamable
+      include OpPrimer::ComponentHelpers
 
-    layout "admin"
+      def initialize
+        super(nil)
+      end
 
-    menu_item :departments
-
-    # TODO: We will check for users permission here
-    before_action :require_admin
-
-    def index
-      @groups = Group.organizational_units.visible.order(:lastname)
-    end
-
-    def edit_organization_name
-      replace_via_turbo_stream(component: Admin::Groups::OrganizationNameFormComponent.new)
-      respond_with_turbo_streams
-    end
-
-    def cancel_edit_organization_name
-      replace_via_turbo_stream(component: Admin::Groups::OrganizationNameComponent.new)
-      respond_with_turbo_streams
-    end
-
-    def update_organization_name
-      ::Settings::UpdateService
-        .new(user: current_user)
-        .call(organization_name: params[:organization_name])
-
-      replace_via_turbo_stream(component: Admin::Groups::OrganizationNameComponent.new)
-      respond_with_turbo_streams
+      def organization_name
+        Setting.organization_name.presence || I18n.t("setting_organization_name")
+      end
     end
   end
 end

@@ -27,21 +27,24 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%# helpers.content_controller "admin--departments-page" %>
-
 <%=
-  component_wrapper(tag: "turbo-frame", class: "admin-groups-tree-page--wrapper", refresh: :morph, data: { turbo_action: :advance }) do
-    render(Primer::Alpha::Layout.new(stacking_breakpoint: :md, overflow: :hidden, h: :full, classes: "admin-groups-tree-page")) do |content|
-      content.with_main(overflow: :auto) do
-        flex_layout do |container|
-          container.with_row do
-            render(Primer::Beta::Text.new) { "Main content for departments page" }
-          end
-        end
+  component_wrapper do
+    flex_layout(align_items: :center, justify_content: :space_between) do |container|
+      container.with_column do
+        render(Primer::Beta::Heading.new(tag: :h4)) { organization_name }
       end
 
-      content.with_sidebar(row_placement: :start, col_placement: :start, border: true, border_bottom: 0, p: 3, overflow: :auto, classes: "admin-groups-tree-page--sidebar") do
-        render(Primer::Beta::Text.new) { "Tree view" }
+      container.with_column do
+        render(
+          Primer::Beta::IconButton.new(
+            tag: :a,
+            href: edit_organization_name_admin_departments_path,
+            icon: :pencil,
+            scheme: :invisible,
+            "aria-label": I18n.t(:button_edit),
+            data: { turbo_stream: true }
+          )
+        )
       end
     end
   end

@@ -29,17 +29,17 @@
 #++
 
 module Admin
-  module Departments
-    class DepartmentsPageComponent < ApplicationComponent
+  module Groups
+    class OrganizationNameFormComponent < ApplicationComponent
+      include ApplicationHelper
       include OpTurbo::Streamable
       include OpPrimer::ComponentHelpers
 
-      attr_reader :groups
-
-      def initialize(groups:)
-        super()
-        @groups = groups
+      def initialize
+        super(nil)
       end
+
+      delegate :wrapper_key, to: OrganizationNameComponent
     end
   end
 end
