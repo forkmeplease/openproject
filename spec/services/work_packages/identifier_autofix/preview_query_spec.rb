@@ -61,9 +61,9 @@ RSpec.describe WorkPackages::IdentifierAutofix::PreviewQuery do
   context "when a project has underscores and lowercase in its identifier" do
     before { create_valid_project(name: "My Project", identifier: "my_proj") }
 
-    it "flags it as :not_uppercase (underscores are allowed per spec)" do
+    it "flags it as :not_fully_uppercased (underscores are allowed per spec)" do
       expect(result.total_count).to eq(1)
-      expect(result.projects_data.first[:error_reason]).to eq(:not_uppercase)
+      expect(result.projects_data.first[:error_reason]).to eq(:not_fully_uppercased)
     end
   end
 

@@ -51,7 +51,7 @@ module WorkPackages
         [:too_long, ->(id, max) { id.length > max }],
         [:numerical, ->(id, _) { id.match?(/\A\d+\z/) }],
         [:starts_with_number, ->(id, _) { id.match?(/\A\d/) }],
-        [:special_characters, ->(id, _) { id.match?(/[^a-zA-Z0-9]/) }],
+        [:special_characters, ->(id, _) { id.match?(/[^a-zA-Z0-9_]/) }],
         [:not_fully_uppercased, ->(id, _) { id != id.upcase }]
       ].freeze
 
@@ -80,7 +80,7 @@ module WorkPackages
       private
 
       def exceeds_max_length        = Project.where("length(identifier) > ?", max_identifier_length)
-      def contains_non_alphanumeric = Project.where("identifier ~ ?", "[^a-zA-Z0-9]")
+      def contains_non_alphanumeric = Project.where("identifier ~ ?", "[^a-zA-Z0-9_]")
       def starts_with_digit         = Project.where("identifier ~ ?", "^[0-9]")
       def not_fully_uppercased      = Project.where("identifier != UPPER(identifier)")
 
