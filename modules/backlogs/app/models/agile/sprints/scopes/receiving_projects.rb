@@ -41,19 +41,18 @@ module Agile::Sprints::Scopes::ReceivingProjects
     private
 
     def shared_receiver_projects(source_project_id)
+      source_cte = Project
+        .where(id: source_project_id)
+        .select(:id, :lft, :rgt, Arel.sql("settings ->> 'sprint_sharing' AS sharing_mode"))
+
       Project.receive_shared_sprints
+        .with(source: source_cte)
         .where(
-          <<~SQL.squish,
+          <<~SQL.squish
             (
-              EXISTS (
-                SELECT 1
-                FROM projects source
-                WHERE source.id = :source_id
-                  AND source.settings ->> 'sprint_sharing' = 'share_all_projects'
-              )
+              EXISTS (SELECT 1 FROM source WHERE sharing_mode = 'share_all_projects')
               AND NOT EXISTS (
-                SELECT 1
-                FROM projects ancestors
+                SELECT 1 FROM projects ancestors
                 WHERE ancestors.lft < projects.lft
                   AND ancestors.rgt > projects.rgt
                   AND ancestors.settings ->> 'sprint_sharing' = 'share_subprojects'
@@ -61,27 +60,20 @@ module Agile::Sprints::Scopes::ReceivingProjects
             )
             OR
             (
-              EXISTS (
-                SELECT 1
-                FROM projects source
-                WHERE source.id = :source_id
-                  AND source.settings ->> 'sprint_sharing' = 'share_subprojects'
-              )
-              AND projects.lft > (SELECT source.lft FROM projects source WHERE source.id = :source_id)
-              AND projects.rgt < (SELECT source.rgt FROM projects source WHERE source.id = :source_id)
+              EXISTS (SELECT 1 FROM source WHERE sharing_mode = 'share_subprojects')
+              AND projects.lft > (SELECT lft FROM source)
+              AND projects.rgt < (SELECT rgt FROM source)
               AND NOT EXISTS (
-                SELECT 1
-                FROM projects ancestors
+                SELECT 1 FROM projects ancestors
                 WHERE ancestors.lft < projects.lft
                   AND ancestors.rgt > projects.rgt
-                  AND ancestors.id != :source_id
+                  AND ancestors.id != (SELECT id FROM source)
                   AND ancestors.settings ->> 'sprint_sharing' = 'share_subprojects'
-                  AND ancestors.lft >= (SELECT source.lft FROM projects source WHERE source.id = :source_id)
-                  AND ancestors.rgt <= (SELECT source.rgt FROM projects source WHERE source.id = :source_id)
+                  AND ancestors.lft >= (SELECT lft FROM source)
+                  AND ancestors.rgt <= (SELECT rgt FROM source)
               )
             )
           SQL
-          source_id: source_project_id
         )
     end
   end
