@@ -48,27 +48,6 @@ RSpec.describe "Create", :js do
            finish_date: Date.new(2025, 9, 15))
   end
 
-  let(:story_type) do
-    create(:type_feature)
-  end
-  let(:story_type2) do
-    type = create(:type)
-
-    project.types << type
-
-    type
-  end
-  let(:inactive_story_type) do
-    create(:type)
-  end
-
-  let(:task_type) do
-    type = create(:type_task)
-    project.types << type
-
-    type
-  end
-
   before do
     login_as(user)
 

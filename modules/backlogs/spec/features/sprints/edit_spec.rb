@@ -40,27 +40,6 @@ RSpec.describe "Edit", :js do
   end
   let(:planning_page) { Pages::SprintPlanning.new(project) }
 
-  let(:story_type) do
-    create(:type_feature)
-  end
-  let(:story_type2) do
-    type = create(:type)
-
-    project.types << type
-
-    type
-  end
-  let(:inactive_story_type) do
-    create(:type)
-  end
-
-  let(:task_type) do
-    type = create(:type_task)
-    project.types << type
-
-    type
-  end
-
   let!(:closed_sprint) do
     create(:agile_sprint,
            project:,
@@ -84,7 +63,7 @@ RSpec.describe "Edit", :js do
   end
 
   let!(:work_package) do
-    create(:work_package, subject: "First work package", project:, sprint: first_sprint, type: story_type)
+    create(:work_package, subject: "First work package", project:, sprint: first_sprint)
   end
 
   # Necessary so that work packages can be created via dialog
