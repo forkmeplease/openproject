@@ -55,6 +55,9 @@ en:
         story_points: "Story Points"
 
     errors:
+      messages:
+        must_be_in_planning: "must be in planning to start."
+        only_one_active_sprint_allowed: "only one active sprint is allowed per project."
       models:
         project:
           attributes:
