@@ -56,7 +56,7 @@ module OpenProject::Backlogs::List
     # we're using send to circumvent visibility work_packages.
     def scope_condition
       if OpenProject::FeatureDecisions.scrum_projects_active?
-        { project_id: project_id, sprint_id: sprint_id }
+        { project_id:, sprint_id: }
       else
         self.class.send(:sanitize_sql, ["project_id = ? AND version_id = ? AND type_id IN (?)",
                                         project_id, version_id, types])
