@@ -98,12 +98,9 @@ module Boards
 
     def statuses_from_sprint_work_packages
       type_ids = params[:sprint].work_packages.distinct.pluck(:type_id)
+      type_ids = params[:project].type_ids if type_ids.empty?
 
-      if type_ids.present?
-        Type.statuses(type_ids)
-      else
-        Type.find(Task.type).statuses
-      end
+      Type.statuses(type_ids)
     end
 
     def query_name(status)

@@ -31,10 +31,10 @@
 require "rails_helper"
 
 RSpec.describe Sprints::StartService do
-  shared_let(:project) { create(:project) }
   shared_let(:type_task) { create(:type_task) }
   shared_let(:status1) { create(:status) }
   shared_let(:status2) { create(:status) }
+  shared_let(:project) { create(:project, types: [type_task]) }
   let(:status) { "in_planning" }
   let(:sprint) { create(:agile_sprint, project:, status:) }
   let(:user) { create(:admin) }
@@ -44,10 +44,6 @@ RSpec.describe Sprints::StartService do
 
   before do
     create(:workflow, type: type_task, old_status: status1, new_status: status2, role: create(:project_role))
-
-    allow(Setting)
-      .to receive(:plugin_openproject_backlogs)
-      .and_return({ "task_type" => type_task.id.to_s })
   end
 
   context "when no task board exists yet" do
@@ -159,7 +155,7 @@ RSpec.describe Sprints::StartService do
   end
 
   context "when the sprint source shares with all projects" do
-    let(:project) { create(:project, sprint_sharing: "share_all_projects") }
+    let(:project) { create(:project, sprint_sharing: "share_all_projects", types: [type_task]) }
     let!(:receiving_project) { create(:project, sprint_sharing: "receive_shared", types: [type_task]) }
 
     it "creates boards for both owning and receiving projects", :aggregate_failures do
@@ -172,7 +168,7 @@ RSpec.describe Sprints::StartService do
   end
 
   context "when the user cannot manage boards in a receiving project" do
-    let(:project) { create(:project, sprint_sharing: "share_all_projects") }
+    let(:project) { create(:project, sprint_sharing: "share_all_projects", types: [type_task]) }
     let!(:receiving_project) { create(:project, sprint_sharing: "receive_shared", types: [type_task]) }
     let(:user) do
       create(:user, member_with_permissions: { project => [:start_complete_sprint] })

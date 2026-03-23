@@ -32,20 +32,16 @@ require "spec_helper"
 require_relative "../base_create_service_shared_examples"
 
 RSpec.describe Boards::SprintTaskBoardCreateService do
-  shared_let(:project) { create(:project) }
-  shared_let(:sprint) { create(:agile_sprint, project:) }
   shared_let(:type_task) { create(:type_task) }
   shared_let(:status1) { create(:status) }
   shared_let(:status2) { create(:status) }
+  shared_let(:project) { create(:project, types: [type_task]) }
+  shared_let(:sprint) { create(:agile_sprint, project:) }
   let(:user) { create(:admin) }
   let(:instance) { described_class.new(user:) }
 
   before do
     create(:workflow, type: type_task, old_status: status1, new_status: status2, role: create(:project_role))
-
-    allow(Setting)
-      .to receive(:plugin_openproject_backlogs)
-      .and_return({ "task_type" => type_task.id.to_s })
   end
 
   subject { instance.call(project:, sprint:, name: "Sprint Task Board") }
@@ -164,14 +160,14 @@ RSpec.describe Boards::SprintTaskBoardCreateService do
       end
 
       context "when the sprint has no work packages" do
-        it "falls back to the task type statuses" do
+        it "falls back to the project type statuses" do
           board = subject.result
           query_names = board.contained_queries.pluck(:name)
 
           expect(query_names).to contain_exactly(status1.name, status2.name)
         end
 
-        it "sets column_count to match the number of task type statuses" do
+        it "sets column_count to match the number of project type statuses" do
           expect(subject.result.column_count).to eq(2)
         end
       end
