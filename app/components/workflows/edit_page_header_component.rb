@@ -33,9 +33,10 @@ module Workflows
     include OpPrimer::ComponentHelpers
     include ApplicationHelper
 
-    def initialize(type, tabs:)
+    def initialize(type, tabs:, role: nil)
       super
       @type = type
+      @role = role
       @tabs = tabs
     end
 

@@ -26,38 +26,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
+<% html_title t(:label_administration), t(:label_workflow_plural), t(:label_workflow_copy) -%>
 
-<%=
-  render Primer::OpenProject::PageHeader.new(classes: "workflows-page-header") do |header|
-    header.with_title { title }
-    header.with_breadcrumbs(breadcrumb_items)
+<%= render Workflows::PageHeaderComponent.new(state: :copy) %>
 
-    header.with_action_button(
-      tag: :a,
-      mobile_icon: :copy,
-      mobile_label: t(:button_copy),
-      size: :medium,
-      href: new_workflow_copy_from_role_path(@type, source_role_id: @role&.id),
-      aria: { label: I18n.t(:button_copy) },
-      title: I18n.t(:button_copy)
-    ) do |button|
-      button.with_leading_visual_icon(icon: :copy)
-      t(:button_copy)
-    end
-
-    header.with_action_button(
-      tag: :a,
-      mobile_icon: :info,
-      mobile_label: t(:label_workflow_summary),
-      size: :medium,
-      href: summarized_workflows_path,
-      aria: { label: I18n.t(:label_workflow_summary) },
-      title: I18n.t(:label_workflow_summary)
-    ) do |button|
-      button.with_leading_visual_icon(icon: :info)
-      t(:label_workflow_summary)
-    end
-
-    helpers.render_tab_header_nav(header, @tabs)
-  end
-%>
+<%= primer_form_with(url: workflow_copy_from_role_path(@source_type)) do |f|
+  render(Workflows::Copies::FromRoleForm.new(f, source_type: @source_type, source_role: @source_role, all_roles: @all_roles))
+end %>

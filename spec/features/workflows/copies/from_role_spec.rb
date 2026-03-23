@@ -1,0 +1,77 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+
+RSpec.describe "Workflow copy from role" do
+  let!(:type) { create(:type) }
+  let!(:roles) { create_list(:project_role, 3) }
+  let(:admin)  { create(:admin) }
+
+  let(:target_roles_autocompleter) { FormFields::Primerized::AutocompleteField.new("target_roles", selector: "[data-test-selector='target_roles_autocomplete']") }
+
+  current_user { admin }
+
+  before do
+    visit new_workflow_copy_from_role_path(type)
+  end
+
+  it "permits to select a source role and target source roles", :js do
+    within_fieldset "Source" do
+      expect(page).to have_select("Role", text: roles.first.name)
+      select(roles.last.name, from: "Role")
+    end
+
+    target_roles_autocompleter.select_option roles.first.name
+    target_roles_autocompleter.select_option roles.second.name
+
+    click_button "Copy"
+
+    expect(page).to have_css(".flash-success", text: "Successful update.")
+  end
+
+  it "allows navigating to Workflow edit page" do
+    within ".PageHeader-actions" do
+      click_on "Edit"
+    end
+
+    expect(page).to have_heading "Workflow"
+    expect(page).to have_current_path(workflows_path)
+  end
+
+  it "allows navigating to Workflow summary page" do
+    within ".PageHeader-actions" do
+      click_on "Summary"
+    end
+
+    expect(page).to have_heading "Summary"
+    expect(page).to have_current_path(summarized_workflows_path)
+  end
+end

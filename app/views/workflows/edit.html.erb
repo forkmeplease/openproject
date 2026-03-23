@@ -29,7 +29,7 @@ See COPYRIGHT and LICENSE files for more details.
 <% html_title t(:label_administration), t(:label_workflow_plural), @type.name -%>
 
 <% content_for :content_header do %>
-  <%= render Workflows::EditPageHeaderComponent.new(@type, tabs: workflow_tabs(@type)) %>
+  <%= render Workflows::EditPageHeaderComponent.new(@type, role: @role, tabs: workflow_tabs(@type)) %>
 <% end %>
 
 <%= styled_form_tag({}, method: "get") do %>

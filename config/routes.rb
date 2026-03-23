@@ -799,6 +799,7 @@ Rails.application.routes.draw do
   resources :workflows, only: %i[index edit update], param: :type_id do
     resource :copy, only: %i[], module: "workflows/copies" do
       resource :from_type, only: %i[new create]
+      resource :from_role, only: %i[new create]
     end
     collection do
       scope module: :workflows, as: :workflows do
