@@ -35,10 +35,11 @@ module Workflows
 
     DIALOG_ID = "workflows-confirmation-dialog"
 
-    def initialize(redirect_url:, next_role_id:)
+    def initialize(redirect_url:, next_role_id: nil, next_tab: nil)
       super()
       @redirect_url = redirect_url
       @next_role_id = next_role_id
+      @next_tab = next_tab
     end
   end
 end

@@ -29,12 +29,12 @@ See COPYRIGHT and LICENSE files for more details.
 <% html_title t(:label_administration), t(:label_workflow_plural), @type.name -%>
 
 <% content_for :content_header do %>
-  <%= render Workflows::EditPageHeaderComponent.new(@type, tabs: workflow_tabs(@type)) %>
+  <%= render Workflows::EditPageHeaderComponent.new(@type, tabs: workflow_tabs(@type, current_role: @role, current_tab: @current_tab)) %>
 <% end %>
 
 <% if @type && @role %>
   <%= turbo_frame_tag "workflow-table" do %>
-    <%= render Workflows::EditSubHeaderComponent.new(tab: params[:tab], current_role: @role, type: @type, available_roles: @roles, status_ids: @statuses.pluck(:id)) %>
+    <%= render Workflows::EditSubHeaderComponent.new(tab: @current_tab, current_role: @role, type: @type, available_roles: @roles, status_ids: @statuses.pluck(:id)) %>
 
     <% if @statuses.any? %>
       <%= form_tag(
@@ -45,7 +45,7 @@ See COPYRIGHT and LICENSE files for more details.
           ) do %>
           <%= hidden_field_tag "type_id", @type.id %>
           <%= hidden_field_tag "role_id", @role.id %>
-          <%= hidden_field_tag "tab", params[:tab] || "always" %>
+          <%= hidden_field_tag "tab", @current_tab %>
 
     <%= render_tabs workflow_tabs(@type) %>
 
@@ -58,7 +58,7 @@ See COPYRIGHT and LICENSE files for more details.
           </div>
         <% end %>
     <% else %>
-      <%= render Workflows::BlankslateComponent.new(role: @role, type: @type, tab: params[:tab]) %>
+      <%= render Workflows::BlankslateComponent.new(role: @role, type: @type, tab: @current_tab) %>
     <% end %>
   <% end %>
 <% end %>

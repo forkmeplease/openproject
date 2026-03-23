@@ -52,6 +52,7 @@ class WorkflowsController < ApplicationController
   end
 
   def edit
+    @current_tab = current_tab
     statuses_for_form
 
     if @type && @role && @statuses.any?
@@ -69,7 +70,8 @@ class WorkflowsController < ApplicationController
     if call.success?
       flash[:notice] = I18n.t(:notice_successful_update)
       next_role_id = params[:next_role_id].presence
-      redirect_to edit_workflow_path(@type, role_id: next_role_id || @role.id, tab:)
+      next_tab = params[:next_tab].presence
+      redirect_to edit_workflow_path(@type, role_id: next_role_id || @role.id, tab: next_tab || tab)
     end
   end
 
@@ -102,6 +104,10 @@ class WorkflowsController < ApplicationController
   end
 
   def confirmation_dialog # rubocop:disable Metrics/AbcSize
+    destination_role_id = params[:next_role_id].presence || @role.id
+    destination_tab = params[:next_tab].presence || current_tab
+    destination_url = edit_workflow_path(@type, role_id: destination_role_id, tab: destination_tab)
+
     if params[:dirty] == "true"
       # Necessary because the ActionMenu updates even when the confirmation dialog
       # is closed via "X". This update ensures the correct option is shown as selected
@@ -117,12 +123,12 @@ class WorkflowsController < ApplicationController
         )
       )
       respond_with_dialog Workflows::ConfirmationDialogComponent.new(
-        redirect_url: edit_workflow_path(@type, role_id: params[:next_role_id], tab: current_tab),
-        next_role_id: params[:next_role_id]
+        redirect_url: destination_url,
+        next_role_id: params[:next_role_id].presence,
+        next_tab: params[:next_tab].presence
       )
     else
-      redirect_to edit_workflow_path(@type, role_id: params[:next_role_id], tab: current_tab),
-                  status: :see_other
+      redirect_to destination_url, status: :see_other
     end
   end
 

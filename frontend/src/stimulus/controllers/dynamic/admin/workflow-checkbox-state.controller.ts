@@ -29,6 +29,7 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
+import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
 
 const SAVED_STATE_KEY = 'workflow-saved-state';
 
@@ -39,8 +40,13 @@ interface SavedState {
 
 export default class WorkflowCheckboxStateController extends Controller<HTMLFormElement> {
   private initialCheckboxState:Record<string, boolean> = {};
+  private turboRequests:TurboRequestsService;
 
   connect() {
+    void window.OpenProject.getPluginContext().then((context) => {
+      this.turboRequests = context.services.turboRequests;
+    });
+
     const frame = this.element.closest<HTMLElement>('turbo-frame');
     frame?.addEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
 
@@ -53,12 +59,15 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
 
     this.initialCheckboxState = this.captureState();
     this.element.addEventListener('change', this.onCheckboxChange);
+
+    document.addEventListener('click', this.onTabLinkClick, true);
   }
 
   disconnect() {
     this.element.closest('turbo-frame')?.removeEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
     this.element.removeEventListener('submit', this.onFormSubmit);
     this.element.removeEventListener('change', this.onCheckboxChange);
+    document.removeEventListener('click', this.onTabLinkClick, true);
   }
 
   private onBeforeFrameRender = () => {
@@ -76,6 +85,21 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
     const dirty = Object.keys(current).some((key) => current[key] !== this.initialCheckboxState[key]);
     this.element.dataset.dirty = dirty ? 'true' : 'false';
     this.updateRoleFormDirtyParam(dirty);
+  };
+
+  private onTabLinkClick = (event:Event) => {
+    const target = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-workflow-tab-link]');
+    if (!target) return;
+    if (target.dataset.workflowTabCurrent === 'true') return;
+    if (this.element.dataset.dirty !== 'true') return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    void this.turboRequests.request(target.dataset.confirmationUrl!, {
+      method: 'POST',
+      headers: { Accept: 'text/vnd.turbo-stream.html' },
+    });
   };
 
   private updateRoleFormDirtyParam(dirty:boolean):void {

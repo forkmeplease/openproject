@@ -223,6 +223,11 @@ RSpec.describe "Workflow edit" do
       end
 
       click_link "User is author"
+
+      within_dialog "Save changes before continuing?" do
+        click_link "Ignore changes"
+      end
+
       click_link "Default transitions"
 
       within "#workflow_form_always" do

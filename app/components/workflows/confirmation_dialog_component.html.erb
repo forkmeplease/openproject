@@ -48,7 +48,8 @@ See COPYRIGHT and LICENSE files for more details.
         footer.with_component(
           Primer::Beta::Button.new(
             scheme: :primary, type: :submit, form: "workflow_form",
-            name: :next_role_id, value: @next_role_id
+            name: @next_tab ? :next_tab : :next_role_id,
+            value: @next_tab || @next_role_id
           )
         ) { t("admin.workflows.leave_confirmation.save") }
       end
