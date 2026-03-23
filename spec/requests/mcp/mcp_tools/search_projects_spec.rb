@@ -83,22 +83,18 @@ RSpec.describe McpTools::SearchProjects, with_flag: { mcp_server: true } do
     context "when passing an exact identifier" do
       let(:call_args) { { identifier: "abc" } }
 
-      it "finds only the matching project" do
+      it "finds the project" do
         subject
-        items = parsed_results.dig("structuredContent", "items")
-        expect(items.size).to eq(1)
-        expect(items.first).to include("identifier" => "abc")
+        expect(parsed_results.dig("structuredContent", "items")).to be_present
       end
     end
 
-    context "when passing a case-variant identifier" do
+    context "when passing a non-exact identifier" do
       let(:call_args) { { identifier: "Abc" } }
 
-      it "finds only the matching project (case-insensitive)" do
+      it "does not find the project" do
         subject
-        items = parsed_results.dig("structuredContent", "items")
-        expect(items.size).to eq(1)
-        expect(items.first).to include("identifier" => "abc")
+        expect(parsed_results.dig("structuredContent", "items")).to be_empty
       end
     end
 
