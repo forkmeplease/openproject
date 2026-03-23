@@ -158,21 +158,25 @@ RSpec.describe "Start and finish sprints",
       let!(:closed_work_package) do
         create(:work_package,
                project:,
+               subject: "Finished work package",
                sprint: first_sprint,
                status: closed_status)
       end
       let!(:unfinished_work_package1) do
         create(:work_package,
+               subject: "First unfinished work package",
                sprint: first_sprint,
                project:)
       end
       let!(:unfinished_work_package2) do
         create(:work_package,
+               subject: "Second unfinished work package",
                sprint: first_sprint,
                project:)
       end
       let!(:wp_in_next_sprint) do
         create(:work_package,
+               subject: "Work package in next sprint",
                sprint: second_sprint,
                project:)
       end
@@ -183,6 +187,19 @@ RSpec.describe "Start and finish sprints",
         planning_page.expect_sprint_finishing_modal
 
         planning_page.choose_to_move_unfinished_work_packages second_sprint.name
+
+        planning_page.expect_and_dismiss_flash type: :success, message: "The sprint was completed."
+
+        planning_page.expect_sprint_names_in_order(second_sprint.name)
+
+        # Replace this by the commented out code
+        planning_page.expect_story_in_sprint(unfinished_work_package1, second_sprint)
+        planning_page.expect_story_in_sprint(unfinished_work_package2, second_sprint)
+        planning_page.expect_story_in_sprint(wp_in_next_sprint, second_sprint)
+        # planning_page.expect_work_packages_in_sprint_in_order(second_sprint,
+        #                                                       work_packages: [unfinished_work_package1,
+        #                                                                       unfinished_work_package2,
+        #                                                                       wp_in_next_sprint])
       end
     end
   end

@@ -65,8 +65,13 @@ class Sprints::FinishService < BaseServices::BaseContracted
     # TODO: potentially do it with a different/no contract
     # so that it is possible to move work packages in all
     # projects the sprint is shared with.
-    model.work_packages.with_status_open.map do |wp|
-      WorkPackages::UpdateService.new(user:, model: wp).call(sprint: target_sprint)
+    model.work_packages.with_status_open.order(position: :desc).map do |wp|
+      WorkPackages::UpdateService
+        .new(user:, model: wp)
+        .call(sprint: target_sprint)
+        .on_success do
+        wp.move_after(position: 0)
+      end
     end
   end
 end

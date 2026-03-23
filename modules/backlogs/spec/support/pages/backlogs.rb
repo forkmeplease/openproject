@@ -153,6 +153,18 @@ module Pages
       end
     end
 
+    def expect_work_packages_in_sprint_in_order(sprint,
+                                                work_packages: [])
+      raise ArgumentError, "work_packages should not be empty" if work_packages.empty?
+
+      within_sprint(sprint) do
+        selectors = work_packages.map { |wp| work_package_selector(wp) }
+
+        expect(page)
+          .to have_css(selectors.join(" + "))
+      end
+    end
+
     def expect_and_dismiss_error(message)
       expect(page).to have_content message
 
