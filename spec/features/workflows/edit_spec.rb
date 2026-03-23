@@ -252,7 +252,7 @@ RSpec.describe "Workflow edit" do
 
     it "loads the matrix for a different role after switching" do
       click_button role.name
-      click_link other_role.name
+      click_button other_role.name
 
       within "#workflow_form_always" do
         expect(page).to have_field workflow_checkbox(1, 2)
@@ -266,14 +266,18 @@ RSpec.describe "Workflow edit" do
       end
 
       click_button role.name
-      click_link other_role.name
+      click_button other_role.name
+
+      within_dialog "Save changes before continuing?" do
+        click_link "Ignore changes"
+      end
 
       within "#workflow_form_always" do
         expect(page).to have_field workflow_checkbox(1, 2)
       end
 
       click_button other_role.name
-      click_link role.name
+      click_button role.name
 
       within "#workflow_form_always" do
         expect(page).to have_field workflow_checkbox(1, 0), checked: false

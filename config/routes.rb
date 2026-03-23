@@ -803,6 +803,7 @@ Rails.application.routes.draw do
       get "summarized"
       get :status_dialog
       post :confirm_statuses
+      post :confirmation_dialog
     end
   end
 

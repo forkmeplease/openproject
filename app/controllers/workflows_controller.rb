@@ -38,8 +38,8 @@ class WorkflowsController < ApplicationController
   before_action :find_roles, except: :update
   before_action :find_types, except: %i[edit update]
 
-  before_action :find_role, only: :update
-  before_action :find_type, only: %i[edit update]
+  before_action :find_role, only: %i[update confirmation_dialog]
+  before_action :find_type, only: %i[edit update confirmation_dialog]
 
   before_action :find_optional_role, only: %i[edit status_dialog confirm_statuses]
   before_action :find_optional_type, only: %i[edit status_dialog confirm_statuses]
@@ -68,7 +68,8 @@ class WorkflowsController < ApplicationController
 
     if call.success?
       flash[:notice] = I18n.t(:notice_successful_update)
-      redirect_to edit_workflow_path(@type, role_id: @role.id, tab:)
+      next_role_id = params[:next_role_id].presence
+      redirect_to edit_workflow_path(@type, role_id: next_role_id || @role.id, tab:)
     end
   end
 
@@ -97,6 +98,31 @@ class WorkflowsController < ApplicationController
         flash[:notice] = I18n.t(:notice_successful_update)
         redirect_to action: "copy", source_type_id: @source_type, source_role_id: @source_role
       end
+    end
+  end
+
+  def confirmation_dialog # rubocop:disable Metrics/AbcSize
+    if params[:dirty] == "true"
+      # Necessary because the ActionMenu updates even when the confirmation dialog
+      # is closed via "X". This update ensures the correct option is shown as selected
+      # with a preceding checkbox at all times.
+      update_via_turbo_stream(
+        component: Workflows::EditSubHeaderComponent.new(
+          tab: current_tab,
+          current_role: @role,
+          type: @type,
+          available_roles: @roles,
+          status_ids: [],
+          dirty: true
+        )
+      )
+      respond_with_dialog Workflows::ConfirmationDialogComponent.new(
+        redirect_url: edit_workflow_path(@type, role_id: params[:next_role_id], tab: current_tab),
+        next_role_id: params[:next_role_id]
+      )
+    else
+      redirect_to edit_workflow_path(@type, role_id: params[:next_role_id], tab: current_tab),
+                  status: :see_other
     end
   end
 

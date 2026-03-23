@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,21 +26,19 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
 module Workflows
-  class EditSubHeaderComponent < ApplicationComponent
+  class ConfirmationDialogComponent < ApplicationComponent
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    def initialize(tab:, current_role: nil, type: nil, available_roles: [], status_ids: [], dirty: false)
-      super
-      @tab = tab
-      @current_role = current_role
-      @type = type
-      @available_roles = available_roles
-      @status_ids = status_ids
-      @dirty = dirty
+    DIALOG_ID = "workflows-confirmation-dialog"
+
+    def initialize(redirect_url:, next_role_id:)
+      super()
+      @redirect_url = redirect_url
+      @next_role_id = next_role_id
     end
   end
 end

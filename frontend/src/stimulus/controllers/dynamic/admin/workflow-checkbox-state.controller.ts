@@ -38,6 +38,8 @@ interface SavedState {
 }
 
 export default class WorkflowCheckboxStateController extends Controller<HTMLFormElement> {
+  private initialCheckboxState:Record<string, boolean> = {};
+
   connect() {
     const frame = this.element.closest<HTMLElement>('turbo-frame');
     frame?.addEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
@@ -48,26 +50,50 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
     }
 
     this.element.addEventListener('submit', this.onFormSubmit);
+
+    this.initialCheckboxState = this.captureState();
+    this.element.addEventListener('change', this.onCheckboxChange);
   }
 
   disconnect() {
     this.element.closest('turbo-frame')?.removeEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
     this.element.removeEventListener('submit', this.onFormSubmit);
+    this.element.removeEventListener('change', this.onCheckboxChange);
   }
 
   private onBeforeFrameRender = () => {
-    const checkboxes:Record<string, boolean> = {};
-    this.element.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((cb) => {
-      checkboxes[`${cb.dataset.oldStatus}:${cb.dataset.newStatus}:${cb.value}`] = cb.checked;
-    });
-
-    const state:SavedState = { formKey: this.formKey, checkboxes };
+    const state:SavedState = { formKey: this.formKey, checkboxes: this.captureState() };
     sessionStorage.setItem(SAVED_STATE_KEY, JSON.stringify(state));
   };
 
   private onFormSubmit = () => {
     sessionStorage.removeItem(SAVED_STATE_KEY);
+    this.element.dataset.dirty = 'false';
   };
+
+  private onCheckboxChange = () => {
+    const current = this.captureState();
+    const dirty = Object.keys(current).some((key) => current[key] !== this.initialCheckboxState[key]);
+    this.element.dataset.dirty = dirty ? 'true' : 'false';
+    this.updateRoleFormDirtyParam(dirty);
+  };
+
+  private updateRoleFormDirtyParam(dirty:boolean):void {
+    const frame = this.element.closest('turbo-frame');
+    frame?.querySelectorAll<HTMLFormElement>('[data-workflow-role-form]').forEach((form) => {
+      const url = new URL(form.action);
+      url.searchParams.set('dirty', dirty ? 'true' : 'false');
+      form.action = url.toString();
+    });
+  }
+
+  private captureState():Record<string, boolean> {
+    const checkboxes:Record<string, boolean> = {};
+    this.element.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((cb) => {
+      checkboxes[`${cb.dataset.oldStatus}:${cb.dataset.newStatus}:${cb.value}`] = cb.checked;
+    });
+    return checkboxes;
+  }
 
   private get formKey():string {
     return `${this.formValue('type_id')}-${this.formValue('role_id')}`;

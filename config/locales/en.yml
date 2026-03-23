@@ -418,6 +418,11 @@ en:
           other: "Remove %{count} statuses?"
         description: "Removing these statuses will make them unavailable to this type and delete existing workflows. Are you sure you want to proceed?"
         confirm: "Remove"
+      leave_confirmation:
+        title: "Save changes before continuing?"
+        description: "You are about to leave this page but you have unsaved changes. Would you like to save them before continuing?"
+        ignore: "Ignore changes"
+        save: "Save changes and continue"
       role_selector:
         label: "Role: %{role}"
         no_role: "Select role"
