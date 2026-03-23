@@ -410,7 +410,7 @@ en:
           label_autofixed_suggestion: Future identifier
           label_example_work_package_id: Example work package ID
         autofix_preview:
-          error_too_long: Has to be fewer than 5 characters
+          error_too_long: Has to be 10 characters or fewer
           error_numerical: Cannot be purely numerical
           error_starts_with_number: Cannot start with a number
           error_special_characters: Special characters not allowed

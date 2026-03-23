@@ -84,18 +84,22 @@ RSpec.describe McpTools::SearchPortfolios, with_flag: { mcp_server: true } do
     context "when passing an exact identifier" do
       let(:call_args) { { identifier: "abc" } }
 
-      it "finds the portfolio" do
+      it "finds only the matching portfolio" do
         subject
-        expect(parsed_results.dig("structuredContent", "items")).to be_present
+        items = parsed_results.dig("structuredContent", "items")
+        expect(items.size).to eq(1)
+        expect(items.first).to include("identifier" => "abc")
       end
     end
 
     context "when passing a case-variant identifier" do
       let(:call_args) { { identifier: "Abc" } }
 
-      it "finds the portfolio (case-insensitive)" do
+      it "finds only the matching portfolio (case-insensitive)" do
         subject
-        expect(parsed_results.dig("structuredContent", "items")).to be_present
+        items = parsed_results.dig("structuredContent", "items")
+        expect(items.size).to eq(1)
+        expect(items.first).to include("identifier" => "abc")
       end
     end
 
