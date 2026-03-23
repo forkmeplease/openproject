@@ -41,7 +41,7 @@ module Agile::Sprints::Scopes::ReceivingProjects
     private
 
     def shared_receiver_projects(source_project_id)
-      Project.active.receive_shared_sprints
+      Project.receive_shared_sprints
         .where(
           <<~SQL.squish,
             (

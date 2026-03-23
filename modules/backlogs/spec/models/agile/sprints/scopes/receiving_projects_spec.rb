@@ -60,6 +60,19 @@ RSpec.describe Agile::Sprints::Scopes::ReceivingProjects do
       end
     end
 
+    context "when an ancestor shares subprojects (blocking share_all_projects)" do
+      let(:source_sharing) { "share_all_projects" }
+      let!(:ancestor_sharer) { create(:project, sprint_sharing: "share_subprojects") }
+      let!(:blocked_receiver) do
+        create(:project, parent: ancestor_sharer, sprint_sharing: "receive_shared")
+      end
+      let!(:unblocked_receiver) { create(:project, sprint_sharing: "receive_shared") }
+
+      it "excludes receivers beneath the share_subprojects ancestor" do
+        expect(scope).to contain_exactly(source_project, unblocked_receiver)
+      end
+    end
+
     context "when the sprint source shares with subprojects" do
       let(:source_sharing) { "share_subprojects" }
       let!(:receiving_project) do
