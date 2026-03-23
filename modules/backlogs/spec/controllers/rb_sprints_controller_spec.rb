@@ -493,7 +493,9 @@ RSpec.describe RbSprintsController do
           it "finishes the sprint and redirects to the backlog", :aggregate_failures do
             post :finish, params: request_params
 
-            expect(response).to redirect_to(backlogs_project_backlogs_path(project))
+            expect(response).to be_successful
+            expect(response.body).to include("action=\"redirect_to\"")
+            expect(response.body).to include(backlogs_project_backlogs_path(project))
             expect(flash[:notice]).to eq(I18n.t(:notice_successful_finish))
             expect(service).to have_received(:call)
           end
@@ -511,10 +513,12 @@ RSpec.describe RbSprintsController do
           end
         end
 
-        it "finishes the sprint and redirects to the backlog", :aggregate_failures do
-          post :finish, params: request_params
+        it "finishes the sprint and redirects to the backlog via turbo stream", :aggregate_failures do
+          post :finish, format: :turbo_stream, params: request_params
 
-          expect(response).to redirect_to(backlogs_project_backlogs_path(project))
+          expect(response).to be_successful
+          expect(response.body).to include("action=\"redirect_to\"")
+          expect(response.body).to include(backlogs_project_backlogs_path(project))
           expect(flash[:notice]).to eq(I18n.t(:notice_successful_finish))
           expect(service).to have_received(:call)
         end
