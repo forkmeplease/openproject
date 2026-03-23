@@ -32,23 +32,23 @@ require "support/components/common/modal"
 require "support/components/autocompleter/ng_select_autocomplete_helpers"
 
 module Components
-  module Projects
-    module ProjectCustomFields
+  module Common
+    class InplaceEditFields
       class Dialog < Components::Common::Modal
         include Components::Autocompleter::NgSelectAutocompleteHelpers
 
-        attr_reader :project, :project_custom_field, :title
+        attr_reader :model, :attribute
 
-        def initialize(project, project_custom_field)
+        def initialize(model, attribute)
           super()
 
-          @project = project
-          @project_custom_field = project_custom_field
-          @title = @project_custom_field.name
+          @model = model
+          @attribute = attribute
+          @model_class = @model.class.name.parameterize(separator: "_")
         end
 
         def dialog_css_selector
-          "dialog#project-custom-field-dialog-#{@project_custom_field.id}"
+          "dialog#inplace-edit-field-dialog--#{@model_class}-#{model.id}--#{attribute.name}"
         end
 
         def async_content_container_css_selector
@@ -82,7 +82,7 @@ module Components
 
         def submit
           within(dialog_css_selector) do
-            page.find("[data-test-selector='save-project-attributes-button']").click
+            click_link_or_button "Save"
           end
         end
 
@@ -122,21 +122,6 @@ module Components
         def find_field_label(label_text)
           within_dialog do
             page.find(:element, :label, text: label_text)
-          end
-        end
-
-        ###
-
-        def input_containers
-          within "#project-custom-field-edit-form > .FormControl-spacingWrapper" do
-            page.all(".FormControl-spacingWrapper")
-          end
-        end
-
-        def within_custom_field_input_container(custom_field, &)
-          # wrapping in `within_async_content` to make sure the container is properly loaded
-          within_async_content do
-            within("[data-test-selector='project-custom-field-input-container-#{custom_field.id}']", &)
           end
         end
       end

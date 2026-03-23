@@ -29,7 +29,7 @@
 #++
 
 require "spec_helper"
-require_relative "../shared_context"
+require_relative "shared_context"
 
 RSpec.describe "Edit project custom fields on project overview page", :js do
   include_context "with seeded projects, members and project custom fields"
@@ -42,11 +42,19 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
   describe "with correct updating behaviour" do
     def open_dialog
-      dialog = overview_page.open_modal_for_custom_field(custom_field)
+      dialog = overview_page.open_modal_for_custom_field(custom_field).dialog
 
       yield dialog
       dialog.submit
       dialog.expect_closed
+    end
+
+    def open_field
+      field = overview_page.open_inplace_edit_field_for_custom_field(custom_field)
+
+      yield field
+      field.submit
+      field.expect_close
     end
 
     shared_examples "saves custom comment" do
@@ -74,7 +82,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content I18n.t("placeholders.default")
           end
 
-          open_dialog do
+          open_field do
             field.check
           end
 
@@ -90,7 +98,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content "Yes"
           end
 
-          open_dialog do
+          open_field do
             field.uncheck
           end
 
@@ -100,6 +108,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
         end
 
         it "does not change the value if untouched" do
+          custom_field.update!(has_comment: true)
           overview_page.visit_page
 
           overview_page.within_custom_field_container(custom_field) do
@@ -128,7 +137,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content I18n.t("placeholders.default")
           end
 
-          open_dialog do
+          open_field do
             field.fill_in(with: update_value)
           end
 
@@ -138,6 +147,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
         end
 
         it "does not change the value if untouched" do
+          custom_field.update!(has_comment: true)
           overview_page.visit_page
 
           overview_page.within_custom_field_container(custom_field) do
@@ -160,7 +170,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content expected_initial_value
           end
 
-          open_dialog do
+          open_field do
             field.fill_in(with: "")
           end
 
@@ -180,7 +190,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content expected_initial_calculated_value
           end
 
-          open_dialog do
+          open_field do
             field.fill_in(with: update_value)
           end
 
@@ -196,7 +206,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content expected_initial_calculated_value
           end
 
-          open_dialog do |dialog|
+          open_field do |dialog|
             # don't touch the input
           end
 
@@ -212,7 +222,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_content expected_initial_calculated_value
           end
 
-          open_dialog do
+          open_field do
             field.fill_in(with: "")
           end
 
@@ -375,7 +385,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_no_text first_option
           end
 
-          open_dialog do
+          open_field do
             field.select_option(first_option)
           end
 
@@ -391,7 +401,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_text first_option
           end
 
-          open_dialog do
+          open_field do
             field.expect_selected(first_option) # wait for proper initialization
             # don't touch the input
           end
@@ -408,7 +418,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_text first_option
           end
 
-          open_dialog do
+          open_field do
             field.clear
           end
 
@@ -430,7 +440,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_no_text unused_option
           end
 
-          open_dialog do
+          open_field do
             # Choose the unused option as the new selection
             field.select_option(unused_option)
           end
@@ -488,7 +498,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
             overview_page.visit_page
 
-            open_dialog do
+            open_field do
               field.select_option(group.name)
             end
 
@@ -509,7 +519,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
             overview_page.visit_page
 
-            open_dialog do
+            open_field do
               field.select_option(placeholder_user.name)
             end
 
@@ -532,7 +542,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_no_text first_option
           end
 
-          open_dialog do
+          open_field do
             field.select_option(first_option)
           end
 
@@ -551,7 +561,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_no_text second_option
           end
 
-          open_dialog do
+          open_field do
             field.select_option(first_option)
             field.select_option(second_option)
           end
@@ -570,7 +580,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_text second_option
           end
 
-          open_dialog do
+          open_field do
             field.deselect_option(first_option)
           end
 
@@ -588,7 +598,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_text second_option
           end
 
-          open_dialog do
+          open_field do
             field.expect_selected(first_option, second_option) # wait for proper initialization
             # don't touch the values
           end
@@ -607,7 +617,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_text second_option
           end
 
-          open_dialog do
+          open_field do
             field.clear
           end
 
@@ -627,7 +637,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_no_text second_option
           end
 
-          open_dialog do
+          open_field do
             field.select_option(first_option)
           end
 
@@ -636,7 +646,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
             expect(page).to have_no_text second_option
           end
 
-          open_dialog do
+          open_field do
             field.select_option(second_option)
           end
 
@@ -693,7 +703,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
             overview_page.visit_page
 
-            open_dialog do
+            open_field do
               field.select_option(group.name)
               field.select_option(another_group.name)
             end
@@ -720,7 +730,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
             overview_page.visit_page
 
-            open_dialog do
+            open_field do
               field.select_option(placeholder_user.name)
               field.select_option(another_placeholder_user.name)
             end
@@ -769,7 +779,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
         overview_page.visit_page
 
-        open_dialog do
+        open_field do
           field.fill_in(with: "new value")
         end
 
@@ -801,7 +811,7 @@ RSpec.describe "Edit project custom fields on project overview page", :js do
 
         overview_page.visit_page
 
-        open_dialog do
+        open_field do
           field.fill_in(with: 567)
         end
 

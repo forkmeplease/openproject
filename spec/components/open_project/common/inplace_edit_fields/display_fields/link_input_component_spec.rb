@@ -27,23 +27,29 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+require "rails_helper"
 
-module Overviews
-  module ProjectCustomFields
-    class ShowDialogComponent < DialogComponent
-      private
+RSpec.describe OpenProject::Common::InplaceEditFields::DisplayFields::LinkInputComponent,
+               type: :component do
+  include ViewComponent::TestHelpers
 
-      def body_component
-        Overviews::ProjectCustomFields::ShowComponent.new(
-          project_custom_field: @project_custom_field,
-          project_custom_field_values: @project.custom_values_for_custom_field(@project_custom_field),
-          project: @project
-        )
-      end
+  let(:project) { build_stubbed(:project) }
 
-      def close_button_title
-        t("button_close")
-      end
+  it "renders a link for a URL value" do
+    without_partial_double_verification do
+      allow(project).to receive(:homepage).and_return("https://example.com")
+      render_inline(described_class.new(model: project, attribute: :homepage, writable: false, truncated: false))
+
+      expect(rendered_content).to have_link("https://example.com", href: "https://example.com")
+    end
+  end
+
+  it "renders a placeholder when the value is blank" do
+    without_partial_double_verification do
+      allow(project).to receive(:homepage).and_return(nil)
+      render_inline(described_class.new(model: project, attribute: :homepage, writable: false, truncated: false))
+
+      expect(rendered_content).to have_text(I18n.t("placeholders.default"))
     end
   end
 end

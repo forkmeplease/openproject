@@ -28,36 +28,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Overviews
-  module ProjectCustomFields
-    class EditDialogComponent < DialogComponent
-      private
+module OpenProject
+  module Common
+    module InplaceEditFields
+      class CalculatedValueInputComponent < InplaceEditFields::TextInputComponent
+        def self.display_class
+          DisplayFields::CalculatedValueInputComponent
+        end
 
-      def body_component
-        Overviews::ProjectCustomFields::EditComponent.new(
-          project_custom_field: @project_custom_field,
-          project: @project,
-          wrapper_id:
-        )
-      end
+        def initialize(form:, attribute:, model:, **system_arguments)
+          system_arguments ||= {}
+          system_arguments[:readonly] = true
 
-      def close_button_title
-        t("button_cancel")
-      end
-
-      def footer_buttons(footer_collection)
-        footer_collection.with_component(
-          Primer::Beta::Button.new(
-            scheme: :primary,
-            type: :submit,
-            form: "project-custom-field-edit-form",
-            data: {
-              test_selector: "save-project-attributes-button",
-              turbo: true
-            }
-          )
-        ) do
-          t("button_save")
+          super(form:, attribute:, model:, show_action_buttons: false, **system_arguments)
         end
       end
     end

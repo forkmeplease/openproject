@@ -28,25 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Overviews
-  module ProjectCustomFields
-    class EditComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpTurbo::Streamable
-      include OpPrimer::ComponentHelpers
-      include CustomFieldHierarchyTreeViewHelper
+module OpenProject
+  module Common
+    module InplaceEditFields
+      module DisplayFields
+        class LinkInputComponent < DisplayFieldComponent
+          include OpenProject::TextFormatting
 
-      attr_reader :wrapper_id
+          attr_reader :model, :attribute, :writable
 
-      def initialize(project:, project_custom_field:, wrapper_id: nil)
-        super
-        @project = project
-        @project_custom_field = project_custom_field
-        @wrapper_id = wrapper_id
-      end
+          def render_display_value
+            value = model.public_send(attribute)
 
-      def wrapper_uniq_by
-        @project_custom_field.id
+            if value.present?
+              render_link(value)
+            else
+              t("placeholders.default")
+            end
+          end
+
+          def render_link(href)
+            link = Addressable::URI.parse(href)
+            return href unless link
+
+            render(Primer::Beta::Link.new(href:, rel: "noopener noreferrer")) do
+              href
+            end
+          end
+        end
       end
     end
   end
