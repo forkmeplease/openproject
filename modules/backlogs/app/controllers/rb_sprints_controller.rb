@@ -155,7 +155,8 @@ class RbSprintsController < RbApplicationController
 
   def update_sprint_header_component_via_turbo_stream(sprint:)
     update_via_turbo_stream(
-      component: Backlogs::SprintHeaderComponent.new(sprint:),
+      component: Backlogs::SprintHeaderComponent.new(sprint:,
+                                                     project: @project),
       method: :morph
     )
   end
