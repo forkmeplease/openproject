@@ -27,45 +27,25 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+require "rails_helper"
 
-module Overviews
-  module ProjectCustomFields
-    class DialogComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpTurbo::Streamable
-      include OpPrimer::ComponentHelpers
+RSpec.describe OpenProject::Common::InplaceEditFields::FloatInputComponent,
+               type: :component do
+  include ViewComponent::TestHelpers
 
-      def initialize(project:, project_custom_field:)
-        super
-        @project = project
-        @project_custom_field = project_custom_field
-      end
+  let(:project) { build_stubbed(:project) }
 
-      private
-
-      def dialog_title
-        @project_custom_field.project_custom_field_section.name
-      end
-
-      def dialog_id
-        "project-custom-field-dialog-#{@project_custom_field.id}"
-      end
-
-      def wrapper_id
-        "##{dialog_id}"
-      end
-
-      def body_component
-        fail NoMethodError, "Must be overridden in subclass"
-      end
-
-      def close_button_title
-        fail NoMethodError, "Must be overridden in subclass"
-      end
-
-      def footer_buttons(footer_collection)
-        # noop
+  it "renders a number input for the attribute" do
+    component_class = described_class
+    render_in_view_context(project) do |model|
+      primer_form_with(url: "/foo", model:) do |f|
+        render_inline_form(f) do |form|
+          render component_class.new(form:, model:, attribute: :name, label: "Name")
+        end
       end
     end
+
+    expect(rendered_content).to have_field("project[name]", type: "number")
+    expect(rendered_content).to include('step="any"')
   end
 end

@@ -27,20 +27,31 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+require "rails_helper"
 
-require "spec_helper"
-require "support/permission_specs"
+RSpec.describe OpenProject::Common::InplaceEditFields::DisplayFields::UserSelectListComponent,
+               type: :component do
+  include ViewComponent::TestHelpers
 
-RSpec.describe Overviews::ProjectCustomFieldsController, "edit_project_attributes permission", # rubocop:disable RSpec/EmptyExampleGroup,RSpec/SpecFilePathFormat
-               type: :controller do
-  include PermissionSpecs
+  let(:user_admin) { create(:admin) }
+  let(:project) { create(:project) }
+  let(:custom_field) { create(:project_custom_field, :user, projects: [project]) }
+  let(:attribute) { custom_field.attribute_name.to_sym }
+  let(:selected_user) { create(:user) }
 
-  # render dialog displaying project attributes
-  check_permission_required_for("overviews/project_custom_fields#show", :view_project_attributes)
+  before { allow(User).to receive(:current).and_return(user_admin) }
 
-  # render dialog with inputs for editing project attributes with edit_project permission
-  check_permission_required_for("overviews/project_custom_fields#edit", :edit_project_attributes)
+  it "renders the user avatar for a single-value user custom field" do
+    create(:custom_value, :skip_validations, customized: project, custom_field:, value: selected_user.id.to_s)
+    render_inline(described_class.new(model: Project.find(project.id), attribute:, writable: false, truncated: false))
 
-  # update project attributes with edit_project permission, deeper permission check via contract in place
-  check_permission_required_for("overviews/project_custom_fields#update", :edit_project_attributes)
+    expect(rendered_content).to have_css "opce-principal"
+    expect(rendered_content).to have_no_text(I18n.t("placeholders.default"))
+  end
+
+  it "renders the placeholder when no user is selected" do
+    render_inline(described_class.new(model: project, attribute:, writable: false, truncated: false))
+
+    expect(rendered_content).to have_text(I18n.t("placeholders.default"))
+  end
 end
