@@ -32,6 +32,7 @@ class AddCaseInsensitiveUniquenessForProjectIdentifiers < ActiveRecord::Migratio
   disable_ddl_transaction!
 
   def up
+    deduplicate_case_colliding_identifiers
     remove_index :projects, :identifier, unique: true, algorithm: :concurrently, if_exists: true
     add_index :projects, "LOWER(identifier)",
               unique: true,
@@ -43,5 +44,21 @@ class AddCaseInsensitiveUniquenessForProjectIdentifiers < ActiveRecord::Migratio
   def down
     remove_index :projects, name: "index_projects_on_lower_identifier", algorithm: :concurrently, if_exists: true
     add_index :projects, :identifier, unique: true, algorithm: :concurrently
+  end
+
+  private
+
+  # Resolves any existing case-colliding identifiers (e.g. "Foo" and "foo") so that
+  # the unique LOWER(identifier) index can be created without violation errors.
+  # The oldest project (by id) keeps its identifier; duplicates get a "-N" suffix.
+  def deduplicate_case_colliding_identifiers
+    execute <<~SQL.squish
+      UPDATE projects SET identifier = projects.identifier || '-' || counter.rn
+      FROM (
+        SELECT id, row_number() OVER (PARTITION BY LOWER(identifier) ORDER BY id) AS rn
+        FROM projects
+      ) AS counter
+      WHERE projects.id = counter.id AND counter.rn > 1;
+    SQL
   end
 end
