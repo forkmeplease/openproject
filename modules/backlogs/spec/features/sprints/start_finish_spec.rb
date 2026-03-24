@@ -208,14 +208,10 @@ RSpec.describe "Start and finish sprints",
 
         planning_page.expect_sprint_names_in_order(sprint_from_other_project.name, second_sprint.name)
 
-        # Replace this by the commented out code
-        planning_page.expect_story_in_sprint(unfinished_work_package1, second_sprint)
-        planning_page.expect_story_in_sprint(unfinished_work_package2, second_sprint)
-        planning_page.expect_story_in_sprint(wp_in_next_sprint, second_sprint)
-        # planning_page.expect_work_packages_in_sprint_in_order(second_sprint,
-        #                                                       work_packages: [unfinished_work_package1,
-        #                                                                       unfinished_work_package2,
-        #                                                                       wp_in_next_sprint])
+        planning_page.expect_work_packages_in_sprint_in_order(second_sprint,
+                                                              work_packages: [unfinished_work_package1,
+                                                                              unfinished_work_package2,
+                                                                              wp_in_next_sprint])
       end
     end
   end

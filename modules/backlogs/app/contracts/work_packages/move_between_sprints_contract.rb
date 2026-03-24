@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,44 +26,27 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class Sprints::FinishService < BaseServices::BaseContracted
-  def initialize(user:, model:)
-    super(user:)
-    self.model = model
-  end
+module WorkPackages
+  # Contract used for moving work packages between two sprints at the end
+  # of a sprint. It does not enforce permissions as this change is carried
+  # out in the background.
+  class MoveBetweenSprintsContract < ModelContract
+    attribute :sprint
+    attribute :position
 
-  protected
+    validate :active_sprint_in_sharer_project
 
-  def before_perform(service_call)
-    if params[:move_to_sprint_id].present?
-      @target_sprint = Agile::Sprint.find_by(id: params[:move_to_sprint_id])
+    private
 
-      move_open_work_packages(@target_sprint).each do |result|
-        service_call.add_dependent!(result)
+    def active_sprint_in_sharer_project
+      unless Agile::Sprint
+               .native_to_sprint_source(Agile::Sprint.find_by(id: model.sprint_id_was).project)
+               .in_planning
+               .exists?(id: model.sprint_id)
+        errors.add(:sprint, :not_eligible_for_moving)
       end
-    end
-
-    service_call
-  end
-
-  def persist(service_call)
-    model.completed!
-    service_call
-  end
-
-  def default_contract_class
-    Sprints::FinishContract
-  end
-
-  private
-
-  def move_open_work_packages(target_sprint)
-    model.work_packages.with_status_open.order(position: :desc).map do |wp|
-      WorkPackages::UpdateService
-        .new(user:, model: wp, contract_class: WorkPackages::MoveBetweenSprintsContract)
-        .call(sprint: target_sprint, position: 1)
     end
   end
 end

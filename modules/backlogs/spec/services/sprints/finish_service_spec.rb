@@ -30,12 +30,12 @@
 
 require "rails_helper"
 
-RSpec.describe Sprints::FinishService do
+RSpec.describe Sprints::FinishService, with_flag: { scrum_projects: true } do
+  create_shared_association_defaults_for_work_package_factory
+
   shared_let(:project) { create(:project, enabled_module_names: %w[backlogs work_package_tracking]) }
   shared_let(:open_status) { create(:status, is_closed: false) }
   shared_let(:closed_status) { create(:status, is_closed: true) }
-  shared_let(:type) { create(:type_feature) }
-  shared_let(:priority) { create(:priority) }
 
   let(:user) do
     create(:user, member_with_permissions: {
@@ -45,12 +45,6 @@ RSpec.describe Sprints::FinishService do
   let(:sprint) { create(:agile_sprint, project:, status: sprint_status) }
   let(:sprint_status) { "active" }
   let(:instance) { described_class.new(user:, model: sprint) }
-
-  before do
-    allow(Setting)
-      .to receive(:plugin_openproject_backlogs)
-      .and_return({ "story_types" => [type.id.to_s], "task_type" => type.id.to_s })
-  end
 
   subject(:result) { instance.call }
 
@@ -63,7 +57,7 @@ RSpec.describe Sprints::FinishService do
 
   context "when the sprint has a closed work package" do
     let!(:closed_wp) do
-      create(:work_package, project:, sprint:, status: closed_status, type:, priority:)
+      create(:work_package, project:, sprint:, status: closed_status)
     end
 
     it "completes the sprint ignoring the closed work package", :aggregate_failures do
@@ -75,7 +69,7 @@ RSpec.describe Sprints::FinishService do
 
   context "when the sprint has unfinished (open) work packages" do
     let!(:open_wp) do
-      create(:work_package, project:, sprint:, status: open_status, type:, priority:)
+      create(:work_package, project:, sprint:, status: open_status)
     end
 
     context "without specifying a target sprint" do
@@ -102,12 +96,10 @@ RSpec.describe Sprints::FinishService do
     context "when specifying a non-existent target sprint id" do
       subject(:result) { instance.call(move_to_sprint_id: 0, send_notifications: false) }
 
-      # find_by returns nil for id: 0, so UpdateService is called with sprint: nil,
-      # which unassigns the WPs from the sprint. The contract then sees no unfinished WPs.
-      it "unassigns the open work packages and completes the sprint", :aggregate_failures do
-        expect(result).to be_success
-        expect(sprint.reload).to be_completed
-        expect(open_wp.reload.sprint).to be_nil
+      it "returns failure on the work package update and leaves the sprint active", :aggregate_failures do
+        expect(result).not_to be_success
+        expect(sprint.reload).to be_active
+        expect(open_wp.reload.sprint).to eq(sprint)
       end
     end
 
@@ -128,13 +120,13 @@ RSpec.describe Sprints::FinishService do
   context "when the sprint has multiple unfinished work packages and a target sprint is given" do
     let(:target_sprint) { create(:agile_sprint, project:, status: "in_planning") }
     let!(:open_wp1) do
-      create(:work_package, project:, sprint:, status: open_status, type:, priority:)
+      create(:work_package, project:, sprint:, status: open_status)
     end
     let!(:open_wp2) do
-      create(:work_package, project:, sprint:, status: open_status, type:, priority:)
+      create(:work_package, project:, sprint:, status: open_status)
     end
     let!(:closed_wp) do
-      create(:work_package, project:, sprint:, status: closed_status, type:, priority:)
+      create(:work_package, project:, sprint:, status: closed_status)
     end
 
     subject(:result) { instance.call(move_to_sprint_id: target_sprint.id, send_notifications: false) }
@@ -145,6 +137,76 @@ RSpec.describe Sprints::FinishService do
       expect(open_wp1.reload.sprint).to eq(target_sprint)
       expect(open_wp2.reload.sprint).to eq(target_sprint)
       expect(closed_wp.reload.sprint).to eq(sprint)
+    end
+  end
+
+  context "when the sprint has multiple unfinished work packages also in other projects and a target sprint is given" do
+    let(:target_sprint) { create(:agile_sprint, project:, status: "in_planning") }
+    # Permissions are not necessary for this. The change is carried out regardless.
+    let(:other_project) { create(:project) }
+    let!(:open_wp1) do
+      create(:work_package, project:, sprint:, status: open_status)
+    end
+    let!(:open_wp2) do
+      create(:work_package, project:, sprint:, status: open_status)
+    end
+    let!(:open_wp3_target_sprint) do
+      create(:work_package, project:, sprint: target_sprint, status: open_status)
+    end
+    let!(:open_wp4_target_sprint) do
+      create(:work_package, project:, sprint: target_sprint, status: open_status)
+    end
+    let!(:open_wp1_other_project) do
+      create(:work_package, project: other_project, sprint:, status: open_status)
+    end
+    let!(:open_wp2_other_project) do
+      create(:work_package, project: other_project, sprint:, status: open_status)
+    end
+    let!(:closed_wp) do
+      create(:work_package, project:, sprint:, status: closed_status)
+    end
+
+    subject(:result) { instance.call(move_to_sprint_id: target_sprint.id, send_notifications: false) }
+
+    it "moves only open work packages to their correct position across project borders and completes the sprint", # rubocop:disable RSpec/ExampleLength
+       :aggregate_failures do
+      expect(result).to be_success
+      expect(sprint.reload).to be_completed
+
+      open_wp1.reload
+      expect(open_wp1.sprint).to eq(target_sprint)
+      expect(open_wp1.position).to eq(1)
+      expect(open_wp1.project).to eq(project)
+
+      open_wp2.reload
+      expect(open_wp2.sprint).to eq(target_sprint)
+      expect(open_wp2.position).to eq(2)
+      expect(open_wp2.project).to eq(project)
+
+      open_wp3_target_sprint.reload
+      expect(open_wp3_target_sprint.sprint).to eq(target_sprint)
+      expect(open_wp3_target_sprint.position).to eq(3)
+      expect(open_wp3_target_sprint.project).to eq(project)
+
+      open_wp4_target_sprint.reload
+      expect(open_wp4_target_sprint.sprint).to eq(target_sprint)
+      expect(open_wp4_target_sprint.position).to eq(4)
+      expect(open_wp4_target_sprint.project).to eq(project)
+
+      open_wp1_other_project.reload
+      expect(open_wp1_other_project.sprint).to eq(target_sprint)
+      expect(open_wp1_other_project.position).to eq(1)
+      expect(open_wp1_other_project.project).to eq(other_project)
+
+      open_wp2_other_project.reload
+      expect(open_wp2_other_project.sprint).to eq(target_sprint)
+      expect(open_wp2_other_project.position).to eq(2)
+      expect(open_wp2_other_project.project).to eq(other_project)
+
+      closed_wp.reload.sprint
+      expect(closed_wp.sprint).to eq(sprint)
+      expect(closed_wp.position).to eq(1)
+      expect(closed_wp.project).to eq(project)
     end
   end
 

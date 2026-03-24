@@ -202,7 +202,7 @@ class RbSprintsController < RbApplicationController
       Backlogs::FinishSprintDialogComponent.new(
         sprint: @sprint,
         project: @project,
-        available_sprints: Agile::Sprint.native_to_sprint_source(@project).not_completed.where.not(id: @sprint.id)
+        available_sprints: Agile::Sprint.native_to_sprint_source(@project).in_planning.where.not(id: @sprint.id).order_by_date
       )
     )
   end
