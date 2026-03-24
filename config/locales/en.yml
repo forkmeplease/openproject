@@ -4022,7 +4022,7 @@ en:
   label_status: "Status"
   label_status_plural: "Statuses"
   label_storage_free_space: "Remaining disk space"
-  label_storage_used_space: "UsedA disk space"
+  label_storage_used_space: "Used disk space"
   label_storage_group: "Storage filesystem %{identifier}"
   label_storage_for: "Encompasses storage for"
   label_string: "Text"
