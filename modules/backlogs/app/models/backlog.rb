@@ -38,6 +38,15 @@ class Backlog
     new(sprint:, stories: sprint.stories(project), owner_backlog:)
   end
 
+  def self.inbox_for(project:)
+    WorkPackage
+      .visible
+      .where(project:)
+      .with_status_open
+      .where(sprint_id: nil)
+      .order(Arel.sql(Story::ORDER))
+  end
+
   def self.owner_backlogs(project)
     backlogs = Sprint.apply_to(project).with_status_open.displayed_right(project).order(:name)
 
