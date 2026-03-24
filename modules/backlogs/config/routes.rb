@@ -60,10 +60,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :stories, controller: :rb_stories, only: [] do
+    resources :inbox, only: [] do
       member do
-        put :move_from_inbox
-        post :reorder_inbox
+        put :move
+        post :reorder
       end
     end
   end

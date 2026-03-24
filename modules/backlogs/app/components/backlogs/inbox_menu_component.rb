@@ -71,7 +71,7 @@ module Backlogs
         id: dom_target(work_package, :menu, direction),
         label:,
         tag: :button,
-        href: reorder_inbox_project_story_path(project, work_package),
+        href: reorder_project_inbox_path(project, work_package),
         form_arguments: { method: :post, inputs: [{ name: "direction", value: direction }] }
       ) do |item|
         item.with_leading_visual_icon(icon:)

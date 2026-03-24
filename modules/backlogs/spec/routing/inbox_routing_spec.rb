@@ -28,41 +28,26 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs
-  class InboxItemComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+require "spec_helper"
 
-    attr_reader :work_package, :project, :container, :max_position, :current_user
+RSpec.describe InboxController do
+  describe "routing" do
+    it {
+      expect(put("/projects/project_42/inbox/85/move")).to route_to(
+        controller: "inbox",
+        action: "move",
+        project_id: "project_42",
+        id: "85"
+      )
+    }
 
-    def initialize(inbox_item:, project:, container:, max_position:, current_user: User.current)
-      super()
-
-      @work_package = inbox_item
-      @project = project
-      @container = container
-      @max_position = max_position
-      @current_user = current_user
-    end
-
-    private
-
-    def row_options
-      {
-        id: dom_id(work_package),
-        classes: "Box-row--hover-blue Box-row--focus-gray Box-row--clickable Box-row--draggable",
-        data: {
-          draggable_id: work_package.id,
-          draggable_type: "story",
-          drop_url: move_project_inbox_path(project, work_package),
-          story: true,
-          controller: "backlogs--story",
-          backlogs__story_id_value: work_package.id,
-          backlogs__story_split_url_value: details_backlogs_project_backlogs_path(project, work_package),
-          backlogs__story_full_url_value: work_package_path(work_package),
-          backlogs__story_selected_class: "Box-row--blue"
-        },
-        tabindex: 0
-      }
-    end
+    it {
+      expect(post("/projects/project_42/inbox/85/reorder")).to route_to(
+        controller: "inbox",
+        action: "reorder",
+        project_id: "project_42",
+        id: "85"
+      )
+    }
   end
 end
