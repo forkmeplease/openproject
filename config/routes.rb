@@ -801,6 +801,10 @@ Rails.application.routes.draw do
       resource :from_type, only: %i[new create]
       resource :from_role, only: %i[new create]
     end
+    collection do
+      get :status_dialog
+      post :confirm_statuses
+    end
   end
   namespace :workflows do
     resource :summary, only: %i[show]

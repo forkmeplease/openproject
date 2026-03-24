@@ -34,19 +34,19 @@ module WorkflowHelper
       {
         name: "always",
         partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id, :used_statuses_only))),
+        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id))),
         label: I18n.t(:"admin.workflows.tabs.default_transitions")
       },
       {
         name: "author",
         partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id, :used_statuses_only))),
+        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id))),
         label: I18n.t(:"admin.workflows.tabs.user_author")
       },
       {
         name: "assignee",
         partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id, :used_statuses_only))),
+        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id))),
         label: I18n.t(:"admin.workflows.tabs.user_assignee")
       }
     ]

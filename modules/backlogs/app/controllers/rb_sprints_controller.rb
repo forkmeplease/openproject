@@ -148,12 +148,16 @@ class RbSprintsController < RbApplicationController
         backlog: @backlog,
         project: @project,
         state:
-      )
+      ),
+      method: :morph
     )
   end
 
   def update_sprint_header_component_via_turbo_stream(sprint:)
-    update_via_turbo_stream(component: Backlogs::SprintHeaderComponent.new(sprint:))
+    update_via_turbo_stream(
+      component: Backlogs::SprintHeaderComponent.new(sprint:),
+      method: :morph
+    )
   end
 
   def update_new_sprint_form_component_via_turbo_stream(sprint:, base_errors: nil)
@@ -170,10 +174,6 @@ class RbSprintsController < RbApplicationController
   def load_sprint_and_project
     @sprint = Sprint.visible.find(params[:id])
     load_project
-  end
-
-  def load_project
-    @project = Project.visible.find(params[:project_id])
   end
 
   def sprint_params

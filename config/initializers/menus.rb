@@ -399,7 +399,7 @@ Redmine::MenuManager.map :admin_menu do |menu|
   menu.push :statuses,
             { controller: "/statuses" },
             if: ->(_) { User.current.admin? },
-            caption: :label_status,
+            caption: :label_status_plural,
             parent: :admin_work_packages
 
   menu.push :priorities,
@@ -417,7 +417,7 @@ Redmine::MenuManager.map :admin_menu do |menu|
   menu.push :workflows,
             { controller: "/workflows", action: "index" },
             if: ->(_) { User.current.admin? },
-            caption: ->(_) { Workflow.model_name.human },
+            caption: ->(_) { I18n.t(:label_workflow_plural) },
             parent: :admin_work_packages
 
   menu.push :admin_projects_settings,

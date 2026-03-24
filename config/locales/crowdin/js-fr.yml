@@ -460,7 +460,7 @@ fr:
     label_children_derived_duration: "Durée dérivée des enfants du lot de travaux"
     label_warning: "Attention"
     label_work_package: "Lot de travaux"
-    label_work_package_parent: "Lot de Travaux parent"
+    label_work_package_parent: "Lot de travaux parent"
     label_work_package_plural: "Lots de Travaux"
     label_watch: "Suivre"
     label_watch_work_package: "Suivre le lot de travaux"
@@ -558,7 +558,7 @@ fr:
       date_alerts:
         milestone_date: "Date jalon"
         overdue: "En retard"
-        overdue_since: "pour %{difference_in_days}."
+        overdue_since: "de %{difference_in_days}."
         property_today: "a lieu aujourd'hui."
         property_is: "a lieu dans %{difference_in_days}."
         property_was: "avait lieu il y a %{difference_in_days}."
