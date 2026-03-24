@@ -1,7 +1,10 @@
 .controller-workflows
   #content-body
     overflow-x: scroll
-    margin-bottom: 68px
+
+  &.action-edit
+    #content-body
+      margin-bottom: 72px // 16px (mt: 3) + 32px (button) + 24px (mb: 4)
 
   turbo-frame#workflow-table
     width: 100%
@@ -69,9 +72,13 @@
   th:first-child
     z-index: 3
 
-#work-flow-save-button
-  position: sticky
-  left: 0
+.workflow-save-bar
+  position: fixed
+  bottom: 0
+  left: var(--main-menu-width)
+  right: 0
+  background: var(--body-background)
+  z-index: 100
 
 .workflow-status-dialog-body
   min-height: 480px

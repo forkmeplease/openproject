@@ -30,15 +30,17 @@
 
 module Workflows
   class EditSubHeaderComponent < ApplicationComponent
+    include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    def initialize(tab:, current_role: nil, type: nil, available_roles: [], status_ids: [])
+    def initialize(tab:, current_role: nil, type: nil, available_roles: [], status_ids: [], dirty: false)
       super
       @tab = tab
       @current_role = current_role
       @type = type
       @available_roles = available_roles
       @status_ids = status_ids
+      @dirty = dirty
     end
   end
 end

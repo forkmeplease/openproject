@@ -27,37 +27,47 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%=
-  render Primer::OpenProject::SubHeader.new do |subheader|
-    if @type && @available_roles.any?
-      subheader.with_filter_component do
-        render(Primer::Alpha::ActionMenu.new(select_variant: :single)) do |menu|
-          menu.with_show_button(scheme: :secondary) do |button|
-            button.with_trailing_visual_icon(icon: :"triangle-down")
-            @current_role ? t("admin.workflows.role_selector.label", role: @current_role.name) : t("admin.workflows.role_selector.no_role")
-          end
-          @available_roles.each do |role|
-            menu.with_item(
-              label: role.name,
-              tag: :a,
-              href: helpers.edit_workflow_path(@type, role_id: role.id, tab: @tab || "always"),
-              active: role == @current_role,
-              content_arguments: { data: { turbo_frame: "_top" } }
-            )
+<%= component_wrapper do %>
+  <%=
+    render Primer::OpenProject::SubHeader.new do |subheader|
+      if @type && @available_roles.any?
+        subheader.with_filter_component do
+          render(Primer::Alpha::ActionMenu.new(select_variant: :single)) do |menu|
+            menu.with_show_button(scheme: :secondary) do |button|
+              button.with_trailing_visual_icon(icon: :"triangle-down")
+              @current_role ? t("admin.workflows.role_selector.label", role: @current_role.name) : t("admin.workflows.role_selector.no_role")
+            end
+            @available_roles.each do |role|
+              menu.with_item(
+                label: role.name,
+                active: role == @current_role,
+                href: helpers.confirmation_dialog_workflows_path(
+                  type_id: @type.id,
+                  role_id: @current_role&.id,
+                  next_role_id: role.id,
+                  tab: @tab || "always",
+                  dirty: @dirty
+                ),
+                form_arguments: {
+                  method: :post,
+                  data: { turbo_stream: true, workflow_role_form: true, turbo_frame: "_top" }
+                }
+              )
+            end
           end
         end
       end
-    end
 
-    subheader.with_action_button(
-      tag: :a,
-      scheme: :secondary,
-      leading_icon: :plus,
-      label: t("admin.workflows.status_button"),
-      href: helpers.status_dialog_workflows_path(role_id: @current_role&.id, type_id: @type&.id, tab: @tab, status_ids: @status_ids.presence),
-      data: { controller: "async-dialog" }
-    ) do
-      t("admin.workflows.status_button")
+      subheader.with_action_button(
+        tag: :a,
+        scheme: :secondary,
+        leading_icon: :plus,
+        label: t("admin.workflows.status_button"),
+        href: helpers.status_dialog_workflows_path(role_id: @current_role&.id, type_id: @type&.id, tab: @tab, status_ids: @status_ids.presence),
+        data: { controller: "async-dialog" }
+      ) do
+        t("admin.workflows.status_button")
+      end
     end
-  end
-%>
+  %>
+<% end %>
