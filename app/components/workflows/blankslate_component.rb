@@ -28,27 +28,15 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkflowHelper
-  def workflow_tabs(type)
-    [
-      {
-        name: "always",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id))),
-        label: I18n.t(:"admin.workflows.tabs.default_transitions")
-      },
-      {
-        name: "author",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id))),
-        label: I18n.t(:"admin.workflows.tabs.user_author")
-      },
-      {
-        name: "assignee",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id))),
-        label: I18n.t(:"admin.workflows.tabs.user_assignee")
-      }
-    ]
+module Workflows
+  class BlankslateComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+
+    def initialize(role:, type:, tab:)
+      super
+      @role = role
+      @type = type
+      @tab = tab
+    end
   end
 end

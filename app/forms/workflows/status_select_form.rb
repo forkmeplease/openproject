@@ -28,27 +28,44 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkflowHelper
-  def workflow_tabs(type)
-    [
-      {
-        name: "always",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :always }.merge(params.permit(:role_id))),
-        label: I18n.t(:"admin.workflows.tabs.default_transitions")
-      },
-      {
-        name: "author",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :author }.merge(params.permit(:role_id))),
-        label: I18n.t(:"admin.workflows.tabs.user_author")
-      },
-      {
-        name: "assignee",
-        partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: :assignee }.merge(params.permit(:role_id))),
-        label: I18n.t(:"admin.workflows.tabs.user_assignee")
-      }
-    ]
+module Workflows
+  class StatusSelectForm < ApplicationForm
+    def initialize(all_statuses:, current_statuses:, role:, type:, tab:, dialog_id:)
+      super()
+      @all_statuses = all_statuses
+      @current_statuses = current_statuses
+      @role = role
+      @type = type
+      @tab = tab
+      @dialog_id = dialog_id
+    end
+
+    form do |f|
+      f.hidden(name: :role_id, value: @role.id)
+      f.hidden(name: :type_id, value: @type.id)
+      f.hidden(name: :tab, value: @tab || "always")
+      @current_statuses.each { |status| f.hidden(name: "original_status_ids[]", value: status.id) }
+
+      f.autocompleter(
+        name: :status_ids,
+        label: I18n.t("admin.workflows.statuses_dialog.label"),
+        caption: I18n.t("admin.workflows.statuses_dialog.caption"),
+        autocomplete_options: {
+          multiple: true,
+          decorated: true,
+          closeOnSelect: false,
+          clearable: false,
+          appendTo: "##{@dialog_id}"
+        }
+      ) do |list|
+        @all_statuses.each do |status|
+          list.option(
+            label: status.name,
+            value: status.id,
+            selected: @current_statuses.include?(status)
+          )
+        end
+      end
+    end
   end
 end
