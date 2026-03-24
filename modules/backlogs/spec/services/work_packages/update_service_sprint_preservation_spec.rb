@@ -104,12 +104,11 @@ RSpec.describe WorkPackages::UpdateService, "sprint preservation on project chan
             let(:source_project_permissions) { project_permissions - %i[manage_sprint_items] }
             let(:target_project_permissions) { project_permissions - %i[manage_sprint_items] }
 
-            # FIXME: this spec should be red, but it is green
+            # Usually this should not work without the permission, but since the change is
+            # performed via `change_by_system`, this is bypassed.
             it "preserves the sprint_id" do
               result = instance.call(project: target_project)
 
-              # Ensure that the sprint id is set by the system, not by the user. If the user tried this,
-              # the service call would fail due to lacking permissions.
               expect(result).to be_success
               expect(work_package.reload.sprint_id).to eq(sprint_in_source_project.id)
               expect(work_package.project).to eq(target_project)

@@ -38,9 +38,9 @@ module OpenProject::Backlogs::Patches::SetAttributesServicePatch
       super
 
       if OpenProject::FeatureDecisions.scrum_projects_active? && moved_to_project_that_has_no_access_to_sprint?
-        # model.change_by_system do
+        model.change_by_system do
           model.sprint = nil
-        # end
+        end
       elsif should_inherit_version_from_parent?
         closest = closest_story_or_impediment(work_package.parent_id)
         work_package.version_id = closest.version_id if closest
