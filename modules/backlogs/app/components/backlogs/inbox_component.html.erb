@@ -26,8 +26,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++# %>
+<%= component_wrapper(tag: "turbo-frame", refresh: :morph) do %>
+  <%=
+    render(Primer::Beta::Subhead.new(hide_border: true)) do |head|
+      head.with_heading(tag: :h3, font_weight: :bold, size: :medium) do
+        concat t(:label_backlog)
+        concat render(Primer::Beta::Counter.new(count: total, scheme: :default, ml: 1))
+      end
 
-<%= component_wrapper(tag: :section) do %>
+      if allow_sprint_creation?(project)
+        # Ugly hack:
+        # This button will not be rendered, but still takes up space to push the left side down a bit.
+        # Remove as soon as the `+ Sprint` button moves from the Subhead into a SubHeader.
+        head.with_actions do
+          render(Primer::Beta::Button.new(tag: :a, visibility: :hidden)) { "spacer" }
+        end
+      end
+    end
+  %>
+
   <%= render(Primer::Beta::BorderBox.new(**@system_arguments)) do |border_box| %>
     <% if work_packages.empty? %>
       <% border_box.with_row(data: { empty_list_item: true }) do %>
