@@ -33,51 +33,49 @@ require "spec_helper"
 RSpec.describe WorkPackages::IdentifierAutofix::ProblematicIdentifiers do
   subject(:analysis) { described_class.new }
 
+  # Bypasses model validations to set an exact identifier in the database,
+  # allowing tests to simulate identifiers from any format mode.
   def set_raw_identifier(project, identifier)
     Project.where(id: project.id).update_all(identifier:)
-    project
+    project.reload
   end
 
-  def create_problematic_project(name:, identifier:)
-    set_raw_identifier(create(:project, name:), identifier)
-  end
-
-  def create_valid_project(name:, identifier:)
+  def create_project_with_raw_identifier(name:, identifier:)
     set_raw_identifier(create(:project, name:), identifier)
   end
 
   describe "#scope" do
     it "includes projects with identifiers exceeding max length" do
-      project = create_problematic_project(name: "Test", identifier: "averylongidentifier")
+      project = create_project_with_raw_identifier(name: "Test", identifier: "averylongidentifier")
       expect(analysis.scope).to include(Project.find(project.id))
     end
 
     it "includes projects with non-alphanumeric characters" do
-      project = create_problematic_project(name: "Test", identifier: "ab-c")
+      project = create_project_with_raw_identifier(name: "Test", identifier: "ab-c")
       expect(analysis.scope).to include(Project.find(project.id))
     end
 
     it "includes projects with identifiers starting with a digit" do
-      project = create_problematic_project(name: "Test", identifier: "1abc")
+      project = create_project_with_raw_identifier(name: "Test", identifier: "1abc")
       expect(analysis.scope).to include(Project.find(project.id))
     end
 
     it "includes projects with non-uppercased identifiers" do
-      project = create_problematic_project(name: "Test", identifier: "proj")
+      project = create_project_with_raw_identifier(name: "Test", identifier: "proj")
       expect(analysis.scope).to include(Project.find(project.id))
     end
 
     it "excludes valid uppercased alphanumeric identifiers" do
-      project = create_valid_project(name: "Valid", identifier: "VALID")
+      project = create_project_with_raw_identifier(name: "Valid", identifier: "VALID")
       expect(analysis.scope).not_to include(Project.find(project.id))
     end
   end
 
   describe "#count" do
     it "returns the number of problematic projects" do
-      create_problematic_project(name: "A", identifier: "a-b")
-      create_problematic_project(name: "B", identifier: "c-d")
-      create_valid_project(name: "C", identifier: "VALID")
+      create_project_with_raw_identifier(name: "A", identifier: "a-b")
+      create_project_with_raw_identifier(name: "B", identifier: "c-d")
+      create_project_with_raw_identifier(name: "C", identifier: "VALID")
 
       expect(analysis.count).to eq(2)
     end
@@ -109,12 +107,12 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProblematicIdentifiers do
     end
 
     it "returns :in_use when identifier belongs to a non-problematic project" do
-      create_valid_project(name: "Taken", identifier: "TAKEN")
+      create_project_with_raw_identifier(name: "Taken", identifier: "TAKEN")
       expect(analysis.error_reason("TAKEN")).to eq(:in_use)
     end
 
     it "returns :reserved when identifier is a historical slug of another project" do
-      project = create_valid_project(name: "Gamma", identifier: "GAMMA")
+      project = create_project_with_raw_identifier(name: "Gamma", identifier: "GAMMA")
       FriendlyId::Slug.create!(slug: "OLDIE", sluggable: project)
 
       expect(analysis.error_reason("OLDIE")).to eq(:reserved)
@@ -128,10 +126,10 @@ RSpec.describe WorkPackages::IdentifierAutofix::ProblematicIdentifiers do
   describe "#exclusion_set" do
     subject(:exclusion) { analysis.exclusion_set }
 
-    let!(:valid_project) { create_valid_project(name: "Alpha", identifier: "ALPHA") }
+    let!(:valid_project) { create_project_with_raw_identifier(name: "Alpha", identifier: "ALPHA") }
 
     before do
-      create_problematic_project(name: "Beta", identifier: "beta-project")
+      create_project_with_raw_identifier(name: "Beta", identifier: "beta-project")
     end
 
     it "returns a Set" do

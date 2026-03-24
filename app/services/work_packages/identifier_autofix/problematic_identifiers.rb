@@ -45,11 +45,6 @@ module WorkPackages
     #   hit a regular index. If queries get slow on large tables, a functional index
     #   on +UPPER(identifier)+ or a +pg_trgm+ GIN index would help.
     #
-    # * The +LOWER(slug)+ query in +#reserved_identifiers+ and in the model-level
-    #   +identifier_not_historically_reserved+ validation won't use the existing
-    #   +(slug, sluggable_type)+ index on +friendly_id_slugs+. A functional index
-    #   on +LOWER(slug)+ would help, but that table is an internal FriendlyId concern
-    #   so adding indexes there should be weighed against coupling to gem internals.
     #
     class ProblematicIdentifiers
       # Priority-ordered format rules for identifier classification.
