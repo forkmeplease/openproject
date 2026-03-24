@@ -59,6 +59,13 @@ Rails.application.routes.draw do
         resource :backlog_sharing, only: %i[show update]
       end
     end
+
+    resources :stories, controller: :rb_stories, only: [] do
+      member do
+        put :move_from_inbox
+        post :reorder_inbox
+      end
+    end
   end
 
   # Legacy routes

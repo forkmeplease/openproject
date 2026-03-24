@@ -135,6 +135,12 @@ en:
         one: "%{count} story in backlog"
         other: "%{count} stories in backlog"
 
+    inbox_item_component:
+      label_drag_work_package: "Move %{name}"
+
+    inbox_menu_component:
+      label_actions: "Work package actions"
+
     sprint_header_component:
       label_toggle_backlog: "Collapse/Expand %{name}"
       label_story_count:
