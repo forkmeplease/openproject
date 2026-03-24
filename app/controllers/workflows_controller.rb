@@ -137,7 +137,7 @@ class WorkflowsController < ApplicationController
     current_statuses = if params[:status_ids].present?
                          Status.where(id: params[:status_ids].map(&:to_i)).order(:position)
                        elsif @type && @role
-                         role_type_statuses
+                         statuses_for_role_and_type
                        else
                          Status.none
                        end
@@ -180,10 +180,10 @@ class WorkflowsController < ApplicationController
     @added_status_ids = []
     @statuses = if @type && params[:status_ids].present?
                   status_ids = params[:status_ids].map(&:to_i)
-                  @added_status_ids = status_ids - role_type_statuses.pluck(:id)
+                  @added_status_ids = status_ids - statuses_for_role_and_type.pluck(:id)
                   Status.where(id: status_ids).order(:position)
                 elsif @type && @role
-                  role_type_statuses
+                  statuses_for_role_and_type
                 elsif @type
                   @type.statuses
                 else
@@ -191,7 +191,7 @@ class WorkflowsController < ApplicationController
                 end
   end
 
-  def role_type_statuses
+  def statuses_for_role_and_type
     @type.statuses(role: @role, tab: current_tab)
   end
 

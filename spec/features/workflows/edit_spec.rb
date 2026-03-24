@@ -443,9 +443,9 @@ RSpec.describe "Workflow edit" do
 
       remove_status_via_dialog(statuses[1])
 
-      expect(page).to have_dialog("Remove statuses?")
+      expect(page).to have_dialog("Remove statuses")
 
-      within_dialog "Remove statuses?" do
+      within_dialog "Remove statuses" do
         expect(page).to have_text("Remove 1 status?")
 
         click_button "Remove"
@@ -475,11 +475,11 @@ RSpec.describe "Workflow edit" do
 
       remove_status_via_dialog(statuses[1])
 
-      within_dialog "Remove statuses?" do
+      within_dialog "Remove statuses" do
         click_button "Cancel"
       end
 
-      expect(page).to have_no_dialog("Remove statuses?")
+      expect(page).to have_no_dialog("Remove statuses")
 
       expect(page).to have_field workflow_checkbox(0, 1)
     end
@@ -537,7 +537,7 @@ RSpec.describe "Workflow edit" do
 
       remove_status_via_dialog(statuses[2])
 
-      within_dialog "Remove statuses?" do
+      within_dialog "Remove statuses" do
         click_button "Remove"
       end
 

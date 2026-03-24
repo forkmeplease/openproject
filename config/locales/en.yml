@@ -410,9 +410,8 @@ en:
         title: "Statuses"
         label: "Statuses enabled for this type"
         caption: "Add or remove statuses you would like to associate with this type. Removing a status will also delete the workflow associated with it."
-        apply: "Apply"
       statuses_removal_dialog:
-        title: "Remove statuses?"
+        title: "Remove statuses"
         heading:
           one: "Remove 1 status?"
           other: "Remove %{count} statuses?"

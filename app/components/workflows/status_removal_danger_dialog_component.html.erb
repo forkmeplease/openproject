@@ -41,6 +41,10 @@ See COPYRIGHT and LICENSE files for more details.
       message.with_description_content(t("admin.workflows.statuses_removal_dialog.description"))
     end
 
+    ##
+    # Do not copy unless absolutely necessary to pass params through a DangerDialog doing a GET!
+    # The reason this is done here is because the submit is not a DELETE, and GET form submissions
+    # strip url params
     dialog.with_additional_details do
       concat(hidden_field_tag(:role_id, @role.id))
       concat(hidden_field_tag(:tab, @tab))

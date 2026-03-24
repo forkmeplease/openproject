@@ -37,7 +37,7 @@ See COPYRIGHT and LICENSE files for more details.
   ) do |dialog|
     dialog.with_header(variant: :large)
 
-    dialog.with_body(classes: "Overlay-body_autocomplete_height") do
+    dialog.with_body(classes: "workflow-status-dialog-body") do
       render(
         Workflows::StatusFormComponent.new(
           all_statuses: @all_statuses,
@@ -61,7 +61,7 @@ See COPYRIGHT and LICENSE files for more details.
             type: :submit,
             form: Workflows::StatusFormComponent::FORM_ID
           )
-        ) { t("admin.workflows.statuses_dialog.apply") }
+        ) { t("button_apply") }
       end
     end
   end
