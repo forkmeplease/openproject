@@ -462,8 +462,6 @@ RSpec.describe "API v3 Project resource create", content_type: :json do
       end
     end
 
-
-
     context "when auto-generated identifier already exists" do
       # The outer before already created a project with identifier "FPA".
       # A second request with the same name must fail with a conflict.
