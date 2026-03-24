@@ -45,21 +45,28 @@ module Admin
       end
 
       def breadcrumb_items
-        items = [{ label: organization_name, href: admin_departments_path }]
+        items = []
 
-        ancestors.each do |ancestor|
-          items << { label: ancestor.name, href: admin_department_path(ancestor) }
+        if group
+          items << { label: organization_name, href: admin_departments_path }
+          ancestors.each do |ancestor|
+            items << { label: ancestor.name, href: admin_department_path(ancestor) }
+          end
+          items << { label: group.name }
+        else
+          items << { label: organization_name }
         end
 
-        items << { label: group.name }
         items
       end
 
       def users
+        return [] unless group
+
         @users ||= group.users
       end
 
-      def render?
+      def show_users?
         group.present?
       end
 

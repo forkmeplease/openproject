@@ -64,59 +64,61 @@ See COPYRIGHT and LICENSE files for more details.
         end
       end
 
-      main.with_row do
-        render(Primer::Beta::BorderBox.new) do |box|
-          box.with_header(tag: :details, open: true) do
-            flex_layout(align_items: :center, justify_content: :space_between) do |header|
-              header.with_column do
-                render(Primer::BaseComponent.new(tag: :summary, display: :inline_flex, align_items: :center, cursor: :pointer)) do
-                  render(Primer::Beta::Text.new(font_weight: :bold)) { I18n.t(:label_user_plural) }
+      if show_users?
+        main.with_row do
+          render(Primer::Beta::BorderBox.new) do |box|
+            box.with_header(tag: :details, open: true) do
+              flex_layout(align_items: :center, justify_content: :space_between) do |header|
+                header.with_column do
+                  render(Primer::BaseComponent.new(tag: :summary, display: :inline_flex, align_items: :center, cursor: :pointer)) do
+                    render(Primer::Beta::Text.new(font_weight: :bold)) { I18n.t(:label_user_plural) }
+                  end
+                end
+
+                header.with_column do
+                  render(
+                    Primer::Beta::IconButton.new(
+                      tag: :a,
+                      href: "#",
+                      icon: :plus,
+                      scheme: :invisible,
+                      "aria-label": I18n.t(:button_add)
+                    )
+                  )
                 end
               end
-
-              header.with_column do
-                render(
-                  Primer::Beta::IconButton.new(
-                    tag: :a,
-                    href: "#",
-                    icon: :plus,
-                    scheme: :invisible,
-                    "aria-label": I18n.t(:button_add)
-                  )
-                )
-              end
             end
-          end
 
-          if users.any?
-            users.each do |user|
-              box.with_row(py: 2) do
-                flex_layout(align_items: :center, justify_content: :space_between) do |row|
-                  row.with_column do
-                    render(Users::AvatarComponent.new(user:, size: "mini"))
-                  end
+            if users.any?
+              users.each do |user|
+                box.with_row(py: 2) do
+                  flex_layout(align_items: :center, justify_content: :space_between) do |row|
+                    row.with_column do
+                      render(Users::AvatarComponent.new(user:, size: "mini"))
+                    end
 
-                  row.with_column do
-                    render(Primer::Alpha::ActionMenu.new) do |menu|
-                      menu.with_show_button(
-                        icon: "kebab-horizontal",
-                        scheme: :invisible,
-                        "aria-label": I18n.t(:label_actions)
-                      )
-                      menu.with_item(
-                        label: I18n.t(:button_remove),
-                        scheme: :danger,
-                        tag: :a,
-                        href: "#"
-                      )
+                    row.with_column do
+                      render(Primer::Alpha::ActionMenu.new) do |menu|
+                        menu.with_show_button(
+                          icon: "kebab-horizontal",
+                          scheme: :invisible,
+                          "aria-label": I18n.t(:label_actions)
+                        )
+                        menu.with_item(
+                          label: I18n.t(:button_remove),
+                          scheme: :danger,
+                          tag: :a,
+                          href: "#"
+                        )
+                      end
                     end
                   end
                 end
               end
-            end
-          else
-            box.with_row do
-              render(Primer::Beta::Text.new(color: :muted)) { I18n.t(:no_results_title_text) }
+            else
+              box.with_row do
+                render(Primer::Beta::Text.new(color: :muted)) { I18n.t(:no_results_title_text) }
+              end
             end
           end
         end
