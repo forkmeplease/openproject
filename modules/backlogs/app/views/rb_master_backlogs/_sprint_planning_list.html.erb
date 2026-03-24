@@ -60,13 +60,13 @@ See COPYRIGHT and LICENSE files for more details.
           end
         %>
 
-        <turbo-frame id="inbox-frame-<%= @project.id %>">
+        <%= turbo_frame_tag "inbox-frame-#{@project.id}" do %>
           <%= render Backlogs::InboxComponent.new(
                 work_packages: @inbox_work_packages,
                 project: @project,
                 show_all: params[:all].present?
               ) %>
-        </turbo-frame>
+        <% end %>
       </div>
       <div id="sprint_backlogs_container" class="op-sprint-planning-lists">
         <%=
