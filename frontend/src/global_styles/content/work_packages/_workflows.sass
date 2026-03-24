@@ -1,7 +1,10 @@
 .controller-workflows
   #content-body
     overflow-x: scroll
-    margin-bottom: 72px
+
+  &.action-edit
+    #content-body
+      margin-bottom: 72px // 16px (mt: 3) + 32px (button) + 24px (mb: 4)
 
   turbo-frame#workflow-table
     width: 100%
