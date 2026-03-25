@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,19 +26,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module Agile::Sprints::Scopes::ForProject
+module Agile::Sprints::Scopes::NativeToSprintSource
   extend ActiveSupport::Concern
 
   class_methods do
-    def for_project(project)
-      # Ideally the project.work_packages scope would be used, but unfortunately
-      # it has some extra includes that are not necessary in this case.
-      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
-
-      native_to_sprint_source(project)
-        .or(where(id: from_work_packages.select(:sprint_id)))
+    def native_to_sprint_source(project)
+      where(project: project.sprint_source)
     end
   end
 end

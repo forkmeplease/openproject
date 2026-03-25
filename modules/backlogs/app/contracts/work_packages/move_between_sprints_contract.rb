@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,19 +26,27 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module Agile::Sprints::Scopes::ForProject
-  extend ActiveSupport::Concern
+module WorkPackages
+  # Contract used for moving work packages between two sprints at the end
+  # of a sprint. It does not enforce permissions as this change is carried
+  # out in the background.
+  class MoveBetweenSprintsContract < ModelContract
+    attribute :sprint
+    attribute :position
 
-  class_methods do
-    def for_project(project)
-      # Ideally the project.work_packages scope would be used, but unfortunately
-      # it has some extra includes that are not necessary in this case.
-      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
+    validate :active_sprint_in_sharer_project
 
-      native_to_sprint_source(project)
-        .or(where(id: from_work_packages.select(:sprint_id)))
+    private
+
+    def active_sprint_in_sharer_project
+      unless Agile::Sprint
+               .native_to_sprint_source(Agile::Sprint.find_by(id: model.sprint_id_was).project)
+               .in_planning
+               .exists?(id: model.sprint_id)
+        errors.add(:sprint, :not_eligible_for_moving)
+      end
     end
   end
 end

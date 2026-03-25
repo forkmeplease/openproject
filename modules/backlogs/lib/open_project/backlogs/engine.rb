@@ -98,7 +98,7 @@ module OpenProject::Backlogs
                    { rb_sprints: %i[start finish] },
                    permissible_on: :project,
                    require: :member,
-                   dependencies: %i[view_sprints manage_board_views],
+                   dependencies: %i[view_sprints manage_board_views manage_sprint_items],
                    visible: -> { OpenProject::FeatureDecisions.scrum_projects_active? }
 
         permission :manage_sprint_items,

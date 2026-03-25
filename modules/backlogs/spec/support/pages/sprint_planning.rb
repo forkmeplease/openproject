@@ -82,14 +82,24 @@ module Pages
 
     def expect_work_packages_in_sprint_in_order(sprint,
                                                 work_packages: [])
+      within_sprint(sprint) do
+        expect_work_packages_in_order work_packages:
+      end
+    end
+
+    def expect_work_packages_in_inbox_in_order(work_packages: [])
+      within_inbox do
+        expect_work_packages_in_order work_packages:
+      end
+    end
+
+    def expect_work_packages_in_order(work_packages: [])
       raise ArgumentError, "work_packages should not be empty" if work_packages.empty?
 
-      within_sprint(sprint) do
-        selectors = work_packages.map { |wp| work_package_selector(wp) }
+      selectors = work_packages.map { |wp| work_package_selector(wp) }
 
-        expect(page)
-          .to have_css(selectors.join(" + "))
-      end
+      expect(page)
+        .to have_css(selectors.join(" + "))
     end
 
     def drag_work_package(moved, before: nil, into: nil)
@@ -275,8 +285,18 @@ module Pages
       expect(page).to have_css("#create-work-package-dialog")
     end
 
-    def within_sprint_menu(backlog, &)
-      within_sprint(backlog) do
+    def expect_sprint_finishing_modal
+      expect(page).to have_css sprint_finish_modal_selector
+    end
+
+    def expect_sprints_to_choose_for_moving_unfinished_work_packages_to(*sprints)
+      within sprint_finish_modal_selector do
+        expect(page).to have_select("Select sprint", options: sprints.map(&:name))
+      end
+    end
+
+    def within_sprint_menu(sprint, &)
+      within_sprint(sprint) do
         button = find(:button, accessible_name: "Sprint actions")
         button.click
 
@@ -286,6 +306,37 @@ module Pages
 
     def within_work_package_row(work_package, &)
       within(work_package_selector(work_package), &)
+    end
+
+    def click_to_finish_sprint(sprint)
+      within_sprint_menu(sprint) do |menu|
+        menu.find(:button, "Finish sprint").click
+      end
+    end
+
+    def choose_to_move_unfinished_work_packages_to_sprint(sprint_name)
+      within sprint_finish_modal_selector do
+        choose I18n.t("backlogs.finish_sprint_dialog_component.actions.move_to_sprint")
+        select sprint_name, from: "Select sprint"
+
+        click_button "Close sprint"
+      end
+    end
+
+    def choose_to_move_unfinished_work_packages_to_top_of_backlog
+      within sprint_finish_modal_selector do
+        choose I18n.t("backlogs.finish_sprint_dialog_component.actions.move_to_top_of_backlog")
+
+        click_button "Close sprint"
+      end
+    end
+
+    def choose_to_move_unfinished_work_packages_to_bottom_of_backlog
+      within sprint_finish_modal_selector do
+        choose I18n.t("backlogs.finish_sprint_dialog_component.actions.move_to_bottom_of_backlog")
+
+        click_button "Close sprint"
+      end
     end
 
     private
@@ -316,6 +367,10 @@ module Pages
 
     def work_package_selector(work_package)
       test_selector("work-package-#{work_package.id}")
+    end
+
+    def sprint_finish_modal_selector
+      "##{::Backlogs::FinishSprintDialogComponent::DIALOG_ID}"
     end
 
     def inbox_item_selector(work_package)

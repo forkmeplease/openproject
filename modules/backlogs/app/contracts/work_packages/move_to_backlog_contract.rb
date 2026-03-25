@@ -28,17 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Agile::Sprints::Scopes::ForProject
-  extend ActiveSupport::Concern
-
-  class_methods do
-    def for_project(project)
-      # Ideally the project.work_packages scope would be used, but unfortunately
-      # it has some extra includes that are not necessary in this case.
-      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
-
-      native_to_sprint_source(project)
-        .or(where(id: from_work_packages.select(:sprint_id)))
-    end
+module WorkPackages
+  # Contract used for moving work packages to the product backlog (sprint = nil)
+  # at the end of a sprint. It does not enforce permissions as this change is
+  # carried out in the background.
+  class MoveToBacklogContract < ModelContract
+    attribute :sprint
+    attribute :position
   end
 end

@@ -28,17 +28,31 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Agile::Sprints::Scopes::ForProject
-  extend ActiveSupport::Concern
+module Backlogs
+  class FinishSprintDialogComponent < ApplicationComponent
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-  class_methods do
-    def for_project(project)
-      # Ideally the project.work_packages scope would be used, but unfortunately
-      # it has some extra includes that are not necessary in this case.
-      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
+    DIALOG_ID = "finish-sprint-dialog"
+    FORM_ID = "finish-sprint-dialog-form"
 
-      native_to_sprint_source(project)
-        .or(where(id: from_work_packages.select(:sprint_id)))
+    attr_reader :sprint, :project, :available_sprints
+
+    def initialize(sprint:, project:, available_sprints:)
+      super
+      @sprint = sprint
+      @project = project
+      @available_sprints = available_sprints
+    end
+
+    private
+
+    def title
+      t(".title")
+    end
+
+    def message
+      t(".body", message: sprint.errors[:base].join)
     end
   end
 end

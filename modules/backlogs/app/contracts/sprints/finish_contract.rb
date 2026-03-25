@@ -28,17 +28,30 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Agile::Sprints::Scopes::ForProject
-  extend ActiveSupport::Concern
+module Sprints
+  class FinishContract < ModelContract
+    validate :sprint_must_be_active
+    validate :user_allowed_to_finish
+    validate :no_unfinished_work_packages
 
-  class_methods do
-    def for_project(project)
-      # Ideally the project.work_packages scope would be used, but unfortunately
-      # it has some extra includes that are not necessary in this case.
-      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
+    def self.model
+      Agile::Sprint
+    end
 
-      native_to_sprint_source(project)
-        .or(where(id: from_work_packages.select(:sprint_id)))
+    private
+
+    def sprint_must_be_active
+      errors.add(:status, :not_active) unless model.active?
+    end
+
+    def user_allowed_to_finish
+      errors.add(:base, :error_unauthorized) unless user.allowed_in_project?(:start_complete_sprint, model.project)
+    end
+
+    def no_unfinished_work_packages
+      unfinished_work_package_count = model.work_packages.with_status_open.count
+
+      errors.add(:base, :unfinished_work_packages, count: unfinished_work_package_count) if unfinished_work_package_count > 0
     end
   end
 end

@@ -126,7 +126,7 @@ RSpec.describe Backlogs::SprintMenuComponent, type: :component do
 
         expect(menu_items.first).to eq("Finish sprint")
         expect(page).to have_octicon(:check)
-        expect(page).to have_element(:form, action: finish_sprint_path, method: "post", "data-turbo": "false")
+        expect(page).to have_element(:form, action: finish_sprint_path, method: "post")
         expect(menu_items).to include("Task board")
       end
     end

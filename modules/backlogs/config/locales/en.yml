@@ -74,6 +74,16 @@ en:
               task_version_must_be_the_same_as_story_version: "must be the same as the parent story's version."
             sprint:
               not_shared_with_project: "is not shared with the project the work package is in."
+              not_eligible_for_moving: "is not an active sprint in the project which holds the sprint the work package is moved out of."
+        agile/sprint:
+          attributes:
+            base:
+              unfinished_work_packages:
+                one: "There is %{count} work package that was not completed in this sprint."
+                other: "There are %{count} work packages that were not completed in this sprint."
+              format: "%{message}"
+            status:
+              not_active: "is not active so it cannot be closed."
         sprint:
           cannot_end_before_it_starts: "Sprint cannot end before it starts."
 
@@ -167,6 +177,17 @@ en:
         burndown_chart: "Burndown chart"
         wiki: "Wiki"
         properties: "Properties"
+
+    finish_sprint_dialog_component:
+      title: "There are work in progress items"
+      body: "%{message} What would you like to do with these?"
+      legend: "Action for unfinished work packages"
+      actions:
+        move_to_top_of_backlog: "Move them to the top of the backlog"
+        move_to_bottom_of_backlog: "Move them to the bottom of the backlog"
+        move_to_sprint: "Move them to another sprint"
+      select_sprint_label: "Select sprint"
+      button_close_sprint: "Close sprint"
 
     sprint_menu_component:
       label_actions: "Sprint actions"
