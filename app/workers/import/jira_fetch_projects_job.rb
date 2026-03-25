@@ -43,6 +43,7 @@ module Import
       sync_statuses
       sync_projects
       sync_issues
+      sync_custom_fields
     end
 
     private
@@ -130,6 +131,41 @@ module Import
         start_at = result["startAt"] + result["maxResults"]
         break if start_at >= result["total"]
       end
+    end
+
+    def sync_custom_fields
+      used_custom_field_ids = collect_used_custom_field_ids
+      return unless used_custom_field_ids.any?
+
+      upsert_custom_fields(used_custom_field_ids)
+    end
+
+    def collect_used_custom_field_ids
+      used_ids = Set.new
+      Import::JiraProject.where(jira_id: @jira_id, jira_project_id: @jira_import.project_ids).find_each do |jira_project|
+        Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: jira_project.id).find_each do |issue|
+          issue.payload["fields"].each do |key, value|
+            used_ids << key if key.start_with?("customfield_") && value.present?
+          end
+        end
+      end
+      used_ids
+    end
+
+    def upsert_custom_fields(used_custom_field_ids)
+      fields_upsert_data = @jira_client.fields.select do |field|
+        field.fetch("custom", false) && used_custom_field_ids.include?(field.fetch("id"))
+      end.map do |field|
+        {
+          payload: field,
+          jira_id: @jira_id,
+          jira_field_id: field.fetch("id"),
+          jira_import_id: @jira_import.id,
+          created_at: @created_at,
+          updated_at: @updated_at
+        }
+      end
+      Import::JiraField.upsert_all(fields_upsert_data, unique_by: %i[jira_id jira_field_id]) if fields_upsert_data.any?
     end
   end
 end
