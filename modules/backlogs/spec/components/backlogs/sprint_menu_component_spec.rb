@@ -174,6 +174,36 @@ RSpec.describe Backlogs::SprintMenuComponent, type: :component do
         end
       end
 
+      context "when the sprint has no start date" do
+        let(:sprint) { create(:agile_sprint, project:, name: "Sprint 1", start_date: nil, finish_date: Date.tomorrow) }
+
+        it "shows Start sprint disabled with a missing dates description" do
+          render_component
+
+          expect(page).to have_selector(:menuitem, text: "Start sprint", disabled: true)
+          expect(page).to have_text(I18n.t(:"backlogs.sprint_menu_component.action_menu.start_sprint_missing_dates_description"))
+        end
+      end
+
+      context "when the sprint has no finish date" do
+        let(:sprint) { create(:agile_sprint, project:, name: "Sprint 1", start_date: Date.yesterday, finish_date: nil) }
+
+        it "shows Start sprint disabled with a missing dates description" do
+          render_component
+
+          expect(page).to have_selector(:menuitem, text: "Start sprint", disabled: true)
+          expect(page).to have_text(I18n.t(:"backlogs.sprint_menu_component.action_menu.start_sprint_missing_dates_description"))
+        end
+      end
+
+      context "when the sprint has both start and finish dates" do
+        it "shows Start sprint enabled" do
+          render_component
+
+          expect(page).to have_selector(:menuitem, text: "Start sprint", disabled: false)
+        end
+      end
+
       context "when the sprint is in planning and the user cannot start it" do
         let(:permissions) { %i[view_sprints view_work_packages] }
 
