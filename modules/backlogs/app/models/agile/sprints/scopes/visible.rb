@@ -39,10 +39,10 @@ module Agile::Sprints::Scopes
       # configuration), or if it has work packages in such a project.
       def visible(user = User.current)
         allowed_projects = Project.allowed_to(user, :view_sprints)
-        source_project_ids = Project.sprint_source_for(allowed_projects)
+        source_project = Project.sprint_source_for(allowed_projects)
         from_wps = WorkPackage.where(project: allowed_projects).where.not(sprint_id: nil)
 
-        where(project_id: source_project_ids)
+        where(project_id: source_project.select(:id))
           .or(where(id: from_wps.select(:sprint_id)))
       end
     end
