@@ -31,7 +31,7 @@
 module Queries::WorkPackages::Filter
   class SprintFilter < ::Queries::WorkPackages::Filter::WorkPackageFilter
     def allowed_values
-      @allowed_values ||= sprints.pluck(:id, :id).map { |value, id| [value.to_s, id.to_s] }
+      @allowed_values ||= sprints.pluck(:id).map { |id| [id.to_s] * 2 }
     end
 
     def available?
