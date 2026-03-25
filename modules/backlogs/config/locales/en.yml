@@ -199,6 +199,7 @@ en:
         start_sprint: "Start sprint"
         finish_sprint: "Finish sprint"
         start_sprint_disabled_description: "Another sprint is already active."
+        start_sprint_missing_dates_description: "Start and finish dates are required in order to start the sprint."
         edit_sprint: "Edit sprint"
         add_work_package: "Add work package"
         task_board: "Task board"
