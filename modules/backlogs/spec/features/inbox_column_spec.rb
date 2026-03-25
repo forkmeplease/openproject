@@ -82,13 +82,8 @@ RSpec.describe "Inbox column in sprint planning view", :js, with_flag: { scrum_p
     end
 
     it "allows reordering items via the kebab menu", :aggregate_failures do
-      items_in_visual_order = planning_page.inbox_items_in_visual_order(inbox_wp1, inbox_wp2, inbox_wp3)
-      top_item = items_in_visual_order[0]
-      middle_item = items_in_visual_order[1]
-      bottom_item = items_in_visual_order[2]
-
       # First item has no upward actions
-      planning_page.within_inbox_menu(top_item) do |menu|
+      planning_page.within_inbox_menu(inbox_wp1) do |menu|
         planning_page.within_move_submenu(menu) do |submenu|
           expect(submenu).to have_no_selector(:menuitem, text: "Move to top")
           expect(submenu).to have_no_selector(:menuitem, text: "Move up")
@@ -98,7 +93,7 @@ RSpec.describe "Inbox column in sprint planning view", :js, with_flag: { scrum_p
       end
 
       # Last item has no downward actions
-      planning_page.within_inbox_menu(bottom_item) do |menu|
+      planning_page.within_inbox_menu(inbox_wp3) do |menu|
         planning_page.within_move_submenu(menu) do |submenu|
           expect(submenu).to have_selector(:menuitem, text: "Move to top")
           expect(submenu).to have_selector(:menuitem, text: "Move up")
@@ -107,20 +102,20 @@ RSpec.describe "Inbox column in sprint planning view", :js, with_flag: { scrum_p
         end
       end
 
-      planning_page.click_in_inbox_move_menu(top_item, "Move down")
-      planning_page.expect_inbox_items_in_order(middle_item, top_item, bottom_item)
+      planning_page.click_in_inbox_move_menu(inbox_wp1, "Move down")
+      planning_page.expect_inbox_items_in_order(inbox_wp2, inbox_wp1, inbox_wp3)
 
-      planning_page.click_in_inbox_move_menu(top_item, "Move down")
-      planning_page.expect_inbox_items_in_order(middle_item, bottom_item, top_item)
+      planning_page.click_in_inbox_move_menu(inbox_wp1, "Move down")
+      planning_page.expect_inbox_items_in_order(inbox_wp2, inbox_wp3, inbox_wp1)
 
-      planning_page.click_in_inbox_move_menu(middle_item, "Move to bottom")
-      planning_page.expect_inbox_items_in_order(bottom_item, top_item, middle_item)
+      planning_page.click_in_inbox_move_menu(inbox_wp2, "Move to bottom")
+      planning_page.expect_inbox_items_in_order(inbox_wp3, inbox_wp1, inbox_wp2)
 
-      planning_page.click_in_inbox_move_menu(middle_item, "Move to top")
-      planning_page.expect_inbox_items_in_order(middle_item, bottom_item, top_item)
+      planning_page.click_in_inbox_move_menu(inbox_wp2, "Move to top")
+      planning_page.expect_inbox_items_in_order(inbox_wp2, inbox_wp3, inbox_wp1)
 
-      planning_page.click_in_inbox_move_menu(top_item, "Move up")
-      planning_page.expect_inbox_items_in_order(middle_item, top_item, bottom_item)
+      planning_page.click_in_inbox_move_menu(inbox_wp1, "Move up")
+      planning_page.expect_inbox_items_in_order(inbox_wp2, inbox_wp1, inbox_wp3)
     end
 
     describe "moving backlog items to a sprint via the 'Move to sprint' menu item" do
