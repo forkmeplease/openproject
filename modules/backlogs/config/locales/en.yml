@@ -58,6 +58,7 @@ en:
       messages:
         must_be_in_planning: "must be in planning to start."
         only_one_active_sprint_allowed: "only one active sprint is allowed per project."
+        dates_required: "Start and finish dates are required in order to start the sprint."
       models:
         project:
           receiving_sprints: "is receiving shared sprints. Own sprints cannot be created."
