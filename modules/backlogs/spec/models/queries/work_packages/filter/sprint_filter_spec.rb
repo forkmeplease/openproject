@@ -68,9 +68,12 @@ RSpec.describe Queries::WorkPackages::Filter::SprintFilter, with_flag: { scrum_p
       allow(visible_scope).to receive(:pluck).with(:id, :id).and_return([[sprint.id, sprint.id]])
 
       mock_permissions_for current_user do |mock|
-        mock.allow_in_project(*project_permissions, project:) if project
-        # To mock having permissions for the `allowed_in_any_project?` check
-        mock.allow_in_project(*project_permissions, project: build_stubbed(:project)) if project.nil?
+        if project
+          mock.allow_in_project(*project_permissions, project:)
+        else
+          # To mock having permissions for the `allowed_in_any_project?` check
+          mock.allow_in_project(*project_permissions, project: build_stubbed(:project))
+        end
       end
     end
 

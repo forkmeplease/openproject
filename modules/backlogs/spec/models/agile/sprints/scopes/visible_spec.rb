@@ -48,22 +48,22 @@ RSpec.describe Agile::Sprints::Scopes::Visible do
   shared_let(:role) { create(:project_role, permissions: [:view_sprints]) }
 
   shared_let(:user_with_permission_in_project_with_own_sprint) do
-    create(:user).tap do |u|
+    create(:user) do |u|
       create(:member, project: project_with_own_sprint, user: u, roles: [role])
     end
   end
   shared_let(:user_with_permission_in_project_with_sprint_referenced_by_wp) do
-    create(:user).tap do |u|
+    create(:user) do |u|
       create(:member, project: project_with_referenced_by_wp_sprint, user: u, roles: [role])
     end
   end
   shared_let(:user_with_permission_in_receiving_project) do
-    create(:user).tap do |u|
+    create(:user) do |u|
       create(:member, project: project_receiving, user: u, roles: [role])
     end
   end
   shared_let(:user_with_permission_in_all_projects) do
-    create(:user).tap do |u|
+    create(:user) do |u|
       [project_with_own_sprint,
        project_receiving,
        project_with_referenced_by_wp_sprint].each do |project|
@@ -72,7 +72,7 @@ RSpec.describe Agile::Sprints::Scopes::Visible do
     end
   end
   shared_let(:user_without_permission) do
-    create(:user).tap do |u|
+    create(:user) do |u|
       [project_with_own_sprint,
        project_receiving,
        project_with_referenced_by_wp_sprint].each do |project|
