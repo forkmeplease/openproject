@@ -103,15 +103,19 @@ module Import
       Import::JiraProject.upsert_all(projects_upsert_data, unique_by: %i[jira_id jira_project_id])
     end
 
-    # rubocop:disable Metrics/AbcSize
     def sync_issues
       Import::JiraProject.where(jira_id: @jira_id, jira_project_id: @jira_import.project_ids).find_each do |jira_project|
-        jql = "project=#{jira_project.payload['key']}"
-        result = @jira_client.issues(jql:, start_at: 0, max_results: 5)
-        total = result["total"]
-        start_at = result["startAt"]
-        max_results = result["maxResults"]
-        issues_upsert_data = result["issues"].map do |issue|
+        sync_project_issues(jira_project)
+      end
+    end
+
+    def sync_project_issues(jira_project)
+      jql = "project=#{jira_project.payload['key']}"
+      start_at = 0
+      loop do
+        result = @jira_client.issues(jql:, start_at:, max_results: 5)
+        issues = result["issues"]
+        issues_upsert_data = issues.map do |issue|
           {
             payload: issue,
             jira_id: @jira_id,
@@ -123,27 +127,9 @@ module Import
           }
         end
         Import::JiraIssue.upsert_all(issues_upsert_data, unique_by: %i[jira_id jira_issue_id])
-        while total > start_at + max_results
-          start_at += max_results
-          result = @jira_client.issues(jql:, start_at:, max_results: 5)
-          total = result["total"]
-          start_at = result["startAt"]
-          max_results = result["maxResults"]
-          issues_upsert_data = result["issues"].map do |issue|
-            {
-              payload: issue,
-              jira_id: @jira_id,
-              jira_project_id: jira_project.id,
-              jira_issue_id: issue.fetch("id"),
-              jira_import_id: @jira_import.id,
-              created_at: @created_at,
-              updated_at: @updated_at
-            }
-          end
-          Import::JiraIssue.upsert_all(issues_upsert_data, unique_by: %i[jira_id jira_issue_id])
-        end
+        start_at = result["startAt"] + result["maxResults"]
+        break if start_at >= result["total"]
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize
 end
