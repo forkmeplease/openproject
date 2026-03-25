@@ -221,13 +221,12 @@ RSpec.describe Backlogs::StoryMenuComponent, type: :component do
         expect(page).to have_no_text(I18n.t(:label_sort_lowest))
       end
 
-      it "shows the Move submenu disabled" do
+      it "hides the Move submenu" do
         render_component(position: 1, max_position: 1)
 
-        expect(page).to have_selector(
+        expect(page).to have_no_selector(
           :menuitem,
-          text: I18n.t("backlogs.story_menu_component.action_menu.move_menu"),
-          disabled: true
+          text: I18n.t("backlogs.story_menu_component.action_menu.move_menu")
         )
       end
     end

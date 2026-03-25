@@ -74,13 +74,15 @@ See COPYRIGHT and LICENSE files for more details.
       item.with_leading_visual_icon(icon: :hash)
     end
 
-    menu.with_divider
+    if show_move_items?
+      menu.with_divider
 
-    menu.with_sub_menu_item(label: t(".action_menu.move_menu"), disabled: !show_move_items?) do |move_menu|
-      move_menu.with_leading_visual_icon(icon: :"op-arrow-in")
+      menu.with_sub_menu_item(label: t(".action_menu.move_menu")) do |move_menu|
+        move_menu.with_leading_visual_icon(icon: :"op-arrow-in")
 
-      with_item_group(move_menu) do
-        build_move_menu(move_menu)
+        with_item_group(move_menu) do
+          build_move_menu(move_menu)
+        end
       end
     end
   end

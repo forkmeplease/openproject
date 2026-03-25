@@ -118,17 +118,17 @@ RSpec.describe Backlogs::InboxMenuComponent, type: :component do
         text: I18n.t("backlogs.inbox_menu_component.action_menu.copy_work_package_id")
       )
     end
-
-    it "shows a divider before the Move submenu" do
-      render_component
-
-      expect(page).to have_css(".ActionList-sectionDivider")
-    end
   end
 
   describe "move menu" do
     context "with :manage_sprint_items permission" do
       let(:permissions) { [:manage_sprint_items] }
+
+      it "shows a divider before the Move submenu" do
+        render_component
+
+        expect(page).to have_css(".ActionList-sectionDivider")
+      end
 
       it "shows the Move submenu with incoming-arrow icon" do
         render_component
@@ -164,33 +164,23 @@ RSpec.describe Backlogs::InboxMenuComponent, type: :component do
         expect(page).to have_no_text(I18n.t(:label_sort_lowest))
       end
 
-      it "shows the Move submenu disabled when there is only one item" do
+      it "hides the Move submenu when there is only one item" do
         render_component(position: 1, max_position: 1)
 
-        expect(page).to have_no_text(I18n.t(:label_sort_highest))
-        expect(page).to have_no_text(I18n.t(:label_sort_higher))
-        expect(page).to have_no_text(I18n.t(:label_sort_lower))
-        expect(page).to have_no_text(I18n.t(:label_sort_lowest))
-        expect(page).to have_selector(
+        expect(page).to have_no_selector(
           :menuitem,
-          text: I18n.t("backlogs.inbox_menu_component.action_menu.move_menu"),
-          disabled: true
+          text: I18n.t("backlogs.inbox_menu_component.action_menu.move_menu")
         )
       end
     end
 
     context "without :manage_sprint_items permission" do
-      it "shows the Move submenu disabled" do
+      it "hides the Move submenu" do
         render_component
 
-        expect(page).to have_no_text(I18n.t(:label_sort_highest))
-        expect(page).to have_no_text(I18n.t(:label_sort_higher))
-        expect(page).to have_no_text(I18n.t(:label_sort_lower))
-        expect(page).to have_no_text(I18n.t(:label_sort_lowest))
-        expect(page).to have_selector(
+        expect(page).to have_no_selector(
           :menuitem,
-          text: I18n.t("backlogs.inbox_menu_component.action_menu.move_menu"),
-          disabled: true
+          text: I18n.t("backlogs.inbox_menu_component.action_menu.move_menu")
         )
       end
     end
