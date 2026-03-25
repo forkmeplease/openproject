@@ -67,7 +67,15 @@ module Admin
       end
 
       def show_users?
-        group.present?
+        group.present? && (users.any? || child_groups.any?)
+      end
+
+      def show_global_empty_state?
+        group.blank? && child_groups.empty?
+      end
+
+      def show_department_empty_state?
+        group.present? && child_groups.empty? && users.empty?
       end
 
       private

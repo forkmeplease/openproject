@@ -58,27 +58,53 @@ See COPYRIGHT and LICENSE files for more details.
             end
           end
 
-          child_groups.each do |child|
+          if show_global_empty_state?
             box.with_row do
-              flex_layout(align_items: :center, justify_content: :space_between) do |row|
-                row.with_column do
-                  render(
-                    Primer::Beta::Link.new(href: admin_department_path(child))
-                  ) { child.name }
+              render(Primer::Beta::Blankslate.new(border: false)) do |component|
+                component.with_visual_icon(icon: :people, size: :medium)
+                component.with_heading(tag: :h2) { t("departments.blankslate.heading") }
+                component.with_description { t("departments.blankslate.description") }
+                component.with_primary_action(href: "#", scheme: :primary) do |button|
+                  button.with_leading_visual_icon(icon: :plus)
+                  t("departments.blankslate.add_button")
                 end
+              end
+            end
+          elsif group.present? && child_groups.empty? && users.empty?
+            box.with_row do
+              render(Primer::Beta::Blankslate.new(border: false)) do |component|
+                component.with_visual_icon(icon: :people, size: :medium)
+                component.with_heading(tag: :h2) { t("departments.detail_blankslate.heading") }
+                component.with_description { t("departments.detail_blankslate.description") }
+                component.with_primary_action(href: "#", scheme: :primary) do |button|
+                  button.with_leading_visual_icon(icon: :plus)
+                  t("departments.detail_blankslate.add_button")
+                end
+              end
+            end
+          else
+            child_groups.each do |child|
+              box.with_row do
+                flex_layout(align_items: :center, justify_content: :space_between) do |row|
+                  row.with_column do
+                    render(
+                      Primer::Beta::Link.new(href: admin_department_path(child))
+                    ) { child.name }
+                  end
 
-                row.with_column do
-                  render(Primer::Alpha::ActionMenu.new) do |menu|
-                    menu.with_show_button(
-                      icon: "kebab-horizontal",
-                      scheme: :invisible,
-                      "aria-label": I18n.t(:label_actions)
-                    )
-                    menu.with_item(
-                      label: I18n.t(:button_edit),
-                      tag: :a,
-                      href: edit_admin_department_path(child)
-                    )
+                  row.with_column do
+                    render(Primer::Alpha::ActionMenu.new) do |menu|
+                      menu.with_show_button(
+                        icon: "kebab-horizontal",
+                        scheme: :invisible,
+                        "aria-label": I18n.t(:label_actions)
+                      )
+                      menu.with_item(
+                        label: I18n.t(:button_edit),
+                        tag: :a,
+                        href: edit_admin_department_path(child)
+                      )
+                    end
                   end
                 end
               end
