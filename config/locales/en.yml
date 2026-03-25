@@ -461,7 +461,7 @@ en:
         no_role: "Select role"
       blankslate:
         title: "No status transitions configured"
-        description: "Add statuses to start configuring workflows for this role"    
+        description: "Add statuses to start configuring workflows for this role"
     info:
       database_deprecation_html: >
         Starting with OpenProject 16.0, PostgreSQL 16 is required to use OpenProject.
