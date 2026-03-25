@@ -16,7 +16,7 @@ allOf:
             allOf:
               - $ref: "./link.yml"
               - description: |-
-                  This collection of non-working day records.
+                  This collection of non-working times records.
                   **Resource**: UserNonWorkingTimeCollectionModel
       _embedded:
         type: object
