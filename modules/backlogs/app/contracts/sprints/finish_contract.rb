@@ -29,10 +29,14 @@
 #++
 
 module Sprints
-  class FinishContract < BaseContract
+  class FinishContract < ModelContract
     validate :sprint_must_be_active
     validate :user_allowed_to_finish
     validate :no_unfinished_work_packages
+
+    def self.model
+      Agile::Sprint
+    end
 
     private
 
