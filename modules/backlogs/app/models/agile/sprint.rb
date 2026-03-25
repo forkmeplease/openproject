@@ -88,5 +88,17 @@ module Agile
     def task_board_for(project)
       task_boards.find_by(project:)
     end
+
+    def owned_by?(project)
+      project_id == project.id
+    end
+
+    def shared_with?(project)
+      self.class.for_project(project).exists?(id:) && !owned_by?(project)
+    end
+
+    def visible_to?(project)
+      self.class.for_project(project).exists?(id:)
+    end
   end
 end
