@@ -30,6 +30,8 @@
 
 module Backlogs
   class InboxMenuComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+
     attr_reader :work_package, :project, :max_position, :current_user
 
     def initialize(work_package:, project:, max_position:, current_user: User.current, **system_arguments)

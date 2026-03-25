@@ -97,9 +97,21 @@ module Pages
       raise ArgumentError, "work_packages should not be empty" if work_packages.empty?
 
       selectors = work_packages.map { |wp| work_package_selector(wp) }
-
       expect(page)
         .to have_css(selectors.join(" + "))
+      wait_for_network_idle
+    end
+
+    def sprint_items_in_visual_order(sprint, *work_packages)
+      tops = within_sprint(sprint) do
+        work_packages.index_with do |wp|
+          page.evaluate_script(
+            "document.querySelector('#{work_package_selector(wp)}').getBoundingClientRect().top"
+          )
+        end
+      end
+
+      work_packages.sort_by { |wp| tops.fetch(wp) }
     end
 
     def drag_work_package(moved, before: nil, into: nil)
@@ -151,15 +163,28 @@ module Pages
         selectors = work_packages.map { |wp| inbox_item_selector(wp) }
         expect(page).to have_css(selectors.join(" + "))
       end
+
+      wait_for_network_idle
+    end
+
+    def inbox_items_in_visual_order(*work_packages)
+      tops = within_inbox do
+        work_packages.index_with do |wp|
+          page.evaluate_script(
+            "document.querySelector('#{inbox_item_selector(wp)}').getBoundingClientRect().top"
+          )
+        end
+      end
+
+      work_packages.sort_by { |wp| tops.fetch(wp) }
     end
 
     def within_inbox_menu(work_package, &)
       within(inbox_item_selector(work_package)) do
         button = find(:button, accessible_name: "Work package actions")
-        button.click
-        within_menu_controlled_by(button, &)
+        within(open_controlled_menu(button), &)
       end
-      page.send_keys(:escape)
+      dismiss_menu
     end
 
     def click_in_inbox_menu(work_package, item_name)
@@ -168,19 +193,36 @@ module Pages
       end
     end
 
+    def click_in_inbox_move_menu(work_package, item_name)
+      button = within(inbox_item_selector(work_package)) do
+        find(:button, accessible_name: "Work package actions")
+      end
+      menu = open_controlled_menu(button)
+      submenu = open_move_submenu(menu)
+      submenu.find(:menuitem, text: item_name).click
+    end
+
     def within_sprint_story_menu(story, &)
       within(work_package_selector(story)) do
         button = find(:button, accessible_name: "Story actions")
-        button.click
-        within_menu_controlled_by(button, &)
+        within(open_controlled_menu(button), &)
       end
-      page.send_keys(:escape)
+      dismiss_menu
     end
 
     def click_in_sprint_story_menu(story, item_name)
       within_sprint_story_menu(story) do |menu|
         menu.find(:menuitem, text: item_name).click
       end
+    end
+
+    def click_in_sprint_story_move_menu(story, item_name)
+      button = within(work_package_selector(story)) do
+        find(:button, accessible_name: "Story actions")
+      end
+      menu = open_controlled_menu(button)
+      submenu = open_move_submenu(menu)
+      submenu.find(:menuitem, text: item_name).click
     end
 
     def drag_inbox_item_to_sprint(work_package, sprint)
@@ -250,9 +292,7 @@ module Pages
     def within_story_menu(story, &)
       within_story(story) do
         button = find(:button, accessible_name: "Story actions")
-        button.click
-
-        within_menu_controlled_by(button, &)
+        within(open_controlled_menu(button), &)
       end
     end
 
@@ -298,9 +338,7 @@ module Pages
     def within_sprint_menu(sprint, &)
       within_sprint(sprint) do
         button = find(:button, accessible_name: "Sprint actions")
-        button.click
-
-        within_menu_controlled_by(button, &)
+        within(open_controlled_menu(button), &)
       end
     end
 
@@ -337,6 +375,10 @@ module Pages
 
         click_button "Close sprint"
       end
+    end
+
+    def within_move_submenu(menu, &)
+      within(open_move_submenu(menu), &)
     end
 
     private
@@ -377,13 +419,19 @@ module Pages
       "#work_package_#{work_package.id}"
     end
 
-    def within_menu_controlled_by(button)
-      menu_id = button[:controls] || button["aria-controls"]
-      menu = page.find(:menu, id: menu_id)
+    def open_controlled_menu(button)
+      button.click
+      page.find(:menu, id: button[:controls] || button["aria-controls"])
+    end
 
-      within(menu) do
-        yield page
-      end
+    def open_move_submenu(menu)
+      move_item = menu.find(:menuitem, text: "Move")
+      move_item.click
+      page.find(:menu, id: move_item["aria-controls"])
+    end
+
+    def dismiss_menu
+      page.find("body").click
     end
   end
 end
