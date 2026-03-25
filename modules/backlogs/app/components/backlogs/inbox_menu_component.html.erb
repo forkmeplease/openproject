@@ -74,7 +74,7 @@ See COPYRIGHT and LICENSE files for more details.
       item.with_leading_visual_icon(icon: :hash)
     end
 
-    if show_move_items?
+    if show_move_submenu?
       menu.with_divider
 
       menu.with_sub_menu_item(label: t(".action_menu.move_menu")) do |move_menu|
@@ -82,6 +82,19 @@ See COPYRIGHT and LICENSE files for more details.
 
         with_item_group(move_menu) do
           build_move_menu(move_menu)
+        end
+
+        with_item_group(move_menu) do
+          if show_move_to_sprint?
+            move_menu.with_item(
+              id: dom_target(work_package, :menu, :move_to_sprint),
+              label: t(".label_move_to_sprint"),
+              href: move_to_sprint_dialog_project_inbox_path(project, work_package),
+              content_arguments: { data: { controller: "async-dialog" } }
+            ) do |item|
+              item.with_leading_visual_icon(icon: :zap)
+            end
+          end
         end
       end
     end

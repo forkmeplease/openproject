@@ -163,6 +163,11 @@ en:
         copy_url_to_clipboard: "Copy URL to clipboard"
         copy_work_package_id: "Copy work package ID"
         move_menu: "Move"
+      label_move_to_sprint: "Move to sprint"
+
+    move_to_sprint_dialog_component:
+      title: "Move to sprint"
+      label_sprint: "Sprint"
 
     sprint_header_component:
       label_toggle_backlog: "Collapse/Expand %{name}"

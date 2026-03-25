@@ -167,18 +167,6 @@ module Pages
       wait_for_network_idle
     end
 
-    def inbox_items_in_visual_order(*work_packages)
-      tops = within_inbox do
-        work_packages.index_with do |wp|
-          page.evaluate_script(
-            "document.querySelector('#{inbox_item_selector(wp)}').getBoundingClientRect().top"
-          )
-        end
-      end
-
-      work_packages.sort_by { |wp| tops.fetch(wp) }
-    end
-
     def within_inbox_menu(work_package, &)
       within(inbox_item_selector(work_package)) do
         button = find(:button, accessible_name: "Work package actions")
