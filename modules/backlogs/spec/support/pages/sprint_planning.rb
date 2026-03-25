@@ -114,13 +114,13 @@ module Pages
 
     def expect_inbox_blankslate
       within_inbox do
-        expect(page).to have_css("h4", text: "Inbox is empty")
+        expect(page).to have_css("h4", text: "Backlog inbox is empty")
       end
     end
 
     def expect_no_inbox_blankslate
       within_inbox do
-        expect(page).to have_no_css("h4", text: "Inbox is empty")
+        expect(page).to have_no_css("h4", text: "Backlog inbox is empty")
       end
     end
 
