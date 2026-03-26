@@ -71,7 +71,7 @@ RSpec.describe "Types", :js do
     # Workflow routes are not resource-oriented.
     visit(url_for(controller: :workflows, action: :index, only_path: true))
     within "li", text: "A new type" do
-      click_link "Edit"
+      click_link "A new type"
     end
 
     from_id = existing_workflow.old_status_id

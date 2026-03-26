@@ -108,7 +108,7 @@ RSpec.describe "Role creation", :js do
     # Workflow routes are not resource-oriented.
     visit(url_for(controller: :workflows, action: :index, only_path: true))
     within "li", text: type.name do
-      click_link "Edit"
+      click_link type.name
     end
 
     click_button existing_role.name
