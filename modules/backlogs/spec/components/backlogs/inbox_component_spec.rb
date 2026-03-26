@@ -66,6 +66,10 @@ RSpec.describe Backlogs::InboxComponent, type: :component do
       expect(page).to have_css("h4", text: "Backlog inbox is empty")
       expect(page).to have_text("All open work packages in this project will automatically appear here.")
     end
+
+    it "hides the counter" do
+      expect(page).to have_css(".Counter", text: "0", visible: :hidden)
+    end
   end
 
   describe "with work packages" do
