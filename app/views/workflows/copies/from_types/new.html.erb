@@ -30,6 +30,6 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= render Workflows::PageHeaderComponent.new(state: :copy) %>
 
-<%= primer_form_with(url: workflow_copy_from_type_path(@source_type)) do |f|
+<%= settings_primer_form_with(url: workflow_copy_from_type_path(@source_type)) do |f|
   render(Workflows::Copies::FromTypeForm.new(f, source_type: @source_type, other_types: @other_types))
 end %>

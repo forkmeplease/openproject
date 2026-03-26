@@ -38,24 +38,31 @@ See COPYRIGHT and LICENSE files for more details.
       component.with_row(data: { "filter--filter-list-target": "searchItem" }) do
         flex_layout(align_items: :center, justify_content: :space_between) do |type_row|
           type_row.with_column do
-            tag.span type.name, class: "text-bold"
+            link_to type.name, edit_workflow_path(type), class: "text-bold"
           end
           type_row.with_column do
-            render(Primer::Beta::ButtonGroup.new) do |component|
-              component.with_button(
-                tag: :a,
-                mobile_icon: :pencil,
-                mobile_label: t(:button_edit),
-                href: edit_workflow_path(type),
-                aria: { label: I18n.t(:button_edit) },
-                title: I18n.t(:button_edit)
-              ) do |button|
-                button.with_leading_visual_icon(icon: :pencil)
-                t(:button_edit)
+            render(Primer::Alpha::ActionMenu.new(test_selector: "op-action-menu")) do |menu|
+              menu.with_show_button(
+                icon: "kebab-horizontal",
+                scheme: :invisible,
+                "aria-label": "Actions"
+              )
+
+              menu.with_item(label:t("button_edit"),
+                             tag: :a,
+                             href: edit_workflow_path(type)) do |item|
+                item.with_leading_visual_icon(icon: :pencil)
               end
-              component.with_menu_button(button_arguments: { "aria-label": t("label_more") }, menu_arguments: { anchor_align: :end }) do |menu, button|
-                menu.with_item(label: t("label_copy_workflow_from_type"), href: new_workflow_copy_from_type_path(type), icon: :copy)
-                menu.with_item(label: t("label_copy_workflow_from_role"), href: new_workflow_copy_from_role_path(type))
+              menu.with_divider
+              menu.with_item(label:t("label_copy_workflow_from_type"),
+                             tag: :a,
+                             href: new_workflow_copy_from_type_path(type)) do |item|
+                item.with_leading_visual_icon(icon: :copy)
+              end
+              menu.with_item(label:t("label_copy_workflow_from_role"),
+                             tag: :a,
+                             href: new_workflow_copy_from_role_path(type)) do |item|
+                item.with_leading_visual_icon(icon: :copy)
               end
             end
           end

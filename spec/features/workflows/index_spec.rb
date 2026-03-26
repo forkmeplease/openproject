@@ -66,11 +66,12 @@ RSpec.describe "Workflows index" do
     some_type = types.sample
     within "ul.Box-list" do
       within "li", text: some_type.name do
-        click_link "Edit"
+        click_link some_type.name
       end
     end
 
     expect(page).to have_heading some_type.name
+    expect(page).to have_current_path(edit_workflow_path(some_type))
   end
 
   it "allows navigating to any copy-from-type page" do
@@ -85,6 +86,7 @@ RSpec.describe "Workflows index" do
     end
 
     expect(page).to have_heading "Copy workflow"
+    expect(page).to have_current_path(new_workflow_copy_from_type_path(some_type))
   end
 
   it "allows navigating to any copy-from-role page" do
@@ -99,6 +101,7 @@ RSpec.describe "Workflows index" do
     end
 
     expect(page).to have_heading "Copy workflow"
+    expect(page).to have_current_path(new_workflow_copy_from_role_path(some_type))
   end
 
   it "allows navigating to Workflow summary page" do
