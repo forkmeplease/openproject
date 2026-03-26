@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -21,37 +23,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+class SubclassResponsibilityError < StandardError
+  def initialize(message = nil)
+    message ||= "The subclass needs to implement this method."
 
-module API
-  module Utilities
-    module RepresenterToJsonCache
-      def to_json(*)
-        if json_cacheable?
-          OpenProject::Cache.fetch(*json_representer_name_cache_key, *json_cache_key) do
-            super
-          end
-        else
-          super
-        end
-      end
-
-      def json_cacheable?
-        true
-      end
-
-      def json_cache_key
-        raise SubclassResponsibilityError
-      end
-
-      private
-
-      def json_representer_name_cache_key
-        self.class.name.to_s.split("::") + ["json", I18n.locale]
-      end
-    end
+    super
   end
 end

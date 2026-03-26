@@ -37,7 +37,7 @@ module Wikis
     scope :enabled, -> { where(enabled: true) }
 
     class << self
-      def registry_prefix = raise NotImplementedError, "SubclassResponsibility"
+      def registry_prefix = raise SubclassResponsibilityError
     end
 
     def resolve(registry_path)
