@@ -39,8 +39,17 @@ module OpenProject::Wikis
     include OpenProject::Plugins::ActsAsOpEngine
 
     register "openproject-wikis",
-             author_url: "https://openproject.org",
-             requires_openproject: ">= 17.0.0"
+             author_url: "https://openproject.org" do
+               menu :work_package_split_view,
+                    :wikis,
+                    { tab: :wikis },
+                    skip_permissions_check: true,
+                    after: :relations,
+                    if: ->(_project) {
+                      # TODO: only display if there are wiki providers available
+                      OpenProject::FeatureDecisions.wiki_enhancements_active?
+                    }
+             end
 
     initializer "openproject_wikis.inflections" do
       ActiveSupport::Inflector.inflections(:en) do |inflect|
