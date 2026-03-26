@@ -157,7 +157,9 @@ class Meeting < ApplicationRecord
 
   def self.templates_visible_globally(user = User.current)
     accessible = Project.allowed_to(user, :view_meetings).to_a
-    ancestor_ids = accessible.flat_map(&:ancestors).pluck(:id).uniq
+    return none if accessible.empty?
+
+    ancestor_ids = accessible.map(&:ancestors).reduce(:or).select(:id)
 
     available_onetime_templates
       .where(project_id: accessible.map(&:id))
