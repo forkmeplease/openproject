@@ -1045,6 +1045,7 @@ Rails.application.routes.draw do
 
     patch "/my/account", action: "update_account"
     patch "/my/settings", action: "update_settings"
+    patch "/my/email_alerts", action: "update_email_alerts"
   end
 
   scope controller: "onboarding" do

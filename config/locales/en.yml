@@ -3590,6 +3590,36 @@ en:
         disabled_text: "RSS tokens are not enabled by the administrator. Please contact your administrator to use this feature."
       storages:
         unknown_storage: "Unknown storage"
+    email_reminders:
+      immediate_reminders:
+        title: "Send me an email reminder"
+        mentioned: "Notify me when I am mentioned"
+        personal_reminder: "Notify me for personal reminders"
+      daily_reminders:
+        title: "Send me daily email reminders for unread notifications"
+        caption: "You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC."
+        enabled: "Enable daily email reminders"
+        add_time: "Add time"
+        remove_time: "Remove time"
+        time_slot_label: "Reminder time (UTC)"
+      workdays:
+        title: "Receive email reminders on these days"
+        submit_button: "Update reminder days"
+      pause_reminders:
+        title: "Pause email notifications"
+        enabled: "Temporarily pause daily email reminders"
+        date_range: "Pause period"
+      email_alerts:
+        title: "Email alerts for other items that are not work packages"
+        news_added: "News added"
+        news_commented: "Comment on a news item"
+        document_added: "Document added"
+        forum_messages: "Forum message posted"
+        wiki_page_added: "Wiki page added"
+        wiki_page_updated: "Wiki page updated"
+        membership_added: "Membership added"
+        membership_updated: "Membership updated"
+        submit_button: "Update alerts"
 
   notifications:
     reasons:

@@ -46,6 +46,7 @@ class MyController < ApplicationController
                              :locale,
                              :interface,
                              :update_settings,
+                             :update_email_alerts,
                              :password,
                              :change_password,
                              :password_confirmation_dialog,
@@ -72,6 +73,16 @@ class MyController < ApplicationController
     write_settings
   end
 
+  def update_email_alerts
+    set_global_notification_setting
+    if @global_notification_setting.update(permitted_params.notification_setting_email_alerts)
+      flash[:notice] = notice_account_updated
+    else
+      flash[:error] = error_account_update_failed(nil)
+    end
+    redirect_back_or_to(my_notifications_path)
+  end
+
   def interface; end
 
   # Manage user's password
@@ -92,7 +103,9 @@ class MyController < ApplicationController
   end
 
   # Configure user's notifications and email reminders
-  def notifications; end
+  def notifications
+    set_global_notification_setting
+  end
 
   def working_hours
     render_403 unless OpenProject::FeatureDecisions.user_working_times_active?
@@ -154,6 +167,10 @@ class MyController < ApplicationController
 
   def user_params
     permitted_params.my_account_settings.to_h
+  end
+
+  def set_global_notification_setting
+    @global_notification_setting = @user.notification_settings.find_or_initialize_by(project: nil)
   end
 
   def notice_account_updated

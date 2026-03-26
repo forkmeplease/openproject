@@ -278,7 +278,15 @@ class PermittedParams
                                    :comments_sorting,
                                    :disable_keyboard_shortcuts,
                                    :warn_on_leaving_unsaved,
-                                   :auto_hide_popups)
+                                   :auto_hide_popups,
+                                   immediate_reminders: %i[mentioned personal_reminder],
+                                   daily_reminders: [:enabled, { times: [] }],
+                                   workdays: [],
+                                   pause_reminders: %i[enabled date_range])
+  end
+
+  def notification_setting_email_alerts
+    params.fetch(:notification_setting, {}).permit(*NotificationSetting.email_settings)
   end
 
   def project
