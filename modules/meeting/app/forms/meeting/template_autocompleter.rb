@@ -34,17 +34,7 @@ class Meeting::TemplateAutocompleter < ApplicationForm
       name: :template_id,
       label: I18n.t(:label_meeting_template),
       caption: I18n.t(:caption_meeting_template_select),
-      autocomplete_options: {
-        decorated: true,
-        defaultData: false,
-        multiple: false,
-        disabled: @disabled,
-        placeholder: @placeholder,
-        appendTo: "#new-meeting-dialog",
-        data: {
-          "test-selector": "template_id"
-        }
-      }
+      autocomplete_options:
     ) do |select|
       templates.each do |template|
         select.option(
@@ -65,6 +55,21 @@ class Meeting::TemplateAutocompleter < ApplicationForm
   end
 
   private
+
+  def autocomplete_options
+    opts = {
+      decorated: true,
+      defaultData: false,
+      multiple: false,
+      disabled: @disabled,
+      appendTo: "#new-meeting-dialog",
+      data: {
+        "test-selector": "template_id"
+      }
+    }
+    opts[:placeholder] = @placeholder if @placeholder
+    opts
+  end
 
   def templates
     return [] if @disabled
