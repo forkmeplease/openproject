@@ -34,6 +34,7 @@ class MyController < ApplicationController
   include ActionView::Helpers::TagHelper
   include OpTurbo::ComponentStream
   include FlashMessagesOutputSafetyHelper
+  include Notifications::NotificationSettingsActions
 
   layout "my"
 
@@ -116,39 +117,6 @@ class MyController < ApplicationController
     respond_with_dialog My::PasswordConfirmationDialog.new
   end
 
-  def new_project_settings
-    respond_with_dialog My::Notifications::ProjectSettingsDialogComponent.new(user: @user)
-  end
-
-  def create_project_settings
-    update_project_notification_setting
-    redirect_back_or_to(my_notifications_path)
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t(:notice_bad_request)
-    redirect_back_or_to(my_notifications_path)
-  end
-
-  def edit_project_settings
-    setting = @user.notification_settings.find_by!(project_id: params[:project_id])
-    respond_with_dialog My::Notifications::ProjectSettingsDialogComponent.new(user: @user, notification_setting: setting)
-  end
-
-  def update_project_settings
-    update_project_notification_setting(params[:project_id])
-    redirect_back_or_to(my_notifications_path)
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t(:notice_bad_request)
-    redirect_back_or_to(my_notifications_path)
-  end
-
-  def destroy_project_settings
-    @user.notification_settings.find_by!(project_id: params[:project_id]).destroy!
-    flash[:notice] = notice_account_updated
-    redirect_back_or_to(my_notifications_path)
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t(:notice_bad_request)
-    redirect_back_or_to(my_notifications_path)
-  end
 
   # Configure user's notifications and email reminders
   def notifications
@@ -227,37 +195,12 @@ class MyController < ApplicationController
     @global_notification_setting = @user.notification_settings.find_or_initialize_by(project: nil)
   end
 
-  def update_project_notification_setting(project_id = params.dig(:notification_setting, :project_id))
-    project = Project.find(project_id)
-    setting = @user.notification_settings.find_or_initialize_by(project:)
-    persist_notification_setting(setting, project_notification_params)
-  end
-
   def persist_notification_setting(setting, update_params)
     if setting.update(update_params)
       flash[:notice] = notice_account_updated
     else
       flash[:error] = error_account_update_failed(nil)
     end
-  end
-
-  def project_notification_params
-    permitted_params.notification_setting_project.except(:project_id).merge(build_date_alerts_params)
-  end
-
-  def build_date_alerts_params
-    ns_params = params.fetch(:notification_setting, {})
-    {
-      start_date: date_alert_value(ns_params, :start_date),
-      due_date: date_alert_value(ns_params, :due_date),
-      overdue: date_alert_value(ns_params, :overdue)
-    }
-  end
-
-  def date_alert_value(ns_params, field)
-    return nil unless ns_params["#{field}_active"] == "1"
-
-    ns_params[field.to_s].presence&.to_i
   end
 
   def notice_account_updated
@@ -269,6 +212,18 @@ class MyController < ApplicationController
   def error_account_update_failed(result)
     errors = result ? result.errors.full_messages.join("\n") : ""
     [t(:notice_account_update_failed), errors]
+  end
+
+  def notifications_settings_path
+    my_notifications_path
+  end
+
+  def project_notifications_create_url
+    my_project_notifications_path
+  end
+
+  def project_setting_form_url(project_id)
+    my_project_setting_path(project_id:)
   end
 
   def set_current_user

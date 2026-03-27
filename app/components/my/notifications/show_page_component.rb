@@ -38,13 +38,17 @@ module My
                   :update_participating_url,
                   :update_non_participating_url,
                   :update_date_alerts_url,
+                  :new_project_settings_url,
                   :project_notification_settings
 
       def initialize(user:,
                      global_notification_setting:,
                      update_participating_url:,
                      update_non_participating_url:,
-                     update_date_alerts_url:)
+                     update_date_alerts_url:,
+                     new_project_settings_url:,
+                     edit_project_settings_url:,
+                     project_setting_url:)
         super
 
         @user = user
@@ -52,7 +56,18 @@ module My
         @update_participating_url = update_participating_url
         @update_non_participating_url = update_non_participating_url
         @update_date_alerts_url = update_date_alerts_url
+        @new_project_settings_url = new_project_settings_url
+        @edit_project_settings_url_builder = edit_project_settings_url
+        @project_setting_url_builder = project_setting_url
         @project_notification_settings = user.notification_settings.where.not(project: nil).includes(:project)
+      end
+
+      def edit_project_settings_url(project_id)
+        @edit_project_settings_url_builder.call(project_id)
+      end
+
+      def project_setting_url(project_id)
+        @project_setting_url_builder.call(project_id)
       end
 
       def date_alerts_available?

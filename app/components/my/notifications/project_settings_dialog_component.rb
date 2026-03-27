@@ -37,9 +37,10 @@ module My
       DIALOG_ID = "project-notification-settings-dialog"
       FORM_ID = "project-notification-settings-form"
 
-      def initialize(user:, notification_setting: nil)
+      def initialize(user:, form_url:, notification_setting: nil)
         super
         @user = user
+        @form_url = form_url
         @provided_setting = notification_setting
       end
 

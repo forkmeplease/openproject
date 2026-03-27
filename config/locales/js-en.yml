@@ -631,49 +631,6 @@ en:
       settings:
         change_notification_settings: 'You can modify your <a target="_blank" href="%{url}">notification settings</a> to ensure you never miss an important update.'
         title: "Notification settings"
-        notify_me: "Notify me"
-        reminders:
-          no_notification: No notification
-          timeframes:
-            normal:
-              PT0S: same day
-              P1D: 1 day before
-              P3D: 3 days before
-              P7D: a week before
-            overdue:
-              P1D: every day
-              P3D: every 3 days
-              P7D: every week
-        reasons:
-          mentioned:
-            title: "Mentioned"
-            description: "Receive a notification every time someone mentions me anywhere"
-          assignee: "Assignee"
-          responsible: "Accountable"
-          shared: "Shared"
-          watched: "Watcher"
-          work_package_commented: "All new comments"
-          work_package_created: "New work packages"
-          work_package_processed: "All status changes"
-          work_package_prioritized: "All priority changes"
-          work_package_scheduled: "All date changes"
-        global:
-          immediately:
-            title: "Participating"
-            description: "Notifications for all activities in work packages you are involved in (assignee, accountable or watcher)."
-          delayed:
-            title: "Non-participating"
-            description: "Additional notifications for activities in all projects."
-          date_alerts:
-            title: "Date alerts"
-            description: "Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher)."
-          overdue: When overdue
-        project_specific:
-          title: "Project-specific notification settings"
-          description: "These project-specific settings override default settings above."
-          add: "Add setting for project"
-          already_selected: "This project is already selected"
-          remove: "Remove project settings"
 
     pagination:
       no_other_page: "You are on the only page."

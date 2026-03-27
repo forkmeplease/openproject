@@ -31,6 +31,7 @@
 class UsersController < ApplicationController
   include OpTurbo::ComponentStream
   include WorkingTimesAuthorization
+  include Notifications::NotificationSettingsActions
 
   layout "admin"
 
@@ -40,6 +41,14 @@ class UsersController < ApplicationController
                                      edit
                                      update
                                      update_email_alerts
+                                     update_participating
+                                     update_non_participating
+                                     update_date_alerts
+                                     new_project_settings
+                                     create_project_settings
+                                     edit_project_settings
+                                     update_project_settings
+                                     destroy_project_settings
                                      change_status_info
                                      change_status
                                      destroy
@@ -119,6 +128,18 @@ class UsersController < ApplicationController
                                                               object: global_setting.class.model_name.human)
     end
     redirect_back_or_to edit_user_path(@user, tab: "reminders")
+  end
+
+  def update_participating
+    update_user_notification_setting(permitted_params.notification_setting_participating)
+  end
+
+  def update_non_participating
+    update_user_notification_setting(permitted_params.notification_setting_non_participating)
+  end
+
+  def update_date_alerts
+    update_user_notification_setting(build_date_alerts_params)
   end
 
   def update # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
@@ -272,6 +293,24 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def update_user_notification_setting(update_params)
+    global_setting = @user.notification_settings.find_or_initialize_by(project: nil)
+    persist_notification_setting(global_setting, update_params)
+    redirect_back_or_to edit_user_path(@user, tab: "notifications")
+  end
+
+  def notifications_settings_path
+    edit_user_path(@user, tab: "notifications")
+  end
+
+  def project_notifications_create_url
+    project_notifications_user_path(@user)
+  end
+
+  def project_setting_form_url(project_id)
+    project_setting_user_path(@user, project_id:)
+  end
 
   def can_show_user?
     return true if can_manage_or_create_users?

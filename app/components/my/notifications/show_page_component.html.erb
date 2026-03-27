@@ -99,7 +99,7 @@ See COPYRIGHT and LICENSE files for more details.
                     )
                     menu.with_item(
                       label: t("button_edit"),
-                      href: helpers.edit_my_project_settings_path(project_id: setting.project_id),
+                      href: edit_project_settings_url(setting.project_id),
                       content_arguments: { data: { controller: "async-dialog" } }
                     ) do |item|
                       item.with_leading_visual_icon(icon: :pencil)
@@ -107,7 +107,7 @@ See COPYRIGHT and LICENSE files for more details.
                     menu.with_item(
                       label: t("button_delete"),
                       scheme: :danger,
-                      href: helpers.my_project_setting_path(project_id: setting.project_id),
+                      href: project_setting_url(setting.project_id),
                       content_arguments: { data: { turbo_method: :delete, turbo_confirm: t("text_are_you_sure") } }
                     ) do |item|
                       item.with_leading_visual_icon(icon: :trash)
@@ -123,7 +123,7 @@ See COPYRIGHT and LICENSE files for more details.
   <%= render(
         Primer::Beta::Button.new(
           tag: :a,
-          href: helpers.new_my_project_settings_path,
+          href: new_project_settings_url,
           data: { controller: "async-dialog" },
           mb: 3
         )

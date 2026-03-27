@@ -31,7 +31,6 @@ See COPYRIGHT and LICENSE files for more details.
       Primer::Alpha::Dialog.new(
         id: DIALOG_ID,
         title: t("my_account.notifications.project_specific_settings.dialog_title"),
-        size: :large,
         position: :right
       )
     ) do |d|
@@ -39,7 +38,7 @@ See COPYRIGHT and LICENSE files for more details.
         primer_form_with(
           model: notification_setting,
           scope: :notification_setting,
-          url: edit_mode? ? helpers.my_project_setting_path(project_id: notification_setting.project_id) : my_project_notifications_path,
+          url: @form_url,
           method: edit_mode? ? :patch : :post,
           html: { id: FORM_ID },
           data: {
