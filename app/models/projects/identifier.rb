@@ -61,28 +61,22 @@ module Projects::Identifier
                       if: -> { Setting::WorkPackageIdentifier.alphanumeric? && identifier.blank? }
 
     ### ID validators
-    # Validators for the legacy underscored identifier format (e.g. "project_one")
+    # Shared validators for all identifier formats
     validates :identifier,
               presence: true,
-              uniqueness: { case_sensitive: true },
+              uniqueness: { case_sensitive: false },
               length: { maximum: IDENTIFIER_MAX_LENGTH },
-              exclusion: RESERVED_IDENTIFIERS,
               if: ->(p) { p.persisted? || p.identifier.present? }
-    # Contains only a-z, 0-9, dashes and underscores but cannot consist of numbers only as it would clash with the id.
-    validates :identifier,
-              format: { with: /\A(?!^\d+\z)[a-z0-9\-_]+\z/ },
-              if: ->(p) {
-                p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.numeric?
-              }
 
-    # Validators for the semantic identifier format
-    validates :identifier,
-              format: { with: /\A[A-Z]/, message: :must_start_with_letter },
-              if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
-    validates :identifier,
-              format: { with: /\A[A-Z][A-Z0-9_]*\z/, message: :no_special_characters },
-              length: { maximum: SEMANTIC_IDENTIFIER_MAX_LENGTH },
-              if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
+    # Validators for the numeric (legacy) identifier format (e.g. "my-project", "project_one")
+    validate :identifier_numeric_format,
+             if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.numeric? }
+
+    # Validators for the semantic (alphanumeric) identifier format (e.g. "PROJ1")
+    validate :identifier_alphanumeric_format,
+             if: ->(p) { p.identifier_changed? && p.identifier.present? && Setting::WorkPackageIdentifier.alphanumeric? }
+
+    validate :identifier_not_reserved, if: -> { identifier.present? }
 
     # Complements the uniqueness validation above: once an identifier has been used by a
     # project, it remains reserved for that project even after the project moves to a new
@@ -130,14 +124,38 @@ module Projects::Identifier
 
   private
 
+  # Contains only a-z, 0-9, dashes and underscores but cannot consist of numbers only
+  # as that would clash with the numeric id.
+  def identifier_numeric_format
+    unless identifier.match?(/\A(?!^\d+\z)[a-z0-9\-_]+\z/)
+      errors.add(:identifier, :invalid)
+    end
+  end
+
+  def identifier_alphanumeric_format
+    errors.add(:identifier, :must_start_with_letter) unless identifier.match?(/\A[A-Z]/)
+    errors.add(:identifier, :no_special_characters) unless identifier.match?(/\A[A-Z0-9_]*\z/)
+    if identifier.length > SEMANTIC_IDENTIFIER_MAX_LENGTH
+      errors.add(:identifier, :too_long, count: SEMANTIC_IDENTIFIER_MAX_LENGTH)
+    end
+  end
+
+  def identifier_not_reserved
+    if RESERVED_IDENTIFIERS.include?(identifier&.downcase)
+      errors.add(:identifier, :exclusion)
+    end
+  end
+
   # Checks friendly_id_slugs for any project that previously used this identifier and
-  # has since changed it. It allows to switch back to an identifier the project itself
-  # has used before.
+  # has since changed it. It allows a project to switch back to an identifier it has
+  # used before. Uses LOWER() because slugs may be stored in a different case than the
+  # incoming identifier (e.g. old lowercase slug vs new uppercase alphanumeric identifier).
   def identifier_not_historically_reserved
     return if errors.any? { |error| error.attribute == :identifier && error.type == :taken }
 
     already_existing = FriendlyId::Slug
-                         .where(slug: identifier, sluggable_type: self.class.to_s)
+                         .where("LOWER(slug) = LOWER(?)", identifier)
+                         .where(sluggable_type: self.class.to_s)
                          .where.not(sluggable_id: id)
                          .exists?
 
