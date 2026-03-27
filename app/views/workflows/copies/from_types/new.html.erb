@@ -26,10 +26,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
-<% html_title t(:label_administration), t(:label_workflow_plural), t(:label_workflow_copy) -%>
+<% title = t(".title", source_type: @source_type.name) %>
+<% html_title t(:label_administration), t(:label_workflow_plural), title -%>
 
-<%= render Workflows::PageHeaderComponent.new(state: :copy) %>
+<%= render Workflows::PageHeaders::CopyComponent.new(title:) %>
 
 <%= settings_primer_form_with(url: workflow_copy_from_type_path(@source_type)) do |f|
+  render(Primer::Alpha::Banner.new(scheme: :warning, m: 4)) do |banner|
+    banner.with_action_content { render OpPrimer::BackButtonLinkComponent.new }
+    t(".warning")
+  end +
   render(Workflows::Copies::FromTypeForm.new(f, source_type: @source_type, other_types: @other_types))
 end %>

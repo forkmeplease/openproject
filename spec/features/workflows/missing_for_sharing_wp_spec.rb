@@ -72,6 +72,7 @@ RSpec.describe "Configuring the workflow for work package sharing", :js,
     end
     select role.name, from: "source_role_id"
     target_roles_autocompleter.select_option work_package_role.name
+    target_roles_autocompleter.close_autocompleter
 
     click_button "Copy"
 
@@ -85,11 +86,6 @@ RSpec.describe "Configuring the workflow for work package sharing", :js,
                           new_status_id: end_status.id,
                           author: false,
                           assignee: false).count).to eq(1)
-
-    # Need to navigate because the Turbo response does not remove the warning
-    within "page-header" do
-      click_link "Workflows"
-    end
 
     expect(page)
       .to have_no_css(".warning-bar--item")

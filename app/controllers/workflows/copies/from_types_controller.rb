@@ -58,10 +58,8 @@ class Workflows::Copies::FromTypesController < ApplicationController
       Workflow.eligible_roles.each do |role|
         Workflow.copy_one(@source_type, role, @target_type, role)
       end
-      render_flash_message_via_turbo_stream(
-        message: I18n.t(:notice_successful_update),
-        scheme: :success
-      )
+      redirect_to edit_workflow_path(@target_type), notice: I18n.t(:notice_successful_update)
+      return
     end
 
     respond_with_turbo_streams

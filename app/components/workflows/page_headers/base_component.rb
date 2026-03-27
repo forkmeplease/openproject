@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,52 +26,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-require "spec_helper"
+module Workflows::PageHeaders
+  class BaseComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+    include ApplicationHelper
 
-RSpec.describe "Workflow copy from type" do
-  let(:types) { create_list(:type, 3) }
-  let(:type) { types.first }
-  let(:admin)  { create(:admin) }
-
-  current_user { admin }
-
-  before do
-    visit new_workflow_copy_from_type_path(type)
-  end
-
-  it "permits to select another type", :js do
-    expect(page).to have_select("Target type", text: types.second.name)
-    select(types.last.name, from: "Target type")
-    click_button "Copy"
-
-    expect(page).to have_css(".flash-success", text: "Successful update.")
-  end
-
-  it "allows to go back to Workflow index page" do
-    visit workflows_path
-    within "li", text: type.name do
-      click_link "Copy to another type"
+    def breadcrumb_items
+      [*parent_breadcrumbs, page_breadcrumb, title].compact
     end
 
-    within ".Banner--warning" do
-      click_link "Cancel"
+    def parent_breadcrumbs
+      [
+        { href: admin_index_path, text: t("label_administration") },
+        { href: admin_settings_work_packages_general_path, text: t(:label_work_package_plural) }
+      ]
     end
 
-    expect(page).to have_heading "Workflow"
-    expect(page).to have_current_path(workflows_path)
-  end
-
-  it "allows to go back to Workflow edit page" do
-    visit edit_workflow_path(type)
-    click_link "Copy to another type"
-
-    within ".Banner--warning" do
-      click_link "Cancel"
-    end
-
-    expect(page).to have_heading type.name
-    expect(page).to have_current_path(edit_workflow_path(type))
+    def page_breadcrumb = nil
+    def title = nil
+    def description = nil
+    def add_action_buttons(header); end
+    def add_tabs(header); end
   end
 end

@@ -372,16 +372,16 @@ RSpec.describe "Workflow edit" do
     end
   end
 
-  it "allows navigating to Workflow summary page" do
+  it "allows navigating to Workflow copy-from-type page" do
     within ".PageHeader-actions" do
-      click_on "Summary"
+      click_on "Copy to another type"
     end
 
-    expect(page).to have_heading("Summary")
-    expect(page).to have_current_path(workflows_summary_path)
+    expect(page).to have_heading "Copy workflow"
+    expect(page).to have_current_path(new_workflow_copy_from_type_path(type))
   end
 
-  it "allows navigating to Workflow copy page" do
+  it "allows navigating to Workflow copy-from-role page" do
     within ".PageHeader-actions" do
       click_on "Copy to other roles"
     end

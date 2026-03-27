@@ -28,50 +28,30 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
+require "rails_helper"
 
-RSpec.describe "Workflow copy from type" do
-  let(:types) { create_list(:type, 3) }
-  let(:type) { types.first }
-  let(:admin)  { create(:admin) }
-
-  current_user { admin }
-
-  before do
-    visit new_workflow_copy_from_type_path(type)
-  end
-
-  it "permits to select another type", :js do
-    expect(page).to have_select("Target type", text: types.second.name)
-    select(types.last.name, from: "Target type")
-    click_button "Copy"
-
-    expect(page).to have_css(".flash-success", text: "Successful update.")
-  end
-
-  it "allows to go back to Workflow index page" do
-    visit workflows_path
-    within "li", text: type.name do
-      click_link "Copy to another type"
+RSpec.describe OpPrimer::BackButtonLinkComponent, type: :component do
+  describe "#render" do
+    def render_component(...)
+      render_inline(described_class.new(...))
     end
 
-    within ".Banner--warning" do
-      click_link "Cancel"
+    subject(:rendered_component) { render_component(model) }
+
+    context "without model" do
+      let(:model) { nil }
+
+      it "renders a default text" do
+        expect(rendered_component).to have_css(".Button .Button-content .Button-label", text: "Cancel")
+      end
     end
 
-    expect(page).to have_heading "Workflow"
-    expect(page).to have_current_path(workflows_path)
-  end
+    context "with a custom text as model" do
+      let(:model) { "Some text…" }
 
-  it "allows to go back to Workflow edit page" do
-    visit edit_workflow_path(type)
-    click_link "Copy to another type"
-
-    within ".Banner--warning" do
-      click_link "Cancel"
+      it "renders a default text" do
+        expect(rendered_component).to have_css(".Button .Button-content .Button-label", text: model)
+      end
     end
-
-    expect(page).to have_heading type.name
-    expect(page).to have_current_path(edit_workflow_path(type))
   end
 end

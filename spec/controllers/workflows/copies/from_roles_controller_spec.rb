@@ -126,7 +126,7 @@ RSpec.describe Workflows::Copies::FromRolesController do
       }, format: :turbo_stream
     end
 
-    it "calls the Workflow.copy method with every target roles" do
+    it "calls the Workflow.copy method with every target role" do
       expect(Workflow)
         .to have_received(:copy).exactly(1).times
       expect(Workflow)
@@ -134,8 +134,9 @@ RSpec.describe Workflows::Copies::FromRolesController do
               .with(source_type, source_role, [source_type], target_roles)
     end
 
-    it "sets a flash notice" do
-      expect(response).to have_turbo_stream action: "flash", target: "op-primer-flash-component"
+    it "redirects with a flash notice" do
+      expect(response).to redirect_to(edit_workflow_path(source_type))
+      expect(flash[:notice]).to eq("Successful update.")
     end
   end
 end

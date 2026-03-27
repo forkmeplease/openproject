@@ -28,36 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-module Workflows
-  class PageHeaderComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-    include ApplicationHelper
-
-    def initialize(state:)
-      super
-      @state = state
+module OpPrimer
+  # @logical_path OpenProject/Primer
+  # @display min_height 250px
+  class BackButtonLinkComponentPreview < Lookbook::Preview
+    # Use [`link_to :back`](https://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-link_to)
+    # special behaviour with Primer styling.
+    #
+    # `Primer::Beta::Button.new(tag: :a, href: :back)` links to `/back` unfortunately,
+    # hence this tiny component…
+    def default
+      render(OpPrimer::BackButtonLinkComponent.new)
     end
 
-    def breadcrumb_items
-      [{ href: admin_index_path, text: t("label_administration") },
-       { href: admin_settings_work_packages_general_path, text: t(:label_work_package_plural) },
-       @state == :index ? nil : { href: workflows_path, text: t(:label_workflow_plural) },
-       title].compact
-    end
-
-    def title
-      case @state
-      when :summary
-        t(:label_workflow_summary)
-      when :copy
-        t(:label_workflow_copy)
-      else
-        t(:label_workflow_plural)
-      end
-    end
-
-    def description
-      t("admin.workflows.index.description") if @state == :index
+    def with_custom_label
+      render(OpPrimer::BackButtonLinkComponent.new("Go back"))
     end
   end
 end

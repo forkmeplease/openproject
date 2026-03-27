@@ -37,25 +37,21 @@ class Workflows::Copies::FromRoleForm < ApplicationForm
   end
 
   form do |copy|
-    copy.fieldset_group(title: I18n.t(:label_copy_source)) do |copy_source|
-      copy_source.text_field(name: :source_type_name, label: ::Type.model_name.human, value: @source_type.name, disabled: true)
-      copy_source.select_list(name: :source_role_id, label: Role.model_name.human, required: true) do |source_role_list|
-        @all_roles.each do |role|
-          source_role_list.option(label: role.name, value: role.id, selected: role == @source_role)
-        end
+    source_label = helpers.t("workflows.copies.from_role_form.source_role")
+    copy.select_list(name: :source_role_id, label: source_label, required: true) do |source_role_list|
+      @all_roles.each do |role|
+        source_role_list.option(label: role.name, value: role.id, selected: role == @source_role)
       end
-    end
-    copy.fieldset_group(title: I18n.t(:label_copy_target)) do |copy_target|
-      copy_target.text_field(name: :source_type_name, label: ::Type.model_name.human, value: @source_type.name, disabled: true)
     end
     copy.autocompleter(
       name: "target_role_ids",
       required: true,
       include_blank: false,
-      label: Role.model_name.human(count: 10),
+      label: helpers.t("workflows.copies.from_role_form.target_roles"),
       autocomplete_options: {
         multiple: true,
         decorated: true,
+        closeOnSelect: false,
         data: {
           "test-selector": "target_roles_autocomplete"
         }
@@ -65,6 +61,6 @@ class Workflows::Copies::FromRoleForm < ApplicationForm
         target_list.option(label: role.name, value: role.id)
       end
     end
-    copy.submit(name: :submit_copy, label: I18n.t(:button_copy), scheme: :primary)
+    copy.submit(name: :submit_copy, label: helpers.t(:button_copy), scheme: :primary)
   end
 end

@@ -28,27 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-module Workflows
-  class EditPageHeaderComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-    include ApplicationHelper
+module Workflows::PageHeaders
+  class CopyComponent < BaseComponent
+    options :title
 
-    def initialize(type, tabs:, role: nil)
-      super
-      @type = type
-      @role = role
-      @tabs = tabs
-    end
-
-    def breadcrumb_items
-      [{ href: admin_index_path, text: t("label_administration") },
-       { href: admin_settings_work_packages_general_path, text: t(:label_work_package_plural) },
-       { href: workflows_path, text: t(:label_workflow_plural) },
-       title]
-    end
-
-    def title
-      @type.name
+    def page_breadcrumb
+      { href: workflows_path, text: t(:label_workflow_plural) }
     end
   end
 end

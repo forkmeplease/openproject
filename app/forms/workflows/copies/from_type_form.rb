@@ -36,8 +36,8 @@ class Workflows::Copies::FromTypeForm < ApplicationForm
   end
 
   form do |copy|
-    copy.text_field(name: :source_type_name, label: I18n.t(:label_copy_source), value: @source_type.name, disabled: true)
-    copy.select_list(name: :target_type_id, label: I18n.t(:label_copy_target), required: true) do |target_list|
+    target_label = helpers.t("workflows.copies.from_type_form.target_type")
+    copy.select_list(name: :target_type_id, label: target_label, required: true) do |target_list|
       @other_types.each do |other_type|
         target_list.option(label: other_type.name, value: other_type.id)
       end

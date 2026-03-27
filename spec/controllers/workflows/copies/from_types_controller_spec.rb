@@ -120,8 +120,9 @@ RSpec.describe Workflows::Copies::FromTypesController do
               .with(source_type, roles.last, target_type, roles.last)
     end
 
-    it "sets a flash notice" do
-      expect(response).to have_turbo_stream action: "flash", target: "op-primer-flash-component"
+    it "redirects with a flash notice" do
+      expect(response).to redirect_to(edit_workflow_path(target_type))
+      expect(flash[:notice]).to eq("Successful update.")
     end
   end
 end

@@ -39,24 +39,10 @@ RSpec.describe Workflows::Copies::FromRoleForm, type: :forms do
   let(:all_roles) { create_list(:project_role, 4) }
   let(:source_role) { nil }
 
-  it "renders the Source type as disabled" do
-    expect(page).to have_css("fieldset", text: "Source") do |fieldset|
-      expect(fieldset).to have_field "Type", with: source_type.name, disabled: true
-    end
-  end
-
   it "renders the Source role select list" do
-    expect(page).to have_css("fieldset", text: "Source") do |fieldset|
-      expect(fieldset).to have_select "Role", required: true do |select|
-        options_text = select.all("option").map(&:text)
-        expect(options_text).to match_array(all_roles.map(&:name))
-      end
-    end
-  end
-
-  it "renders the Target type as disabled" do
-    expect(page).to have_css("fieldset", text: "Target") do |fieldset|
-      expect(fieldset).to have_field "Type", with: source_type.name, disabled: true
+    expect(page).to have_select "Source role", required: true do |select|
+      options_text = select.all("option").map(&:text)
+      expect(options_text).to match_array(all_roles.map(&:name))
     end
   end
 
@@ -76,11 +62,9 @@ RSpec.describe Workflows::Copies::FromRoleForm, type: :forms do
     let(:source_role) { all_roles.sample }
 
     it "renders the Source role select list with selected source" do
-      expect(page).to have_css("fieldset", text: "Source") do |fieldset|
-        expect(fieldset).to have_select "Role", required: true do |select|
-          selected_option_text = select.all("option[selected=selected]").map(&:text)
-          expect(selected_option_text).to contain_exactly(source_role.name)
-        end
+      expect(page).to have_select "Source role", required: true do |select|
+        selected_option_text = select.all("option[selected=selected]").map(&:text)
+        expect(selected_option_text).to contain_exactly(source_role.name)
       end
     end
   end

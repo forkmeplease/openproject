@@ -57,10 +57,8 @@ class Workflows::Copies::FromRolesController < ApplicationController
       @turbo_status = :unprocessable_entity
     else
       Workflow.copy(@source_type, @source_role, [@source_type], @target_roles)
-      render_flash_message_via_turbo_stream(
-        message: I18n.t(:notice_successful_update),
-        scheme: :success
-      )
+      redirect_to edit_workflow_path(@source_type), notice: I18n.t(:notice_successful_update)
+      return
     end
 
     respond_with_turbo_streams

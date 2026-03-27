@@ -435,10 +435,6 @@ en:
         default_transitions: "Default transitions"
         user_author: "User is author"
         user_assignee: "User is assignee"
-      index:
-        description: "Configure status transitions for each work package type."
-        type_filter:
-          label: "Filter by type name…"
       status_button: "Status"
       statuses_dialog:
         title: "Statuses"
@@ -1396,6 +1392,20 @@ en:
       no_results_content_text: Add a new wiki page
 
   workflows:
+    copies:
+      from_role_form:
+        source_role: "Source role"
+        target_roles: "Target roles"
+      from_roles:
+        new:
+          title: "Copy workflow of \"%{source_type}\" between roles"
+          warning: "This action will replace existing workflows of the selected target roles."
+      from_type_form:
+        target_type: "Target type"
+      from_types:
+        new:
+          title: "Copy workflow from \"%{source_type}\" to another type"
+          warning: "This action will replace existing workflows of all the roles of the selected target type."
     form:
       matrix_caption: "Workflow matrix"
       matrix_caption_assignee: "Workflow matrix for assignee"
@@ -1405,6 +1415,12 @@ en:
       matrix_uncheck_all_label: "Disallow all transitions"
       matrix_check_uncheck_all_in_row_label_html: "Toggle transitions from <em>%{old_status}</em> to all new statuses"
       matrix_check_uncheck_all_in_col_label_html: "Toggle transitions from all old statuses to <em>%{new_status}</em>"
+    index:
+      type_filter:
+        label: "Filter by type name…"
+    page_headers:
+      index_component:
+        description: "Configure status transitions for each work package type."
 
   work_flows:
     index:

@@ -58,13 +58,4 @@ RSpec.describe "Workflow summary", :js do
       expect(page).to have_selector :columnheader, "Hauptrolle"
     end
   end
-
-  it "allows navigating to Workflow edit page" do
-    within ".PageHeader-actions" do
-      click_on "Edit"
-    end
-
-    expect(page).to have_heading "Workflow"
-    expect(page).to have_current_path(workflows_path)
-  end
 end

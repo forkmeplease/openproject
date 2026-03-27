@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,52 +26,32 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-require "spec_helper"
-
-RSpec.describe "Workflow copy from type" do
-  let(:types) { create_list(:type, 3) }
-  let(:type) { types.first }
-  let(:admin)  { create(:admin) }
-
-  current_user { admin }
-
-  before do
-    visit new_workflow_copy_from_type_path(type)
-  end
-
-  it "permits to select another type", :js do
-    expect(page).to have_select("Target type", text: types.second.name)
-    select(types.last.name, from: "Target type")
-    click_button "Copy"
-
-    expect(page).to have_css(".flash-success", text: "Successful update.")
-  end
-
-  it "allows to go back to Workflow index page" do
-    visit workflows_path
-    within "li", text: type.name do
-      click_link "Copy to another type"
+module Workflows::PageHeaders
+  class IndexComponent < BaseComponent
+    def title
+      t(:label_workflow_plural)
     end
 
-    within ".Banner--warning" do
-      click_link "Cancel"
+    def description
+      t(".description")
     end
 
-    expect(page).to have_heading "Workflow"
-    expect(page).to have_current_path(workflows_path)
-  end
-
-  it "allows to go back to Workflow edit page" do
-    visit edit_workflow_path(type)
-    click_link "Copy to another type"
-
-    within ".Banner--warning" do
-      click_link "Cancel"
+    def add_action_buttons(header)
+      header.with_action_button(
+        tag: :a,
+        mobile_icon: :info,
+        mobile_label: helpers.t(:label_workflow_summary),
+        size: :medium,
+        href: workflows_summary_path,
+        aria: { label: helpers.t(:label_workflow_summary) },
+        title: helpers.t(:label_workflow_summary)
+      ) do |button|
+        button.with_leading_visual_icon(icon: :info)
+        helpers.t(:label_workflow_summary)
+      end
     end
 
-    expect(page).to have_heading type.name
-    expect(page).to have_current_path(edit_workflow_path(type))
   end
 end

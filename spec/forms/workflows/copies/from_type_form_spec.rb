@@ -38,12 +38,8 @@ RSpec.describe Workflows::Copies::FromTypeForm, type: :forms do
   let(:source_type) { create(:type) }
   let(:other_types) { create_list(:type, 4) }
 
-  it "renders the Source type as disabled" do
-    expect(page).to have_field "Source", with: source_type.name, disabled: true
-  end
-
   it "renders the Target type select list" do
-    expect(page).to have_select "Target", required: true do |select|
+    expect(page).to have_select "Target type", required: true do |select|
       options_text = select.all("option").map(&:text)
       expect(options_text).to match_array(other_types.map(&:name))
     end

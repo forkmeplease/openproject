@@ -44,34 +44,40 @@ RSpec.describe "Workflow copy from role" do
   end
 
   it "permits to select a source role and target source roles", :js do
-    within_fieldset "Source" do
-      expect(page).to have_select("Role", text: roles.first.name)
-      select(roles.last.name, from: "Role")
-    end
+    expect(page).to have_select("Source role", text: roles.first.name)
+    select(roles.last.name, from: "Source role")
 
-    target_roles_autocompleter.select_option roles.first.name
-    target_roles_autocompleter.select_option roles.second.name
+    target_roles_autocompleter.select_option roles.first.name, roles.second.name
+    target_roles_autocompleter.close_autocompleter
 
     click_button "Copy"
 
     expect(page).to have_css(".flash-success", text: "Successful update.")
   end
 
-  it "allows navigating to Workflow edit page" do
-    within ".PageHeader-actions" do
-      click_on "Edit"
+  it "allows to go back to Workflow index page" do
+    visit workflows_path
+    within "li", text: type.name do
+      click_link "Copy to other roles"
+    end
+
+    within ".Banner--warning" do
+      click_link "Cancel"
     end
 
     expect(page).to have_heading "Workflow"
     expect(page).to have_current_path(workflows_path)
   end
 
-  it "allows navigating to Workflow summary page" do
-    within ".PageHeader-actions" do
-      click_on "Summary"
+  it "allows to go back to Workflow edit page" do
+    visit edit_workflow_path(type)
+    click_link "Copy to other roles"
+
+    within ".Banner--warning" do
+      click_link "Cancel"
     end
 
-    expect(page).to have_heading "Summary"
-    expect(page).to have_current_path(workflows_summary_path)
+    expect(page).to have_heading type.name
+    expect(page).to have_current_path(edit_workflow_path(type))
   end
 end
