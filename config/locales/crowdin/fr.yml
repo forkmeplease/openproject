@@ -391,14 +391,14 @@ fr:
           label_autofixed_suggestion: Futur identifiant
           label_example_work_package_id: Exemple d'identifiant de lot de travaux
         autofix_preview:
-          error_too_long: Has to be 10 characters or fewer
-          error_numerical: Cannot be purely numerical
-          error_starts_with_number: Cannot start with a number
+          error_too_long: Doit être composé de 10 caractères ou moins
+          error_numerical: Ne peut être purement numérique
+          error_starts_with_number: Ne peut pas commencer par un chiffre
           error_special_characters: Caractères spéciaux non autorisés
-          error_not_fully_uppercased: Must be uppercase
+          error_not_fully_uppercased: Doit être en majuscules
           error_in_use: Already in use as another project's active handle
           error_reserved: Reserved by another project's handle history
-          error_unknown: Needs manual review
+          error_unknown: Nécessite une vérification manuelle
           remaining_projects:
             one: "... 1 projet supplémentaire"
             other: "... %{count} projets supplémentaires"
@@ -673,10 +673,10 @@ fr:
     confirmation_live_message_unchecked: "Le bouton pour continuer est maintenant inactif. Vous devez cocher la case pour continuer."
   pagination:
     label: "Pagination"
-    prev: "Previous"
-    prev_page: "Previous Page"
-    next: "Next"
-    next_page: "Next Page"
+    prev: "Précédent"
+    prev_page: "Page précédente"
+    next: "Suivante"
+    next_page: "Page suivante"
     page: "Page %{number}"
     page_with_more: "Page %{number}..."
   mcp_configurations:
@@ -4019,7 +4019,7 @@ fr:
   label_start_to_start: "de début à début"
   label_statistics: "Statistiques"
   label_status: "Statut"
-  label_status_plural: "Statuses"
+  label_status_plural: "Statuts"
   label_storage_free_space: "Espace disque restant"
   label_storage_used_space: "Espace disque utilisé"
   label_storage_group: "Système de fichiers de stockage %{identifier}"
@@ -4181,7 +4181,7 @@ fr:
   button_add_non_working_time: "Temps libre"
   button_edit_non_working_time: "Modifier les temps libres"
   label_continued_from_previous_year: "continued from previous year"
-  label_continues_into_next_year: "continues into next year"
+  label_continues_into_next_year: "se poursuit dans l'année suivante"
   label_end_date: "Date de fin"
   label_working_days: "Journées de travail"
   label_non_working_times_with_count: "%{year} de temps libre (%{count})"
