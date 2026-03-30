@@ -107,8 +107,21 @@ module Import
       type = import_type(jira_issue, project)
       status = import_status(jira_issue)
       update_workflows(type)
+      update_custom_field_selection(jira_issue, type, custom_field_list)
       priority = import_priority(jira_issue)
       import_work_package(jira_issue, project, type, status, priority, custom_field_list)
+    end
+
+    def update_custom_field_selection(jira_issue, type, custom_field_list)
+      existing_cf_ids = type.custom_field_ids
+      new_cfs = custom_field_list
+                  .select { |field| field[:values].any? { |v| v[:issue_id] == jira_issue.id } }
+                  .filter_map { |field| field[:custom_field] }
+                  .reject { |cf| existing_cf_ids.include?(cf.id) }
+      if new_cfs.any?
+        type.custom_fields << new_cfs
+        type.save!
+      end
     end
 
     def import_type(jira_issue, project)
