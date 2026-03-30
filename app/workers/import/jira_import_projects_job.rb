@@ -324,6 +324,8 @@ module Import
       custom_field_list = []
       usage.each do |jira_field_id, value|
         jira_field = jira_fields_by_id[jira_field_id]
+        next unless jira_field
+
         custom_field, values = import_custom_field(jira_field, jira_project, value[:values])
         custom_field_list << { custom_field:, values: }
       end
