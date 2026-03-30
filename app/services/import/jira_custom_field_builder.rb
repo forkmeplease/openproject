@@ -71,8 +71,8 @@ module Import
       params
     end
 
-    def convert_values(custom_field)
-      @values
+    def convert_values(_custom_field)
+      @values # TODO convert Jira custom field values to OP custom field values
     end
 
     def custom_field_post_processing(custom_field)
@@ -119,11 +119,11 @@ module Import
       end
     end
 
-    def collect_list_options(values)
+    def collect_list_options(_values)
       [] # TODO: collect_list_options
     end
 
-    def populate_hierarchy_items(custom_field, values)
+    def populate_hierarchy_items(_custom_field, _values)
       # TODO: populate_hierarchy_items
     end
   end

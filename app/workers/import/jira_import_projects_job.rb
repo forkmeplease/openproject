@@ -32,6 +32,8 @@ module Import
   class JiraImportProjectsJob < ApplicationJob
     include Import::JiraOpenProjectReferenceCreation
 
+    JIRA_IMPORT_GROUP_KEY = "Jira import"
+
     # rubocop:disable Metrics/AbcSize
     def perform(jira_import_id)
       @jira_import = Import::JiraImport.find(jira_import_id)
@@ -98,7 +100,7 @@ module Import
         taken_identifier = error.options[:value]
         project = Project.find_by!(identifier: taken_identifier)
         raise "You are trying to import a project with already used " \
-                "identifier: #{taken_identifier}. Existing project: #{project}."
+              "identifier: #{taken_identifier}. Existing project: #{project}."
       end
 
       raise service_call.message
@@ -113,8 +115,6 @@ module Import
       priority = import_priority(jira_issue)
       import_work_package(jira_issue, project, type, status, priority, custom_field_list)
     end
-
-    JIRA_IMPORT_GROUP_KEY = "Jira import"
 
     def new_custom_fields_in_type(jira_issue, type, custom_field_list)
       existing_cf_ids = type.custom_field_ids
@@ -215,14 +215,7 @@ module Import
 
       [author, assigned_to].uniq.compact.each { |member| import_member(project, member) }
       description = Import::JiraWikiMarkupConverter.new(jira_issue.payload["fields"]["description"] || "").convert
-
-      custom_field_attrs = custom_field_list.each_with_object({}) do |field, attrs|
-        value = field[:values].select { |value| value[:issue_id] == jira_issue.id }
-        next if value&.nil?
-
-        custom_field = field[:custom_field]
-        attrs[custom_field.attribute_getter] = value.first[:value]
-      end
+      custom_field_attrs = collect_custom_field_attributes(custom_field_list, jira_issue)
 
       service_call = WorkPackages::CreateService
                        .new(user: author || User.system, contract_class: EmptyContract)
@@ -241,6 +234,16 @@ module Import
       work_package = service_call.result
       create_reference!(op_leg: work_package, jira_leg: jira_issue, jira_import: @jira_import, uses_existing: false)
       import_work_package_history(work_package, jira_issue, project)
+    end
+
+    def collect_custom_field_attributes(custom_field_list, jira_issue)
+      custom_field_list.each_with_object({}) do |field, attrs|
+        value = field[:values].select { |value| value[:issue_id] == jira_issue.id }
+        next if value&.nil?
+
+        custom_field = field[:custom_field]
+        attrs[custom_field.attribute_getter] = value.first[:value]
+      end
     end
 
     def import_work_package_history(work_package, jira_issue, project)
