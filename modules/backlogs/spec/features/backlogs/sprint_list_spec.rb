@@ -28,52 +28,33 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs
-  class SprintHeaderComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-    include OpTurbo::Streamable
-    include Primer::FetchOrFallbackHelper
-    include Redmine::I18n
-    include RbCommonHelper
+require "spec_helper"
+require_relative "../../support/pages/backlog"
 
-    attr_reader :sprint, :project, :stories, :collapsed, :current_user, :active_sprint_ids
+RSpec.describe "Sprint list", :js, with_flag: { scrum_projects: true } do
+  shared_let(:project) { create(:project) }
+  shared_let(:other_project) { create(:project) }
+  shared_let(:user) { create(:user, member_with_permissions: { project => %i[view_sprints view_work_packages] }) }
+  shared_let(:sprint) do
+    create(:agile_sprint, project:,
+                          start_date: Date.new(2025, 9, 1),
+                          finish_date: Date.new(2025, 9, 14))
+  end
 
-    delegate :name, to: :sprint, prefix: :sprint
+  let(:backlog_page) { Pages::Backlog.new(project) }
 
-    def initialize(
-      sprint:,
-      project:,
-      stories: nil,
-      folded: false,
-      current_user: User.current,
-      active_sprint_ids: nil
-    )
-      super()
+  before { login_as(user) }
 
-      @sprint = sprint
-      @project = project
-      @stories = stories || sprint.work_packages_for(project)
-      @collapsed = folded
-      @current_user = current_user
-      @active_sprint_ids = active_sprint_ids
-    end
+  describe "sprint header" do
+    shared_let(:wp_in_project) { create(:work_package, project:, sprint:, story_points: 5) }
+    shared_let(:wp_in_project2) { create(:work_package, project:, sprint:, story_points: 3) }
+    shared_let(:wp_in_other_project) { create(:work_package, project: other_project, sprint:, story_points: 10) }
 
-    def wrapper_uniq_by
-      sprint.id
-    end
+    it "only counts work packages belonging to the viewed project" do
+      backlog_page.visit!
 
-    private
-
-    def story_points
-      @story_points ||= stories.sum { |story| story.story_points || 0 }
-    end
-
-    def story_count
-      @story_count ||= stories.size
-    end
-
-    def date_range
-      [sprint.start_date, sprint.finish_date]
+      backlog_page.expect_sprint_story_points(sprint, 8)
+      backlog_page.expect_sprint_story_count(sprint, 2)
     end
   end
 end

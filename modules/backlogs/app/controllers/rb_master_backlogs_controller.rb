@@ -89,6 +89,10 @@ class RbMasterBacklogsController < RbApplicationController
 
     if OpenProject::FeatureDecisions.scrum_projects_active?
       @sprints = Agile::Sprint.for_project(@project).not_completed.order_by_date
+      @stories_by_sprint_id = WorkPackage
+        .where(sprint: @sprints, project: @project)
+        .order_by_position
+        .group_by(&:sprint_id)
       @active_sprint_ids = @sprints.select(&:active?).map(&:id)
       @inbox_work_packages = Backlog.inbox_for(project: @project)
     else

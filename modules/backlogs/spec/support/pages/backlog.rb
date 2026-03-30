@@ -316,10 +316,15 @@ module Pages
       end
     end
 
-    def expect_velocity(backlog, velocity)
-      within("#backlog_#{backlog.id} .velocity") do
-        expect(page)
-          .to have_content(velocity.to_s)
+    def expect_sprint_story_points(sprint, points)
+      within(sprint_selector(sprint)) do
+        expect(page).to have_css(".velocity", text: points.to_s)
+      end
+    end
+
+    def expect_sprint_story_count(sprint, count)
+      within(sprint_selector(sprint)) do
+        expect(page).to have_css ".Counter", accessible_name: "#{count} stories in sprint"
       end
     end
 
