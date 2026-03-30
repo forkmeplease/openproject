@@ -29,12 +29,20 @@
 #++
 
 class My::Notifications::ProjectAutocompleterForm < ApplicationForm
-  def initialize(readonly: false)
+  def initialize(readonly: false, user: nil)
     super()
     @readonly = readonly
+    @excluded_project_ids = if !readonly && user
+                              user.notification_settings.where.not(project: nil).pluck(:project_id).map(&:to_s)
+                            else
+                              []
+                            end
   end
 
   form do |f|
+    filters = [{ name: "active", operator: "=", values: ["t"] }]
+    filters << { name: "id", operator: "!", values: @excluded_project_ids } if @excluded_project_ids.any?
+
     f.project_autocompleter(
       name: :project_id,
       label: Project.model_name.human,
@@ -42,7 +50,8 @@ class My::Notifications::ProjectAutocompleterForm < ApplicationForm
       autocomplete_options: {
         data: { test_selector: "my-notifications-project-autocompleter" },
         appendTo: "##{My::Notifications::ProjectSettingsDialogComponent::DIALOG_ID}",
-        readonly: @readonly
+        readonly: @readonly,
+        filters:
       }
     )
   end
