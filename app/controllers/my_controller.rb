@@ -47,6 +47,7 @@ class MyController < ApplicationController
                              :locale,
                              :interface,
                              :update_settings,
+                             :update_workdays,
                              :update_email_alerts,
                              :update_participating,
                              :update_non_participating,
@@ -116,7 +117,6 @@ class MyController < ApplicationController
   def password_confirmation_dialog
     respond_with_dialog My::PasswordConfirmationDialog.new
   end
-
 
   # Configure user's notifications and email reminders
   def notifications
@@ -215,6 +215,10 @@ class MyController < ApplicationController
   end
 
   def notifications_settings_path
+    my_notifications_path
+  end
+
+  def workdays_redirect_path
     my_notifications_path
   end
 

@@ -44,8 +44,10 @@ class My::Notifications::NonParticipatingForm < ApplicationForm
         )
       end
 
-      fg.submit(name: :submit, label: helpers.t("my_account.notifications.non_participating.submit_button"),
-                scheme: :default) if @show_submit
+      if @show_submit
+        fg.submit(name: :submit, label: helpers.t("my_account.notifications.non_participating.submit_button"),
+                  scheme: :default)
+      end
     end
   end
 end

@@ -37,10 +37,12 @@ class UsersController < ApplicationController
 
   before_action :authorize_global, except: %i[show deletion_info destroy]
 
+  # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :find_user, only: %i[show
                                      edit
                                      update
                                      update_reminders
+                                     update_workdays
                                      update_email_alerts
                                      update_participating
                                      update_non_participating
@@ -55,6 +57,7 @@ class UsersController < ApplicationController
                                      destroy
                                      deletion_info
                                      resend_invitation]
+  # rubocop:enable Rails/LexicallyScopedActionFilter
   # should also contain destroy but post data can not be redirected
   before_action :require_login, only: [:deletion_info]
   before_action :authorize_for_user, only: [:destroy]
@@ -122,24 +125,13 @@ class UsersController < ApplicationController
 
   def update_email_alerts
     global_setting = @user.notification_settings.find_or_initialize_by(project: nil)
-    if global_setting.update(permitted_params.notification_setting_email_alerts)
-      flash[:notice] = I18n.t(:notice_successful_update)
-    else
-      flash[:error] = I18n.t(:notice_failed_to_save_messages, count: global_setting.errors.count,
-                                                              object: global_setting.class.model_name.human)
-    end
+    persist_notification_setting(global_setting, permitted_params.notification_setting_email_alerts)
     redirect_back_or_to edit_user_path(@user, tab: "reminders")
   end
 
   def update_reminders
     call = ::Users::UpdateService.new(model: @user, user: current_user).call(pref: permitted_params.pref.to_h)
-
-    if call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-    else
-      flash[:error] = call.errors.full_messages.join(", ")
-    end
-
+    flash[call.success? ? :notice : :error] = update_service_flash_message(call)
     redirect_back_or_to edit_user_path(@user, tab: "reminders")
   end
 
@@ -315,6 +307,10 @@ class UsersController < ApplicationController
 
   def notifications_settings_path
     edit_user_path(@user, tab: "notifications")
+  end
+
+  def workdays_redirect_path
+    edit_user_path(@user, tab: "reminders")
   end
 
   def project_notifications_create_url

@@ -951,6 +951,7 @@ Rails.application.routes.draw do
       post :change_status
       post :resend_invitation
       patch :update_reminders
+      patch :update_workdays
       patch :update_email_alerts
       patch :update_participating
       patch :update_non_participating
@@ -1055,6 +1056,7 @@ Rails.application.routes.draw do
 
     patch "/my/account", action: "update_account"
     patch "/my/settings", action: "update_settings"
+    patch "/my/workdays", action: "update_workdays"
     patch "/my/email_alerts", action: "update_email_alerts"
     patch "/my/participating", action: "update_participating"
     patch "/my/non_participating", action: "update_non_participating"

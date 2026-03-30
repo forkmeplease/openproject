@@ -36,6 +36,12 @@ module Notifications
       include OpTurbo::ComponentStream
     end
 
+    def update_workdays
+      call = ::Users::UpdateService.new(model: @user, user: current_user).call(pref: workdays_pref_params)
+      flash[call.success? ? :notice : :error] = update_service_flash_message(call)
+      redirect_back_or_to(workdays_redirect_path)
+    end
+
     def new_project_settings
       respond_with_dialog My::Notifications::ProjectSettingsDialogComponent.new(
         user: @user,
@@ -108,6 +114,19 @@ module Notifications
       }
     end
 
+    def workdays_pref_params
+      pref_params = permitted_params.pref.to_h
+      pref_params.merge("workdays" => pref_params.fetch("workdays", []))
+    end
+
+    def update_service_flash_message(call)
+      if call.success?
+        I18n.t(:notice_successful_update)
+      else
+        call.errors.full_messages.join(", ")
+      end
+    end
+
     def date_alert_value(ns_params, field)
       return nil unless ns_params["#{field}_active"] == "1"
 
@@ -116,15 +135,19 @@ module Notifications
 
     # To be implemented by the including controller
     def notifications_settings_path
-      raise NotImplementedError
+      raise SubclassResponsibilityError
+    end
+
+    def workdays_redirect_path
+      raise SubclassResponsibilityError
     end
 
     def project_notifications_create_url
-      raise NotImplementedError
+      raise SubclassResponsibilityError
     end
 
     def project_setting_form_url(_project_id)
-      raise NotImplementedError
+      raise SubclassResponsibilityError
     end
   end
 end

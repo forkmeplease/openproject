@@ -188,7 +188,7 @@ class UserPreference < ApplicationRecord
   end
 
   def workdays=(value)
-    super(Array(value).map(&:to_i))
+    self.settings = settings.merge("workdays" => Array(value).map(&:to_i))
   end
 
   def immediate_reminders
