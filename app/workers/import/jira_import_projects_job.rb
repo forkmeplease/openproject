@@ -44,9 +44,10 @@ module Import
         @project_role = setup_project_role
 
         Import::JiraProject.where(jira_id: @jira_id, jira_project_id: @jira_import.project_ids).find_each do |jira_project|
-          project = import_project(jira_project)
+          custom_field_list = import_custom_fields(jira_project)
+          project = import_project(jira_project, custom_field_list)
           Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: jira_project.id).find_each do |jira_issue|
-            import_issue(jira_issue, project)
+            import_issue(jira_issue, project, custom_field_list)
           end
         end
       end
@@ -71,7 +72,7 @@ module Import
       Role.find_by!(name: "JiraMember")
     end
 
-    def import_project(jira_project)
+    def import_project(jira_project, _custom_field_list)
       identifier = jira_project.payload.fetch("key").downcase
       service_call = Projects::CreateService
                        .new(user: @user, contract_class: EmptyContract)
@@ -96,18 +97,18 @@ module Import
         taken_identifier = error.options[:value]
         project = Project.find_by!(identifier: taken_identifier)
         raise "You are trying to import a project with already used " \
-              "identifier: #{taken_identifier}. Existing project: #{project}."
+                "identifier: #{taken_identifier}. Existing project: #{project}."
       end
 
       raise service_call.message
     end
 
-    def import_issue(jira_issue, project)
+    def import_issue(jira_issue, project, custom_field_list)
       type = import_type(jira_issue, project)
       status = import_status(jira_issue)
       update_workflows(type)
       priority = import_priority(jira_issue)
-      import_work_package(jira_issue, project, type, status, priority)
+      import_work_package(jira_issue, project, type, status, priority, custom_field_list)
     end
 
     def import_type(jira_issue, project)
@@ -173,7 +174,7 @@ module Import
       raise call.message if call.failure?
     end
 
-    def import_work_package(jira_issue, project, type, status, priority)
+    def import_work_package(jira_issue, project, type, status, priority, custom_field_list)
       # required because otherwise project.types does not include type and then wp creation fails.
       project.reload
       author_key = jira_issue.payload.dig("fields", "creator", "key")
@@ -182,17 +183,27 @@ module Import
       assigned_to = find_user(assignee_key)
 
       [author, assigned_to].uniq.compact.each { |member| import_member(project, member) }
+      description = Import::JiraWikiMarkupConverter.new(jira_issue.payload["fields"]["description"] || "").convert
+
+      custom_field_attrs = custom_field_list.each_with_object({}) do |field, attrs|
+        value = field[:values].select { |value| value[:issue_id] == jira_issue.id }
+        next if value&.nil?
+
+        custom_field = field[:custom_field]
+        attrs[custom_field.attribute_getter] = value.first[:value]
+      end
 
       service_call = WorkPackages::CreateService
                        .new(user: author || User.system, contract_class: EmptyContract)
                        .call(
                          project:,
                          subject: jira_issue.payload["fields"]["summary"],
-                         description: convert_rich_text(jira_issue.payload["fields"]["description"]),
+                         description:,
                          type:,
                          priority:,
                          status:,
-                         assigned_to:
+                         assigned_to:,
+                         **custom_field_attrs
                        )
       raise service_call.message unless service_call.success?
 
@@ -262,6 +273,57 @@ module Import
       raise service_call.message if service_call.errors.find { |error| error.type == :taken }.blank?
     end
 
+    def import_custom_fields(jira_project)
+      usage = {}
+      Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: jira_project.id).find_each do |issue|
+        issue.payload["fields"].each do |key, value|
+          next unless key.start_with?("customfield_") && value.present?
+
+          usage[key] ||= { values: [] }
+          usage[key][:values] << { value:, issue_id: issue.id }
+        end
+      end
+
+      custom_field_list = []
+      usage.each do |jira_field_id, value|
+        jira_field = Import::JiraField.find_by(jira_id: @jira_id, jira_field_id:)
+        custom_field, values = import_custom_field(jira_field, jira_project, value[:values])
+        custom_field_list << { custom_field:, values: }
+      end
+      custom_field_list
+    end
+
+    def import_custom_field(jira_field, jira_project, values)
+      jira_custom_field_builder = Import::JiraCustomFieldBuilder.new(jira_field, jira_project, values)
+      existing_cf = jira_custom_field_builder.find_existing_custom_field
+      if existing_cf
+        unless Import::JiraOpenProjectReference.exists?(op_entity_id: existing_cf.id,
+                                                        op_entity_class: existing_cf.class.to_s,
+                                                        jira_id: @jira_id)
+          create_reference!(op_leg: existing_cf, jira_leg: jira_field, jira_import:, uses_existing: true)
+        end
+        return [existing_cf, jira_custom_field_builder.convert_values(existing_cf)]
+      end
+      name, field_format = jira_custom_field_builder.custom_field_settings
+      params = {
+        type: "WorkPackageCustomField",
+        name:,
+        field_format:,
+        is_required: false,
+        is_for_all: false,
+        **jira_custom_field_builder.custom_field_parameters
+      }
+      service_call = CustomFields::CreateService.new(user: @user).call(**params)
+      if service_call.success?
+        custom_field = service_call.result
+        create_reference!(op_leg: custom_field, jira_leg: jira_field, jira_import: @jira_import, uses_existing: false)
+        jira_custom_field_builder.custom_field_post_processing(custom_field)
+        [custom_field, jira_custom_field_builder.convert_values(custom_field)]
+      else
+        raise "Failed to create custom field '#{jira_field['name']}': #{service_call.message}"
+      end
+    end
+
     def find_user(jira_user_key)
       return if jira_user_key.blank?
 
@@ -276,11 +338,6 @@ module Import
       end
     end
 
-    def convert_rich_text(description)
-      return "" if description.blank?
-
-      Import::JiraWikiMarkupConverter.new(description).convert
-    end
     # rubocop:enable Metrics/AbcSize
   end
 end
