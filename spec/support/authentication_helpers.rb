@@ -81,7 +81,9 @@ module AuthenticationHelpers
       page.driver.clear_cookies
     end
 
-    allow(RequestStore).to receive(:[]).with(:current_user).and_call_original
+    # The login_as method call short circuits the login by mocking the current user.
+    # Thus logging out should also reset the login mock in order to make the logout complete.
+    allow(RequestStore).to receive(:[]).and_call_original
   end
 
   private
