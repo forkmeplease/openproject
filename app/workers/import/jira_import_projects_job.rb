@@ -239,7 +239,7 @@ module Import
     def collect_custom_field_attributes(custom_field_list, jira_issue)
       custom_field_list.each_with_object({}) do |field, attrs|
         value = field[:values].select { |value| value[:issue_id] == jira_issue.id }
-        next if value&.nil?
+        next if value&.nil? || value&.empty?
 
         custom_field = field[:custom_field]
         attrs[custom_field.attribute_getter] = value.first[:value]
@@ -318,9 +318,12 @@ module Import
         end
       end
 
+      jira_fields_by_id = Import::JiraField
+                            .where(jira_id: @jira_id, jira_field_id: usage.keys)
+                            .index_by(&:jira_field_id)
       custom_field_list = []
       usage.each do |jira_field_id, value|
-        jira_field = Import::JiraField.find_by(jira_id: @jira_id, jira_field_id:)
+        jira_field = jira_fields_by_id[jira_field_id]
         custom_field, values = import_custom_field(jira_field, jira_project, value[:values])
         custom_field_list << { custom_field:, values: }
       end
