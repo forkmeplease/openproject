@@ -44,7 +44,8 @@ class MeetingAgendaItemsController < ApplicationController
                 :set_presentation_mode,
                 only: %i[new cancel_new edit cancel_edit create update destroy drop move move_to_section_dialog]
   before_action :check_recurring_meeting_param,
-                only: %i[move_to_next_meeting duplicate_in_next_meeting duplicate_in_next_meeting_dialog]
+                only: %i[move_to_next_meeting move_to_next_meeting_dialog duplicate_in_next_meeting
+                         duplicate_in_next_meeting_dialog]
   before_action :assign_drop_params, only: %i[drop]
 
   def new
@@ -220,10 +221,14 @@ class MeetingAgendaItemsController < ApplicationController
   end
 
   def move_to_next_meeting_dialog
+    next_occurrence = init_next_meeting_occurrence
+    return if next_occurrence.nil?
+
     respond_with_dialog MeetingAgendaItems::MoveToNextMeetingDialogComponent.new(
       agenda_item: @meeting_agenda_item,
       datetime: params[:datetime],
-      skipped: params[:skipped]
+      skipped: params[:skipped],
+      next_occurrence:
     )
   end
 
@@ -243,7 +248,10 @@ class MeetingAgendaItemsController < ApplicationController
     next_occurrence = init_next_meeting_occurrence
     return if next_occurrence.nil?
 
-    update_call = update_agenda_item(meeting_id: next_occurrence.id, meeting_section: nil)
+    update_call = update_agenda_item(
+      meeting_id: next_occurrence.id,
+      meeting_section_id: params.dig(:meeting_agenda_item, :meeting_section_id)
+    )
 
     if update_call.success?
       render_success_flash_message_via_turbo_stream(
