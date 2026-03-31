@@ -1,7 +1,7 @@
 ---
 sidebar_navigation:
   title: Project home page
-  priority: 900
+  priority: 700
 description: Learn how to configure a project overview page
 keywords: project overview page, project home page, project home, project overview, project dashboard, project life cycle, life cycle, lifecycle, project lifecycle, favorite, favourite, archive, project attribute
 ---

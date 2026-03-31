@@ -63,3 +63,18 @@ Afterwards, you could adjust the hierarchy of the child project (which you origi
 For portfolio management or custom reporting, you can use either the project list, or the global work package table. Both views can be used to create optimal reports via filtering, sorting and other configuration options.
 
 For more information on portfolio management options in OpenProject please refer to this [Use Case](../../../use-cases/resource-management).
+
+
+## When I set up the overview page for a project, work packages can be arranged as a Gantt chart. I would also need this for the subprojects. How does it work?
+
+If you have selected the "Work package table" widget on the under the *Dashboard* tab of the home page, you can open the *more (three dots)* menu at the top right corner of the widget and click **Configure view**. In the configuration, you can select subprojects under *Filter*. You can choose all subprojects, a single subproject, or several subprojects.  
+
+In the *Gantt chart* tab of the Work package table configuration, tick the box next to "Show Gantt chart". All work packages of the selected subprojects will then be displayed in a combined Gantt chart view.  
+
+If you want to see the individual Gantt charts of the subprojects separately, you need to add a Work package table widget for each subproject.
+
+## Can I change or re-arrange the widget on the project home page?
+
+The layout of widgets on the **Overview** tab of the project home page is pre-set and **cannot** be changed.  
+
+You **can**, however, add, edit, and re-arrange all widgets on the **Dashboard** tab of the project home page.
