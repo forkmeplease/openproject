@@ -37,10 +37,7 @@ class Workflows::Copies::FromRolesController < ApplicationController
 
   before_action :set_source_type
   before_action :set_source_role
-  before_action :set_all_roles
-  before_action :set_target_roles, only: %i[create]
-
-  def new; end
+  before_action :set_target_roles
 
   def create
     if @source_type.nil? || @source_role.nil?
@@ -72,10 +69,6 @@ class Workflows::Copies::FromRolesController < ApplicationController
 
   def set_source_role
     @source_role = eligible_roles.find_by(id: params[:source_role_id])
-  end
-
-  def set_all_roles
-    @all_roles = eligible_roles
   end
 
   def set_target_roles

@@ -36,10 +36,7 @@ class Workflows::Copies::FromTypesController < ApplicationController
   before_action :require_admin
 
   before_action :set_source_type
-  before_action :set_other_types
-  before_action :set_target_type, only: %i[create]
-
-  def new; end
+  before_action :set_target_type
 
   def create
     if @source_type.nil?
@@ -69,10 +66,6 @@ class Workflows::Copies::FromTypesController < ApplicationController
 
   def set_source_type
     @source_type = ::Type.find(params[:workflow_type_id])
-  end
-
-  def set_other_types
-    @other_types = ::Type.where.not(id: @source_type.id).order(:position)
   end
 
   def set_target_type

@@ -372,24 +372,6 @@ RSpec.describe "Workflow edit" do
     end
   end
 
-  it "allows navigating to Workflow copy-from-type page" do
-    within ".PageHeader-actions" do
-      click_on "Copy to another type"
-    end
-
-    expect(page).to have_heading "Copy workflow"
-    expect(page).to have_current_path(new_workflow_copy_from_type_path(type))
-  end
-
-  it "allows navigating to Workflow copy-from-role page" do
-    within ".PageHeader-actions" do
-      click_on "Copy to other roles"
-    end
-
-    expect(page).to have_heading "Copy workflow"
-    expect(page).to have_current_path(new_workflow_copy_from_role_path(type, source_role_id: role.id))
-  end
-
   context "with status dialog", :js do
     before do
       visit_workflow_edit(role:)
@@ -578,5 +560,13 @@ RSpec.describe "Workflow edit" do
       expect(page).to have_text("No status transitions configured")
       expect(page).to have_text("Add statuses to start configuring workflows for this role")
     end
+  end
+
+  it "allows navigating to any Copy page", :js do
+    within ".PageHeader-actions" do
+      click_on "Copy"
+    end
+
+    expect(page).to have_heading "Copy workflow"
   end
 end

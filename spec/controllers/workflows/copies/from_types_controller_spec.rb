@@ -53,36 +53,6 @@ RSpec.describe Workflows::Copies::FromTypesController do
 
   current_user { build_stubbed(:admin) }
 
-  describe "#new" do
-    let(:params) do
-      { workflow_type_id: source_type.id.to_s }
-    end
-
-    before do
-      get :new, params:
-    end
-
-    it "is a success" do
-      expect(response)
-        .to have_http_status(:ok)
-    end
-
-    it "renders the correct template" do
-      expect(response)
-        .to render_template :new
-    end
-
-    it "assigns the source_type" do
-      expect(assigns[:source_type])
-        .to eq source_type
-    end
-
-    it "assigns the source_role" do
-      expect(assigns[:other_types])
-        .to match_array(other_types)
-    end
-  end
-
   describe "#create" do
     let!(:target_type) do
       other_types.last.tap do |stub|

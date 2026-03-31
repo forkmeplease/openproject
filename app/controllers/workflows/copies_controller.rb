@@ -27,25 +27,40 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-#
-require "spec_helper"
 
-RSpec.describe Workflows::Copies::FromTypeForm, type: :forms do
-  include_context "with rendered form"
+class Workflows::CopiesController < ApplicationController
+  include OpTurbo::ComponentStream
 
-  let(:model) { false }
-  let(:params) { { source_type:, other_types: } }
-  let(:source_type) { create(:type) }
-  let(:other_types) { create_list(:type, 4) }
+  layout "admin"
 
-  it "renders the Target type select list" do
-    expect(page).to have_select "Target type", required: true do |select|
-      options_text = select.all("option").map(&:text)
-      expect(options_text).to match_array(other_types.map(&:name))
-    end
+  before_action :require_admin
+
+  before_action :set_source_type
+  before_action :set_source_role
+  before_action :set_other_types
+  before_action :set_all_roles
+
+  def new; end
+
+  private
+
+  def set_source_type
+    @source_type = ::Type.find(params[:workflow_type_id])
   end
 
-  it "renders submit button" do
-    expect(page).to have_button "Copy", class: "Button--primary"
+  def set_source_role
+    @source_role = eligible_roles.find_by(id: params[:source_role_id])
+  end
+
+  def set_other_types
+    @other_types = ::Type.where.not(id: @source_type.id).order(:position)
+  end
+
+  def set_all_roles
+    @all_roles = eligible_roles
+  end
+
+  def eligible_roles
+    @eligible_roles ||= Workflow.eligible_roles
   end
 end

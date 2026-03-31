@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Workflow copy from role" do
+RSpec.describe "Workflow copy from role", :js do
   let!(:type) { create(:type) }
   let!(:roles) { create_list(:project_role, 3) }
   let(:admin)  { create(:admin) }
@@ -39,45 +39,42 @@ RSpec.describe "Workflow copy from role" do
 
   current_user { admin }
 
-  before do
-    visit new_workflow_copy_from_role_path(type)
+  shared_examples "a copy-to-other-roles dialog" do |with_source_role:|
+    it "permits to select a source role and target source roles" do
+      unless with_source_role
+        choose "Copy to other roles"
+
+        expect(page).to have_select("Source role", text: roles.first.name)
+        select(roles.last.name, from: "Source role")
+      end
+
+      target_roles_autocompleter.select_option roles.first.name, roles.second.name
+      target_roles_autocompleter.close_autocompleter
+
+      click_button "Copy"
+
+      expect(page).to have_css(".flash-success", text: "Successful update.")
+    end
   end
 
-  it "permits to select a source role and target source roles", :js do
-    expect(page).to have_select("Source role", text: roles.first.name)
-    select(roles.last.name, from: "Source role")
+  describe "from the workflows index page" do
+    before do
+      visit workflows_path
+      within "li", text: type.name do
+        find("button[aria-haspopup=true]").click
+        click_link "Copy"
+      end
+    end
 
-    target_roles_autocompleter.select_option roles.first.name, roles.second.name
-    target_roles_autocompleter.close_autocompleter
-
-    click_button "Copy"
-
-    expect(page).to have_css(".flash-success", text: "Successful update.")
+    it_behaves_like "a copy-to-other-roles dialog", with_source_role: false
   end
 
-  it "allows to go back to Workflow index page" do
-    visit workflows_path
-    within "li", text: type.name do
-      click_link "Copy to other roles"
+  describe "from the workflows edit page" do
+    before do
+      visit edit_workflow_path(type)
+      click_link "Copy"
     end
 
-    within ".Banner--warning" do
-      click_link "Cancel"
-    end
-
-    expect(page).to have_heading "Workflow"
-    expect(page).to have_current_path(workflows_path)
-  end
-
-  it "allows to go back to Workflow edit page" do
-    visit edit_workflow_path(type)
-    click_link "Copy to other roles"
-
-    within ".Banner--warning" do
-      click_link "Cancel"
-    end
-
-    expect(page).to have_heading type.name
-    expect(page).to have_current_path(edit_workflow_path(type))
+    it_behaves_like "a copy-to-other-roles dialog", with_source_role: true
   end
 end

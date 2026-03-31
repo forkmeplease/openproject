@@ -42,33 +42,19 @@ module Workflows::PageHeaders
       type.name
     end
 
-    def add_action_buttons(header) # rubocop:disable Metrics/AbcSize
+    def add_action_buttons(header)
       header.with_action_button(
         data: { controller: "async-dialog" },
         tag: :a,
         mobile_icon: :copy,
-        mobile_label: t(:label_copy_workflow_from_type),
+        mobile_label: t(:button_copy),
         size: :medium,
-        href: new_workflow_copy_from_type_path(type),
-        aria: { label: helpers.t(:label_copy_workflow_from_type) },
-        title: helpers.t(:label_copy_workflow_from_type)
+        href: new_workflow_copy_path(type, source_role_id: role&.id),
+        aria: { label: helpers.t(:button_copy) },
+        title: helpers.t(:button_copy)
       ) do |button|
         button.with_leading_visual_icon(icon: :copy)
-        t(:label_copy_workflow_from_type)
-      end
-
-      header.with_action_button(
-        data: { controller: "async-dialog" },
-        tag: :a,
-        mobile_icon: :copy,
-        mobile_label: t(:label_copy_workflow_from_role),
-        size: :medium,
-        href: new_workflow_copy_from_role_path(type, source_role_id: role&.id),
-        aria: { label: helpers.t(:label_copy_workflow_from_role) },
-        title: helpers.t(:label_copy_workflow_from_role)
-      ) do |button|
-        button.with_leading_visual_icon(icon: :copy)
-        t(:label_copy_workflow_from_role)
+        t(:button_copy)
       end
     end
 

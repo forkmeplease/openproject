@@ -804,9 +804,11 @@ Rails.application.routes.draw do
   end
 
   resources :workflows, only: %i[index edit update], param: :type_id do
-    resource :copy, only: %i[], module: "workflows/copies" do
-      resource :from_type, only: %i[new create]
-      resource :from_role, only: %i[new create]
+    resource :copy, only: %i[new], module: :workflows do
+      scope module: :copies do
+        resource :from_type, only: %i[create]
+        resource :from_role, only: %i[create]
+      end
     end
     collection do
       get :status_dialog

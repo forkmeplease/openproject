@@ -30,48 +30,46 @@
 
 require "spec_helper"
 
-RSpec.describe "Workflow copy from type" do
-  let(:types) { create_list(:type, 3) }
-  let(:type) { types.first }
+RSpec.describe "Workflow copy from type", :js do
+  let!(:types) { create_list(:type, 3) }
+  let!(:type) { types.first }
   let(:admin)  { create(:admin) }
 
   current_user { admin }
 
-  before do
-    visit new_workflow_copy_from_type_path(type)
+  shared_examples "a copy-to-another-type dialog" do |with_source_role:|
+    it "permits to select a target type" do
+      if with_source_role
+        choose "Copy to another type"
+      end
+
+      expect(page).to have_select("Target type", text: types.second.name)
+      select(types.last.name, from: "Target type")
+
+      click_button "Copy"
+
+      expect(page).to have_css(".flash-success", text: "Successful update.")
+    end
   end
 
-  it "permits to select another type", :js do
-    expect(page).to have_select("Target type", text: types.second.name)
-    select(types.last.name, from: "Target type")
-    click_button "Copy"
+  describe "from the workflows index page" do
+    before do
+      visit workflows_path
+      within "li", text: type.name do
+        find("button[aria-haspopup=true]").click
+        click_link "Copy"
+      end
+    end
 
-    expect(page).to have_css(".flash-success", text: "Successful update.")
+    it_behaves_like "a copy-to-another-type dialog", with_source_role: false
   end
 
-  it "allows to go back to Workflow index page" do
-    visit workflows_path
-    within "li", text: type.name do
-      click_link "Copy to another type"
+  describe "from the workflows edit page" do
+    before do
+      visit edit_workflow_path(type)
+      click_link "Copy"
     end
 
-    within ".Banner--warning" do
-      click_link "Cancel"
-    end
-
-    expect(page).to have_heading "Workflow"
-    expect(page).to have_current_path(workflows_path)
-  end
-
-  it "allows to go back to Workflow edit page" do
-    visit edit_workflow_path(type)
-    click_link "Copy to another type"
-
-    within ".Banner--warning" do
-      click_link "Cancel"
-    end
-
-    expect(page).to have_heading type.name
-    expect(page).to have_current_path(edit_workflow_path(type))
+    it_behaves_like "a copy-to-another-type dialog", with_source_role: true
   end
 end

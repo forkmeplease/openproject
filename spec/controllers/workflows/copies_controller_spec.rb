@@ -30,13 +30,24 @@
 
 require "spec_helper"
 
-RSpec.describe Workflows::Copies::FromRolesController do
+RSpec.describe Workflows::CopiesController do
   let!(:source_type) do
     build_stubbed(:type) do |stub|
       allow(Type)
         .to receive(:find)
               .with(stub.id.to_s)
               .and_return(stub)
+    end
+  end
+
+  let!(:other_types) do
+    build_stubbed_list(:type, 2).tap do |stubs|
+      where_double = instance_double(ActiveRecord::QueryMethods::WhereChain)
+      not_double = instance_double(ActiveRecord::Relation)
+
+      allow(Type).to receive(:where).and_return(where_double)
+      allow(where_double).to receive(:not).and_return(not_double)
+      allow(not_double).to receive(:order).and_return(stubs)
     end
   end
 
@@ -53,44 +64,60 @@ RSpec.describe Workflows::Copies::FromRolesController do
     build_stubbed_list(:project_role, 2)
   end
 
+  let!(:source_role) { nil }
+
   before do
     allow(eligible_roles).to receive(:find_by).and_return(source_role)
   end
 
   current_user { build_stubbed(:admin) }
 
-  describe "#create" do
-    let!(:source_role) { all_roles.sample }
-    let!(:target_roles) do
-      all_roles.tap do |stubs|
-        allow(eligible_roles)
-          .to receive(:find_by).with(id: target_role_ids)
-            .and_return(stubs)
-      end
+  describe "#new" do
+    let(:params) do
+      { workflow_type_id: source_type.id.to_s, source_role_id: source_role&.id }
     end
-    let!(:target_role_ids) { all_roles.map { |role| role.id.to_s } }
 
     before do
-      allow(Workflow).to receive(:copy)
-
-      post :create, params: {
-        workflow_type_id: source_type.id.to_s,
-        source_role_id: source_role.id.to_s,
-        target_role_ids: target_role_ids
-      }, format: :turbo_stream
+      get :new, params:, format: :turbo_stream
     end
 
-    it "calls the Workflow.copy method with every target role" do
-      expect(Workflow)
-        .to have_received(:copy).exactly(1).times
-      expect(Workflow)
-        .to have_received(:copy)
-              .with(source_type, source_role, [source_type], target_roles)
+    it "is a success" do
+      expect(response)
+        .to have_http_status(:ok)
     end
 
-    it "redirects with a flash notice" do
-      expect(response).to redirect_to(edit_workflow_path(source_type))
-      expect(flash[:notice]).to eq("Successful update.")
+    it "renders the correct template" do
+      expect(response)
+        .to render_template :new
+    end
+
+    it "assigns the source type" do
+      expect(assigns[:source_type])
+        .to eq source_type
+    end
+
+    it "assigns the other types" do
+      expect(assigns[:other_types])
+      .to match_array(other_types)
+    end
+
+    it "does not assign any source role" do
+      expect(assigns[:source_role])
+        .to be_nil
+    end
+
+    it "assigns the eligible roles" do
+      expect(assigns[:all_roles])
+        .to match_array(all_roles)
+    end
+
+    describe "when the source role is specified" do
+      let!(:source_role) { all_roles.sample }
+
+      it "assigns the source role" do
+        expect(assigns[:source_role])
+          .to eq source_role
+      end
     end
   end
 end

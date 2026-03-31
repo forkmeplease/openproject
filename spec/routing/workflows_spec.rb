@@ -36,16 +36,14 @@ RSpec.describe "workflows routes" do
   it { expect(get("/workflows/42/edit")).to route_to("workflows#edit", type_id: "42") }
   it { expect(patch("/workflows/42")).to route_to("workflows#update", type_id: "42") }
 
-  it { expect(get("/workflows/42/copy/from_type/new")).to route_to("workflows/copies/from_types#new", workflow_type_id: "42") }
-  it { expect(post("/workflows/42/copy/from_type")).to route_to("workflows/copies/from_types#create", workflow_type_id: "42") }
-
-  it { expect(get("/workflows/42/copy/from_role/new")).to route_to("workflows/copies/from_roles#new", workflow_type_id: "42") }
+  it { expect(get("/workflows/42/copy/new")).to route_to("workflows/copies#new", workflow_type_id: "42") }
 
   it do
-    expect(get("/workflows/42/copy/from_role/new?source_role_id=23"))
-      .to route_to("workflows/copies/from_roles#new", workflow_type_id: "42", source_role_id: "23")
+    expect(get("/workflows/42/copy/new?source_role_id=23"))
+    .to route_to("workflows/copies#new", workflow_type_id: "42", source_role_id: "23")
   end
 
+  it { expect(post("/workflows/42/copy/from_type")).to route_to("workflows/copies/from_types#create", workflow_type_id: "42") }
   it { expect(post("/workflows/42/copy/from_role")).to route_to("workflows/copies/from_roles#create", workflow_type_id: "42") }
 
   it { expect(get("/workflows/summary")).to route_to("workflows/summaries#show") }

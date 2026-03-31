@@ -1393,19 +1393,22 @@ en:
 
   workflows:
     copies:
-      from_role_form:
-        source_role: "Source role"
-        target_roles: "Target roles"
-      from_roles:
-        new:
-          title: "Copy workflow of \"%{source_type}\" between roles"
-          warning: "This action will replace existing workflows of the selected target roles."
-      from_type_form:
-        target_type: "Target type"
-      from_types:
-        new:
-          title: "Copy workflow from \"%{source_type}\" to another type"
-          warning: "This action will replace existing workflows of all the roles of the selected target type."
+      form:
+        source_role_id:
+          label: "Source role"
+        target_role_ids:
+          label: "Target roles"
+        target_type_id:
+          label: "Target type"
+        mode:
+          from_role:
+            label: "Copy to other roles"
+            caption: "Copy the current workflow to one or more roles inside the same work package type. If the selected role has already a workflow the current one will be overwritten."
+          from_type:
+            label: "Copy to another type"
+            caption: "Copy the current workflow to another work packages type. If the selected type has already a workflow the current one will be overwritten."
+      new:
+        title: "Copy workflow of \"%{source_type}\""
     form:
       matrix_caption: "Workflow matrix"
       matrix_caption_assignee: "Workflow matrix for assignee"
