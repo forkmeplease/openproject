@@ -30,8 +30,6 @@
 
 import { User } from '@blocknote/core/comments';
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { Application } from '@hotwired/stimulus';
-import FlashController from 'core-stimulus/controllers/flash.controller';
 import { LiveCollaborationManager } from 'core-stimulus/helpers/live-collaboration-helpers';
 import { ShadowDomWrapper } from 'op-blocknote-extensions';
 import React from 'react';
@@ -40,11 +38,9 @@ import { createRoot } from 'react-dom/client';
 import OpBlockNoteContainer from '../react/OpBlockNoteContainer';
 
 class BlockNoteElement extends HTMLElement {
-  private stimulusRoot:HTMLDivElement;
+  private editorRoot:HTMLDivElement;
   private editorMount:HTMLDivElement;
-  private errorContainer:HTMLDivElement;
   private reactRoot:Root|null = null;
-  private stimulusApp:Application|null = null;
   private renderCallback:((provider:HocuspocusProvider) => void) | null = null;
 
   constructor() {
@@ -52,30 +48,22 @@ class BlockNoteElement extends HTMLElement {
 
     const shadowRoot = this.attachShadow({ mode: 'open' });
 
-    // Wrapper div as Stimulus root so both errorContainer and editorMount are in scope
-    this.stimulusRoot = document.createElement('div');
+    this.editorRoot = document.createElement('div');
     const browserSpecificClasses = this.getAttribute('browser-specific-classes')?.split(' ') ?? [];
     if (browserSpecificClasses.length > 0) {
-      this.stimulusRoot.classList.add(...browserSpecificClasses);
+      this.editorRoot.classList.add(...browserSpecificClasses);
     }
     // Clone the blank-target link description into the shadow DOM
     // so aria-describedby references resolve for links inside the editor
     const blankLinkDesc = document.getElementById('open-blank-target-link-description');
     if (blankLinkDesc) {
-      this.stimulusRoot.appendChild(blankLinkDesc.cloneNode(true));
+      this.editorRoot.appendChild(blankLinkDesc.cloneNode(true));
     }
-
-    // Container for connection error/recovery messages (rendered by React via fetchConnectionTemplate)
-    this.errorContainer = document.createElement('div');
-    this.errorContainer.id = 'documents-show-edit-view-connection-error-notice-component';
-    this.errorContainer.dataset.controller = 'flash';
-    this.errorContainer.dataset.flashAutohideValue = 'true';
 
     this.editorMount = document.createElement('div');
 
-    this.stimulusRoot.appendChild(this.errorContainer);
-    this.stimulusRoot.appendChild(this.editorMount);
-    shadowRoot.appendChild(this.stimulusRoot);
+    this.editorRoot.appendChild(this.editorMount);
+    shadowRoot.appendChild(this.editorRoot);
 
     const blockNoteStylesheetUrl = this.getAttribute('blocknote-stylesheet-url');
     if (blockNoteStylesheetUrl) {
@@ -98,11 +86,6 @@ class BlockNoteElement extends HTMLElement {
     const collaborationEnabled = this.getAttribute('collaboration-enabled') === 'true';
     if (!collaborationEnabled) return;
 
-    // Initialize Stimulus application within shadow DOM
-    this.stimulusApp = Application.start(this.stimulusRoot);
-    this.stimulusApp.register('flash', FlashController);
-
-    // Initialize React application within shadow DOM
     this.reactRoot = createRoot(this.editorMount);
 
     this.renderCallback = (provider:HocuspocusProvider) => {
@@ -125,11 +108,6 @@ class BlockNoteElement extends HTMLElement {
       this.reactRoot.unmount();
       this.reactRoot = null;
     }
-
-    if (this.stimulusApp) {
-      this.stimulusApp.stop();
-      this.stimulusApp = null;
-    }
   }
 
   private BlockNoteReactContainer = (hocuspocusProvider:HocuspocusProvider) => {
@@ -145,7 +123,6 @@ class BlockNoteElement extends HTMLElement {
           attachmentsUploadUrl: this.getAttribute('attachments-upload-url') ?? '',
           attachmentsCollectionKey: this.getAttribute('attachments-collection-key') ?? '',
           hocuspocusProvider,
-          errorContainer: this.errorContainer,
         }
       )
     );
