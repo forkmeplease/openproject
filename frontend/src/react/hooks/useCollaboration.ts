@@ -131,24 +131,40 @@ function useProviderAuthError(onAuthError:() => void) {
  * Transitions:
  *   mount → synced              : isLoading false, offlineMode false
  *   mount → timeout (5s)        : isLoading false, offlineMode true
- *   connected → disconnect      : offlineMode true
+ *   connected → disconnect      : offlineMode true  (after 5s grace period)
  *   offline → re-synced         : offlineMode false
  *   any → auth error            : isLoading false, offlineMode true
  */
 function useCollaboration(provider:HocuspocusProvider) {
   const [isLoading, setIsLoading] = useState(true);
   const [offlineMode, setOfflineMode] = useState(false);
+  const disconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearDisconnectTimer = useCallback(() => {
+    if (disconnectTimerRef.current !== null) {
+      clearTimeout(disconnectTimerRef.current);
+      disconnectTimerRef.current = null;
+    }
+  }, []);
 
   const handleSynced = useCallback(() => {
     debugLog('(BlockNote Editor) synced with collaboration server');
+    clearDisconnectTimer();
     setIsLoading(false);
     setOfflineMode(false);
-  }, []);
+  }, [clearDisconnectTimer]);
 
   const handleDisconnect = useCallback(() => {
-    debugLog('(BlockNote Editor) Disconnected - offline mode');
+    debugLog('(BlockNote Editor) Disconnected — starting grace period');
     setIsLoading(false);
-    setOfflineMode(true);
+    // Don't go offline immediately. Start a grace timer so that transient
+    // reconnections (idle heartbeat, token-expiry reconnect) never surface
+    // to the user. If synced fires within the window the timer is cancelled.
+    disconnectTimerRef.current ??= setTimeout(() => {
+      disconnectTimerRef.current = null;
+      debugLog('(BlockNote Editor) Grace period expired — offline mode');
+      setOfflineMode(true);
+    }, 5_000);
   }, []);
 
   const handleTimeout = useCallback(() => {
@@ -158,9 +174,14 @@ function useCollaboration(provider:HocuspocusProvider) {
   }, []);
 
   const handleAuthError = useCallback(() => {
+    // Auth errors are permanent — bypass the grace period.
+    clearDisconnectTimer();
     setOfflineMode(true);
     setIsLoading(false);
-  }, []);
+  }, [clearDisconnectTimer]);
+
+  // Clean up the grace timer on unmount and when the provider changes.
+  useEffect(() => clearDisconnectTimer, [provider, clearDisconnectTimer]);
 
   useConnectionTimeout(provider, handleTimeout);
   useCollaborationProvider(provider, handleSynced, handleDisconnect);
