@@ -39,8 +39,8 @@ class My::BacklogsForm < ApplicationForm
                 value: DEFAULT_FOLD_STATE,
                 unchecked_value: DEFAULT_EXPAND_STATE,
                 checked: default_fold_state_checked?,
-                label: I18n.t("backlogs.label_versions_default_fold_state"),
-                caption: I18n.t("backlogs.caption_versions_default_fold_state")
+                label: I18n.t("backlogs.label_sprints_default_fold_state"),
+                caption: I18n.t("backlogs.caption_sprints_default_fold_state")
 
     f.submit(name: :submit, label: I18n.t("backlogs.user_preference.button_update_backlogs"), scheme: :default)
   end

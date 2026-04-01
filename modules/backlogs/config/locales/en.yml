@@ -103,8 +103,8 @@ en:
     sharing_description: "This project can either share its own sprints, receive shared sprints or handle sprints independently (no sharing)."
     sharing: "Sharing"
     impediment: "Impediment"
-    label_versions_default_fold_state: "Show versions folded"
-    caption_versions_default_fold_state: "Versions will not be expanded by default when viewing backlogs. Each one has to be manually expanded."
+    label_sprints_default_fold_state: "Show sprints folded"
+    caption_sprints_default_fold_state: "Sprints will not be expanded by default when viewing the 'Backlog and sprints' page. Each one has to be manually expanded."
     work_package_is_closed: "Work package is done, when"
     label_is_done_status: "Status %{status_name} means done"
     points_label:
