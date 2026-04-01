@@ -78,6 +78,29 @@ module Backlogs
       sprint.in_planning? && (!sprint.date_range_set? || project_has_another_active_sprint?)
     end
 
+    def start_sprint_button_arguments
+      args = {
+        id: dom_target(sprint, :start_button),
+        scheme: :invisible
+      }
+
+      if disable_start_sprint_action?
+        args.merge(tag: :button, inactive: true, aria: { disabled: true })
+      else
+        args.merge(tag: :a, href: start_project_sprint_path(project, sprint), data: { turbo_method: :post })
+      end
+    end
+
+    def finish_sprint_button_arguments
+      {
+        id: dom_target(sprint, :finish_button),
+        scheme: :invisible,
+        tag: :a,
+        href: finish_project_sprint_path(project, sprint),
+        data: { turbo_method: :post }
+      }
+    end
+
     def story_points
       @story_points ||= stories.sum { |story| story.story_points || 0 }
     end

@@ -183,7 +183,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
         it "shows Start disabled with a reason" do
           render_component(active_sprint_ids: [active_sprint.id])
 
-          expect(page).to have_selector(:link_or_button, "Start", disabled: true)
+          expect(page).to have_selector(:link_or_button, "Start", aria: { disabled: true })
           expect(page).to have_text("Another sprint is already active.")
         end
       end
@@ -194,7 +194,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
         it "shows Start disabled with a missing dates reason" do
           render_component
 
-          expect(page).to have_selector(:link_or_button, "Start", disabled: true)
+          expect(page).to have_selector(:link_or_button, "Start", aria: { disabled: true })
           expect(page).to have_text("Start and finish dates are required in order to start the sprint.")
         end
       end
@@ -205,7 +205,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
         it "shows Start disabled with a missing dates reason" do
           render_component
 
-          expect(page).to have_selector(:link_or_button, "Start", disabled: true)
+          expect(page).to have_selector(:link_or_button, "Start", aria: { disabled: true })
           expect(page).to have_text("Start and finish dates are required in order to start the sprint.")
         end
       end

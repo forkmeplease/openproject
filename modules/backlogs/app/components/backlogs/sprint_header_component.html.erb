@@ -77,16 +77,7 @@ See COPYRIGHT and LICENSE files for more details.
     <% grid.with_area(:actions) do %>
       <%=
         if show_start_sprint_action?
-          render(
-            Primer::Beta::Button.new(
-              id: dom_target(sprint, :start_button),
-              scheme: :invisible,
-              tag: :a,
-              href: start_project_sprint_path(project, sprint),
-              disabled: disable_start_sprint_action?,
-              data: { turbo_method: :post }
-            )
-          ) do |button|
+          render(Primer::Beta::Button.new(**start_sprint_button_arguments)) do |button|
             button.with_leading_visual_icon(icon: :play)
             if start_sprint_disabled_reason.present?
               button.with_tooltip(text: start_sprint_disabled_reason, type: :description, direction: :sw)
@@ -95,15 +86,7 @@ See COPYRIGHT and LICENSE files for more details.
             t(".label_start_sprint")
           end
         elsif show_finish_sprint_action?
-          render(
-            Primer::Beta::Button.new(
-              id: dom_target(sprint, :finish_button),
-              scheme: :invisible,
-              tag: :a,
-              href: finish_project_sprint_path(project, sprint),
-              data: { turbo_method: :post }
-            )
-          ) do |button|
+          render(Primer::Beta::Button.new(**finish_sprint_button_arguments)) do |button|
             button.with_leading_visual_icon(icon: :check)
 
             t(".label_finish_sprint")
