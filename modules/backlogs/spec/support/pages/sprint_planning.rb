@@ -124,7 +124,9 @@ module Pages
                          find(sprint_selector(into))
                        end
 
-      moved_element.native.drag_to(target_element.native, delay: 0.1)
+      wait_for_turbo_stream do
+        moved_element.native.drag_to(target_element.native, delay: 0.1)
+      end
     rescue Capybara::Cuprite::ObsoleteNode
       retry
     end
