@@ -30,14 +30,31 @@
 
 module Import
   class JiraCustomFieldBuilder
-    JIRA_TO_OP_FIELD_FORMAT = {
+    # Maps the Jira schema `custom` field suffix (part after the last `:`) to an OP field format.
+    # Takes precedence over the type-based mapping below.
+    JIRA_CUSTOM_SUFFIX_TO_OP_FORMAT = {
+      "textarea" => "text",
+      "url" => "link",
+      "userpicker" => "user",
+      "multiuserpicker" => "user"
+    }.freeze
+
+    # Maps the Jira schema `type` field to an OP field format (fallback when no custom suffix match).
+    JIRA_TYPE_TO_OP_FORMAT = {
       "string" => "string",
       "text" => "text",
       "number" => "float",
       "date" => "date",
-      "datetime" => "date", # TODO loss of precision
+      "datetime" => "date", # TODO: loss of precision
       "option" => "list",
+      "user" => "user",
       "any" => "string"
+    }.freeze
+
+    # Maps the Jira schema `items` field (for array types) to an OP field format.
+    JIRA_ARRAY_ITEMS_TO_OP_FORMAT = {
+      "option" => "list",
+      "user" => "user"
     }.freeze
 
     attr_reader :jira_project, :jira_field, :values
@@ -67,12 +84,14 @@ module Import
         params[:multi_value] = jira_field_multi_value?
         options = collect_list_options(values)
         params[:possible_values] = options unless options.empty?
+      elsif format == "user"
+        params[:multi_value] = jira_field_multi_value?
       end
       params
     end
 
     def convert_values(_custom_field)
-      @values # TODO convert Jira custom field values to OP custom field values
+      @values # TODO: convert Jira custom field values to OP custom field values, if needed
     end
 
     def custom_field_post_processing(custom_field)
@@ -83,7 +102,7 @@ module Import
 
     def jira_field_multi_value?
       schema = jira_field.payload["schema"] || {}
-      schema["type"] == "array" && schema["items"] == "option"
+      schema["type"] == "array" && JIRA_ARRAY_ITEMS_TO_OP_FORMAT.key?(schema["items"])
     end
 
     def custom_field_by_name(name)
@@ -107,15 +126,14 @@ module Import
     def jira_to_op_field_format(jira_field)
       schema = jira_field.payload["schema"] || {}
       type = schema["type"]
-      items = schema["items"]
-      custom = schema["custom"].to_s
+      custom_suffix = schema["custom"].to_s.split(":").last
 
       if type == "array"
-        items == "option" ? "list" : "string"
-      elsif type == "option" && custom.include?("cascadingselect")
+        JIRA_ARRAY_ITEMS_TO_OP_FORMAT.fetch(schema["items"], "string")
+      elsif type == "option" && custom_suffix == "cascadingselect"
         EnterpriseToken.allows_to?(:custom_field_hierarchies) ? "hierarchy" : "string"
       else
-        JIRA_TO_OP_FIELD_FORMAT.fetch(type, "string")
+        JIRA_CUSTOM_SUFFIX_TO_OP_FORMAT[custom_suffix] || JIRA_TYPE_TO_OP_FORMAT.fetch(type, "string")
       end
     end
 
