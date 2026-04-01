@@ -27,13 +27,15 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+#
 
 module Documents
   module ShowEditView
-    class ConnectionErrorNoticeComponent < ApplicationComponent
-      include OpTurbo::Streamable
-
-      alias_method :document, :model
+    module PageHeader
+      class ConnectionStatusComponent < ApplicationComponent
+        include OpPrimer::ComponentHelpers
+        include OpTurbo::Streamable
+      end
     end
   end
 end
