@@ -1,4 +1,6 @@
-#-- copyright
+# frozen_string_literal: true
+
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -24,30 +26,35 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class Stories::UpdateService
-  attr_accessor :user, :story
+require "spec_helper"
+require_relative "../../support/pages/sprint_planning"
 
-  def initialize(user:, story:)
-    self.user = user
-    self.story = story
+RSpec.describe "Show burndown chart", :js, with_flag: { scrum_projects: true } do
+  include Redmine::I18n
+
+  shared_let(:project) { create(:project, enabled_module_names: %w(backlogs)) }
+  shared_let(:sprint) { create(:agile_sprint, status: "active", project:, start_date: 1.week.ago, finish_date: 1.week.from_now) }
+
+  let(:planning_page) { Pages::SprintPlanning.new(project) }
+  let(:role) do
+    create(:project_role,
+           permissions: %i[view_work_packages view_sprints])
   end
 
-  def call(attributes: {}, position: nil, prev_id: nil)
-    create_call = WorkPackages::UpdateService
-                  .new(user:,
-                       model: story)
-                  .call(**attributes.to_h.symbolize_keys)
+  current_user { create(:user, member_with_roles: { project => role }) }
 
-    if create_call.success?
-      if prev_id
-        create_call.result.move_after(prev_id: prev_id.to_i)
-      elsif position
-        create_call.result.move_after(position:)
-      end
-    end
+  it "lists burndown in the menu by which the user can navigate to the burndown chart" do
+    planning_page.visit!
 
-    create_call
+    planning_page.click_in_sprint_menu(sprint, "Burndown chart")
+
+    expect(page)
+      .to have_content(sprint.name)
+    expect(page)
+      .to have_content "#{format_date(sprint.start_date)} – #{format_date(sprint.finish_date)}"
+    expect(page)
+      .to have_css "opce-burndown-chart"
   end
 end
