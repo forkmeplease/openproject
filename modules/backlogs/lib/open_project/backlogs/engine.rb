@@ -180,7 +180,7 @@ module OpenProject::Backlogs
         {
           "backlogs_task_color" => {
             "type" => "string",
-            "pattern" => "^#[0-9a-fA-F]{6}$"
+            "pattern" => "^(#[0-9a-fA-F]{6})|(.{0})$"
           },
           "backlogs_versions_default_fold_state" => {
             "type" => "string",
