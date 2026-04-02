@@ -99,6 +99,7 @@ en:
 
   backlogs:
     any: "any"
+    caption_sprints_default_fold_state: "Sprints will not be expanded by default when viewing the 'Backlog and sprints' page. Each one has to be manually expanded."
     column_width: "Column width"
     definition_of_done: "Definition of Done"
     definition_of_done_caption: "Work packages with these statuses are treated as completed in backlog views and reporting."
@@ -106,7 +107,9 @@ en:
     sharing_description: "This project can either share its own sprints, receive shared sprints or handle sprints independently (no sharing)."
     sharing: "Sharing"
     impediment: "Impediment"
-    caption_sprints_default_fold_state: "Sprints will not be expanded by default when viewing the 'Backlog and sprints' page. Each one has to be manually expanded."
+    label_versions_default_fold_state: "Show versions folded"
+    label_burndown_chart: "Burndown chart"
+    label_sprint_board: "Sprint board"
     work_package_is_closed: "Work package is done, when"
     label_is_done_status: "Status %{status_name} means done"
     points_label:
@@ -117,7 +120,7 @@ en:
     rebuild: "Rebuild"
     rebuild_positions: "Rebuild positions"
     remaining_hours: "Remaining work"
-    show_burndown_chart: "Burndown Chart"
+    show_burndown_chart: "Burndown chart"
     story: "Story"
     story_points:
       one: "%{count} story point"
@@ -197,7 +200,6 @@ en:
         new_story: "New story"
         stories_tasks: "Stories/Tasks"
         task_board: "Task board"
-        burndown_chart: "Burndown chart"
         wiki: "Wiki"
         properties: "Properties"
 
@@ -221,7 +223,6 @@ en:
         start_sprint_missing_dates_description: "Start and finish dates are required in order to start the sprint."
         edit_sprint: "Edit sprint"
         add_work_package: "Add work package"
-        task_board: "Sprint board"
 
     story_component:
       label_drag_story: "Move %{name}"
@@ -261,8 +262,10 @@ en:
   label_backlogs: "Backlogs"
   label_backlogs_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
   label_blocks_ids: "IDs of blocked work packages"
+  label_burndown_chart: "Burndown chart"
   label_column_in_backlog: "Column in backlog"
   label_used_as_backlog: "Used as backlog"
+  label_sprint_board: "Sprint board"
   label_points_burn_down: "Down"
   label_points_burn_up: "Up"
   label_sprint_edit: "Edit sprint"
