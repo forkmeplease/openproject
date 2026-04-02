@@ -101,7 +101,7 @@ module Import
         taken_identifier = error.options[:value]
         project = Project.find_by!(identifier: taken_identifier)
         raise "You are trying to import a project with already used " \
-                "identifier: #{taken_identifier}. Existing project: #{project}."
+              "identifier: #{taken_identifier}. Existing project: #{project}."
       end
       raise service_call.message
     end
