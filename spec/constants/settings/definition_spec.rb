@@ -1100,7 +1100,7 @@ RSpec.describe Settings::Definition, :settings_reset do
     context "when the override block returns a callable" do
       before do
         described_class.add_value_override(:bogus_override_test) do
-          -> { nil }
+          -> {}
         end
       end
 
