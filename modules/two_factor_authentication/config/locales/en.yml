@@ -92,7 +92,6 @@ en:
       none_found: No backup codes exist for this account.
       singular: Backup code
       plural: Backup codes
-      your_codes: for your %{app_name} account %{login}
       overview_description: |
         If you are unable to access your two factor devices, you can use a backup code to regain access to your account.
         Use the following button to generate a new set of backup codes.
