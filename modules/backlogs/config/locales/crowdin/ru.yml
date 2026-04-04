@@ -194,7 +194,7 @@ ru:
         move_to_bottom_of_backlog: "Переместите их в нижнюю часть бэклога"
         move_to_sprint: "Переместите их в другой спринт"
       select_sprint_label: "Выберите спринт"
-      button_close_sprint: "Закрыть спринт"
+      button_complete_sprint: "Complete sprint"
     sprint_menu_component:
       label_actions: "Действия в спринте"
       action_menu:

@@ -194,7 +194,7 @@ cs:
         move_to_bottom_of_backlog: "Přesunout je dospod backlogu"
         move_to_sprint: "Přesunout je do jiného sprintu"
       select_sprint_label: "Vyberte sprint"
-      button_close_sprint: "Zavřít sprint"
+      button_complete_sprint: "Complete sprint"
     sprint_menu_component:
       label_actions: "Akce sprintu"
       action_menu:
