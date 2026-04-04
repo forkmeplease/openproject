@@ -170,7 +170,7 @@ en:
         title: "Import run"
         history: "History"
         remove_error: "A Jira import run cannot be removed while it is running"
-        import_blocked_error: "Another Jira import run is currently in progress or awaiting review. Please complete or revert it before starting a new import."        
+        import_blocked_error: "Another Jira import run is currently in progress or awaiting review. Please complete or revert it before starting a new import."
         project_identifier_taken: "You are trying to import a project with an already used identifier: %{taken_identifier}. Please update the project identifier in Jira then click on Retry."
         blank:
           title: "No import runs set up yet"
@@ -3628,6 +3628,7 @@ en:
 
   label_accessibility: "Accessibility"
   label_account: "Account"
+  label_actions: "Actions"
   label_active: "Active"
   label_activate_user: "Activate user"
   label_active_in_new_projects: "Active in new projects"
