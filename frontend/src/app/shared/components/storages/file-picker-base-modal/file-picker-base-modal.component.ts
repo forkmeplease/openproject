@@ -122,10 +122,9 @@ export abstract class FilePickerBaseModalComponent extends OpModalComponent impl
           this.loading$.next('success');
           this.cdRef.detectChanges();
         },
-        error: (error) => {
+        error: () => {
           this.loading$.next('error');
           this.cdRef.detectChanges();
-          throw error;
         },
       });
   }
@@ -133,6 +132,7 @@ export abstract class FilePickerBaseModalComponent extends OpModalComponent impl
   ngOnDestroy():void {
     super.ngOnDestroy();
 
+    this.cancelCurrentLoading();
     this.storageFilesResourceService.reset();
   }
 
@@ -165,10 +165,9 @@ export abstract class FilePickerBaseModalComponent extends OpModalComponent impl
           this.loading$.next('success');
           this.cdRef.detectChanges();
         },
-        error: (error) => {
+        error: () => {
           this.loading$.next('error');
           this.cdRef.detectChanges();
-          throw error;
         },
       });
   }
