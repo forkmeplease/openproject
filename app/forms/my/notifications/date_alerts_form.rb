@@ -45,6 +45,7 @@ class My::Notifications::DateAlertsForm < ApplicationForm
         fg.check_box(
           name: :"#{field}_active",
           label: helpers.t("my_account.notifications.date_alerts.#{field}"),
+          id: "op-notification-type-#{field}-date-active--#{SecureRandom.uuid}}",
           data: {
             show_when_checked_target: "cause",
             target_name: field.to_s,
@@ -69,6 +70,7 @@ class My::Notifications::DateAlertsForm < ApplicationForm
       fg.check_box(
         name: :overdue_active,
         label: helpers.t("my_account.notifications.date_alerts.overdue"),
+        id: "op-notification-type-overdue-date-active--#{SecureRandom.uuid}}",
         data: {
           show_when_checked_target: "cause",
           target_name: "overdue",

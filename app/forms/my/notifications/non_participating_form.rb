@@ -40,7 +40,8 @@ class My::Notifications::NonParticipatingForm < ApplicationForm
         fg.check_box(
           name: setting,
           label: helpers.t("my_account.notifications.non_participating.#{setting}"),
-          data: { test_selector: "global-notification-type-#{setting}" }
+          data: { test_selector: "global-notification-type-#{setting}" },
+          id: "op-notification-type-#{setting}--#{SecureRandom.uuid}}"
         )
       end
 

@@ -40,28 +40,33 @@ class My::Notifications::ParticipatingForm < ApplicationForm
         name: :mentioned,
         label: helpers.t("my_account.notifications.participating.mentioned"),
         disabled: true,
-        data: { test_selector: "global-notification-type-mentioned" }
+        data: { test_selector: "global-notification-type-mentioned" },
+        id: "op-notification-mentioned--#{SecureRandom.uuid}}"
       )
       fg.check_box(
         name: :watched,
         label: helpers.t("my_account.notifications.participating.watched"),
         disabled: true,
-        data: { test_selector: "global-notification-type-watched" }
+        data: { test_selector: "global-notification-type-watched" },
+        id: "op-notification-watched--#{SecureRandom.uuid}}"
       )
       fg.check_box(
         name: :assignee,
         label: helpers.t("my_account.notifications.participating.assignee"),
-        data: { test_selector: "global-notification-type-assignee" }
+        data: { test_selector: "global-notification-type-assignee" },
+        id: "op-notification-assignee--#{SecureRandom.uuid}}"
       )
       fg.check_box(
         name: :responsible,
         label: helpers.t("my_account.notifications.participating.responsible"),
-        data: { test_selector: "global-notification-type-responsible" }
+        data: { test_selector: "global-notification-type-responsible" },
+        id: "op-notification-responsible--#{SecureRandom.uuid}}"
       )
       fg.check_box(
         name: :shared,
         label: helpers.t("my_account.notifications.participating.shared"),
-        data: { test_selector: "global-notification-type-shared" }
+        data: { test_selector: "global-notification-type-shared" },
+        id: "op-notification-shared--#{SecureRandom.uuid}}"
       )
 
       if @show_submit
