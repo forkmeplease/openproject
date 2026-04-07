@@ -806,6 +806,10 @@ Rails.application.routes.draw do
               only: %i[index show edit update],
               constraints: lambda { |_request| OpenProject::FeatureDecisions.departments_active? } do
       member do
+        get :new_user
+        post :add_user
+
+        # old routes for old group style management, might remove when new interface
         post "/members" => "departments#add_users", as: "members_of"
         delete "/members:user_id" => "departments#remove_user", as: "member_of"
         patch "/memberships:membership_id" => "departments#edit_membership", as: "membership_of"

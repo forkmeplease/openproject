@@ -30,52 +30,37 @@
 
 module Admin
   module Departments
-    class DetailComponent < ApplicationComponent
+    class UserRowComponent < ApplicationComponent
       include ApplicationHelper
-      include OpTurbo::Streamable
       include OpPrimer::ComponentHelpers
 
-      attr_reader :group, :ancestors, :child_groups
-
-      def initialize(group:, ancestors: [], child_groups: [])
-        super(nil)
-        @group = group
-        @ancestors = ancestors
-        @child_groups = child_groups
+      def initialize(user:)
+        super()
+        @user = user
       end
 
-      def users
-        @users ||= group&.users || []
-      end
-
-      def breadcrumb_items
-        items = []
-
-        if group
-          items << { label: organization_name, href: admin_departments_path }
-          ancestors.each do |ancestor|
-            items << { label: ancestor.name, href: admin_department_path(ancestor) }
+      def call
+        flex_layout(align_items: :center, justify_content: :space_between) do |row|
+          row.with_column do
+            render(Users::AvatarComponent.new(user: @user, size: "mini"))
           end
-          items << { label: group.name }
-        else
-          items << { label: organization_name }
+
+          row.with_column do
+            render(Primer::Alpha::ActionMenu.new) do |menu|
+              menu.with_show_button(
+                icon: "kebab-horizontal",
+                scheme: :invisible,
+                "aria-label": I18n.t(:label_actions)
+              )
+              menu.with_item(
+                label: I18n.t(:button_remove),
+                scheme: :danger,
+                tag: :a,
+                href: "#"
+              )
+            end
+          end
         end
-
-        items
-      end
-
-      def show_global_empty_state?
-        group.blank? && child_groups.empty?
-      end
-
-      def show_department_empty_state?
-        group.present? && child_groups.empty? && users.empty?
-      end
-
-      private
-
-      def organization_name
-        Setting.organization_name.presence || I18n.t("setting_organization_name")
       end
     end
   end

@@ -29,146 +29,51 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   component_wrapper do
-    flex_layout do |main|
-      main.with_row(mb: 3) do
-        render(Primer::Beta::BorderBox.new) do |box|
-          box.with_header do
-            flex_layout(align_items: :center, justify_content: :space_between) do |header|
-              header.with_column do
-                render(Primer::Beta::Breadcrumbs.new) do |loaf|
-                  breadcrumb_items.each do |item|
-                    loaf.with_item(href: item[:href] || "#", target: nil) { item[:label] }
-                  end
-                end
-              end
-
-              if group
-                header.with_column do
-                  render(
-                    Primer::Beta::IconButton.new(
-                      tag: :a,
-                      href: edit_admin_department_path(group),
-                      icon: :pencil,
-                      scheme: :invisible,
-                      "aria-label": I18n.t(:button_edit)
-                    )
-                  )
-                end
+    render(Primer::Beta::BorderBox.new) do |box|
+      box.with_header do
+        flex_layout(align_items: :center, justify_content: :space_between) do |header|
+          header.with_column do
+            render(Primer::Beta::Breadcrumbs.new) do |loaf|
+              breadcrumb_items.each do |item|
+                loaf.with_item(href: item[:href] || "#", target: nil) { item[:label] }
               end
             end
           end
 
-          if show_global_empty_state?
-            box.with_row do
-              render(Primer::Beta::Blankslate.new(border: false)) do |component|
-                component.with_visual_icon(icon: :people, size: :medium)
-                component.with_heading(tag: :h2) { t("departments.blankslate.heading") }
-                component.with_description { t("departments.blankslate.description") }
-                component.with_primary_action(href: "#", scheme: :primary) do |button|
-                  button.with_leading_visual_icon(icon: :plus)
-                  t("departments.blankslate.add_button")
-                end
-              end
-            end
-          elsif group.present? && child_groups.empty? && users.empty?
-            box.with_row do
-              render(Primer::Beta::Blankslate.new(border: false)) do |component|
-                component.with_visual_icon(icon: :people, size: :medium)
-                component.with_heading(tag: :h2) { t("departments.detail_blankslate.heading") }
-                component.with_description { t("departments.detail_blankslate.description") }
-                component.with_primary_action(href: "#", scheme: :primary) do |button|
-                  button.with_leading_visual_icon(icon: :plus)
-                  t("departments.detail_blankslate.add_button")
-                end
-              end
-            end
-          else
-            child_groups.each do |child|
-              box.with_row do
-                flex_layout(align_items: :center, justify_content: :space_between) do |row|
-                  row.with_column do
-                    render(
-                      Primer::Beta::Link.new(href: admin_department_path(child))
-                    ) { child.name }
-                  end
-
-                  row.with_column do
-                    render(Primer::Alpha::ActionMenu.new) do |menu|
-                      menu.with_show_button(
-                        icon: "kebab-horizontal",
-                        scheme: :invisible,
-                        "aria-label": I18n.t(:label_actions)
-                      )
-                      menu.with_item(
-                        label: I18n.t(:button_edit),
-                        tag: :a,
-                        href: edit_admin_department_path(child)
-                      )
-                    end
-                  end
-                end
-              end
+          if group
+            header.with_column do
+              render(
+                Primer::Beta::IconButton.new(
+                  tag: :a,
+                  href: edit_admin_department_path(group),
+                  icon: :pencil,
+                  scheme: :invisible,
+                  "aria-label": I18n.t(:button_edit)
+                )
+              )
             end
           end
         end
       end
 
-      if show_users?
-        main.with_row do
-          render(Primer::Beta::BorderBox.new) do |box|
-            box.with_header(tag: :details, open: true) do
-              flex_layout(align_items: :center, justify_content: :space_between) do |header|
-                header.with_column do
-                  render(Primer::BaseComponent.new(tag: :summary, display: :inline_flex, align_items: :center, cursor: :pointer)) do
-                    render(Primer::Beta::Text.new(font_weight: :bold)) { I18n.t(:label_user_plural) }
-                  end
-                end
+      if show_global_empty_state?
+        box.with_row do
+          render(Admin::Departments::BlankslateComponent.new)
+        end
+      elsif show_department_empty_state?
+        box.with_row do
+          render(Admin::Departments::DetailBlankslateComponent.new)
+        end
+      else
+        child_groups.each do |child|
+          box.with_row do
+            render(Admin::Departments::DepartmentRowComponent.new(department: child))
+          end
+        end
 
-                header.with_column do
-                  render(
-                    Primer::Beta::IconButton.new(
-                      tag: :a,
-                      href: "#",
-                      icon: :plus,
-                      scheme: :invisible,
-                      "aria-label": I18n.t(:button_add)
-                    )
-                  )
-                end
-              end
-            end
-
-            if users.any?
-              users.each do |user|
-                box.with_row(py: 2) do
-                  flex_layout(align_items: :center, justify_content: :space_between) do |row|
-                    row.with_column do
-                      render(Users::AvatarComponent.new(user:, size: "mini"))
-                    end
-
-                    row.with_column do
-                      render(Primer::Alpha::ActionMenu.new) do |menu|
-                        menu.with_show_button(
-                          icon: "kebab-horizontal",
-                          scheme: :invisible,
-                          "aria-label": I18n.t(:label_actions)
-                        )
-                        menu.with_item(
-                          label: I18n.t(:button_remove),
-                          scheme: :danger,
-                          tag: :a,
-                          href: "#"
-                        )
-                      end
-                    end
-                  end
-                end
-              end
-            else
-              box.with_row do
-                render(Primer::Beta::Text.new(color: :muted)) { I18n.t(:no_results_title_text) }
-              end
-            end
+        users.each do |user|
+          box.with_row do
+            render(Admin::Departments::UserRowComponent.new(user:))
           end
         end
       end

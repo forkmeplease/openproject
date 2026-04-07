@@ -46,6 +46,28 @@ module Admin
       @groups = Group.with_detail.organizational_units.visible.order(:lastname)
     end
 
+    def new_user
+      if @group.users.empty?
+        replace_via_turbo_stream(
+          component: Admin::Departments::AddUserComponent.new(group: @group),
+          target_component: # blank state
+        )
+      else
+        append_via_turbo_stream(
+          component: Admin::Departments::OrganizationNameFormComponent.new,
+          target_component: # list component
+        )
+      end
+
+      respond_with_turbo_streams
+    end
+
+    def add_user
+      # TODO: Implement
+    end
+
+    # old groups interface that we adapted for departments.
+
     def show
       @groups = Group.with_detail.organizational_units.visible.order(:lastname)
       render action: :index

@@ -30,52 +30,19 @@
 
 module Admin
   module Departments
-    class DetailComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpTurbo::Streamable
+    class DetailBlankslateComponent < ApplicationComponent
       include OpPrimer::ComponentHelpers
 
-      attr_reader :group, :ancestors, :child_groups
-
-      def initialize(group:, ancestors: [], child_groups: [])
-        super(nil)
-        @group = group
-        @ancestors = ancestors
-        @child_groups = child_groups
-      end
-
-      def users
-        @users ||= group&.users || []
-      end
-
-      def breadcrumb_items
-        items = []
-
-        if group
-          items << { label: organization_name, href: admin_departments_path }
-          ancestors.each do |ancestor|
-            items << { label: ancestor.name, href: admin_department_path(ancestor) }
+      def call
+        render(Primer::Beta::Blankslate.new(border: false)) do |component|
+          component.with_visual_icon(icon: :people, size: :medium)
+          component.with_heading(tag: :h2) { t("departments.detail_blankslate.heading") }
+          component.with_description { t("departments.detail_blankslate.description") }
+          component.with_primary_action(href: "#", scheme: :primary) do |button|
+            button.with_leading_visual_icon(icon: :plus)
+            t("departments.detail_blankslate.add_button")
           end
-          items << { label: group.name }
-        else
-          items << { label: organization_name }
         end
-
-        items
-      end
-
-      def show_global_empty_state?
-        group.blank? && child_groups.empty?
-      end
-
-      def show_department_empty_state?
-        group.present? && child_groups.empty? && users.empty?
-      end
-
-      private
-
-      def organization_name
-        Setting.organization_name.presence || I18n.t("setting_organization_name")
       end
     end
   end
