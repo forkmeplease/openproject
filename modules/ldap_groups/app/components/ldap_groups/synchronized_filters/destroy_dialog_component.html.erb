@@ -36,7 +36,7 @@ See COPYRIGHT and LICENSE files for more details.
     )
   ) do |dialog|
     dialog.with_confirmation_message do |message|
-      message.with_heading(tag: :h2) { I18n.t("ldap_groups.synchronized_filters.destroy.title", name: @filter.name) }
+      message.with_heading(tag: :h2) { I18n.t("ldap_groups.synchronized_filters.destroy.heading", name: @filter.name) }
       message.with_description_content(
         I18n.t(
           "ldap_groups.synchronized_filters.destroy.confirmation",
