@@ -37,18 +37,14 @@ es:
     error_invalid_backup_code: "Código de copia de seguridad 2FA no válido"
     channel_unavailable: "El canal de entrega %{channel} no está disponible."
     no_valid_phone_number: "No existe un número de teléfono válido."
-    label_pwd_confirmation: "Contraseña"
-    notice_pwd_confirmation: "Debe confirmar su contraseña al realizar cambios en estas configuraciones."
     label_device_type: "Tipo de dispositivo"
     label_default_device: "Dispositivo 2FA predeterminado"
     label_device: "Dispositivo 2FA"
     label_devices: "dispositivo 2FA"
-    label_one_time_password: "Contraseña de un solo uso"
     label_2fa_enabled: "Autenticación de dos factores está activa"
     label_2fa_disabled: "Autenticación de dos factores no está activa"
     text_otp_delivery_message_sms: "Su contraseña de un solo uso de %{app_title} es %{token}"
     text_otp_delivery_message_voice: "Su contraseña de un solo uso de %{app_title} es: %{pause} %{token}. %{pause} Repito: %{pause} %{token}"
-    text_enter_2fa: "Ingrese la contraseña de un solo uso desde su dispositivo."
     text_2fa_enabled: "Después de cada inicio de sesión, se le solicitará que ingrese un token OTP desde su dispositivo 2FA predeterminado."
     text_2fa_disabled: "Para habilitar la autenticación de dos factores, use el botón de arriba para registrar un nuevo dispositivo 2FA. Si ya tiene un dispositivo, debe hacerlo de manera predeterminada."
     login:
@@ -68,11 +64,9 @@ es:
       text_remember: |
         Establezca esto en mayor que cero para permitir a los usuarios recordar su autenticación 2FA para la cantidad de días dada.
         No se les pedirá que lo vuelvan a ingresar durante ese período. Solo se puede configurar cuando no se aplica por configuración.
-      error_invalid_settings: "Las estrategias 2FA que seleccionaste no son válidas"
       failed_to_save_settings: "Error al actualizar la configuración 2FA: %{message}"
     admin:
-      self_edit_path: "Para agregar o modificar sus propios dispositivos 2FA, vaya a %{self_edit_link}"
-      self_edit_link_name: "Autenticación de dos factores en su página de cuenta"
+      self_edit_path_html: "To add or modify your own 2FA devices, please go to the [Two-factor authentication on your account page](self_edit_link)"
       self_edit_forbidden: "No puede editar sus propios dispositivos 2FA en esta ruta. Vaya a Mi cuenta > Autenticación de dos factores en su lugar."
       no_devices_for_user: "No se ha registrado ningún dispositivo 2FA para este usuario."
       all_devices_deleted: "Todos los dispositivos 2FA de este usuario han sido eliminados"
@@ -82,14 +76,9 @@ es:
       text_2fa_enabled: "Después de cada inicio de sesión, se le pedirá a este usuario que ingrese un token OTP desde su dispositivo 2FA predeterminado."
       text_2fa_disabled: "El usuario no configuró un dispositivo 2FA a través de su página «Mi cuenta»"
       only_sms_allowed: "Solo se puede configurar el envío de SMS para otros usuarios."
-    upsell:
-      title: "Autenticación de dos factores"
-      description: "Refuerce la seguridad de su instancia de OpenProject ofreciendo (o aplicando) reconocimiento de dos factores a todos los miembros del proyecto."
     backup_codes:
-      none_found: No existen códigos de respaldo para esta cuenta.
       singular: Código de respaldo
       plural: Códigos de respaldo
-      your_codes: para su %{app_name} cuenta %{login}
       overview_description: |
         Si no puede acceder a sus dispositivos de dos factores, puede usar un código de copia de seguridad para recuperar el acceso a su cuenta.
         Use el siguiente botón para generar un nuevo conjunto de códigos de respaldo.
@@ -119,8 +108,8 @@ es:
       failed_to_delete: "Error al eliminar el dispositivo 2FA."
       is_default_cannot_delete: "El dispositivo está marcado como predeterminado y no se puede eliminar debido a una política de seguridad activa. Marque otro dispositivo como predeterminado antes de eliminar."
       not_existing: "No se ha registrado ningún dispositivo 2FA para su cuenta."
-      2fa_from_input: Ingrese el código de su <strong>%{device_name}</strong> para verificar su identidad.
-      2fa_from_webauthn: Indique el dispositivo WebAuthn <strong>%{device_name}</strong>. Si es USB asegúrese de conectarlo y tocarlo. A continuación, haga clic en el botón de inicio de sesión.
+      2fa_from_input_html: Please enter the code from your <strong>%{device_name}</strong> to verify your identity.
+      2fa_from_webauthn_html: Please provide the WebAuthn device <strong>%{device_name}</strong>. If it is USB based make sure to plug it in and touch it. Then click the sign in button.
       webauthn:
         title: "WebAuthn"
         description: Registre un dispositivo FIDO2 (como YubiKey) o el enclave seguro de su dispositivo móvil.
@@ -168,19 +157,15 @@ es:
       clear_cookie: "Haga clic aquí para quitar todas las sesiones de 2FA recordadas."
       cookie_removed: "Se eliminaron todas las sesiones de 2FA recordadas."
       dont_ask_again: "Crea una cookie para recordar la autenticación de 2FA en este cliente durante %{days} días."
-  field_phone: "Teléfono móvil"
   field_otp: "Contraseña de un solo uso"
   notice_account_otp_invalid: "Contraseña de un solo uso no válida."
   notice_account_otp_expired: "La contraseña de un solo uso que ingresó expiró."
   notice_developer_strategy_otp: "La estrategia de desarrollador generó la siguiente contraseña de un solo uso: %{token} (Canal: %{channel})"
   notice_account_otp_send_failed: "No se pudo enviar su contraseña de un solo uso."
   notice_account_has_no_phone: "No hay un número de teléfono celular asociado a su cuenta."
-  label_expiration_hint: "%{date} o al cerrar la sesión"
-  label_actions: "Comportamiento"
   label_confirmed: "Confirmado"
   button_continue: "Continuar"
   button_make_default: "Marcar como predeterminado"
-  label_unverified_phone: "Teléfono celular aún no verificado"
   notice_phone_number_format: "Ingrese el número en el siguiente formato: + XX XXXXXXXX."
   text_otp_not_receive: "Otros métodos de verificación"
   text_send_otp_again: "Vuelva a ingresar la contraseña de un solo uso de la siguiente manera:"

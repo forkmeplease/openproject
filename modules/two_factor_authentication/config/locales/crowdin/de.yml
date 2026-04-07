@@ -37,18 +37,14 @@ de:
     error_invalid_backup_code: "Ungültiger 2FA Backup-Code"
     channel_unavailable: "Die Zustellung über %{channel} ist nicht verfügbar."
     no_valid_phone_number: "Keine gültige Telefonnummer vorhanden."
-    label_pwd_confirmation: "Kennwort"
-    notice_pwd_confirmation: "Sie müssen Ihr Kennwort eingeben, um diese Änderungen zu bestätigen."
     label_device_type: "2FA-Gerätetyp"
     label_default_device: "Standardgerät für 2FA"
     label_device: "2FA-Gerät"
     label_devices: "2FA-Geräte"
-    label_one_time_password: "Passwort zur einmaligen Verwendung"
     label_2fa_enabled: "Zwei-Faktor-Authentifizierung ist aktiviert"
     label_2fa_disabled: "Zwei-Faktor-Authentifizierung ist nicht aktiviert"
     text_otp_delivery_message_sms: "Ihr %{app_title} Einmalkennwort lautet %{token}"
     text_otp_delivery_message_voice: "Ihr %{app_title} Einmalkennwort lautet: %{pause} %{token}. %{pause} I repeat: %{pause} %{token}"
-    text_enter_2fa: "Bitte geben Sie das Einmalpasswort von Ihrem 2FA-Gerät ein."
     text_2fa_enabled: "Bei jedem Login werden Sie aufgefordert, ein Einmalpasswort aus Ihrem Standardgerät für 2FA einzugeben."
     text_2fa_disabled: "Um die Zwei-Faktor-Authentifizierung zu aktivieren, registrieren Sie ein 2FA-Gerät über die obige Schaltfläche. Wenn Sie bereits ein Gerät registriert haben, müssen Sie es noch als Standardgerät festlegen."
     login:
@@ -67,11 +63,9 @@ de:
       text_enforced: "Aktivieren Sie diese Einstellungen, um die Verwendung eines 2FA-Geräts für alle Nutzer bei ihrer nächsten Anmeldung zu erzwingen. Kann nicht deaktiviert werden, wenn über Konfiguration aktiviert."
       text_remember: |
         Setzen Sie diesen Wert größer Null, damit Nutzer bei der Eingabe ihres zweiten Faktors wählen können, den zweiten Faktor auf diesem Browser für die hier angegebenen Tage zu speichern. Während dieser Zeit wird kein zweiter Faktor vom Nutzer über denselben Browser abgefragt. Kann nicht verändert werden, wenn durch die systemweite Konfiguration gesetzt.
-      error_invalid_settings: "Die ausgewählten 2FA-Strategien sind ungültig"
       failed_to_save_settings: "Fehler beim Aktualisieren der 2FA-Einstellungen: %{message}"
     admin:
-      self_edit_path: "Bitte besuchen Sie %{self_edit_link} zum hinzufügen oder bearbeiten Ihrer eigenen 2FA-Geräte"
-      self_edit_link_name: "Zwei-Faktor-Authentifizierung auf Ihrer Kontoseite"
+      self_edit_path_html: "To add or modify your own 2FA devices, please go to the [Two-factor authentication on your account page](self_edit_link)"
       self_edit_forbidden: "Sie können ihre eigenen 2FA-Geräte nicht auf diese Weise bearbeiten. Gehen sie hierfür auf die Seite Mein Account > Zwei-Faktor-Authentifizierung."
       no_devices_for_user: "Kein 2FA-Gerät für diesen Nutzer registriert."
       all_devices_deleted: "Alle 2FA-Geräte dieses Benutzers wurden entfernt"
@@ -81,14 +75,9 @@ de:
       text_2fa_enabled: "Bei jeder Anmeldung wird dieser Benutzer aufgefordert, ein OTP-Token über sein Standard-2FA-Gerät einzugeben."
       text_2fa_disabled: "Der Benutzer hat kein 2FA-Gerät über seine Seite „Mein Konto“ eingerichtet"
       only_sms_allowed: "Für andere Benutzer kann nur der SMS-Versand eingerichtet werden."
-    upsell:
-      title: "Zwei-Faktor-Authentifizierung"
-      description: "Stärken Sie die Sicherheit Ihrer OpenProject Instanz, indem Sie allen Projektmitgliedern eine Zwei-Faktor-Authentifizierung anbieten (oder durchsetzen)."
     backup_codes:
-      none_found: Keine 2FA Backup-Codes für dieses Konto gefunden.
       singular: 2FA Backup-Code
       plural: 2FA Backup-Codes
-      your_codes: für Ihr Konto %{login} an %{app_name}
       overview_description: |
         Wenn Sie auf Ihre registrierten 2FA-Geräte nicht zugreifen können, erhalten Sie über die Eingabe eines 2FA Backup-Codes Zugang zu Ihrem Account.
       generate:
@@ -117,8 +106,8 @@ de:
       failed_to_delete: "Fehler beim Entfernen des 2FA-Gerätes."
       is_default_cannot_delete: "Dieses 2FA-Gerät ist das aktuelle Standardgerät und kann aufgrund einer aktiven Sicherheitsrichtlinie nicht entfernt werden. Wechseln Sie das Standardgerät, um dieses Gerät löschen zu können."
       not_existing: "Kein 2FA-Gerät für Ihren Account registriert."
-      2fa_from_input: Bitte geben Sie den Code von Ihrem <strong>%{device_name}</strong> ein, um Ihre Identität zu bestätigen.
-      2fa_from_webauthn: Bitte geben Sie das WebAuthn-Gerät <strong>%{device_name}</strong> an. Wenn es sich um ein USB-Gerät handelt, schließen Sie es bitte an und berühren Sie es. Klicken Sie anschließend auf die Schaltfläche zum Anmelden.
+      2fa_from_input_html: Please enter the code from your <strong>%{device_name}</strong> to verify your identity.
+      2fa_from_webauthn_html: Please provide the WebAuthn device <strong>%{device_name}</strong>. If it is USB based make sure to plug it in and touch it. Then click the sign in button.
       webauthn:
         title: "WebAuthn"
         description: Registrieren Sie ein FIDO2-Gerät (wie z. B. YubiKey) oder ein Passkey Ihres mobilen Geräts.
@@ -165,19 +154,15 @@ de:
       clear_cookie: "Klicken Sie hier, um alle gespeicherten 2FA Sitzungen zu entfernen."
       cookie_removed: "Alle gespeicherten 2FA Sitzungen wurden entfernt."
       dont_ask_again: "Die Zwei-Faktor-Authentifizierung auf diesem Browser für %{days} Tage nicht mehr abfragen."
-  field_phone: "Mobiltelefon"
   field_otp: "Einmalpasswort"
   notice_account_otp_invalid: "Ungültiges Einmalpasswort."
   notice_account_otp_expired: "Das Einmalpasswort ist abgelaufen."
   notice_developer_strategy_otp: "Die Entwicklungs-Strategie hat das folgende Einmalpasswort generiert: %{token} (Kanal: %{channel})"
   notice_account_otp_send_failed: "Ihr Einmalpasswort konnte nicht versendet werden."
   notice_account_has_no_phone: "Keine Telefonnummer mit Ihrem Account verknüpft."
-  label_expiration_hint: "%{date} oder bei Logout"
-  label_actions: "Aktionen"
   label_confirmed: "Bestätigt"
   button_continue: "Fortfahren"
   button_make_default: "Als Standard festlegen"
-  label_unverified_phone: "Mobilgerät noch nicht bestätigt"
   notice_phone_number_format: "Bitte geben Sie die Nummer in folgendem Format ein: +XX XXXXXXXX."
   text_otp_not_receive: "Andere Überprüfungsmethoden"
   text_send_otp_again: "Einmalpasswort neu senden über:"
