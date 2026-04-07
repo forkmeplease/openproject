@@ -44,7 +44,7 @@ module Workflows::PageHeaders
 
     def add_action_buttons(header)
       header.with_action_button(
-        data: { controller: "async-dialog" },
+        data: { controller: "async-dialog", "admin--workflow-checkbox-state-confirmation-trigger": "click" },
         tag: :a,
         mobile_icon: :copy,
         mobile_label: t(:button_copy),

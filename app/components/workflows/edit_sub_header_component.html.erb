@@ -41,17 +41,9 @@ See COPYRIGHT and LICENSE files for more details.
               menu.with_item(
                 label: role.name,
                 active: role == @current_role,
-                href: helpers.confirmation_dialog_workflows_path(
-                  type_id: @type.id,
-                  role_id: @current_role&.id,
-                  next_role_id: role.id,
-                  tab: @tab || "always",
-                  dirty: @dirty
-                ),
-                form_arguments: {
-                  method: :post,
-                  data: { turbo_stream: true, workflow_role_form: true, turbo_frame: "_top" }
-                }
+                tag: :a,
+                href: helpers.edit_workflow_path(@type, role_id: role.id, tab: @tab || "always"),
+                data: { "admin--workflow-checkbox-state-confirmation-trigger": "click" }
               )
             end
           end

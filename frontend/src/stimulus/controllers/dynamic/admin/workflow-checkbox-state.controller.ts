@@ -54,14 +54,15 @@ interface SavedState {
  * calling the confirmation dialog from here when dirty
  */
 export default class WorkflowCheckboxStateController extends Controller<HTMLFormElement> {
+  static targets = [  "confirmationDialog", "ignoreButton", "saveButton" ]
+  declare readonly confirmationDialogTarget:HTMLDialogElement;
+  declare readonly ignoreButtonTarget:HTMLButtonElement;
+  declare readonly saveButtonTarget:HTMLButtonElement;
+
   private initialCheckboxState:Record<string, boolean> = {};
-  private turboRequests:TurboRequestsService;
+  private confirmationTriggers:NodeListOf<HTMLElement>;
 
   connect() {
-    void window.OpenProject.getPluginContext().then((context) => {
-      this.turboRequests = context.services.turboRequests;
-    });
-
     const frame = this.element.closest<HTMLElement>('turbo-frame');
     frame?.addEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
 
@@ -75,15 +76,28 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
     this.initialCheckboxState = this.captureState();
     this.element.addEventListener('change', this.onCheckboxChange);
 
-    document.addEventListener('click', this.onTabLinkClick, true);
+    this.confirmationTriggers = document.querySelectorAll<HTMLElement>("[data-admin--workflow-checkbox-state-confirmation-trigger]");
+    this.confirmationTriggers.forEach((watchedElement) => {
+      const watchedTrigger = watchedElement.dataset["admin-WorkflowCheckboxStateConfirmationTrigger"] || "";
+      watchedElement.addEventListener(watchedTrigger, this.confirmWithDialog, true);
+    })
   }
 
   disconnect() {
     this.element.closest('turbo-frame')?.removeEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
     this.element.removeEventListener('submit', this.onFormSubmit);
+
+    this.confirmationTriggers.forEach((watchedElement) => {
+      const watchedTrigger = watchedElement.dataset["admin-WorkflowCheckboxStateConfirmationTrigger"] || "";
+      watchedElement.removeEventListener(watchedTrigger, this.confirmWithDialog, true);
+    })
     this.element.removeEventListener('change', this.onCheckboxChange);
-    document.removeEventListener('click', this.onTabLinkClick, true);
   }
+
+  //
+  // Save current state before rendering the matrix with new statuses.
+  // Restores state on connect, after after new statuses rendered.
+  //
 
   private onBeforeFrameRender = () => {
     const state:SavedState = { formKey: this.formKey, checkboxes: this.captureState() };
@@ -94,45 +108,6 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
     sessionStorage.removeItem(SAVED_STATE_KEY);
     this.element.dataset.dirty = 'false';
   };
-
-  private onCheckboxChange = () => {
-    const current = this.captureState();
-    const dirty = Object.keys(current).some((key) => current[key] !== this.initialCheckboxState[key]);
-    this.element.dataset.dirty = dirty ? 'true' : 'false';
-    this.updateRoleFormDirtyParam(dirty);
-  };
-
-  private onTabLinkClick = (event:Event) => {
-    const target = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-workflow-tab-link]');
-    if (!target) return;
-    if (target.dataset.workflowTabCurrent === 'true') return;
-    if (this.element.dataset.dirty !== 'true') return;
-
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    void this.turboRequests.request(target.dataset.confirmationUrl!, {
-      method: 'POST',
-      headers: { Accept: 'text/vnd.turbo-stream.html' },
-    });
-  };
-
-  private updateRoleFormDirtyParam(dirty:boolean):void {
-    const frame = this.element.closest('turbo-frame');
-    frame?.querySelectorAll<HTMLFormElement>('[data-workflow-role-form]').forEach((form) => {
-      const url = new URL(form.action);
-      url.searchParams.set('dirty', dirty ? 'true' : 'false');
-      form.action = url.toString();
-    });
-  }
-
-  private captureState():Record<string, boolean> {
-    const checkboxes:Record<string, boolean> = {};
-    this.element.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((cb) => {
-      checkboxes[`${cb.dataset.oldStatus}:${cb.dataset.newStatus}:${cb.value}`] = cb.checked;
-    });
-    return checkboxes;
-  }
 
   private get formKey():string {
     return `${this.formValue('type_id')}-${this.formValue('role_id')}`;
@@ -148,6 +123,92 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
     if (!raw) return null;
 
     return JSON.parse(raw) as SavedState;
+  }
+
+  //
+  // Hook "Unsaved changes" dialog to triggers to prevent data loss.
+  // Asks for confirmation and proceed to requested event.
+  //
+
+  private confirmWithDialog = (event:Event) => {
+    if (this.element.dataset.dirty !== 'true') return;
+
+    const target = event.target as HTMLElement;
+
+    if (!target.dataset.confirmed) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      this.showDialog(target, event);
+    }
+    else {
+      // Reset confirmation status for next time
+      delete target.dataset.confirmed;
+      // Let default behaviour behave…
+    }
+  }
+
+  private showDialog = (target:HTMLElement, event:Event) => {
+    const onIgnoreCallback = this.onIgnoreChanges(target, event);
+    this.ignoreButtonTarget.addEventListener("click", onIgnoreCallback);
+
+    const onSaveCallback = this.onSaveChanges(target, event);
+    this.saveButtonTarget.addEventListener("click", onSaveCallback)
+
+    this.confirmationDialogTarget.addEventListener("close", () => {
+      this.ignoreButtonTarget.removeEventListener("click", onIgnoreCallback);
+      this.saveButtonTarget.removeEventListener("click", onSaveCallback);
+    })
+
+    this.confirmationDialogTarget.showModal();
+  }
+
+  private onIgnoreChanges = (originalTarget:HTMLElement, originalEvent:Event) => {
+    return () => {
+      this.applyState(this.initialCheckboxState);
+
+      this.closeAndProceed(originalTarget, originalEvent);
+    }
+  }
+
+  private onSaveChanges = (originalTarget:HTMLElement, originalEvent:Event) => {
+    return () => {
+      this.element.requestSubmit();
+
+      this.closeAndProceed(originalTarget, originalEvent);
+    }
+  }
+
+  private closeAndProceed = (originalTarget:HTMLElement, originalEvent:Event) => {
+    this.confirmationDialogTarget.close();
+    originalTarget.dataset.confirmed = "true";
+
+    if (originalEvent.type === "click") {
+      // Dispatching a click event is not as effective as explicitly clicking
+      originalTarget.click();
+    }
+    else {
+      const forwardedEvent = new Event(originalEvent.type, { bubbles: true })
+      originalTarget.dispatchEvent(forwardedEvent);
+    }
+  }
+
+  //
+  // Foundation for state management: save, apply and track dirtiness.
+  //
+
+  private onCheckboxChange = () => {
+    const current = this.captureState();
+    const dirty = Object.keys(current).some((key) => current[key] !== this.initialCheckboxState[key]);
+    this.element.dataset.dirty = dirty ? 'true' : 'false';
+  };
+
+  private captureState():Record<string, boolean> {
+    const checkboxes:Record<string, boolean> = {};
+    this.element.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((cb) => {
+      checkboxes[`${cb.dataset.oldStatus}:${cb.dataset.newStatus}:${cb.value}`] = cb.checked;
+    });
+    return checkboxes;
   }
 
   private applyState(checkboxes:Record<string, boolean>):void {

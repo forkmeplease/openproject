@@ -38,19 +38,7 @@ module WorkflowHelper
       tab.merge(
         partial: "workflows/form",
         path: edit_workflow_path(type, { tab: tab[:name] }.merge(params.permit(:role_id))),
-        data: if current_role
-                {
-                  workflow_tab_link: true,
-                  workflow_tab_current: tab[:name] == current_tab,
-                  confirmation_url: confirmation_dialog_workflows_path(
-                    type_id: type.id,
-                    role_id: current_role.id,
-                    next_tab: tab[:name],
-                    tab: current_tab || "always",
-                    dirty: true
-                  )
-                }
-              end
+        data: { "admin--workflow-checkbox-state-confirmation-trigger": "click" }
       )
     end
   end

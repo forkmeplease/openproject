@@ -38,8 +38,8 @@ class WorkflowsController < ApplicationController
   before_action :find_roles, except: :update
   before_action :find_types, except: %i[edit update]
 
-  before_action :find_role, only: %i[update confirmation_dialog]
-  before_action :find_type, only: %i[edit update confirmation_dialog]
+  before_action :find_role, only: %i[update]
+  before_action :find_type, only: %i[edit update]
 
   before_action :find_optional_role, only: %i[edit status_dialog confirm_statuses]
   before_action :find_optional_type, only: %i[edit status_dialog confirm_statuses]
@@ -63,40 +63,19 @@ class WorkflowsController < ApplicationController
            .call(permitted_status_params)
 
     if call.success?
-      flash[:notice] = I18n.t(:notice_successful_update)
-      next_role_id = params[:next_role_id].presence
-      next_tab = params[:next_tab].presence
-      redirect_to edit_workflow_path(@type, role_id: next_role_id || @role.id, tab: next_tab || tab)
-    end
-  end
-
-  def confirmation_dialog # rubocop:disable Metrics/AbcSize
-    destination_role_id = params[:next_role_id].presence || @role.id
-    destination_tab = params[:next_tab].presence || current_tab
-    destination_url = edit_workflow_path(@type, role_id: destination_role_id, tab: destination_tab)
-
-    if params[:dirty] == "true"
-      # Necessary because the ActionMenu updates even when the confirmation dialog
-      # is closed via "X". This update ensures the correct option is shown as selected
-      # with a preceding checkbox at all times
-      update_via_turbo_stream(
-        component: Workflows::EditSubHeaderComponent.new(
-          tab: current_tab,
-          current_role: @role,
-          type: @type,
-          available_roles: @roles,
-          status_ids: [],
-          dirty: true
-        )
-      )
-      respond_with_dialog Workflows::ConfirmationDialogComponent.new(
-        redirect_url: destination_url,
-        next_role_id: params[:next_role_id].presence,
-        next_tab: params[:next_tab].presence
+      render_flash_message_via_turbo_stream(
+        message: I18n.t(:notice_successful_update),
+        scheme: :success
       )
     else
-      redirect_to destination_url, status: :see_other
+      render_flash_message_via_turbo_stream(
+        message: I18n.t(:notice_unsuccessful_update),
+        scheme: :danger
+      )
+      @turbo_status = :unprocessable_entity
     end
+
+    respond_with_turbo_streams
   end
 
   def status_dialog

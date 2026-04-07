@@ -813,7 +813,6 @@ Rails.application.routes.draw do
     collection do
       get :status_dialog
       post :confirm_statuses
-      post :confirmation_dialog
     end
   end
   namespace :workflows do
