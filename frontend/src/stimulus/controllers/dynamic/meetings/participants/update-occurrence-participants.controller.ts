@@ -33,8 +33,18 @@ import { Controller } from '@hotwired/stimulus';
 export default class UpdateOccurrenceParticipantsController extends Controller {
   static targets = ['removeButton', 'controlCheckbox'];
 
-  declare readonly controlCheckboxTarget:HTMLInputElement;
-  declare readonly hasControlCheckboxTarget:boolean;
+  // Tracks checkbox state so it isn't reset after every action
+  // Initially true to match the rendered default
+  private applyToUpcoming = true;
+
+  controlCheckboxTargetConnected(element:HTMLInputElement):void {
+    element.checked = this.applyToUpcoming;
+    element.addEventListener('change', this.handleCheckboxChange);
+  }
+
+  controlCheckboxTargetDisconnected(element:HTMLInputElement):void {
+    element.removeEventListener('change', this.handleCheckboxChange);
+  }
 
   removeButtonTargetConnected(element:HTMLAnchorElement):void {
     element.addEventListener('click', this.handleRemoveClick);
@@ -44,10 +54,14 @@ export default class UpdateOccurrenceParticipantsController extends Controller {
     element.removeEventListener('click', this.handleRemoveClick);
   }
 
+  private handleCheckboxChange = (event:Event):void => {
+    this.applyToUpcoming = (event.target as HTMLInputElement).checked;
+  };
+
   private handleRemoveClick = (event:MouseEvent):void => {
     const button = event.currentTarget as HTMLAnchorElement;
     const url = new URL(button.href);
-    if (this.hasControlCheckboxTarget && this.controlCheckboxTarget.checked) {
+    if (this.applyToUpcoming) {
       url.searchParams.set('apply_to_upcoming', '1');
     } else {
       url.searchParams.delete('apply_to_upcoming');
