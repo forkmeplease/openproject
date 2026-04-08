@@ -120,7 +120,7 @@ class MeetingParticipantsController < ApplicationController
   end
 
   def remove_from_upcoming_occurrences(user_id)
-    @meeting.recurring_meeting.instantiated_meetings.each do |meeting|
+    @meeting.recurring_meeting.instantiated_meetings.upcoming.each do |meeting|
       participant = meeting.participants.find_by(user_id:)
       next unless participant
 
@@ -131,7 +131,7 @@ class MeetingParticipantsController < ApplicationController
   end
 
   def add_to_upcoming_occurrences(user_ids)
-    @meeting.recurring_meeting.instantiated_meetings.each do |meeting|
+    @meeting.recurring_meeting.instantiated_meetings.upcoming.each do |meeting|
       user_ids.each do |user_id|
         next if meeting.participants.exists?(user_id:)
 

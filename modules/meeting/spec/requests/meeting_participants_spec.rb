@@ -254,4 +254,160 @@ RSpec.describe "MeetingParticipants requests",
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe "series template participant management" do
+    let!(:recurring_meeting) { create(:recurring_meeting, project:, author: user) }
+    let!(:template) { recurring_meeting.template }
+
+    let!(:open_scheduled) { create(:scheduled_meeting, :persisted, recurring_meeting:, start_time: 1.day.from_now) }
+    let!(:open_occurrence) { open_scheduled.meeting }
+
+    let!(:closed_scheduled) { create(:scheduled_meeting, :persisted, recurring_meeting:, start_time: 2.days.from_now) }
+    let!(:closed_occurrence) { closed_scheduled.meeting.tap { |m| m.update!(state: :closed) } }
+
+    before { ActionMailer::Base.deliveries.clear }
+
+    describe "POST - adding participants" do
+      let(:add_params) do
+        {
+          meeting_id: template.id,
+          project_id: project.id,
+          meeting_participant: { user_id: [user_with_meeting_permissions.id] }
+        }
+      end
+
+      context "without apply_to_upcoming" do
+        it "only adds participant to the series template" do
+          post project_meeting_participants_path(project, template), params: add_params, as: :turbo_stream
+
+          expect(template.participants.reload.pluck(:user_id)).to include(user_with_meeting_permissions.id)
+          expect(open_occurrence.participants.reload.pluck(:user_id)).not_to include(user_with_meeting_permissions.id)
+          expect(closed_occurrence.participants.reload.pluck(:user_id)).not_to include(user_with_meeting_permissions.id)
+        end
+
+        it "only sends series invitation emails" do
+          post project_meeting_participants_path(project, template), params: add_params, as: :turbo_stream
+          perform_enqueued_jobs
+
+          # 1 series invite to new participant + 1 participant added email to existing participant
+          expect(ActionMailer::Base.deliveries.size).to eq(2)
+          expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(user_with_meeting_permissions.mail)
+        end
+      end
+
+      context "with apply_to_upcoming" do
+        let(:params) { add_params.deep_merge(meeting_participant: { apply_to_upcoming: "1" }) }
+
+        it "adds participant to template and all instantiated occurrences" do
+          post project_meeting_participants_path(project, template), params:, as: :turbo_stream
+
+          expect(template.participants.reload.pluck(:user_id)).to include(user_with_meeting_permissions.id)
+          expect(open_occurrence.participants.reload.pluck(:user_id)).to include(user_with_meeting_permissions.id)
+          expect(closed_occurrence.participants.reload.pluck(:user_id)).to include(user_with_meeting_permissions.id)
+        end
+
+        it "does not add participant to past instantiated occurrences" do
+          past_scheduled = create(:scheduled_meeting, :persisted, recurring_meeting:, start_time: 1.week.ago)
+
+          post project_meeting_participants_path(project, template), params:, as: :turbo_stream
+
+          expect(past_scheduled.meeting.participants.reload.pluck(:user_id))
+            .not_to include(user_with_meeting_permissions.id)
+        end
+
+        it "does not automatically instantiate future unscheduled occurrences" do
+          future_uninstantiated = create(:scheduled_meeting, recurring_meeting:, start_time: 2.weeks.from_now)
+
+          post project_meeting_participants_path(project, template), params:, as: :turbo_stream
+
+          expect(future_uninstantiated.reload.meeting).to be_nil
+        end
+
+        it "sends emails for series and open occurrences, but not closed" do
+          post project_meeting_participants_path(project, template), params:, as: :turbo_stream
+          perform_enqueued_jobs
+
+          # 1 series invite to new participant + 1 participant added email to existing participant + 1 occurrence invite
+          expect(ActionMailer::Base.deliveries.size).to eq(3)
+          expect(ActionMailer::Base.deliveries.map(&:to).flatten)
+            .to include(user_with_meeting_permissions.mail, user.mail)
+        end
+      end
+    end
+
+    describe "DELETE - removing participants" do
+      let!(:template_participant) do
+        create(:meeting_participant, meeting: template, user: user_with_meeting_permissions, invited: true)
+      end
+      let!(:open_occurrence_participant) do
+        create(:meeting_participant, meeting: open_occurrence, user: user_with_meeting_permissions, invited: true)
+      end
+      let!(:closed_occurrence_participant) do
+        create(:meeting_participant, meeting: closed_occurrence, user: user_with_meeting_permissions, invited: true)
+      end
+
+      context "without apply_to_upcoming" do
+        it "only removes participant from the series template" do
+          delete project_meeting_participant_path(project, template, template_participant), as: :turbo_stream
+
+          expect(template.participants.reload.pluck(:user_id)).not_to include(user_with_meeting_permissions.id)
+          expect(open_occurrence.participants.reload.pluck(:user_id)).to include(user_with_meeting_permissions.id)
+          expect(closed_occurrence.participants.reload.pluck(:user_id)).to include(user_with_meeting_permissions.id)
+        end
+
+        it "only sends template cancellation emails" do
+          delete project_meeting_participant_path(project, template, template_participant), as: :turbo_stream
+          perform_enqueued_jobs
+
+          # 1 cancelled series to removed participant + 1 participant removed to remaining template participant
+          expect(ActionMailer::Base.deliveries.size).to eq(2)
+          expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(user_with_meeting_permissions.mail)
+        end
+      end
+
+      context "with apply_to_upcoming" do
+        let(:delete_params) { { apply_to_upcoming: "1" } }
+
+        it "removes participant from template and upcoming instantiated occurrences" do
+          delete project_meeting_participant_path(project, template, template_participant),
+                 params: delete_params, as: :turbo_stream
+
+          expect(template.participants.reload.pluck(:user_id)).not_to include(user_with_meeting_permissions.id)
+          expect(open_occurrence.participants.reload.pluck(:user_id)).not_to include(user_with_meeting_permissions.id)
+          expect(closed_occurrence.participants.reload.pluck(:user_id)).not_to include(user_with_meeting_permissions.id)
+        end
+
+        it "does not remove participant from past instantiated occurrences" do
+          past_scheduled = create(:scheduled_meeting, :persisted, recurring_meeting:, start_time: 1.week.ago)
+          create(:meeting_participant, meeting: past_scheduled.meeting, user: user_with_meeting_permissions, invited: true)
+
+          delete project_meeting_participant_path(project, template, template_participant),
+                 params: delete_params, as: :turbo_stream
+
+          expect(past_scheduled.meeting.participants.reload.pluck(:user_id))
+            .to include(user_with_meeting_permissions.id)
+        end
+
+        it "does not automatically instantiate future unscheduled occurrences" do
+          future_uninstantiated = create(:scheduled_meeting, recurring_meeting:, start_time: 2.weeks.from_now)
+
+          delete project_meeting_participant_path(project, template, template_participant),
+                 params: delete_params, as: :turbo_stream
+
+          expect(future_uninstantiated.reload.meeting).to be_nil
+        end
+
+        it "sends cancellation emails for template and open occurrences, but not closed" do
+          delete project_meeting_participant_path(project, template, template_participant),
+                 params: delete_params, as: :turbo_stream
+          perform_enqueued_jobs
+
+          # 1 cancelled series to removed participant + 1 participant removed to remaining participant +
+          # 1 occurrence cancelled
+          expect(ActionMailer::Base.deliveries.size).to eq(3)
+          expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(user_with_meeting_permissions.mail)
+        end
+      end
+    end
+  end
 end

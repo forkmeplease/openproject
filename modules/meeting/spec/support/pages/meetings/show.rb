@@ -575,6 +575,10 @@ module Pages::Meetings
       click_on "Add"
     end
 
+    def uncheck_apply_to_upcoming
+      page.find('input[type="checkbox"][name="meeting_participant[apply_to_upcoming]"]').set(false)
+    end
+
     def expect_no_participant(participant)
       autocomplete = page.find('[data-test-selector="participants-dialog-autocomplete"]')
       search_autocomplete(autocomplete, query: participant.lastname, results_selector: "body")
