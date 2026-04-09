@@ -49,7 +49,12 @@ See COPYRIGHT and LICENSE files for more details.
       <% end %>
     <% end %>
     <% grid.with_area(:menu) do %>
-      <%= render(Backlogs::InboxMenuComponent.new(work_package:, project:, max_position:)) %>
+      <%= render Backlogs::InboxMenuComponent.new(
+            work_package:,
+            project:,
+            max_position:,
+            open_sprints_exist:
+          ) %>
     <% end %>
     <% grid.with_area(:subject) do %>
       <%= render(Primer::Beta::Text.new(font_weight: :semibold)) { work_package.subject } %>

@@ -44,7 +44,7 @@ module Backlogs
       @project = project
       @current_user = current_user
       @active_sprint_ids = active_sprint_ids
-      @stories = stories || sprint.work_packages_for(project)
+      @stories = stories || sprint.work_packages_for(project).includes(:status, :type)
 
       @system_arguments = system_arguments
       @system_arguments[:id] = dom_id(sprint)

@@ -32,15 +32,17 @@ module Backlogs
   class InboxItemComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
-    attr_reader :work_package, :project, :container, :max_position, :current_user
+    attr_reader :work_package, :project, :container, :max_position, :current_user, :open_sprints_exist
 
-    def initialize(inbox_item:, project:, container:, max_position:, current_user: User.current)
+    def initialize(inbox_item:, project:, container:, max_position:, open_sprints_exist:,
+                   current_user: User.current)
       super()
 
       @work_package = inbox_item
       @project = project
       @container = container
       @max_position = max_position
+      @open_sprints_exist = open_sprints_exist
       @current_user = current_user
     end
 

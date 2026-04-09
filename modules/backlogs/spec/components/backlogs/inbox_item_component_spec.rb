@@ -52,7 +52,14 @@ RSpec.describe Backlogs::InboxItemComponent, type: :component do
   let(:work_packages) { WorkPackage.where(id: work_package.id).order(Arel.sql(Story::ORDER)) }
 
   before do
-    render_inline(Backlogs::InboxComponent.new(work_packages:, project:, current_user: user))
+    render_inline(
+      Backlogs::InboxComponent.new(
+        work_packages:,
+        project:,
+        open_sprints_exist: true,
+        current_user: user
+      )
+    )
   end
 
   it "rendering renders the Inbox Component", :aggregate_failures do

@@ -77,7 +77,8 @@ See COPYRIGHT and LICENSE files for more details.
           paginate? ? first_page : work_packages,
           container: border_box,
           project:,
-          max_position:
+          max_position:,
+          open_sprints_exist:
         ) %>
 
     <% if paginate? %>
@@ -110,7 +111,8 @@ See COPYRIGHT and LICENSE files for more details.
             last_page,
             container: border_box,
             project:,
-            max_position:
+            max_position:,
+            open_sprints_exist:
           ) %>
     <% end %>
   <% end %>

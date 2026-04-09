@@ -75,9 +75,13 @@ class InboxController < RbApplicationController
   end
 
   def replace_inbox_component_via_turbo_stream
-    inbox_work_packages = Backlog.inbox_for(project: @project)
+    work_packages = Backlog.inbox_for(project: @project)
     replace_via_turbo_stream(
-      component: Backlogs::InboxComponent.new(work_packages: inbox_work_packages, project: @project),
+      component: Backlogs::InboxComponent.new(
+        work_packages:,
+        project: @project,
+        open_sprints_exist: true
+      ),
       method: :morph
     )
   end

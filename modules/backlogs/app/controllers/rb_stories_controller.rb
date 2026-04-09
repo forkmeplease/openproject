@@ -127,9 +127,10 @@ class RbStoriesController < RbApplicationController
     render_success_flash_message_via_turbo_stream(
       message: I18n.t(:notice_successful_move, from: @sprint.name, to: I18n.t(:label_inbox))
     )
-    inbox_work_packages = Backlog.inbox_for(project: @project)
+    work_packages = Backlog.inbox_for(project: @project)
+    open_sprints_exist = Agile::Sprint.for_project(@project).not_completed.exists?
     replace_via_turbo_stream(
-      component: Backlogs::InboxComponent.new(work_packages: inbox_work_packages, project: @project),
+      component: Backlogs::InboxComponent.new(work_packages:, project: @project, open_sprints_exist:),
       method: :morph
     )
   end
