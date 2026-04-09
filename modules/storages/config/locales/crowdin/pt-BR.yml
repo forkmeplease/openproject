@@ -1,3 +1,4 @@
+---
 pt-BR:
   activerecord:
     attributes:
@@ -60,7 +61,7 @@ pt-BR:
               cannot_be_connected_to: não pôde ser acessado. Verifique se o host está disponível e se o aplicativo de integração do OpenProject está instalado.
               minimal_nextcloud_version_unmet: não atende aos requisitos mínimos de versão (deve ser Nextcloud 23 ou superior)
               not_nextcloud_server: não é um servidor Nextcloud
-              op_application_not_installed: Parece não possui o aplicativo "OpenProject integration" instalado. Instale-o primeiro e depois tente novamente. 
+              op_application_not_installed: Parece não possui o aplicativo "OpenProject integration" instalado. Instale-o primeiro e depois tente novamente.
             password:
               invalid_password: não é válido.
               unknown_error: não pôde ser validado com o provedor de armazenamento de arquivos. Verifique se a conexão está funcionando corretamente.
@@ -146,7 +147,7 @@ pt-BR:
               permission_not_set: não foi possível definir permissões em %{path}.
             remote_folders:
               not_allowed: O %{username} não tem acesso ao %{group_folder}. Verifique as permissões da pasta no Nextcloud.
-              not_found: "A pasta %{group_folder} não foi encontrada. Verifique a configuração do Nextcloud."
+              not_found: A pasta %{group_folder} não foi encontrada. Verifique a configuração do Nextcloud.
             remove_user_from_group:
               conflict: 'O usuário %{user} não pôde ser removido do grupo %{group} pelo seguinte motivo: %{reason}'
               failed_to_remove: 'O usuário %{user} não pôde ser removido do grupo %{group} pelo seguinte motivo: %{reason}'
@@ -489,7 +490,7 @@ pt-BR:
       cancel_button_label: Cuidarei disso mais tarde
       heading: Login em %{provider_type} obrigatório
       login_button_aria_label: Faça login em %{storage}
-      login_button_label: "Login %{provider_type}"
+      login_button_label: Login %{provider_type}
       project_settings:
         description: Para ter acesso à pasta do projeto, você precisa fazer login em %{storage}.
       requesting_access_to: Solicitação de acesso ao site %{storage}
@@ -510,8 +511,7 @@ pt-BR:
         delete: Excluir armazenamento de arquivos?
         subtitle: Adicione um armazenamento de arquivos externo para carregar, vincular e gerenciar arquivos em pacotes de trabalho.
       managed_project_folders:
-        subtitle: |-
-          Deixe o OpenProject criar pastas por projeto automaticamente. Esta ação é recomendada, pois garante que cada membro da equipe sempre tenha as permissões de acesso corretas.
+        subtitle: Deixe o OpenProject criar pastas por projeto automaticamente. Esta ação é recomendada, pois garante que cada membro da equipe sempre tenha as permissões de acesso corretas.
         subtitle_short: Deixe o OpenProject criar pastas por projeto automaticamente.
         title: Pastas do projeto gerenciadas automaticamente
       project_settings:
@@ -523,7 +523,7 @@ pt-BR:
         title: Status da conexão dos membros
       project_storages:
         delete: Remover o armazenamento de arquivos do projeto?
-    permission_header_explanation: 'As permissões de arquivos em armazenamentos externos são aplicadas apenas a pastas e arquivos dentro das pastas de projetos gerenciadas automaticamente. Observe que nem todas as permissões de arquivos são compatíveis com todos os provedores de armazenamento. Consulte a documentação sobre <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>permissões de armazenamento de arquivos</a> para mais informações.'
+    permission_header_explanation: As permissões de arquivos em armazenamentos externos são aplicadas apenas a pastas e arquivos dentro das pastas de projetos gerenciadas automaticamente. Observe que nem todas as permissões de arquivos são compatíveis com todos os provedores de armazenamento. Consulte a documentação sobre <a target='_blank' href='https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions'>permissões de armazenamento de arquivos</a> para mais informações.
     provider_types:
       label: Tipo de provedor
       nextcloud:
@@ -559,10 +559,8 @@ pt-BR:
     successful_storage_connection: Armazenamento conectado com sucesso! Não se esqueça de ativá-lo na aba Projetos para cada projeto em que deseja usá-lo.
     upsell:
       one_drive:
-        description: |-
-          Integre sua unidade OneDrive como um armazenamento de arquivos com o OpenProject. Carregue arquivos e vincule-os diretamente aos pacotes de trabalho em um projeto.
+        description: Integre sua unidade OneDrive como um armazenamento de arquivos com o OpenProject. Carregue arquivos e vincule-os diretamente aos pacotes de trabalho em um projeto.
         title: Integração com OneDrive
       sharepoint:
-        description: |-
-          Integre seu site SharePoint como um armazenamento de arquivos com o OpenProject. Carregue arquivos e vincule-os diretamente aos pacotes de trabalho em um projeto.
+        description: Integre seu site SharePoint como um armazenamento de arquivos com o OpenProject. Carregue arquivos e vincule-os diretamente aos pacotes de trabalho em um projeto.
         title: Integração SharePoint

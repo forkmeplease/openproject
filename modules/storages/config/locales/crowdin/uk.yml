@@ -1,3 +1,4 @@
+---
 uk:
   activerecord:
     attributes:
@@ -39,18 +40,18 @@ uk:
       messages:
         invalid_host_url: не є дійсною URL-адресою.
         invalid_sharepoint_url: не є дійсним сайтом, бібліотекою або документом SharePoint.
-        not_linked_to_project: '– не пов’язано з проєктом.'
+        not_linked_to_project: "– не пов’язано з проєктом."
       models:
         storages/file_link:
           attributes:
             origin_id:
-              only_numeric_or_uuid: '– може бути тільки числом або ідентифікатором uuid.'
+              only_numeric_or_uuid: "– може бути тільки числом або ідентифікатором uuid."
         storages/project_storage:
           attributes:
             project_folder_id:
               blank: Виберіть папку.
             project_folder_mode:
-              mode_unavailable: '– недоступно для цього сховища.'
+              mode_unavailable: "– недоступно для цього сховища."
             project_ids:
               blank: Виберіть проєкт.
         storages/storage:
@@ -58,8 +59,8 @@ uk:
             host:
               authorization_header_missing: налаштовано не повністю. Екземпляр Nextcloud не отримує заголовка «Authorization», який необхідний для авторизації запитів API на основі маркерів власника. Перевірте свою конфігурацію сервера HTTP.
               cannot_be_connected_to: недоступний. Переконайтеся, що до нього можна підключитися й додаток OpenProject Integration установлено.
-              minimal_nextcloud_version_unmet: '– не відповідає мінімальним вимогам до версії (Nextcloud 23 або новішої версії)'
-              not_nextcloud_server: '– не є сервером Nextcloud.'
+              minimal_nextcloud_version_unmet: "– не відповідає мінімальним вимогам до версії (Nextcloud 23 або новішої версії)"
+              not_nextcloud_server: "– не є сервером Nextcloud."
               op_application_not_installed: схоже, у вас не встановлено додаток OpenProject integration. Спочатку встановіть його, а потім спробуйте знову.
             password:
               invalid_password: недійсний.
@@ -101,7 +102,7 @@ uk:
     attributes:
       nextcloud_sync_service:
         add_user_to_group: 'Додати користувача в групу:'
-        create_folder: 'Створення керованої папки проєкту'
+        create_folder: Створення керованої папки проєкту
         ensure_root_folder_permissions: 'Установіть дозволи для основної папки:'
         hide_inactive_folders: 'Етап «Приховайте неактивні папки»:'
         remote_folders: 'Читання вмісту папки команди:'
@@ -145,7 +146,7 @@ uk:
             hide_inactive_folders:
               permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
             remote_folders:
-              not_allowed: '%{username} не має доступу до теки %{group_folder}. Будь ласка, перевірте права доступу до теки на Nextcloud.'
+              not_allowed: "%{username} не має доступу до теки %{group_folder}. Будь ласка, перевірте права доступу до теки на Nextcloud."
               not_found: "%{group_folder} не знайдено. Перевірте налаштування Nextcloud."
             remove_user_from_group:
               conflict: 'Користувача %{user} не вдалося вилучити з групи «%{group}» з такої причини: %{reason}'
@@ -157,7 +158,7 @@ uk:
             set_folders_permissions:
               permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
           error: Сталася неочікувана помилка. Щоб дізнатися більше, переконайтеся, що маєте доступ до свого екземпляра Nextcloud, і перевірте журнали працівників OpenProject.
-          group_does_not_exist: "Групи «%{group}» не існує. Перевірте конфігурацію свого екземпляра Nextcloud."
+          group_does_not_exist: Групи «%{group}» не існує. Перевірте конфігурацію свого екземпляра Nextcloud.
           insufficient_privileges: OpenProject не має достатніх привілеїв, щоб додати користувача %{user} в групу «%{group}». Перевірте налаштування своєї групи в Nextcloud.
           not_allowed: Nextcloud блокує запит.
           not_found: OpenProject не зміг знайти файл на сховищі Nextcloud. Перевірте, будь ласка, чи він не був видалений.
@@ -166,7 +167,7 @@ uk:
         one_drive_sync_service:
           attributes:
             create_folder:
-              conflict: '%{folder_name} уже існує в папці %{parent_location}.'
+              conflict: "%{folder_name} уже існує в папці %{parent_location}."
               not_found: "%{parent_location} не знайдено."
             hide_inactive_folders:
               permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
@@ -185,7 +186,7 @@ uk:
         sharepoint_sync_service:
           attributes:
             create_folder:
-              conflict: '%{folder_name} уже існує в папці %{parent_location}.'
+              conflict: "%{folder_name} уже існує в папці %{parent_location}."
               not_found: "%{parent_location} не знайдено."
             hide_inactive_folders:
               permission_not_set: не вдалося встановити дозволи за шляхом %{path}.
@@ -209,7 +210,7 @@ uk:
           sync_now: Sync now
           sync_queued: Synchronization queued.
     buttons:
-      done_continue: Виконано, продовжити 
+      done_continue: Виконано, продовжити
       open_storage: Відкрити файлове сховище
       replace_oauth_application: Замінити OpenProject OAuth
       replace_oauth_client: Замінити %{provider_type} OAuth
@@ -402,7 +403,7 @@ uk:
       empty_project_folder_validation: Щоб продовжити, потрібно вибрати папку.
       existing_manual_folder: Ви можете призначити наявну папку як кореневу папку для цього проєкту. Однак дозволи автоматично не налаштовуються, і адміністратор має вручну надати користувачам відповідні дозволи на доступ. Вибрану папку зможуть використовувати кілька проєктів.
       host: Додайте адресу хосту для свого сховища, включно з https://. Її довжина не може перевищувати 255 символів.
-      managed_project_folders_application_password_caption: 'Увімкніть папки з автоматичним керуванням, скопіювавши це значення з %{provider_type_link}.'
+      managed_project_folders_application_password_caption: Увімкніть папки з автоматичним керуванням, скопіювавши це значення з %{provider_type_link}.
       name: Назвіть своє сховище, щоб користувачі могли відрізняти його від інших сховищ.
       new_storage_html: Read our documentation on [setting up a %{provider_name} file storage](docs_url) integration for more information.
       nextcloud:
@@ -493,7 +494,7 @@ uk:
       cancel_button_label: Я зроблю це пізніше
       heading: Потрібно ввійти в %{provider_type}
       login_button_aria_label: Увійти в %{storage}
-      login_button_label: "Увійти в %{provider_type}"
+      login_button_label: Увійти в %{provider_type}
       project_settings:
         description: Щоб отримати доступ до папки проєкту, потрібно ввійти в %{storage}.
       requesting_access_to: Надсилаємо запит на доступ до %{storage}
@@ -528,7 +529,7 @@ uk:
         title: Стан підключення учасників
       project_storages:
         delete: Вилучити файлове сховище з проєкту?
-    permission_header_explanation: 'Дозволи на доступ до файлів у зовнішніх сховищах застосовуються лише до папок і файлів у межах папок проєкту з автоматичним керуванням. Зауважте, що деякі постачальники сховищ не підтримують дозволи на доступ до файлів. Щоб дізнатися більше, ознайомтеся з документацією щодо <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>дозволів для файлових сховищ</a>.'
+    permission_header_explanation: Дозволи на доступ до файлів у зовнішніх сховищах застосовуються лише до папок і файлів у межах папок проєкту з автоматичним керуванням. Зауважте, що деякі постачальники сховищ не підтримують дозволи на доступ до файлів. Щоб дізнатися більше, ознайомтеся з документацією щодо <a target='_blank' href='https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions'>дозволів для файлових сховищ</a>.
     provider_types:
       label: Тип постачальника
       nextcloud:
@@ -564,10 +565,8 @@ uk:
     successful_storage_connection: Сховище під'єднано. Щоб користуватися ним, активуйте модуль і визначене сховище в налаштуваннях кожного потрібного проєкту.
     upsell:
       one_drive:
-        description: |-
-          Інтегруйте диск OneDrive як файлове сховище в OpenProject. Додайте файли й прив’яжіть їх безпосередньо до пакетів робіт у проєкті.
+        description: Інтегруйте диск OneDrive як файлове сховище в OpenProject. Додайте файли й прив’яжіть їх безпосередньо до пакетів робіт у проєкті.
         title: Інтеграція OneDrive
       sharepoint:
-        description: |-
-          Інтегруйте сайт SharePoint як файлове сховище в OpenProject. Додайте файли й прив’яжіть їх безпосередньо до пакетів робіт у проєкті.
+        description: Інтегруйте сайт SharePoint як файлове сховище в OpenProject. Додайте файли й прив’яжіть їх безпосередньо до пакетів робіт у проєкті.
         title: Інтеграція SharePoint

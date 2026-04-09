@@ -10,7 +10,7 @@ cs:
         token_exchange_scope: XWiki Scope
         url: Adresa URL instance
         wiki_audience: XWiki Audience
-    errors: { }
+    errors: {}
     models:
       wikis/inline_page_link:
         one: Inline page link
@@ -24,4 +24,4 @@ cs:
         many: Relation page links
         other: Relation page links
       wikis/xwiki_provider: Poskytovatel XWiki
-  wikis: { }
+  wikis: {}

@@ -1,3 +1,4 @@
+---
 el:
   activerecord:
     attributes:
@@ -146,7 +147,7 @@ el:
               permission_not_set: could not set permissions on %{path}.
             remote_folders:
               not_allowed: The %{username} doesn't have access to the %{group_folder} folder. Please check the folder permissions on Nextcloud.
-              not_found: "Ο φάκελος %{group_folder} δεν βρέθηκε. Παρακαλώ ελέγξτε τη ρύθμιση του Nextcloud."
+              not_found: Ο φάκελος %{group_folder} δεν βρέθηκε. Παρακαλώ ελέγξτε τη ρύθμιση του Nextcloud.
             remove_user_from_group:
               conflict: 'The user %{user} could not be removed from the %{group} group for the following reason: %{reason}'
               failed_to_remove: 'The user %{user} could not be removed from the %{group} group for the following reason: %{reason}'
@@ -157,7 +158,7 @@ el:
             set_folders_permissions:
               permission_not_set: could not set permissions on %{path}.
           error: An unexpected error occurred. Please ensure that your Nextcloud instance is reachable and check OpenProject worker logs for more information
-          group_does_not_exist: "Το %{group} δεν υπάρχει. Ελέγξτε τη ρύθμιση παραμέτρων Nextcloud."
+          group_does_not_exist: Το %{group} δεν υπάρχει. Ελέγξτε τη ρύθμιση παραμέτρων Nextcloud.
           insufficient_privileges: OpenProject does not have enough privileges to add %{user} to %{group}. Check you group settings in Nextcloud.
           not_allowed: Nextcloud block the request.
           not_found: Το OpenProject δεν μπόρεσε να βρει το αρχείο στον πάροχο αποθήκευσης Nextcloud. Παρακαλώ ελέγξτε αν δεν διαγράφηκε.
@@ -524,7 +525,7 @@ el:
         title: Members connection status
       project_storages:
         delete: Remove file storage from project?
-    permission_header_explanation: 'File permissions on external storages are applied only to folders and files within automatically managed project folders. Note that not all file permissions are supported by all storage providers. Please check the documentation on <a target=''_blank'' href=''https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions''>file storage permissions</a> for more information.'
+    permission_header_explanation: File permissions on external storages are applied only to folders and files within automatically managed project folders. Note that not all file permissions are supported by all storage providers. Please check the documentation on <a target='_blank' href='https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#file-storages-permissions'>file storage permissions</a> for more information.
     provider_types:
       label: Τύπος παρόχου
       nextcloud:
