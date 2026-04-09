@@ -12,6 +12,12 @@ allOf:
         description: Work package id
         readOnly: true
         minimum: 1
+      semanticId:
+        type: string
+        description: |-
+          The project-based semantic identifier for the work package (e.g. PROJ-42).
+          Only present when semantic mode is enabled.
+        readOnly: true
       lockVersion:
         type: integer
         description: The version of the item as used for optimistic locking

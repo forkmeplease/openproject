@@ -345,6 +345,12 @@ module API
         property :id,
                  render_nil: true
 
+        property :semantic_id,
+                 as: :semanticId,
+                 render_nil: true,
+                 getter: ->(*) { identifier },
+                 if: ->(*) { Setting::WorkPackageIdentifier.semantic_mode_active? }
+
         property :lock_version,
                  render_nil: true,
                  getter: ->(*) {

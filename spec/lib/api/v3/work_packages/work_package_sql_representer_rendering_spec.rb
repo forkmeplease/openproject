@@ -155,6 +155,23 @@ RSpec.describe API::V3::WorkPackages::WorkPackageSqlRepresenter, "rendering" do
         expect(json).to be_json_eql(expected.to_json)
       end
     end
+
+    context "when semantic work package ids are active",
+            with_flag: { semantic_work_package_ids: true },
+            with_settings: { work_packages_identifier: "semantic" } do
+      let(:project) { create(:project, identifier: "PROJ", types: [type]) }
+
+      it "includes semanticId" do
+        expect(json).to be_json_eql("PROJ-1".to_json).at_path("semanticId")
+      end
+    end
+
+    context "when semantic_work_package_ids feature flag is inactive",
+            with_flag: { semantic_work_package_ids: false } do
+      it "does not include semanticId" do
+        expect(json).not_to have_json_path("semanticId")
+      end
+    end
   end
 
   shared_examples_for "principal link" do |link_name, only_user: false|

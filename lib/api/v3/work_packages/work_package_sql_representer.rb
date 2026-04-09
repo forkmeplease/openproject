@@ -76,6 +76,10 @@ module API
 
         property :id
 
+        property :semanticId,
+                 representation: ->(*) { "identifier" },
+                 render_if: ->(*) { Setting::WorkPackageIdentifier.semantic_mode_active? ? "TRUE" : "FALSE" }
+
         property :subject
 
         property :startDate, column: :start_date,
