@@ -108,7 +108,7 @@ pt-PT:
     jemalloc_allocator: Alocador de memória Jemalloc
     journal_aggregation:
       caption: >
-        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays.
+        As ações do utilizador num pacote de trabalhos (alteração da descrição, do estado, dos valores ou adição de comentários) são agrupadas se forem realizadas durante este período. Também controla os prazos de notificação e de [webhook](webhook_link).
     import:
       title: "Importar"
     jira:
@@ -162,7 +162,7 @@ pt-PT:
         history: "Histórico"
         remove_error: "Uma importação do Jira não pode ser removida enquanto está a ser executada"
         import_blocked_error: "Está em curso ou a aguardar revisão outra importação do Jira. Conclua-a ou reverta-a antes de iniciar uma nova importação."
-        project_identifier_taken: "You are trying to import a project with an already used identifier: %{taken_identifier}. Please update the project identifier in Jira then click on Retry."
+        project_identifier_taken: "Está a tentar importar um projeto com um identificador já utilizado: %{taken_identifier}. Atualize o identificador do projeto no Jira e clique em Tentar novamente."
         blank:
           title: "Ainda não foram feitas importações"
           description: "Crie uma execução de importação para começar a importar informações desta instância do Jira"
@@ -175,7 +175,7 @@ pt-PT:
           instance_meta_fetching: "A recolher metadados"
           instance_meta_error: "Erro ao recolher metadados"
           instance_meta_done: "Metadados recolhidos"
-          import_scope: "Select scope"
+          import_scope: "Selecionar âmbito"
           configuring: "Selecionar âmbito"
           projects_meta_fetching: "A recolher dados do projeto"
           projects_meta_error: "Erro ao recolher os dados do projeto"
@@ -185,12 +185,12 @@ pt-PT:
           imported: "Modo de revisão"
           reverting: "A reverter"
           revert_error: "Erro durante a reversão"
-          revert_cancelling: "Cancelling revert"
-          revert_cancelled: "Revert cancelled"
+          revert_cancelling: "A cancelar a reversão"
+          revert_cancelled: "Reversão cancelada"
           reverted: "Revertido"
-          finalizing: "Finalizing"
-          finalizing_error: "Error during finalizing"
-          finalizing_done: "Completed"
+          finalizing: "A finalizar"
+          finalizing_error: "Erro durante a finalização"
+          finalizing_done: "Concluído"
         wizard:
           button_retry: "Tentar novamente"
           parts:
@@ -271,9 +271,9 @@ pt-PT:
               button_revert: "Reverter importação"
               button_done: "Finalizar importação"
               preview_description: 'Os dados importados estão em modo de revisão. Clique em "Finalizar importação" para tornar a importação permanente ou em "Reverter importação" para anular todas as alterações feitas nesta importação.'
-              label_finalize_import: "Finalize import"
-              label_finalizing: "Finalizing import..."
-              label_finalizing_done: "Import finalized."
+              label_finalize_import: "Finalizar importação"
+              label_finalizing: "A finalizar importação..."
+              label_finalizing_done: "Importação finalizada."
               label_revert_progress: "A reverter a importação..."
               label_reverted: "Importação revertida."
           select_dialog:
@@ -382,69 +382,69 @@ pt-PT:
           <p>Olá,</p> <p>Foi criado um novo projeto: projectValue:name</p> <p>Obrigado</p>
       work_packages_identifier:
         page_header:
-          description: Choose between basic numerical work packages IDs or project-specific ones that prepend the project identifier to the work package ID.
+          description: Escolha entre IDs numéricos básicos de pacotes de trabalho ou IDs específicos do projeto que acrescentam o identificador do projeto ao ID do pacote de trabalho.
         banner:
           existing_identifiers_notice: >
-            Existing identifiers for %{project_count} projects don't meet requirements for project-based alphanumerical identifiers. OpenProject can automatically update these so that they are valid as in the examples below. Click on 'Autofix and save' to update identifiers for all projects in this manner and enable project-based alphanumerical identifiers.
+            Os identificadores existentes para os projec~tos %{project_count} não cumprem os requisitos para identificadores alfanuméricos baseados em projetos. O OpenProject pode atualizá-los automaticamente para que sejam válidos, como nos exemplos abaixo. Clique em "Corrigir automaticamente e guardar" para atualizar os identificadores de todos os projetos desta forma, e ativar os identificadores alfanuméricos baseados em projetos.
         box_header:
-          label_project: Project
-          label_previous_identifier: Previous identifier
-          label_autofixed_suggestion: Future identifier
-          label_example_work_package_id: Example work package ID
+          label_project: Projeto
+          label_previous_identifier: Identificador anterior
+          label_autofixed_suggestion: Identificador de futuro
+          label_example_work_package_id: Exemplo de ID de pacote de trabalho
         autofix_preview:
-          error_too_long: Has to be fewer than 5 characters
-          error_special_characters: Special characters not allowed
-          error_in_use: Already in use as another project's active handle
-          error_reserved: Reserved by another project's handle history
+          error_too_long: Tem de ter menos de 5 caracteres
+          error_special_characters: Caracteres especiais não são permitidos 
+          error_in_use: Já está a ser utilizado como identificador ativo de outro projeto
+          error_reserved: Reservado pelo histórico do identificador de outro projeto
           remaining_projects:
-            one: "... 1 more project"
-            other: "... %{count} more projects"
-        button_autofix: Autofix and save
+            one: "... mais 1 projeto"
+            other: "... mais %{count} projetos"
+        button_autofix: Corrigir automaticamente e guardar
         dialog:
-          title: Change work package identifiers
-          heading: Enable project-based work package IDs?
+          title: Alterar identificadores do pacote de trabalho
+          heading: Permitir IDs de pacotes de trabalho baseados em projetos?
           description: >
-            This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to redirect properly. This change will take some time to complete.
-          confirm_button: Change identifiers
-          checkbox_label: I understand that this will permanently change all work package IDs
-        success_banner: Successfully updated work package identifier format.
+            Isto irá alterar os IDs de todos os pacotes de trabalho em todos os projetos nesta instância. Os identificadores e URLs anteriores continuarão a redirecionar corretamente. Esta alteração demorará algum tempo a ser concluída.
+          confirm_button: Alterar identificadores
+          checkbox_label: Compreendo que isto irá alterar permanentemente todos os IDs dos pacotes de trabalho
+        success_banner: Formato de identificador de pacote de trabalho atualizado com sucesso.
         in_progress:
-          banner_message: Project identifiers are currently being updated to project-based alphanumerical identifiers. This may take some time.
+          banner_message: Os identificadores de projetos estão a ser atualizados para identificadores alfanuméricos baseados em projetos. Este processo pode demorar algum tempo.
     workflows:
       tabs:
         default_transitions: "Transições padrão"
         user_author: "O utilizador é o autor"
         user_assignee: "O utilizador é encarregado"
       index:
-        description: "Configure status transitions for each work package type."
+        description: "Configurar transições de estado para cada tipo de pacote de trabalho."
         type_filter:
-          label: "Filter by type name…"
-      status_button: "Status"
+          label: "Filtrar por tipo de nome…"
+      status_button: "Estado"
       statuses_dialog:
-        title: "Statuses"
-        label: "Statuses enabled for this type"
-        caption: "Add or remove statuses you would like to associate with this type. Removing a status will also delete the workflow associated with it."
+        title: "Estados"
+        label: "Estados ativados para este tipo"
+        caption: "Adicione ou remova os estados que gostaria de associar a este tipo. A remoção de um estado também elimina o fluxo de trabalho que lhe está associado."
       statuses_removal_dialog:
-        title: "Remove statuses"
+        title: "Remover estados"
         heading:
-          one: "Remove 1 status?"
-          other: "Remove %{count} statuses?"
-        description: "Removing these statuses will make them unavailable to this type and delete existing workflows. Are you sure you want to proceed?"
-        confirm: "Remove"
+          one: "Remover 1 estado?"
+          other: "Remover %{count} estados?"
+        description: "A remoção destes estados torna-os indisponíveis para este tipo e elimina os fluxos de trabalho existentes. Tem a certeza de que quer continuar?"
+        confirm: "Remover"
       leave_confirmation:
-        title: "Save changes before continuing?"
-        description: "You are about to leave this page but you have unsaved changes. Would you like to save them before continuing?"
-        ignore: "Ignore changes"
-        save: "Save changes and continue"
+        title: "Guardar as alterações antes de continuar?"
+        description: "Está prestes a sair desta página, mas tem alterações por guardar. Gostaria de as guardar antes de continuar?"
+        ignore: "Ignorar alterações"
+        save: "Guardar as alterações e continuar"
       role_selector:
-        label: "Role: %{role}"
-        no_role: "Select role"
+        label: "Função: %{role}"
+        no_role: "Selecionar função"
       blankslate:
-        title: "No status transitions configured"
-        description: "Add statuses to start configuring workflows for this role"
+        title: "Não há transições de estado configuradas"
+        description: "Adicione estados para começar a configurar fluxos de trabalho para esta função"
     info:
       database_deprecation_html: >
-        Starting with OpenProject 16.0, PostgreSQL 16 is required to use OpenProject. Your installation will remain functional with your current database, but anticipate incompatability in future releases. <br/> We have prepared [upgrade guides for all installation methods](upgrade_guide). You can perform the upgrade ahead of the next release at any time by following the guides.
+        A partir do OpenProject 16.0, PostgreSQL 16 é necessário para usar o OpenProject. A sua instalação permanecerá funcional com a sua base de dados atual, mas antecipe a incompatibilidade em versões futuras. <br/> Preparámos [guias de atualização para todos os métodos de instalação](upgrade_guide). Pode fazer a atualização antes da próxima versão a qualquer momento, seguindo os guias.
   authentication:
     login_and_registration: "Iniciar sessão e registo"
   announcements:
@@ -667,13 +667,13 @@ pt-PT:
     confirmation_live_message_checked: "O botão para prosseguir está agora ativo."
     confirmation_live_message_unchecked: "O botão para prosseguir está agora inativo. Tem de assinalar a caixa de verificação para continuar."
   pagination:
-    label: "Pagination"
-    prev: "Previous"
-    prev_page: "Previous Page"
-    next: "Next"
-    next_page: "Next Page"
-    page: "Page %{number}"
-    page_with_more: "Page %{number}..."
+    label: "Paginação"
+    prev: "Anterior"
+    prev_page: "Página anterior"
+    next: "Seguinte"
+    next_page: "Página seguinte"
+    page: "Página %{number}"
+    page_with_more: "Página %{number}..."
   mcp_configurations:
     server_url_component:
       caption: "URL em que o servidor OpenProject MCP estará acessível. Necessário para a configuração de clientes MCP."
@@ -681,13 +681,13 @@ pt-PT:
   op_dry_validation:
     or: "ou"
     errors:
-      unexpected_key: "is not allowed."
+      unexpected_key: "não é permitido."
       array?: "tem de ser uma matriz."
       decimal?: "tem de ser um decimal."
       defined: "não deve ser definido."
       eql?: "tem de ser igual a %{left}."
       filled?: "tem de estar preenchido."
-      format?: "is in invalid format."
+      format?: "está num formato inválido."
       greater_or_equal_zero: "tem de ser maior ou igual a 0."
       gteq?: "tem de ser maior ou igual a %{num}."
       hash?: "tem de ser um hash."
@@ -714,9 +714,9 @@ pt-PT:
         parent:
           not_descendant: "tem de ser um descendente da raiz da hierarquia."
       str?: "tem de ser uma string."
-      time?: "must be a time."
+      time?: "tem de ser uma hora."
       type?: "tem de ser %{type}."
-      uri?: "is not a valid URI."
+      uri?: "não é um URI válido."
     rules:
       copy_workflow_from: "Tipo de cópia do fluxo de trabalho"
       enabled: "Ativado"
@@ -834,11 +834,11 @@ pt-PT:
         description: >
           O projeto só estará visível para os membros do projeto, dependendo do seu cargo e permissões associadas. Os subprojetos não são afetados e têm suas próprias definições.
       change_identifier: Mudar identificador
-      change_identifier_dialog_title: Change project identifier
-      change_identifier_format_hint_semantic: "Only uppercase letters (A–Z), numbers or underscores. Max 10 characters. Must start with a letter."
-      change_identifier_format_hint_legacy: "Only lowercase letters (a–z), numbers, dashes or underscores."
+      change_identifier_dialog_title: Alterar o identificador do projeto
+      change_identifier_format_hint_semantic: "Apenas letras maiúsculas (A-Z), números ou sublinhados. Máximo de 10 caracteres. Deve começar por uma letra."
+      change_identifier_format_hint_legacy: "Apenas letras minúsculas (a-z), números, traços ou sublinhados."
       change_identifier_warning: >
-        This will permanently change identifiers and URLs of all work packages in this project. The previous identifier and URLs will nevertheless continue to redirect properly.
+        Isto irá alterar permanentemente os identificadores e URLs de todos os pacotes de trabalho deste projeto. No entanto, o identificador e os URLs anteriores continuarão a redirecionar corretamente.
       subitems:
         template_section: >
           Selecione os modelos a utilizar na criação de novos sub-elementos.
@@ -1071,9 +1071,9 @@ pt-PT:
     groups:
       member_in_these_groups: "Atualmente, este utilizador é membro dos seguintes grupos:"
       no_results_title_text: Este utilizador atualmente não é um membro de nenhum grupo.
-      summary_with_more_html: Member of %{names} and %{count_link}.
+      summary_with_more_html: Membro de %{names} e %{count_link}.
       more: "mais %{count}"
-      summary_html: Member of %{names}.
+      summary_html: Membro de %{names}.
     memberships:
       no_results_title_text: Este utilizador atualmente não é um membro de um projeto.
     open_profile: "Abrir perfil"
@@ -1130,62 +1130,62 @@ pt-PT:
         group: "O grupo agora faz parte de %{project}. Enquanto isso, já pode planear com este grupo e atribuir pacotes de trabalho, por exemplo."
     working_hours:
       current_schedule:
-        title: "Current schedule"
-        work_days: "Work days"
-        work_hours: "Work hours"
-        availability_factor: "Availability factor"
-        availability_subtitle: "Dedicated to project work"
-        effective_hours: "Effective work hours"
-        effective_subtitle: "Per week"
-        not_set: "Not set"
+        title: "Horário atual"
+        work_days: "Dias úteis"
+        work_hours: "Horário de trabalho"
+        availability_factor: "Fator de disponibilidade"
+        availability_subtitle: "Dedicado ao trabalho de projeto"
+        effective_hours: "Horário de trabalho efetivo"
+        effective_subtitle: "Por semana"
+        not_set: "Não definido"
       future:
-        title: "Future schedules"
-        description: "Plan working schedule changes ahead of time. Once the date arrives your working schedules will be updated automatically."
-        add_button: "Add future schedule"
-        blank_title: "No future schedules planned"
-        blank_description: "Create a future schedule to plan changes ahead of time"
+        title: "Horários futuros"
+        description: "Planeie antecipadamente as alterações ao seu horário de trabalho. Quando a data chegar, os seus horários de trabalho serão atualizados automaticamente."
+        add_button: "Adicionar horário futuro"
+        blank_title: "Não estão previstos horários futuros"
+        blank_description: "Crie um horário futuro para planear as alterações com antecedência"
       history:
-        title: "Schedule history"
-        description: "View your past work schedules."
-        blank_title: "No schedule history yet"
-        blank_description: "Past schedule changes will appear here"
+        title: "Histórico de horários"
+        description: "Veja os seus horários de trabalho anteriores."
+        blank_title: "Ainda não há histórico de horários"
+        blank_description: "As alterações de horários anteriores são apresentadas aqui"
       destroy:
-        confirm: "Are you sure you want to delete this working schedule?"
+        confirm: "Tem a certeza que pretende eliminar este horário de trabalho?"
       form:
-        title: "Plan a future work schedule"
-        title_current: "Edit current work schedule"
-        start_date: "Start date"
-        start_date_caption: "Select the date from when the new work schedule will be effective."
-        work_days: "Work days"
-        working_hours_label: "Working hours"
-        hours_mode_label: "Hours mode"
-        same_hours_mode: "Same hours per day"
-        individual_hours_mode: "Individual hours per day"
-        work_hours: "Work hours"
-        hours_per_day: "Hours per day"
-        per_day: "per day"
-        per_week: "per week"
-        total_work_hours: "Total work hours"
-        availability_description: "The availability factor represents the actual percentage of your working time dedicated to project tasks. This accounts for meetings, emails, administrative work, and other non-project activities."
-        availability_factor: "Availability factor"
-        availability_factor_caption: "Define the percentage of your working time dedicated to project work."
-        total_available_hours: "Total available work hours"
-        title_availability_factor: "Availability factor"
-        title_days_and_hours: "Days and hours"
-        title_future_dates: "Future dates"
+        title: "Planear um horário de trabalho futuro"
+        title_current: "Editar o horário de trabalho atual"
+        start_date: "Data de início"
+        start_date_caption: "Selecione a data a partir da qual o novo horário de trabalho entrará em vigor."
+        work_days: "Dias úteis"
+        working_hours_label: "Horário de trabalho"
+        hours_mode_label: "Modo de horas"
+        same_hours_mode: "As mesmas horas por dia"
+        individual_hours_mode: "Horas individuais por dia"
+        work_hours: "Horário de trabalho"
+        hours_per_day: "Horas por dia"
+        per_day: "por dia"
+        per_week: "por semana"
+        total_work_hours: "Total de horas de trabalho"
+        availability_description: "O fator de disponibilidade representa a percentagem real do seu tempo de trabalho dedicado às tarefas do projeto. Isto inclui reuniões, e-mails, trabalho administrativo e outras atividades não relacionadas com o projeto."
+        availability_factor: "Fator de disponibilidade"
+        availability_factor_caption: "Defina a percentagem do seu tempo de trabalho dedicada ao trabalho de projeto."
+        total_available_hours: "Total de horas de trabalho disponíveis"
+        title_availability_factor: "Fator de disponibilidade"
+        title_days_and_hours: "Dias e horas"
+        title_future_dates: "Datas futuras"
       table:
-        mobile_title: "Working schedules"
-        start_date: "Start date"
-        work_days: "Work days"
-        work_hours: "Work hours"
-        availability_factor: "Availability factor"
-        effective_work_hours: "Effective work hours"
+        mobile_title: "Horários de trabalho"
+        start_date: "Data de início"
+        work_days: "Dias úteis"
+        work_hours: "Horário de trabalho"
+        availability_factor: "Fator de disponibilidade"
+        effective_work_hours: "Horas de trabalho efetivas"
         work_days_count:
-          one: "1 working day"
-          other: "%{count} working days"
+          one: "1 dia útil"
+          other: "%{count} dias úteis"
   user_preferences:
     disable_keyboard_shortcuts_caption: >
-      You can choose to disable default [keyboard shortcuts](docs_url) if you use a screen  reader or want to avoid accidentally triggering an action with a shortcut.
+      Pode optar por desativar os [atalhos de teclado](docs_url) predefinidos se utilizar um leitor de ecrã, ou se quiser evitar desencadear acidentalmente uma ação com um atalho.
   page:
     text: "Conteúdo"
   placeholder_users:
@@ -1193,11 +1193,11 @@ pt-PT:
       Não pode eliminar o utilizador do espaço reservado. Não tem direito de gerir membros em todos os projetos de que o utilizador do espaço reservado é membro.
     delete_tooltip: "Eliminar utilizador de espaço reservado"
     deletion_info:
-      heading_html: "Delete placeholder user %{name}"
+      heading_html: "Eliminar utilizador de espaço reservado %{name}"
       data_consequences: >
         Todas as ocorrências do utilizador de espaço reservado (por exemplo, como responsável, competente ou outros valores de utilizador) serão reatribuídas a uma conta chamada "Utilizador eliminado". Como os dados de todas as contas eliminadas são reatribuídos a esta conta, não será possível diferenciar os dados criados pelo utilizador a partir de dados de outra conta eliminada.
       irreversible: "Esta ação é irreversível"
-      confirmation_html: "Enter the placeholder user name %{name} to confirm the deletion."
+      confirmation_html: "Insira o nome de utilizador do espaço reservado %{name} para confirmar a eliminação."
   priorities:
     edit:
       priority_color_text: |
@@ -1230,9 +1230,8 @@ pt-PT:
         Assinale esta opção para excluir pacotes de trabalho com este estado dos totais de Trabalho,
         Trabalho restante e % Completo numa hierarquia.
       status_percent_complete_text_html: |-
-        In [status-based progress calculation mode](setting_url), the % Complete of a work
-        package is automatically set to this value when this status is selected.
-        Ignored in work-based mode.
+        No [modo de cálculo do progresso baseado no estado](setting_url), % Concluído de um pacote de trabalho é automaticamente definida para este valor quando este estado está selecionado.
+        Ignorado no modo baseado no trabalho.
       status_readonly_html: |
         Assinale esta opção para marcar pacotes de trabalho com este estado como só de leitura.
         Nenhum atributo pode ser alterado com a exceção do estado.
@@ -1495,7 +1494,7 @@ pt-PT:
       O registo de utilizadores é limitado para o fornecedor de início de sessão único "%{name}". Peça a um administrador para ativar a conta para si ou para alterar o limite de auto-registo para este fornecedor.
     login_with_auth_provider: "ou inicie sessão com a sua conta"
     signup_with_auth_provider: "ou registe-se, utilizando"
-    auth_source_login_html: Please login as <em>%{login}</em> to activate your account.
+    auth_source_login_html: Inicie sessão como <em>%{login}</em> para ativar a sua conta.
     omniauth_login: Por favor, inicie a sessão para ativar a sua conta.
   actionview_instancetag_blank_option: "Por favor, selecione"
   activemodel:
@@ -1512,7 +1511,7 @@ pt-PT:
         personal_access_token: "Token de acesso pessoal"
       "import/jira_open_project_reference":
         jira: "Jira"
-        jira_import: "Jira import"
+        jira_import: "Importação Jira"
       announcements:
         show_until: "Exibir até"
       attachment:
@@ -1766,11 +1765,11 @@ pt-PT:
         consented_at: "Consentiu em"
       group:
         identity_url: "URL de identidade"
-        parent: "Parent group"
-        organizational_unit: "Organizational unit"
+        parent: "Grupo principal"
+        organizational_unit: "Unidade organizacional"
       group_detail:
-        parent: "Parent group"
-        organizational_unit: "Organizational unit"
+        parent: "Grupo principal"
+        organizational_unit: "Unidade organizacional"
       user_preference:
         header_look_and_feel: "Aspeto e sensação"
         header_alerts: "Alertas"
@@ -1800,27 +1799,27 @@ pt-PT:
         principal_type: "Tipo de convite"
         id_or_email: "Nome ou endereço de e-mail"
       user_non_working_time:
-        start_date: "Start date"
-        end_date: "End date"
+        start_date: "Data de início"
+        end_date: "Data de término"
       user_working_hours:
-        valid_from: "Valid from"
-        monday: "Monday"
-        monday_hours: "Monday hours"
-        tuesday: "Tuesday"
-        tuesday_hours: "Tuesday hours"
-        wednesday: "Wednesday"
-        wednesday_hours: "Wednesday hours"
-        thursday: "Thursday"
-        thursday_hours: "Thursday hours"
-        friday: "Friday"
-        friday_hours: "Friday hours"
-        saturday: "Saturday"
-        saturday_hours: "Saturday hours"
-        sunday: "Sunday"
-        sunday_hours: "Sunday hours"
-        availability_factor: "Availability factor"
-        shared_hours: "Work hours"
-        days: "Working days"
+        valid_from: "Válido a partir de"
+        monday: "Segunda-feira"
+        monday_hours: "Horário de segunda-feira"
+        tuesday: "Terça-feira"
+        tuesday_hours: "Horário de terça-feira"
+        wednesday: "Quarta-feira"
+        wednesday_hours: "Horário de quarta-feira"
+        thursday: "Quinta-feira"
+        thursday_hours: "Horário de quinta-feira"
+        friday: "Sexta-feira"
+        friday_hours: "Horário de sexta-feira"
+        saturday: "Sábado"
+        saturday_hours: "Horário de sábado"
+        sunday: "Domingo"
+        sunday_hours: "Horário de domingo"
+        availability_factor: "Fator de disponibilidade"
+        shared_hours: "Horário de trabalho"
+        days: "Dias úteis"
       version:
         effective_date: "Data de término"
         sharing: "Compartilhar"
@@ -1875,8 +1874,8 @@ pt-PT:
         before: "tem de ser anterior a %{date}."
         before_or_equal_to: "deve ser antes ou igual a %{date}."
         blank: "não pode ficar em branco."
-        not_before_start_date: "must not be before the start date."
-        overlapping_range: "overlaps with an existing non-working day range."
+        not_before_start_date: "não deve ser antes da data de início."
+        overlapping_range: "sobrepõe-se a um intervalo de dias não úteis já existente."
         blank_nested: "precisa de ter a propriedade '%{property}' configurada."
         cannot_delete_mapping: "é necessário. Não pode ser eliminado."
         is_for_all_cannot_modify: "é para todos os projetos e, por conseguinte, não pode ser alterado."
@@ -1913,9 +1912,9 @@ pt-PT:
         less_than_or_equal_to: "deve ser menor ou igual a %{count}."
         not_available: "não está disponível devido a uma configuração do sistema."
         not_deletable: "não pode ser eliminado"
-        not_editable: "cannot be edited because it is already in effect."
+        not_editable: "não pode ser editado porque já está em vigor."
         not_current_user: "não é o utilizador atual."
-        system_wide_non_working_day_exists: "conflicts with an existing system-wide non-working day for this date."
+        system_wide_non_working_day_exists: "entra em conflito com um dia não útil existente em todo o sistema para esta data."
         not_found: "não encontrado."
         not_a_date: "não é uma data válida."
         not_a_datetime: "não é uma data/hora válida."
@@ -1949,7 +1948,7 @@ pt-PT:
         group:
           attributes:
             parent_id:
-              circular_dependency: "would create a circular group hierarchy."
+              circular_dependency: "criaria uma hierarquia circular de grupos."
         ldap_auth_source:
           attributes:
             tls_certificate_string:
@@ -2061,8 +2060,8 @@ pt-PT:
             types:
               in_use_by_work_packages: "ainda em uso por pacotes de trabalho: %{types}"
             identifier:
-              must_start_with_letter: "must start with a letter"
-              no_special_characters: "may only contain uppercase letters, numbers, and underscores"
+              must_start_with_letter: "deve começar com uma letra"
+              no_special_characters: "só pode conter letras maiúsculas, números e sublinhados"
             enabled_modules:
               dependency_missing: "O módulo '%{dependency}' tem de ser ativado também, pois o módulo '%{module}' depende dele."
               format: "%{message}"
@@ -2271,7 +2270,7 @@ pt-PT:
         user_working_hours:
           attributes:
             days:
-              no_working_day: "At least one day needs to be configured as a working day."
+              no_working_day: "Pelo menos um dia tem de ser configurado como dia útil."
         member:
           principal_blank: "Por favor, escolha pelo menos um utilizador ou grupo."
           role_blank: "tem de ser atribuído."
@@ -2539,7 +2538,7 @@ pt-PT:
       info: >
         Tem de gerar um token de cópia de segurança para poder criar uma cópia de segurança . Cada vez que solicitar uma cópia de segurança , terá de fornecer este token. Pode eliminar o token de cópia de segurança para desativar cópias de segurança deste utilizador.
       verification_html: >
-        Enter %{word} to confirm you want to %{action} the backup token.
+        Digite %{word} para confirmar que quer %{action} o token de cópia de segurança.
       verification_word_reset: redefinir
       verification_word_create: criar
       warning: >
@@ -2978,7 +2977,7 @@ pt-PT:
       title:
         one: "Um dia restante do token de teste %{trial_plan}"
         other: "F%{count} dias restantes do token de teste %{trial_plan}"
-      description_html: "You have access to all %{trial_plan} features."
+      description_html: "Tem acesso a todas as funcionalidades de %{trial_plan}."
     trial:
       not_found: "Solicitou um token de teste, mas esse pedido já não está disponível. Tente novamente."
       wait_for_confirmation: "Enviámos um e-mail para confirmar o seu endereço, a fim de obter um token de avaliação."
@@ -2995,8 +2994,8 @@ pt-PT:
       confirmation_subline: >
         Verifique a sua caixa de correio eletrónico e siga os passos para iniciar o seu teste gratuito de 14 dias.
       domain_caption: O token será válido para o nome do anfitrião configurado atualmente.
-      receive_newsletter: "I want to receive the OpenProject [newsletter](newsletter_url)."
-      consent: "I agree with the [terms of service](tos_url) and the [privacy policy](privacy_url)."
+      receive_newsletter: "Quero receber a [newsletter](newsletter_url) do OpenProject."
+      consent: "Concordo com os [termos de serviço](tos_url) e a [política de privacidade](privacy_url)."
   email_calendar_updates:
     state:
       disabled: "Desativado."
@@ -3084,8 +3083,8 @@ pt-PT:
     work_package_edit: "Pacote de trabalho editado"
     work_package_note: "Nota de pacote de trabalho adicionada"
     title:
-      project_html: "Project: %{name}"
-      subproject_html: "Subproject: %{name}"
+      project_html: "Projeto: %{name}"
+      subproject_html: "Subprojeto: %{name}"
   export:
     dialog:
       title: "Exportar"
@@ -3259,15 +3258,15 @@ pt-PT:
         #We need to include the version to invalidate outdated translations in other locales
         "17_3":
           new_features_title: >
-            The release contains various new features and improvements, such as:
+            A versão contém várias novas funcionalidades e melhorias, como:
           new_features_list:
-            line_0: "Big Agile update: dedicated sprint objects, all work packages visible on Backlogs, and automatic sprint board creation."
-            line_1: In-place editing of project attributes on the Project Overview page.
-            line_2: Sharing of meeting templates (Basic plan and higher).
-            line_3: Better search in Time and Costs, Boards, and more.
-            line_4: Option to safely change project identifiers.
-            line_5: Improved workflow configuration for administrators.
-            line_6: Action boards released to Community.
+            line_0: "Grande atualização de Agile: objetos de sprint dedicados, todos os pacotes de trabalho visíveis nos Backlogs, e criação automática de quadros de sprint."
+            line_1: Edição no local dos atributos do projeto na página Síntese do projeto.
+            line_2: Partilha de modelos de reunião (plano Basic e superiores).
+            line_3: Pesquisa melhorada nas secções Tempo e Custos, Quadros e muito mais.
+            line_4: Opção para alterar com segurança os identificadores de projetos.
+            line_5: Melhoria da configuração do fluxo de trabalho para administradores.
+            line_6: Quadros de atividades disponibilizados em Community.
     links:
       upgrade_enterprise_edition: "Aprimorar para a edição Enterprise"
       postgres_migration: "A migrar a sua instalação para PostgreSQL"
@@ -3335,7 +3334,7 @@ pt-PT:
           Modo de agendamento ajustado automaticamente com a atualização da versão.
         totals_removed_from_childless_work_packages: >-
           Os totais de trabalho e de progresso são automaticamente removidos dos pacotes de trabalho que não são principais com a <a href="%{href}" target="_blank">atualização da versão</a>. Esta é uma tarefa de manutenção e pode ser ignorada com segurança.
-        sprint_migration: "Version '%{version_name}' has been copied as a sprint."
+        sprint_migration: "A versão '%{version_name}' foi copiada como sprint."
       total_percent_complete_mode_changed_to_work_weighted_average: >-
         Os pacotes de trabalho para crianças sem Trabalho são ignorados.
       total_percent_complete_mode_changed_to_simple_average: >-
@@ -3343,9 +3342,9 @@ pt-PT:
   links:
     configuration_guide: "Guia de configuração"
     get_in_touch: "Tem questões? Entre em contato conosco."
-  instructions_after_registration_link: "You can sign in as soon as your account has been activated by clicking [here](signin_url)."
-  instructions_after_logout_link: "You can sign in again by clicking [here](signin_url)."
-  instructions_after_error_link: "You can try to sign in again by clicking [here](signin_url). If the error persists, ask your admin for help."
+  instructions_after_registration_link: "Pode iniciar sessão assim que a sua conta for ativada ao clicar [aqui](signin_url)."
+  instructions_after_logout_link: "Pode iniciar sessão novamente clicando [aqui](signin_url)."
+  instructions_after_error_link: "Pode tentar iniciar sessão novamente, clicando [aqui](signin_url). Se o erro persistir, peça ajuda ao seu administrador."
   menus:
     admin:
       ai: "Inteligência artificial (IA)"
@@ -3537,8 +3536,8 @@ pt-PT:
   label_calendar_show: "Mostrar Calendários"
   label_category: "Categoria"
   label_completed: Concluído
-  label_committed_at_html: "%{committed_revision_link} at %{date}"
-  label_committed_link: "committed revision %{revision_identifier}"
+  label_committed_at_html: "%{committed_revision_link} em %{date}"
+  label_committed_link: "revisão confirmada %{revision_identifier}"
   label_consent_settings: "Consentimento do utilizador"
   label_wiki_menu_item: Item do menu wiki
   label_select_main_menu_item: Seleccione novo item do menu principal
@@ -3705,7 +3704,7 @@ pt-PT:
   label_subject_or_id: "ID ou Assunto"
   label_calendar_subscriptions: "Subscrições de Calendários"
   label_identifier: "Identificador"
-  label_project_identifier: "Project identifier"
+  label_project_identifier: "Identificador do projeto"
   label_in: "em"
   label_in_less_than: "em menos de"
   label_in_more_than: "em mais de"
@@ -3839,13 +3838,13 @@ pt-PT:
   label_news_view_all: "Exibir todas as notícias"
   label_next: "Próxima"
   label_next_week: "Próxima semana"
-  label_next_year: "Next year"
+  label_next_year: "Próximo ano"
   label_no_change_option: "(Sem mudança)"
   label_no_data: "Sem dados para apresentar"
   label_no_due_date: "sem data de término"
   label_no_start_date: "sem data de início"
   label_no_parent_page: "Sem página pai"
-  label_no_parent_group: "(No parent group)"
+  label_no_parent_group: "(Nenhum grupo pai)"
   label_notification_center_plural: "Notificações"
   label_nothing_display: "Nada para exibir"
   label_nobody: "ninguém"
@@ -3875,7 +3874,7 @@ pt-PT:
   label_overview: "Sinopse"
   label_page_title: "Título da página"
   label_parent_group_caption: >
-    Setting a parent group will make this group a subgroup of the selected parent group. This will also inherit all memberships, including permissions of the parent group.
+    A definição de um grupo principal fará com que este grupo seja um subgrupo do grupo principal selecionado. Também herdará todos os membros, incluindo as permissões do grupo principal.
   label_part_of: "parte de"
   label_password_lost: "Esqueceu a sua senha?"
   label_password_rule_lowercase: "Minúsculas"
@@ -3902,7 +3901,7 @@ pt-PT:
   label_preview_not_available: "Pré-visualização não disponível"
   label_previous: "Anterior"
   label_previous_week: "Semana passada"
-  label_previous_year: "Previous year"
+  label_previous_year: "Ano anterior"
   label_principal_invite_via_email: " ou convide novos utilizadores via correio eletrónico"
   label_principal_search: "Adicionar utilizadores ou grupos existentes"
   label_privacy_policy: "Política de privacidade e segurança de dados"
@@ -4014,7 +4013,7 @@ pt-PT:
   label_start_to_start: "início a início"
   label_statistics: "Estatísticas"
   label_status: "Situação"
-  label_status_plural: "Statuses"
+  label_status_plural: "Estados"
   label_storage_free_space: "Espaço em disco restante"
   label_storage_used_space: "Espaço de disco usado"
   label_storage_group: "Armazenamento de ficheiro de sistema %{identifier}"
@@ -4064,7 +4063,7 @@ pt-PT:
   label_user: "Utilizador"
   label_user_and_permission: "Utilizadores e Permissões"
   label_user_named: "Utilizador %{name}"
-  label_user_activity_html: "%{value}'s activity"
+  label_user_activity_html: "Atividade de %{value}"
   label_user_anonymous: "Anónimo"
   label_user_menu: "Menu do utilizador"
   label_user_new: "Novo Utilizador"
@@ -4152,14 +4151,14 @@ pt-PT:
     other: "%{count} ficheiros"
     zero: "sem ficheiros"
   label_x_days:
-    one: "1 day"
-    other: "%{count} days"
+    one: "1 dia"
+    other: "%{count} dias"
   label_x_working_days:
-    one: "1 working day"
-    other: "%{count} working days"
+    one: "1 dia útil"
+    other: "%{count} dias úteis"
   label_x_working_days_time_off:
-    one: "Time off: 1 working day"
-    other: "Time off: %{count} working days"
+    one: "Ausência: 1 dia útil"
+    other: "Ausência: %{count} dias úteis"
   label_yesterday: "ontem"
   label_zen_mode: "Modo Zen"
   label_role_type: "Tipo"
@@ -4168,22 +4167,22 @@ pt-PT:
   label_not_changeable: "(não mutável)"
   label_global: "Global"
   label_seeded_from_env_warning: Este registo foi criado através de uma variável de ambiente de definição. Não é editável através da IU.
-  label_schedule_and_availability: "Schedule and availability"
-  label_working_hours: "Work schedule"
-  label_non_working_days: "Availability calendar"
-  label_non_working_days_with_count: "Non-working days (%{count})"
-  label_non_working_days_summary: "Summary"
-  button_add_non_working_time: "Time off"
-  button_edit_non_working_time: "Edit time off"
-  label_continued_from_previous_year: "continued from previous year"
-  label_continues_into_next_year: "continues into next year"
-  label_end_date: "Finish date"
-  label_working_days: "Working days"
-  label_non_working_times_with_count: "%{year} time off (%{count})"
-  label_non_working_times_summary: "%{year} summary"
-  label_total_user_non_working_times: "Personal non-working days"
-  label_total_global_non_working_days: "Global non-working days"
-  label_total_days_off: "Total days off"
+  label_schedule_and_availability: "Horário e disponibilidade"
+  label_working_hours: "Horários de trabalho"
+  label_non_working_days: "Calendário de disponibilidade"
+  label_non_working_days_with_count: "Dias não úteis (%{count})"
+  label_non_working_days_summary: "Resumo"
+  button_add_non_working_time: "Folgas"
+  button_edit_non_working_time: "Editar ausências"
+  label_continued_from_previous_year: "continuação do ano anterior"
+  label_continues_into_next_year: "continua no próximo ano"
+  label_end_date: "Data de término"
+  label_working_days: "Dias úteis"
+  label_non_working_times_with_count: "%{year} de ausências (%{count})"
+  label_non_working_times_summary: "Resumo de %{year}"
+  label_total_user_non_working_times: "Dias de folga por motivos pessoais"
+  label_total_global_non_working_days: "Dias não úteis globais"
+  label_total_days_off: "Total de dias de folga"
   macro_execution_error: "Erro a executar a macro %{macro_name}"
   macro_unavailable: "Macro %{macro_name} não pode ser mostrada."
   macros:
@@ -4218,7 +4217,7 @@ pt-PT:
       center: "Para o centro de notificações"
       see_in_center: "Ver comentário no centro de notificações"
       settings: "Alterar configurações de e-mail"
-    salutation: "Hello %{user},"
+    salutation: "Olá %{user},"
     salutation_full_name: "Nome completo"
     work_packages:
       created_at: "Criado a %{timestamp} por %{user}"
@@ -4248,7 +4247,7 @@ pt-PT:
       note: "Nota: \"%{note}\""
     sharing:
       work_packages:
-        allowed_actions_html: "You may %{allowed_actions} this work package. This can change depending on your project role and permissions."
+        allowed_actions_html: "Pode aceder a este pacote de trabalho em %{allowed_actions}. Isto pode mudar consoante a sua função no projeto e as suas permissões."
         create_account: "Para aceder a este pacote de trabalho, terá de criar e ativar uma conta em %{instance}. "
         open_work_package: "Abrir pacote de trabalho"
         subject: "O pacote de trabalho #%{id} foi partilhado consigo"
@@ -4347,8 +4346,8 @@ pt-PT:
   mail_user_activation_limit_reached:
     subject: Atingido o limite de ativação de utilizador
     message_html: |
-      A new user (%{email}) tried to create an account on an OpenProject environment that you manage (%{host}).
-      The user cannot activate their account since the user limit has been reached.
+      Um novo utilizador (%{email}) tentou criar uma conta num ambiente do OpenProject gerido por si (%{host}).
+      O utilizador não conseguiu ativar a sua conta pois foi atingido o limite máximo de utilizadores.
     steps:
       label: "Para permitir que o utilizador inicie a sessão pode: "
       a: "Atualizar o seu plano de pagamento ([here](upgrade_url))" #here turned into a link
@@ -4410,7 +4409,7 @@ pt-PT:
   notice_parent_item_not_found: "O elemento pai não foi encontrado."
   notice_project_not_deleted: "O projeto não foi eliminado."
   notice_project_not_found: "Projeto não encontrado."
-  notice_smtp_address_unsafe_env_hint: "SMTP address %{address} is not safe. Please add it to the whitelist using the %{env_name} environment variable."
+  notice_smtp_address_unsafe_env_hint: "O endereço SMTP %{address} não é seguro. Adicione-o à lista de permissões com a variável de ambiente %{env_name}."
   notice_successful_connection: "Ligação bem sucedida."
   notice_successful_create: "Criado com sucesso."
   notice_successful_delete: "Eliminado com sucesso."
@@ -4532,12 +4531,12 @@ pt-PT:
   permission_manage_versions: "Gerir versões"
   permission_manage_wiki: "Gerir wiki"
   permission_manage_wiki_menu: "Gerir menu da wiki"
-  permission_manage_own_working_times: "Manage own working times"
+  permission_manage_own_working_times: "Gerir o próprio horário de trabalho"
   permission_manage_own_working_times_explanation: >
-    Allows users to manage their own working times, and personal non-working days.
-  permission_manage_working_times: "Manage working times for all users"
+    Permite aos utilizadores gerir os seus próprios horários de trabalho e dias de folga por motivos pessoais.
+  permission_manage_working_times: "Gerir os tempos de trabalho de todos os utilizadores"
   permission_manage_working_times_explanation: >
-    Allows users to manage working times for all users, including personal non-working days.
+    Permite aos utilizadores gerir o horário de trabalho de todos os utilizadores, incluindo os dias de ausência por motivos pessoais.
   permission_move_work_packages: "Mover pacotes de trabalho"
   permission_protect_wiki_pages: "Proteger páginas da wiki"
   permission_rename_wiki_pages: "Renomear páginas da wiki"
@@ -4681,10 +4680,10 @@ pt-PT:
       info: "Apagar o repositório é uma ação irreversível."
       info_not_managed: "Nota: Isto NÃO apagará o conteúdo deste repositório, uma vez que não é gerido por OpenProject."
       managed_path_note: "O seguinte directório será apagado: %{path}"
-      repository_verification_html: "Enter the project's identifier %{identifier} to verify the deletion of its repository."
+      repository_verification_html: "Digite o identificador do projeto %{identifier} para verificar a eliminação do seu repositório."
       subtitle: "Pretende realmente apagar o %{repository_type} do projeto %{project_name}?"
-      subtitle_not_managed_html: "Do you really want to remove the linked %{repository_type} %{url} from the project %{project_name}?"
-      title_html: "Delete the %{repository_type}"
+      subtitle_not_managed_html: "Pretende realmente remover o %{repository_type} %{url} vinculado do projeto %{project_name}?"
+      title_html: "Eliminar %{repository_type}"
       title_not_managed: "Remover o %{repository_type} vinculado?"
     errors:
       build_failed: "Não é possível criar o repositório com a configuração selecionada. %{reason}"
@@ -4734,7 +4733,7 @@ pt-PT:
     storage:
       not_available: "O consumo de armazenamento de disco não está disponível para este repositório."
       update_timeout: "Manter as últimas informações de espaço em disco necessário para um repositório por N minutos. Como contar o espaço em disco necessário para um repositório pode ser caro, aumente este valor para reduzir o impacto no desempenho."
-      oauth_application_details_html: "The client secret value will not be accessible again after you close this window. Please copy these values into the Nextcloud OpenProject Integration settings:"
+      oauth_application_details_html: "O valor secreto do cliente não estará acessível novamente após fechar esta janela. Copie esses valores para as definições de integração do OpenProject da Nextcloud:"
       oauth_application_details_link_text: "Ir para a página de definições"
       setup_documentation_details: "Se precisar de ajuda para configurar um novo armazenamento de ficheiros, verifique a documentação: "
       setup_documentation_details_link_text: "Definição de armazenamentos"
@@ -4780,14 +4779,14 @@ pt-PT:
   setting_apiv3_cors_enabled: "Habilitar CORS"
   setting_apiv3_cors_origins: "Partilha de recursos entre origens (CORS) permitidos pela API V3"
   setting_apiv3_cors_origins_instructions_html: >
-    If CORS is enabled, these are the origins that are allowed to access OpenProject API. <br/> Please check the [Documentation on the Origin header](docs_url) on how to specify the expected values.
+    Se CORS estiver ativado, estas são as origens que têm permissão para aceder à API do OpenProject. <br/> Consulte a [Documentação sobre o cabeçalho Origin](docs_url) sobre como especificar os valores esperados.
   setting_apiv3_write_readonly_attributes: "Acesso de escrita a atributos só de leitura"
   setting_apiv3_write_readonly_attributes_instructions: >
     Se ativada, a API permitirá que os administradores escrevam atributos estáticos só de leitura durante a criação, tais como createdAt e author.
   setting_apiv3_write_readonly_attributes_warning: >
     Esta definição tem um caso de utilização para, por exemplo, importar dados, mas permite que os administradores se façam passar por outros utilizadores na criação de elementos. No entanto, todos os pedidos de criação são registados com o verdadeiro autor.
   setting_apiv3_write_readonly_attributes_additional_html: >
-    For more information on attributes and supported resources, please see the [API documentation](api_documentation_link).
+    Para mais informações sobre atributos e recursos suportados, consulte a [documentação da API](api_documentation_link).
   setting_apiv3_max_page_size: "Tamanho máximo da página de API"
   setting_apiv3_max_page_size_instructions: >
     Defina o tamanho máximo da página com que a API responderá. Não será possível executar pedidos de API que devolvam mais valores numa única página.
@@ -4884,7 +4883,7 @@ pt-PT:
   setting_work_package_properties: "Propriedades do pacote de trabalho"
   setting_work_package_startdate_is_adddate: "Utilizar a data atual como data de início para novos pacotes de trabalho"
   setting_work_packages_projects_export_limit: "Pacotes de trabalho / limite de exportação de projetos"
-  setting_journal_aggregation_time_minutes: "Aggregation period"
+  setting_journal_aggregation_time_minutes: "Período de agregação"
   setting_log_requesting_user: "Registar início de sessão, nome e endereço de email para todos os pedidos"
   setting_login_required: "Autenticação necessária"
   setting_login_required_caption: "Quando assinalado, todas as solicitações para a aplicação têm de ser autenticadas."
@@ -4965,12 +4964,12 @@ pt-PT:
   setting_welcome_text: "Bloco de texto de boas-vindas"
   setting_welcome_title: "Título de texto de boas-vindas"
   setting_welcome_on_homescreen: "Exibir o bloco de boas-vindas no ecrã inicial"
-  setting_work_packages_identifier_numeric: Instance-wide numerical sequence (default)
+  setting_work_packages_identifier_numeric: Sequência numérica a nível da instância (padrão)
   setting_work_packages_identifier_numeric_caption: >
-    Every work package gets a sequential number starting with 1 and incremented with every new one. The numbers are unique within this instance so they remain the same even if work packages are moved between projects.
-  setting_work_packages_identifier_alphanumeric: Project-based alphanumerical identifiers
+    Cada pacote de trabalho recebe um número sequencial que começa em 1 e aumenta com cada novo pacote. Os números são únicos nesta instância, pelo que permanecem os mesmos, mesmo que os pacotes de trabalho sejam transferidos entre projetos.
+  setting_work_packages_identifier_alphanumeric: Identificadores alfanuméricos baseados em projetos
   setting_work_packages_identifier_alphanumeric_caption: >
-    Every project has a unique identifier that is prefixed to the work package ID. If a work package moved to another project, a new identifier is generated but the old one continues to function.
+    Cada projeto tem um identificador único que é prefixado ao ID do pacote de trabalho. Se um pacote de trabalho for transferido para outro projeto, é gerado um novo identificador, mas o antigo continua a funcionar.
   setting_work_package_list_default_highlighting_mode: "Modo de destaque padrão"
   setting_work_package_list_default_highlighted_attributes: "Atributos padrão destacados em linha"
   setting_working_days: "Dias úteis"
@@ -5137,12 +5136,12 @@ pt-PT:
       section_work_week: "Semana de trabalho"
       section_holidays_and_closures: "Feriados e encerramentos"
     work_packages:
-      work_package_identifier: "Work package identifier"
+      work_package_identifier: "Identificador do pacote de trabalho"
       not_allowed_text: "Não tem as permissões necessárias para visualizar esta página."
       activities:
         enable_internal_comments: "Ativar comentários internos"
         helper_text_html: >
-          Internal comments allow an internal team to communicate amongst themselves privately. These are only visible to selected roles that have the necessary permissions and will not be visible publicly. [Click here to learn more](docs_url)
+          Os comentários internos permitem que uma equipa interna comunique entre si de forma privada. Estes só são visíveis para funções selecionadas que tenham as permissões necessárias e não serão visíveis publicamente. [Clique aqui para mais informações](docs_url)
   text_formatting:
     markdown: "Markdown"
     plain: "Texto Simples"
@@ -5212,7 +5211,7 @@ pt-PT:
   text_default_administrator_account_changed: "Conta padrão de administrador alterada"
   text_default_encoding: "Padrão: UTF-8"
   text_destroy: "Eliminar"
-  text_destroy_with_associated: "There are additional objects associated with the work package(s) that are to be deleted. Those objects are of the following types:"
+  text_destroy_with_associated: "Existem objectos adicionais associados ao(s) pacote(s) de trabalho que vão ser eliminados. Esses objetos são dos seguintes tipos:"
   text_destroy_what_to_do: "O que deseja fazer?"
   text_diff_truncated: "... Este diff foi truncado porque excede o tamanho máximo que pode ser mostrado."
   text_email_delivery_not_configured: "A entrega de emails não está configurada e as notificações estão desativadas.\nConfigure o seu servidor de SMTP para ativar."
@@ -5264,10 +5263,10 @@ pt-PT:
   text_plugin_assets_writable: "É possíver escrever na pasta de ativos dos módulos de extensão"
   text_powered_by: "Desenvolvido por %{link}"
   text_project_identifier_info: "Apenas letras minúsculas (a-z), números, traços e underscores são permitidos, deve começar com uma letra minúscula."
-  text_project_identifier_description: 'The project identifier is prepended to all work package IDs. If the identifier is "PROJ" for example, the work package identifier will be "PROJ-12" or "PROJ-246".'
-  text_project_identifier_url_description: "The project identifier is included in the URL of the project."
-  text_project_identifier_handle_format: "Must start with a letter and contain only uppercase letters, numbers, and underscores (max 10 characters)."
-  text_project_identifier_format: "Must start with a lowercase letter. Only lowercase letters (a-z), numbers, dashes and underscores are allowed."
+  text_project_identifier_description: 'O identificador do projeto é anexado a todos os identificadores de pacotes de trabalho. Se o identificador for "PROJ", por exemplo, o identificador do pacote de trabalho será "PROJ-12" ou "PROJ-246".'
+  text_project_identifier_url_description: "O identificador do projeto está incluído no URL do projeto."
+  text_project_identifier_handle_format: "Deve começar por uma letra e conter apenas letras maiúsculas, números e sublinhados (máximo de 10 caracteres)."
+  text_project_identifier_format: "Deve começar com uma letra minúscula. Só são permitidas letras minúsculas (a-z), números, traços e sublinhados."
   text_reassign: "Reatribuir pacote de trabalho:"
   text_regexp_multiline: 'Regex é aplicado num modo de várias linhas. por exemplo, ^---\s+'
   text_repository_usernames_mapping: "Selecionar ou atualizar o utilizador de OpenProjecto mapeado a cada nome de utilizador encontrado no repositório.\nUtilizadores com o mesmo nome de utilizador ou e-mail no OpenProject e no repositório são mapeados automaticamente."
@@ -5375,18 +5374,18 @@ pt-PT:
   version_status_locked: "bloqueado"
   version_status_open: "abrir"
   note: Nota
-  note_password_login_disabled_link: "Password login has been disabled through a [configuration setting](configuration_url)."
+  note_password_login_disabled_link: "O início de sessão com palavra-passe foi desativado através de uma [definição de configuração](configuration_url)."
   warning: Aviso
   warning_attachments_not_saved: "Não foi possível guardar %{count} ficheiro(s)."
   warning_imminent_user_limit_html: >
-    You invited more users than are supported by your current plan. Invited users may not be able to join your OpenProject environment. Please [upgrade your plan](upgrade_url) or block existing users in order to allow invited and registered users to join.
+    Convidou mais utilizadores do que os suportados no seu plano atual. Os utilizadores convidados podem não conseguir entrar no seu ambiente OpenProject. [Faça upgrade do seu plano](upgrade_url) ou bloqueie os utilizadores existentes, para permitir a entrada de utilizadores convidados e registados.
   warning_registration_token_expired: |
     O e-mail de ativação expirou. Enviámos um novo para %{email}.
     por favor clique no link lá contido para ativar a sua conta.
   warning_user_limit_reached: >
     Adicionar usuários adicionais excederá o limite atual. Por favor, contate um administrador para aumentar o limite de usuários para garantir que usuários externos sejam capazes de acessar esta instância.
   warning_user_limit_reached_admin_html: >
-    Adding additional users will exceed the current limit. Please [upgrade your plan](upgrade_url) to be able to ensure external users are able to access this instance.
+    A adição de utilizadores adicionais irá exceder o limite atual. [Faça upgrade do seu plano](upgrade_url) para garantir que os utilizadores externos conseguem aceder a esta instância.
   warning_user_limit_reached_instructions: >
     Atingiu o seu limite de utilizadores (%{current}/%{max} utilizadores ativos). Entre em contato com sales@openproject.com para atualizar o seu plano da edição Enterprise e adicionar novos utilizadores.
   warning_protocol_mismatch_html: >
@@ -5446,7 +5445,7 @@ pt-PT:
     reminders:
       label_remind_at: "Data"
       note_placeholder: "Porque está a definir este lembrete?"
-      create_success_message_html: "Reminder set successfully. You will receive a notification for this work package %{reminder_time}."
+      create_success_message_html: "Lembrete definido com sucesso. Irá receber uma notificação para este pacote de trabalho %{reminder_time}."
       success_update_message: "Lembrete atualizado com sucesso."
       success_deletion_message: "Lembrete eliminado com sucesso."
   sharing:
@@ -5478,7 +5477,7 @@ pt-PT:
     warning_user_limit_reached: >
       A adição de utilizadores adicionais excederá o limite atual. Contacte um administrador para aumentar o limite de utilizadores, de modo a garantir que os utilizadores externos possam aceder a esta %{entity}.
     warning_user_limit_reached_admin_html: >
-      Adding additional users will exceed the current limit. Please [upgrade your plan](upgrade_url) to be able to ensure external users are able to access this %{entity}.
+      A adição de utilizadores adicionais irá exceder o limite atual. [Faça upgrade do seu plano](upgrade_url) para garantir que os utilizadores externos conseguem aceder a este %{entity}.
     warning_no_selected_user: "Selecione os utilizadores com quem partilhar esta %{entity}"
     warning_locked_user: "O utilizador %{user} está bloqueado e não pode ser partilhado com"
     user_details:
@@ -5598,7 +5597,7 @@ pt-PT:
       project: Não revelado - O projeto está invisível devido a falta de permissões.
       ancestor: Não revelado - O ancestral está invisível devido a falta de permissões.
       definingProject: Não revelado - O projeto está invisível devido a falta de permissões.
-      definingWorkspace: Undisclosed - The workspace is invisible because of lacking permissions.
+      definingWorkspace: Não revelado - O espaço de trabalho está invisível devido a falta de permissões.
   doorkeeper:
     pre_authorization:
       status: "Pré-autorização"

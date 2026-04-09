@@ -109,7 +109,7 @@ cs:
   button_log_time: "Log"
   button_add_activity: "Aktivita"
   button_add_time_entry: "Čas protokolu"
-  button_stop_timer: "Stop timer"
+  button_stop_timer: "Zastavit časovač"
   caption_booked_on_project: "Rezervováno v projektu"
   caption_default: "Výchozí"
   caption_default_rate_history_for: "Výchozí historie sazeb  pro %{user}"

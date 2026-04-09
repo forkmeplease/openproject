@@ -121,7 +121,7 @@ cs:
         description: "Configure a Jira host to start importing items from Jira to this OpenProject instance."
       configuration:
         title: "Jira configuration"
-        new: "New configuration"
+        new: "Nová konfigurace"
       banner:
         title: "Limited import"
         description: "This import tool is currently in beta and can only import basic data: projects, issues (name, title, description, attachments), users (name, email, project membership), statuses, and types. It cannot import workflows, custom fields, issue relations, or permissions. We currently only support Jira Server/Data Center versions 10.x and 11.x. Cloud instances are not supported at this time."
@@ -180,7 +180,7 @@ cs:
           projects_meta_fetching: "Fetching project data"
           projects_meta_error: "Error fetching project data"
           projects_meta_done: "Data gathered"
-          importing: "In progress"
+          importing: "Probíhá"
           import_error: "Error during import"
           imported: "Review mode"
           reverting: "Reverting"
@@ -205,7 +205,7 @@ cs:
               many: "%{count} issues"
               other: "%{count} issues"
             work_packages:
-              one: "1 work package"
+              one: "1 pracovní balíček"
               few: "%{count} work packages"
               many: "%{count} work packages"
               other: "%{count} work packages"
@@ -220,7 +220,7 @@ cs:
               many: "%{count} statuses"
               other: "%{count} statuses"
             users:
-              one: "1 user"
+              one: "1 uživatel"
               few: "%{count} users"
               many: "%{count} users"
               other: "%{count} users"
@@ -594,12 +594,12 @@ cs:
             description: Přidat položky do tohoto seznamu k vytvoření podpoložek uvnitř jiného
         delete_dialog:
           title: "Odstranění položku vlastního pole"
-          heading: "Delete custom field item?"
+          heading: "Odstranit vlastní položku pole?"
           description: "This action will irreversibly remove the item and all its sub-items. Any assigned values will be permanently deleted. If this field is required, removing items may cause existing work packages to become invalid."
         placeholder:
           label: "Štítek položky"
           short: "Krátký název"
-          weight: "Weight"
+          weight: "Váha"
       notice:
         remember_items_and_projects: "Remember to set items and projects in the respective tabs for this custom field."
       hierarchy:
@@ -611,7 +611,7 @@ cs:
         title: Role Assignment
         description: You can automatically grant a certain project role to any user assigned to this project attribute, regardless of that user’s original role in that project.
         warning: Depending on the role selected below, the user assigned to this project attribute might gain significantly more permissions than they previously had, including the ability to add new members and elevate their role.
-        role_field_label: "Project Role"
+        role_field_label: "Projektová role"
         role_field_caption: This project role will automatically be granted to any user assigned to this project attribute
         review_hint: >
           There are %{user_count} who are already assigned to this project attribute in various projects. They might get additional permissions and be added to projects they did not previously have access to.
@@ -741,7 +741,7 @@ cs:
       depth: "Hloubka"
       item: "Položka"
       label: "Popisek"
-      weight: "Weight"
+      weight: "Váha"
       short: "Krátký název"
       parent: "Nadřazený"
       blueprint: "Vzhled plánu"

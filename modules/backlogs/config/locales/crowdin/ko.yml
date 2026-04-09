@@ -32,11 +32,11 @@ ko:
         name: "스프린트 이름"
         sharing: "공유"
         statuses:
-          in_planning: "In planning"
-          active: "Active"
-          completed: "Completed"
+          in_planning: "계획 중"
+          active: "활성"
+          completed: "완료됨"
       project:
-        sprint_sharing: "Sprint sharing"
+        sprint_sharing: "스프린트 공유"
       sprint:
         duration: "스프린트 기간"
       user_preference:
@@ -45,20 +45,20 @@ ko:
       work_package:
         backlogs_work_package_type: "백로그 유형"
         position: "위치"
-        sprint: "Sprint"
+        sprint: "스프린트"
         story_points: "스토리 포인트"
     errors:
       messages:
-        must_be_in_planning: "must be in planning to start."
+        must_be_in_planning: "- 시작하려면 계획 단계에 있어야 합니다."
         only_one_active_sprint_allowed: "프로젝트당 하나의 활성 스프린트만 허용됩니다."
-        dates_required: "Start and finish dates are required in order to start the sprint."
+        dates_required: "스프린트를 시작하려면 시작 날짜와 완료 날짜가 필요합니다."
       models:
         project:
-          receiving_sprints: "is receiving shared sprints. Own sprints cannot be created."
+          receiving_sprints: "- 공유 스프린트를 받고 있습니다. 자체 스프린트는 생성할 수 없습니다."
           attributes:
             sprint_sharing:
-              share_all_projects_already_taken: "cannot be set because project \"%{name}\" is already sharing with all projects."
-              share_all_projects_already_taken_anonymous: "cannot be set because another project is already sharing with all projects."
+              share_all_projects_already_taken: "- 프로젝트 \"%{name}\"이(가) 이미 모든 프로젝트와 공유 중이므로 설정할 수 없습니다."
+              share_all_projects_already_taken_anonymous: "- 다른 프로젝트가 이미 모든 프로젝트와 공유 중이므로 설정할 수 없습니다."
         work_package:
           attributes:
             blocks_ids:
@@ -67,16 +67,16 @@ ko:
             version_id:
               task_version_must_be_the_same_as_story_version: "은(는) 부모 스토리의 버전과 동일해야 합니다."
             sprint:
-              not_shared_with_project: "is not shared with the project the work package is in."
-              not_eligible_for_moving: "is not an active sprint in the project which holds the sprint the work package is moved out of."
+              not_shared_with_project: "- 작업 패키지가 속한 프로젝트와 공유되지 않습니다."
+              not_eligible_for_moving: "- 작업 패키지가 이동된 스프린트가 속한 프로젝트에서 활성 스프린트가 아닙니다."
         agile/sprint:
           attributes:
             base:
               unfinished_work_packages:
-                other: "There are %{count} work packages that were not completed in this sprint."
+                other: "이 스프린트에서 완료되지 않은 %{count}개 작업 패키지가 있습니다."
               format: "%{message}"
             status:
-              not_active: "is not active so it cannot be closed."
+              not_active: "- 활성화되어 있지 않으므로 닫을 수 없습니다."
         sprint:
           cannot_end_before_it_starts: "스프린트는 시작되기 전에 끝날 수 없습니다."
     models:

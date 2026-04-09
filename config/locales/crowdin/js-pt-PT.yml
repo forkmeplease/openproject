@@ -1218,5 +1218,5 @@ pt-PT:
         network_on: "A rede está de volta. Estamos a tentar."
     projects:
       identifier_suggestion:
-        loading: "Loading suggestion..."
-        set_name_first: "Please set the name first."
+        loading: "A carregar sugestão..."
+        set_name_first: "Defina primeiro o nome."

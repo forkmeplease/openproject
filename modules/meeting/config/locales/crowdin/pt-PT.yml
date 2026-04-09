@@ -197,8 +197,8 @@ pt-PT:
   label_subscribe_icalendar: "Subscrever o calendário"
   caption_meeting_template_select: "Selecione um modelo para copiar automaticamente os seus pontos da agenda"
   caption_template_project_select: "Selecione o projeto em que quer criar este modelo de reunião"
-  placeholder_meeting_template_select_project_first: "Select a project first"
-  placeholder_meeting_template_no_templates_for_project: "No templates available for this project"
+  placeholder_meeting_template_select_project_first: "Selecione um projeto primeiro"
+  placeholder_meeting_template_no_templates_for_project: "Não há modelos disponíveis para este projeto"
   meeting:
     participants:
       label:
@@ -218,8 +218,8 @@ pt-PT:
         heading: "Sem participantes"
         description: "Ainda não há participantes."
     attachments:
-      onetime_template: "These attached files will be included in all future meetings using this template."
-      series_template: "These attached files will be included in all future meetings in the series."
+      onetime_template: "Estes ficheiros em anexo serão incluídos em todas as futuras reuniões que utilizem este modelo."
+      series_template: "Estes ficheiros em anexo serão incluídos em todas as futuras reuniões da série."
       text: "Os ficheiros anexados estão disponíveis para todos os participantes na reunião. Também pode arrastar e soltar estes ficheiros nas notas do item da agenda."
     copy:
       title: "Copiar reunião: %{title}"
@@ -296,7 +296,7 @@ pt-PT:
           title: "Eliminar modelo"
           heading: "Eliminar este modelo?"
           confirmation_message_html: >
-            This action is not reversible. Please proceed with caution. Existing meetings that were created using this template will not be affected.
+            Esta ação não é reversível. Proceda com cuidado. As reuniões existentes criadas com este modelo não serão afetadas.
       occurrence:
         title: "Cancelar ocorrência de reunião"
         heading: "Cancelar esta ocorrência de reunião?"
@@ -374,7 +374,7 @@ pt-PT:
           disabled: >
             As atualizações de calendário por e-mails estão desativadas. Os participantes não receberão um e-mail a informar quando adiciona ou remove participantes.
           draft_disabled: >
-            Participants will not receive an email informing them when you add or remove participants.
+            Os participantes não receberão um e-mail a informá-los quando adiciona ou remove participantes.
         onetime:
           enabled: >
             Todos os participantes receberão convites de calendário atualizados via e-mail quando adicionar ou remover participantes.

@@ -108,7 +108,7 @@ pt-BR:
     jemalloc_allocator: Alocador de memória Jemalloc
     journal_aggregation:
       caption: >
-        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays.
+        As ações do usuário em um pacote de trabalho (alterar descrição, status, valores ou escrever comentários) são agrupadas se realizadas dentro deste período. Esse intervalo também controla os atrasos nas notificações e nos [webhooks] (webhook_link).
     import:
       title: "Importar"
     jira:
@@ -162,7 +162,7 @@ pt-BR:
         history: "Histórico"
         remove_error: "Uma importação do Jira não pode ser removida enquanto estiver em execução"
         import_blocked_error: "Outra execução de importação do Jira está em andamento ou aguardando revisão. Conclua ou reverta-a antes de iniciar uma nova importação."
-        project_identifier_taken: "You are trying to import a project with an already used identifier: %{taken_identifier}. Please update the project identifier in Jira then click on Retry."
+        project_identifier_taken: "Você está tentando importar um projeto com um identificador já em uso: %{taken_identifier}. Atualize o identificador do projeto no Jira e clique em Tentar novamente."
         blank:
           title: "Ainda não há execuções de importação configuradas"
           description: "Crie uma execução de importação para começar a importar informações desta instância do Jira"
@@ -387,10 +387,10 @@ pt-BR:
           existing_identifiers_notice: >
             Existing identifiers for %{project_count} projects don't meet requirements for project-based alphanumerical identifiers. OpenProject can automatically update these so that they are valid as in the examples below. Click on 'Autofix and save' to update identifiers for all projects in this manner and enable project-based alphanumerical identifiers.
         box_header:
-          label_project: Project
-          label_previous_identifier: Previous identifier
-          label_autofixed_suggestion: Future identifier
-          label_example_work_package_id: Example work package ID
+          label_project: Projeto
+          label_previous_identifier: Identificação anterior
+          label_autofixed_suggestion: Identificador futuro
+          label_example_work_package_id: Exemplo de ID de pacote de trabalho
         autofix_preview:
           error_too_long: Has to be fewer than 5 characters
           error_special_characters: Special characters not allowed

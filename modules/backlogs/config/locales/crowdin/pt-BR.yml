@@ -33,8 +33,8 @@ pt-BR:
         sharing: "Compartilhamento"
         statuses:
           in_planning: "Em planejamento"
-          active: "Ativo"
-          completed: "Concluído"
+          active: "Ativa"
+          completed: "Concluída"
       project:
         sprint_sharing: "Compartilhamento de sprints"
       sprint:
@@ -51,14 +51,14 @@ pt-BR:
       messages:
         must_be_in_planning: "deve estar em fase de planejamento para começar."
         only_one_active_sprint_allowed: "apenas uma sprint ativa é permitida por projeto."
-        dates_required: "É necessário informar as datas de início e término para dar início ao sprint."
+        dates_required: "As datas de início e término são obrigatórias para iniciar a sprint."
       models:
         project:
-          receiving_sprints: "está recebendo sprints compartilhados. Não é possível criar sprints próprios."
+          receiving_sprints: "está recebendo sprints compartilhadas. Não é possível criar sprints próprias."
           attributes:
             sprint_sharing:
-              share_all_projects_already_taken: "não é possível definir porque o projeto \"%{name}\" já está sendo compartilhado com todos os projetos."
-              share_all_projects_already_taken_anonymous: "não pode ser definido porque outro projeto já está compartilhando com todos os projetos."
+              share_all_projects_already_taken: "não pode ser definido, pois o projeto “%{name}” já está compartilhando com todos os projetos."
+              share_all_projects_already_taken_anonymous: "não pode ser definido, pois outro projeto já está compartilhando com todos os projetos."
         work_package:
           attributes:
             blocks_ids:
@@ -67,17 +67,17 @@ pt-BR:
             version_id:
               task_version_must_be_the_same_as_story_version: "deve ser igual à versão da história dos pais."
             sprint:
-              not_shared_with_project: "não é compartilhado com o projeto ao qual o pacote de trabalho pertence."
-              not_eligible_for_moving: "não há nenhum sprint ativo no projeto do qual o pacote de trabalho foi removido."
+              not_shared_with_project: "não está compartilhada com o projeto ao qual o pacote de trabalho pertence."
+              not_eligible_for_moving: "não é uma sprint ativa no projeto que contém a sprint da qual o pacote de trabalho está sendo movido."
         agile/sprint:
           attributes:
             base:
               unfinished_work_packages:
-                one: "Há %{count} tarefas que não foram concluídas neste sprint."
-                other: "Há %{count} pacotes de trabalho que não foram concluídos neste sprint."
+                one: "Há %{count} pacote de trabalho que não foi concluído nesta sprint."
+                other: "Há %{count} pacotes de trabalho que não foram concluídos nesta sprint."
               format: "%{message}"
             status:
-              not_active: "não está ativo, portanto não pode ser fechado."
+              not_active: "não está ativo, portanto não pode ser concluído."
         sprint:
           cannot_end_before_it_starts: "A sprint não pode terminar antes de começar."
     models:
@@ -91,12 +91,12 @@ pt-BR:
     definition_of_done: "Definição de pronto"
     definition_of_done_caption: "Os pacotes de trabalho com esses status são considerados concluídos nas visualizações da carteira de projetos e nos relatórios."
     done_status: "Status \"Concluído\""
-    sharing_description: "Este projeto pode compartilhar seus próprios sprints, receber sprints compartilhados ou gerenciar sprints de forma independente (sem compartilhamento)."
+    sharing_description: "Este projeto pode compartilhar suas próprias sprints, receber sprints compartilhadas ou gerenciar sprints de forma independente (sem compartilhamento)."
     sharing: "Compartilhamento"
     impediment: "Impedimento"
     label_versions_default_fold_state: "Mostrar versões em modo fechado"
     label_burndown_chart: "Gráfico de burndown"
-    label_sprint_board: "Conselho da Sprint"
+    label_sprint_board: "Quadro de sprints"
     work_package_is_closed: "Pacote de trabalho está pronto, quando"
     label_is_done_status: "Situação %{status_name} significa pronto"
     points_label:
@@ -117,7 +117,7 @@ pt-BR:
     unassigned: "Não atribuída"
     administration_blankslate:
       title: "As configurações administrativas do Backlog estão em evolução"
-      text: "No momento, estamos reformulando o módulo Backlogs. As configurações administrativas para sprints e backlogs estarão disponíveis aqui em breve. As configurações no nível do projeto continuam disponíveis."
+      text: "Estamos reformulando o módulo de Backlogs. Em breve, você poderá ver aqui as configurações de administração de sprints e backlogs. As configurações do projeto continuam disponíveis normalmente."
     user_preference:
       header_backlogs: "Módulo de backlogs"
       button_update_backlogs: "Atualizar módulo de backlogs"
@@ -138,19 +138,19 @@ pt-BR:
       blankslate_description: "Todos os pacotes de trabalho em aberto neste projeto aparecerão automaticamente aqui."
       label_drag_work_package: "Mover %{name}"
       show_more:
-        one: "Show 1 more item"
-        other: "Show %{count} more items"
+        one: "Mostrar mais 1 item"
+        other: "Mostrar mais %{count} itens"
     inbox_item_component:
-      label_drag_work_package: "Move %{name}"
+      label_drag_work_package: "Mover %{name}"
     inbox_menu_component:
-      label_actions: "Work package actions"
+      label_actions: "Ações do pacote de trabalho"
       action_menu:
-        copy_url_to_clipboard: "Copy URL to clipboard"
-        copy_work_package_id: "Copy work package ID"
-        move_menu: "Move"
-      label_move_to_sprint: "Move to sprint"
+        copy_url_to_clipboard: "Copiar URL para a área de transferência"
+        copy_work_package_id: "Copiar ID do pacotes de trabalho"
+        move_menu: "Mover"
+      label_move_to_sprint: "Mover para sprint"
     move_to_sprint_dialog_component:
-      title: "Move to sprint"
+      title: "Mover para sprint"
       label_sprint: "Sprint"
     backlog:
       blankslate:
@@ -178,15 +178,15 @@ pt-BR:
         wiki: "Wiki"
         properties: "Propriedades"
     finish_sprint_dialog_component:
-      title: "Há itens em andamento"
+      title: "Existem itens em andamento"
       body: "%{message} O que você gostaria de fazer com isso?"
-      legend: "Action for unfinished work packages"
+      legend: "Ação para pacotes de trabalho não concluídos"
       actions:
-        move_to_top_of_backlog: "Move them to the top of the backlog"
-        move_to_bottom_of_backlog: "Move them to the bottom of the backlog"
-        move_to_sprint: "Move them to another sprint"
-      select_sprint_label: "Select sprint"
-      button_complete_sprint: "Complete sprint"
+        move_to_top_of_backlog: "Mover para o início do backlog"
+        move_to_bottom_of_backlog: "Mover para o final do backlog"
+        move_to_sprint: "Mover para outra sprint"
+      select_sprint_label: "Selecionar sprint"
+      button_complete_sprint: "Concluir sprint"
     sprint_menu_component:
       label_actions: "Ações da sprint"
       action_menu:
@@ -195,15 +195,15 @@ pt-BR:
         start_sprint_disabled_description: "Another sprint is already active."
         start_sprint_missing_dates_description: "Start and finish dates are required in order to start the sprint."
         edit_sprint: "Editar sprint"
-        add_work_package: "Add work package"
+        add_work_package: "Adicionar pacote de trabalho"
     story_component:
       label_drag_story: "Mover %{name}"
     story_menu_component:
       label_actions: "Ações da história"
       action_menu:
-        copy_url_to_clipboard: "Copy URL to clipboard"
-        copy_work_package_id: "Copy work package ID"
-        move_menu: "Move"
+        copy_url_to_clipboard: "Copiar URL para a área de transferência"
+        copy_work_package_id: "Copiar ID do pacotes de trabalho"
+        move_menu: "Mover"
   backlogs_points_burn_direction: "Pontos burn up/down"
   backlogs_product_backlog: "Backlog do produto"
   backlogs_story: "História"
@@ -224,14 +224,14 @@ pt-BR:
       task_type:
         cannot_be_story_type: "também não pode ser do tipo história"
   label_backlog: "Backlog"
-  label_inbox: "Inbox"
+  label_inbox: "Caixa de entrada"
   label_backlogs: "Backlogs"
   label_backlogs_unconfigured: "Você ainda não configurou o Backlog. Por favor, vá para %{administration} > %{plugins} e, em seguida, clique em %{configure} o link para este plugin. Uma vez que você definiu os campos, volte a esta página para começar a usar a ferramenta."
   label_blocks_ids: "IDs dos pacotes de trabalho bloqueados"
-  label_burndown_chart: "Burndown chart"
+  label_burndown_chart: "Gráfico de burndown"
   label_column_in_backlog: "Coluna no backlog"
   label_used_as_backlog: "Usado como backlog"
-  label_sprint_board: "Conselho da Sprint"
+  label_sprint_board: "Quadro de sprints"
   label_points_burn_down: "Abaixo"
   label_points_burn_up: "Acima"
   label_sprint_edit: "Editar sprint"
@@ -239,12 +239,12 @@ pt-BR:
   label_sprint_new: "Nova sprint"
   label_backlog_and_sprints: "Backlog and sprints"
   label_task_board: "Quadro de tarefas"
-  notice_successful_start: "A corrida de velocidade começou."
-  notice_successful_finish: "O sprint foi concluído."
-  notice_unsuccessful_start: "The sprint could not be started."
-  notice_unsuccessful_start_with_reason: "The sprint could not be started: %{reason}"
-  notice_unsuccessful_finish: "The sprint could not be completed."
-  notice_unsuccessful_finish_with_reason: "The sprint could not be completed: %{reason}"
+  notice_successful_start: "A sprint foi iniciada."
+  notice_successful_finish: "A sprint foi concluída."
+  notice_unsuccessful_start: "Não foi possível iniciar a sprint."
+  notice_unsuccessful_start_with_reason: "Não foi possível iniciar a sprint: %{reason}"
+  notice_unsuccessful_finish: "Não foi possível concluir a sprint."
+  notice_unsuccessful_finish_with_reason: "Não foi possível concluir a sprint: %{reason}"
   permission_create_sprints: "Criar sprints"
   permission_manage_sprint_items: "Gerenciar itens da sprint"
   permission_select_done_statuses: "Selecione situações concluídas"
@@ -257,22 +257,22 @@ pt-BR:
       backlog_sharing:
         options:
           no_sharing:
-            label: "Don't share"
-            caption: "Sprints created in this project will only be available and visible to this project. They will also not be visible to subprojects."
+            label: "Não compartilhar"
+            caption: "As sprints criadas neste projeto estarão disponíveis e visíveis apenas para ele. Além disso, não serão visíveis para os subprojetos."
           receive_shared:
-            label: "Receive shared sprints"
-            caption: "This project can only use sprints shared by other projects."
-            warning: "Este projeto só pode utilizar sprints compartilhados por outros projetos. Os sprints não utilizados criados neste projeto no passado não estarão mais visíveis."
+            label: "Receber sprints compartilhadas"
+            caption: "Este projeto só pode utilizar sprints compartilhadas por outros projetos."
+            warning: "Este projeto só pode utilizar sprints compartilhadas por outros projetos. Sprints criadas anteriormente neste projeto que não foram usadas não estarão mais visíveis."
           share_all_projects:
             label: "Todos os projetos"
-            caption: "Os sprints criados neste projeto estarão disponíveis para todos os projetos nesta instância. Se você selecionar esta opção, eles não estarão mais disponíveis para outros projetos."
+            caption: "As sprints criadas neste projeto estarão disponíveis para todos os projetos desta instância. Se você selecionar esta opção, elas não estarão mais disponíveis para outros projetos."
             disabled_caption: "A opção não está disponível, pois o projeto \"%{name}\" está compartilhando com todos os projetos no momento, e apenas um projeto pode fazer isso."
-            disabled_caption_anonymous: "Option not available since another project is currently sharing with all projects and only one project can do this."
+            disabled_caption_anonymous: "Opção indisponível, pois outro projeto está compartilhando com todos os projetos e apenas um projeto pode fazer isso."
           share_subprojects:
-            label: "Subprojects"
-            caption: "Sprints created in this project will be available to all subprojects of the current project."
-            info: "Sharing a sprint will share the name, status and the start and finish dates in all projects. These cannot be modified in projects that receive and use these sprints."
-        sprint_sharing: Share sprints
+            label: "Subprojetos"
+            caption: "As sprints criadas neste projeto estarão disponíveis para todos os subprojetos do projeto atual."
+            info: "Compartilhar uma sprint fará com que o nome, o status e as datas de início e término sejam replicados em todos os projetos. Esses dados não podem ser alterados nos projetos que recebem e utilizam essas sprints."
+        sprint_sharing: Compartilhar sprints
   rb_burndown_charts:
     show:
       blankslate_title: "Nenhum dado de burndown disponível"
