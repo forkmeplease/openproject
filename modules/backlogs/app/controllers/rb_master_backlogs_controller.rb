@@ -41,7 +41,8 @@ class RbMasterBacklogsController < RbApplicationController
   before_action :load_backlogs, only: %i[index backlog]
 
   def backlog
-    if turbo_frame_request?
+    case turbo_frame_request_id
+    when "backlogs_container"
       render partial: "backlog_list", layout: false
     else
       render :backlog
