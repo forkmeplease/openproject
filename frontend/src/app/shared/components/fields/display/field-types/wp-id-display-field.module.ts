@@ -45,6 +45,10 @@ export class WorkPackageIdDisplayField extends IdDisplayField {
 
   private uiStateBuilder:UiStateLinkBuilder = new UiStateLinkBuilder(this.$state, this.keepTab, this.currentProject, this.pathHelper);
 
+  public get valueString():string {
+    return this.resource.displayId ?? this.value?.toString() ?? '';
+  }
+
   public render(element:HTMLElement, displayText:string):void {
     if (!this.value) {
       return;
