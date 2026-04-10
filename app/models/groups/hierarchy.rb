@@ -56,7 +56,10 @@ module Groups::Hierarchy
       # ancestor_ids are returned child-first by the CTE.
       # Use array_position to preserve that order, then apply asc/desc.
       ordered_ids = order == :asc ? ids.reverse : ids
-      scope.order(Arel.sql("array_position(ARRAY[#{ordered_ids.join(',')}]::bigint[], #{Group.table_name}.id)"))
+      order_sql = self.class.sanitize_sql_array(
+        ["array_position(ARRAY[?]::bigint[], #{Group.table_name}.id)", ordered_ids]
+      )
+      scope.order(Arel.sql(order_sql))
     else
       scope
     end
