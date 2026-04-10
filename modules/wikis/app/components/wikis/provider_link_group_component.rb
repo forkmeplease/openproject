@@ -35,9 +35,9 @@ module Wikis
 
     alias_method :provider, :model
 
-    def initialize(model = nil, work_package: nil, **options)
+    def initialize(model = nil, work_package: nil, **)
       @work_package = work_package
-      super(model, **options)
+      super(model, **)
     end
   end
 end
