@@ -195,7 +195,9 @@ export abstract class WorkPackageSingleViewBase extends UntilDestroyedMixin {
       );
 
     this.displayNotificationsButton$ = this.storeService.hasNotifications$;
-    this.storeService.setFilters(this.workPackage.id!);
+    // Use the numeric PK ($source.id) — the notification API's resourceId filter
+    // requires a database ID, not the user-facing display identifier.
+    this.storeService.setFilters(this.workPackage.$source.id!.toString());
 
     // Set authorisation data
     this.authorisationService.initModelAuth('work_package', this.workPackage.$links);

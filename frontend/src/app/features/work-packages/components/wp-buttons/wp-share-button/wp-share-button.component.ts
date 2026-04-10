@@ -91,7 +91,7 @@ export class WorkPackageShareButtonComponent extends UntilDestroyedMixin impleme
   private countShares():Observable<number> {
     const filters = new ApiV3FilterBuilder()
       .add('entityType', '=', ['WorkPackage'])
-      .add('entityId', '=', [this.workPackage.id!]);
+      .add('entityId', '=', [this.workPackage.$source.id!.toString()]);
 
     return this
       .apiV3Service
