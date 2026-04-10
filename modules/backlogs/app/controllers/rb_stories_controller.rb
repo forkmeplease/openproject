@@ -220,9 +220,9 @@ class RbStoriesController < RbApplicationController
 
   def load_story
     @story = if OpenProject::FeatureDecisions.scrum_projects_active?
-               WorkPackage.visible.find(params[:id])
+               WorkPackage.visible.where(sprint: @sprint, project: @project).find(params[:id])
              else
-               Story.visible.find(params[:id])
+               Story.visible.where(version: @sprint, project: @project).find(params[:id])
              end
   end
 

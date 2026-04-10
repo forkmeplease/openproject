@@ -48,6 +48,7 @@ Rails.application.routes.draw do
 
         resources :stories, controller: :rb_stories, only: [] do
           member do
+            get :menu
             put :move
           end
         end

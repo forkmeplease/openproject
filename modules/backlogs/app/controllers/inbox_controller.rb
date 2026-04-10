@@ -86,7 +86,7 @@ class InboxController < RbApplicationController
   private
 
   def load_work_package
-    @work_package = WorkPackage.visible.find(params[:id])
+    @work_package = WorkPackage.visible.where(project: @project).find(params[:id])
   end
 
   def replace_inbox_component_via_turbo_stream

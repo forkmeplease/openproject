@@ -216,6 +216,15 @@ RSpec.describe InboxController, with_flag: { scrum_projects_active: true } do
       expect(response.body).to include(I18n.t(:"js.button_open_details"))
     end
 
+    context "when the work package belongs to another project" do
+      let(:other_project) { create(:project) }
+      let(:work_package) { create(:work_package, project: other_project) }
+
+      it "responds with 404" do
+        expect(response).to have_http_status :not_found
+      end
+    end
+
     context "with a user lacking project permission" do
       let(:user) { create(:user) }
 
