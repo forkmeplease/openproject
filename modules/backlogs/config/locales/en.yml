@@ -228,7 +228,7 @@ en:
       label_drag_story: "Move %{name}"
       label_actions: "Story actions"
 
-    story_menu_component:
+    story_menu_list_component:
       action_menu:
         copy_url_to_clipboard: "Copy URL to clipboard"
         copy_work_package_id: "Copy work package ID"

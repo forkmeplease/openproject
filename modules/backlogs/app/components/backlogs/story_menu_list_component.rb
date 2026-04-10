@@ -31,7 +31,7 @@
 module Backlogs
   # Renders Primer::Alpha::ActionMenu::List for the deferred menu (RbStoriesController#menu).
   # +menu_id+ must match the row ActionMenu in StoryComponent.
-  class StoryMenuComponent < ApplicationComponent
+  class StoryMenuListComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
     attr_reader :story, :sprint, :project, :max_position, :current_user

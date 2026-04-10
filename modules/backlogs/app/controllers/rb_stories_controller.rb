@@ -41,7 +41,7 @@ class RbStoriesController < RbApplicationController
                       WorkPackage.where(version_id: @sprint.id, project_id: @project.id)
                     end
 
-    render(Backlogs::StoryMenuComponent.new(
+    render(Backlogs::StoryMenuListComponent.new(
              story: @story,
              sprint: @sprint,
              project: @project,
