@@ -3824,6 +3824,7 @@ en:
   label_commits_per_month: "Commits per month"
   label_confirmation: "Confirmation"
   label_contains: "contains"
+  label_starts_with: "starts with"
   label_content: "Content"
   label_color_plural: "Colors"
   label_copied: "copied"
