@@ -207,7 +207,7 @@ ko:
     admin:
       side_panel:
         health_notifications_component:
-          sync_now: Sync now
+          sync_now: 지금 동기화
           sync_queued: Synchronization queued.
     buttons:
       done_continue: 완료, 계속
@@ -229,11 +229,11 @@ ko:
     delete_warning:
       project_storage_delete_result_1: 해당 파일 및 폴더에 대한 모든 링크가 제거됩니다
       project_storage_delete_result_2: 자동으로 관리되는 프로젝트 폴더 및 이 폴더 내 모든 파일이 삭제됩니다
-      project_storage_html: Are you sure you want to remove %{file_storage} from this project?
+      project_storage_html: 이 프로젝트에서 %{file_storage}을(를) 제거하시겠습니까?
       storage_delete_result_1: 저장소를 현재 사용 중인 모든 프로젝트에서 이 저장소가 제거됩니다
       storage_delete_result_2: 해당 파일 및 폴더에 대한 모든 링크가 제거됩니다
       storage_delete_result_3: 자동으로 관리되는 프로젝트 폴더 및 이 폴더 내 모든 파일이 삭제됩니다
-      storage_html: Are you sure you want to delete %{file_storage} as an external file storage?
+      storage_html: 외부 파일 저장소로 사용 중인 %{file_storage}을(를) 삭제하시겠습니까?
     dependencies:
       nextcloud:
         group_folders_app: 팀 폴더

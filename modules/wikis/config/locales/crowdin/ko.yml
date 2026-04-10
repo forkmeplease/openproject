@@ -3,12 +3,12 @@ ko:
   activerecord:
     attributes:
       wikis/xwiki_provider:
-        name: Name
-        url: Instance URL
-        authentication_method: Authentication method
+        name: 이름
+        url: 인스턴스 URL
+        authentication_method: 인증 방법
         authentication_methods:
-          oauth2_sso: Single-Sign-On through OpenID Connect Identity Provider
-          two_way_oauth2: Two-way OAuth 2.0 authorization code flow
+          oauth2_sso: OpenID Connect ID 공급자를 통한 Single-Sign-On
+          two_way_oauth2: 양방향 OAuth 2.0 인증 코드 흐름
         token_exchange_scope: XWiki Scope
         wiki_audience: XWiki Audience
     errors: {}
