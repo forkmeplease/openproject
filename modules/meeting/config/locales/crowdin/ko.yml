@@ -193,8 +193,8 @@ ko:
   label_subscribe_icalendar: 캘린더 구독
   caption_meeting_template_select: 템플릿을 선택하면 의제 항목이 자동으로 복사됩니다.
   caption_template_project_select: 이 미팅 템플릿을 만들 프로젝트를 선택하세요
-  placeholder_meeting_template_select_project_first: Select a project first
-  placeholder_meeting_template_no_templates_for_project: No templates available for this project
+  placeholder_meeting_template_select_project_first: 먼저 프로젝트를 선택하세요
+  placeholder_meeting_template_no_templates_for_project: 이 프로젝트에 사용할 수 있는 템플릿이 없습니다
   meeting:
     participants:
       label:
@@ -377,7 +377,7 @@ ko:
           disabled: '이메일 캘린더 업데이트가 비활성화되었습니다. 참가자를 추가 또는 제거하는 경우 알려주는 이메일이 참가자에게 전송되지 않습니다.
 
             '
-          draft_disabled: 'Participants will not receive an email informing them when you add or remove participants.
+          draft_disabled: '참가자를 추가 또는 제거하는 경우 알려주는 이메일이 참가자에게 전송되지 않습니다.
 
             '
         onetime:

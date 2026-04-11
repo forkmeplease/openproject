@@ -185,7 +185,7 @@ zh-CN:
         move_to_top_of_backlog: Move them to the top of the backlog
         move_to_bottom_of_backlog: Move them to the bottom of the backlog
         move_to_sprint: Move them to another sprint
-      select_sprint_label: Select sprint
+      select_sprint_label: 选择冲刺
       button_complete_sprint: Complete sprint
     sprint_menu_component:
       label_actions: 冲刺操作

@@ -23,7 +23,7 @@
 ---
 pt-BR:
   attributes:
-    commit: Commit
+    commit: Confirmar
     gitlab: Identificador do GitLab
     gitlab_avatar_url: URL da imagem de perfil
     gitlab_email: E-mail do GitLab
