@@ -210,7 +210,7 @@ pt-BR:
         manage_participants: Gerenciar participantes
         no_participants: Sem participantes
         show_all: Mostrar todos
-        apply_to_upcoming_meetings: Apply these changes to all upcoming meetings in this series
+        apply_to_upcoming_meetings: Aplique essas alterações a todas as próximas reuniões desta série
       text:
         template: Esses participantes serão convidados automaticamente para todas as futuras reuniões à medida que forem criadas.
         manage_participants: Pesquisar e adicionar membros do projeto como participantes desta reunião.
