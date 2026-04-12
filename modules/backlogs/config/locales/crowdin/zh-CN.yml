@@ -33,7 +33,7 @@ zh-CN:
         name: 冲刺名称
         sharing: 共享
         statuses:
-          in_planning: 规划中
+          in_planning: 计划中
           active: 有效
           completed: 已完成
       project:
@@ -50,15 +50,15 @@ zh-CN:
         story_points: 故事点
     errors:
       messages:
-        must_be_in_planning: 必须处于规划中状态才能启动。
+        must_be_in_planning: must be in planning to start.
         only_one_active_sprint_allowed: 每个项目只允许有一个有效冲刺。
-        dates_required: 必须设置开始和结束日期才能启动冲刺。
+        dates_required: Start and finish dates are required in order to start the sprint.
       models:
         project:
-          receiving_sprints: 正在接收共享冲刺。无法创建自己的冲刺。
+          receiving_sprints: is receiving shared sprints. Own sprints cannot be created.
           attributes:
             sprint_sharing:
-              share_all_projects_already_taken: 无法设置，因为项目“%{name}”已经与所有项目共享。
+              share_all_projects_already_taken: cannot be set because project "%{name}" is already sharing with all projects.
               share_all_projects_already_taken_anonymous: cannot be set because another project is already sharing with all projects.
         work_package:
           attributes:
@@ -160,7 +160,10 @@ zh-CN:
         receive_shared_no_actions_description_text: This project receives shared sprints from a different project, but none are available right now.
         settings_link_text: project settings
     sprint_header_component:
-      label_toggle_backlog: 折叠/展开 %{name}
+      label_start_sprint: Start
+      label_complete_sprint: Complete
+      start_sprint_disabled_reason_active_sprint: Another sprint is already active.
+      start_sprint_disabled_reason_missing_dates: Start and finish dates are required in order to start the sprint.
       label_story_count:
         zero: 冲刺中没有故事
         one: 冲刺中有 %{count} 个故事
@@ -187,10 +190,6 @@ zh-CN:
     sprint_menu_component:
       label_actions: 冲刺操作
       action_menu:
-        start_sprint: Start sprint
-        complete_sprint: Complete sprint
-        start_sprint_disabled_description: Another sprint is already active.
-        start_sprint_missing_dates_description: Start and finish dates are required in order to start the sprint.
         edit_sprint: 编辑冲刺
         add_work_package: Add work package
     story_component:
