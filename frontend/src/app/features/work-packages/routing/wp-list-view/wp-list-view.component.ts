@@ -82,7 +82,7 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
   readonly CurrentProject = inject(CurrentProjectService);
   readonly wpDisplayRepresentation = inject(WorkPackageViewDisplayRepresentationService);
   readonly cdRef = inject(ChangeDetectorRef);
-  readonly elementRef = inject(ElementRef);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly wpTableBaseline = inject(WorkPackageViewBaselineService);
   readonly pathHelper = inject(PathHelperService);
 
@@ -140,8 +140,8 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
 
       // The header of the table hides the scrolledIntoView element
       // so we scrollIntoView the previous element, if any
-      if (selectedRow?.previousSibling) {
-        selectedRow.previousSibling.scrollIntoView({ block: 'start' });
+      if (selectedRow?.previousElementSibling) {
+        selectedRow.previousElementSibling.scrollIntoView({ block: 'start' });
       }
 
       if (selectedCard) {
