@@ -29,45 +29,43 @@
 #++
 
 Rails.application.routes.draw do
-  constraints(Constraints::FeatureDecision.new(:scrum_projects)) do
-    # Routes for the new Agile::Sprint
-    # Scoped under projects for permissions:
-    resources :projects, only: [] do
-      resources :sprints, controller: :rb_sprints, only: %i[create] do
-        collection do
-          get :new_dialog
-          get :refresh_form
-        end
-
-        member do
-          post :start
-          post :finish
-          get :edit_dialog
-          put :update_agile_sprint
-        end
-
-        resources :stories, controller: :rb_stories, only: [] do
-          member do
-            get :menu
-            put :move
-          end
-        end
+  # Routes for the new Agile::Sprint
+  # Scoped under projects for permissions:
+  resources :projects, only: [] do
+    resources :sprints, controller: :rb_sprints, only: %i[create] do
+      collection do
+        get :new_dialog
+        get :refresh_form
       end
 
-      resources :inbox, only: [] do
+      member do
+        post :start
+        post :finish
+        get :edit_dialog
+        put :update_agile_sprint
+      end
+
+      resources :stories, controller: :rb_stories, only: [] do
         member do
           get :menu
           put :move
-          post :reorder
-          get :move_to_sprint_dialog
         end
       end
     end
 
-    scope "projects/:project_id", as: "project", module: "projects" do
-      namespace "settings" do
-        resource :backlog_sharing, only: %i[show update]
+    resources :inbox, only: [] do
+      member do
+        get :menu
+        put :move
+        post :reorder
+        get :move_to_sprint_dialog
       end
+    end
+  end
+
+  scope "projects/:project_id", as: "project", module: "projects" do
+    namespace "settings" do
+      resource :backlog_sharing, only: %i[show update]
     end
   end
 

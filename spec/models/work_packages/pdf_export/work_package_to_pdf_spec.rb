@@ -245,13 +245,16 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
       "Remaining work", "9h",
       "% Complete", "25%",
       "Spent time", "0h",
+      "Story Points", "1",
       "Details",
       "Priority", "Normal",
+      *(work_package.sprint.present? ? ["Sprint", work_package.sprint] : ["Sprint"]),
       "Version", work_package.version,
       "Category", work_package.category,
       "Project phase",
       "Date", "05/30/2024 - 03/13/2025",
       "Other",
+      "Position", "1",
       "Work Package Custom Field Long Text", "foo   faa",
       "Empty Work Package Custom Field Long Text",
       "Work Package Custom Field Boolean", "Yes",
@@ -627,7 +630,7 @@ RSpec.describe WorkPackage::PDFExport::WorkPackageToPdf do
       end
     end
 
-    context "with the backlogs module enabled and the feature flag active", with_flag: { scrum_projects: true } do
+    context "with the backlogs module enabled" do
       let(:enabled_module_names) { %i[backlogs] }
       let(:sprint) { create(:agile_sprint, name: "Sprint name for export", project:) }
 

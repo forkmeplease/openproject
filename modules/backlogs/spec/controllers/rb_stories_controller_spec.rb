@@ -58,7 +58,7 @@ RSpec.describe RbStoriesController do
           format: :html
     end
 
-    context "when scrum_projects flag is inactive", with_flag: { scrum_projects: false } do
+    context "when loading from a version sprint" do
       let(:load_story_id) { story.id }
       let(:requested_sprint) { version_sprint }
 
@@ -78,7 +78,7 @@ RSpec.describe RbStoriesController do
       end
     end
 
-    context "when scrum_projects flag is active", with_flag: { scrum_projects: true } do
+    context "when loading from an agile sprint" do
       let(:agile_sprint) { create(:agile_sprint, name: "Agile Sprint load_story", project:) }
       let(:work_package_in_sprint) { create(:work_package, status:, sprint: agile_sprint, project:) }
       let(:load_story_id) { work_package_in_sprint.id }
@@ -243,11 +243,11 @@ RSpec.describe RbStoriesController do
     end
   end
 
-  describe "PUT #move", with_flag: { scrum_projects: true } do
+  describe "PUT #move" do
     let(:agile_sprint) { create(:agile_sprint, name: "Agile Sprint 1", project:) }
     let(:story_in_agile_sprint) { create(:work_package, status:, sprint: agile_sprint, project:) }
 
-    context "with another Agile::Sprint as target", with_flag: { scrum_projects: true } do
+    context "with another Agile::Sprint as target" do
       let(:other_agile_sprint) { create(:agile_sprint, name: "Agile Sprint 2", project:) }
 
       it "responds with success and moves story to another Agile::Sprint", :aggregate_failures do
@@ -304,7 +304,7 @@ RSpec.describe RbStoriesController do
       end
     end
 
-    context "with a Sprint (Version) as target", with_flag: { scrum_projects: true } do
+    context "with a Sprint (Version) as target" do
       it "responds with success and moves story to Sprint", :aggregate_failures do
         put :move, params: {
                      project_id: project.id,

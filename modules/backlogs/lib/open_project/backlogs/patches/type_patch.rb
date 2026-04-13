@@ -39,15 +39,11 @@ module OpenProject::Backlogs::Patches::TypePatch
 
   module InstanceMethods
     def story?
-      return false if OpenProject::FeatureDecisions.scrum_projects_active?
-
-      Story.types.include?(id)
+      false
     end
 
     def task?
-      return false if OpenProject::FeatureDecisions.scrum_projects_active?
-
-      Task.type.present? && id == Task.type
+      false
     end
   end
 end

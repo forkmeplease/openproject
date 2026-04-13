@@ -132,13 +132,8 @@ module RbCommonHelper
     item.remaining_hours.blank? || item.remaining_hours == 0 ? "" : item.remaining_hours
   end
 
-  def scrum_projects_enabled?
-    OpenProject::FeatureDecisions.scrum_projects_active?
-  end
-
   def allow_sprint_creation?(project)
-    scrum_projects_enabled? &&
-      current_user.allowed_in_project?(:create_sprints, project) &&
+    current_user.allowed_in_project?(:create_sprints, project) &&
       !project.receive_shared_sprints?
   end
 
@@ -162,24 +157,11 @@ module RbCommonHelper
   end
 
   def backlogs_types
-    return [] if scrum_projects_enabled?
-
-    @backlogs_types ||= begin
-      backlogs_ids = Setting.plugin_openproject_backlogs["story_types"]
-      backlogs_ids << Setting.plugin_openproject_backlogs["task_type"]
-
-      Type.where(id: backlogs_ids).order(Arel.sql("position ASC"))
-    end
+    []
   end
 
   def story_types
-    return [] if scrum_projects_enabled?
-
-    @story_types ||= begin
-      backlogs_type_ids = Setting.plugin_openproject_backlogs["story_types"].map(&:to_i)
-
-      backlogs_types.select { |t| backlogs_type_ids.include?(t.id) }
-    end
+    []
   end
 
   def get_backlogs_preference(assignee, attr)
@@ -187,6 +169,6 @@ module RbCommonHelper
   end
 
   def sprint_board_label
-    OpenProject::FeatureDecisions.scrum_projects_active? ? t("backlogs.label_sprint_board") : t(:label_task_board)
+    t("backlogs.label_sprint_board")
   end
 end

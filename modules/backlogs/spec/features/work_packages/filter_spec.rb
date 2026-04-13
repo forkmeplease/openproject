@@ -113,7 +113,7 @@ RSpec.describe "Filter work packages by backlog filters", :js do
     end
   end
 
-  context "on the sprint", with_flag: { scrum_projects: true } do
+  context "on the sprint" do
     shared_examples_for "filtering on sprints" do
       it "allows filtering by sprint" do
         filters.open

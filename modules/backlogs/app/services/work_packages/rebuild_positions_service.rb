@@ -47,7 +47,7 @@ class WorkPackages::RebuildPositionsService
           id,
           ROW_NUMBER() OVER (
             PARTITION BY project_id, sprint_id
-            ORDER BY position, created_at
+            ORDER BY position, created_at, id
           ) AS new_position
         FROM work_packages
       ) AS mapping

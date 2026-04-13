@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with_flag: { scrum_projects: true } do
+RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
   include API::V3::Utilities::PathHelper
 
   let(:custom_field) { build(:custom_field) }
@@ -77,17 +77,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with
       end
     end
 
-    context "when not a story with the feature flag inactive", with_flag: { scrum_projects: false } do
-      before do
-        allow(schema.type).to receive(:story?).and_return(false)
-      end
-
-      it "does not show story points" do
-        expect(subject).not_to have_json_path("storyPoints")
-      end
-    end
-
-    context "when not a story with the feature flag active" do
+    context "when not a story" do
       before do
         allow(schema.type).to receive(:story?).and_return(false)
       end
@@ -121,17 +111,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with
       end
     end
 
-    context "when not a story with the feature flag inactive", with_flag: { scrum_projects: false } do
-      before do
-        allow(schema.type).to receive(:story?).and_return(false)
-      end
-
-      it "does not show position" do
-        expect(subject).not_to have_json_path("position")
-      end
-    end
-
-    context "when not a story with the feature flag active" do
+    context "when not a story" do
       before do
         allow(schema.type).to receive(:story?).and_return(false)
       end
@@ -181,23 +161,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter, with
       end
     end
 
-    context "when the feature flag is disabled", with_flag: { scrum_projects: false } do
-      it "has no reference to the sprint" do
-        expect(subject).not_to have_json_path(path)
-      end
-    end
-
-    context "when not a story with the feature flag inactive", with_flag: { scrum_projects: false } do
-      before do
-        allow(schema.type).to receive(:story?).and_return(false)
-      end
-
-      it "does not show sprint" do
-        expect(subject).not_to have_json_path("sprint")
-      end
-    end
-
-    context "when not a story with the feature flag active" do
+    context "when not a story" do
       before do
         allow(schema.type).to receive(:story?).and_return(false)
       end

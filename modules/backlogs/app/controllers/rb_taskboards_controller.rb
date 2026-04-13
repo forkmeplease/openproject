@@ -34,7 +34,7 @@ class RbTaskboardsController < RbApplicationController
   helper :taskboards
 
   def show
-    if OpenProject::FeatureDecisions.scrum_projects_active?
+    if @sprint.is_a?(Agile::Sprint)
       @board = @sprint.task_board_for(@project)
 
       return redirect_to(project_work_package_board_path(@project, @board)) if @board
@@ -56,10 +56,7 @@ class RbTaskboardsController < RbApplicationController
 
     return unless (@sprint_id = params.delete(:sprint_id))
 
-    @sprint = if OpenProject::FeatureDecisions.scrum_projects_active?
-                Agile::Sprint.for_project(@project).visible.find(@sprint_id)
-              else
-                Sprint.visible.apply_to(@project).find(@sprint_id)
-              end
+    @sprint = Agile::Sprint.for_project(@project).visible.find_by(id: @sprint_id) ||
+      Sprint.visible.apply_to(@project).find(@sprint_id)
   end
 end

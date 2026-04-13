@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -34,7 +36,6 @@ module OpenProject::Backlogs::Patches::Versions::RowComponentPatch
   private
 
   def backlogs_edit_link
-    return if OpenProject::FeatureDecisions.scrum_projects_active?
     return if version.project == table.project || !table.project.module_enabled?("backlogs")
 
     helpers.link_to_if_authorized "",

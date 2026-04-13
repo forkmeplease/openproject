@@ -99,8 +99,7 @@ module OpenProject::Backlogs
                    { rb_sprints: %i[start finish] },
                    permissible_on: :project,
                    require: :member,
-                   dependencies: %i[view_sprints manage_board_views manage_sprint_items],
-                   visible: -> { OpenProject::FeatureDecisions.scrum_projects_active? }
+                   dependencies: %i[view_sprints manage_board_views manage_sprint_items]
 
         permission :manage_sprint_items,
                    { rb_stories: %i[move move_legacy reorder],
@@ -113,15 +112,13 @@ module OpenProject::Backlogs
                    { "projects/settings/backlog_sharings": %i[show update] },
                    permissible_on: :project,
                    require: :member,
-                   dependencies: :create_sprints,
-                   visible: -> { OpenProject::FeatureDecisions.scrum_projects_active? }
+                   dependencies: :create_sprints
       end
 
-      # Menu items that are there when feature flag is active
       menu :project_menu,
            :backlogs,
            { controller: "/rb_master_backlogs", action: :backlog },
-           if: Proc.new { |project| project.module_enabled?(:backlogs) && OpenProject::FeatureDecisions.scrum_projects_active? },
+           if: Proc.new { |project| project.module_enabled?(:backlogs) },
            caption: :project_module_backlogs,
            after: :work_packages,
            icon: "op-backlogs"
@@ -129,18 +126,9 @@ module OpenProject::Backlogs
       menu :project_menu,
            :backlog,
            { controller: "/rb_master_backlogs", action: :backlog },
-           if: Proc.new { |project| project.module_enabled?(:backlogs) && OpenProject::FeatureDecisions.scrum_projects_active? },
+           if: Proc.new { |project| project.module_enabled?(:backlogs) },
            caption: :label_backlog_and_sprints,
            parent: :backlogs
-
-      # Menu items that are there when feature flag is inactive
-      menu :project_menu,
-           :backlogs_legacy,
-           { controller: "/rb_master_backlogs", action: :index },
-           if: Proc.new { |project| project.module_enabled?(:backlogs) && !OpenProject::FeatureDecisions.scrum_projects_active? },
-           caption: :project_module_backlogs,
-           after: :work_packages,
-           icon: "op-backlogs"
 
       # Menu items that are always present
       menu :project_menu,
@@ -158,12 +146,10 @@ module OpenProject::Backlogs
                Type
                Project
                User
-               VersionsController
                Version]
 
     patch_with_namespace :BasicData, :SettingSeeder
     patch_with_namespace :DemoData, :ProjectSeeder
-    patch_with_namespace :WorkPackages, :UpdateService
     patch_with_namespace :WorkPackages, :SetAttributesService
     patch_with_namespace :WorkPackages, :BaseContract
     patch_with_namespace :WorkPackages, :UpdateContract
@@ -202,11 +188,6 @@ module OpenProject::Backlogs
 
     extend_api_response(:v3, :work_packages, :schema, :work_package_schema,
                         &::OpenProject::Backlogs::Patches::API::WorkPackageSchemaRepresenter.extension)
-
-    add_api_path :backlogs_type do |id|
-      # There is no api endpoint for this url
-      "#{root}/backlogs_types/#{id}"
-    end
 
     add_api_path :sprint do |id|
       "#{root}/sprints/#{id}"
@@ -250,20 +231,16 @@ module OpenProject::Backlogs
     config.to_prepare do
       enabled_backlogs_story = ->(type, project: nil) do
         if project.present?
-          project.backlogs_enabled? && (OpenProject::FeatureDecisions.scrum_projects_active? || type.story?)
+          project.backlogs_enabled?
         else
-          # Allow globally configuring the attribute if story
-          OpenProject::FeatureDecisions.scrum_projects_active? || type.story?
+          true
         end
       end
 
       story_and_sprint_permission = ->(_type, project: nil) do
-        return false unless OpenProject::FeatureDecisions.scrum_projects_active?
-
         project.nil? || User.current.allowed_in_project?(:view_sprints, project)
       end
 
-      # TODO: upon removal of the scrum_projects feature flag, remove these constraints
       ::Type.add_constraint :position, enabled_backlogs_story
       ::Type.add_constraint :story_points, enabled_backlogs_story
       ::Type.add_constraint :sprint, story_and_sprint_permission
@@ -274,7 +251,6 @@ module OpenProject::Backlogs
 
       ::Queries::Register.register(::Query) do
         filter Queries::WorkPackages::Filter::SprintFilter
-        filter OpenProject::Backlogs::WorkPackageFilter
 
         select OpenProject::Backlogs::QueryBacklogsSelect
       end

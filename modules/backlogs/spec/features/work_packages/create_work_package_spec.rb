@@ -31,7 +31,7 @@
 require "spec_helper"
 require_relative "../../support/pages/backlog"
 
-RSpec.describe "Create work package in sprint", :js, with_flag: { scrum_projects: true } do
+RSpec.describe "Create work package in sprint", :js do
   let!(:project) do
     create(:project,
            types: [type, type2],

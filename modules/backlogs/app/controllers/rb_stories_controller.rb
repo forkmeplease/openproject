@@ -216,7 +216,7 @@ class RbStoriesController < RbApplicationController
 
   def load_story
     @allowed_stories =
-      if OpenProject::FeatureDecisions.scrum_projects_active?
+      if @sprint.is_a?(Agile::Sprint)
         WorkPackage.visible.where(sprint: @sprint, project: @project)
       else
         Story.visible.where(Story.condition(@project, @sprint))
