@@ -101,19 +101,13 @@ export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase imp
   ngOnInit():void {
     this.observeWorkPackage();
 
-    const wpId = (this.$state.params.workPackageId || this.workPackageId) as string;
-    this.wpTableFocus.updateFocus(wpId, false);
-
-    if (this.wpTableSelection.isEmpty) {
-      this.wpTableSelection.setRowState(wpId, true);
-    }
-
     this.wpTableFocus.whenChanged()
       .pipe(
         this.untilDestroyed(),
       )
       .subscribe((newId) => {
-        const idSame = wpId.toString() === newId.toString();
+        const currentId = this.workPackage?.id ?? this.workPackageId;
+        const idSame = currentId.toString() === newId.toString();
         if (!idSame && this.$state.includes(`${this.baseRoute}.details`)) {
           this.$state.go(
             (this.$state.current.name!),
@@ -121,7 +115,18 @@ export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase imp
           );
         }
       });
-    this.recentItemsService.add(wpId);
+  }
+
+  protected override init():void {
+    super.init();
+    const numericId = this.workPackage.id!;
+    this.wpTableFocus.updateFocus(numericId, false);
+
+    if (this.wpTableSelection.isEmpty) {
+      this.wpTableSelection.setRowState(numericId, true);
+    }
+
+    this.recentItemsService.add(numericId);
   }
 
   get activeTabComponent():Type<TabComponent>|undefined {
