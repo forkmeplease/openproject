@@ -27,6 +27,7 @@ import { Highlighting } from 'core-app/features/work-packages/components/wp-fast
 import { WorkPackageCardViewComponent } from 'core-app/features/work-packages/components/wp-card-view/wp-card-view.component';
 import { WorkPackageStatesInitializationService } from 'core-app/features/work-packages/components/wp-list/wp-states-initialization.service';
 import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
 import { BoardService } from 'core-app/features/boards/board/board.service';
 import { HalResourceEditingService } from 'core-app/shared/components/fields/edit/services/hal-resource-editing.service';
 import { HalResourceNotificationService } from 'core-app/features/hal/services/hal-resource-notification.service';
@@ -514,8 +515,7 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
   }
 
   private resolveRoutingId(workPackageId:string):string {
-    const wp = this.states.workPackages.get(workPackageId)?.value;
-    return wp?.displayId ?? workPackageId;
+    return resolveRoutingId(this.states, workPackageId);
   }
 
   private schema(workPackage:WorkPackageResource) {

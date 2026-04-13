@@ -24,6 +24,7 @@ import {
   KeepTabService,
 } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
 import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { firstValueFrom } from 'rxjs';
 import { QueryRequestParams } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
@@ -215,7 +216,6 @@ export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseCo
   }
 
   private resolveRoutingId(workPackageId:string):string {
-    const wp = this.states.workPackages.get(workPackageId)?.value;
-    return wp?.displayId ?? workPackageId;
+    return resolveRoutingId(this.states, workPackageId);
   }
 }

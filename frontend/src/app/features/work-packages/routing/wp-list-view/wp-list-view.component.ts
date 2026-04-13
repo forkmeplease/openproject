@@ -58,6 +58,7 @@ import { WorkPackageViewBaselineService } from '../wp-view-base/view-services/wp
 import { combineLatest } from 'rxjs';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
 
 @Component({
   selector: 'wp-list-view',
@@ -212,7 +213,6 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
   }
 
   private resolveRoutingId(workPackageId:string):string {
-    const wp = this.states.workPackages.get(workPackageId)?.value;
-    return wp?.displayId ?? workPackageId;
+    return resolveRoutingId(this.states, workPackageId);
   }
 }
