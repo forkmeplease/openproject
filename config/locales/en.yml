@@ -1400,12 +1400,6 @@ en:
     index:
       no_results_content_text: Add a new wiki page
 
-  wikis:
-    inline_page_links_component:
-      empty_heading: "No inline links"
-      empty_text: "Inline links to wiki pages in the work package description will automatically also show up here."
-      heading: "Inline page links"
-
   workflows:
     form:
       matrix_caption: "Workflow matrix"

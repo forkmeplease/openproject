@@ -4,9 +4,9 @@
 
     if page_links.empty?
       container.with_row do
-        render(Primer::Beta::Blankslate.new(border: false)) do |empty_placeholder|
-          empty_placeholder.with_heading(tag: :h2).with_content(t(".empty_heading"))
-          empty_placeholder.with_description { t(".empty_text") }
+        render(Primer::Beta::Blankslate.new(border: false)) do |blankslate|
+          blankslate.with_heading(tag: :h2).with_content(t(".empty_heading"))
+          blankslate.with_description { t(".empty_text") }
         end
       end
     end
