@@ -161,19 +161,49 @@ describe('WorkPackage', () => {
     it('should prefix displayId with # in semantic mode', () => {
       source = { id: 42, displayId: 'PROJ-7' };
       createWorkPackage();
+
       expect(workPackage.displayIdWithHash).toEqual('#PROJ-7');
     });
 
     it('should prefix displayId with # in classic mode', () => {
       source = { id: 42, displayId: '42' };
       createWorkPackage();
+
       expect(workPackage.displayIdWithHash).toEqual('#42');
     });
 
     it('should fall back to numeric id when displayId is absent', () => {
       source = { id: 42 };
       createWorkPackage();
+
       expect(workPackage.displayIdWithHash).toEqual('#42');
+    });
+  });
+
+  describe('subjectWithId', () => {
+    afterEach(() => {
+      source = undefined;
+    });
+
+    it('should include semantic displayId in parentheses', () => {
+      source = { id: 42, displayId: 'PROJ-7', subject: 'Fix the bug' };
+      createWorkPackage();
+
+      expect(workPackage.subjectWithId()).toEqual('Fix the bug (#PROJ-7)');
+    });
+
+    it('should include numeric displayId in classic mode', () => {
+      source = { id: 42, displayId: '42', subject: 'Fix the bug' };
+      createWorkPackage();
+
+      expect(workPackage.subjectWithId()).toEqual('Fix the bug (#42)');
+    });
+
+    it('should omit id suffix for new resources', () => {
+      source = { subject: 'New task' };
+      createWorkPackage();
+
+      expect(workPackage.subjectWithId()).toEqual('New task');
     });
   });
 
