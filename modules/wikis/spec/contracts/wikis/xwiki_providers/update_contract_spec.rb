@@ -28,10 +28,14 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+require "spec_helper"
+require "contracts/shared/model_contract_shared_context"
 
-    alias_method :wiki_providers, :model
-  end
+RSpec.describe Wikis::XWikiProviders::UpdateContract do
+  include_context "ModelContract shared context"
+
+  let(:wiki_provider) { build_stubbed(:xwiki_provider) }
+  let(:contract) { described_class.new(wiki_provider, current_user) }
+
+  it_behaves_like "contract is valid for active admins and invalid for regular users"
 end

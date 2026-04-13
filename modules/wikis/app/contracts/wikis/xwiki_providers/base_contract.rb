@@ -28,10 +28,18 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+module Wikis
+  module XWikiProviders
+    class BaseContract < ::BaseContract
+      include RequiresAdminGuard
 
-    alias_method :wiki_providers, :model
+      attribute :name
+      attribute :url
+
+      validates :name, presence: true, length: { maximum: 255 }
+      validates :url, presence: true, length: { maximum: 255 }
+      validates :url, url: true, unless: -> { url.blank? || errors.include?(:url) }
+      validates :url, secure_context_uri: true, unless: -> { url.blank? || errors.include?(:url) }
+    end
   end
 end

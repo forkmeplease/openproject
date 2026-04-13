@@ -28,10 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+require "spec_helper"
 
-    alias_method :wiki_providers, :model
+require "services/base_services/behaves_like_delete_service"
+
+RSpec.describe Wikis::XWikiProviders::DeleteService, type: :model do
+  it_behaves_like "BaseServices delete service" do
+    let(:factory) { :xwiki_provider }
   end
 end

@@ -28,10 +28,9 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-
-    alias_method :wiki_providers, :model
+module Wikis
+  module XWikiProviders
+    class CreateContract < BaseContract
+    end
   end
 end
