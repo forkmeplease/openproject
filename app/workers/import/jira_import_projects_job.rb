@@ -294,7 +294,7 @@ module Import
       end
     end
 
-    def import_member((project, member)
+    def import_member(project, member)
       service_call = Members::CreateService
                        .new(user: @user, contract_class: EmptyContract)
                        .call(
