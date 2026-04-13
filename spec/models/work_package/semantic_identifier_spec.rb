@@ -262,6 +262,16 @@ RSpec.describe WorkPackage::SemanticIdentifier do
       end
     end
 
+    context "when semantic mode is active but identifier is nil",
+            with_flag: { semantic_work_package_ids: true },
+            with_settings: { work_packages_identifier: "semantic" } do
+      before { work_package.update_columns(identifier: nil) }
+
+      it "falls back to the numeric id" do
+        expect(work_package.display_id).to eq(work_package.id)
+      end
+    end
+
     context "when semantic mode is not active",
             with_flag: { semantic_work_package_ids: false } do
       it "returns the numeric id" do
