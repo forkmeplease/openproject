@@ -142,6 +142,8 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
         this.untilDestroyed(),
         map(() => {
           if (this.selectedWhenOpen) {
+            // Route param may be semantic ("PROJ-7") or numeric ("42").
+            // Compare against both id and displayId to handle both modes.
             const routeWpId = this.uiRouterGlobals.params.workPackageId;
             return routeWpId === this.workPackage.id || routeWpId === this.workPackage.displayId;
           }

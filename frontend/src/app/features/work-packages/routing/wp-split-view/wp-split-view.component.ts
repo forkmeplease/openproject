@@ -117,6 +117,14 @@ export class WorkPackageSplitViewComponent extends WorkPackageSingleViewBase imp
       });
   }
 
+  /**
+   * Set focus, selection, and recent-items after the WP has loaded.
+   *
+   * Intentionally deferred from ngOnInit because the route param
+   * (this.workPackageId) may be a semantic identifier like "PROJ-7",
+   * but focus/selection services are keyed by numeric PK. By the time
+   * init() runs, this.workPackage.id is guaranteed to be the numeric PK.
+   */
   protected override init():void {
     super.init();
     const numericId = this.workPackage.id!;

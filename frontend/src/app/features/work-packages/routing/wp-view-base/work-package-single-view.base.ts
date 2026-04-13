@@ -141,6 +141,12 @@ export abstract class WorkPackageSingleViewBase extends UntilDestroyedMixin {
   /**
    * Observe changes of work package and re-run initialization.
    * Needs to be run explicitly by descendants.
+   *
+   * Note: this.workPackageId may be a semantic identifier (e.g. "PROJ-7")
+   * from the route param. The API resolves it correctly, but the cache key
+   * would be "PROJ-7" while list queries cache the same WP under "42".
+   * After the first load we normalize to the numeric PK to prevent
+   * dual cache entries.
    */
   protected observeWorkPackage():void {
     this
