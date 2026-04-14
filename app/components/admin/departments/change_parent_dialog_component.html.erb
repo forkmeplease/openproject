@@ -28,48 +28,39 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-  component_wrapper do
-    primer_form_with(
-      url: add_department_admin_departments_path,
-      method: :post,
-      scope: :group
-    ) do |f|
-      cancel_path = if group
-                      helpers.admin_department_path(group)
-                    else
-                      helpers.admin_departments_path
-                    end
-
-      parent_id = group&.id
-
-      render_inline_form(f) do |form|
-        form.hidden(name: :parent_id, value: parent_id) if parent_id
-
-        form.group(layout: :horizontal) do |row|
-          row.text_field(
-            name: :lastname,
-            label: I18n.t("departments.add_department_form.name_label"),
-            visually_hide_label: true,
-            placeholder: I18n.t("departments.add_department_form.name_placeholder"),
-            required: true,
-            autofocus: true,
-            value: "",
-            autocomplete: "off"
+  render(
+    Primer::Alpha::Dialog.new(
+      id: DIALOG_ID,
+      title: I18n.t(:label_change_parent),
+      size: :medium_portrait
+    )
+  ) do |dialog|
+    dialog.with_body do
+      primer_form_with(**form_arguments) do |form|
+        render(
+          Primer::OpenProject::FilterableTreeView.new(
+            form_arguments: { builder: form, name: :new_parent_id },
+            include_sub_items_check_box_arguments: { hidden: true },
+            filter_mode_control_arguments: { hidden: true }
           )
-          row.button(
-            name: :cancel,
-            tag: :a,
-            label: I18n.t(:button_cancel),
-            scheme: :default,
-            href: cancel_path
-          )
-          row.submit(
-            name: :submit,
-            label: I18n.t(:button_add),
-            scheme: :primary
-          )
+        ) do |tree_view|
+          render_tree(tree_view)
         end
       end
+    end
+
+    dialog.with_footer(show_divider: true) do
+      concat(render(Primer::Beta::Button.new(data: { close_dialog_id: DIALOG_ID })) { I18n.t(:button_cancel) })
+      concat(
+        render(
+          Primer::Beta::Button.new(
+            scheme: :primary,
+            form: FORM_ID,
+            type: :submit,
+            data: { turbo: true }
+          )
+        ) { I18n.t(:button_select) }
+      )
     end
   end
 %>

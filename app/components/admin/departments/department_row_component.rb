@@ -99,8 +99,9 @@ module Admin
       def change_parent_item(menu)
         menu.with_item(
           label: I18n.t(:label_change_parent),
-          tag: :button,
-          disabled: true
+          tag: :a,
+          href: change_parent_admin_department_path(@department),
+          content_arguments: { data: { controller: "async-dialog" } }
         ) { it.with_leading_visual_icon(icon: "arrow-switch") }
       end
 

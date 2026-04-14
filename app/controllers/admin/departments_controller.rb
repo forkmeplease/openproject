@@ -40,8 +40,8 @@ module Admin
     # TODO: We will check for users permission here
     before_action :require_admin
     before_action :find_group,
-                  only: %i[show edit new_user add_user remove_user update destroy create_memberships edit_membership
-                           destroy_membership]
+                  only: %i[show edit new_user add_user remove_user update destroy change_parent_dialog change_parent
+                           create_memberships edit_membership destroy_membership]
 
     def index
       @groups = Group.with_detail.organizational_units.visible.order(:lastname)
@@ -104,6 +104,22 @@ module Admin
         flash[:error] = service_call.errors.full_messages.join("\n")
       end
       redirect_to admin_department_path(@group), status: :see_other
+    end
+
+    def change_parent_dialog
+      departments = Group.with_detail.organizational_units.visible.order(:lastname)
+      respond_with_dialog(
+        Admin::Departments::ChangeParentDialogComponent.new(department: @group, departments:)
+      )
+    end
+
+    def change_parent
+      new_parent_id = parse_new_parent_id(params[:new_parent_id])
+      service_call = ::Groups::UpdateService
+        .new(user: current_user, model: @group)
+        .call(parent_id: new_parent_id)
+
+      respond_parent_changed(service_call)
     end
 
     def edit_organization_name
@@ -204,6 +220,23 @@ module Admin
 
     def find_group
       @group = Group.visible.organizational_units.includes(:members, :users, :group_detail).find(params[:id])
+    end
+
+    def parse_new_parent_id(input)
+      return nil if input.blank?
+
+      value = MultiJson.load(Array(input).first, symbolize_keys: true)[:value]
+      value.presence
+    end
+
+    def respond_parent_changed(service_call)
+      if service_call.success?
+        flash[:notice] = I18n.t(:notice_successful_update)
+        redirect_to admin_department_path(service_call.result.parent || service_call.result), status: :see_other
+      else
+        flash[:error] = service_call.errors.full_messages.join("\n")
+        redirect_to admin_department_path(@group), status: :see_other
+      end
     end
 
     def respond_department_created(service_call)

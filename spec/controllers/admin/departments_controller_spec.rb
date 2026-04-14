@@ -153,6 +153,45 @@ RSpec.describe Admin::DepartmentsController, with_flag: { departments: true } do
       end
     end
 
+    describe "#change_parent_dialog" do
+      render_views
+
+      let(:department) { create(:department) }
+
+      it "renders the change parent dialog with the department tree" do
+        get :change_parent_dialog, params: { id: department.id }, format: :turbo_stream
+
+        expect(response).to be_successful
+        expect(response.media_type).to eq "text/vnd.turbo-stream.html"
+        expect(response.body).to include(Admin::Departments::ChangeParentDialogComponent::DIALOG_ID)
+        expect(response.body).to include(department.name)
+      end
+    end
+
+    describe "#change_parent" do
+      let(:department) { create(:department, parent: old_parent) }
+      let(:old_parent) { create(:department) }
+      let(:new_parent) { create(:department) }
+
+      it "moves the department to a new parent" do
+        post :change_parent, params: {
+          id: department.id,
+          new_parent_id: [{ value: new_parent.id }.to_json]
+        }
+
+        expect(department.reload.parent).to eq new_parent
+        expect(flash[:notice]).to eq I18n.t(:notice_successful_update)
+        expect(response).to redirect_to admin_department_path(new_parent)
+      end
+
+      it "moves the department to root level" do
+        post :change_parent, params: { id: department.id, new_parent_id: [] }
+
+        expect(department.reload.parent_id).to be_nil
+        expect(response).to redirect_to admin_department_path(department)
+      end
+    end
+
     describe "#new_department" do
       render_views
 
@@ -363,6 +402,16 @@ RSpec.describe Admin::DepartmentsController, with_flag: { departments: true } do
 
     it "forbids destroy" do
       delete :destroy, params: { id: department.id }
+      expect(response).to have_http_status :forbidden
+    end
+
+    it "forbids change_parent_dialog" do
+      get :change_parent_dialog, params: { id: department.id }, format: :turbo_stream
+      expect(response).to have_http_status :forbidden
+    end
+
+    it "forbids change_parent" do
+      post :change_parent, params: { id: department.id, new_parent_id: [] }
       expect(response).to have_http_status :forbidden
     end
 
