@@ -47,11 +47,7 @@ class RbMasterBacklogsController < RbApplicationController
   end
 
   def index
-    if turbo_frame_request?
-      render partial: "backlog_list", layout: false
-    else
-      render :backlog
-    end
+    redirect_to action: :backlog
   end
 
   def details

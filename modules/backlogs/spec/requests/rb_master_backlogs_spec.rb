@@ -44,26 +44,17 @@ RSpec.describe "RbMasterBacklogs", :skip_csrf, type: :rails_request do
   current_user { user }
 
   describe "GET #index" do
-    it "is successful" do
+    it "redirects to backlog" do
       get "/projects/#{project.identifier}/backlogs"
 
-      expect(response).to have_http_status(:ok)
-      expect(response).to render_template(:backlog)
-
-      expect(response).to have_turbo_frame "backlogs_container",
-                                           src: "/projects/#{project.identifier}/backlogs/backlog?all=false"
-      expect(response).to have_turbo_frame "content-bodyRight"
+      expect(response).to redirect_to("/projects/#{project.identifier}/backlogs/backlog")
     end
 
     context "with a Turbo Frame request" do
-      it "renders the backlog list partial" do
+      it "redirects to backlog" do
         get "/projects/#{project.identifier}/backlogs", headers: { "Turbo-Frame" => "backlogs_container" }
 
-        expect(response).to have_http_status(:ok)
-        expect(response).to render_template("rb_master_backlogs/_backlog_list")
-
-        expect(response).to have_turbo_frame "backlogs_container"
-        expect(response).to have_no_turbo_frame "content-bodyRight"
+        expect(response).to redirect_to("/projects/#{project.identifier}/backlogs/backlog")
       end
     end
   end
