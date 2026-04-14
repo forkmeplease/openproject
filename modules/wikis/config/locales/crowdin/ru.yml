@@ -3,12 +3,14 @@ ru:
   activerecord:
     attributes:
       wikis/xwiki_provider:
+        name: Имя
+        url: Адрес сервера
+        universal_identifier: Universal identifier
         authentication_method: Метод аутентификации
         authentication_methods:
           oauth2_sso: Аутентификация Single-Sign-On посредством поставщика OpenID Connect
           two_way_oauth2: Двусторонняя аутентификация OAuth 2.0
         token_exchange_scope: XWiki Scope
-        url: Адрес сервера
         wiki_audience: XWiki Audience
     errors: {}
     models:
@@ -24,4 +26,33 @@ ru:
         many: Relation page links
         other: Relation page links
       wikis/xwiki_provider: Провайдер XWiki
-  wikis: {}
+  project_module_wiki_platforms: Провайдеры вики
+  wikis:
+    buttons:
+      save_and_continue: Сохранить и продолжить
+    admin:
+      wiki_providers:
+        index_description: Добавить внешний вики-сервис, чтобы связать рабочие пакеты с существующими вики-страницами или создать новые прямо из OpenProject.
+        label_wiki_platform: Провайдер Wiki
+        label_add_new: Добавить нового вики-провайдера
+        label_new_xwiki_instance: Новый провайдер XWiki
+        no_results_title: У вас пока нет ни одного вики-провайдера.
+        no_results_description: Добавьте провайдера, чтобы увидеть его здесь.
+        label_edit: Edit XWiki provider
+        name_placeholder: XWiki knowledge base
+        name_caption: Give your storage a name so that users can differentiate between multiple wiki platforms.
+        url_caption: Please add the host address of your wiki platform including the https://. It should not be longer than 255 characters.
+        xwiki_instance: XWiki Instance
+        xwiki_instance_description: Please make sure you have administration privileges in your XWiki instance before doing the setup.
+        new_provider_html: Прочитайте нашу документацию по [настройке интеграции XWiki](docs_url) для получения дополнительной информации.
+        sections:
+          basic_details: Основные детали
+          oauth_applications: OAuth приложения
+        oauth:
+          openproject_oauth: OpenProject OAuth
+          openproject_oauth_description: Разрешить XWiki доступ к данным OpenProject с помощью OAuth.
+          xwiki_oauth: XWiki OAuth
+          xwiki_oauth_description: Разрешить OpenProject доступ к данным XWiki с помощью OAuth.
+        delete:
+          title: Удалить вики-провайдера
+          warning_html: Вы собираетесь удалить %{wiki_provider}. Это действие необратимо.
