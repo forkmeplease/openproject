@@ -93,13 +93,7 @@ module Admin
         .new(user: current_user)
         .call(permitted_params.group.merge(organizational_unit: true))
 
-      if service_call.success?
-        flash[:notice] = I18n.t("departments.flash.department_created")
-        redirect_to admin_department_path(redirect_target_for(service_call.result)), status: :see_other
-      else
-        flash[:error] = service_call.errors.full_messages.join("\n")
-        redirect_back_or_to(admin_departments_path)
-      end
+      respond_department_created(service_call)
     end
 
     def remove_user
@@ -202,6 +196,16 @@ module Admin
 
     def find_group
       @group = Group.visible.organizational_units.includes(:members, :users, :group_detail).find(params[:id])
+    end
+
+    def respond_department_created(service_call)
+      if service_call.success?
+        flash[:notice] = I18n.t("departments.flash.department_created")
+        redirect_to admin_department_path(redirect_target_for(service_call.result)), status: :see_other
+      else
+        flash[:error] = service_call.errors.full_messages.join("\n")
+        redirect_back_or_to(admin_departments_path)
+      end
     end
 
     def respond_membership_altered(service_call)
