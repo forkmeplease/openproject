@@ -51,10 +51,7 @@ FactoryBot.define do
 
     factory :department do
       sequence(:lastname) { |n| "Department #{n}" }
-
-      callback(:after_create) do |group|
-        group.detail.update!(organizational_unit: true)
-      end
+      organizational_unit { true }
     end
 
     factory :group_marked_for_deletion do
