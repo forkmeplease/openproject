@@ -277,6 +277,34 @@ RSpec.describe Admin::DepartmentsController, with_flag: { departments: true } do
       end
     end
 
+    describe "#destroy" do
+      let!(:department) { create(:department) }
+
+      it "schedules deletion and redirects to index" do
+        perform_enqueued_jobs do
+          delete :destroy, params: { id: department.id }
+        end
+
+        expect { department.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect(flash[:info]).to eq I18n.t(:notice_deletion_scheduled)
+        expect(response).to redirect_to admin_departments_path
+      end
+
+      context "with a parent department" do
+        let(:parent) { create(:department) }
+        let!(:department) { create(:department, parent:) }
+
+        it "redirects to the parent department" do
+          perform_enqueued_jobs do
+            delete :destroy, params: { id: department.id }
+          end
+
+          expect { department.reload }.to raise_error ActiveRecord::RecordNotFound
+          expect(response).to redirect_to admin_department_path(parent)
+        end
+      end
+    end
+
     describe "#destroy_membership" do
       let(:department) { create(:department) }
       let(:project) { create(:project) }
@@ -330,6 +358,11 @@ RSpec.describe Admin::DepartmentsController, with_flag: { departments: true } do
 
     it "forbids remove_user" do
       delete :remove_user, params: { id: department.id, user_id: 0 }
+      expect(response).to have_http_status :forbidden
+    end
+
+    it "forbids destroy" do
+      delete :destroy, params: { id: department.id }
       expect(response).to have_http_status :forbidden
     end
 

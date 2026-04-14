@@ -742,6 +742,9 @@ en:
       heading: "Move user to this department?"
       description: "%{user} is currently a member of %{from_department}. Moving them will remove them from that department."
       confirm: "Move user"
+    context_menu:
+      add_sub_department: "Add sub-department"
+      add_user: "Add user"
     flash:
       user_added: "User was successfully added to the department."
       user_removed: "User was successfully removed from the department."

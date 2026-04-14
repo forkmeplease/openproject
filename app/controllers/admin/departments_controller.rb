@@ -40,7 +40,7 @@ module Admin
     # TODO: We will check for users permission here
     before_action :require_admin
     before_action :find_group,
-                  only: %i[show edit new_user add_user remove_user update create_memberships edit_membership
+                  only: %i[show edit new_user add_user remove_user update destroy create_memberships edit_membership
                            destroy_membership]
 
     def index
@@ -48,8 +48,9 @@ module Admin
     end
 
     def new_user
-      @child_groups = @group.children
-      @ancestors = @group.ancestors(order: :asc)
+      @groups = Group.with_detail.organizational_units.visible.order(:lastname)
+      @add_user = true
+      render action: :index
     end
 
     def add_user # rubocop:disable Metrics/AbcSize
@@ -79,13 +80,9 @@ module Admin
 
     def new_department
       @group = Group.visible.with_detail.organizational_units.find(params[:parent_id]) if params[:parent_id].present?
-
-      if @group
-        @child_groups = @group.children
-        @ancestors = @group.ancestors(order: :asc)
-      else
-        @child_groups = Group.with_detail.organizational_units.visible.where_detail(parent_id: nil).order(:lastname)
-      end
+      @groups = Group.with_detail.organizational_units.visible.order(:lastname)
+      @add_subgroup = true
+      render action: :index
     end
 
     def add_department
@@ -148,6 +145,17 @@ module Admin
       else
         render action: :edit, status: :unprocessable_entity
       end
+    end
+
+    def destroy
+      redirect_target = @group.parent
+
+      ::Groups::DeleteService
+        .new(user: current_user, model: @group)
+        .call
+
+      flash[:info] = I18n.t(:notice_deletion_scheduled)
+      redirect_to redirect_target ? admin_department_path(redirect_target) : admin_departments_path, status: :see_other
     end
 
     def create_memberships

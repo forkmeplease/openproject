@@ -52,14 +52,72 @@ module Admin
                 scheme: :invisible,
                 "aria-label": I18n.t(:label_actions)
               )
-              menu.with_item(
-                label: I18n.t(:button_edit),
-                tag: :a,
-                href: edit_admin_department_path(@department)
-              )
+              menu_items(menu)
             end
           end
         end
+      end
+
+      private
+
+      def menu_items(menu)
+        with_item_group(menu) { edit_item(menu) }
+        with_item_group(menu) do
+          add_sub_department_item(menu)
+          add_user_item(menu)
+        end
+        with_item_group(menu) { change_parent_item(menu) }
+        with_item_group(menu) { delete_item(menu) }
+      end
+
+      def edit_item(menu)
+        menu.with_item(
+          label: I18n.t(:button_edit),
+          tag: :a,
+          href: edit_admin_department_path(@department)
+        ) { it.with_leading_visual_icon(icon: :pencil) }
+      end
+
+      def add_sub_department_item(menu)
+        menu.with_item(
+          label: I18n.t("departments.context_menu.add_sub_department"),
+          tag: :a,
+          href: new_department_admin_departments_path(parent_id: @department.id),
+          content_arguments: { data: { turbo_frame: Admin::Departments::HierarchyLayoutComponent.wrapper_key } }
+        ) { it.with_leading_visual_icon(icon: "op-arrow-in") }
+      end
+
+      def add_user_item(menu)
+        menu.with_item(
+          label: I18n.t("departments.context_menu.add_user"),
+          tag: :a,
+          href: new_user_admin_department_path(@department),
+          content_arguments: { data: { turbo_frame: Admin::Departments::HierarchyLayoutComponent.wrapper_key } }
+        ) { it.with_leading_visual_icon(icon: "person-add") }
+      end
+
+      def change_parent_item(menu)
+        menu.with_item(
+          label: I18n.t(:label_change_parent),
+          tag: :button,
+          disabled: true
+        ) { it.with_leading_visual_icon(icon: "arrow-switch") }
+      end
+
+      def delete_item(menu)
+        menu.with_item(
+          label: I18n.t(:button_delete),
+          scheme: :danger,
+          tag: :a,
+          href: admin_department_path(@department),
+          content_arguments: {
+            data: {
+              turbo_confirm: I18n.t(:text_are_you_sure),
+              turbo_method: :delete,
+              turbo_frame: "_top"
+            }
+          }
+        ) { it.with_leading_visual_icon(icon: :trash) }
       end
     end
   end
