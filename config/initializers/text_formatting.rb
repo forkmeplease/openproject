@@ -23,38 +23,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpenProject::TextFormatting
-  module Filters
-    class PatternMatcherFilter < HTML::Pipeline::Filter
-      # Skip text nodes that are within preformatted blocks
-      PREFORMATTED_BLOCKS = %w(pre code).to_set
+Rails.application.configure do |application|
+  application.config.to_prepare do
+    namespace = OpenProject::TextFormatting
 
-      class << self
-        def append_matcher(matcher)
-          matchers << matcher
-        end
-
-        def matchers
-          @matchers ||= []
-        end
-      end
-
-      def call
-        doc.search(".//text()").each do |node|
-          next if has_ancestor?(node, PREFORMATTED_BLOCKS)
-
-          self.class.matchers.each do |matcher|
-            matcher.call(node, doc:, context:)
-          end
-        end
-
-        doc
-      end
-    end
+    namespace::Filters::PatternMatcherFilter.append_matcher namespace::Matchers::ResourceLinksMatcher
+    namespace::Filters::PatternMatcherFilter.append_matcher namespace::Matchers::WikiLinksMatcher
+    namespace::Filters::PatternMatcherFilter.append_matcher namespace::Matchers::AttributeMacros
   end
 end
