@@ -224,7 +224,7 @@ module Components
       end
 
       def clear_filter_value(field)
-        ng_select_clear(page.find("#filter_#{field} ng-select"))
+        ng_select_clear(page.find("#filter_#{field} ng-select"), raise_on_missing: false)
       end
 
       def open_autocompleter(id)
