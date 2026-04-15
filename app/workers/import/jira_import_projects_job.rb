@@ -31,8 +31,7 @@
 module Import
   class JiraImportProjectsJob < ApplicationJob
     include Import::JiraOpenProjectReferenceCreation
-
-    JIRA_IMPORT_GROUP_KEY = "Jira import"
+    include Import::JiraImportCustomFields
 
     # rubocop:disable Metrics/AbcSize
     def perform(jira_import_id)
@@ -44,13 +43,13 @@ module Import
 
       ActiveRecord::Base.transaction do
         @project_role = setup_project_role
+        custom_field_registry = build_custom_field_registry
 
         Import::JiraProject.where(jira_id: @jira_id, jira_project_id: @jira_import.project_ids).find_each do |jira_project|
-          custom_field_list = import_custom_fields(jira_project)
-          project = import_project(jira_project, custom_field_list)
-          update_custom_fields_in_project(project, custom_field_list)
+          project = import_project(jira_project)
+          update_custom_fields_in_project(project, jira_project, custom_field_registry)
           Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: jira_project.id).find_each do |jira_issue|
-            import_issue(jira_issue, project, custom_field_list)
+            import_issue(jira_issue, project, custom_field_registry)
           end
         end
       end
@@ -75,7 +74,7 @@ module Import
       Role.find_by!(name: "JiraMember")
     end
 
-    def import_project(jira_project, _custom_field_list)
+    def import_project(jira_project)
       project_key = jira_project.payload.fetch("key")
       identifier = Setting::WorkPackageIdentifier.semantic? ? project_key.upcase : project_key.downcase
       service_call = Projects::CreateService
@@ -105,22 +104,27 @@ module Import
       raise service_call.message
     end
 
-    def import_issue(jira_issue, project, custom_field_list)
+    def import_issue(jira_issue, project, custom_field_registry)
       type = import_type(jira_issue, project)
       status = import_status(jira_issue)
       update_workflows(type)
-      new_custom_fields = new_custom_fields_in_type(jira_issue, type, custom_field_list)
+      new_custom_fields = new_custom_fields_in_type(jira_issue, type, custom_field_registry)
       update_custom_fields_in_type(type, new_custom_fields) if new_custom_fields.any?
       priority = import_priority(jira_issue)
-      import_work_package(jira_issue, project, type, status, priority, custom_field_list)
+      import_work_package(jira_issue, project, type, status, priority, custom_field_registry)
     end
 
-    def new_custom_fields_in_type(jira_issue, type, custom_field_list)
+    def new_custom_fields_in_type(jira_issue, type, custom_field_registry)
       existing_cf_ids = type.custom_field_ids
-      custom_field_list
-        .select { |field| field[:values].any? { |v| v[:issue_id] == jira_issue.id } }
-        .filter_map { |field| field[:custom_field] }
-        .reject { |cf| existing_cf_ids.include?(cf.id) }
+      cfs = custom_field_registry.filter_map do |entry|
+        field_key = entry[:jira_field].jira_field_id
+        raw_value = jira_issue.payload["fields"][field_key]
+        next if raw_value.blank?
+
+        context = find_context_for_issue(entry, jira_issue)
+        context&.dig(:custom_field)
+      end
+      cfs.uniq.reject { |cf| existing_cf_ids.include?(cf.id) }
     end
 
     def update_custom_fields_in_type(type, new_custom_fields)
@@ -142,10 +146,15 @@ module Import
       type.save!
     end
 
-    def update_custom_fields_in_project(project, custom_field_list)
+    def update_custom_fields_in_project(project, jira_project, custom_field_registry)
+      project_key = jira_project.payload["key"]
+      applicable_cfs = custom_field_registry.flat_map do |entry|
+        entry[:contexts]
+          .select { |ctx| context_applies_to_project?(ctx, project_key) }
+          .map { |ctx| ctx[:custom_field] }
+      end
       existing_cf_ids = project.work_package_custom_fields.pluck(:id).to_set
-      new_cfs = custom_field_list.filter_map { |field| field[:custom_field] }
-                                 .reject { |cf| existing_cf_ids.include?(cf.id) }
+      new_cfs = applicable_cfs.uniq.reject { |cf| existing_cf_ids.include?(cf.id) }
       project.work_package_custom_fields << new_cfs if new_cfs.any?
     end
 
@@ -204,7 +213,7 @@ module Import
       raise call.message if call.failure?
     end
 
-    def import_work_package(jira_issue, project, type, status, priority, custom_field_list)
+    def import_work_package(jira_issue, project, type, status, priority, custom_field_registry)
       # required because otherwise project.types does not include type and then wp creation fails.
       project.reload
       author_key = jira_issue.payload.dig("fields", "creator", "key")
@@ -214,7 +223,7 @@ module Import
 
       [author, assigned_to].uniq.compact.each { |member| import_member(project, member) }
       description = Import::JiraWikiMarkupConverter.new(jira_issue.payload["fields"]["description"] || "").convert
-      custom_field_attrs = collect_custom_field_attributes(custom_field_list, jira_issue)
+      custom_field_attrs = collect_custom_field_attributes(custom_field_registry, jira_issue)
 
       service_call = WorkPackages::CreateService
                        .new(user: author || User.system, contract_class: EmptyContract)
@@ -233,16 +242,6 @@ module Import
       work_package = service_call.result
       create_reference!(op_leg: work_package, jira_leg: jira_issue, jira_import: @jira_import, uses_existing: false)
       import_work_package_history(work_package, jira_issue, project)
-    end
-
-    def collect_custom_field_attributes(custom_field_list, jira_issue)
-      custom_field_list.each_with_object({}) do |field, attrs|
-        value = field[:values].select { |value| value[:issue_id] == jira_issue.id }
-        next if value&.nil? || value&.empty?
-
-        custom_field = field[:custom_field]
-        attrs[custom_field.attribute_getter] = value.first[:value]
-      end
     end
 
     def import_work_package_history(work_package, jira_issue, project)
@@ -307,62 +306,6 @@ module Import
 
       if service_call.errors.find { |error| error.type == :taken }.blank?
         raise service_call.message
-      end
-    end
-
-    def import_custom_fields(jira_project)
-      usage = {}
-      Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: jira_project.id).find_each do |issue|
-        issue.payload["fields"].each do |key, value|
-          next unless key.start_with?("customfield_") && value.present?
-
-          usage[key] ||= { values: [] }
-          usage[key][:values] << { value:, issue_id: issue.id }
-        end
-      end
-
-      jira_fields_by_id = Import::JiraField
-                            .where(jira_id: @jira_id, jira_field_id: usage.keys)
-                            .index_by(&:jira_field_id)
-      custom_field_list = []
-      usage.each do |jira_field_id, value|
-        jira_field = jira_fields_by_id[jira_field_id]
-        next unless jira_field
-
-        custom_field, values = import_custom_field(jira_field, jira_project, value[:values])
-        custom_field_list << { custom_field:, values: }
-      end
-      custom_field_list
-    end
-
-    def import_custom_field(jira_field, jira_project, values)
-      jira_custom_field_builder = Import::JiraCustomFieldBuilder.new(jira_field, jira_project, values)
-      existing_cf = jira_custom_field_builder.find_existing_custom_field
-      if existing_cf
-        unless Import::JiraOpenProjectReference.exists?(op_entity_id: existing_cf.id,
-                                                        op_entity_class: existing_cf.class.to_s,
-                                                        jira_id: @jira_id)
-          create_reference!(op_leg: existing_cf, jira_leg: jira_field, jira_import:, uses_existing: true)
-        end
-        return [existing_cf, jira_custom_field_builder.convert_values(existing_cf)]
-      end
-      name, field_format = jira_custom_field_builder.custom_field_settings
-      params = {
-        type: "WorkPackageCustomField",
-        name:,
-        field_format:,
-        is_required: false,
-        is_for_all: false,
-        **jira_custom_field_builder.custom_field_parameters
-      }
-      service_call = CustomFields::CreateService.new(user: @user).call(**params)
-      if service_call.success?
-        custom_field = service_call.result
-        create_reference!(op_leg: custom_field, jira_leg: jira_field, jira_import: @jira_import, uses_existing: false)
-        jira_custom_field_builder.custom_field_post_processing(custom_field)
-        [custom_field, jira_custom_field_builder.convert_values(custom_field)]
-      else
-        raise "Failed to create custom field '#{jira_field['name']}': #{service_call.message}"
       end
     end
 

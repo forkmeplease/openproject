@@ -29,7 +29,9 @@
 #++
 
 module Import
-  class JiraCustomFieldBuilder
+  # Builds OpenProject custom field definition(s) from a Jira custom field
+  # and an optional Jira "field context" group.
+  class JiraImportCustomFieldBuilder
     # Maps the Jira schema `custom` field suffix (part after the last `:`) to an OP field format.
     # Takes precedence over the type-based mapping below.
     JIRA_CUSTOM_SUFFIX_TO_OP_FORMAT = {
@@ -57,13 +59,12 @@ module Import
       "user" => "user"
     }.freeze
 
-    attr_reader :jira_project, :jira_field, :values
+    attr_reader :jira_field, :context_group
 
-    def initialize(jira_field, jira_project, values)
+    def initialize(jira_field, context_group: nil)
       @jira_field = jira_field
-      @jira_project = jira_project
-      @values = values
-      @import_name = jira_field.payload["name"]
+      @context_group = context_group
+      @import_name = default_import_name
     end
 
     def find_existing_custom_field
@@ -79,33 +80,70 @@ module Import
     end
 
     def custom_field_parameters
-      params = {}
-      if format == "list"
-        params[:multi_value] = jira_field_multi_value?
-        options = collect_list_options(values)
-        params[:possible_values] = options unless options.empty?
-      elsif format == "user"
-        params[:multi_value] = jira_field_multi_value?
+      case format
+      when "list"
+        list_field_parameters
+      when "user"
+        { multi_value: jira_field_multi_value? }
+      else
+        {}
       end
-      params
     end
 
-    def convert_values(custom_field)
-      return convert_values_text if format == "text"
-      return convert_values_list(custom_field) if format == "list"
-
-      # TODO: convert Jira custom field values to OP custom field values, if needed
-      @values
+    # Converts a single raw Jira field value (as found in `issue.payload["fields"][field_key]`)
+    # into the value to assign to the OP custom field attribute.
+    def convert_value(raw_value, custom_field)
+      case format
+      when "text" then JiraWikiMarkupConverter.new(raw_value.to_s).convert
+      when "list" then convert_list_value(raw_value, custom_field)
+      else raw_value
+      end
     end
 
     def custom_field_post_processing(custom_field)
-      populate_hierarchy_items(custom_field, values) if format == "hierarchy"
+      populate_hierarchy_items(custom_field) if format == "hierarchy"
+    end
+
+    def format
+      @format ||= jira_to_op_field_format(jira_field)
     end
 
     private
 
-    def convert_values_text
-      @values.map { |entry| entry.merge(value: JiraWikiMarkupConverter.new(entry[:value]).convert) }
+    def default_import_name
+      base_name = jira_field.payload["name"]
+      project_keys = context_group_projects
+      return base_name if project_keys.empty?
+
+      "#{base_name} (#{project_keys.join(', ')})"
+    end
+
+    def context_group_projects
+      Array(@context_group&.dig("projects"))
+    end
+
+    def context_group_allowed_values
+      Array(@context_group&.dig("allowedValues"))
+    end
+
+    def list_field_parameters
+      # In Jira DC, a single custom field can be bound to different allowed-values sets via
+      # per-project and per-issuetype Field Contexts. Each distinct option set becomes its
+      # own OP custom field, so one `JiraField` can produce several OP CFs. A context group
+      # is a hash of the shape:
+      #
+      #     {
+      #       "projects"      => ["DYX", "ABC"],   # Jira project keys sharing this option set
+      #       "issuetypes"    => ["10100"],        # Jira issue type ids sharing this option set
+      #       "allowedValues" => [{ "value" => "Low" }, ...]
+      #     }
+      #
+      # An empty `projects` / `issuetypes` array means the context applies to all projects /
+      # all issue types (used for non-list fields too, where no context discrimination exists).
+      params = { multi_value: jira_field_multi_value? }
+      options = context_group_allowed_values.pluck("value").compact.uniq
+      params[:possible_values] = options if options.any?
+      params
     end
 
     def jira_field_multi_value?
@@ -127,10 +165,6 @@ module Import
       unique_name
     end
 
-    def format
-      @format ||= jira_to_op_field_format(jira_field)
-    end
-
     def jira_to_op_field_format(jira_field)
       schema = jira_field.payload["schema"] || {}
       type = schema["type"]
@@ -145,37 +179,15 @@ module Import
       end
     end
 
-    def convert_values_list(custom_field)
-      @values.map do |v|
-        list_value = v[:value]
-        list_items = if list_value.is_a?(Array)
-                       list_value.map { |c_value| custom_field.value_of(c_value["value"]) }
-                     else
-                       custom_field.value_of(list_value["value"])
-                     end
-        v.merge({ value: list_items })
+    def convert_list_value(raw_value, custom_field)
+      if raw_value.is_a?(Array)
+        raw_value.filter_map { |c_value| custom_field.value_of(c_value["value"]) }
+      else
+        custom_field.value_of(raw_value["value"])
       end
     end
 
-    def collect_list_options(list_values)
-      # Prefer context-defined options fetched from /rest/api/2/customFields/{id}/options.
-      # But this is an experimental API endpoint in Jira DC v9, v10 and v11
-      # This gives the complete list including options never used in any issue.
-      context_options = jira_field.payload["allowedValues"]
-      return context_options.pluck("value") if context_options.present?
-
-      # Fall back to extracting options from actual issue values (may be incomplete).
-      list_values.flat_map do |v|
-        list_value = v[:value]
-        if list_value.is_a?(Array)
-          list_value.map { |c_value| c_value["value"] }
-        else
-          list_value["value"]
-        end
-      end
-    end
-
-    def populate_hierarchy_items(_custom_field, _values)
+    def populate_hierarchy_items(_custom_field)
       # TODO: populate_hierarchy_items
     end
   end

@@ -30,6 +30,8 @@
 
 module Import
   class JiraFetchProjectsJob < ApplicationJob
+    include Import::JiraFetchCustomFields
+
     def perform(jira_import_id)
       @jira_import = Import::JiraImport.find(jira_import_id)
       jira = @jira_import.jira
@@ -131,85 +133,6 @@ module Import
         start_at = result["startAt"] + result["maxResults"]
         break if start_at >= result["total"]
       end
-    end
-
-    def sync_custom_fields
-      used_custom_field_ids = collect_used_custom_field_ids
-      return unless used_custom_field_ids.any?
-
-      upsert_custom_fields(used_custom_field_ids)
-      sync_custom_field_options
-    end
-
-    def collect_used_custom_field_ids
-      used_ids = Set.new
-      Import::JiraProject.where(jira_id: @jira_id, jira_project_id: @jira_import.project_ids).find_each do |jira_project|
-        Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: jira_project.id).find_each do |issue|
-          issue.payload["fields"].each do |key, value|
-            used_ids << key if key.start_with?("customfield_") && value.present?
-          end
-        end
-      end
-      used_ids
-    end
-
-    def upsert_custom_fields(used_custom_field_ids)
-      used_fields = @jira_client.fields.select do |field|
-        field.fetch("custom", false) && used_custom_field_ids.include?(field.fetch("id"))
-      end
-      fields_upsert_data = used_fields.map do |field|
-        {
-          payload: field,
-          jira_id: @jira_id,
-          jira_field_id: field.fetch("id"),
-          jira_import_id: @jira_import.id,
-          created_at: @created_at,
-          updated_at: @updated_at
-        }
-      end
-      Import::JiraField.upsert_all(fields_upsert_data, unique_by: %i[jira_id jira_field_id]) if fields_upsert_data.any?
-    end
-
-    def sync_custom_field_options
-      list_fields = Import::JiraField
-                      .where(jira_id: @jira_id, jira_import_id: @jira_import.id)
-                      .select { |f| list_type_field?(f) }
-      return if list_fields.empty?
-
-      list_fields.each { |jira_field| update_custom_field_options(jira_field) }
-    rescue Import::JiraClient::ApiError => e
-      Rails.logger.warn("Could not fetch custom field contexts from Jira: #{e.message}. " \
-                        "List field options will be derived from actual issue values only.")
-    end
-
-    def update_custom_field_options(jira_field)
-      options = fetch_all_custom_field_options(jira_field.payload["schema"]["customId"])
-      return if options.blank?
-
-      jira_field.update!(payload: jira_field.payload.merge("allowedValues" => options))
-    end
-
-    def list_type_field?(jira_field)
-      schema = jira_field.payload["schema"] || {}
-      type = schema["type"]
-      type == "option" || (type == "array" && schema["items"] == "option")
-    end
-
-    def fetch_all_custom_field_options(field_id)
-      page = 1
-      all_options = []
-      loop do
-        result = @jira_client.custom_field_options(field_id, page:)
-        options = result["options"] || []
-        all_options.concat(options)
-        break if all_options.size >= result["total"].to_i || options.empty?
-
-        page += 1
-      end
-      all_options
-    rescue Import::JiraClient::ApiError => e
-      Rails.logger.warn("Could not fetch custom field contexts from Jira: #{e.message}.")
-      nil # gracefully skip this field if the experimental options endpoint fails
     end
   end
 end
