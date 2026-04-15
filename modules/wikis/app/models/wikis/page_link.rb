@@ -34,5 +34,13 @@ module Wikis
 
     belongs_to :provider
     belongs_to :linkable, polymorphic: true
+
+    def relation? = false
+
+    def inline? = false
+
+    def href
+      "#"
+    end
   end
 end

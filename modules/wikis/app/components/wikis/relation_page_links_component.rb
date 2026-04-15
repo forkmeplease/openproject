@@ -29,18 +29,25 @@
 #++
 
 module Wikis
-  class PageLinkComponent < ApplicationComponent
+  class RelationPageLinksComponent < ApplicationComponent
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
 
-    alias_method :link, :model
+    alias_method :provider, :model
 
-    def page_title_service
-      @page_title_service ||= PageTitleService.new
+    def initialize(model = nil, work_package: nil, **)
+      @work_package = work_package
+      super(model, **)
     end
 
-    def show_action_menu?
-      link.relation?
+    def page_links
+      @page_links ||= page_link_service.relation_page_links_for(provider:, linkable: @work_package)
+    end
+
+    private
+
+    def page_link_service
+      @page_link_service ||= PageLinkService.new
     end
   end
 end
