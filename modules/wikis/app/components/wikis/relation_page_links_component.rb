@@ -29,20 +29,25 @@
 #++
 
 module Wikis
-  class PageLink < ApplicationRecord
-    self.table_name = "wiki_page_links"
+  class RelationPageLinksComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpPrimer::ComponentHelpers
 
-    belongs_to :provider
-    belongs_to :linkable, polymorphic: true
+    alias_method :provider, :model
 
-    def relation? = false
-
-    def inline? = false
-
-    def href
-      "#"
+    def initialize(model = nil, work_package: nil, **)
+      @work_package = work_package
+      super(model, **)
     end
 
-    def render_author? = false
+    def page_links
+      @page_links ||= page_link_service.relation_page_links_for(provider:, linkable: @work_package)
+    end
+
+    private
+
+    def page_link_service
+      @page_link_service ||= PageLinkService.new
+    end
   end
 end
