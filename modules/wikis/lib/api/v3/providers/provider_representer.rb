@@ -28,10 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis
-  class RelationPageLink < PageLink
-    belongs_to :author, class_name: "User"
+module API
+  module V3
+    module Providers
+      class ProviderRepresenter < Decorators::Single
+        include Decorators::LinkedResource
+        include Decorators::DateProperty
 
-    def render_author? = true
+        property :id
+        property :name
+
+        date_time_property :created_at
+        date_time_property :updated_at
+
+        self_link(path: :wiki_provider)
+      end
+    end
   end
 end
