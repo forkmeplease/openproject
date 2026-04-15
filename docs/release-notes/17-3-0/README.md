@@ -99,7 +99,7 @@ When editing workflows, only relevant statuses are displayed, and role selection
 
 ### Improved handling of project identifiers
 
-[Project identifiers](../../docs/glossary/#project-identifier) can now be easily changed without invalidating existing links. Previous identifiers remain valid and continue to redirect to the project.
+[Project identifiers](../../glossary/#project-identifier) can now be easily changed without invalidating existing links. Previous identifiers remain valid and continue to redirect to the project.
 
 In addition, identifier handling has been improved when creating or copying projects, including automatic suggestions and updated validation. These improvements also apply to API-based project creation.
 
