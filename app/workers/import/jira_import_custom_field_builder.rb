@@ -80,6 +80,11 @@ module Import
         "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker"
       },
       {
+        "type" => "array",
+        "items" => "user",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker"
+      },
+      {
         "type" => "option-with-child",
         "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect"
       },
