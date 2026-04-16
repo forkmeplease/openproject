@@ -91,7 +91,7 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
            jira_user_key: "JIRAUSER10000",
            payload: jira_user_payload)
   end
-  let!(:op_user) { create(:user, login: "p.balashou", mail: "p.balashou@openproject.com") }
+  let!(:op_user) { create(:user, login: "e.xample", mail: "e.xample@example.com") }
   let!(:jira_user_reference) do
     create(:jira_open_project_reference,
            jira:,
@@ -452,9 +452,45 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
     end
   end
 
+  describe "user field (com.atlassian.jira.plugin.system.customfieldtypes:userpicker)" do
+    # customfield_10258 "CF User"
+    # Jira value: user object with "key" -> resolved to OP User via JiraOpenProjectReference.
+    let!(:jira_field) do
+      create(:jira_field, jira:, jira_import:,
+                          jira_field_id: "customfield_10258",
+                          payload: {
+                            "id" => "customfield_10258",
+                            "name" => "CF User",
+                            "schema" => {
+                              "type" => "user",
+                              "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker",
+                              "customId" => 10258
+                            }
+                          })
+    end
+    let!(:jira_issue) do
+      create(:jira_issue, jira:, jira_import:,
+                          jira_issue_id: "10200",
+                          jira_project_id: jira_project.id,
+                          payload: issue_payload)
+    end
+
+    before { described_class.new.perform(jira_import.id) }
+
+    it "creates a 'user' custom field" do
+      expect(WorkPackageCustomField.find_by!(name: "CF User").field_format).to eq("user")
+    end
+
+    it "resolves the Jira user key to the mapped OP user" do
+      # Fixture value has key JIRAUSER10000 which is mapped to op_user via jira_user_reference
+      expect(cf_value("CF User")).to eq(op_user)
+    end
+  end
+
   describe "all custom field types in a single import run" do
-    # Registers all 8 field types at once and verifies the correct number of
-    # OP custom fields are created (6 simple + 1 list-single + 1 list-multi + 2 bool = 10).
+    # Registers all field types at once and verifies the correct number of
+    # OP custom fields are created:
+    # 5 scalar (string, text, float, date, url) + 1 user + 1 list-single + 1 list-multi + 2 bool = 10
     let!(:jira_fields) do
       [
         { id: "customfield_10255", name: "CF String",
@@ -472,6 +508,9 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
         { id: "customfield_10257", name: "CF URL",
           schema: { "type" => "string",
                     "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:url" } },
+        { id: "customfield_10258", name: "CF User",
+          schema: { "type" => "user",
+                    "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker" } },
         { id: "customfield_10264", name: "CF List",
           schema: { "type" => "option",
                     "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:select" },
@@ -509,9 +548,9 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
     end
 
     it "creates the correct number of OpenProject custom fields" do
-      # 5 scalar (string, text, float, date, url) + 1 list-single + 1 list-multi + 2 bool (one per checkbox option) = 9
+      # 5 scalar + 1 user + 1 list-single + 1 list-multi + 2 bool (one per checkbox option) = 10
       expect { described_class.new.perform(jira_import.id) }
-        .to change(WorkPackageCustomField, :count).by(9)
+        .to change(WorkPackageCustomField, :count).by(10)
     end
 
     context "on after the import" do
@@ -524,6 +563,7 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
           "CF Number" => "float",
           "CF Date" => "date",
           "CF URL" => "link",
+          "CF User" => "user",
           "CF List" => "list",
           "CF Multi-List" => "list",
           "CF Booleans - Check 1" => "bool",
@@ -541,6 +581,10 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
           expect(cf_value("CF URL")).to eq("https://example.com")
           expect(cf_value("CF text (plain)")).to include("**bold**")
         end
+      end
+
+      it "resolves the user field to the mapped OP user" do
+        expect(cf_value("CF User")).to eq(op_user)
       end
 
       it "sets the single-select list value correctly" do

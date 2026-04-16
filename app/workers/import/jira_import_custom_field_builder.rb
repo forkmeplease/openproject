@@ -32,6 +32,42 @@ module Import
   # Builds OpenProject custom field definition(s) from a Jira custom field
   # and an optional Jira "field context" group.
   class JiraImportCustomFieldBuilder
+    JIRA_SUPPORTED_FIELDS = [
+      {
+        "type" => "option",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:select"
+      },
+      {
+        "type" => "array",
+        "items" => "option",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
+      },
+      {
+        "type" => "datetime",
+        "custom" => "com.onresolve.jira.groovy.groovyrunner:scripted-field"
+      },
+      {
+        "type" => "string",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:url"
+      },
+      {
+        "type" => "string",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:textarea"
+      },
+      {
+        "type" => "string",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:textfield"
+      },
+      {
+        "type" => "number",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:float"
+      },
+      {
+        "type" => "user",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker"
+      }
+    ].freeze
+
     # Maps the Jira schema `custom` field suffix (part after the last `:`) to an OP field format.
     # Takes precedence over the type-based mapping below.
     JIRA_CUSTOM_SUFFIX_TO_OP_FORMAT = {
@@ -61,10 +97,11 @@ module Import
 
     attr_reader :jira_field, :context_group
 
-    def initialize(jira_field, context_group: nil, option_value: nil)
+    def initialize(jira_field, context_group: nil, option_value: nil, jira_import: nil)
       @jira_field = jira_field
       @context_group = context_group
       @option_value = option_value
+      @jira_import = jira_import
       @import_name = default_import_name
     end
 
@@ -98,6 +135,7 @@ module Import
       when "bool" then convert_multicheckbox_bool_value(raw_value)
       when "text" then JiraWikiMarkupConverter.new(raw_value.to_s).convert
       when "list" then convert_list_value(raw_value, custom_field)
+      when "user" then convert_user_value(raw_value)
       else raw_value
       end
     end
@@ -191,6 +229,14 @@ module Import
       raw_value.any? { |v| v["value"] == @option_value }
     end
 
+    def convert_user_value(raw_value)
+      if raw_value.is_a?(Array)
+        raw_value.filter_map { |u| find_field_user(u["key"]) }
+      else
+        find_field_user(raw_value["key"])
+      end
+    end
+
     def convert_list_value(raw_value, custom_field)
       if raw_value.is_a?(Array)
         raw_value.filter_map { |c_value| custom_field.value_of(c_value["value"]) }
@@ -201,6 +247,18 @@ module Import
 
     def populate_hierarchy_items(_custom_field)
       # TODO: populate_hierarchy_items
+    end
+
+    def find_field_user(jira_user_key)
+      return if jira_user_key.blank?
+
+      jira_user = Import::JiraUser.find_by(jira_user_key:, jira_import: @jira_import)
+      if jira_user
+        JiraOpenProjectReference.find_by!(
+          jira_entity_class: "Import::JiraUser",
+          jira_entity_id: jira_user.id
+        ).op_leg
+      end
     end
   end
 end

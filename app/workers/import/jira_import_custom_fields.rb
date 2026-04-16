@@ -138,7 +138,7 @@ module Import
     end
 
     def build_context_entry(jira_field, context_group, option_value: nil)
-      builder = Import::JiraImportCustomFieldBuilder.new(jira_field, context_group:, option_value:)
+      builder = Import::JiraImportCustomFieldBuilder.new(jira_field, context_group:, option_value:, jira_import: @jira_import)
       custom_field = find_or_create_custom_field(jira_field, builder)
       {
         projects: Array(context_group&.dig("projects")),

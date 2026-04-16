@@ -521,6 +521,56 @@ RSpec.describe Import::JiraImportCustomFieldBuilder do
       end
     end
 
+    context "with a single-user field (userpicker)" do
+      let(:jira_field) do
+        jira_field_for(name: "CF User",
+                       schema: { "type" => "user",
+                                 "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker" })
+      end
+      let(:op_user) { instance_double(User, id: 99) }
+      let(:builder) { described_class.new(jira_field) }
+
+      before { allow(builder).to receive(:find_field_user).with("JIRAUSER10000").and_return(op_user) }
+
+      it "looks up the OP user by the Jira user key" do
+        raw = { "key" => "JIRAUSER10000", "name" => "p.balashou" }
+        expect(builder.convert_value(raw, custom_field)).to eq(op_user)
+      end
+
+      it "returns nil when the user key is not found" do
+        allow(builder).to receive(:find_field_user).with("UNKNOWN").and_return(nil)
+        raw = { "key" => "UNKNOWN", "name" => "gone" }
+        expect(builder.convert_value(raw, custom_field)).to be_nil
+      end
+    end
+
+    context "with a multi-user field (multiuserpicker)" do
+      let(:jira_field) do
+        jira_field_for(name: "CF Users",
+                       schema: { "type" => "array", "items" => "user",
+                                 "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker" })
+      end
+      let(:user_a) { instance_double(User, id: 10) }
+      let(:user_b) { instance_double(User, id: 11) }
+      let(:builder) { described_class.new(jira_field) }
+
+      before do
+        allow(builder).to receive(:find_field_user).with("JIRA_A").and_return(user_a)
+        allow(builder).to receive(:find_field_user).with("JIRA_B").and_return(user_b)
+        allow(builder).to receive(:find_field_user).with("JIRA_GONE").and_return(nil)
+      end
+
+      it "maps each user object to the corresponding OP user" do
+        raw = [{ "key" => "JIRA_A" }, { "key" => "JIRA_B" }]
+        expect(builder.convert_value(raw, custom_field)).to eq([user_a, user_b])
+      end
+
+      it "filters out unmapped users" do
+        raw = [{ "key" => "JIRA_A" }, { "key" => "JIRA_GONE" }]
+        expect(builder.convert_value(raw, custom_field)).to eq([user_a])
+      end
+    end
+
     context "with scalar passthrough fields (string, float, date, link)" do
       {
         "string" => ["CF String",

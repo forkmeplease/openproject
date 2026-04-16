@@ -62,6 +62,13 @@
         "value": "Turtle"
       }
     ],
+    "customfield_10258": {
+      "key": "JIRAUSER10000",
+      "name": "p.balashou",
+      "displayName": "E Xample",
+      "emailAddress": "p.e.xample@example.com",
+      "active": true
+    },
     "customfield_10260": [
       {
         "id": "10137",
