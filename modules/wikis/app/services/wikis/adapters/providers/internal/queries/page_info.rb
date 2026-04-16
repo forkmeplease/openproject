@@ -28,15 +28,27 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# This query is only intended for demo purposes and can be deleted once we have real queries
 module Wikis::Adapters::Providers::Internal::Queries
-  class Test
-    def initialize(provider)
-      @provider = provider
+  class PageInfo < Wikis::Adapters::BaseQuery
+    class << self
+      def call_contract
+        Wikis::Adapters::Input::PageInfoCallContract
+      end
     end
 
-    def call(*args, **opts)
-      puts "#{args} and #{opts} passed to internal test query for #{@provider}" # rubocop:disable Rails/Output
+    def handle_query(identifier:)
+      title = [
+        "How to write wiki pages",
+        "Technical specifications",
+        "A brief introduction on how to write wiki page titles that are short enough to be memorable"
+      ].sample
+
+      success(
+        Wikis::Adapters::Results::PageInfo.new(
+          title:,
+          href: "#"
+        )
+      )
     end
   end
 end

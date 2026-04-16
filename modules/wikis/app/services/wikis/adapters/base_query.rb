@@ -28,32 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis
-  module Adapters
-    module Providers
-      module XWiki
-        Registry = Dry::Container::Namespace.new("xwiki") do
-          namespace("authentication") do
-            # ...
-          end
+module Wikis::Adapters
+  class BaseQuery
+    include Dry::Monads[:result]
 
-          namespace("commands") do
-            # ...
-          end
-
-          namespace("components") do
-            # ...
-          end
-
-          namespace("contracts") do
-            # ...
-          end
-
-          namespace("queries") do
-            register(:page_info, Queries::PageInfo)
-          end
-        end
+    class << self
+      def call_contract
+        raise SubclassResponsibilityError
       end
+    end
+
+    attr_reader :provider
+
+    def initialize(provider)
+      @provider = provider
+    end
+
+    def call(**)
+      self.class.call_contract.new.call(**).to_monad.bind { handle_query(**it.to_h) }
+    end
+
+    def handle_query(**)
+      raise SubclassResponsibilityError
+    end
+
+    private
+
+    def success(result)
+      Success(result)
+    end
+
+    def failure(code:)
+      Failure(Results::Error.new(source: self.class, code:))
     end
   end
 end

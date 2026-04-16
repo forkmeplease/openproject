@@ -28,15 +28,14 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# This query is only intended for demo purposes and can be deleted once we have real queries
-module Wikis::Adapters::Providers::XWiki::Queries
-  class Test
-    def initialize(provider)
-      @provider = provider
-    end
-
-    def call(*args, **opts)
-      puts "#{args} and #{opts} passed to internal test query for #{@provider}" # rubocop:disable Rails/Output
+module Wikis
+  module Adapters
+    module Input
+      class PageInfoCallContract < DryApplicationContract
+        params do
+          required(:identifier).filled(:string)
+        end
+      end
     end
   end
 end

@@ -23,22 +23,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis
-  class PageTitleService
-    def read(_page_link)
-      # Mock implementation until connection to Wikis API is done
-      # TODO: Replace with real implementation
-
-      [
-        "How to write wiki pages",
-        "Technical specifications",
-        "A brief introduction on how to write wiki page titles that are short enough to be memorable"
-      ].sample
-    end
-  end
+module Wikis::Adapters::Results
+  PageInfo = Data.define(:title, :href)
 end
