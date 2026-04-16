@@ -28,15 +28,10 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkPackages
-  module IdentifierAutofix
-    def self.job_in_progress?
-      GoodJob::Job
-        .where(job_class: [
-                 ProjectIdentifiers::ConvertInstanceToSemanticIdsJob.name,
-                 ProjectIdentifiers::RevertInstanceToClassicIdsJob.name
-               ])
-        .exists?(finished_at: nil)
-    end
-  end
+class ProjectIdentifiers::ConvertInstanceToSemanticIdsJob < ApplicationJob
+  include GoodJob::ActiveJobExtensions::Concurrency
+
+  good_job_control_concurrency_with(total_limit: 1)
+
+  def perform(*); end
 end
