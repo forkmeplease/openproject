@@ -23,7 +23,7 @@ export interface WorkPackageViewOutputs {
   // On row (double) clicked
   itemClicked:EventEmitter<{ workPackageId:string, double:boolean }>;
   // On work package link / details icon clicked
-  stateLinkClicked:EventEmitter<{ workPackageId:string, requestedState:string }>;
+  stateLinkClicked:EventEmitter<{ workPackageId:string, routingId?:string, requestedState:string }>;
 }
 
 export const WorkPackageViewHandlerToken = new InjectionToken<WorkPackageViewEventHandler<any>>('CardEventHandler');

@@ -87,7 +87,7 @@ export class WorkPackageCardViewComponent extends UntilDestroyedMixin implements
 
   @Output() itemClicked = new EventEmitter<{ workPackageId:string, double:boolean }>();
 
-  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, requestedState:string }>();
+  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, routingId?:string, requestedState:string }>();
 
   public trackByHref = trackByHrefAndProperty('lockVersion');
 

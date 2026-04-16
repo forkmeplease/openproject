@@ -177,16 +177,17 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
     }
   }
 
-  openStateLink(event:{ workPackageId:string; requestedState:'show'|'split' }) {
+  openStateLink(event:{ workPackageId:string; routingId?:string; requestedState:'show'|'split' }) {
+    const routingId = event.routingId ?? event.workPackageId;
     const params = {
-      workPackageId: event.workPackageId,
+      workPackageId: routingId,
       focus: true,
     };
 
     if (event.requestedState === 'split') {
       this.keepTab.goCurrentDetailsState(params);
     } else {
-      this.openInFullView(event.workPackageId);
+      this.openInFullView(routingId);
     }
   }
 

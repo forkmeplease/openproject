@@ -87,7 +87,7 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
 
   @Output() onRemove = new EventEmitter<WorkPackageResource>();
 
-  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, requestedState:string }>();
+  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, routingId?:string, requestedState:string }>();
 
   @Output() cardClicked = new EventEmitter<{ workPackageId:string, event:MouseEvent }>();
 
