@@ -38,7 +38,6 @@ module Groups
     attribute :name
     attribute :lastname
     attribute :parent_id
-    attribute :organizational_unit
 
     validate :validate_unique_users
     validate :validate_users_not_in_other_department
