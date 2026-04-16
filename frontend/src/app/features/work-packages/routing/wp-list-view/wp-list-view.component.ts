@@ -212,7 +212,7 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
     window.location.href = this.pathHelper.genericWorkPackagePath(projectIdentifier, routingId) + window.location.search;
   }
 
-  private resolveRoutingId(workPackageId:string):string {
+  protected resolveRoutingId(workPackageId:string):string {
     return resolveRoutingId(this.states, workPackageId);
   }
 }
