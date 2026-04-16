@@ -285,7 +285,7 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
     end
 
     it "stores the URL string on the work package" do
-      expect(cf_value("CF URL")).to eq("https://openproject.org")
+      expect(cf_value("CF URL")).to eq("https://example.com")
     end
   end
 
@@ -538,7 +538,7 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
           expect(cf_value("CF String")).to eq("my plain string value")
           expect(cf_value("CF Number").to_f).to eq(42.5)
           expect(cf_value("CF Date")).to eq(Date.parse("2024-06-15"))
-          expect(cf_value("CF URL")).to eq("https://openproject.org")
+          expect(cf_value("CF URL")).to eq("https://example.com")
           expect(cf_value("CF text (plain)")).to include("**bold**")
         end
       end
