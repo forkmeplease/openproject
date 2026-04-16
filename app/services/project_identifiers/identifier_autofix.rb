@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkPackages
+module ProjectIdentifiers
   module IdentifierAutofix
     def self.job_in_progress?
       GoodJob::Job
