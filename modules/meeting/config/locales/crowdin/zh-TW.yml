@@ -41,6 +41,9 @@ zh-TW:
         start_date: 日期
         start_time: 開始時間
         start_time_hour: 開始時間
+        end_time: End time
+        template: Template
+        notify: Send notifications
         sharing: 共享
       meeting_agenda_item:
         title: 標題
@@ -48,9 +51,15 @@ zh-TW:
         duration_in_minutes: 時長
         description: 備註
         presenter: 簡報者
+        item_type: Type
+        position: Position
+        lock_version: Lock version
+        notes: Notes
       meeting_section:
         title: 標題
+        position: Position
       recurring_meeting:
+        title: Title
         frequency: 頻率
         interval: 間隔
         start_date: 開始於
@@ -59,6 +68,10 @@ zh-TW:
         end_after: 系列會議結束
         end_date: 結束日期
         iterations: 出現次數
+        time_zone: Time zone
+        location: Location
+        duration: Duration
+        notify: Send notifications
       recurring_meeting_interim_response:
         start_time: Start time
       meeting_participant:
@@ -186,6 +199,7 @@ zh-TW:
   label_notify: 送出審閱
   label_icalendar: 發送 iCalendar
   label_icalendar_download: '下載 iCalendar '
+  label_view_meeting: View meeting
   label_view_meeting_series: 檢視會議
   label_meeting_series: 會議
   label_version: 版本
