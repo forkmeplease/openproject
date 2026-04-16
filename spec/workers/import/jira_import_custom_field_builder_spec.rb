@@ -170,6 +170,19 @@ RSpec.describe Import::JiraImportCustomFieldBuilder do
       it { is_expected.to eq("list") }
     end
 
+    context "with a string-array field (e.g. labels)" do
+      # customfield_10280 "CF Labels"
+      let(:jira_field) do
+        jira_field_for(name: "CF Labels",
+                       schema: { "type" => "array",
+                                 "items" => "string",
+                                 "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:labels",
+                                 "customId" => 10280 })
+      end
+
+      it { is_expected.to eq("list") }
+    end
+
     context "with a multicheckboxes field WITHOUT option_value" do
       # customfield_10260 "CF Booleans"
       # Without option_value the builder falls through to the schema mapping (list).
@@ -446,7 +459,7 @@ RSpec.describe Import::JiraImportCustomFieldBuilder do
       end
     end
 
-    context "with a multi-select list field" do
+    context "with a multi-select list field (option items)" do
       let(:jira_field) do
         jira_field_for(name: "CF Multi-List",
                        schema: { "type" => "array",
@@ -473,6 +486,36 @@ RSpec.describe Import::JiraImportCustomFieldBuilder do
         raw = [{ "value" => "Mouse" }, { "value" => "Gone" }]
         result = builder.convert_value(raw, custom_field)
         expect(result).to eq([mouse_option])
+      end
+    end
+
+    context "with a string-array list field (e.g. labels)" do
+      let(:jira_field) do
+        jira_field_for(name: "CF Labels",
+                       schema: { "type" => "array",
+                                 "items" => "string",
+                                 "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:labels" })
+      end
+      let(:builder) { described_class.new(jira_field) }
+      let(:label_a_option) { instance_double(CustomOption, id: 10) }
+      let(:label_b_option) { instance_double(CustomOption, id: 11) }
+
+      before do
+        allow(custom_field).to receive(:value_of).with("Label A").and_return(label_a_option)
+        allow(custom_field).to receive(:value_of).with("Label B").and_return(label_b_option)
+      end
+
+      it "looks up each plain string as a list option" do
+        raw = ["Label A", "Label B"]
+        result = builder.convert_value(raw, custom_field)
+        expect(result).to eq([label_a_option, label_b_option])
+      end
+
+      it "filters out plain strings not present as options" do
+        allow(custom_field).to receive(:value_of).with("Gone").and_return(nil)
+        raw = ["Label A", "Gone"]
+        result = builder.convert_value(raw, custom_field)
+        expect(result).to eq([label_a_option])
       end
     end
 
@@ -533,7 +576,7 @@ RSpec.describe Import::JiraImportCustomFieldBuilder do
       before { allow(builder).to receive(:find_field_user).with("JIRAUSER10000").and_return(op_user) }
 
       it "looks up the OP user by the Jira user key" do
-        raw = { "key" => "JIRAUSER10000", "name" => "p.balashou" }
+        raw = { "key" => "JIRAUSER10000", "name" => "e.xample" }
         expect(builder.convert_value(raw, custom_field)).to eq(op_user)
       end
 

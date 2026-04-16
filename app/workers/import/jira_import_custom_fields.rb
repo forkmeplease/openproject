@@ -74,6 +74,8 @@ module Import
     def build_registry_entries_for_field(jira_field)
       if multicheckbox_field?(jira_field)
         build_multicheckbox_registry_entries(jira_field)
+      elsif string_array_field?(jira_field)
+        build_string_array_registry_entries(jira_field)
       else
         [{ jira_field:, contexts: build_contexts_for_field(jira_field) }]
       end
@@ -82,6 +84,36 @@ module Import
     def multicheckbox_field?(jira_field)
       schema = jira_field.payload["schema"] || {}
       schema["custom"].to_s.end_with?(":multicheckboxes")
+    end
+
+    def string_array_field?(jira_field)
+      schema = jira_field.payload["schema"] || {}
+      schema["type"] == "array" && schema["items"] == "string"
+    end
+
+    def build_string_array_registry_entries(jira_field)
+      string_values = collect_string_values_from_issues(jira_field)
+      allowed_values = string_values.map { |v| { "value" => v } }
+      groups = jira_field.payload["contextGroups"]
+
+      contexts = if groups.present?
+                   groups.map { |g| build_context_entry(jira_field, g.merge("allowedValues" => allowed_values)) }
+                 else
+                   [build_context_entry(jira_field, { "projects" => [], "issuetypes" => [], "allowedValues" => allowed_values })]
+                 end
+      [{ jira_field:, contexts: }]
+    end
+
+    def collect_string_values_from_issues(jira_field)
+      field_key = jira_field.jira_field_id
+      values = Set.new
+      Import::JiraIssue.where(jira_id: @jira_id, jira_project_id: all_jira_import_project_ids).find_each do |issue|
+        raw = issue.payload["fields"][field_key]
+        next unless raw.is_a?(Array)
+
+        raw.each { |v| values << v.to_s if v.present? }
+      end
+      values.to_a.sort
     end
 
     def build_multicheckbox_registry_entries(jira_field)

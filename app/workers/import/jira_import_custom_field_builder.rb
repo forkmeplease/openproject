@@ -43,8 +43,21 @@ module Import
         "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
       },
       {
+        "type" => "array",
+        "items" => "option",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes"
+      },
+      {
         "type" => "datetime",
         "custom" => "com.onresolve.jira.groovy.groovyrunner:scripted-field"
+      },
+      {
+        "type" => "date",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:datepicker"
+      },
+      {
+        "type" => "datetime",
+        "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:datetime"
       },
       {
         "type" => "string",
@@ -65,6 +78,10 @@ module Import
       {
         "type" => "user",
         "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker"
+      },
+      {
+        "type" => "array",
+        "items" => "string"
       }
     ].freeze
 
@@ -92,6 +109,7 @@ module Import
     # Maps the Jira schema `items` field (for array types) to an OP field format.
     JIRA_ARRAY_ITEMS_TO_OP_FORMAT = {
       "option" => "list",
+      "string" => "list",
       "user" => "user"
     }.freeze
 
@@ -239,9 +257,13 @@ module Import
 
     def convert_list_value(raw_value, custom_field)
       if raw_value.is_a?(Array)
-        raw_value.filter_map { |c_value| custom_field.value_of(c_value["value"]) }
+        raw_value.filter_map do |c_value|
+          label = c_value.is_a?(Hash) ? c_value["value"] : c_value.to_s
+          custom_field.value_of(label)
+        end
       else
-        custom_field.value_of(raw_value["value"])
+        label = raw_value.is_a?(Hash) ? raw_value["value"] : raw_value.to_s
+        custom_field.value_of(label)
       end
     end
 

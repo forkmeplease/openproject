@@ -452,6 +452,49 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
     end
   end
 
+  describe "string-array list field (com.atlassian.jira.plugin.system.customfieldtypes:labels)" do
+    # customfield_10280 "CF Labels"
+    # Jira value: plain string array -> options collected from issues, stored as multi-value list.
+    let!(:jira_field) do
+      create(:jira_field, jira:, jira_import:,
+                          jira_field_id: "customfield_10280",
+                          payload: {
+                            "id" => "customfield_10280",
+                            "name" => "CF Labels",
+                            "schema" => {
+                              "type" => "array",
+                              "items" => "string",
+                              "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:labels",
+                              "customId" => 10280
+                            }
+                            # No contextGroups/allowedValues - options are collected from issue values
+                          })
+    end
+    let!(:jira_issue) do
+      create(:jira_issue, jira:, jira_import:,
+                          jira_issue_id: "10200",
+                          jira_project_id: jira_project.id,
+                          payload: issue_payload)
+    end
+
+    before { described_class.new.perform(jira_import.id) }
+
+    it "creates a multi-value 'list' custom field" do
+      cf = WorkPackageCustomField.find_by!(name: "CF Labels")
+      expect(cf.field_format).to eq("list")
+      expect(cf.multi_value).to be true
+    end
+
+    it "populates options from the values found in imported issues" do
+      cf = WorkPackageCustomField.find_by!(name: "CF Labels")
+      expect(cf.custom_options.pluck(:value)).to contain_exactly("Label A", "Label B")
+    end
+
+    it "sets the selected labels on the work package" do
+      expect(cf_value("CF Labels")).to contain_exactly("Label A", "Label B")
+    end
+  end
+
   describe "user field (com.atlassian.jira.plugin.system.customfieldtypes:userpicker)" do
     # customfield_10258 "CF User"
     # Jira value: user object with "key" -> resolved to OP User via JiraOpenProjectReference.
@@ -511,6 +554,9 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
         { id: "customfield_10258", name: "CF User",
           schema: { "type" => "user",
                     "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:userpicker" } },
+        { id: "customfield_10280", name: "CF Labels",
+          schema: { "type" => "array", "items" => "string",
+                    "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:labels" } },
         { id: "customfield_10264", name: "CF List",
           schema: { "type" => "option",
                     "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:select" },
@@ -548,9 +594,9 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
     end
 
     it "creates the correct number of OpenProject custom fields" do
-      # 5 scalar + 1 user + 1 list-single + 1 list-multi + 2 bool (one per checkbox option) = 10
+      # 5 scalar + 1 user + 1 labels (string-array list) + 1 list-single + 1 list-multi + 2 bool = 11
       expect { described_class.new.perform(jira_import.id) }
-        .to change(WorkPackageCustomField, :count).by(10)
+        .to change(WorkPackageCustomField, :count).by(11)
     end
 
     context "on after the import" do
@@ -564,6 +610,7 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
           "CF Date" => "date",
           "CF URL" => "link",
           "CF User" => "user",
+          "CF Labels" => "list",
           "CF List" => "list",
           "CF Multi-List" => "list",
           "CF Booleans - Check 1" => "bool",
@@ -585,6 +632,10 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
 
       it "resolves the user field to the mapped OP user" do
         expect(cf_value("CF User")).to eq(op_user)
+      end
+
+      it "sets the string-array labels on the work package" do
+        expect(cf_value("CF Labels")).to contain_exactly("Label A", "Label B")
       end
 
       it "sets the single-select list value correctly" do
