@@ -36,7 +36,7 @@ class Workflows::Copies::FromTypesController < ApplicationController
   before_action :require_admin
 
   before_action :set_source_type
-  before_action :set_target_type
+  before_action :set_target_types
 
   def create
     if @source_type.nil?
@@ -45,18 +45,16 @@ class Workflows::Copies::FromTypesController < ApplicationController
         scheme: :danger
       )
       @turbo_status = :unprocessable_entity
-    elsif @target_type.nil?
+    elsif @target_types.blank?
       render_flash_message_via_turbo_stream(
         message: I18n.t(:error_workflow_copy_target),
         scheme: :danger
       )
       @turbo_status = :unprocessable_entity
     else
-      Workflow.eligible_roles.each do |role|
-        Workflow.copy_one(@source_type, role, @target_type, role)
-      end
-      redirect_to edit_workflow_path(@target_type),
-                  notice: t(".notice", type_name: @target_type.name)
+      Workflow.copy(@source_type, nil, @target_types, Workflow.eligible_roles)
+      redirect_to edit_workflow_path(@target_types.first),
+                  notice: t(".notice", count: @target_types.size, type_name: @target_types.first.name)
       return
     end
 
@@ -69,7 +67,7 @@ class Workflows::Copies::FromTypesController < ApplicationController
     @source_type = ::Type.find_by(id: params[:workflow_type_id])
   end
 
-  def set_target_type
-    @target_type = ::Type.find_by(id: params[:target_type_id])
+  def set_target_types
+    @target_types = ::Type.where(id: params[:target_type_ids])
   end
 end

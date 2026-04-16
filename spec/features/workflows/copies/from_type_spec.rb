@@ -37,18 +37,21 @@ RSpec.describe "Workflow copy from type", :js do
 
   current_user { admin }
 
+  let(:target_types_autocompleter) { FormFields::Primerized::AutocompleteField.new("target_types", selector: "[data-test-selector='target_types_autocomplete']") }
+
   shared_examples "a copy-to-another-type dialog" do |with_source_role:|
-    it "permits to select a target type" do
+    it "permits to select target types" do
       if with_source_role
         choose "Copy to another type"
       end
 
-      expect(page).to have_select("Target type", text: types.second.name)
-      select(types.last.name, from: "Target type")
+      target_types_autocompleter.select_option types.second.name, types.last.name
+      target_types_autocompleter.close_autocompleter
 
       click_button "Copy"
 
-      expect(page).to have_css(".flash-success", text: "Successfully copied workflow to '#{types.last.name}' type.")
+      expect(page).to have_css(".flash-success", text: "Successfully copied workflow to 2 types.")
+      expect(page).to have_current_path(edit_workflow_path(types.second))
     end
   end
 

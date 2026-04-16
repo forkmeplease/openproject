@@ -45,9 +45,10 @@ RSpec.describe Workflows::Copies::Form, type: :forms do
       expect(page).to have_field("Copy to other roles", checked: !another_type_at_first)
     end
 
-    it "renders the Target type select list" do
-      expect(page).to have_select "Target type", required: true, visible: another_type_at_first do |select|
-        options_text = select.all("option", visible: another_type_at_first).map(&:text)
+    it "renders the Target types autocompleter" do
+      data_attributes = "[data-test-selector=\"target_types_autocomplete\"][data-multiple=\"true\"]"
+      expect(page).to have_css "opce-autocompleter#{data_attributes}", visible: another_type_at_first do |autocompleter|
+        options_text = JSON.parse(autocompleter["data-items"]).map { |item| item["name"] }
         expect(options_text).to match_array(other_types.map(&:name))
       end
     end

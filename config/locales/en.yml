@@ -1403,8 +1403,8 @@ en:
           label: "Source role"
         target_role_ids:
           label: "Target roles"
-        target_type_id:
-          label: "Target type"
+        target_type_ids:
+          label: "Target types"
         mode:
           from_role:
             label: "Copy to other roles"
@@ -1419,7 +1419,9 @@ en:
             other: "Successfully copied workflow to %{count} roles."
       from_types:
         create:
-          notice: "Successfully copied workflow to '%{type_name}' type."
+          notice:
+            one: "Successfully copied workflow to '%{type_name}' type."
+            other: "Successfully copied workflow to %{count} types."
       new:
         title: "Copy workflow of \"%{source_type}\""
     form:

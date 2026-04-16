@@ -40,26 +40,11 @@ RSpec.describe Workflows::Copies::FromTypesController do
     end
   end
 
-  let!(:other_types) do
-    build_stubbed_list(:type, 2).tap do |stubs|
-      where_double = instance_double(ActiveRecord::QueryMethods::WhereChain)
-      not_double = instance_double(ActiveRecord::Relation)
-
-      allow(Type).to receive(:where).and_return(where_double)
-      allow(where_double).to receive(:not).and_return(not_double)
-      allow(not_double).to receive(:order).and_return(stubs)
-    end
-  end
-
   current_user { build_stubbed(:admin) }
 
   describe "#create" do
-    let!(:target_type) do
-      other_types.last.tap do |stub|
-        allow(Type)
-          .to receive(:find_by).with(id: stub.id.to_s).and_return(stub)
-      end
-    end
+    let!(:target_types) { build_stubbed_list(:type, 2) }
+    let!(:target_type_ids) { target_types.map { |t| t.id.to_s } }
 
     let!(:roles) do
       build_stubbed_list(:project_role, 2).tap do |stubs|
@@ -71,28 +56,24 @@ RSpec.describe Workflows::Copies::FromTypesController do
     end
 
     before do
-      allow(Workflow).to receive(:copy_one)
+      allow(Type).to receive(:where).with(id: target_type_ids).and_return(target_types)
+      allow(Workflow).to receive(:copy)
 
       post :create, params: {
         workflow_type_id: source_type.id.to_s,
-        target_type_id: target_type.id.to_s
+        target_type_ids: target_type_ids
       }, format: :turbo_stream
     end
 
-    it "calls the Workflow.copy_one method on each role" do
+    it "calls the Workflow.copy method with all target types and eligible roles" do
       expect(Workflow)
-        .to have_received(:copy_one).exactly(2).times
-      expect(Workflow)
-        .to have_received(:copy_one)
-              .with(source_type, roles.first, target_type, roles.first)
-      expect(Workflow)
-        .to have_received(:copy_one)
-              .with(source_type, roles.last, target_type, roles.last)
+        .to have_received(:copy)
+              .with(source_type, nil, target_types, roles)
     end
 
     it "redirects with a flash notice" do
-      expect(response).to redirect_to(edit_workflow_path(target_type))
-      expect(flash[:notice]).to eq("Successfully copied workflow to '#{target_type.name}' type.")
+      expect(response).to redirect_to(edit_workflow_path(target_types.first))
+      expect(flash[:notice]).to eq("Successfully copied workflow to 2 types.")
     end
   end
 end

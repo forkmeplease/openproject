@@ -71,8 +71,21 @@ class Workflows::Copies::Form < ApplicationForm
         "show-when-value-selected-target": "effect"
       }
     ) do |from_type|
-      target_label = helpers.t("workflows.copies.form.target_type_id.label")
-      from_type.select_list(name: :target_type_id, label: target_label, required: true) do |target_list|
+      from_type.autocompleter(
+        name: "target_type_ids",
+        required: true,
+        include_blank: false,
+        label: helpers.t("workflows.copies.form.target_type_ids.label"),
+        autocomplete_options: {
+          multiple: true,
+          decorated: true,
+          closeOnSelect: false,
+          appendTo: @append_to,
+          data: {
+            "test-selector": "target_types_autocomplete"
+          }
+        }
+      ) do |target_list|
         @other_types.each do |other_type|
           target_list.option(label: other_type.name, value: other_type.id)
         end
