@@ -31,6 +31,7 @@ import {
 } from '@angular/core';
 import { UIRouterGlobals } from '@uirouter/core';
 import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
 import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
 import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
 import { DragAndDropService } from 'core-app/shared/helpers/drag-and-drop/drag-and-drop.service';
@@ -129,8 +130,13 @@ export class BcfListComponent extends WorkPackageListViewComponent implements Un
       : 'bim.partitioned.show';
     // Passing the card param to the new state because the router doesn't keep
     // it when going to 'bim.partitioned.show'
-    const params = { workPackageId, cards, focus };
+    const routingId = this.resolveRoutingId(workPackageId);
+    const params = { workPackageId: routingId, cards, focus };
 
     void this.$state.go(stateToGo, params);
+  }
+
+  private resolveRoutingId(workPackageId:string):string {
+    return resolveRoutingId(this.states, workPackageId);
   }
 }

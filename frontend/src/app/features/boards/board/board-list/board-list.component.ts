@@ -26,6 +26,8 @@ import { AuthorisationService } from 'core-app/core/model-auth/model-auth.servic
 import { Highlighting } from 'core-app/features/work-packages/components/wp-fast-table/builders/highlighting/highlighting.functions';
 import { WorkPackageCardViewComponent } from 'core-app/features/work-packages/components/wp-card-view/wp-card-view.component';
 import { WorkPackageStatesInitializationService } from 'core-app/features/work-packages/components/wp-list/wp-states-initialization.service';
+import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
 import { BoardService } from 'core-app/features/boards/board/board.service';
 import { HalResourceEditingService } from 'core-app/shared/components/fields/edit/services/hal-resource-editing.service';
 import { HalResourceNotificationService } from 'core-app/features/hal/services/hal-resource-notification.service';
@@ -175,6 +177,7 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
     readonly keepTab:KeepTabService,
     readonly currentProject:CurrentProjectService,
     readonly pathHelper:PathHelperService,
+    readonly states:States,
   ) {
     super(I18n, injector);
   }
@@ -488,17 +491,19 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
 
   openFullViewOnDoubleClick(event:{ workPackageId:string, double:boolean }) {
     if (event.double) {
+      const routingId = this.resolveRoutingId(event.workPackageId);
       const projectIdentifier = this.currentProject.identifier;
-      const link = this.pathHelper.genericWorkPackagePath(projectIdentifier, event.workPackageId) + window.location.search;
+      const link = this.pathHelper.genericWorkPackagePath(projectIdentifier, routingId) + window.location.search;
       Turbo.visit(link, { action: 'advance' });
     }
   }
 
   openStateLink(event:{ workPackageId:string; requestedState:string }) {
+    const routingId = this.resolveRoutingId(event.workPackageId);
     if (event.requestedState === 'split') {
-      this.goToSplitView(event.workPackageId);
+      this.goToSplitView(routingId);
     } else {
-      this.keepTab.goCurrentShowState(event.workPackageId);
+      this.keepTab.goCurrentShowState(routingId);
     }
   }
 
@@ -507,6 +512,10 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
     const search = window.location.search;
     const link = search ? `${base}${search}` : base;
     Turbo.visit(link, { frame: 'content-bodyRight', action: 'advance' });
+  }
+
+  private resolveRoutingId(workPackageId:string):string {
+    return resolveRoutingId(this.states, workPackageId);
   }
 
   private schema(workPackage:WorkPackageResource) {

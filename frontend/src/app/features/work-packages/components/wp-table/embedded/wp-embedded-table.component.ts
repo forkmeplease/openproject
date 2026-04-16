@@ -23,6 +23,8 @@ import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decora
 import {
   KeepTabService,
 } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
+import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { firstValueFrom } from 'rxjs';
 import { QueryRequestParams } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
@@ -62,6 +64,8 @@ export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseCo
   @InjectField() wpTablePagination:WorkPackageViewPaginationService;
 
   @InjectField() keepTab:KeepTabService;
+
+  @InjectField() states:States;
 
   // Cache the form promise
   private formPromise:Promise<QueryFormResource|undefined>|undefined;
@@ -190,15 +194,17 @@ export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseCo
 
   handleWorkPackageClicked(event:{ workPackageId:string; double:boolean }) {
     if (event.double) {
+      const routingId = this.resolveRoutingId(event.workPackageId);
       const projectIdentifier = this.currentProject.identifier;
-      const link = this.pathHelper.genericWorkPackagePath(projectIdentifier, event.workPackageId) + window.location.search;
+      const link = this.pathHelper.genericWorkPackagePath(projectIdentifier, routingId) + window.location.search;
       Turbo.visit(link, { action: 'advance' });
     }
   }
 
   openStateLink(event:{ workPackageId:string; requestedState:'show'|'split' }) {
+    const routingId = this.resolveRoutingId(event.workPackageId);
     const params = {
-      workPackageId: event.workPackageId,
+      workPackageId: routingId,
       focus: true,
     };
 
@@ -207,5 +213,9 @@ export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseCo
     } else {
       this.keepTab.goCurrentShowState(params.workPackageId);
     }
+  }
+
+  private resolveRoutingId(workPackageId:string):string {
+    return resolveRoutingId(this.states, workPackageId);
   }
 }
