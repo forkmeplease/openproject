@@ -30,19 +30,9 @@
 
 module Homescreen
   module Blocks
-    class Users < Grids::WidgetComponent
-      include IconsHelper
-      include OpenProject::ObjectLinking
-      include Redmine::I18n
-
-      def initialize(*)
-        super
-
-        @newest_users = User.active.newest.take(3)
-      end
-
-      def title
-        I18n.t(:label_user_plural)
+    class Meetings < Grids::WidgetComponent
+      def call
+        render(::Meetings::Widgets::Meetings.new(limit: 3))
       end
     end
   end
