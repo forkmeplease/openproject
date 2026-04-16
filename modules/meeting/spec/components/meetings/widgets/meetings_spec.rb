@@ -101,7 +101,7 @@ RSpec.describe Meetings::Widgets::Meetings, type: :component do
         end
 
         expect(rendered_component).to have_list_item(position: 3) do |item|
-          expect(item).to have_link href: meetings_path(filters: [{ invited_user_id: { operator: "*", values: [] } }].to_json)
+          expect(item).to have_link href: meetings_path
           expect(item).to have_content("View all meetings")
         end
       end
@@ -129,7 +129,9 @@ RSpec.describe Meetings::Widgets::Meetings, type: :component do
         end
 
         expect(rendered_component).to have_list_item(position: 2) do |item|
-          expect(item).to have_link href: project_meetings_path(project_red)
+          expect(item).to have_link href: project_meetings_path(project_red,
+                                                                filters: [{ invited_user_id: { operator: "*",
+                                                                                               values: [] } }].to_json)
           expect(item).to have_content("View all meetings")
         end
       end

@@ -97,9 +97,9 @@ module Meetings
 
       def all_meetings_link
         if global_scoped?
-          meetings_path(filters: [{ invited_user_id: { operator: "*", values: [] } }].to_json)
+          meetings_path
         else
-          project_meetings_path(project)
+          project_meetings_path(project, filters: [{ invited_user_id: { operator: "*", values: [] } }].to_json)
         end
       end
 
