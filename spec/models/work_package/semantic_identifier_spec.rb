@@ -170,17 +170,16 @@ RSpec.describe WorkPackage::SemanticIdentifier do
 
   describe "WorkPackage.find_by" do
     context "with id: keyword and semantic identifier" do
-      it "resolves via the semantic identifier" do
-        expect(WorkPackage.find_by(id: "MYPROJ-1")).to eq(work_package)
+      it "raises ArgumentError pointing to find_by_display_id" do
+        expect { WorkPackage.find_by(id: "MYPROJ-1") }
+          .to raise_error(ArgumentError, /find_by_display_id/)
       end
+    end
 
-      it "returns nil for unknown semantic id" do
-        expect(WorkPackage.find_by(id: "MYPROJ-999")).to be_nil
-      end
-
-      it "resolves via historic alias" do
-        WorkPackageSemanticAlias.create!(identifier: "OLDPROJ-1", work_package:)
-        expect(WorkPackage.find_by(id: "OLDPROJ-1")).to eq(work_package)
+    context "with identifier: keyword and semantic identifier" do
+      it "raises ArgumentError pointing to find_by_display_id" do
+        expect { WorkPackage.find_by(identifier: "MYPROJ-1") }
+          .to raise_error(ArgumentError, /find_by_display_id/)
       end
     end
 
@@ -198,37 +197,14 @@ RSpec.describe WorkPackage::SemanticIdentifier do
 
     context "with multiple keywords including id:" do
       it "passes through to standard AR find_by" do
-        expect(WorkPackage.find_by(id: work_package.id, project: project)).to eq(work_package)
+        expect(WorkPackage.find_by(id: work_package.id, project:)).to eq(work_package)
       end
     end
 
     context "with an unparseable semantic string" do
-      it "returns nil" do
-        expect(WorkPackage.find_by(id: "not-an-identifier!")).to be_nil
-      end
-    end
-
-    context "when identifier differs but an alias row exists" do
-      it "resolves via the alias table" do
-        work_package.update_columns(identifier: "OTHER-99")
-        expect(WorkPackage.find_by(id: "MYPROJ-1")).to eq(work_package)
-      end
-    end
-
-    context "with visibility scoping" do
-      let(:member_user) { create(:user, member_with_permissions: { project => [:view_work_packages] }) }
-      let(:non_member_user) { create(:user) }
-
-      it "respects the scope for semantic ids" do
-        expect(WorkPackage.visible(member_user).find_by(id: "MYPROJ-1")).to eq(work_package)
-      end
-
-      it "returns nil when the user cannot see it" do
-        expect(WorkPackage.visible(non_member_user).find_by(id: "MYPROJ-1")).to be_nil
-      end
-
-      it "also scopes numeric lookup" do
-        expect(WorkPackage.visible(non_member_user).find_by(id: work_package.id.to_s)).to be_nil
+      it "raises ArgumentError" do
+        expect { WorkPackage.find_by(id: "not-an-identifier!") }
+          .to raise_error(ArgumentError, /find_by_display_id/)
       end
     end
   end
@@ -236,12 +212,9 @@ RSpec.describe WorkPackage::SemanticIdentifier do
   # rubocop:disable Rails/FindById -- testing find_by! override specifically, not suggesting find()
   describe "WorkPackage.find_by!" do
     context "with id: keyword and semantic identifier" do
-      it "resolves via the semantic identifier" do
-        expect(WorkPackage.find_by!(id: "MYPROJ-1")).to eq(work_package)
-      end
-
-      it "raises RecordNotFound for unknown semantic id" do
-        expect { WorkPackage.find_by!(id: "MYPROJ-999") }.to raise_error(ActiveRecord::RecordNotFound)
+      it "raises ArgumentError pointing to find_by_display_id" do
+        expect { WorkPackage.find_by!(id: "MYPROJ-1") }
+          .to raise_error(ArgumentError, /find_by_display_id/)
       end
     end
 
@@ -252,6 +225,73 @@ RSpec.describe WorkPackage::SemanticIdentifier do
     end
   end
   # rubocop:enable Rails/FindById
+
+  describe "WorkPackage.find_by_display_id" do
+    context "with a semantic identifier" do
+      it "resolves via the semantic identifier" do
+        expect(WorkPackage.find_by_display_id("MYPROJ-1")).to eq(work_package)
+      end
+
+      it "returns nil for unknown semantic id" do
+        expect(WorkPackage.find_by_display_id("MYPROJ-999")).to be_nil
+      end
+
+      it "resolves via historic alias" do
+        WorkPackageSemanticAlias.create!(identifier: "OLDPROJ-1", work_package:)
+        expect(WorkPackage.find_by_display_id("OLDPROJ-1")).to eq(work_package)
+      end
+
+      it "resolves when identifier column differs but alias row exists" do
+        work_package.update_columns(identifier: "OTHER-99")
+        expect(WorkPackage.find_by_display_id("MYPROJ-1")).to eq(work_package)
+      end
+    end
+
+    context "with a numeric string" do
+      it "falls through to standard AR find_by" do
+        expect(WorkPackage.find_by_display_id(work_package.id.to_s)).to eq(work_package)
+      end
+
+      it "returns nil for unknown numeric id" do
+        expect(WorkPackage.find_by_display_id("9999999")).to be_nil
+      end
+    end
+
+    context "with visibility scoping" do
+      let(:member_user) { create(:user, member_with_permissions: { project => [:view_work_packages] }) }
+      let(:non_member_user) { create(:user) }
+
+      it "respects the scope for semantic ids" do
+        expect(WorkPackage.visible(member_user).find_by_display_id("MYPROJ-1")).to eq(work_package)
+      end
+
+      it "returns nil when the user cannot see it" do
+        expect(WorkPackage.visible(non_member_user).find_by_display_id("MYPROJ-1")).to be_nil
+      end
+
+      it "also scopes numeric lookup" do
+        expect(WorkPackage.visible(non_member_user).find_by_display_id(work_package.id.to_s)).to be_nil
+      end
+    end
+  end
+
+  describe "WorkPackage.find_by_display_id!" do
+    context "with a semantic identifier" do
+      it "resolves via the semantic identifier" do
+        expect(WorkPackage.find_by_display_id!("MYPROJ-1")).to eq(work_package)
+      end
+
+      it "raises RecordNotFound for unknown semantic id" do
+        expect { WorkPackage.find_by_display_id!("MYPROJ-999") }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "with a numeric string" do
+      it "falls through to standard AR find" do
+        expect(WorkPackage.find_by_display_id!(work_package.id.to_s)).to eq(work_package)
+      end
+    end
+  end
 
   describe "#display_id" do
     context "when semantic mode is active",
