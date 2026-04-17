@@ -103,7 +103,8 @@ module WorkPackage::SemanticIdentifier::FinderMethods
     return unless key && semantic_id?(value)
 
     raise ArgumentError,
-          "Semantic identifier #{value.inspect} cannot be passed to find_by(#{key}:). " \
+          "find_by(#{key}: #{value.inspect}) does not support semantic identifiers " \
+          "because it cannot resolve aliases or match across identifier history. " \
           "Use find(#{value.inspect}) or find_by_display_id(#{value.inspect}) instead."
   end
 
