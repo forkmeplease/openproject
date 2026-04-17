@@ -122,7 +122,6 @@ module OpenProject::Backlogs
 
     patches %i[PermittedParams
                WorkPackage
-               Status
                Project
                User
                Version]

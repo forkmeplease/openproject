@@ -39,7 +39,8 @@ class Backlog
       .with_status_open
       .where(project:, sprint_id: nil)
       .includes(:type)
-      .order(WorkPackage.arel_table[:position].asc.nulls_last, WorkPackage.arel_table[:id].asc)
+      .order_by_position
+      .order(WorkPackage.arel_table[:id].asc)
   end
 
   def initialize(sprint:, stories:)

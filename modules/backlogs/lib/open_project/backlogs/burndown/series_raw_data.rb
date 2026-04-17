@@ -117,11 +117,7 @@ module OpenProject::Backlogs::Burndown
     end
 
     def container_query
-      if sprint.is_a?(Agile::Sprint)
-        "(#{Journal::WorkPackageJournal.table_name}.sprint_id = #{sprint.id})"
-      else
-        "(#{Journal::WorkPackageJournal.table_name}.version_id = #{sprint.id})"
-      end
+      "(#{Journal::WorkPackageJournal.table_name}.sprint_id = #{sprint.id})"
     end
 
     def project_id_query
@@ -130,7 +126,7 @@ module OpenProject::Backlogs::Burndown
 
     def day_query
       lower_bound = sprint.start_date
-      upper_date = sprint.is_a?(Agile::Sprint) ? sprint.finish_date : sprint.effective_date
+      upper_date = sprint.finish_date
       upper_bound = Time.zone.today.clamp(lower_bound, upper_date)
 
       return Day.none unless upper_bound && lower_bound
