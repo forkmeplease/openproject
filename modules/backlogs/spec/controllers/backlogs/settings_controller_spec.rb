@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe BacklogsSettingsController do
+RSpec.describe Backlogs::SettingsController do
   let(:user) { create(:admin) }
 
   before { login_as(user) }

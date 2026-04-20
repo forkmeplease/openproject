@@ -678,7 +678,7 @@ Redmine::MenuManager.map :admin_menu do |menu|
             if: proc { User.current.admin? && OpenProject::Configuration.ee_manager_visible? }
 
   menu.push :admin_backlogs,
-            { controller: "/backlogs_settings", action: :show },
+            { controller: "/backlogs/settings", action: :show },
             if: ->(_) { User.current.admin? },
             caption: :label_backlogs,
             icon: "op-backlogs"

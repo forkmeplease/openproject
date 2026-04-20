@@ -28,11 +28,13 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class BacklogsSettingsController < ApplicationController
-  layout "admin"
-  menu_item :admin_backlogs
+module Backlogs
+  class SettingsController < ::ApplicationController
+    layout "admin"
+    menu_item :admin_backlogs
 
-  before_action :require_admin
+    before_action :require_admin
 
-  def show; end
+    def show; end
+  end
 end
