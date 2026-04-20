@@ -43,10 +43,6 @@ RSpec.describe Backlogs::SprintComponent, type: :component do
   let(:project) { create(:project, types: [type_feature, type_task]) }
   let(:sprint) { create(:agile_sprint, project:, name: "Sprint 1", start_date: Date.yesterday, finish_date: Date.tomorrow) }
 
-  before do
-    allow(user).to receive(:backlogs_preference).with(:versions_default_fold_state).and_return("open")
-  end
-
   def render_component
     render_inline(described_class.new(sprint:, project:, current_user: user))
   end

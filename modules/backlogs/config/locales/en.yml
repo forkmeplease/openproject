@@ -49,7 +49,6 @@ en:
       sprint:
         duration: "Sprint duration"
       user_preference:
-        backlogs_task_color: "Task color"
         backlogs_versions_default_fold_state: "Show sprints folded"
       work_package:
         backlogs_work_package_type: "Backlog type"

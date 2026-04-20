@@ -123,7 +123,6 @@ module OpenProject::Backlogs
     patches %i[PermittedParams
                WorkPackage
                Project
-               User
                Version]
 
     patch_with_namespace :BasicData, :SettingSeeder
@@ -142,10 +141,6 @@ module OpenProject::Backlogs
       UserPreferences::Schema.merge!(
         "definitions/UserPreferences/properties",
         {
-          "backlogs_task_color" => {
-            "type" => "string",
-            "pattern" => "^(#[0-9a-fA-F]{6})|(.{0})$"
-          },
           "backlogs_versions_default_fold_state" => {
             "type" => "string",
             "enum" => %w[open closed]
