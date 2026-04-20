@@ -891,6 +891,70 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
     end
   end
 
+  describe "cascading select without enterprise - fallback to multi-value list" do
+    # Without EE the cascading select becomes a flat multi-value list containing
+    # every node (root + children) as an option. The selected value is imported
+    # as all nodes on the selected path (parent + child).
+    let!(:jira_field) do
+      create(:jira_field, jira:, jira_import:,
+                          jira_field_id: "customfield_10266",
+                          payload: {
+                            "id" => "customfield_10266",
+                            "name" => "CF Cascading",
+                            "schema" => {
+                              "type" => "option-with-child",
+                              "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect",
+                              "customId" => 10266
+                            },
+                            "contextGroups" => [
+                              global_context.merge(
+                                "allowedValues" => [
+                                  { "id" => "10150", "value" => "Critical",
+                                    "children" => [
+                                      { "id" => "10151", "value" => "Security" },
+                                      { "id" => "10152", "value" => "Performance" }
+                                    ] },
+                                  { "id" => "10153", "value" => "Major",
+                                    "children" => [
+                                      { "id" => "10154", "value" => "Data Loss" }
+                                    ] }
+                                ]
+                              )
+                            ]
+                          })
+    end
+    let!(:jira_issue) do
+      create(:jira_issue, jira:, jira_import:,
+                          jira_issue_id: "10200",
+                          jira_project_id: jira_project.id,
+                          payload: issue_payload)
+    end
+
+    before { described_class.new.perform(jira_import.id) }
+
+    it "creates a multi-value 'list' custom field" do
+      cf = WorkPackageCustomField.find_by!(name: "CF Cascading")
+      expect(cf.field_format).to eq("list")
+      expect(cf.multi_value).to be true
+    end
+
+    it "populates all tree nodes as path-based list options" do
+      cf = WorkPackageCustomField.find_by!(name: "CF Cascading")
+      expect(cf.custom_options.pluck(:value)).to contain_exactly(
+        "Critical",
+        "Critical / Security",
+        "Critical / Performance",
+        "Major",
+        "Major / Data Loss"
+      )
+    end
+
+    it "sets the selected path (parent + child) as path-based list values on the work package" do
+      # Fixture selects Critical > Security -> chain is ["Critical", "Critical / Security"]
+      expect(cf_value("CF Cascading")).to contain_exactly("Critical", "Critical / Security")
+    end
+  end
+
   describe "all custom field types in a single import run", with_ee: [:custom_field_hierarchies] do
     # Registers all field types at once and verifies the correct number of
     # OP custom fields are created:

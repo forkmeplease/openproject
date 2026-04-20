@@ -225,14 +225,45 @@ module Import
         # An empty `projects` / `issuetypes` array means the context applies to all projects /
         # all issue types (used for non-list fields too, where no context discrimination exists).
         params = { multi_value: jira_field_multi_value? }
-        options = context_group_allowed_values.pluck("value").compact.uniq
+        options = list_field_option_values
         params[:possible_values] = options if options.any?
         params
       end
 
       def jira_field_multi_value?
         schema = jira_field.payload["schema"] || {}
+        return true if schema["type"] == "option-with-child"
+
         schema["type"] == "array" && JIRA_ARRAY_ITEMS_TO_OP_FORMAT.key?(schema["items"])
+      end
+
+      # Returns the flat list of option labels for this list field's context group.
+      # For cascading selects the tree is fully flattened so every level becomes an option.
+      def list_field_option_values
+        allowed = context_group_allowed_values
+        if cascading_select_as_list?
+          flatten_cascading_allowed_values(allowed)
+        else
+          allowed.pluck("value").compact.uniq
+        end
+      end
+
+      def cascading_select_as_list?
+        schema = jira_field.payload["schema"] || {}
+        schema["custom"].to_s.end_with?(":cascadingselect") &&
+          !EnterpriseToken.allows_to?(:custom_field_hierarchies)
+      end
+
+      # Recursively collects every node as a full path label at every level of the cascading tree.
+      # E.g. Animals -> ["Animals"], Animals / Cat -> ["Animals", "Animals / Cat"]
+      def flatten_cascading_allowed_values(allowed_values, parent_path: nil)
+        allowed_values.flat_map do |av|
+          label = av["value"]
+          next [] if label.blank?
+
+          full_path = parent_path ? "#{parent_path} / #{label}" : label
+          [full_path] + flatten_cascading_allowed_values(Array(av["children"]), parent_path: full_path)
+        end.uniq
       end
 
       def custom_field_by_name(name)
@@ -257,7 +288,7 @@ module Import
         if type == "array"
           JIRA_ARRAY_ITEMS_TO_OP_FORMAT.fetch(schema["items"], "string")
         elsif custom_suffix == "cascadingselect"
-          EnterpriseToken.allows_to?(:custom_field_hierarchies) ? "hierarchy" : "string"
+          EnterpriseToken.allows_to?(:custom_field_hierarchies) ? "hierarchy" : "list"
         else
           JIRA_CUSTOM_SUFFIX_TO_OP_FORMAT[custom_suffix] || JIRA_TYPE_TO_OP_FORMAT.fetch(type, "string")
         end
@@ -278,7 +309,9 @@ module Import
       end
 
       def convert_list_value(raw_value, custom_field)
-        if raw_value.is_a?(Array)
+        if cascading_select_as_list? && raw_value.is_a?(Hash)
+          extract_cascading_chain(raw_value).filter_map { |label| custom_field.value_of(label) }
+        elsif raw_value.is_a?(Array)
           raw_value.filter_map do |c_value|
             label = c_value.is_a?(Hash) ? c_value["value"] : c_value.to_s
             custom_field.value_of(label)
@@ -287,6 +320,17 @@ module Import
           label = raw_value.is_a?(Hash) ? raw_value["value"] : raw_value.to_s
           custom_field.value_of(label)
         end
+      end
+
+      # Walks the parent -> child chain of a cascading select value, returning
+      # full path labels from root down to the deepest selected child.
+      # E.g. {value: "Animals", child: {value: "Cat"}} -> ["Animals", "Animals / Cat"]
+      def extract_cascading_chain(value, parent_path: nil)
+        return [] unless value.is_a?(Hash) && value["value"].present?
+
+        label = value["value"]
+        full_path = parent_path ? "#{parent_path} / #{label}" : label
+        [full_path] + extract_cascading_chain(value["child"], parent_path: full_path)
       end
 
       def populate_hierarchy_items(custom_field)

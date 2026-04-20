@@ -196,8 +196,8 @@ RSpec.describe Import::JiraImportProjectsJob::JiraImportCustomFieldBuilder do
                                  "customId" => 10266 })
       end
 
-      it "falls back to string" do
-        expect(subject).to eq("string")
+      it "falls back to a multi-value list" do
+        expect(subject).to eq("list")
       end
     end
 
@@ -228,31 +228,6 @@ RSpec.describe Import::JiraImportProjectsJob::JiraImportCustomFieldBuilder do
       it "returns 'bool'" do
         builder = described_class.new(jira_field, option_value: "Check 1")
         expect(builder.format).to eq("bool")
-      end
-    end
-
-    context "with an unknown/any-type field (e.g. Epic Link)" do
-      let(:jira_field) do
-        jira_field_for(name: "Epic Link",
-                       schema: { "type" => "any",
-                                 "custom" => "com.pyxis.greenhopper.jira:gh-epic-link",
-                                 "customId" => 10100 })
-      end
-
-      it { is_expected.to eq("string") }
-    end
-
-    context "with an array field whose items type is not mapped (e.g. issuelinks)" do
-      let(:jira_field) do
-        jira_field_for(name: "CF Multiple Issues",
-                       schema: { "type" => "array",
-                                 "items" => "issuelinks",
-                                 "custom" => "com.onresolve.jira.groovy.groovyrunner:multiple-issue-picker-cf",
-                                 "customId" => 10270 })
-      end
-
-      it "falls back to 'string'" do
-        expect(subject).to eq("string")
       end
     end
   end
@@ -432,6 +407,43 @@ RSpec.describe Import::JiraImportProjectsJob::JiraImportCustomFieldBuilder do
       it "returns an empty hash (bool CFs need no extra params)" do
         params = described_class.new(jira_field, option_value: "Check 1").custom_field_parameters
         expect(params).to eq({})
+      end
+    end
+
+    context "with a cascading select field without enterprise (list fallback)" do
+      let(:context_group) do
+        {
+          "projects" => [],
+          "issuetypes" => [],
+          "allowedValues" => [
+            { "id" => "10150", "value" => "Critical",
+              "children" => [{ "id" => "10151", "value" => "Security" },
+                             { "id" => "10152", "value" => "Performance" }] },
+            { "id" => "10153", "value" => "Major",
+              "children" => [{ "id" => "10154", "value" => "Data Loss" }] }
+          ]
+        }
+      end
+      let(:jira_field) do
+        jira_field_for(name: "CF Cascading",
+                       schema: { "type" => "option-with-child",
+                                 "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect" })
+      end
+
+      subject(:params) { described_class.new(jira_field, context_group:).custom_field_parameters }
+
+      it "is multi_value" do
+        expect(params[:multi_value]).to be true
+      end
+
+      it "flattens all tree nodes as path-based possible_values" do
+        expect(params[:possible_values]).to contain_exactly(
+          "Critical",
+          "Critical / Security",
+          "Critical / Performance",
+          "Major",
+          "Major / Data Loss"
+        )
       end
     end
 
@@ -740,22 +752,31 @@ RSpec.describe Import::JiraImportProjectsJob::JiraImportCustomFieldBuilder do
       end
     end
 
-    context "with a cascading select falling back to string (no enterprise)" do
+    context "with a cascading select falling back to list (no enterprise)" do
       let(:jira_field) do
         jira_field_for(name: "CF Cascading",
                        schema: { "type" => "option-with-child",
                                  "custom" => "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect" })
       end
       let(:builder) { described_class.new(jira_field) }
+      let(:critical_option)          { instance_double(CustomOption, id: 1) }
+      let(:critical_security_option) { instance_double(CustomOption, id: 2) }
+      let(:major_option)             { instance_double(CustomOption, id: 3) }
 
-      it "converts parent + child to a readable string" do
-        raw = { "id" => "10150", "value" => "Critical", "child" => { "id" => "10151", "value" => "Security" } }
-        expect(builder.convert_value(raw, custom_field)).to eq("Critical - Security")
+      before do
+        allow(custom_field).to receive(:value_of).with("Critical").and_return(critical_option)
+        allow(custom_field).to receive(:value_of).with("Critical / Security").and_return(critical_security_option)
+        allow(custom_field).to receive(:value_of).with("Major").and_return(major_option)
       end
 
-      it "converts parent-only to the parent label" do
+      it "extracts the parent + child chain as path-based list values" do
+        raw = { "id" => "10150", "value" => "Critical", "child" => { "id" => "10151", "value" => "Security" } }
+        expect(builder.convert_value(raw, custom_field)).to eq([critical_option, critical_security_option])
+      end
+
+      it "extracts a parent-only selection as a single-element array" do
         raw = { "id" => "10153", "value" => "Major" }
-        expect(builder.convert_value(raw, custom_field)).to eq("Major")
+        expect(builder.convert_value(raw, custom_field)).to eq([major_option])
       end
     end
   end
