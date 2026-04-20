@@ -130,11 +130,21 @@ module Import
     def update_custom_fields_in_type(type, new_custom_fields)
       type.custom_fields << new_custom_fields
       update_custom_fields_in_type_configuration_form(type, new_custom_fields)
+      type.save!
+      type.reload
     end
 
     def update_custom_fields_in_type_configuration_form(type, new_custom_fields)
       new_cf_keys = new_custom_fields.map(&:attribute_name)
       groups = type.attribute_groups.map { |g| [g.key, g.is_a?(Type::QueryGroup) ? [g.query_attribute_name] : g.attributes] }
+
+      # Remove new custom fields from all other groups to avoid duplicates
+      groups.each do |group|
+        next if group[0] == JIRA_IMPORT_GROUP_KEY
+
+        group[1] -= new_cf_keys
+      end
+
       jira_group = groups.find { |g| g[0] == JIRA_IMPORT_GROUP_KEY }
       if jira_group
         jira_group[1] |= new_cf_keys
@@ -143,7 +153,6 @@ module Import
         groups << jira_group
       end
       type.attribute_groups = groups
-      type.save!
     end
 
     def update_custom_fields_in_project(project, jira_project, custom_field_registry)
