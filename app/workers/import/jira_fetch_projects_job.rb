@@ -30,7 +30,7 @@
 
 module Import
   class JiraFetchProjectsJob < ApplicationJob
-    include Import::JiraFetchCustomFields
+    include JiraFetchCustomFields
 
     def perform(jira_import_id)
       @jira_import = Import::JiraImport.find(jira_import_id)

@@ -111,7 +111,6 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
   end
 
   describe "string field (com.atlassian.jira.plugin.system.customfieldtypes:textfield)" do
-    # customfield_10255 "CF String"
     # Jira value: plain string -> stored as-is.
     let!(:jira_field) do
       create(:jira_field, jira:, jira_import:,
@@ -431,7 +430,6 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
   end
 
   describe "string-array list field (com.atlassian.jira.plugin.system.customfieldtypes:labels)" do
-    # customfield_10280 "CF Labels"
     # Jira value: plain string array -> options collected from issues, stored as multi-value list.
     let!(:jira_field) do
       create(:jira_field, jira:, jira_import:,
@@ -474,7 +472,6 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
   end
 
   describe "user field (com.atlassian.jira.plugin.system.customfieldtypes:userpicker)" do
-    # customfield_10258 "CF User"
     # Jira value: user object with "key" -> resolved to OP User via JiraOpenProjectReference.
     let!(:jira_field) do
       create(:jira_field, jira:, jira_import:,
@@ -510,7 +507,6 @@ RSpec.describe Import::JiraImportProjectsJob, :webmock do
 
   describe "cascading select / hierarchy field (com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect)",
            with_ee: [:custom_field_hierarchies] do
-    # customfield_10266 "CF Cascading"
     # Jira value: option-with-child -> hierarchy item.
     let!(:jira_field) do
       create(:jira_field, jira:, jira_import:,

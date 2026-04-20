@@ -31,7 +31,7 @@
 module Import
   class JiraImportProjectsJob < ApplicationJob
     include Import::JiraOpenProjectReferenceCreation
-    include Import::JiraImportCustomFields
+    include JiraImportCustomFields
 
     # rubocop:disable Metrics/AbcSize
     def perform(jira_import_id)

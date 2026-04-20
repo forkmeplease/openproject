@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe Import::JiraImportCustomFieldBuilder do
+RSpec.describe Import::JiraImportProjectsJob::JiraImportCustomFieldBuilder do
   def jira_field_for(name:, schema:, context_groups: nil)
     payload = { "name" => name, "schema" => schema }
     payload["contextGroups"] = context_groups if context_groups
