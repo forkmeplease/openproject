@@ -181,8 +181,27 @@ RSpec.describe "Markdown security (tagfilter-equivalent protections)" do # ruboc
       expect(html).not_to include("evil.example.com")
     end
 
-    it "strips inline SVG <script>" do
-      html = to_html(%(<svg><script>alert(1)</script></svg>))
+    it "strips inline SVG and all its content" do
+      # <svg> is in remove_contents, so the tag and everything nested inside are removed.
+      html = to_html(%(<svg><script>alert(1)</script><text>visible?</text></svg>))
+      expect(html).not_to match(/<svg\b/i)
+      expect(html).not_to match(/<script\b/i)
+      expect(html).not_to include("alert(1)")
+      expect(html).not_to include("visible?")
+    end
+
+    it "strips a <script> nested inside a <style> block" do
+      # <style> IS in remove_contents, so both the tag and all of its content
+      # (including any nested <script>) are removed entirely.
+      html = to_html(%(<style><script>alert(1)</script></style>))
+      expect(html).not_to match(/<style\b/i)
+      expect(html).not_to match(/<script\b/i)
+      expect(html).not_to include("alert(1)")
+    end
+
+    it "strips a <script> embedded in <style> property value position" do
+      html = to_html(%(<style>body { color: <script>alert(1)</script>; }</style>))
+      expect(html).not_to match(/<style\b/i)
       expect(html).not_to match(/<script\b/i)
       expect(html).not_to include("alert(1)")
     end
