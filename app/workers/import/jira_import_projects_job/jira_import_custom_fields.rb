@@ -174,8 +174,11 @@ module Import
       end
 
       def build_boolean_registry_entries(jira_field, boolean_groups)
-        boolean_groups.group_by { |bg| bg[:option_value] }.map do |option_value, grouped|
-          contexts = grouped.map { |bg| build_context_entry(jira_field, bg[:group], option_value:) }
+        grouped_by_value = boolean_groups.group_by { |bg| bg[:option_value] }
+        needs_disambiguation = grouped_by_value.size > 1
+
+        grouped_by_value.map do |option_value, grouped|
+          contexts = grouped.map { |bg| build_context_entry(jira_field, bg[:group], option_value:, needs_disambiguation:) }
           { jira_field:, contexts: }
         end
       end
@@ -183,7 +186,8 @@ module Import
       def build_list_registry_entries(jira_field, list_groups)
         return [] if list_groups.empty?
 
-        contexts = list_groups.map { |group| build_context_entry(jira_field, group) }
+        needs_disambiguation = list_groups.size > 1
+        contexts = list_groups.map { |group| build_context_entry(jira_field, group, needs_disambiguation:) }
         [{ jira_field:, contexts: }]
       end
 
@@ -207,14 +211,15 @@ module Import
       def build_contexts_for_field(jira_field)
         groups = jira_field.payload["contextGroups"]
         if groups.present?
-          groups.map { |group| build_context_entry(jira_field, group) }
+          needs_disambiguation = groups.size > 1
+          groups.map { |group| build_context_entry(jira_field, group, needs_disambiguation:) }
         else
           [build_context_entry(jira_field, nil)]
         end
       end
 
-      def build_context_entry(jira_field, context_group, option_value: nil)
-        builder = JiraImportCustomFieldBuilder.new(jira_field, context_group:, option_value:, jira_import: @jira_import)
+      def build_context_entry(jira_field, context_group, option_value: nil, needs_disambiguation: false)
+        builder = JiraImportCustomFieldBuilder.new(jira_field, context_group:, option_value:, needs_disambiguation:, jira_import: @jira_import)
         custom_field = find_or_create_custom_field(jira_field, builder)
         {
           projects: Array(context_group&.dig("projects")),

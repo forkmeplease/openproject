@@ -138,10 +138,11 @@ module Import
 
       attr_reader :jira_field, :context_group
 
-      def initialize(jira_field, context_group: nil, option_value: nil, jira_import: nil)
+      def initialize(jira_field, context_group: nil, option_value: nil, needs_disambiguation: false, jira_import: nil)
         @jira_field = jira_field
         @context_group = context_group
         @option_value = option_value
+        @needs_disambiguation = needs_disambiguation
         @jira_import = jira_import
         @import_name = default_cf_name
       end
@@ -196,7 +197,7 @@ module Import
         base_name = jira_field.payload["name"]
         base_name = "#{base_name} - #{@option_value}" if @option_value
         project_keys = context_group_projects
-        return base_name if project_keys.empty?
+        return base_name if project_keys.empty? || !@needs_disambiguation
 
         "#{base_name} (#{project_keys.join(', ')})"
       end

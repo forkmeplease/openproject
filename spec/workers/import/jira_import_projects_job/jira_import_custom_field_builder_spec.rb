@@ -266,7 +266,7 @@ RSpec.describe Import::JiraImportProjectsJob::JiraImportCustomFieldBuilder do
 
       it "appends the project keys to the name" do
         name, = described_class.new(jira_field, context_group:).custom_field_settings
-        expect(name).to eq("CF List (ZB)")
+        expect(name).to eq("CF List")
       end
     end
 
