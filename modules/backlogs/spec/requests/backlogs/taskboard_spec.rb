@@ -30,30 +30,21 @@
 
 require "spec_helper"
 
-RSpec.describe "Backlogs::BurndownChart", :skip_csrf, type: :rails_request do
-  shared_let(:type_feature) { create(:type_feature) }
-  shared_let(:type_task) { create(:type_task) }
-  shared_let(:user) { create(:admin) }
+RSpec.describe "Backlogs::Taskboard", type: :rails_request do
   shared_let(:project) { create(:project) }
-  shared_let(:status) { create(:status, name: "status 1", is_default: true) }
   shared_let(:sprint) { create(:agile_sprint, project:) }
 
-  current_user { user }
+  describe "legacy (version 17.3) sprint taskboard route" do
+    it "redirects to the namespaced taskboard route" do
+      get "/projects/#{project.identifier}/sprints/#{sprint.id}/taskboard"
 
-  describe "GET #show" do
-    it "renders the namespaced burndown chart template" do
-      get "/projects/#{project.identifier}/backlogs/sprints/#{sprint.id}/burndown_chart"
-
-      expect(response).to be_successful
-      expect(response).to render_template("backlogs/burndown_chart/show")
+      expect(response).to redirect_to("/projects/#{project.identifier}/backlogs/sprints/#{sprint.id}/taskboard")
     end
-  end
 
-  describe "legacy (version 17.3) sprint burndown route" do
-    it "redirects to the namespaced burndown route" do
-      get "/projects/#{project.identifier}/sprints/#{sprint.id}/burndown_chart"
+    it "preserves the query string" do
+      get "/projects/#{project.identifier}/sprints/#{sprint.id}/taskboard", params: { foo: "bar" }
 
-      expect(response).to redirect_to("/projects/#{project.identifier}/backlogs/sprints/#{sprint.id}/burndown_chart")
+      expect(response).to redirect_to("/projects/#{project.identifier}/backlogs/sprints/#{sprint.id}/taskboard?foo=bar")
     end
   end
 end

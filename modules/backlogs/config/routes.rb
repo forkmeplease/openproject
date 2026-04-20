@@ -30,6 +30,12 @@
 
 Rails.application.routes.draw do
   rails_relative_url_root = OpenProject::Configuration["rails_relative_url_root"] || ""
+  backlogs_redirect = lambda do |params, request, target|
+    query = request.query_string.presence
+    path = "#{rails_relative_url_root}/projects/#{params[:project_id]}/backlogs/#{target}"
+
+    query ? "#{path}?#{query}" : path
+  end
 
   scope "admin" do
     resource :backlogs, only: :show, controller: :backlogs_settings, as: "admin_backlogs_settings"
@@ -43,13 +49,14 @@ Rails.application.routes.draw do
 
   resources :projects, only: [] do
     get "backlogs",
-        to: redirect { |params, request|
-          query = request.query_string.presence
-          path = "#{rails_relative_url_root}/projects/#{params[:project_id]}/backlogs/backlog"
-
-          query ? "#{path}?#{query}" : path
-        },
+        to: redirect { |params, request| backlogs_redirect.call(params, request, "backlog") },
         as: :backlogs
+
+    # TODO: Remove these legacy (version 17.3) compatibility redirects in OpenProject 18.
+    get "sprints/:sprint_id/taskboard",
+        to: redirect { |params, request| backlogs_redirect.call(params, request, "sprints/#{params[:sprint_id]}/taskboard") }
+    get "sprints/:sprint_id/burndown_chart",
+        to: redirect { |params, request| backlogs_redirect.call(params, request, "sprints/#{params[:sprint_id]}/burndown_chart") }
 
     namespace :backlogs do
       resource :backlog, controller: :backlog, only: :show
