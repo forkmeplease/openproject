@@ -129,30 +129,32 @@ module Import
 
     def update_custom_fields_in_type(type, new_custom_fields)
       type.custom_fields << new_custom_fields
-      update_custom_fields_in_type_configuration_form(type, new_custom_fields)
+      new_cf_keys = new_custom_fields.map(&:attribute_name)
+      groups = type.attribute_groups.map { |g| [g.key, g.is_a?(Type::QueryGroup) ? [g.query_attribute_name] : g.attributes] }
+
+      remove_custom_fields_from_other_groups(groups, new_cf_keys)
+      add_or_update_jira_import_group(groups, new_cf_keys)
+
+      type.attribute_groups = groups
       type.save!
       type.reload
     end
 
-    def update_custom_fields_in_type_configuration_form(type, new_custom_fields)
-      new_cf_keys = new_custom_fields.map(&:attribute_name)
-      groups = type.attribute_groups.map { |g| [g.key, g.is_a?(Type::QueryGroup) ? [g.query_attribute_name] : g.attributes] }
-
-      # Remove new custom fields from all other groups to avoid duplicates
+    def remove_custom_fields_from_other_groups(groups, cf_keys)
       groups.each do |group|
         next if group[0] == JIRA_IMPORT_GROUP_KEY
 
-        group[1] -= new_cf_keys
+        group[1] -= cf_keys
       end
+    end
 
+    def add_or_update_jira_import_group(groups, cf_keys)
       jira_group = groups.find { |g| g[0] == JIRA_IMPORT_GROUP_KEY }
       if jira_group
-        jira_group[1] |= new_cf_keys
+        jira_group[1] |= cf_keys
       else
-        jira_group = [JIRA_IMPORT_GROUP_KEY, new_cf_keys]
-        groups << jira_group
+        groups << [JIRA_IMPORT_GROUP_KEY, cf_keys]
       end
-      type.attribute_groups = groups
     end
 
     def update_custom_fields_in_project(project, jira_project, custom_field_registry)
