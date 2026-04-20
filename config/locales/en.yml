@@ -2576,7 +2576,6 @@ en:
     avatar: "Avatar"
     base: "General Error:"
     body: "Body"
-    blocks_ids: "IDs of blocked work packages"
     category: "Category"
     comment: "Comment"
     comments: "Comment"

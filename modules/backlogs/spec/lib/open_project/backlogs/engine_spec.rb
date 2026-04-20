@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -28,29 +30,15 @@
 
 require "spec_helper"
 
-RSpec.describe User do
-  describe "backlogs_preference" do
-    describe "task_color" do
-      it "reads from and writes to a user preference" do
-        u = create(:user)
-        u.backlogs_preference(:task_color, "#FFCC33")
-
-        expect(u.backlogs_preference(:task_color)).to eq("#FFCC33")
-        u.reload
-        expect(u.backlogs_preference(:task_color)).to eq("#FFCC33")
-      end
-
-      it "computes a random color and persists it, when none is set" do
-        u = create(:user)
-        u.backlogs_preference(:task_color, nil)
-        u.save!
-
-        generated_task_color = u.backlogs_preference(:task_color)
-        expect(generated_task_color).to match(/^#[0-9A-F]{6}$/)
-        u.save!
-        u.reload
-        expect(u.backlogs_preference(:task_color)).to eq(generated_task_color)
-      end
+RSpec.describe OpenProject::Backlogs::Engine do
+  describe ".settings" do
+    it "keeps only the burn direction plugin setting" do
+      expect(described_class.settings).to eq(
+        default: {
+          "points_burn_direction" => "up"
+        },
+        menu_item: :backlogs_settings
+      )
     end
   end
 end
