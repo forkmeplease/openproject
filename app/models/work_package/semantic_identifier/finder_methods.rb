@@ -123,10 +123,16 @@ module WorkPackage::SemanticIdentifier::FinderMethods
     stripped.to_i.to_s != stripped
   end
 
-  # Resolves a semantic identifier (e.g. "PROJ-42") to a WorkPackage in
-  # a single query. Matches against the current identifier column OR a
-  # correlated EXISTS on the alias table for historical identifiers.
-  # Returns nil on miss.
+  def find_by_semantic_identifier(identifier)
+    scope_for_semantic_identifier(identifier).first
+  end
+
+  def exists_by_semantic_identifier?(identifier)
+    scope_for_semantic_identifier(identifier).exists?
+  end
+
+  # Builds a scope that matches work packages by semantic identifier, considering
+  # both the current identifier column and the alias table for historical identifiers.
   #
   # Generates:
   #
@@ -137,13 +143,8 @@ module WorkPackage::SemanticIdentifier::FinderMethods
   #        WHERE "work_package_semantic_aliases"."work_package_id" = "work_packages"."id"
   #          AND "work_package_semantic_aliases"."identifier" = 'PROJ-42'
   #      ))
-  #   ORDER BY "work_packages"."id" ASC LIMIT 1
-  def find_by_semantic_identifier(identifier)
-    where(identifier:).or(where(semantic_alias_exists(identifier))).first
-  end
-
-  def exists_by_semantic_identifier?(identifier)
-    where(identifier:).or(where(semantic_alias_exists(identifier))).exists?
+  def scope_for_semantic_identifier(identifier)
+    where(identifier:).or(where(semantic_alias_exists(identifier)))
   end
 
   # Correlated EXISTS subquery that matches work packages having a
