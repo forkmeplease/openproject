@@ -116,7 +116,7 @@ module WorkPackage::SemanticIdentifier::FinderMethods
     return unless pair
 
     key, value = pair
-    offending = value.is_a?(Array) ? value.find { |v| semantic_id?(v) } : (value if semantic_id?(value))
+    offending = value.is_a?(Array) ? value.detect { |v| semantic_id?(v) } : (value if semantic_id?(value))
     return unless offending
 
     raise WorkPackage::SemanticIdentifier::UnsupportedLookup,
