@@ -135,46 +135,56 @@ module Import
       def build_multicheckbox_registry_entries(jira_field)
         groups = jira_field.payload["contextGroups"]
 
-        if groups.blank?
-          # No context groups: check option values from issues
-          option_values = collect_option_values_from_issues(jira_field)
-          return [] if option_values.empty?
+        return build_multicheckbox_entries_without_context_groups(jira_field) if groups.blank?
 
-          if option_values.size == 1
-            return [{ jira_field:, contexts: [build_context_entry(jira_field, nil, option_value: option_values.first)] }]
-          else
-            return [{ jira_field:, contexts: [build_context_entry(jira_field, nil)] }]
-          end
+        build_multicheckbox_entries_with_context_groups(jira_field, groups)
+      end
+
+      def build_multicheckbox_entries_without_context_groups(jira_field)
+        option_values = collect_option_values_from_issues(jira_field)
+        return [] if option_values.empty?
+
+        if option_values.size == 1
+          [{ jira_field:, contexts: [build_context_entry(jira_field, nil, option_value: option_values.first)] }]
+        else
+          [{ jira_field:, contexts: [build_context_entry(jira_field, nil)] }]
         end
+      end
 
-        # Group context groups by their option values count
+      def build_multicheckbox_entries_with_context_groups(jira_field, groups)
+        boolean_groups, list_groups = partition_multicheckbox_groups_by_value_count(groups)
+
+        build_boolean_registry_entries(jira_field, boolean_groups) + build_list_registry_entries(jira_field, list_groups)
+      end
+
+      def partition_multicheckbox_groups_by_value_count(groups)
         boolean_groups = []
         list_groups = []
 
         groups.each do |group|
           option_values = Array(group["allowedValues"]).pluck("value").compact.uniq
           if option_values.size == 1
-            boolean_groups << { group: group, option_value: option_values.first }
+            boolean_groups << { group:, option_value: option_values.first }
           elsif option_values.size > 1
             list_groups << group
           end
         end
 
-        entries = []
+        [boolean_groups, list_groups]
+      end
 
-        # Create registry entry for boolean contexts (one per unique option value)
-        boolean_groups.group_by { |bg| bg[:option_value] }.each do |option_value, grouped|
+      def build_boolean_registry_entries(jira_field, boolean_groups)
+        boolean_groups.group_by { |bg| bg[:option_value] }.map do |option_value, grouped|
           contexts = grouped.map { |bg| build_context_entry(jira_field, bg[:group], option_value:) }
-          entries << { jira_field:, contexts: }
+          { jira_field:, contexts: }
         end
+      end
 
-        # Create registry entry for list contexts
-        if list_groups.any?
-          contexts = list_groups.map { |group| build_context_entry(jira_field, group) }
-          entries << { jira_field:, contexts: }
-        end
+      def build_list_registry_entries(jira_field, list_groups)
+        return [] if list_groups.empty?
 
-        entries
+        contexts = list_groups.map { |group| build_context_entry(jira_field, group) }
+        [{ jira_field:, contexts: }]
       end
 
       def all_jira_import_project_ids
