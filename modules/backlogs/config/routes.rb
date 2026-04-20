@@ -66,6 +66,12 @@ Rails.application.routes.draw do
           work_package_split_view: true,
           defaults: { tab: :overview }
 
+      resources :backlog_buckets, only: %i[create] do
+        collection do
+          get :new_dialog
+        end
+      end
+
       resources :sprints, param: :sprint_id, only: %i[create update] do
         collection do
           get :new_dialog

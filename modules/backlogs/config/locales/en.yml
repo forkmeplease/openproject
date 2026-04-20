@@ -215,6 +215,8 @@ en:
     story_points_ideal: "Story points (ideal)"
 
   label_backlog: "Backlog"
+  label_backlog_bucket_edit: "Edit backlog bucket"
+  label_backlog_bucket_new: "New backlog bucket"
   label_inbox: "Inbox"
   label_backlogs: "Backlogs"
   label_burndown_chart: "Burndown chart"

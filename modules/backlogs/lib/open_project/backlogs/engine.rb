@@ -69,7 +69,8 @@ module OpenProject::Backlogs
                    require: :member
 
         permission :create_sprints,
-                   { "backlogs/sprints": %i[new_dialog refresh_form create edit_dialog update] },
+                   { "backlogs/backlog_buckets": %i[new_dialog create],
+                     "backlogs/sprints": %i[new_dialog refresh_form create edit_dialog update] },
                    permissible_on: :project,
                    require: :member,
                    dependencies: :view_sprints
