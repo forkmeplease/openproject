@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,20 +28,22 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module RbCommonHelper
-  def format_date_range(dates)
-    return nil if dates.all?(&:nil?)
+module Backlogs
+  module CommonHelper
+    def format_date_range(dates)
+      return nil if dates.all?(&:nil?)
 
-    from, to = dates.map { |date| tag.time(datetime: date.iso8601) { format_date(date) } if date }
-    safe_join([from, "–", to], " ") # &ndash; and &nbsp;
-  end
+      from, to = dates.map { |date| tag.time(datetime: date.iso8601) { format_date(date) } if date }
+      safe_join([from, "–", to], " ") # &ndash; and &nbsp;
+    end
 
-  def allow_sprint_creation?(project)
-    current_user.allowed_in_project?(:create_sprints, project) &&
-      !project.receive_shared_sprints?
-  end
+    def allow_sprint_creation?(project)
+      current_user.allowed_in_project?(:create_sprints, project) &&
+        !project.receive_shared_sprints?
+    end
 
-  def show_all_backlog
-    ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    def show_all_backlog
+      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    end
   end
 end

@@ -30,7 +30,7 @@
 
 require "rails_helper"
 
-RSpec.describe RbCommonHelper do
+RSpec.describe Backlogs::CommonHelper do
   describe "#format_date_range" do
     let(:from) { Date.new(2025, 1, 6) }
     let(:to) { Date.new(2025, 1, 17) }

@@ -30,7 +30,7 @@
 
 # Base class of all controllers in Backlogs
 class RbApplicationController < ApplicationController
-  helper :rb_common
+  helper "backlogs/common"
 
   before_action :load_sprint_and_project,
                 :authorize
