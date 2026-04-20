@@ -37,18 +37,28 @@ module Wikis::Adapters::Providers::Internal::Queries
     end
 
     def handle_query(identifier:)
-      title = [
-        "How to write wiki pages",
-        "Technical specifications",
-        "A brief introduction on how to write wiki page titles that are short enough to be memorable"
-      ].sample
+      # TODO: should we accept implicit User.current or do we want to pass in a user explicitly?
+      wiki_page = WikiPage.visible.find_by(id: identifier)
+      return failure(code: :not_found) if wiki_page.nil?
 
       success(
         Wikis::Adapters::Results::PageInfo.new(
-          title:,
-          href: "#"
+          title: wiki_page.title,
+          href: url_for(only_path: true,
+                        controller: "/wiki",
+                        action: "show",
+                        project_id: wiki_page.project.identifier,
+                        id: wiki_page.slug)
         )
       )
+    end
+
+    private
+
+    delegate :url_for, to: :url_helpers
+
+    def url_helpers
+      OpenProject::StaticRouting::StaticRouter.new.url_helpers
     end
   end
 end
