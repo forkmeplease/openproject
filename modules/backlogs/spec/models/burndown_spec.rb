@@ -61,7 +61,7 @@ RSpec.describe Burndown do
   subject(:burndown) { described_class.new(sprint, project) }
 
   describe "for an agile sprint" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
 
     describe "WITH the today date fixed to April 4th, 2011 and having a 10 (working days) sprint" do
       around do |example|
@@ -191,7 +191,7 @@ RSpec.describe Burndown do
     end
 
     context "without dates on the sprint" do
-      let(:sprint) { create(:agile_sprint, project:, start_date: nil, finish_date: nil) }
+      let(:sprint) { create(:sprint, project:, start_date: nil, finish_date: nil) }
       let(:story) do
         build(:story,
               :created_in_past,

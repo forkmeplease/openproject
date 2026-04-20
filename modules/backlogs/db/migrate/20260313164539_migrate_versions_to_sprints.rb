@@ -59,7 +59,7 @@ class MigrateVersionsToSprints < ActiveRecord::Migration[8.0]
   end
 
   def create_sprint(version)
-    Agile::Sprint.create!(
+    Sprint.create!(
       name: version.name,
       project_id: version.project_id,
       status: version.status == "open" ? "in_planning" : "completed",

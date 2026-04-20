@@ -33,7 +33,7 @@ require "spec_helper"
 RSpec.describe WorkPackage do
   describe "associations" do
     it { is_expected.to belong_to(:backlog_bucket).class_name("Agile::BacklogBucket").optional(true) }
-    it { is_expected.to belong_to(:sprint).class_name("Agile::Sprint").optional(true) }
+    it { is_expected.to belong_to(:sprint).class_name("Sprint").optional(true) }
   end
 
   describe ".order_by_position" do

@@ -44,7 +44,7 @@ module Backlogs
                             end
 
       max_position = backlog_items_scope.maximum(:position) || 0
-      open_sprints_exist = Agile::Sprint.for_project(@project).visible.not_completed.exists?
+      open_sprints_exist = Sprint.for_project(@project).visible.not_completed.exists?
 
       render(Backlogs::InboxMenuComponent.new(
                work_package: @work_package,
@@ -115,7 +115,7 @@ module Backlogs
     end
 
     def replace_sprint_component_via_turbo_stream(sprint_id)
-      sprint = Agile::Sprint.for_project(@project).visible.find(sprint_id)
+      sprint = Sprint.for_project(@project).visible.find(sprint_id)
       replace_via_turbo_stream(
         component: Backlogs::SprintComponent.new(sprint:, project: @project),
         method: :morph

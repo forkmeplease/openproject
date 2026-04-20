@@ -30,18 +30,18 @@
 
 require "spec_helper"
 
-RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
+RSpec.describe Sprints::Scopes::NativeToSprintSource do
   let(:sprint_sharing) { "no_sharing" }
   let(:project) { create(:project, sprint_sharing:) }
   let(:global_sharer) { create(:project, sprint_sharing: "share_all_projects") }
   let(:other_project) { create(:project) }
-  let!(:sprint_in_project) { create(:agile_sprint, project:) }
-  let!(:global_sprint) { create(:agile_sprint, project: global_sharer) }
-  let!(:sprint_in_other_project) { create(:agile_sprint, project: other_project) }
+  let!(:sprint_in_project) { create(:sprint, project:) }
+  let!(:global_sprint) { create(:sprint, project: global_sharer) }
+  let!(:sprint_in_other_project) { create(:sprint, project: other_project) }
 
   shared_examples "executes a single SQL query" do
     it "resolves native_to_sprint_source in a single query" do
-      expect { Agile::Sprint.native_to_sprint_source(project).load }.to have_a_query_limit(1)
+      expect { Sprint.native_to_sprint_source(project).load }.to have_a_query_limit(1)
     end
   end
 
@@ -53,24 +53,24 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
 
       context "and there are no work package assignments" do
         it "returns only the project's own sprint" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
         end
       end
 
       context "and the project has a work package assigned to a sprint from another project" do
-        let!(:cross_project_sprint) { create(:agile_sprint, project: other_project) }
+        let!(:cross_project_sprint) { create(:sprint, project: other_project) }
         let!(:work_package) { create(:work_package, project:, sprint: cross_project_sprint) }
 
         it "returns only the project's own sprint" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
         end
 
         context "when the cross-project sprint is completed" do
-          let!(:completed_sprint) { create(:agile_sprint, project: other_project, status: "completed") }
+          let!(:completed_sprint) { create(:sprint, project: other_project, status: "completed") }
           let!(:work_package) { create(:work_package, project:, sprint: completed_sprint) }
 
           it "returns only the project's own sprint" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
           end
         end
       end
@@ -83,16 +83,16 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
 
       context "and there are no work package assignments" do
         it "returns only the project's own sprint" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
         end
       end
 
       context "and a work package in the project is assigned to a sprint from another project" do
-        let!(:cross_project_sprint) { create(:agile_sprint, project: other_project) }
+        let!(:cross_project_sprint) { create(:sprint, project: other_project) }
         let!(:work_package) { create(:work_package, project:, sprint: cross_project_sprint) }
 
         it "returns only the project's own sprint" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
         end
       end
     end
@@ -104,16 +104,16 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
 
       context "and there are no work package assignments" do
         it "returns only the project's own sprint" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
         end
       end
 
       context "and a work package in the project is assigned to a sprint from another project" do
-        let!(:cross_project_sprint) { create(:agile_sprint, project: other_project) }
+        let!(:cross_project_sprint) { create(:sprint, project: other_project) }
         let!(:work_package) { create(:work_package, project:, sprint: cross_project_sprint) }
 
         it "returns only the project's own sprint" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(sprint_in_project)
         end
       end
     end
@@ -125,14 +125,14 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
 
       context "and there is only a global sharer" do
         it "returns only the sprints shared from the global sharer project" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
         end
 
         context "and a work package is assigned to the project's own sprint" do
           let!(:work_package) { create(:work_package, project:, sprint: sprint_in_project) }
 
           it "returns only the sprints shared from the global sharer project" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
           end
         end
 
@@ -140,7 +140,7 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
           let!(:work_package) { create(:work_package, project:, sprint: global_sprint) }
 
           it "returns the shared sprint only once" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
           end
         end
 
@@ -148,7 +148,7 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
           let!(:work_package) { create(:work_package, project:, sprint: sprint_in_other_project) }
 
           it "returns only the sprints shared from the global sharer project" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(global_sprint)
           end
         end
       end
@@ -156,17 +156,17 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
       context "and there is a subproject-sharing ancestor" do
         let(:subproject_sharer) { create(:project, sprint_sharing: "share_subprojects") }
         let(:project) { create(:project, parent: subproject_sharer, sprint_sharing:) }
-        let!(:subproject_sprint) { create(:agile_sprint, project: subproject_sharer) }
+        let!(:subproject_sprint) { create(:sprint, project: subproject_sharer) }
 
         it "returns only the sprints shared from the closest subproject-sharing ancestor" do
-          expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
+          expect(Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
         end
 
         context "and a work package is assigned to the project's own sprint" do
           let!(:work_package) { create(:work_package, project:, sprint: sprint_in_project) }
 
           it "returns only the sprints shared from the closest subproject-sharing ancestor" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
           end
         end
 
@@ -174,7 +174,7 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
           let!(:work_package) { create(:work_package, project:, sprint: subproject_sprint) }
 
           it "returns the ancestor's shared sprint only once" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
           end
         end
 
@@ -182,7 +182,7 @@ RSpec.describe Agile::Sprints::Scopes::NativeToSprintSource do
           let!(:work_package) { create(:work_package, project:, sprint: global_sprint) }
 
           it "returns only the sprints shared from the closest subproject-sharing ancestor" do
-            expect(Agile::Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
+            expect(Sprint.native_to_sprint_source(project)).to contain_exactly(subproject_sprint)
           end
         end
       end

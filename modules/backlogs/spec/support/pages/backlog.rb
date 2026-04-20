@@ -188,7 +188,7 @@ module Pages
       within_sprint_backlogs do
         expect(page).to have_css(
           test_selector("op-sprints--new-sprint-button"),
-          text: Agile::Sprint.human_model_name
+          text: Sprint.human_model_name
         )
       end
     end
@@ -197,7 +197,7 @@ module Pages
       within_sprint_backlogs do
         expect(page).to have_no_css(
           test_selector("op-sprints--new-sprint-button"),
-          text: Agile::Sprint.human_model_name
+          text: Sprint.human_model_name
         )
       end
     end

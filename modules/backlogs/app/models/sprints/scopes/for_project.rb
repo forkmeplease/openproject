@@ -28,15 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
+module Sprints::Scopes::ForProject
+  extend ActiveSupport::Concern
 
-RSpec.describe API::V3::Utilities::ResourceLinkGenerator do
-  include API::V3::Utilities::PathHelper
+  class_methods do
+    def for_project(project)
+      # Ideally the project.work_packages scope would be used, but unfortunately
+      # it has some extra includes that are not necessary in this case.
+      from_work_packages = WorkPackage.where(project:).where.not(sprint_id: nil)
 
-  describe ".make_link" do
-    it "resolves an Agile::Sprint to the sprint API path" do
-      sprint = build_stubbed(:agile_sprint)
-      expect(described_class.make_link(sprint)).to eql api_v3_paths.sprint(sprint.id)
+      native_to_sprint_source(project)
+        .or(where(id: from_work_packages.select(:sprint_id)))
     end
   end
 end

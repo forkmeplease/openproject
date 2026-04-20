@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Agile::Sprints::Scopes::ReceivingProjects
+module Sprints::Scopes::ReceivingProjects
   extend ActiveSupport::Concern
 
   class_methods do

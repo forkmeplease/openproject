@@ -41,7 +41,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
   let(:project) { create(:project, types: [type_feature, type_task]) }
   let(:start_date) { Date.new(2024, 1, 15) }
   let(:finish_date) { Date.new(2024, 1, 29) }
-  let(:sprint) { create(:agile_sprint, project:, name: "Sprint 1", start_date:, finish_date:) }
+  let(:sprint) { create(:sprint, project:, name: "Sprint 1", start_date:, finish_date:) }
   let(:state) { :show }
   let(:folded) { false }
 
@@ -121,7 +121,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
       it "renders a stable id on the sprint menu trigger" do
         render_component
 
-        expect(page).to have_element(:button, id: /\Aagile_sprint_#{sprint.id}_menu-button\z/)
+        expect(page).to have_element(:button, id: /\Asprint_#{sprint.id}_menu-button\z/)
       end
     end
 
@@ -142,7 +142,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
     end
 
     context "when sprint has no dates" do
-      let(:sprint) { build_stubbed(:agile_sprint, project:, name: "Sprint 1", start_date: nil, finish_date: nil) }
+      let(:sprint) { build_stubbed(:sprint, project:, name: "Sprint 1", start_date: nil, finish_date: nil) }
 
       it "renders without date range or calendar icon" do
         render_component
@@ -170,7 +170,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
 
       context "when another sprint is already active" do
         let!(:active_sprint) do
-          create(:agile_sprint, project:, name: "Active Sprint", status: "active",
+          create(:sprint, project:, name: "Active Sprint", status: "active",
                                 start_date: Date.yesterday, finish_date: Date.tomorrow)
         end
 
@@ -207,7 +207,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
 
     context "when the sprint is active and the user can finish it" do
       let(:sprint) do
-        create(:agile_sprint, project:, name: "Sprint 1", status: "active",
+        create(:sprint, project:, name: "Sprint 1", status: "active",
                               start_date:, finish_date:)
       end
 
@@ -227,7 +227,7 @@ RSpec.describe Backlogs::SprintHeaderComponent, type: :component do
 
     context "when the sprint is completed" do
       let(:sprint) do
-        create(:agile_sprint, project:, name: "Sprint 1", status: "completed",
+        create(:sprint, project:, name: "Sprint 1", status: "completed",
                               start_date:, finish_date:)
       end
 

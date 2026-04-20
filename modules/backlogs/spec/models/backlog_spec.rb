@@ -40,7 +40,7 @@ RSpec.describe Backlog do
       let(:project) { create(:project) }
       let(:open_status) { create(:status, is_closed: false) }
       let(:closed_status) { create(:status, is_closed: true) }
-      let(:agile_sprint) { create(:agile_sprint, project:) }
+      let(:sprint) { create(:sprint, project:) }
 
       before { login_as create(:admin) }
 
@@ -49,7 +49,7 @@ RSpec.describe Backlog do
       it "returns work packages with no sprint assigned and open status" do
         inbox_wp = create(:work_package, project:, status: open_status)
         create(:work_package, project:, status: closed_status)
-        create(:work_package, project:, status: open_status, sprint: agile_sprint)
+        create(:work_package, project:, status: open_status, sprint:)
 
         expect(inbox).to contain_exactly(inbox_wp)
       end

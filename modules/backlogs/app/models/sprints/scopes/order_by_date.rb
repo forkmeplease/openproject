@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,13 +26,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module Queries
-  module Agile
-    module Sprints
-      # Alias to allow auto-discovery by ParamsToQueryService for the Agile::Sprint model.
-      SprintQuery = ::Queries::Sprints::SprintQuery
+module Sprints::Scopes::OrderByDate
+  extend ActiveSupport::Concern
+
+  class_methods do
+    def order_by_date
+      order(arel_table[:start_date].asc.nulls_last,
+            arel_table[:finish_date].asc.nulls_last)
     end
   end
 end

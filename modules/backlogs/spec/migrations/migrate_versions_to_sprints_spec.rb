@@ -62,12 +62,12 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
     context "when all criteria are met (used in the backlog and work package present)" do
       context "when version is used as a sprint (DISPLAY_LEFT)" do
         it "creates one sprint" do
-          expect { migrate }.to change(Agile::Sprint, :count).by(1)
+          expect { migrate }.to change(Sprint, :count).by(1)
         end
 
         it "copies name, start_date and finish_date" do
           migrate
-          sprint = Agile::Sprint.last
+          sprint = Sprint.last
           expect(sprint.name).to eq("Test Sprint")
           expect(sprint.start_date).to eq(Date.new(2026, 1, 1))
           expect(sprint.finish_date).to eq(Date.new(2026, 1, 14))
@@ -78,12 +78,12 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
         let(:version_type) { :backlog }
 
         it "creates one sprint" do
-          expect { migrate }.to change(Agile::Sprint, :count).by(1)
+          expect { migrate }.to change(Sprint, :count).by(1)
         end
 
         it "copies name, start_date and finish_date" do
           migrate
-          sprint = Agile::Sprint.last
+          sprint = Sprint.last
           expect(sprint.name).to eq("Test Sprint")
           expect(sprint.start_date).to eq(Date.new(2026, 1, 1))
           expect(sprint.finish_date).to eq(Date.new(2026, 1, 14))
@@ -95,7 +95,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
       let(:version_type) { :display_none }
 
       it "does not create a sprint" do
-        expect { migrate }.not_to change(Agile::Sprint, :count)
+        expect { migrate }.not_to change(Sprint, :count)
       end
     end
 
@@ -103,7 +103,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
       let!(:wp1) { nil }
 
       it "does not create a sprint" do
-        expect { migrate }.not_to change(Agile::Sprint, :count)
+        expect { migrate }.not_to change(Sprint, :count)
       end
     end
   end
@@ -111,8 +111,8 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
   describe "date handling" do
     context "when both start_date and effective_date are null" do
       it "creates a sprint with nil dates" do
-        expect { migrate }.to change(Agile::Sprint, :count).by(1)
-        sprint = Agile::Sprint.last
+        expect { migrate }.to change(Sprint, :count).by(1)
+        sprint = Sprint.last
         expect(sprint.start_date).to be_nil
         expect(sprint.finish_date).to be_nil
       end
@@ -123,7 +123,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "sets effective_date for finish_date" do
         migrate
-        sprint = Agile::Sprint.last
+        sprint = Sprint.last
         expect(sprint.start_date).to be_nil
         expect(sprint.finish_date).to eq(Date.new(2026, 2, 28))
       end
@@ -134,7 +134,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "sets start_date for start_date" do
         migrate
-        sprint = Agile::Sprint.last
+        sprint = Sprint.last
         expect(sprint.start_date).to eq(Date.new(2026, 2, 1))
         expect(sprint.finish_date).to be_nil
       end
@@ -147,7 +147,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "creates sprint with in_planning status" do
         migrate
-        expect(Agile::Sprint.last.status).to eq("in_planning")
+        expect(Sprint.last.status).to eq("in_planning")
       end
     end
 
@@ -156,7 +156,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "creates sprint with completed status" do
         migrate
-        expect(Agile::Sprint.last.status).to eq("completed")
+        expect(Sprint.last.status).to eq("completed")
       end
     end
 
@@ -165,7 +165,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "creates sprint with completed status" do
         migrate
-        expect(Agile::Sprint.last.status).to eq("completed")
+        expect(Sprint.last.status).to eq("completed")
       end
     end
   end
@@ -175,7 +175,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
     it "sets sprint_id on all associated work packages" do
       migrate
-      sprint = Agile::Sprint.last
+      sprint = Sprint.last
       expect(wp1.reload.sprint_id).to eq(sprint.id)
       expect(wp2.reload.sprint_id).to eq(sprint.id)
     end
@@ -194,7 +194,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "assigns work packages to their respective sprints" do
         migrate
-        sprints = Agile::Sprint.all.index_by(&:name)
+        sprints = Sprint.all.index_by(&:name)
         expect(wp1.reload.sprint_id).to eq(sprints[version.name].id)
         expect(wp2.reload.sprint_id).to eq(sprints[version.name].id)
         expect(wp3.reload.sprint_id).to eq(sprints[version2.name].id)
@@ -209,7 +209,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "assigns work packages from both projects" do
         migrate
-        sprint = Agile::Sprint.last
+        sprint = Sprint.last
         expect(wp1.reload.sprint_id).to eq(sprint.id)
         expect(wp2.reload.sprint_id).to eq(sprint.id)
         expect(wp_in_other_project.reload.sprint_id).to eq(sprint.id)
@@ -224,7 +224,7 @@ RSpec.describe MigrateVersionsToSprints, type: :model do
 
       it "only assigns work packages from the sprint project" do
         migrate
-        sprint = Agile::Sprint.last
+        sprint = Sprint.last
         expect(wp1.reload.sprint_id).to eq(sprint.id)
         expect(wp2.reload.sprint_id).to eq(sprint.id)
         expect(wp_in_other_project.reload.sprint_id).to be_nil

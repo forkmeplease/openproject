@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Agile::Sprints::Scopes::NotCompleted
+module Sprints::Scopes::NotCompleted
   extend ActiveSupport::Concern
 
   def not_completed # rubocop:disable Naming/PredicateMethod

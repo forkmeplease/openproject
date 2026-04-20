@@ -38,7 +38,7 @@ module Backlogs
     # Deferred ActionMenu items (Primer include-fragment).
     def menu
       max_position = @allowed_stories.maximum(:position) || 0
-      open_sprints_exist = Agile::Sprint.for_project(@project).visible.not_completed.where.not(id: @sprint.id).exists?
+      open_sprints_exist = Sprint.for_project(@project).visible.not_completed.where.not(id: @sprint.id).exists?
 
       render(Backlogs::StoryMenuListComponent.new(
                story: @story,
@@ -51,7 +51,7 @@ module Backlogs
              layout: false)
     end
 
-    # Move a story from an Agile::Sprint to another Agile::Sprint, or the Inbox.
+    # Move a story from an Sprint to another Sprint, or the Inbox.
     def move
       # The update service reloads the story internally (via #move_after),
       # so we memoize the previous sprint_id before the call.

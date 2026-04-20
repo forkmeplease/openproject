@@ -30,17 +30,17 @@
 
 require "spec_helper"
 
-RSpec.describe Agile::Sprints::Scopes::Visible do
+RSpec.describe Sprints::Scopes::Visible do
   shared_let(:project_globally_sharing) { create(:project, sprint_sharing: "share_all_projects") }
   shared_let(:project_receiving) { create(:project, sprint_sharing: "receive_shared") }
-  shared_let(:sprint_in_global_sharer) { create(:agile_sprint, project: project_globally_sharing) }
+  shared_let(:sprint_in_global_sharer) { create(:sprint, project: project_globally_sharing) }
 
   shared_let(:project_with_own_sprint) { create(:project) }
-  shared_let(:sprint_own) { create(:agile_sprint, project: project_with_own_sprint) }
+  shared_let(:sprint_own) { create(:sprint, project: project_with_own_sprint) }
 
   shared_let(:project_with_referenced_by_wp_sprint) { create(:project) }
   shared_let(:sprint_referenced_by_wp) do
-    create(:agile_sprint, project: create(:project)) do |sprint|
+    create(:sprint, project: create(:project)) do |sprint|
       create(:work_package, sprint:, project: project_with_referenced_by_wp_sprint)
     end
   end
@@ -85,7 +85,7 @@ RSpec.describe Agile::Sprints::Scopes::Visible do
   end
   shared_let(:user_without_membership) { create(:user) }
 
-  subject { Agile::Sprint.visible(current_user) }
+  subject { Sprint.visible(current_user) }
 
   context "for a user with view_sprints in project with own sprint" do
     current_user { user_with_permission_in_project_with_own_sprint }

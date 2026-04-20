@@ -30,13 +30,13 @@
 
 require "spec_helper"
 
-RSpec.describe Agile::Sprints::Scopes::ReceivingProjects do
+RSpec.describe Sprints::Scopes::ReceivingProjects do
   let(:source_project) { create(:project, sprint_sharing: source_sharing) }
   let(:source_sharing) { "no_sharing" }
-  let(:sprint) { create(:agile_sprint, project: source_project) }
+  let(:sprint) { create(:sprint, project: source_project) }
 
   describe ".receiving_projects" do
-    subject(:scope) { Agile::Sprint.receiving_projects(sprint) }
+    subject(:scope) { Sprint.receiving_projects(sprint) }
 
     it "resolves in a single query" do
       sprint

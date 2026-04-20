@@ -30,7 +30,7 @@
 
 require "spec_helper"
 
-RSpec.describe Agile::Sprint do
+RSpec.describe Sprint do
   let(:project) { create(:project) }
   let(:sprint_status) { "in_planning" }
 
@@ -91,14 +91,14 @@ RSpec.describe Agile::Sprint do
       end
 
       it "prevents multiple active sprints in the same project" do
-        create(:agile_sprint, project:, status: "active")
+        create(:sprint, project:, status: "active")
         expect(sprint).not_to be_valid
         expect(sprint.errors[:status]).to include("only one active sprint is allowed per project.")
       end
 
       it "allows multiple active sprints in different projects" do
         other_project = create(:project)
-        create(:agile_sprint, project: other_project, status: "active")
+        create(:sprint, project: other_project, status: "active")
         expect(sprint).to be_valid
       end
 
@@ -109,8 +109,8 @@ RSpec.describe Agile::Sprint do
       end
 
       it "allows multiple non-active sprints in the same project" do
-        create(:agile_sprint, project:, status: "completed")
-        create(:agile_sprint, project:, status: "in_planning")
+        create(:sprint, project:, status: "completed")
+        create(:sprint, project:, status: "in_planning")
         sprint.status = "in_planning"
         expect(sprint).to be_valid
       end
@@ -134,7 +134,7 @@ RSpec.describe Agile::Sprint do
   end
 
   describe "#task_board_for" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
     let(:other_project) { create(:project) }
 
     context "when a sprint task board exists" do
@@ -182,7 +182,7 @@ RSpec.describe Agile::Sprint do
   end
 
   describe "work_package association" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
     let(:work_package) { create(:work_package, project:, sprint:) }
 
     it "can have work packages associated" do
@@ -197,7 +197,7 @@ RSpec.describe Agile::Sprint do
   end
 
   describe "#work_packages_for" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
     let(:other_project) { create(:project) }
     let!(:wp1) { create(:work_package, project:, sprint:) }
     let!(:wp2) { create(:work_package, project:, sprint:) }
@@ -240,7 +240,7 @@ RSpec.describe Agile::Sprint do
   end
 
   describe "#owned_by?" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
     let(:other_project) { create(:project) }
 
     it "returns true when the sprint belongs to the given project" do
@@ -253,7 +253,7 @@ RSpec.describe Agile::Sprint do
   end
 
   describe "#shared_with?" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
     let(:receiver_project) { create(:project, sprint_sharing: "receive_shared") }
     let(:other_project) { create(:project, sprint_sharing: "no_sharing") }
 
@@ -282,7 +282,7 @@ RSpec.describe Agile::Sprint do
     context "with subproject sharing" do
       let(:parent_project) { create(:project, sprint_sharing: "share_subprojects") }
       let(:child_project) { create(:project, parent: parent_project, sprint_sharing: "receive_shared") }
-      let(:parent_sprint) { create(:agile_sprint, project: parent_project) }
+      let(:parent_sprint) { create(:sprint, project: parent_project) }
 
       it "returns true when sprint is shared from parent to child" do
         expect(parent_sprint.shared_with?(child_project)).to be true
@@ -294,7 +294,7 @@ RSpec.describe Agile::Sprint do
     end
 
     context "with work package assignment to unrelated project" do
-      let(:unrelated_sprint) { create(:agile_sprint, project: other_project) }
+      let(:unrelated_sprint) { create(:sprint, project: other_project) }
 
       before do
         create(:work_package, project:, sprint: unrelated_sprint)
@@ -307,7 +307,7 @@ RSpec.describe Agile::Sprint do
   end
 
   describe "#visible_to?" do
-    let(:sprint) { create(:agile_sprint, project:) }
+    let(:sprint) { create(:sprint, project:) }
     let(:receiver_project) { create(:project, sprint_sharing: "receive_shared") }
     let(:other_project) { create(:project, sprint_sharing: "no_sharing") }
 
@@ -335,7 +335,7 @@ RSpec.describe Agile::Sprint do
 
     context "with global sharing" do
       let(:global_sharer) { create(:project, sprint_sharing: "share_all_projects") }
-      let(:global_sprint) { create(:agile_sprint, project: global_sharer) }
+      let(:global_sprint) { create(:sprint, project: global_sharer) }
 
       it "returns true for projects that receive shared sprints" do
         expect(global_sprint.visible_to?(receiver_project)).to be true
@@ -354,7 +354,7 @@ RSpec.describe Agile::Sprint do
       let(:parent_project) { create(:project, sprint_sharing: "share_subprojects") }
       let(:child_project) { create(:project, parent: parent_project, sprint_sharing: "receive_shared") }
       let(:grandchild_project) { create(:project, parent: child_project, sprint_sharing: "receive_shared") }
-      let(:parent_sprint) { create(:agile_sprint, project: parent_project) }
+      let(:parent_sprint) { create(:sprint, project: parent_project) }
 
       it "returns true for direct child receiving shared sprints" do
         expect(parent_sprint.visible_to?(child_project)).to be true
@@ -371,7 +371,7 @@ RSpec.describe Agile::Sprint do
 
     context "with work package assignment" do
       let(:unrelated_project) { create(:project, sprint_sharing: "no_sharing") }
-      let(:unrelated_sprint) { create(:agile_sprint, project: unrelated_project) }
+      let(:unrelated_sprint) { create(:sprint, project: unrelated_project) }
 
       before do
         create(:work_package, project:, sprint: unrelated_sprint)
