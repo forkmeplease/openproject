@@ -36,6 +36,13 @@ module WorkPackage::SemanticIdentifier
   # The frontend equivalent lives in WP_ID_URL_PATTERN (work-package-id-pattern.ts).
   ID_ROUTE_CONSTRAINT = /\d+|[A-Z][A-Z0-9_]*-\d+/
 
+  # Raised when a finder is invoked in a way that cannot resolve a semantic
+  # identifier — e.g. find_by(id: "PROJ-42") which reduces to a raw SQL
+  # WHERE clause that cannot consult the alias table. Subclasses ArgumentError
+  # so callers that rescue ArgumentError still catch it, but it can be rescued
+  # specifically when needed.
+  class UnsupportedLookup < ArgumentError; end
+
   included do
     has_many :semantic_aliases,
              class_name: "WorkPackageSemanticAlias",
@@ -50,7 +57,11 @@ module WorkPackage::SemanticIdentifier
     include FinderMethods
 
     # Extend every relation built from this model with semantic finder methods,
-    # so that WorkPackage.visible(user).find("PROJ-42") works transparently.
+    # so that WorkPackage.visible(user).find("PROJ-42") and
+    # project.work_packages.find_by_display_id("PROJ-42") both work. Overriding
+    # `relation` is the seam that reaches every scope and association proxy;
+    # including FinderMethods into class_methods alone only covers class-level
+    # calls like WorkPackage.find.
     def relation
       super.extending(FinderMethods)
     end
