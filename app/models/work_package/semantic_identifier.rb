@@ -71,7 +71,9 @@ module WorkPackage::SemanticIdentifier
   # In semantic mode: the project-based identifier (e.g. "PROJ-42")
   # In classic mode: the numeric database ID
   def display_id
-    Setting::WorkPackageIdentifier.semantic_mode_active? ? identifier : id
+    return id unless Setting::WorkPackageIdentifier.semantic_mode_active?
+
+    identifier.presence || id
   end
 
   # Allocates the next semantic identifier in the current project and assigns it to the WP.
