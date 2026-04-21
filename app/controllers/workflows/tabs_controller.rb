@@ -41,6 +41,11 @@ class Workflows::TabsController < ApplicationController
   before_action :set_role
 
   def edit
+    unless turbo_frame_request?
+      redirect_to edit_workflow_path(@type, role_id: params[:role_id], tab: @tab)
+      return
+    end
+
     statuses_for_form
 
     if @type && @role && @statuses.any?

@@ -37,8 +37,10 @@ module WorkflowHelper
     ].map do |tab|
       tab.merge(
         partial: "workflows/form",
-        path: edit_workflow_path(type, { tab: tab[:name] }.merge(params.permit(:role_id))),
-        data: { "admin--workflow-checkbox-state-confirmation-trigger": "click" }
+        path: edit_workflow_tab_path(type, tab[:name], params.permit(:role_id)),
+        data: { "admin--workflow-checkbox-state-confirmation-trigger": "click",
+                turbo_frame: "workflow-table",
+                turbo_action: "advance" }
       )
     end
   end

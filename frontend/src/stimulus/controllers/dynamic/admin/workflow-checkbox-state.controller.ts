@@ -29,10 +29,10 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
-import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
 
 const PRISTINE_STATE_KEY = 'workflow-pristine-state';
 const STATUS_STATE_KEY = 'workflow-status-state';
+const CONFIRMATION_TRIGGER_ATTR = 'data-admin--workflow-checkbox-state-confirmation-trigger';
 
 type CheckboxesState = Record<string, boolean>;
 
@@ -48,13 +48,10 @@ interface SavedState {
  * to the DB
  *
  * 2) Marking the checkbox matrix as dirty when changes are made but not saved, and
- * passing this info along when roles/tabs are changed to trigger a confirmation
- * dialog when necessary:
- *   - Roles are handled by setting an attribute on each ActionMenu item when dirty.
- *   This param decides if the controller responds with a confirmation dialog,
- *   or simply redirects
- *   - Tabs are handled by listening for clicks on the tab headers, and directly
- * calling the confirmation dialog from here when dirty
+ * triggering a confirmation dialog when navigating away:
+ *   - Listens for clicks on any element with data-admin--workflow-checkbox-state-confirmation-trigger
+ *     via document-level event delegation, so it works even after the EditComponent
+ *     is replaced by a turbo-stream after the frame content loads.
  */
 export default class WorkflowCheckboxStateController extends Controller<HTMLFormElement> {
   static targets = [ 'confirmationDialog', 'ignoreButton', 'saveButton' ];
@@ -73,12 +70,8 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
   declare isDirtyValue:boolean;
 
   private initialCheckboxState:CheckboxesState = {};
-  private confirmationTriggers:NodeListOf<HTMLElement>;
 
   connect() {
-    const frame = this.element.closest<HTMLElement>('turbo-frame');
-    frame?.addEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
-
     this.element.addEventListener('change', this.onCheckboxChange);
     this.element.addEventListener('submit', this.onFormSubmit);
 
@@ -88,40 +81,33 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
     const statusCheckboxes = this.popState(STATUS_STATE_KEY);
     if (statusCheckboxes) {
       this.applyState(statusCheckboxes);
+      // Recompute dirty flag: the restored state may differ from DB pristine.
+      this.onCheckboxChange();
     }
 
-    this.confirmationTriggers = document.querySelectorAll<HTMLElement>('[data-admin--workflow-checkbox-state-confirmation-trigger]');
-    this.confirmationTriggers.forEach((watchedElement) => {
-      const watchedTrigger = watchedElement.dataset['admin-WorkflowCheckboxStateConfirmationTrigger'] ?? '';
-      watchedElement.addEventListener(watchedTrigger, this.confirmWithDialog, true);
-    });
+    // Use document-level delegation so this works even when the EditComponent
+    // (which lives outside the turbo frame) is replaced by a turbo-stream after
+    // the frame has already connected this controller.
+    document.addEventListener('click', this.onConfirmationTriggerClick, true);
   }
 
   disconnect() {
-    this.element.closest('turbo-frame')?.removeEventListener('turbo:before-frame-render', this.onBeforeFrameRender);
-    this.element.removeEventListener('submit', this.onFormSubmit);
-
-    this.confirmationTriggers.forEach((watchedElement) => {
-      const watchedTrigger = watchedElement.dataset['admin-WorkflowCheckboxStateConfirmationTrigger'] ?? '';
-      watchedElement.removeEventListener(watchedTrigger, this.confirmWithDialog, true);
-    });
-    this.element.removeEventListener('change', this.onCheckboxChange);
-  }
-
-  //
-  // Save current state before rendering the matrix with new statuses.
-  // Restores state on connect, after after new statuses rendered.
-  //
-
-  private onBeforeFrameRender = () => {
+    // Save checkbox state so it survives a component re-render (status add/remove
+    // via turbo-stream or frame navigation). turbo:before-frame-render is not
+    // fired for turbo-stream replacements, so disconnect() is the reliable hook.
     if (this.hasCheckboxChangesValue) {
       this.pushState(STATUS_STATE_KEY, this.captureState());
-    };
-  };
+    }
+
+    document.removeEventListener('click', this.onConfirmationTriggerClick, true);
+    this.element.removeEventListener('submit', this.onFormSubmit);
+    this.element.removeEventListener('change', this.onCheckboxChange);
+  }
 
   private onFormSubmit = () => {
     this.popState(STATUS_STATE_KEY);
     this.popState(PRISTINE_STATE_KEY);
+    this.initialCheckboxState = this.captureState();
     this.hasCheckboxChangesValue = false;
     this.hasStatusChangesValue = false;
   };
@@ -155,10 +141,15 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
   // Asks for confirmation and proceed to requested event.
   //
 
-  private confirmWithDialog = (event:Event) => {
-    if (!this.isDirtyValue) return;
+  private onConfirmationTriggerClick = (event:Event) => {
+    const target = (event.target as HTMLElement).closest<HTMLElement>(`[${CONFIRMATION_TRIGGER_ATTR}]`);
+    if (!target) return;
 
-    const target = event.target as HTMLElement;
+    this.confirmWithDialog(event, target);
+  };
+
+  private confirmWithDialog = (event:Event, target:HTMLElement) => {
+    if (!this.isDirtyValue) return;
 
     if (!target.dataset.confirmed) {
       event.preventDefault();
@@ -194,6 +185,10 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
   private onIgnoreChanges = (originalTarget:HTMLElement, originalEvent:Event) => {
     return () => {
       const turboFrame = this.element.closest('turbo-frame') as HTMLElement;
+
+      // Clear any saved status state so it is not re-applied after the reload.
+      sessionStorage.removeItem(STATUS_STATE_KEY);
+
       const src = turboFrame.getAttribute('src') ?? '';
       const url = new URL(src);
       // Reload only with original params

@@ -27,14 +27,16 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%=
-  render Primer::OpenProject::PageHeader.new(classes: "workflows-page-header") do |header|
-    header.with_title { title }
-    header.with_description { description }
-    header.with_breadcrumbs(breadcrumb_items)
+<%= component_wrapper do %>
+  <%=
+    render Primer::OpenProject::PageHeader.new(classes: "workflows-page-header") do |header|
+      header.with_title { title }
+      header.with_description { description }
+      header.with_breadcrumbs(breadcrumb_items)
 
-    add_action_buttons(header)
+      add_action_buttons(header)
 
-    add_tabs(header)
-  end
-%>
+      add_tabs(header)
+    end
+  %>
+<% end %>

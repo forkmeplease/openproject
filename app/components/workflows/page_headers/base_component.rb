@@ -32,6 +32,7 @@ module Workflows::PageHeaders
   class BaseComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
     include ApplicationHelper
+    include OpTurbo::Streamable
 
     def breadcrumb_items
       [*parent_breadcrumbs, page_breadcrumb, title].compact

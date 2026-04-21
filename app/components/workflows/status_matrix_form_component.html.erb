@@ -42,8 +42,9 @@ See COPYRIGHT and LICENSE files for more details.
                 label: available_role.name,
                 active: available_role == @role,
                 tag: :a,
-                href: helpers.edit_workflow_path(@type, role_id: available_role.id, tab: @tab),
-                content_arguments: { data: { "admin--workflow-checkbox-state-confirmation-trigger": "click" }, target: "_top" }
+                href: helpers.edit_workflow_tab_path(@type, @tab, role_id: available_role.id),
+                content_arguments: { data: { "admin--workflow-checkbox-state-confirmation-trigger": "click",
+                                             turbo_action: "advance" } }
               )
             end
           end
@@ -71,8 +72,7 @@ See COPYRIGHT and LICENSE files for more details.
           autocomplete: "off",
           data: {
             controller: "admin--workflow-checkbox-state",
-            "admin--workflow-checkbox-state-has-status-changes-value": @has_status_changes,
-            turbo_temporary: true
+            "admin--workflow-checkbox-state-has-status-changes-value": @has_status_changes
           }
         ) do %>
         <%= hidden_field_tag "type_id", @type.id %>
