@@ -66,7 +66,7 @@ Rails.application.routes.draw do
           work_package_split_view: true,
           defaults: { tab: :overview }
 
-      resources :backlog_buckets, only: %i[create update] do
+      resources :backlog_buckets, only: %i[create update destroy] do
         collection do
           get :new_dialog
         end

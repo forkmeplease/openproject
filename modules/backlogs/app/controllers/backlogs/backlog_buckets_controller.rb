@@ -32,7 +32,7 @@ module Backlogs
   class BacklogBucketsController < BaseController
     include OpTurbo::ComponentStream
 
-    before_action :find_backlog_bucket, only: %i[edit_dialog update]
+    before_action :find_backlog_bucket, only: %i[edit_dialog update destroy]
 
     def new_dialog
       backlog_bucket = Agile::BacklogBucket.new(project: @project)
@@ -70,6 +70,20 @@ module Backlogs
         update_new_backlog_bucket_form_component_via_turbo_stream(backlog_bucket: call.result, base_errors: call.errors[:base])
         respond_with_turbo_streams
       end
+    end
+
+    def destroy
+      call = ::BacklogBuckets::DeleteService
+               .new(user: current_user, model: @backlog_bucket)
+               .call
+
+      if call.success?
+        flash[:notice] = I18n.t(:notice_successful_delete)
+      else
+        flash[:error] = call.errors.full_messages.join(", ")
+      end
+
+      render turbo_stream: turbo_stream.redirect_to(project_backlogs_backlog_path(@project))
     end
 
     private
