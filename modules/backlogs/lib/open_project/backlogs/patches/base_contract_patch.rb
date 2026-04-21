@@ -34,6 +34,8 @@ module OpenProject::Backlogs::Patches::BaseContractPatch
   included do
     attribute :story_points,
               writable: -> { model.backlogs_enabled? }
+    attribute :backlog_bucket,
+              permission: :manage_sprint_items
     attribute :sprint,
               # This also covers the check for backlogs being active
               permission: :manage_sprint_items

@@ -131,6 +131,17 @@ RSpec.shared_examples "work package contract with backlogs extensions" do
       it_behaves_like "contract is invalid", sprint_id: :error_readonly
     end
 
+    context "when backlog_bucket is set while the user lacks the :manage_sprint_items permission" do
+      let(:effective_permissions) { permissions - [:manage_sprint_items] }
+
+      before do
+        work_package.sprint = nil
+        work_package.backlog_bucket = build_stubbed(:backlog_bucket, project: work_package_project)
+      end
+
+      it_behaves_like "contract is invalid", backlog_bucket_id: :error_readonly
+    end
+
     context "when position is written by the user" do
       before do
         work_package.position = work_package_position
@@ -141,17 +152,17 @@ RSpec.shared_examples "work package contract with backlogs extensions" do
   end
 
   describe "writable_attributes" do
-    it "includes sprint and story_points", :aggregate_failures do
-      expect(contract.writable_attributes).to include("story_points", "sprint")
+    it "includes sprint, backlog_bucket and story_points", :aggregate_failures do
+      expect(contract.writable_attributes).to include("story_points", "backlog_bucket", "sprint")
       expect(contract.writable_attributes).not_to include("position")
     end
 
     context "when the user lacks the :manage_sprint_items permission" do
       let(:effective_permissions) { permissions - [:manage_sprint_items] }
 
-      it "includes story_points but lacks sprint", :aggregate_failures do
+      it "includes story_points but lacks sprint and backlog_bucket", :aggregate_failures do
         expect(contract.writable_attributes).to include("story_points")
-        expect(contract.writable_attributes).not_to include("sprint", "position")
+        expect(contract.writable_attributes).not_to include("backlog_bucket", "sprint", "position")
       end
     end
 
@@ -162,7 +173,7 @@ RSpec.shared_examples "work package contract with backlogs extensions" do
       let(:effective_permissions) { permissions - [:manage_sprint_items] }
 
       it "includes none of the backlogs attributes", :aggregate_failures do
-        expect(contract.writable_attributes).not_to include("story_points", "sprint", "position")
+        expect(contract.writable_attributes).not_to include("story_points", "backlog_bucket", "sprint", "position")
       end
     end
   end
