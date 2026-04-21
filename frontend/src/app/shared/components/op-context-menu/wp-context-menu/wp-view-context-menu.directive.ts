@@ -134,10 +134,9 @@ export class WorkPackageViewContextMenu extends OpContextMenuHandler {
         break;
 
       case 'relations': {
-        const routingId = this.workPackage.displayId ?? this.workPackageId;
         void this.$state.go(
           `${splitViewRoute(this.$state)}.tabs`,
-          { workPackageId: routingId, tabIdentifier: 'relations' },
+          { workPackageId: this.workPackage.displayId, tabIdentifier: 'relations' },
         );
         break;
       }

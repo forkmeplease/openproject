@@ -348,10 +348,9 @@ export class WorkPackagesCalendarComponent extends UntilDestroyedMixin implement
           if (this.$state.includes('calendar')) {
             this.workPackagesCalendar.openSplitView(wp.id!);
           } else {
-            const routingId = wp.displayId ?? wp.id!;
             void this.$state.go(
               'work-packages.show',
-              { workPackageId: routingId },
+              { workPackageId: wp.displayId },
             );
           }
         }
