@@ -61,7 +61,7 @@ RSpec.describe ProjectIdentifiers::ClassicIdentifierSuggestionGenerator do
 
     context "when the name produces a blank slug" do
       it "falls back to a randomised project-XXXXXX identifier" do
-        expect(described_class.new.suggest_identifier("!!!")).to match(/\Aproject-[a-z0-9]{6}\z/)
+        expect(described_class.new.suggest_identifier("!!!")).to match(/\Aproject-[a-z0-9]{5}\z/)
       end
     end
   end
@@ -93,23 +93,5 @@ RSpec.describe ProjectIdentifiers::ClassicIdentifierSuggestionGenerator do
       expect(described_class.new(project:).restore_identifier(project)).to be_nil
     end
 
-    context "when the prior slug is taken by another project's history" do
-      before do
-        other = create(:project, identifier: "other-project")
-        FriendlyId::Slug.create!(slug: "old-classic", sluggable_type: "Project", sluggable_id: other.id)
-      end
-
-      it "skips the taken slug and falls through to the next candidate" do
-        expect(generator.restore_identifier(project)).to eq("older-classic")
-      end
-    end
-
-    context "when initialized without project:" do
-      subject(:generator) { described_class.new }
-
-      it "includes the project's own historical slugs in the taken set, so restore returns nil" do
-        expect(generator.restore_identifier(project)).to be_nil
-      end
-    end
   end
 end

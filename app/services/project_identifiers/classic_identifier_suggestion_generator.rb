@@ -32,8 +32,7 @@ module ProjectIdentifiers
   # Generates a unique classic-format (acts_as_url-style) identifier from a project name,
   # mirroring acts_as_url's own duplicate loop: appends -1, -2, … until a free slug is found.
   #
-  # Instantiate once to load the taken-identifier set from the DB, then call +restore_identifier+
-  # and/or +suggest_identifier+ — both share the same snapshot so the DB is only hit once.
+  # Instantiate once to load the taken-identifier set from the DB, then call +suggest_identifier+.
   class ClassicIdentifierSuggestionGenerator
     FALLBACK_BASE = "project"
 
@@ -41,13 +40,13 @@ module ProjectIdentifiers
       @exclude = taken_identifiers(project:)
     end
 
-    # Returns the most-recent classic-format slug from the project's FriendlyId history
-    # that is not currently taken, or nil if none exists.
+    # Returns the most-recent classic-format slug from the project's FriendlyId history,
+    # or nil if none exists. Availability is not checked — callers must handle conflicts.
     def restore_identifier(project)
       project.slugs
              .order(created_at: :desc)
              .pluck(:slug)
-             .find { |slug| Project.classic_identifier_format?(slug) && @exclude.exclude?(slug.downcase) }
+             .find { |slug| Project.classic_identifier_format?(slug) }
     end
 
     # Generates a unique classic-format identifier from +name+, mirroring acts_as_url's
@@ -73,7 +72,7 @@ module ProjectIdentifiers
     end
 
     def fallback_base
-      "#{FALLBACK_BASE}-#{SecureRandom.alphanumeric(6).downcase}"
+      "#{FALLBACK_BASE}-#{SecureRandom.alphanumeric(5).downcase}"
     end
 
     def taken_identifiers(project: nil)
