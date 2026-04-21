@@ -56,10 +56,6 @@ module OpenProject::Backlogs::Patches::WorkPackagePatch
   end
 
   module InstanceMethods
-    def done?
-      project.done_statuses.to_a.include?(status)
-    end
-
     def backlogs_enabled?
       project&.backlogs_enabled?
     end
