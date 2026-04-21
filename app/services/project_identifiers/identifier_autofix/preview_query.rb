@@ -51,7 +51,7 @@ module ProjectIdentifiers
       end
 
       def generate_suggestions(analysis)
-        ProjectIdentifierSuggestionGenerator.call(
+        ProjectIdentifiers::SemanticIdentifierSuggestionGenerator.call(
           preview_projects(analysis.scope),
           exclude: analysis.exclusion_set.to_set(&:upcase)
         )

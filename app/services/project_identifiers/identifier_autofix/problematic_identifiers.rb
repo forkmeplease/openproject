@@ -77,7 +77,7 @@ module ProjectIdentifiers
       end
 
       def self.max_identifier_length
-        ProjectIdentifierSuggestionGenerator::IDENTIFIER_LENGTH[:max]
+        ProjectIdentifiers::SemanticIdentifierSuggestionGenerator::IDENTIFIER_LENGTH[:max]
       end
 
       def scope

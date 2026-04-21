@@ -74,7 +74,7 @@ module ProjectIdentifiers
       # Re-instantiate inside the lock so the exclusion set reflects all
       # identifiers committed since this job started.
       detector  = ProjectIdentifiers::IdentifierAutofix::ProblematicIdentifiers.new
-      generator = ProjectIdentifiers::IdentifierAutofix::ProjectIdentifierSuggestionGenerator
+      generator = ProjectIdentifiers::SemanticIdentifierSuggestionGenerator
 
       # Prefer restoring the project's last known semantic identifier (from
       # FriendlyId history) so that existing WP identifiers remain valid and
