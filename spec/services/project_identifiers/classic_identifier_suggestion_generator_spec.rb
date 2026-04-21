@@ -92,6 +92,5 @@ RSpec.describe ProjectIdentifiers::ClassicIdentifierSuggestionGenerator do
       FriendlyId::Slug.create!(slug: "SEMANTIC1", sluggable_type: "Project", sluggable_id: project.id)
       expect(described_class.new(project:).restore_identifier(project)).to be_nil
     end
-
   end
 end
