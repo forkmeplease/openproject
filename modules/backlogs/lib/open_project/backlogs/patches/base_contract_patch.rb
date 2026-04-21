@@ -40,9 +40,24 @@ module OpenProject::Backlogs::Patches::BaseContractPatch
               # This also covers the check for backlogs being active
               permission: :manage_sprint_items
 
+    validate :backlog_bucket_xor_sprint
+    validate :backlog_bucket_belongs_to_project
     validate :sprint_shared_with_project
 
     private
+
+    def backlog_bucket_xor_sprint
+      return unless model.backlog_bucket && model.sprint
+
+      errors.add :base, :backlog_bucket_xor_sprint
+    end
+
+    def backlog_bucket_belongs_to_project
+      return unless model.backlog_bucket
+      return if model.backlog_bucket.project == model.project
+
+      errors.add :backlog_bucket, :backlog_bucket_from_another_project
+    end
 
     def sprint_shared_with_project
       return if model.sprint.nil? ||

@@ -149,6 +149,32 @@ RSpec.shared_examples "work package contract with backlogs extensions" do
 
       it_behaves_like "contract is invalid", position: :error_readonly
     end
+
+    describe "when attaching to a backlog bucket" do
+      before do
+        work_package.backlog_bucket = backlog_bucket
+      end
+
+      context "when only backlog bucket is set" do
+        let(:work_package_sprint) { nil }
+        let(:backlog_bucket) { build_stubbed(:backlog_bucket, project: work_package_project) }
+
+        it_behaves_like "contract is valid"
+      end
+
+      context "when both sprint and backlog bucket are set" do
+        let(:backlog_bucket) { build_stubbed(:backlog_bucket, project: work_package_project) }
+
+        it_behaves_like "contract is invalid", base: :backlog_bucket_xor_sprint
+      end
+
+      context "when backlog bucket belongs to a different project" do
+        let(:work_package_sprint) { nil }
+        let(:backlog_bucket) { build_stubbed(:backlog_bucket, project: build_stubbed(:project)) }
+
+        it_behaves_like "contract is invalid", backlog_bucket: :backlog_bucket_from_another_project
+      end
+    end
   end
 
   describe "writable_attributes" do
