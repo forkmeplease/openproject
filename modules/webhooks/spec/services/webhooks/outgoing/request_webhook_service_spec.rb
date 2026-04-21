@@ -31,7 +31,7 @@
 require "spec_helper"
 
 RSpec.describe Webhooks::Outgoing::RequestWebhookService, :webmock, type: :model do
-  include_context "with ssrf webhook stubs"
+  include_context "with ssrf stubs"
 
   let(:user) { build_stubbed(:user) }
   let(:instance) { described_class.new(webhook, event_name: :created, current_user: user) }

@@ -286,21 +286,19 @@ module Import
       content_url = attachment["content"]
       mime_type = attachment["mimeType"]
       size = attachment["size"]
-      response_body = jira_client.download_attachment(content_url)
+      tempfile = jira_client.download_attachment(content_url, filename)
 
-      Tempfile.create(filename, binmode: true) do |tempfile|
-        response_body.copy_to(tempfile)
-        tempfile.rewind
-        tempfile.define_singleton_method(:original_filename) { filename }
-        tempfile.define_singleton_method(:content_type) { mime_type }
-        tempfile.define_singleton_method(:size) { size }
-        call = Attachments::CreateService
-                 .new(user: author, contract_class: EmptyContract)
-                 .call(container: work_package, filename:, file: tempfile)
+      tempfile.rewind
+      tempfile.define_singleton_method(:original_filename) { filename }
+      tempfile.define_singleton_method(:content_type) { mime_type }
+      tempfile.define_singleton_method(:size) { size }
+      call = Attachments::CreateService
+               .new(user: author, contract_class: EmptyContract)
+               .call(container: work_package, filename:, file: tempfile)
 
-        call.on_failure do
-          raise call.message
-        end
+      File.unlink(tempfile)
+      call.on_failure do
+        raise call.message
       end
     end
     # rubocop:enable Metrics/AbcSize
