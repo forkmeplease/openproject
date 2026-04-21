@@ -39,19 +39,9 @@ See COPYRIGHT and LICENSE files for more details.
             end
           end
         else
-          container.with_row do
-            render(Primer::Beta::Heading.new(tag: :h4, mb: 3)) { t(".relation_page_links") }
-          end
-
           providers.each do |provider|
             container.with_row(mb: 3) do
               render(::Wikis::RelationPageLinksComponent.new(provider, work_package:))
-            end
-          end
-
-          if show_inline_and_references_section?
-            container.with_row(mb: 3) do
-              render(Primer::Beta::Heading.new(tag: :h4)) { t(".inline_page_links_and_references") }
             end
           end
 
@@ -62,7 +52,7 @@ See COPYRIGHT and LICENSE files for more details.
           end
 
           if referencing_wiki_pages.any?
-            container.with_row(mb: 3) do
+            container.with_row do
               render(::Wikis::CollapsiblePageLinksComponent.new(referencing_wiki_pages, heading: t(".referencing_pages")))
             end
           end
