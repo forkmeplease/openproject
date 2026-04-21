@@ -154,6 +154,7 @@ ru:
         connection_timeout: 'Время подключения к серверу Jira истекло: %{message}'
         parse_error: 'Не удалось разобрать ответ Jira API: %{message}'
         api_error: Jira API вернул статус ошибки %{status}
+        401_error: Jira API вернул ошибку 401. Ваш токен аутентификации может быть истёк или не хватает необходимых разрешений. Пожалуйста, убедитесь, что токен принадлежит администратору Jira.
       columns:
         projects: Проекты
         last_change: Последнее изменение
@@ -198,33 +199,33 @@ ru:
           parts:
             projects:
               one: 1 проект
-              few: "%{count} projects"
-              many: "%{count} projects"
+              few: "%{count} проектов"
+              many: "%{count} проектов"
               other: "%{count} проектов"
             issues:
               one: 1 проблема
-              few: "%{count} issues"
-              many: "%{count} issues"
+              few: "%{count} проблем"
+              many: "%{count} проблем"
               other: "%{count} проблем"
             work_packages:
               one: 1 пакет работ
-              few: "%{count} work packages"
-              many: "%{count} work packages"
+              few: "%{count} пакетов работ"
+              many: "%{count} пакетов работ"
               other: "%{count} пакетов работ"
             types:
               one: 1 тип
-              few: "%{count} types"
-              many: "%{count} types"
+              few: "%{count} типов"
+              many: "%{count} типов"
               other: "%{count} типов"
             statuses:
               one: 1 статус
-              few: "%{count} statuses"
-              many: "%{count} statuses"
+              few: "%{count} статусов"
+              many: "%{count} статусов"
               other: "%{count} статусов"
             users:
               one: 1 пользователь
-              few: "%{count} users"
-              many: "%{count} users"
+              few: "%{count} пользователей"
+              many: "%{count} пользователей"
               other: "%{count} пользователей"
           groups:
             fetch:
@@ -420,8 +421,8 @@ ru:
           error_unknown: Требуется ручная проверка
           remaining_projects:
             one: "... еще 1 проект"
-            few: "... %{count} more projects"
-            many: "... %{count} more projects"
+            few: "... еще %{count} проектов"
+            many: "... еще %{count} проектов"
             other: "... еще %{count} проектов"
         button_autofix: Исправить и сохранить
         dialog:
@@ -453,8 +454,8 @@ ru:
         title: Удаление статусов
         heading:
           one: Удалить 1 статус?
-          few: Remove %{count} statuses?
-          many: Remove %{count} statuses?
+          few: Удалить %{count} статусов?
+          many: Удалить %{count} статусов?
           other: Удалить %{count} статусов?
         description: Удаление этих статусов сделает их недоступными для данного типа и удалит существующие рабочие процессы. Вы уверены, что хотите продолжить?
         confirm: Удалить
@@ -701,6 +702,37 @@ ru:
   danger_dialog:
     confirmation_live_message_checked: Кнопка для продолжения активна.
     confirmation_live_message_unchecked: Кнопка для продолжения неактивна. Чтобы продолжить, поставьте галочку.
+  departments:
+    edit: Edit department
+    add_user: Add user
+    add_department: Add department
+    blankslate:
+      heading: Your organization has no departments
+      description: 'Start by adding departments or users to the organization. Each department can be used to create a hierarchy below it, to navigate and create sub-department inside a hierarchy click on the created item.
+
+        '
+      add_button: Add
+    detail_blankslate:
+      heading: This department doesn’t have any hierarchy level below
+      description: Add departments or users to create sub-items inside another one.
+      add_button: Add
+    add_department_form:
+      name_label: Department name
+      name_placeholder: Enter department name
+    move_user_dialog:
+      title: User already in a department
+      heading: Move user to this department?
+      description: "%{user} is currently a member of %{from_department}. Moving them will remove them from that department."
+      confirm: Move user
+    context_menu:
+      add_sub_department: Add sub-department
+      add_user: Add user
+    flash:
+      user_added: User was successfully added to the department.
+      user_removed: User was successfully removed from the department.
+      department_created: Department was successfully created.
+    errors:
+      move_user_failed: Failed to move user between departments.
   pagination:
     label: Разделение на страницы
     prev: Назад
@@ -1239,8 +1271,8 @@ ru:
         effective_work_hours: Эффективные рабочие часы
         work_days_count:
           one: 1 рабочий день
-          few: "%{count} working days"
-          many: "%{count} working days"
+          few: "%{count} рабочих дней"
+          many: "%{count} рабочих дней"
           other: "%{count} рабочих дней"
   user_preferences:
     disable_keyboard_shortcuts_caption: 'Вы можете отключить стандартные [сочетания клавиш](docs_url), если Вы пользуетесь программой чтения с экрана или хотите избежать случайного запуска действия с помощью сочетания клавиш.
@@ -1380,6 +1412,20 @@ ru:
     index:
       no_results_title_text: В данный момент рабочих потоков нет.
   work_packages:
+    delete_dialog:
+      title: Delete work package
+      heading: Permanently delete this work package?
+      description: Are you sure you want to delete the work package "%{name}"?
+      confirm_descendants_deletion: I acknowledge that ALL descendants of this work package will be recursively removed.
+      cross_project_warning: 'Work packages from the following projects will be deleted: %{projects}'
+    bulk_delete_dialog:
+      title: Delete %{count} work packages
+      heading: Permanently delete these %{count} work packages?
+      description: 'The following work packages, including children and all associated data, will permanently be deleted:'
+      description_with_children: 'The following work packages, including child work packages, and all associated data will be permanently deleted:'
+      confirm_children_deletion: I acknowledge that all selected work packages and their children will be permanently deleted.
+      cross_project_warning: 'These work packages span multiple projects: %{projects}'
+      children_label: 'The following children will also be deleted:'
     datepicker_modal:
       banner:
         description:
@@ -1846,6 +1892,7 @@ ru:
         identity_url: URL идентификации
         parent: Родительская группа
         organizational_unit: Подразделение организации
+        group_users: Group users
       group_detail:
         parent: Родительская группа
         organizational_unit: Подразделение организации
@@ -1895,8 +1942,8 @@ ru:
         saturday: Суббота
         saturday_hours: Часы субботы
         sunday: Воскресенье
-        sunday_hours: Sunday hours
-        availability_factor: Availability factor
+        sunday_hours: Воскресные часы
+        availability_factor: Фактор доступности
         shared_hours: Рабочие часы
         days: Рабочие дни
       version:
@@ -1963,6 +2010,7 @@ ru:
         confirmation: не совпадает со значением поля %{attribute}.
         could_not_be_copied: "%{dependency} не может быть скопировано (полностью)."
         does_not_exist: не существует.
+        user_already_in_department: User %{user_id} is already a member of department %{department_id}.
         error_enterprise_only: "%{action} доступно только в корпоративной версии OpenProject."
         error_unauthorized: не доступен.
         error_readonly: запись не разрешена.
@@ -2029,6 +2077,7 @@ ru:
           attributes:
             parent_id:
               circular_dependency: создаст круговую иерархию групп.
+              organizational_unit_mismatch: must have the same organizational unit setting as the group.
         ldap_auth_source:
           attributes:
             tls_certificate_string:
@@ -2051,8 +2100,8 @@ ru:
           previous_custom_field_recalculation_unprocessed: Пересчет предыдущих изменений для этого пользовательского поля еще не был применен, пожалуйста, повторите попытку через несколько минут.
           referenced_in_other_fields_html:
             one: "%{name} используется для расчета атрибута проекта %{links}."
-            few: "%{name} is used in project attribute calculations: %{links}."
-            many: "%{name} is used in project attribute calculations: %{links}."
+            few: "%{name} используются для расчета атрибута проекта %{links}."
+            many: "%{name} используются для расчета атрибута проекта %{links}."
             other: "%{name} используются для расчета атрибута проекта %{links}."
           attributes:
             formula:
@@ -2387,8 +2436,8 @@ ru:
       attachment: Файл
       attribute_help_text:
         one: Текст справки атрибута
-        few: Attribute help texts
-        many: Attribute help texts
+        few: Тексты справки атрибутов
+        many: Тексты справки атрибутов
         other: Тексты справки атрибутов
       auth_provider:
         one: Провайдер аутентификации
@@ -2459,8 +2508,8 @@ ru:
         other: Маркеры доступа
       token/rss:
         one: Токен RSS
-        few: RSS tokens
-        many: RSS tokens
+        few: Токены RSS
+        many: Токены RSS
         other: Токены RSS
       type:
         one: Тип
@@ -2553,7 +2602,6 @@ ru:
       '
     base: 'Общая ошибка:'
     body: Сообщение
-    blocks_ids: Идентификаторы заблокированных рабочих пакетов
     category: Категория
     comment: Комментарий
     comments: Комментарий
@@ -3050,6 +3098,7 @@ ru:
       title: Корпоративное дополнение
       plan_title: Дополнение корпоративной версии %{plan}
       plan_name: Корпоративная версия %{plan}
+      trial_text: Эта функция включена в Вашу активную пробную версию Enterprise.
       plan_text_html: Доступно начиная с %{plan_name}.
       unlimited: Без ограничений
       already_have_token: 'Уже есть токен? Добавьте его с помощью кнопки ниже, чтобы перейти на корпоративную лицензию.
@@ -3432,7 +3481,7 @@ ru:
           new_features_list:
             line_0: 'Большое обновление Agile: выделенные объекты спринта, все рабочие пакеты видны в бэклогах и автоматическое создание доски спринта.'
             line_1: Редактирование атрибутов проекта на странице Обзор проекта.
-            line_2: Sharing of meeting templates (Basic plan and higher).
+            line_2: Совместное использование шаблонов совещаний.
             line_3: Улучшенный поиск в разделах "Время и затраты", "Доски" и многое другое.
             line_4: Возможность безопасного изменения идентификаторов проекта.
             line_5: Улучшена настройка рабочих процессов для администраторов.
@@ -3774,8 +3823,8 @@ ru:
   label_calendar_show: Показать календарь
   label_category: Категория
   label_completed: Завершено
-  label_committed_at_html: "%{committed_revision_link} at %{date}"
-  label_committed_link: committed revision %{revision_identifier}
+  label_committed_at_html: "%{committed_revision_link} на %{date}"
+  label_committed_link: зафиксированная ревизия %{revision_identifier}
   label_consent_settings: Согласие пользователя
   label_wiki_menu_item: Пункт меню wiki
   label_select_main_menu_item: Выберите новый пункт главного меню
@@ -4015,6 +4064,10 @@ ru:
   label_custom_pdf_export_settings: Настройки экспорта PDF
   label_custom_favicon: Пользовательские иконки
   label_custom_touch_icon: Пользовательский значок логотипа
+  label_departments: Organization
+  label_departments_description_html: 'Define your company’s structure by creating departments and sub-departments in a hierarchical way. This allows you to reflect reporting lines and maintain a clear, structured overview of your organization within OpenProject. You can also import an existing organization structure through [LDAP group synchronisation](ldap_docs_article).
+
+    '
   label_logout: Выход
   label_mapping_for: 'Привязки для: %{attribute}'
   label_main_menu: Боковое меню
@@ -4390,20 +4443,20 @@ ru:
     other: "%{count} файлов"
     zero: нет файлов
   label_x_days:
-    one: 1 day
-    few: "%{count} days"
-    many: "%{count} days"
+    one: 1 день
+    few: "%{count} дней"
+    many: "%{count} дней"
     other: "%{count} дней"
   label_x_working_days:
-    one: 1 working day
-    few: "%{count} working days"
-    many: "%{count} working days"
+    one: 1 рабочий день
+    few: "%{count} рабочих дней"
+    many: "%{count} рабочих дней"
     other: "%{count} рабочих дней"
   label_x_working_days_time_off:
-    one: 'Time off: 1 working day'
-    few: 'Time off: %{count} working days'
-    many: 'Time off: %{count} working days'
-    other: 'Time off: %{count} working days'
+    one: 'Время отдыха: 1 рабочий день'
+    few: 'Время отдыха: %{count} рабочих дней'
+    many: 'Время отдыха: %{count} рабочих дней'
+    other: 'Время отдыха: %{count} рабочих дней'
   label_yesterday: вчера
   label_zen_mode: Режим «Дзен» (только доска и часы)
   label_role_type: Тип
@@ -5083,6 +5136,7 @@ ru:
     '
   setting_app_subtitle: Второе название приложения
   setting_app_title: Название приложения
+  setting_organization_name: Organization name
   setting_attachment_max_size: Максимальный размер вложения
   setting_show_work_package_attachments: По умолчанию показывать вложения на вкладке "Файлы".
   setting_antivirus_scan_mode: Режим сканирования
@@ -5914,7 +5968,7 @@ ru:
       project: Нераскрыто - Проект невидим из-за отсутствия разрешений.
       ancestor: Неизвестный - выбранный родитель невидим из-за отсутствия разрешений.
       definingProject: Нераскрыто - Проект невидим из-за отсутствия разрешений.
-      definingWorkspace: Undisclosed - The workspace is invisible because of lacking permissions.
+      definingWorkspace: Нераскрыто - Рабочее пространство невидимо из-за отсутствия разрешений.
   doorkeeper:
     pre_authorization:
       status: Предавторизация

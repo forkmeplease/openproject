@@ -5,31 +5,44 @@ ru:
       wikis/xwiki_provider:
         name: Имя
         url: Адрес сервера
-        universal_identifier: Universal identifier
+        universal_identifier: Универсальный идентификатор
         authentication_method: Метод аутентификации
         authentication_methods:
           oauth2_sso: Аутентификация Single-Sign-On посредством поставщика OpenID Connect
           two_way_oauth2: Двусторонняя аутентификация OAuth 2.0
-        token_exchange_scope: XWiki Scope
-        wiki_audience: XWiki Audience
+        token_exchange_scope: Область XWiki
+        wiki_audience: Аудитория XWiki
     errors: {}
     models:
       wikis/inline_page_link:
         one: Ссылка на встроенную страницу
-        few: Inline page links
-        many: Inline page links
+        few: Ссылки на встроенную страницу
+        many: Ссылки на встроенную страницу
         other: Ссылки на встроенную страницу
       wikis/internal_provider: Внутренняя вики
       wikis/relation_page_link:
-        one: Relation page link
-        few: Relation page links
-        many: Relation page links
-        other: Relation page links
+        one: Ссылка на страницу отношения
+        few: Ссылки на страницу отношения
+        many: Ссылки на страницу отношения
+        other: Ссылки на страницу отношения
       wikis/xwiki_provider: Провайдер XWiki
+  permission_manage_wiki_page_links: Управление ссылками Вики-страницы
+  permission_view_wiki_page_links: Просмотр ссылок на вики-страницы
   project_module_wiki_platforms: Провайдеры вики
   wikis:
     buttons:
       save_and_continue: Сохранить и продолжить
+      wiki_page: Wiki-страница
+    inline_page_links_component:
+      empty_heading: Нет встроенных ссылок
+      empty_text: Встроенные ссылки на вики-страницы в описании пакета работ также будут автоматически отображаться здесь.
+      heading: Inline page links
+    page_link_component:
+      remove: Удалить ссылку на страницу
+    relation_page_links_component:
+      empty_heading: Нет связанных страниц
+      empty_text: Добавьте ссылки вручную на другие связанные вики-страницы.
+      heading: Связанные страницы
     admin:
       wiki_providers:
         index_description: Добавить внешний вики-сервис, чтобы связать рабочие пакеты с существующими вики-страницами или создать новые прямо из OpenProject.
@@ -38,12 +51,12 @@ ru:
         label_new_xwiki_instance: Новый провайдер XWiki
         no_results_title: У вас пока нет ни одного вики-провайдера.
         no_results_description: Добавьте провайдера, чтобы увидеть его здесь.
-        label_edit: Edit XWiki provider
-        name_placeholder: XWiki knowledge base
-        name_caption: Give your storage a name so that users can differentiate between multiple wiki platforms.
-        url_caption: Please add the host address of your wiki platform including the https://. It should not be longer than 255 characters.
-        xwiki_instance: XWiki Instance
-        xwiki_instance_description: Please make sure you have administration privileges in your XWiki instance before doing the setup.
+        label_edit: Редактировать провайдера XWiki
+        name_placeholder: База знаний XWiki
+        name_caption: Дайте своему хранилищу имя, чтобы пользователи могли различать несколько вики-платформ.
+        url_caption: Пожалуйста, добавьте адрес хоста Вашей вики-платформы, включая https://. Его длина не должна превышать 255 символов.
+        xwiki_instance: Экземпляр XWiki
+        xwiki_instance_description: Перед установкой убедитесь, что у вас есть права администрирования на XWiki.
         new_provider_html: Прочитайте нашу документацию по [настройке интеграции XWiki](docs_url) для получения дополнительной информации.
         sections:
           basic_details: Основные детали
