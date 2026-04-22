@@ -29,18 +29,43 @@
 #++
 
 module Backlogs
-  module CommonHelper
-    def allow_backlog_bucket_creation?(project)
-      current_user.allowed_in_project?(:create_sprints, project)
+  class BacklogBucketHeaderComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+    include OpTurbo::Streamable
+    include Primer::FetchOrFallbackHelper
+    include Redmine::I18n
+    include Backlogs::CommonHelper
+
+    attr_reader :backlog_bucket, :project, :work_packages, :collapsed, :current_user
+
+    def initialize(
+      backlog_bucket:,
+      project:,
+      work_packages:,
+      folded: false,
+      current_user: User.current
+    )
+      super()
+
+      @backlog_bucket = backlog_bucket
+      @project = project
+      @work_packages = work_packages
+      @collapsed = folded
+      @current_user = current_user
     end
 
-    def allow_sprint_creation?(project)
-      allow_backlog_bucket_creation?(project) &&
-        !project.receive_shared_sprints?
+    def wrapper_uniq_by
+      backlog_bucket.id
     end
 
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    private
+
+    def story_points
+      @story_points ||= work_packages.sum { it.story_points || 0 }
+    end
+
+    def work_package_count
+      @work_package_count ||= work_packages.size
     end
   end
 end

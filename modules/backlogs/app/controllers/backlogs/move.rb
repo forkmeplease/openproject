@@ -29,18 +29,25 @@
 #++
 
 module Backlogs
-  module CommonHelper
-    def allow_backlog_bucket_creation?(project)
-      current_user.allowed_in_project?(:create_sprints, project)
-    end
+  # TODO: remove this very temporary concern
+  module Move
+    extend ActiveSupport::Concern
 
-    def allow_sprint_creation?(project)
-      allow_backlog_bucket_creation?(project) &&
-        !project.receive_shared_sprints?
-    end
+    private
 
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    def move_attributes_from_target
+      target_type, target_id = move_params[:target_id].split(":", 2)
+
+      case target_type
+      when "sprint"
+        { backlog_bucket_id: nil, sprint_id: target_id }
+      when "backlog_bucket"
+        { backlog_bucket_id: target_id, sprint_id: nil }
+      when "inbox"
+        { backlog_bucket_id: nil, sprint_id: nil }
+      else
+        raise ArgumentError, "target_type must be one of: backlog_bucket, sprint, inbox."
+      end
     end
   end
 end

@@ -29,18 +29,31 @@
 #++
 
 module Backlogs
-  module CommonHelper
-    def allow_backlog_bucket_creation?(project)
-      current_user.allowed_in_project?(:create_sprints, project)
+  class BacklogBucketMenuComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+
+    attr_reader :backlog_bucket, :project, :current_user
+
+    def initialize(backlog_bucket:, project:, current_user: User.current, **system_arguments)
+      super()
+
+      @backlog_bucket = backlog_bucket
+      @project = project
+      @current_user = current_user
+
+      @system_arguments = system_arguments
+      @system_arguments[:menu_id] = dom_target(backlog_bucket, :menu)
+      @system_arguments[:anchor_align] = :end
+      @system_arguments[:classes] = class_names(
+        @system_arguments[:classes],
+        "hide-when-print"
+      )
     end
 
-    def allow_sprint_creation?(project)
-      allow_backlog_bucket_creation?(project) &&
-        !project.receive_shared_sprints?
-    end
+    private
 
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    def user_allowed?(permission)
+      current_user.allowed_in_project?(permission, project)
     end
   end
 end

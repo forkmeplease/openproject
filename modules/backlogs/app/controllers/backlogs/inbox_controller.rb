@@ -31,6 +31,7 @@
 module Backlogs
   class InboxController < BaseController
     include OpTurbo::ComponentStream
+    include Backlogs::Move
 
     before_action :load_work_package
 
@@ -70,8 +71,7 @@ module Backlogs
 
     # Move a work package from the Inbox to a Sprint, or reorder it within the Inbox.
     def move
-      target_type, sprint_id = move_params[:target_id].split(":", 2)
-      attributes = target_type == "sprint" ? { sprint_id: } : {}
+      attributes = move_attributes_from_target
 
       call = Stories::UpdateService
         .new(user: current_user, story: @work_package)
@@ -80,7 +80,7 @@ module Backlogs
       return failure_response(call.message) unless call.success?
 
       replace_inbox_component_via_turbo_stream
-      replace_sprint_component_via_turbo_stream(sprint_id) if target_type == "sprint"
+      replace_sprint_component_via_turbo_stream(attributes[:sprint_id]) if attributes[:sprint_id]
       respond_with_turbo_streams
     end
 

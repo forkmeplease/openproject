@@ -29,18 +29,19 @@
 #++
 
 module Backlogs
-  module CommonHelper
-    def allow_backlog_bucket_creation?(project)
-      current_user.allowed_in_project?(:create_sprints, project)
-    end
+  module BacklogBuckets
+    class DetailsForm < ApplicationForm
+      form do |f|
+        f.hidden(name: :id)
 
-    def allow_sprint_creation?(project)
-      allow_backlog_bucket_creation?(project) &&
-        !project.receive_shared_sprints?
-    end
-
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+        f.text_field(
+          label: attribute_name(:name),
+          name: :name,
+          required: true,
+          autofocus: true,
+          w: :full
+        )
+      end
     end
   end
 end

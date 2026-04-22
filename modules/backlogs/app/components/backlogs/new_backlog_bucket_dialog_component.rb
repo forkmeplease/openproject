@@ -29,18 +29,37 @@
 #++
 
 module Backlogs
-  module CommonHelper
-    def allow_backlog_bucket_creation?(project)
-      current_user.allowed_in_project?(:create_sprints, project)
+  class NewBacklogBucketDialogComponent < ApplicationComponent
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
+    include Primer::FetchOrFallbackHelper
+
+    DIALOG_ID = "new-backlog-bucket-dialog"
+    FORM_ID = "new-backlog-bucket-dialog-form"
+    FOOTER_ID = "new-backlog-bucket-dialog-footer"
+
+    STATE_DEFAULT = :create
+    STATE_OPTIONS = [STATE_DEFAULT, :edit].freeze
+
+    attr_reader :backlog_bucket, :state
+
+    delegate :create?, :edit?, to: :state
+
+    def initialize(backlog_bucket:, state: STATE_DEFAULT)
+      super
+
+      @backlog_bucket = backlog_bucket
+      @state = ActiveSupport::StringInquirer.new(fetch_or_fallback(STATE_OPTIONS, state, STATE_DEFAULT).to_s)
     end
 
-    def allow_sprint_creation?(project)
-      allow_backlog_bucket_creation?(project) &&
-        !project.receive_shared_sprints?
+    private
+
+    def title
+      create? ? t(:label_backlog_bucket_new) : t(:label_backlog_bucket_edit)
     end
 
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    def button_caption
+      create? ? t(:button_create) : t(:button_save)
     end
   end
 end

@@ -29,18 +29,34 @@
 #++
 
 module Backlogs
-  module CommonHelper
-    def allow_backlog_bucket_creation?(project)
-      current_user.allowed_in_project?(:create_sprints, project)
+  class NewBacklogBucketFormComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
+
+    FORM_ID = NewBacklogBucketDialogComponent::FORM_ID
+
+    attr_reader :backlog_bucket
+
+    def initialize(backlog_bucket:, base_errors: nil)
+      super
+
+      @backlog_bucket = backlog_bucket
+      @base_errors = base_errors
     end
 
-    def allow_sprint_creation?(project)
-      allow_backlog_bucket_creation?(project) &&
-        !project.receive_shared_sprints?
+    private
+
+    def http_verb
+      @backlog_bucket.new_record? ? :post : :put
     end
 
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
+    def form_url
+      if @backlog_bucket.new_record?
+        project_backlogs_backlog_buckets_path(@backlog_bucket.project)
+      else
+        project_backlogs_backlog_bucket_path(@backlog_bucket.project, @backlog_bucket)
+      end
     end
   end
 end
