@@ -286,7 +286,7 @@ module Import
       content_url = attachment["content"]
       mime_type = attachment["mimeType"]
       size = attachment["size"]
-      jira_client.download_attachment(content_url, filename) do |tempfile|
+      @jira_client.download_attachment(content_url, filename) do |tempfile|
         tempfile.rewind
         tempfile.define_singleton_method(:original_filename) { filename }
         tempfile.define_singleton_method(:content_type) { mime_type }
