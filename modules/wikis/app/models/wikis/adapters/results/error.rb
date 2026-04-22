@@ -30,28 +30,10 @@
 
 module Wikis
   module Adapters
-    module Providers
-      module XWiki
-        Registry = Dry::Container::Namespace.new("xwiki") do
-          namespace("authentication") do
-            # ...
-          end
-
-          namespace("commands") do
-            # ...
-          end
-
-          namespace("components") do
-            # ...
-          end
-
-          namespace("contracts") do
-            # ...
-          end
-
-          namespace("queries") do
-            register(:page_info, Queries::PageInfo)
-          end
+    module Results
+      Error = Data.define(:code, :source) do
+        def initialize(source:, code: nil)
+          super
         end
       end
     end

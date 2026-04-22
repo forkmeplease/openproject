@@ -28,32 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis
-  module Adapters
-    module Providers
-      module XWiki
-        Registry = Dry::Container::Namespace.new("xwiki") do
-          namespace("authentication") do
-            # ...
-          end
+module Wikis::Adapters::Input
+  PageInfo = Data.define(:identifier) do
+    private_class_method :new
 
-          namespace("commands") do
-            # ...
-          end
-
-          namespace("components") do
-            # ...
-          end
-
-          namespace("contracts") do
-            # ...
-          end
-
-          namespace("queries") do
-            register(:page_info, Queries::PageInfo)
-          end
-        end
-      end
+    def self.build(identifier:, contract: PageInfoContract.new)
+      contract.call(identifier:).to_monad.fmap { new(**it.to_h) }
     end
   end
 end

@@ -28,15 +28,31 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# This query is only intended for demo purposes and can be deleted once we have real queries
 module Wikis::Adapters::Providers::Internal::Queries
-  class Test
-    def initialize(provider)
-      @provider = provider
+  class PageInfo < Wikis::Adapters::BaseQuery
+    def call(input_data)
+      # TODO: should we accept implicit User.current or do we want to pass in a user explicitly?
+      wiki_page = WikiPage.visible.find_by(id: input_data.identifier)
+      return failure(code: :not_found) if wiki_page.nil?
+
+      success(
+        Wikis::Adapters::Results::PageInfo.new(
+          title: wiki_page.title,
+          href: url_for(only_path: true,
+                        controller: "/wiki",
+                        action: "show",
+                        project_id: wiki_page.project.identifier,
+                        id: wiki_page.slug)
+        )
+      )
     end
 
-    def call(*args, **opts)
-      puts "#{args} and #{opts} passed to internal test query for #{@provider}" # rubocop:disable Rails/Output
+    private
+
+    delegate :url_for, to: :url_helpers
+
+    def url_helpers
+      OpenProject::StaticRouting::StaticRouter.new.url_helpers
     end
   end
 end

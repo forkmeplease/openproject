@@ -28,32 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis
-  module Adapters
-    module Providers
-      module XWiki
-        Registry = Dry::Container::Namespace.new("xwiki") do
-          namespace("authentication") do
-            # ...
-          end
+module Wikis::Adapters::Providers::XWiki::Queries
+  class PageInfo < Wikis::Adapters::BaseQuery
+    def call(_input_data)
+      title = [
+        "What makes XWiki special?",
+        "API documentation",
+        "A brief introduction on configuring your own XWiki instance and connect it to OpenProject."
+      ].sample
 
-          namespace("commands") do
-            # ...
-          end
-
-          namespace("components") do
-            # ...
-          end
-
-          namespace("contracts") do
-            # ...
-          end
-
-          namespace("queries") do
-            register(:page_info, Queries::PageInfo)
-          end
-        end
-      end
+      success(
+        Wikis::Adapters::Results::PageInfo.new(
+          title:,
+          href: "#"
+        )
+      )
     end
   end
 end
