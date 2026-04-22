@@ -29,13 +29,20 @@
 #++
 
 module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-
-    alias_method :wiki_providers, :model
-
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+  class OAuthClientForm < ApplicationForm
+    form do |oauth_client_form|
+      oauth_client_form.text_field(
+        name: :client_id,
+        label: I18n.t("activerecord.attributes.oauth_client.client_id"),
+        required: true,
+        input_width: :large
+      )
+      oauth_client_form.text_field(
+        name: :client_secret,
+        label: I18n.t("activerecord.attributes.oauth_client.client_secret"),
+        required: true,
+        input_width: :large
+      )
     end
   end
 end

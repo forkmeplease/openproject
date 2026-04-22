@@ -28,14 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+module Wikis
+  module OAuthApplications
+    class CreateService
+      attr_accessor :user, :wiki_provider
 
-    alias_method :wiki_providers, :model
+      def initialize(wiki_provider:, user:)
+        @wiki_provider = wiki_provider
+        @user = user
+      end
 
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+      def call
+        result = nil
+        ApplicationRecord.transaction do
+          wiki_provider.oauth_application&.destroy!
+          result = ::OAuth::Applications::CreateService
+                     .new(user:)
+                     .call(
+                       name: wiki_provider.name,
+                       redirect_uri: wiki_provider.oidc_redirect_uri,
+                       scopes: "api_v3",
+                       confidential: true,
+                       owner: user,
+                       integration: wiki_provider
+                     )
+          raise ActiveRecord::Rollback unless result.success?
+        end
+        result
+      end
     end
   end
 end

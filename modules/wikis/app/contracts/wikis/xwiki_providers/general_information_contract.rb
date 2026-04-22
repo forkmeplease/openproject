@@ -28,14 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-
-    alias_method :wiki_providers, :model
-
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+module Wikis
+  module XWikiProviders
+    class GeneralInformationContract < BaseContract
+      attribute :authentication_method
+      validates :authentication_method, presence: true,
+                                        inclusion: { in: Wikis::XWikiProvider::AUTHENTICATION_METHODS }
     end
   end
 end

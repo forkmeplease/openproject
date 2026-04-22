@@ -28,14 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+module Wikis::Admin::Forms
+  class OAuthApplicationFormComponent < Wikis::Admin::WikiProviderComponent
+    def self.wrapper_key = :wiki_provider_oauth_application_section
 
-    alias_method :wiki_providers, :model
+    delegate :oauth_application, to: :wiki_provider
 
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+    options in_wizard: false
+
+    def done_button_path
+      if in_wizard
+        url_helpers.new_admin_settings_wiki_provider_path(continue_wizard: wiki_provider.id)
+      else
+        url_helpers.edit_admin_settings_wiki_provider_path(wiki_provider)
+      end
     end
   end
 end

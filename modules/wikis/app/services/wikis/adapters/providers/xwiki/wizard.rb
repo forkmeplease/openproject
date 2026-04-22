@@ -28,14 +28,33 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+module Wikis
+  module Adapters
+    module Providers
+      module XWiki
+        class Wizard < ::Wizard
+          step :general_information,
+               completed_if: ->(provider) { provider.name.present? && provider.url.present? }
 
-    alias_method :wiki_providers, :model
+          step :oauth_application,
+               section: :oauth_configuration,
+               if: ->(provider) { provider.authenticate_via_two_way_oauth2? },
+               completed_if: ->(provider) { provider.oauth_application.present? },
+               preparation: :prepare_oauth_application
 
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+          step :oauth_client,
+               section: :oauth_configuration,
+               if: ->(provider) { provider.authenticate_via_two_way_oauth2? },
+               completed_if: ->(provider) { provider.oauth_client.present? }
+
+          private
+
+          def prepare_oauth_application(wiki_provider)
+            create_result = ::Wikis::OAuthApplications::CreateService.new(wiki_provider:, user:).call
+            wiki_provider.oauth_application = create_result.result if create_result.success?
+          end
+        end
+      end
     end
   end
 end

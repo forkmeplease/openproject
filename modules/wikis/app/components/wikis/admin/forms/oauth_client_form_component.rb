@@ -28,14 +28,28 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+module Wikis::Admin::Forms
+  class OAuthClientFormComponent < Wikis::Admin::WikiProviderComponent
+    def self.wrapper_key = :wiki_provider_oauth_client_section
 
-    alias_method :wiki_providers, :model
+    options in_wizard: false,
+            oauth_client: nil
 
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+    def form_url
+      query = in_wizard ? { continue_wizard: wiki_provider.id } : {}
+      url_helpers.admin_settings_wiki_provider_oauth_client_path(wiki_provider, query)
+    end
+
+    def form_method
+      resolved_oauth_client.persisted? ? :patch : :post
+    end
+
+    def cancel_button_path
+      url_helpers.edit_admin_settings_wiki_provider_path(wiki_provider)
+    end
+
+    def resolved_oauth_client
+      oauth_client || wiki_provider.oauth_client || wiki_provider.build_oauth_client
     end
   end
 end

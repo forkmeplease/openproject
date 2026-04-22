@@ -29,13 +29,9 @@
 #++
 
 module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+  class OAuthClientInfoComponent < WikiProviderComponent
+    def self.wrapper_key = :wiki_provider_oauth_client_section
 
-    alias_method :wiki_providers, :model
-
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
-    end
+    delegate :oauth_client, to: :wiki_provider
   end
 end

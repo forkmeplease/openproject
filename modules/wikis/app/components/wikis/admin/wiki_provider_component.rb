@@ -29,13 +29,10 @@
 #++
 
 module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
+  class WikiProviderComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
+    include OpTurbo::Streamable
 
-    alias_method :wiki_providers, :model
-
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
-    end
+    alias_method :wiki_provider, :model
   end
 end

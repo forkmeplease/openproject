@@ -29,13 +29,20 @@
 #++
 
 module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
-
-    alias_method :wiki_providers, :model
-
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+  class XWikiAuthenticationMethodSelectForm < ApplicationForm
+    form do |f|
+      f.select_list(
+        name: :authentication_method,
+        label: I18n.t("activerecord.attributes.wikis/xwiki_provider.authentication_method"),
+        required: true
+      ) do |select|
+        Wikis::XWikiProvider::AUTHENTICATION_METHODS.each do |method|
+          select.option(
+            label: I18n.t("activerecord.attributes.wikis/xwiki_provider.authentication_methods.#{method}"),
+            value: method
+          )
+        end
+      end
     end
   end
 end

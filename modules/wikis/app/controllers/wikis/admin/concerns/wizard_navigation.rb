@@ -28,14 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class WikiProviderListComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+module Wikis
+  module Admin
+    module Concerns
+      module WizardNavigation
+        extend ActiveSupport::Concern
 
-    alias_method :wiki_providers, :model
+        def in_wizard?
+          params[:continue_wizard].present?
+        end
 
-    def provider_url(wiki_provider)
-      wiki_provider.url.presence
+        def redirect_to_wizard(wiki_provider)
+          redirect_to new_admin_settings_wiki_provider_path(continue_wizard: wiki_provider.id),
+                      status: :see_other
+        end
+      end
     end
   end
 end
