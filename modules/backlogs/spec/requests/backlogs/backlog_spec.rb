@@ -106,6 +106,14 @@ RSpec.describe "Backlogs::Backlog", :skip_csrf, type: :rails_request do
           expect(response.body).to include('id="sprint_backlogs_container"')
         end
       end
+
+      it "uses the inbox border box as the drag mirror container" do
+        get "/projects/#{project.identifier}/backlogs/backlog", headers: { "Turbo-Frame" => "backlogs_container" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(%(id="inbox_#{project.id}"))
+        expect(response.body).to include('data-generic-drag-and-drop-target="container mirrorContainer"')
+      end
     end
   end
 

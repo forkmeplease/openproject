@@ -28,29 +28,25 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs
-  class StoryComponent < ApplicationComponent
-    include OpPrimer::ComponentHelpers
+require "spec_helper"
+require_relative "backlog"
 
-    attr_reader :story, :sprint, :project, :current_user
+RSpec.describe Pages::Backlog do
+  subject(:backlog_page) { described_class.new(project) }
 
-    def initialize(story:, sprint:, project:, current_user: User.current)
-      super()
+  let(:project) { build_stubbed(:project) }
+  let(:work_package) { build_stubbed(:work_package) }
+  let(:sprint) { build_stubbed(:agile_sprint) }
 
-      @story = story
-      @sprint = sprint
-      @project = project
-      @current_user = current_user
+  describe "#drag_work_package" do
+    it "raises when neither before nor into is provided" do
+      expect { backlog_page.drag_work_package(work_package) }
+        .to raise_error(ArgumentError, "You must specify either before or into")
     end
 
-    private
-
-    def story_points
-      story.story_points || 0
-    end
-
-    def menu_src
-      menu_project_backlogs_work_package_path(project, sprint_id: sprint.id, id: story.id)
+    it "raises when both before and into are provided" do
+      expect { backlog_page.drag_work_package(work_package, before: work_package, into: sprint) }
+        .to raise_error(ArgumentError, "You must specify either before or into")
     end
   end
 end
