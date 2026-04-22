@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Injector,
   Input,
   OnDestroy,
@@ -150,6 +151,8 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
 
   public buttonPlaceholder:DisabledButtonPlaceholder|undefined;
 
+  private readonly states = inject(States);
+
   constructor(
     readonly apiv3Service:ApiV3Service,
     readonly I18n:I18nService,
@@ -177,7 +180,6 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
     readonly keepTab:KeepTabService,
     readonly currentProject:CurrentProjectService,
     readonly pathHelper:PathHelperService,
-    readonly states:States,
   ) {
     super(I18n, injector);
   }

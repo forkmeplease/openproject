@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
   Input,
   Injector,
   OnInit,
@@ -93,6 +94,8 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
 
   private currentQueryUpdatedMonitoring:Subscription;
 
+  private readonly wpStates = inject(States);
+
   constructor(
     readonly I18n:I18nService,
     readonly state:StateService,
@@ -111,7 +114,6 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
     readonly QueryUpdated:QueryUpdatedService,
     readonly pathHelper:PathHelperService,
     readonly currentProject:CurrentProjectService,
-    readonly wpStates:States,
 ) {
     super();
   }

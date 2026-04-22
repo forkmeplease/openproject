@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import {
   CalendarOptions,
   DatesSetArg,
@@ -91,6 +91,8 @@ export class OpWorkPackagesCalendarService extends UntilDestroyedMixin {
       take(1),
     );
 
+  private readonly states = inject(States);
+
   constructor(
     private I18n:I18nService,
     private configuration:ConfigurationService,
@@ -114,7 +116,6 @@ export class OpWorkPackagesCalendarService extends UntilDestroyedMixin {
     readonly calendarService:OpCalendarService,
     readonly weekdayService:WeekdayService,
     readonly dayService:DayResourceService,
-    readonly states:States,
   ) {
     super();
   }
