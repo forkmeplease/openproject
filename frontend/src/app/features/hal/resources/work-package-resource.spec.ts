@@ -141,6 +141,25 @@ describe('WorkPackage', () => {
       });
     });
 
+    describe('when displayId is absent but present on the self link (linked ancestor/child)', () => {
+      beforeEach(() => {
+        source = {
+          _links: {
+            self: {
+              href: '/api/v3/work_packages/11099',
+              title: 'subj child',
+              displayId: 'ACSMT-15',
+            },
+          },
+        };
+        createWorkPackage();
+      });
+
+      it('should fall back to the semantic identifier on the self link', () => {
+        expect(workPackage.displayId).toEqual('ACSMT-15');
+      });
+    });
+
 });
 
   describe('formattedId', () => {

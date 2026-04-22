@@ -137,11 +137,18 @@ export class WorkPackageBaseResource extends HalResource {
    * (primary key) should only appear in data attributes and internal
    * state management (selection, focus, hover).
    *
-   * Falls back to `id` when `displayId` is absent from the API response
-   * (defensive against stale cache during rolling deploys).
+   * Falls back to the self link's `displayId` — ancestor/children links
+   * in the API expose `displayId` alongside `href`/`title` because those
+   * HAL resources are built from a link payload alone, without a
+   * top-level `displayId`. Finally falls back to `id` (defensive against
+   * stale cache during rolling deploys, and for resources built from
+   * bare hrefs).
    */
   public get displayId():string {
-    return this.$source.displayId?.toString() ?? this.id?.toString() ?? '';
+    return this.$source.displayId?.toString()
+      ?? this.$source._links?.self?.displayId?.toString()
+      ?? this.id?.toString()
+      ?? '';
   }
 
   /**
