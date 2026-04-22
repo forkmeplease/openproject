@@ -95,7 +95,14 @@ describe('WorkPackage', () => {
     injector = TestBed.inject(Injector);
     halResourceNotification = injector.get(HalResourceNotificationService);
 
-    halResourceService.registerResource('WorkPackage', { cls: WorkPackageResource });
+    halResourceService.registerResource('WorkPackage', {
+      cls: WorkPackageResource,
+      attrTypes: {
+        parent: 'WorkPackage',
+        ancestors: 'WorkPackage',
+        children: 'WorkPackage',
+      },
+    });
   });
 
   describe('when creating an empty work package', () => {
