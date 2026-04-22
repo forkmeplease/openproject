@@ -176,6 +176,7 @@ RSpec.describe "Edit", :js do
         planning_page.click_in_sprint_story_move_menu(work_package, "Move to sprint")
 
         within("#move-to-sprint-dialog") do
+          expect(page).to have_no_select("target_id", with_options: [first_sprint.name])
           expect(page).to have_select("target_id", with_options: [second_sprint.name])
 
           select second_sprint.name, from: "target_id"

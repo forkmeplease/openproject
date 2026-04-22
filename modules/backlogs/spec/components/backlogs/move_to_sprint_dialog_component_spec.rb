@@ -105,4 +105,17 @@ RSpec.describe Backlogs::MoveToSprintDialogComponent, type: :component do
       expect(page).to have_no_css("option", text: "Other Sprint")
     end
   end
+
+  context "when the work package is already in a sprint" do
+    let!(:current_sprint) { create(:agile_sprint, project:, name: "Current Sprint") }
+    let!(:target_sprint) { create(:agile_sprint, project:, name: "Target Sprint") }
+    let(:work_package) { create(:work_package, project:, sprint: current_sprint) }
+
+    it "excludes that sprint from the options" do
+      render_component
+
+      expect(page).to have_no_css("option", text: "Current Sprint")
+      expect(page).to have_css("option[value='sprint:#{target_sprint.id}']", text: "Target Sprint")
+    end
+  end
 end

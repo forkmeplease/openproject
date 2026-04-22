@@ -37,7 +37,7 @@ module Backlogs
     # Deferred ActionMenu items (Primer include-fragment).
     def menu
       max_position = @allowed_stories.maximum(:position) || 0
-      open_sprints_exist = Agile::Sprint.for_project(@project).visible.not_completed.many?
+      open_sprints_exist = Agile::Sprint.for_project(@project).visible.not_completed.where.not(id: @sprint.id).exists?
 
       render(Backlogs::StoryMenuListComponent.new(
                story: @story,

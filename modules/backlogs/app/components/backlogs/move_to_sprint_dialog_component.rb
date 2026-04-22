@@ -45,6 +45,7 @@ module Backlogs
       @project = project
       @move_action = move_action
       @sprints = Agile::Sprint.for_project(@project).not_completed.order_by_date
+      @sprints = @sprints.where.not(id: work_package.sprint_id) if work_package.sprint_id
     end
   end
 end
