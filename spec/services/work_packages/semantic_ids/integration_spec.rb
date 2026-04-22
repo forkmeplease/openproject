@@ -32,19 +32,20 @@ require "spec_helper"
 
 # End-to-end tests verifying that the registry is maintained correctly through
 # the full service stack: CreateService, UpdateService, and Projects::UpdateService.
-RSpec.describe "SemanticIds registry integration", type: :model do
+RSpec.describe "SemanticIds registry integration",
+               type: :model,
+               with_flag: { semantic_work_package_ids: true },
+               with_settings: { work_packages_identifier: "semantic" } do
   shared_let(:role) do
     create(:project_role,
            permissions: %i[view_work_packages add_work_packages edit_work_packages move_work_packages edit_project])
   end
   shared_let(:user) { create(:user) }
 
-  # Projects with uppercase identifiers require alphanumeric mode — stub before creating.
   let(:project) { create(:project, identifier: "PROJ", wp_sequence_counter: 0) }
   let(:target_project) { create(:project, identifier: "DEST", wp_sequence_counter: 0) }
 
   before do
-    allow(Setting::WorkPackageIdentifier).to receive_messages(semantic?: true, classic?: false)
     create(:member, principal: user, project:, roles: [role])
     create(:member, principal: user, project: target_project, roles: [role])
     login_as(user)
@@ -242,6 +243,48 @@ RSpec.describe "SemanticIds registry integration", type: :model do
       WorkPackages::UpdateService.new(user:, model: wp2).call(project: target_project)
 
       expect(WorkPackage.find_by_display_id("PROJ-2")).to eq(wp2)
+    end
+  end
+
+  describe "semantic_identifier_fields_consistent validation does not block service paths" do
+    let(:attributes) do
+      {
+        subject: "A task",
+        project:,
+        type: project.types.first,
+        status: create(:default_status),
+        priority: create(:default_priority)
+      }
+    end
+
+    context "in classic mode", with_settings: { work_packages_identifier: "classic" } do
+      let(:project) { create(:project, wp_sequence_counter: 0) }
+      let(:target_project) { create(:project, wp_sequence_counter: 0) }
+
+      it "CreateService succeeds with both identifier fields absent" do
+        result = WorkPackages::CreateService.new(user:).call(**attributes)
+        expect(result).to be_success
+        expect(result.result.identifier).to be_nil
+        expect(result.result.sequence_number).to be_nil
+      end
+
+      it "UpdateService succeeds when identifier fields remain nil" do
+        wp = WorkPackages::CreateService.new(user:).call(**attributes).result
+        result = WorkPackages::UpdateService.new(user:, model: wp).call(subject: "Updated subject")
+        expect(result).to be_success
+      end
+    end
+
+    context "in semantic mode", with_settings: { work_packages_identifier: "semantic" } do
+      it "UpdateService on a plain attribute change does not disturb identifier fields" do
+        wp = WorkPackages::CreateService.new(user:).call(**attributes).result
+        original_identifier = wp.identifier
+
+        result = WorkPackages::UpdateService.new(user:, model: wp).call(subject: "Updated subject")
+        expect(result).to be_success
+        expect(wp.reload.identifier).to eq(original_identifier)
+        expect(wp.reload.sequence_number).to be_present
+      end
     end
   end
 
