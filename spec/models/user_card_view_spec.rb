@@ -101,4 +101,56 @@ RSpec.describe UserCardView do
       expect(child).to be_valid
     end
   end
+
+  describe "#results" do
+    let!(:alice)  { create(:user, firstname: "Alice", lastname: "Anderson") }
+    let!(:bob)    { create(:user, firstname: "Bob",   lastname: "Brown") }
+    let!(:locked) { create(:locked_user, firstname: "Carol", lastname: "Clark") }
+
+    it "returns nil when there is no query" do
+      expect(view.results).to be_nil
+    end
+
+    it "delegates to the effective query and respects its filters" do
+      query = UserQuery.new(name: "Active only")
+      query.where("status", "=", ["active"])
+      query.save!
+
+      view.query = query
+      expect(view.results).to contain_exactly(alice, bob)
+      expect(view.results).not_to include(locked)
+    end
+
+    it "applies a name filter and sort defined on the query" do
+      query = UserQuery.new(name: "By name")
+      query.where("name", "~", ["Brown"])
+      query.save!
+
+      view.query = query
+      expect(view.results).to contain_exactly(bob)
+    end
+
+    it "bypasses filters and returns manually-added users in their stored order" do
+      query = UserQuery.new(name: "Manual")
+      query.where("status", "=", ["active"])
+      query.save!
+
+      OrderedPersistedQueryEntity.create!(persisted_query: query, entity: bob,    position: 1)
+      OrderedPersistedQueryEntity.create!(persisted_query: query, entity: locked, position: 2)
+      OrderedPersistedQueryEntity.create!(persisted_query: query, entity: alice,  position: 3)
+
+      view.query = query
+      expect(view.results.to_a).to eq([bob, locked, alice])
+    end
+
+    it "walks up the parent chain to find the query" do
+      query = UserQuery.new(name: "Active only")
+      query.where("status", "=", ["active"])
+      query.save!
+
+      parent = described_class.create!(name: "Parent", query:)
+      child = described_class.create!(name: "Child", parent:)
+      expect(child.results).to contain_exactly(alice, bob)
+    end
+  end
 end

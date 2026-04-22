@@ -49,6 +49,10 @@ class UserCardView < PersistedView
 
   validate :query_must_be_user_query
 
+  def results
+    effective_query&.results
+  end
+
   private
 
   def query_must_be_user_query
