@@ -46,7 +46,7 @@ class PersistedQuery < ApplicationRecord
            dependent: :destroy,
            inverse_of: :persisted_query
 
-  validates :name, presence: true, length: { maximum: 255 }
+  validates :name, length: { maximum: 255, allow_nil: true }
 
   def self.inherited(subclass)
     super
@@ -57,6 +57,14 @@ class PersistedQuery < ApplicationRecord
 
   def self.register_query(&)
     Queries::Register.register(self, &)
+  end
+
+  def user
+    principal if principal.is_a?(User)
+  end
+
+  def user=(user)
+    self.principal = user
   end
 
   # Returns the query results, bypassing filters and orders when the query has

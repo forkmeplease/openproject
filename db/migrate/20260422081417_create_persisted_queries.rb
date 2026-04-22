@@ -32,7 +32,7 @@ class CreatePersistedQueries < ActiveRecord::Migration[8.1]
   def change
     create_table :persisted_queries do |t|
       t.string :type
-      t.string :name
+      t.string :name, null: true
       t.references :project, foreign_key: true, null: true
       t.references :principal, foreign_key: { to_table: :users }, null: true
       t.jsonb :filters, default: []

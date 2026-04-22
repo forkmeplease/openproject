@@ -15,12 +15,6 @@ RSpec.describe PersistedQuery do
       expect(persisted_query).to be_valid
     end
 
-    it "requires a name" do
-      persisted_query.name = nil
-      expect(persisted_query).not_to be_valid
-      expect(persisted_query.errors[:name]).to be_present
-    end
-
     it "rejects names longer than 255 characters" do
       persisted_query.name = "a" * 256
       expect(persisted_query).not_to be_valid
