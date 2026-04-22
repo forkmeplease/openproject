@@ -130,6 +130,40 @@ RSpec.describe "SemanticIds registry integration", type: :model do
     end
   end
 
+  describe "WP move in classic mode when sequence numbers linger from semantic mode" do
+    # The outer before block stubs semantic?: true, so both WPs automatically receive
+    # sequence_number = 1 in their respective projects — simulating the state after the
+    # user enabled semantic IDs and then switched back to classic.
+    let!(:work_package) { create(:work_package, project:) }
+    let!(:conflict_wp)  { create(:work_package, project: target_project) }
+
+    before do
+      # Simulate the user switching back to classic mode after semantic IDs were active.
+      allow(Setting::WorkPackageIdentifier).to receive_messages(semantic?: false, classic?: true)
+    end
+
+    it "succeeds without PG::UniqueViolation and clears the sequence number" do
+      result = WorkPackages::UpdateService.new(user:, model: work_package).call(project: target_project)
+
+      expect(result).to be_success
+      expect(work_package.reload.project).to eq(target_project)
+      expect(work_package.reload.sequence_number).to be_nil
+    end
+
+    it "also clears sequence numbers on descendants to avoid conflicts" do
+      child = create(:work_package, project:, parent: work_package)
+      # Manually assign a sequence_number to the child to simulate leftover semantic state,
+      # then create a conflicting WP in the target project with the same sequence number.
+      child.update_columns(sequence_number: 2, identifier: "PROJ-2")
+      create(:work_package, project: target_project).tap { |wp| wp.update_columns(sequence_number: 2) }
+
+      result = WorkPackages::UpdateService.new(user:, model: work_package).call(project: target_project)
+
+      expect(result).to be_success
+      expect(child.reload.sequence_number).to be_nil
+    end
+  end
+
   describe "Project rename via Projects::UpdateService" do
     # after_create auto-registers wp1 as "PROJ-1" (seq=1) and wp2 as "PROJ-2" (seq=2)
     let!(:wp1) { create(:work_package, project:) }
