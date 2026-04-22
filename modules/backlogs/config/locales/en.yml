@@ -201,6 +201,7 @@ en:
         copy_url_to_clipboard: "Copy URL to clipboard"
         copy_work_package_id: "Copy work package ID"
         move_menu: "Move"
+        move_to_sprint: "Move to sprint"
 
     burndown_chart:
       show:

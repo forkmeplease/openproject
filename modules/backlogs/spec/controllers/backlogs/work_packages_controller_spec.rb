@@ -202,6 +202,66 @@ RSpec.describe Backlogs::WorkPackagesController do
       expect(response.body).to include(I18n.t(:"js.button_open_details"))
     end
 
+    context "when another open sprint exists" do
+      let!(:other_open_sprint) { create(:agile_sprint, name: "Sprint 2", project:) }
+
+      before { allow(Backlogs::StoryMenuListComponent).to receive(:new).and_call_original }
+
+      it "passes open_sprints_exist: true to the menu component" do
+        subject
+
+        expect(Backlogs::StoryMenuListComponent)
+          .to have_received(:new)
+          .with(hash_including(open_sprints_exist: true))
+      end
+    end
+
+    context "when no other open sprints exist" do
+      before { allow(Backlogs::StoryMenuListComponent).to receive(:new).and_call_original }
+
+      it "passes open_sprints_exist: false to the menu component" do
+        subject
+
+        expect(Backlogs::StoryMenuListComponent)
+          .to have_received(:new)
+          .with(hash_including(open_sprints_exist: false))
+      end
+    end
+
+    context "with a user lacking project permission" do
+      let(:user) { create(:user) }
+
+      it "responds with 404" do
+        subject
+        expect(response).to have_http_status :not_found
+      end
+    end
+  end
+
+  describe "GET #move_to_sprint_dialog" do
+    subject do
+      get :move_to_sprint_dialog,
+          params: { project_id: project.id, sprint_id: agile_sprint.id, id: story.id },
+          format: :turbo_stream
+    end
+
+    context "when user has manage_sprint_items permission" do
+      it "responds with a dialog turbo stream", :aggregate_failures do
+        subject
+        expect(response).to be_successful
+        expect(response).to have_turbo_stream action: "dialog"
+      end
+    end
+
+    context "with a user lacking manage_sprint_items permission" do
+      let(:user) { create(:user, member_with_permissions: { project => %i[view_sprints view_work_packages] }) }
+
+      it "responds with 403" do
+        subject
+        expect(response).to have_http_status :forbidden
+      end
+    end
+
     context "with a user lacking project permission" do
       let(:user) { create(:user) }
 
