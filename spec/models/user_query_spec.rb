@@ -65,7 +65,7 @@ RSpec.describe UserQuery do
 
       it "is invalid if the filter is invalid" do
         instance.where("name", "=", [""])
-        expect(instance).to be_invalid
+        expect(instance).not_to be_valid
       end
     end
   end
@@ -90,7 +90,7 @@ RSpec.describe UserQuery do
 
       it "is invalid if the filter is invalid" do
         instance.where("status", "=", [""])
-        expect(instance).to be_invalid
+        expect(instance).not_to be_valid
       end
     end
   end
@@ -100,12 +100,7 @@ RSpec.describe UserQuery do
 
     before do
       allow(Group)
-        .to receive(:exists?)
-        .and_return(true)
-
-      allow(Group)
-        .to receive(:all)
-        .and_return([group_1])
+        .to receive_messages(exists?: true, all: [group_1])
 
       instance.where("group", "=", [group_1.id])
     end
@@ -127,7 +122,7 @@ RSpec.describe UserQuery do
 
       it "is invalid if the filter is invalid" do
         instance.where("group", "=", [""])
-        expect(instance).to be_invalid
+        expect(instance).not_to be_valid
       end
     end
   end
@@ -147,7 +142,7 @@ RSpec.describe UserQuery do
 
     describe "valid?" do
       it "is false" do
-        expect(instance).to be_invalid
+        expect(instance).not_to be_valid
       end
 
       it "returns the error on the filter" do
@@ -179,7 +174,7 @@ RSpec.describe UserQuery do
 
     describe "#results", with_settings: { user_format: :firstname_lastname } do
       let(:order_sql) do
-        <<~SQL
+        <<~SQL.squish
           CASE
           WHEN users.type = 'User' THEN LOWER(concat_ws(' ', users.firstname, users.lastname))
           WHEN users.type != 'User' THEN LOWER(users.lastname)
@@ -228,7 +223,7 @@ RSpec.describe UserQuery do
 
     describe "valid?" do
       it "is false" do
-        expect(instance).to be_invalid
+        expect(instance).not_to be_valid
       end
     end
   end
@@ -242,7 +237,7 @@ RSpec.describe UserQuery do
     it "stores the subclass name in the type column" do
       uq = described_class.create!(name: "Named")
       expect(uq.reload.type).to eq("UserQuery")
-      expect(PersistedQuery.find(uq.id)).to be_a(UserQuery)
+      expect(PersistedQuery.find(uq.id)).to be_a(described_class)
     end
 
     it "round-trips filters through serialization" do
