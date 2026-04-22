@@ -180,8 +180,8 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
     }
   }
 
-  openStateLink(event:{ workPackageId:string; routingId?:string; requestedState:'show'|'split' }) {
-    const routingId = event.routingId ?? this.resolveRoutingId(event.workPackageId);
+  openStateLink(event:{ workPackageId:string; requestedState:'show'|'split' }) {
+    const routingId = this.resolveRoutingId(event.workPackageId);
     const params = {
       workPackageId: routingId,
       focus: true,

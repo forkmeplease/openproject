@@ -58,7 +58,6 @@ export class UiStateLinkBuilder {
     a.href = href;
     a.classList.add(uiStateLinkClass);
     a.dataset.workPackageId = workPackageId;
-    a.dataset.routingId = idForHref;
     a.dataset.wpState = state;
 
     a.setAttribute('title', title);

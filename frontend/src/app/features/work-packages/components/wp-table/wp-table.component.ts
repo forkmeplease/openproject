@@ -90,7 +90,7 @@ export class WorkPackagesTableComponent extends UntilDestroyedMixin implements O
 
   @Output() itemClicked = new EventEmitter<{ workPackageId:string, double:boolean }>();
 
-  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, routingId?:string, requestedState:string }>();
+  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, requestedState:string }>();
 
   public configuration:WorkPackageTableConfiguration;
 
