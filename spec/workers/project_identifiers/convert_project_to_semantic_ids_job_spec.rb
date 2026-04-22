@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -27,30 +28,18 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-FactoryBot.define do
-  factory :scheduled_meeting, class: "ScheduledMeeting" do
-    recurring_meeting
-    cancelled { false }
-    meeting { nil }
-    start_time { Date.tomorrow + 10.hours }
+require "rails_helper"
 
-    trait :scheduled
+RSpec.describe ProjectIdentifiers::ConvertProjectToSemanticIdsJob do
+  describe "#perform" do
+    it "delegates to ConvertProjectToSemanticService" do
+      project = create(:project)
+      service = instance_double(ProjectIdentifiers::ConvertProjectToSemanticService, call: nil)
+      allow(ProjectIdentifiers::ConvertProjectToSemanticService).to receive(:new).with(project).and_return(service)
 
-    trait :cancelled do
-      cancelled { true }
-    end
+      described_class.new.perform(project.id)
 
-    trait :persisted do
-      transient do
-        meeting_start_time { nil }
-      end
-
-      after(:build) do |schedule, evaluator|
-        schedule.meeting = build(:meeting,
-                                 recurring_meeting: schedule.recurring_meeting,
-                                 start_time: evaluator.meeting_start_time || schedule.start_time,
-                                 project: schedule.recurring_meeting.project)
-      end
+      expect(service).to have_received(:call)
     end
   end
 end
