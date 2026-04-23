@@ -33,15 +33,6 @@ module Wikis
     include Dry::Monads[:result]
 
     def count(linkable)
-      # Incomplete implementation until connection to Wikis API is done to fetch relation wiki page links
-      # from external providers.
-      # TODO: Replace with complete implementation
-
-      PageLink.joins(:provider)
-              .merge(Provider.enabled)
-              .where(linkable:)
-              .count
-
       relation_page_links = Provider.enabled.sum { |provider| relation_page_link_infos_for(provider:, linkable:).size }
 
       relation_page_links +
