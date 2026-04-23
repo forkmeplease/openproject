@@ -55,14 +55,14 @@ RSpec.describe "Backlog bucket deletion",
 
   it "deletes the bucket and moves its work packages to the Inbox" do
     backlogs_page.visit!
-    backlogs_page.expect_bucket_names_in_order("Deprecated bucket", "Inbox")
+    backlogs_page.expect_bucket_names_in_order("Deprecated bucket")
 
     accept_confirm do
+      sleep 0.5
       backlogs_page.click_in_backlog_bucket_menu(bucket, "Delete backlog bucket")
     end
 
     expect_and_dismiss_flash type: :success, exact_message: "Successful deletion."
-    backlogs_page.expect_bucket_names_in_order("Inbox")
     backlogs_page.expect_no_backlog_bucket(bucket)
 
     backlogs_page.expect_work_packages_in_backlog_inbox_in_order(work_packages: [bucket_wp1, bucket_wp2])

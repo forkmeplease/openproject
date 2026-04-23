@@ -335,7 +335,7 @@ module Pages
     end
 
     def bucket_names_in_order
-      page.find_all("#owner_backlogs_container > section .CollapsibleHeader-title").map(&:text)
+      page.find_all("#owner_backlogs_container section .CollapsibleHeader-title").map(&:text)
     end
 
     def expect_bucket_names_in_order(*bucket_names)
@@ -618,7 +618,7 @@ module Pages
     end
 
     def backlog_inbox_selector
-      "#new_agile_backlog_bucket"
+      test_selector("backlog-inbox")
     end
 
     def story_selector(story)

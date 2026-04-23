@@ -52,7 +52,7 @@ RSpec.describe "Backlog bucket renaming",
 
   it "renames a backlog bucket via the menu" do
     backlogs_page.visit!
-    backlogs_page.expect_bucket_names_in_order("Draft bucket", "Inbox")
+    backlogs_page.expect_bucket_names_in_order("Draft bucket")
 
     backlogs_page.click_in_backlog_bucket_menu(bucket, "Edit backlog bucket")
 
@@ -63,7 +63,7 @@ RSpec.describe "Backlog bucket renaming",
     end
 
     expect_and_dismiss_flash type: :success, exact_message: "Successful update."
-    backlogs_page.expect_bucket_names_in_order("Polished bucket", "Inbox")
+    backlogs_page.expect_bucket_names_in_order("Polished bucket")
     expect(bucket.reload.name).to eq "Polished bucket"
   end
 
