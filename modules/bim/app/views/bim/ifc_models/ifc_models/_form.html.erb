@@ -80,6 +80,7 @@ See COPYRIGHT and LICENSE files for more details.
       } else {
         title = fileName;
       }
+      var csrfToken = jQuery('meta[name="csrf-token"]').attr("content");
 
       return jQuery.ajax({
         type: "post",
@@ -89,6 +90,7 @@ See COPYRIGHT and LICENSE files for more details.
           withCredentials: true
         },
         data: {
+          authenticity_token: csrfToken,
           title: title,
           isDefault: jQuery("#bim_ifc_models_ifc_model_is_default").is(":checked") ? 1 : 0,
           filesize: fileNameField[0].files[0].size
