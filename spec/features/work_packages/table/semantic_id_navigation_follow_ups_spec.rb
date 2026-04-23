@@ -65,6 +65,7 @@ RSpec.describe "Work package table navigation follow-ups use displayId",
         loop do
           copied = page.evaluate_script("window.__lastCopiedText")
           break if copied
+
           sleep 0.1
         end
       end
@@ -82,7 +83,7 @@ RSpec.describe "Work package table navigation follow-ups use displayId",
       wp_table.row(work_package).click
 
       # Click the toolbar info icon
-      page.find("#work-packages-details-view-button").click
+      page.find_by_id("work-packages-details-view-button").click
 
       expect(page).to have_current_path(
         %r{/details/#{Regexp.escape(semantic_id)}($|/|\?)}
@@ -107,7 +108,7 @@ RSpec.describe "Work package table navigation follow-ups use displayId",
       expect(page).to have_current_path(
         %r{/details/#{Regexp.escape(other_semantic_id)}($|/|\?)}
       )
-      expect(page).not_to have_current_path(
+      expect(page).to have_no_current_path(
         %r{/details/#{other_wp.id}($|/|\?)}
       )
     end
