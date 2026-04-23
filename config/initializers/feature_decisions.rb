@@ -76,4 +76,5 @@ OpenProject::FeatureDecisions.add :semantic_work_package_ids,
                                                "See #41855 for details."
 
 OpenProject::FeatureDecisions.add :backlog_buckets,
-                                  description: "Enables backlog buckets."
+                                  description: "Enables backlog buckets.",
+                                  force_active: true
