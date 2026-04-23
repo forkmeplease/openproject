@@ -46,6 +46,9 @@ import {
 import {
   KeepTabService
 } from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
+import { WP_ID_URL_PATTERN } from 'core-app/shared/helpers/work-package-id-pattern';
+
+const DETAILS_URL_PATTERN = new RegExp(`/details/(${WP_ID_URL_PATTERN})(?:/|$)`);
 
 @Component({
   selector: 'wp-single-card',
@@ -156,8 +159,8 @@ export class WorkPackageSingleCardComponent extends UntilDestroyedMixin implemen
             // In non-router views (e.g. Team Planner, Calendar):
             // Use URL-based detection so that closing the split view (which changes the URL
             // but does not clear the selection service) correctly deselects the card.
-            // Matches either numeric or semantic identifier segments.
-            const urlMatch = /\/details\/([^/?#]+)/.exec(window.location.pathname);
+            // Matches either numeric or semantic identifier segments via the shared pattern.
+            const urlMatch = DETAILS_URL_PATTERN.exec(window.location.pathname);
             return urlMatch?.[1] === this.workPackage.id
               || urlMatch?.[1] === this.workPackage.displayId;
           }
