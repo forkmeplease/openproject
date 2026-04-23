@@ -26,56 +26,54 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { Extension } from '@tiptap/core';
-import { Plugin, PluginKey } from '@tiptap/pm/state';
+import { createExtension } from '@blocknote/core';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { buildExternalRedirectUrl, isExternalLinkCandidate, isLinkExternal } from 'core-stimulus/helpers/external-link-helpers';
 
 /**
- * TipTap extension that intercepts clicks on external links and routes them
+ * BlockNote extension that intercepts clicks on external links and routes them
  * through `/external_redirect` for phishing prevention.
  *
  * Uses ProseMirror's `handleDOMEvents.mousedown` to intercept before
  * ProseMirror creates its internal MouseDown tracker. Returning `true`
  * prevents the entire ProseMirror click chain (mousedown → MouseDown.up →
- * handleSingleClick → handleClick), so TipTap's Link extension never calls
+ * handleSingleClick → handleClick), so the editor never calls
  * `window.open` with the original URL. Only our redirect window opens.
  *
  * This extension should only be registered when external link capture is
- * enabled — when disabled, TipTap's default `openOnClick: true` handles
- * link clicks natively.
+ * enabled — when disabled, the editor's default link handling applies and
+ * link clicks are handled natively.
  */
-export const ExternalLinkCaptureExtension = Extension.create({
-  name: 'externalLinkCapture',
+export const ExternalLinkCaptureExtension = createExtension({
+  key: 'externalLinkCapture',
 
-  addProseMirrorPlugins() {
-    return [
-      new Plugin({
-        key: new PluginKey('externalLinkCapture'),
-        props: {
-          handleDOMEvents: {
-            mousedown: (view, event) => {
-              // Left-click (0) and middle-click (1) only — right-click (2)
-              // opens the native context menu which reads href from the DOM
-              // and cannot be intercepted via JavaScript.
-              if (event.button !== 0 && event.button !== 1) return false;
+  prosemirrorPlugins: [
+    new Plugin({
+      key: new PluginKey('externalLinkCapture'),
+      props: {
+        handleDOMEvents: {
+          mousedown: (view, event) => {
+            // Left-click (0) and middle-click (1) only — right-click (2)
+            // opens the native context menu which reads href from the DOM
+            // and cannot be intercepted via JavaScript.
+            if (event.button !== 0 && event.button !== 1) return false;
 
-              const target = event.target instanceof Element
-                ? event.target
-                : (event.target as Node)?.parentElement;
-              const link = target?.closest('a');
-              if (!(link instanceof HTMLAnchorElement)) return false;
-              if (!view.dom.contains(link)) return false;
-              if (!isExternalLinkCandidate(link)) return false;
-              if (!isLinkExternal(link)) return false;
-              if (link.dataset.allowExternalLink) return false;
+            const target = event.target instanceof Element
+              ? event.target
+              : (event.target as Node)?.parentElement;
+            const link = target?.closest('a');
+            if (!(link instanceof HTMLAnchorElement)) return false;
+            if (!view.dom.contains(link)) return false;
+            if (!isExternalLinkCandidate(link)) return false;
+            if (!isLinkExternal(link)) return false;
+            if (link.dataset.allowExternalLink) return false;
 
-              event.preventDefault();
-              window.open(buildExternalRedirectUrl(link.href), '_blank', 'noopener,noreferrer');
-              return true;
-            },
+            event.preventDefault();
+            window.open(buildExternalRedirectUrl(link.href), '_blank', 'noopener,noreferrer');
+            return true;
           },
         },
-      }),
-    ];
-  },
+      },
+    }),
+  ],
 });

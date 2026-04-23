@@ -107,9 +107,7 @@ export function OpBlockNoteEditor({
       // When external link capture is enabled, intercept clicks on external
       // links via a ProseMirror plugin and route through /external_redirect.
       ...(captureExternalLinks && {
-        _tiptapOptions: {
-          extensions: [ExternalLinkCaptureExtension],
-        },
+        extensions: [ExternalLinkCaptureExtension],
       }),
     };
   }, [hocuspocusProvider, doc, activeUser, localeDictionary, attachmentsEnabled, uploadFile, captureExternalLinks]);

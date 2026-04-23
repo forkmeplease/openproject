@@ -60,7 +60,7 @@ RSpec.describe "External links in BlockNote editor",
     visit document_path(document)
   end
 
-  it "editor remains interactive after ProseMirrorExternalLinksController connects" do
+  it "editor remains interactive when external-link extensions are active" do
     expect(page).to have_test_selector("blocknote-document-description")
     editor.fill_in("Hello from the editor")
     expect(editor.content).to include("Hello from the editor")
