@@ -60,12 +60,14 @@ describe('autocompleter', () => {
     },
   ];
 
+  type WindowWithOpenProject = Omit<Window, 'OpenProject'> & { OpenProject?:{ environment:string } };
+
   beforeEach(() => {
-    (window as any).OpenProject = { environment: 'test' };
+    (window as WindowWithOpenProject).OpenProject = { environment: 'test' };
   });
 
   afterEach(() => {
-    delete (window as any).OpenProject;
+    delete (window as WindowWithOpenProject).OpenProject;
   });
 
   beforeEach(async () => {
@@ -187,9 +189,11 @@ describe('autocompleter', () => {
         fixture.detectChanges();
 
         const wpIdElements = document.querySelectorAll('.op-autocompleter--wp-id');
+
         expect(wpIdElements.length).toBeGreaterThanOrEqual(1);
         // Verify at least one rendered option displays formattedId
         const renderedIds = Array.from(wpIdElements).map(el => el.textContent?.trim());
+
         expect(renderedIds).toContain('#1');
       } finally {
         jasmine.clock().uninstall();
@@ -219,11 +223,12 @@ describe('autocompleter', () => {
         fixture.detectChanges();
 
         // Select the first item (classic mode: #1)
-        const firstOption = document.querySelector('.ng-option') as HTMLElement;
+        const firstOption = document.querySelector<HTMLElement>('.ng-option')!;
         firstOption.click();
         fixture.detectChanges();
 
         const labelElement = document.querySelector('.ng-value-label');
+
         expect(labelElement).toBeTruthy();
         expect(labelElement!.textContent).toContain('#1');
         expect(labelElement!.textContent).toContain('Workpackage 1');
@@ -255,11 +260,12 @@ describe('autocompleter', () => {
         fixture.detectChanges();
 
         // Select the semantic mode item (PROJ-2)
-        const option = document.querySelector('.ng-option') as HTMLElement;
+        const option = document.querySelector<HTMLElement>('.ng-option')!;
         option.click();
         fixture.detectChanges();
 
         const labelElement = document.querySelector('.ng-value-label');
+
         expect(labelElement).toBeTruthy();
         expect(labelElement!.textContent).toContain('PROJ-2');
         expect(labelElement!.textContent).not.toContain('#PROJ-2');
