@@ -8,10 +8,7 @@ RSpec.describe WorkPackages::Details::TabComponent, type: :component do
   let(:project)      { create(:project, identifier: "MYPROJ") }
   let(:work_package) { create(:work_package, project:) }
 
-  before do
-    allow(Setting::WorkPackageIdentifier).to receive_messages(semantic?: true, classic?: false)
-    work_package # realize before render so after_create registration runs
-  end
+  before { work_package } # realize before render so after_create registration runs
 
   subject do
     with_controller_class(NotificationsController) do
@@ -22,13 +19,17 @@ RSpec.describe WorkPackages::Details::TabComponent, type: :component do
   end
 
   describe "full-screen link" do
-    it "uses the semantic displayId in the href" do
-      subject
+    context "in semantic mode",
+            with_flag: { semantic_work_package_ids: true },
+            with_settings: { work_packages_identifier: "semantic" } do
+      it "uses the semantic displayId in the href" do
+        subject
 
-      expect(work_package.display_id).to eq("MYPROJ-1")
-      full_screen = page.find("[data-test-selector='wp-details-tab-component--full-screen']")
-      expect(full_screen[:href]).to include("/work_packages/MYPROJ-1")
-      expect(full_screen[:href]).not_to include("/work_packages/#{work_package.id}/")
+        expect(work_package.display_id).to eq("MYPROJ-1")
+        full_screen = page.find("[data-test-selector='wp-details-tab-component--full-screen']")
+        expect(full_screen[:href]).to include("/work_packages/MYPROJ-1")
+        expect(full_screen[:href]).not_to include("/work_packages/#{work_package.id}/")
+      end
     end
   end
 end
