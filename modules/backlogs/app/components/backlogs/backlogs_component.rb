@@ -40,8 +40,7 @@ module Backlogs
                    backlog_buckets:,
                    project:,
                    show_all: false,
-                   current_user: User.current,
-                   **system_arguments)
+                   current_user: User.current)
       super()
 
       @inbox_work_packages = inbox_work_packages
@@ -49,10 +48,6 @@ module Backlogs
       @project = project
       @show_all = show_all
       @current_user = current_user
-
-      @system_arguments = system_arguments
-      @system_arguments[:id] = dom_id
-      @system_arguments[:padding] = :condensed
     end
 
     def wrapper_uniq_by
