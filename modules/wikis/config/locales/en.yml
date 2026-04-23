@@ -33,11 +33,6 @@ en:
     work_package_wikis_tab_component:
       inline_page_links: Inline page links
       referencing_pages: Referenced in
-      blankslate:
-        heading: No wiki providers enabled
-        description: >-
-          There are no wiki providers configured and enabled. Wiki page links can only be added for enabled providers.
-          To add wiki providers, visit Administration > Wikis.
     page_link_component:
       remove: Remove page link
     relation_page_links_component:

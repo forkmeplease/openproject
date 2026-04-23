@@ -34,15 +34,15 @@ module Wikis
       module Internal
         module Queries
           class PageInfo < BaseQuery
-            def handle_query(identifier:)
+            def call(input_data)
               # TODO: should we accept implicit User.current or do we want to pass in a user explicitly?
-              wiki_page = WikiPage.visible.find_by(id: identifier)
+              wiki_page = WikiPage.visible.find_by(id: input_data.identifier)
               return failure(code: :not_found) if wiki_page.nil?
 
               success(
                 Results::PageInfo.new(
-                  identifier:,
-                  provider: InternalProvider.first,
+                  identifier: input_data.identifier,
+                  provider:,
                   title: wiki_page.title,
                   href: url_for(only_path: true,
                                 controller: "/wiki",

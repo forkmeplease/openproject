@@ -41,6 +41,12 @@ module Wikis
               .merge(Provider.enabled)
               .where(linkable:)
               .count
+
+      relation_page_links = Provider.enabled.sum { |provider| relation_page_link_infos_for(provider:, linkable:).size }
+
+      relation_page_links +
+        inline_page_link_infos_for(linkable:).size +
+        referencing_wiki_page_infos_for(linkable:).size
     end
 
     def relation_page_link_infos_for(provider:, linkable:)
@@ -66,7 +72,7 @@ module Wikis
       if linkable.id % 2 == 0
         InternalProvider.enabled.each do |provider|
           random_wiki_page = WikiPage.order("RANDOM()").limit(1).first
-          referenced_in << page_info(provider: , identifier: random_wiki_page.id.to_s)
+          referenced_in << page_info(provider:, identifier: random_wiki_page.id.to_s)
         end
       end
 

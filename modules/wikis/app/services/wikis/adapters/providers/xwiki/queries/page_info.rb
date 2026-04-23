@@ -34,7 +34,7 @@ module Wikis
       module XWiki
         module Queries
           class PageInfo < BaseQuery
-            def handle_query(identifier:)
+            def call(input_data)
               title = [
                 "What makes XWiki special?",
                 "API documentation",
@@ -43,8 +43,8 @@ module Wikis
 
               success(
                 Results::PageInfo.new(
-                  identifier:,
-                  provider: XWikiProvider.first,
+                  identifier: input_data.identifier,
+                  provider:,
                   title:,
                   href: "#"
                 )
