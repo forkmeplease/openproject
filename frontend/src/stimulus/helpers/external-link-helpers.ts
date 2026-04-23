@@ -46,10 +46,15 @@ export function isLinkBlank(link:HTMLAnchorElement) {
  * External links receive special treatment for security (noopener/noreferrer)
  * and, when capture is enabled, are routed through `/external_redirect` for
  * phishing prevention.
+ *
+ * Only considers http/https URLs — non-web protocols (mailto:, tel:,
+ * javascript:, etc.) return false because they don't navigate to an
+ * external origin.
  */
 export function isLinkExternal(link:HTMLAnchorElement) {
   try {
     const linkUrl = new URL(link.href, window.location.origin);
+    if (!linkUrl.protocol.startsWith('http')) return false;
     return linkUrl.origin !== window.location.origin;
   } catch {
     return false;
