@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,41 +26,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
-#
+#++
 
-module Calendar
-  class AddButtonComponent < ::AddButtonComponent
-    def render?
-      if current_project
-        User.current.allowed_in_project?(:manage_calendars, current_project)
-      else
-        User.current.allowed_in_any_project?(:manage_calendars)
-      end
-    end
+class WorkPackages::SplitCreateComponent < ApplicationComponent
+  def initialize(project_identifier:)
+    super
 
-    def dynamic_path
-      if current_project
-        new_project_calendar_path(current_project)
-      else
-        new_calendar_path
-      end
-    end
-
-    def id
-      "add-calendar-button"
-    end
-
-    def test_selector
-      "add-calendar-button"
-    end
-
-    def accessibility_label_text
-      I18n.t("js.calendar.create_new")
-    end
-
-    def label_text
-      I18n.t(:label_calendar)
-    end
+    @project_identifier = project_identifier
   end
 end
