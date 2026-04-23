@@ -48,7 +48,7 @@ class Workflows::TabsController < ApplicationController
 
     statuses_for_form
 
-    if @type && @role && @statuses.any?
+    if @type && @roles.any? && @statuses.any?
       workflows_for_form
     end
   end
@@ -100,7 +100,7 @@ class Workflows::TabsController < ApplicationController
     current_statuses = if params[:status_ids].present?
                          Status.where(id: params[:status_ids].map(&:to_i)).order(:position)
                        elsif @type && @role
-                         statuses_for_role_and_type
+                         statuses_for_roles_and_type
                        else
                          Status.none
                        end
@@ -169,8 +169,8 @@ class Workflows::TabsController < ApplicationController
     @has_status_changes = false
     @statuses = if @type && params[:status_ids].present?
                   statuses_from_params
-                elsif @type && @role
-                  statuses_for_role_and_type
+                elsif @type && @roles.any?
+                  statuses_for_roles_and_type
                 elsif @type
                   @type.statuses
                 else
@@ -180,18 +180,19 @@ class Workflows::TabsController < ApplicationController
 
   def statuses_from_params
     status_ids = params[:status_ids].map(&:to_i)
-    saved_ids = statuses_for_role_and_type.pluck(:id)
+    saved_ids = statuses_for_roles_and_type.pluck(:id)
     @added_status_ids = status_ids - saved_ids
     @has_status_changes = @added_status_ids.any? || (saved_ids - status_ids).any?
     Status.where(id: status_ids).order(:position)
   end
 
-  def statuses_for_role_and_type
-    @type.statuses(role: @role, tab: @tab)
+  def statuses_for_roles_and_type
+    status_ids = @roles.map { |role| @type.statuses(role:, tab: @tab).pluck(:id) }.flatten.uniq
+    Status.where(id: status_ids)
   end
 
   def workflows_for_form
-    workflows = Workflow.where(role_id: @role.id, type_id: @type.id)
+    workflows = Workflow.where(role_id: @roles.map(&:id), type_id: @type.id)
     @workflows = {}
     @workflows["always"] = workflows.select { |w| !w.author && !w.assignee }
     @workflows["author"] = workflows.select(&:author)

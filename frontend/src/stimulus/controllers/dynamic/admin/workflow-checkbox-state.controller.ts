@@ -83,6 +83,9 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
       this.applyState(statusCheckboxes);
       // Recompute dirty flag: the restored state may differ from DB pristine.
       this.onCheckboxChange();
+    } else {
+      // Apply indeterminate checkboxes only on fresh server rendered content.
+      this.initIndeterminateCheckboxes();
     }
 
     // Use document-level delegation so this works even when the EditComponent
@@ -281,6 +284,12 @@ export default class WorkflowCheckboxStateController extends Controller<HTMLForm
       const key = `${cb.dataset.oldStatus}:${cb.dataset.newStatus}:${cb.value}`;
 
       cb.checked = checkboxes[key] ?? defaultValue ?? true;
+    });
+  }
+
+  private initIndeterminateCheckboxes():void {
+    this.element.querySelectorAll<HTMLInputElement>('input[type="checkbox"][data-indeterminate="true"]').forEach((cb) => {
+      cb.indeterminate = true;
     });
   }
 
