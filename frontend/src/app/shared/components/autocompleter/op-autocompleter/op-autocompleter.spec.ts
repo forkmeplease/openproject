@@ -120,11 +120,11 @@ describe('autocompleter', () => {
         fixture.detectChanges();
         const select = fixture.componentInstance.ngSelectInstance;
 
-        expect(select.isOpen).toBeFalse();
+        expect(select.isOpen()).toBeFalse();
         select.open();
         select.focus();
 
-        expect(select.isOpen).toBeTrue();
+        expect(select.isOpen()).toBeTrue();
 
         expect(select.itemsList.items.length).toEqual(0);
 
@@ -284,11 +284,11 @@ describe('autocompleter', () => {
       fixture.detectChanges();
       const select = fixture.componentInstance.ngSelectInstance;
 
-      expect(select.isOpen).toBeFalse();
+      expect(select.isOpen()).toBeFalse();
       select.open();
       select.focus();
 
-      expect(select.isOpen).toBeTrue();
+      expect(select.isOpen()).toBeTrue();
 
       expect(select.itemsList.items.length).toEqual(0);
 

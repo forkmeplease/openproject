@@ -53,7 +53,6 @@ export class WorkPackageStateLinksHandler implements TableEventHandler {
     const element = target.closest(this.SELECTOR) as HTMLElement;
     const state = element.dataset.wpState;
     const workPackageId = element.dataset.workPackageId;
-    const routingId = element.dataset.routingId ?? workPackageId;
 
     // Normal link processing if there are no state and work package information
     if (!state || !workPackageId) {
@@ -74,7 +73,7 @@ export class WorkPackageStateLinksHandler implements TableEventHandler {
     // Update single selection if no modifier present
     this.wpTableSelection.setSelection(workPackageId, index);
 
-    view.stateLinkClicked.emit({ workPackageId, routingId, requestedState: state });
+    view.stateLinkClicked.emit({ workPackageId, requestedState: state });
 
     evt.preventDefault();
     return false;

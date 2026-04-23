@@ -58,7 +58,7 @@ import { WorkPackageViewBaselineService } from '../wp-view-base/view-services/wp
 import { combineLatest } from 'rxjs';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { States } from 'core-app/core/states/states.service';
-import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
 
 @Component({
   selector: 'wp-list-view',
@@ -180,8 +180,8 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
     }
   }
 
-  openStateLink(event:{ workPackageId:string; routingId?:string; requestedState:'show'|'split' }) {
-    const routingId = event.routingId ?? this.resolveRoutingId(event.workPackageId);
+  openStateLink(event:{ workPackageId:string; requestedState:'show'|'split' }) {
+    const routingId = resolveRoutingId(this.states, event.workPackageId);
     const params = {
       workPackageId: routingId,
       focus: true,
@@ -207,12 +207,8 @@ export class WorkPackageListViewComponent extends UntilDestroyedMixin implements
   }
 
   private openInFullView(workPackageId:string) {
-    const routingId = this.resolveRoutingId(workPackageId);
+    const routingId = resolveRoutingId(this.states, workPackageId);
     const projectIdentifier = this.CurrentProject.identifier;
     window.location.href = this.pathHelper.genericWorkPackagePath(projectIdentifier, routingId) + window.location.search;
-  }
-
-  protected resolveRoutingId(workPackageId:string):string {
-    return resolveRoutingId(this.states, workPackageId);
   }
 }

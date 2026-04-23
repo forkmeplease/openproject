@@ -377,12 +377,12 @@ GEM
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
-    axe-core-api (4.11.1)
+    axe-core-api (4.11.2)
       dumb_delegator
       ostruct
       virtus
-    axe-core-rspec (4.11.1)
-      axe-core-api (= 4.11.1)
+    axe-core-rspec (4.11.2)
+      axe-core-api (= 4.11.2)
       dumb_delegator
       ostruct
       virtus
@@ -903,15 +903,15 @@ GEM
       validate_email
       validate_url
       webfinger (~> 2.0)
-    openproject-octicons (19.32.1)
-    openproject-octicons_helper (19.32.1)
+    openproject-octicons (19.34.0)
+    openproject-octicons_helper (19.34.0)
       actionview
-      openproject-octicons (= 19.32.1)
+      openproject-octicons (= 19.34.0)
       railties
-    openproject-primer_view_components (0.84.1)
+    openproject-primer_view_components (0.84.4)
       actionview (>= 7.2.0)
       activesupport (>= 7.2.0)
-      openproject-octicons (>= 19.30.1)
+      openproject-octicons (>= 19.34.0)
       view_component (>= 3.1, < 5.0)
     openproject-token (8.8.2)
       activemodel
@@ -1685,10 +1685,10 @@ DEPENDENCIES
   openproject-job_status!
   openproject-ldap_groups!
   openproject-meeting!
-  openproject-octicons (~> 19.32.0)
-  openproject-octicons_helper (~> 19.32.0)
+  openproject-octicons (~> 19.34.0)
+  openproject-octicons_helper (~> 19.34.0)
   openproject-openid_connect!
-  openproject-primer_view_components (~> 0.84.1)
+  openproject-primer_view_components (~> 0.84.4)
   openproject-recaptcha!
   openproject-reporting!
   openproject-storages!
@@ -1835,8 +1835,8 @@ CHECKSUMS
   aws-sdk-s3 (1.219.0) sha256=6a755d7377978525758b3c29185ca6a10128ce2b07555ca37c4549de10c2f1c7
   aws-sdk-sns (1.113.0) sha256=15fe37d010e86f4c28b4c2f2133c463ce5c14189ec3673a1f43c30dfee511b0f
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
-  axe-core-api (4.11.1) sha256=a6460506449a692030620a0574fee7afa6cd38cfbbf6620d20bf4d53d33a80cc
-  axe-core-rspec (4.11.1) sha256=dc6c0e166405cd3a28c4a0937f6521ee5b511c12c0ca1627144a1ee7d5014aec
+  axe-core-api (4.11.2) sha256=c05c342941e0c29f17b00268302457da9e7b644f753c8bbab274d0083319344f
+  axe-core-rspec (4.11.2) sha256=50c5a5f1b4b991da6857c5df4d6645dfac285a84c7f7f904a6ef23e53f4895eb
   axiom-types (0.1.1) sha256=c1ff113f3de516fa195b2db7e0a9a95fd1b08475a502ff660d04507a09980383
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
@@ -2067,10 +2067,10 @@ CHECKSUMS
   openproject-job_status (1.0.0)
   openproject-ldap_groups (1.0.0)
   openproject-meeting (1.0.0)
-  openproject-octicons (19.32.1) sha256=32253f3256ad4e1aec36442558ce140623c01e5241d9b90f6eb6d317f462781e
-  openproject-octicons_helper (19.32.1) sha256=7676059927ae940170fb13d62f88b885985a3f0d483e1bb246475afcffd90f8f
+  openproject-octicons (19.34.0) sha256=4efe8a58a2d8051b79c94b37e9a7f04fd242a4da12b50f027c3c7f441a042adc
+  openproject-octicons_helper (19.34.0) sha256=12eb7af2214e21631369c76464ebaa30de788e1074c4b3bd0fcef7e74cb9edb4
   openproject-openid_connect (1.0.0)
-  openproject-primer_view_components (0.84.1) sha256=ea0a8da1bc45c8f0ddc13ab279535297ca63f974da72449fbb3a9e4b4e9753d7
+  openproject-primer_view_components (0.84.4) sha256=712b6dcfd64771d0f8e1f8a73a32238b0798b9971a569257086c4823642571e2
   openproject-recaptcha (1.0.0)
   openproject-reporting (1.0.0)
   openproject-storages (1.0.0)

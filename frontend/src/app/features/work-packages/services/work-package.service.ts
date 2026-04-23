@@ -27,7 +27,7 @@
 //++
 
 import { StateService } from '@uirouter/core';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { UrlParamsHelperService } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
@@ -35,6 +35,7 @@ import { ToastService } from 'core-app/shared/components/toaster/toast.service';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { HalDeletedEvent, HalEventsService } from 'core-app/features/hal/services/hal-events.service';
 import { States } from 'core-app/core/states/states.service';
+import { resolveNumericId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
 
 @Injectable()
 export class WorkPackageService {
@@ -42,14 +43,15 @@ export class WorkPackageService {
     successful_delete: this.I18n.t('js.work_packages.message_successful_bulk_delete'),
   };
 
+  private readonly states = inject(States);
+
   constructor(private readonly http:HttpClient,
     private readonly $state:StateService,
     private readonly PathHelper:PathHelperService,
     private readonly UrlParamsHelper:UrlParamsHelperService,
     private readonly toastService:ToastService,
     private readonly I18n:I18nService,
-    private readonly halEvents:HalEventsService,
-    private readonly states:States) {
+    private readonly halEvents:HalEventsService) {
   }
 
   public performBulkDelete(ids:string[], defaultHandling:boolean) {
@@ -71,9 +73,9 @@ export class WorkPackageService {
           ids.forEach((id) => this.halEvents.push({ _type: 'WorkPackage', id }, { eventType: 'deleted' } as HalDeletedEvent));
 
           const routeWpId = this.$state.params.workPackageId as string;
-          const wp = this.states.workPackages.get(routeWpId)?.value;
-          const numericId = wp?.id ?? routeWpId;
-          if (this.$state.includes('**.list.details.**')
+          const numericId = resolveNumericId(this.states, routeWpId);
+          if (numericId
+            && this.$state.includes('**.list.details.**')
             && ids.includes(numericId)) {
             this.$state.go('work-packages.partitioned.list', this.$state.params);
           }

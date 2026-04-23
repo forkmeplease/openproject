@@ -86,7 +86,7 @@ export class WorkPackagesGridComponent implements WorkPackageViewOutputs, OnInit
 
   @Output() itemClicked = new EventEmitter<{ workPackageId:string, double:boolean }>();
 
-  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, routingId?:string, requestedState:string }>();
+  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, requestedState:string }>();
 
   public canDragOutOf:() => boolean;
 

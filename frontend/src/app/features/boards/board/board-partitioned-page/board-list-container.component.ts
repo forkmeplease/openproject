@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
   Input,
   Injector,
   OnInit,
@@ -40,7 +41,7 @@ import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 import { States } from 'core-app/core/states/states.service';
-import { resolveRoutingId } from 'core-app/features/work-packages/helpers/resolve-routing-id';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
 
 @Component({
   selector: 'board-list-container',
@@ -93,6 +94,8 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
 
   private currentQueryUpdatedMonitoring:Subscription;
 
+  private readonly wpStates = inject(States);
+
   constructor(
     readonly I18n:I18nService,
     readonly state:StateService,
@@ -111,7 +114,6 @@ export class BoardListContainerComponent extends UntilDestroyedMixin implements 
     readonly QueryUpdated:QueryUpdatedService,
     readonly pathHelper:PathHelperService,
     readonly currentProject:CurrentProjectService,
-    readonly wpStates:States,
 ) {
     super();
   }
