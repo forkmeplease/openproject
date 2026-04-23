@@ -106,7 +106,7 @@ RSpec.describe Agile::BacklogBucket do
 
     subject(:result) { described_class.for_project(project) }
 
-    it "returns the project buckets followed by the inbox" do
+    it "returns the project buckets" do
       expect(result).to match([bucket1, bucket2])
     end
 
