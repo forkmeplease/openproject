@@ -335,7 +335,7 @@ module Pages
     end
 
     def bucket_names_in_order
-      page.find_all("#owner_backlogs_container > section .CollapsibleHeader-title").map(&:text)
+      page.find_all("#owner_backlogs_container section .CollapsibleHeader-title").map(&:text)
     end
 
     def expect_bucket_names_in_order(*bucket_names)
@@ -404,6 +404,18 @@ module Pages
     def expect_no_backlog_bucket_menu(bucket)
       within_backlog_bucket(bucket) do
         expect(page).to have_no_button(accessible_name: "Backlog bucket actions")
+      end
+    end
+
+    def expect_backlog_bucket_blankslate(bucket)
+      within_backlog_bucket(bucket) do
+        expect(page).to have_selector(:heading, level: 4, text: "Backlog bucket is empty")
+      end
+    end
+
+    def expect_no_backlog_bucket_blankslate(bucket)
+      within_backlog_bucket(bucket) do
+        expect(page).to have_no_selector(:heading, level: 4, text: "Backlog bucket is empty")
       end
     end
 
@@ -618,7 +630,7 @@ module Pages
     end
 
     def backlog_inbox_selector
-      "#new_agile_backlog_bucket"
+      test_selector("backlog-inbox")
     end
 
     def story_selector(story)

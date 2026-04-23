@@ -28,15 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Import
-  class JiraWikiMarkupConverter
-    def initialize(text)
-      @text = text
+module Backlogs
+  class BacklogsComponent < ApplicationComponent
+    include Primer::AttributesHelper
+    include OpTurbo::Streamable
+    include Backlogs::CommonHelper
+
+    attr_reader :inbox_work_packages, :backlog_buckets, :project, :current_user
+
+    def initialize(inbox_work_packages:,
+                   backlog_buckets:,
+                   project:,
+                   current_user: User.current)
+      super()
+
+      @inbox_work_packages = inbox_work_packages
+      @backlog_buckets = backlog_buckets
+      @project = project
+      @current_user = current_user
     end
 
-    def convert
-      ast = JiraWikiMarkup::Parser.new(@text).parse
-      JiraWikiMarkup::Renderer.new(ast).render
+    def wrapper_uniq_by
+      project
+    end
+
+    private
+
+    def dom_id
+      "backlogs_#{project.id}"
+    end
+
+    def total
+      @total ||= inbox_work_packages.count + (backlog_buckets&.sum { it.work_packages.size } || 0)
     end
   end
 end

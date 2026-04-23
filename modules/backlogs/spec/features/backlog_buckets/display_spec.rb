@@ -58,14 +58,13 @@ RSpec.describe "Backlog bucket display",
            })
   end
 
-  it "lists buckets alphabetically with Inbox at the bottom" do
+  it "lists buckets alphabetically (inbox at the bottom is not named)" do
     backlogs_page.visit!
 
     backlogs_page.expect_bucket_names_in_order(
       "Alpha bucket",
       "Beta bucket",
-      "Gamma bucket",
-      "Inbox"
+      "Gamma bucket"
     )
   end
 

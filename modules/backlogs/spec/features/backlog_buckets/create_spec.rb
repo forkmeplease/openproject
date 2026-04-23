@@ -51,8 +51,6 @@ RSpec.describe "Backlog bucket creation",
 
   it "creates a new backlog bucket via the dialog" do
     backlogs_page.visit!
-    backlogs_page.expect_bucket_names_in_order("Inbox")
-
     backlogs_page.open_create_backlog_bucket_dialog
 
     within_dialog "New backlog bucket" do
@@ -61,7 +59,7 @@ RSpec.describe "Backlog bucket creation",
     end
 
     expect_and_dismiss_flash type: :success, exact_message: "Successful creation."
-    backlogs_page.expect_bucket_names_in_order("Discovery work", "Inbox")
+    backlogs_page.expect_bucket_names_in_order("Discovery work")
 
     bucket = Agile::BacklogBucket.find_by!(project:, name: "Discovery work")
     expect(bucket.work_packages).to be_empty
