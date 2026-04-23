@@ -46,10 +46,16 @@ module Import
       )
 
       def initialize(text)
-        @text = text.dup
+        # Normalize any input into a safe, mutable UTF-8 string: nil becomes "",
+        # and invalid byte sequences are dropped so downstream regex/StringScanner
+        # operations cannot raise ArgumentError on malformed input.
+        @text = text.to_s.dup
+        @text.scrub!("") unless @text.valid_encoding?
       end
 
       def parse
+        return N::Document.new(children: []) if @text.blank?
+
         preprocess
         blocks = parse_blocks
         N::Document.new(children: blocks)

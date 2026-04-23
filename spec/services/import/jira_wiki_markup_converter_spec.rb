@@ -51,6 +51,38 @@ RSpec.describe Import::JiraWikiMarkupConverter do
 
       it { is_expected.to eq("This is not {code} and not [a link]") }
     end
+
+    context "with invalid UTF-8 byte sequences in the input" do
+      it "drops a stray invalid byte and keeps the surrounding text" do
+        input = "Hello \xFF world".dup
+        expect(input.valid_encoding?).to be(false)
+        expect(described_class.new(input).convert).to eq("Hello  world")
+      end
+
+      it "drops a stray continuation byte" do
+        input = "abc \x80 def".dup
+        expect(input.valid_encoding?).to be(false)
+        expect(described_class.new(input).convert).to eq("abc  def")
+      end
+
+      it "drops a truncated multi-byte sequence" do
+        input = "pre \xC3 post".dup
+        expect(input.valid_encoding?).to be(false)
+        expect(described_class.new(input).convert).to eq("pre  post")
+      end
+
+      it "preserves valid multi-byte characters while dropping only the invalid byte" do
+        input = "héllo \xFF world".dup
+        expect(input.valid_encoding?).to be(false)
+        expect(described_class.new(input).convert).to eq("héllo  world")
+      end
+
+      it "still parses formatting around invalid bytes inside delimiters" do
+        input = "*bold\xFFtext*".dup
+        expect(input.valid_encoding?).to be(false)
+        expect(described_class.new(input).convert).to eq("**boldtext**")
+      end
+    end
   end
 
   describe "line ending normalization" do
