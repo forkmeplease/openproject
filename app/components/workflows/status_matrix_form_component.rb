@@ -33,14 +33,26 @@ module Workflows
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    def initialize(tab:, role:, type:, available_roles:, statuses:, has_status_changes:)
+    def initialize(tab:, roles:, type:, available_roles:, statuses:, has_status_changes:)
       super
       @tab = tab
-      @role = role
+      @roles = roles
+      @role = @roles.first
       @type = type
       @available_roles = available_roles
       @statuses = statuses
       @has_status_changes = has_status_changes
+    end
+
+    private
+
+    def data_attributes
+      {
+        controller: "admin--workflow-role-select",
+        "admin--workflow-role-select-base-url-value": helpers.edit_workflow_path(@type),
+        "admin--workflow-role-select-current-role-ids-value": @roles.map(&:id).join(","),
+        "admin--workflow-role-select-admin--workflow-checkbox-state-outlet": "#workflow_form"
+      }
     end
   end
 end

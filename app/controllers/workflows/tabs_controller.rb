@@ -38,11 +38,11 @@ class Workflows::TabsController < ApplicationController
   before_action :set_type
   before_action :set_tab
   before_action :set_eligible_roles
-  before_action :set_role
+  before_action :set_roles
 
   def edit
     unless turbo_frame_request?
-      redirect_to edit_workflow_path(@type, role_id: params[:role_id], tab: @tab)
+      redirect_to edit_workflow_path(@type, role_ids: params[:role_ids], tab: @tab)
       return
     end
 
@@ -53,12 +53,19 @@ class Workflows::TabsController < ApplicationController
     end
   end
 
-  def update
-    call = Workflows::BulkUpdateService
-           .new(role: @role, type: @type, tab: @tab)
-           .call(permitted_status_params)
+  def update # rubocop:disable Metrics/AbcSize
+    success = false
+    Workflow.transaction do
+      success = true
+      @roles.each do |role|
+        result = Workflows::BulkUpdateService.new(role:, type: @type, tab: @tab)
+                                             .call(permitted_status_params)
+        success = false unless result.success?
+      end
+      raise ActiveRecord::Rollback unless success
+    end
 
-    if call.success?
+    if success
       render_flash_message_via_turbo_stream(
         message: I18n.t(:notice_successful_update),
         scheme: :success
@@ -69,7 +76,7 @@ class Workflows::TabsController < ApplicationController
         update_via_turbo_stream(
           component: Workflows::StatusMatrixFormComponent.new(
             tab: @tab,
-            role: @role,
+            roles: @roles,
             type: @type,
             available_roles: @eligible_roles,
             statuses:,
@@ -125,7 +132,7 @@ class Workflows::TabsController < ApplicationController
       update_via_turbo_stream(
         component: Workflows::StatusMatrixFormComponent.new(
           tab: @tab,
-          role: @role,
+          roles: @roles,
           type: @type,
           available_roles: @eligible_roles,
           statuses:,
@@ -150,8 +157,11 @@ class Workflows::TabsController < ApplicationController
     @eligible_roles = Workflow.eligible_roles.order(:builtin, :position)
   end
 
-  def set_role
-    @role = @eligible_roles.find(params[:role_id])
+  def set_roles
+    @roles = @eligible_roles.where(id: params[:role_ids])
+    # TODO: remove @role once the matrix form and all dependent components
+    # (dialogs, status selectors, page headers) work natively with @roles (multi-role).
+    @role = @roles.first
   end
 
   def statuses_for_form

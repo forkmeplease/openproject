@@ -28,8 +28,9 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
+  # TODO: pass all roles once StatusFormComponent and confirm_statuses support multi-role natively.
   primer_form_with(
-    url: helpers.confirm_statuses_workflow_tab_path(@type, @tab, role_id: @role.id),
+    url: helpers.confirm_statuses_workflow_tab_path(@type, @tab, role_ids: [@role.id]),
     method: :post,
     id: FORM_ID,
     data: { turbo_frame: "workflow-table" }
