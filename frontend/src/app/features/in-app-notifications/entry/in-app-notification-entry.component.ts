@@ -11,6 +11,8 @@ import { INotification } from 'core-app/core/state/in-app-notifications/in-app-n
 import { IanCenterService } from 'core-app/features/in-app-notifications/center/state/ian-center.service';
 import { DeviceService } from 'core-app/core/browser/device.service';
 import { UrlParamsService } from 'core-app/core/navigation/url-params.service';
+import { States } from 'core-app/core/states/states.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
 
 @Component({
   selector: 'op-in-app-notification-entry',
@@ -57,7 +59,15 @@ export class InAppNotificationEntryComponent implements OnInit {
     readonly pathHelper:PathHelperService,
     readonly deviceService:DeviceService,
     readonly urlParams:UrlParamsService,
+    readonly states:States,
   ) {
+  }
+
+  // The notification's HAL link gives us the numeric primary key. For URL
+  // construction we prefer the semantic displayId so the user-visible URL
+  // carries the readable identifier once the WP is cached.
+  private routingId():string {
+    return this.workPackageId ? resolveRoutingId(this.states, this.workPackageId) : '';
   }
 
   ngOnInit():void {
@@ -101,7 +111,7 @@ export class InAppNotificationEntryComponent implements OnInit {
     }
 
     const tab = this.showDateAlert ? 'overview' : 'activity';
-    this.storeService.openSplitScreen(this.workPackageId, tab);
+    this.storeService.openSplitScreen(this.routingId(), tab);
   }
 
   onDoubleClick():void {
@@ -114,12 +124,12 @@ export class InAppNotificationEntryComponent implements OnInit {
       return;
     }
 
-    const link = this.pathHelper.workPackagePath(this.workPackageId) + window.location.search;
+    const link = this.pathHelper.workPackagePath(this.routingId()) + window.location.search;
     Turbo.visit(link, { action: 'advance' });
   }
 
   fullScreenLink():string {
-    return this.workPackageId ? this.pathHelper.workPackagePath(this.workPackageId) : this.pathHelper.workPackagesPath(null);
+    return this.workPackageId ? this.pathHelper.workPackagePath(this.routingId()) : this.pathHelper.workPackagesPath(null);
   }
 
   onLinkClick(e:Event):void {
