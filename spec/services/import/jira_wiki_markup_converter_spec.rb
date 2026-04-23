@@ -241,6 +241,38 @@ RSpec.describe Import::JiraWikiMarkupConverter do
 
       it { is_expected.to eq("H<sub>2</sub>O") }
     end
+
+    context "with multi-byte UTF-8 characters inside formatting delimiters" do
+      it "handles bold with multi-byte characters" do
+        expect(described_class.new("This is *héllo* text.").convert)
+          .to eq("This is **héllo** text.")
+      end
+
+      it "handles italic with multi-byte characters" do
+        expect(described_class.new("This is _äöü_ text.").convert)
+          .to eq("This is *äöü* text.")
+      end
+
+      it "handles strikethrough with multi-byte characters" do
+        expect(described_class.new("This is -déléted- text.").convert)
+          .to eq("This is ~~déléted~~ text.")
+      end
+
+      it "handles underline with multi-byte characters" do
+        expect(described_class.new("This is +éàü+ text.").convert)
+          .to eq("This is <u>éàü</u> text.")
+      end
+
+      it "handles subscript with multi-byte characters" do
+        expect(described_class.new("H~äö~O").convert)
+          .to eq("H<sub>äö</sub>O")
+      end
+
+      it "handles multiple formatted multi-byte segments in one line" do
+        expect(described_class.new("*éé* and _öü_").convert)
+          .to eq("**éé** and *öü*")
+      end
+    end
   end
 
   describe "links" do

@@ -515,7 +515,9 @@ module Import
         return if inner[-1] == " "
         return if followed_by_word?(rest, close_idx)
 
-        scanner.pos += 1 + close_idx + 1
+        # StringScanner#pos is byte-based; advance by byte length, not char count,
+        # so multi-byte UTF-8 content inside the delimiters does not land pos mid-character.
+        scanner.pos += inner.bytesize + 2
         inner
       end
 
@@ -549,7 +551,8 @@ module Import
         after = rest[(close_idx + 1)..]
         return if after.present? && after[0] == "~"
 
-        scanner.pos += 1 + close_idx + 1
+        # StringScanner#pos is byte-based; advance by byte length to stay on a char boundary.
+        scanner.pos += inner.bytesize + 2
         inner
       end
 
