@@ -5,7 +5,6 @@ require "rails_helper"
 RSpec.describe WorkPackages::Details::TabComponent, type: :component do
   include OpenProject::StaticRouting::UrlHelpers
 
-  let(:project)      { create(:project, identifier: "MYPROJ") }
   let(:work_package) { create(:work_package, project:) }
 
   before { work_package } # realize before render so after_create registration runs
@@ -22,6 +21,8 @@ RSpec.describe WorkPackages::Details::TabComponent, type: :component do
     context "in semantic mode",
             with_flag: { semantic_work_package_ids: true },
             with_settings: { work_packages_identifier: "semantic" } do
+      let(:project) { create(:project, identifier: "MYPROJ") }
+
       it "uses the semantic displayId in the href" do
         subject
 
@@ -29,6 +30,20 @@ RSpec.describe WorkPackages::Details::TabComponent, type: :component do
         full_screen = page.find("[data-test-selector='wp-details-tab-component--full-screen']")
         expect(full_screen[:href]).to include("/work_packages/MYPROJ-1")
         expect(full_screen[:href]).not_to include("/work_packages/#{work_package.id}/")
+      end
+    end
+
+    context "in classic mode",
+            with_flag: { semantic_work_package_ids: false },
+            with_settings: { work_packages_identifier: "classic" } do
+      let(:project) { create(:project, identifier: "myproj") }
+
+      it "uses the numeric id in the href" do
+        subject
+
+        expect(work_package.display_id).to eq(work_package.id)
+        full_screen = page.find("[data-test-selector='wp-details-tab-component--full-screen']")
+        expect(full_screen[:href]).to include("/work_packages/#{work_package.id}/")
       end
     end
   end
