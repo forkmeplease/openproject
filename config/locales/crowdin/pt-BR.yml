@@ -262,6 +262,7 @@ pt-BR:
               caption: Revise suas configurações de importação e inicie a importação
               caption_done: Concluído
               label_available_data: Dados disponíveis para importação
+              label_users_import_explanation: Users that are involved in selected projects (group memberships included)
               button_start: Iniciar importação
               description: Você está prestes a iniciar uma execução de importação com as seguintes configurações.
               label_progress: Importação em andamento...
@@ -3556,7 +3557,7 @@ pt-BR:
         personal_reminder: Notificar-me sobre lembretes pessoais
       daily_reminders:
         title: Enviar lembretes diários por e-mail para notificações não lidas
-        caption: Você receberá esses lembretes apenas para notificações não lidas e somente nos horários que você especificar. Até que você configure um fuso horário para sua conta, os horários serão interpretados como UTC.
+        description: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
         enabled: Ativar lembretes diários por e-mail
         add_time: Adicionar horário
         remove_time: Remover horário
@@ -3570,6 +3571,7 @@ pt-BR:
         date_range: Período de pausa
       email_alerts:
         title: Alertas por e-mail para outros itens que não sejam pacotes de trabalho
+        description: Notifications today are limited to work packages. You can choose to continue receiving email alerts for these events until they are included in notifications.
         news_added: Notícia adicionada
         news_commented: Comentar em uma notícia
         document_added: Documento adicionado
@@ -3582,6 +3584,7 @@ pt-BR:
     notifications:
       participating:
         title: Participando
+        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
         submit_button: Atualizar preferências
         mentioned: Mencionado
         watched: Assistindo
@@ -3590,6 +3593,7 @@ pt-BR:
         shared: Compartilhados comigo
       date_alerts:
         title: Alertas de data
+        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
         submit_button: Atualizar alertas de data
         start_date: Data de início
         due_date: Data de conclusão
@@ -3604,6 +3608,7 @@ pt-BR:
           seven_days_after: 7 dias depois
       non_participating:
         title: Não participando
+        description: Additional notifications for activities in all projects.
         submit_button: Atualizar preferências
         work_package_created: Novos pacotes de trabalho
         work_package_commented: Todos os novos comentários
@@ -3612,6 +3617,7 @@ pt-BR:
         work_package_scheduled: Todas as mudanças de data
       project_specific_settings:
         title: Configurações de notificação específicas de projetos
+        description: These project-specific settings override default settings above.
         add_button: Adicionar notificações específicas do projeto
         dialog_title: Adicionar notificações específicas do projeto
         list_header: Projetos com notificações específicas

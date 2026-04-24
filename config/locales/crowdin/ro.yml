@@ -268,6 +268,7 @@ ro:
               caption: Review your import settings and start the import
               caption_done: Completed
               label_available_data: Available data to import
+              label_users_import_explanation: Users that are involved in selected projects (group memberships included)
               button_start: Start import
               description: You are about to start an import run with the following settings.
               label_progress: Import in progress...
@@ -3620,7 +3621,7 @@ ro:
         personal_reminder: Notify me for personal reminders
       daily_reminders:
         title: Send me daily email reminders for unread notifications
-        caption: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
+        description: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
         enabled: Enable daily email reminders
         add_time: Add time
         remove_time: Remove time
@@ -3634,6 +3635,7 @@ ro:
         date_range: Pause period
       email_alerts:
         title: Email alerts for other items that are not work packages
+        description: Notifications today are limited to work packages. You can choose to continue receiving email alerts for these events until they are included in notifications.
         news_added: News added
         news_commented: Comment on a news item
         document_added: Document added
@@ -3646,6 +3648,7 @@ ro:
     notifications:
       participating:
         title: Participating
+        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
         submit_button: Update preferences
         mentioned: Mentioned
         watched: Watching
@@ -3654,6 +3657,7 @@ ro:
         shared: Shared with me
       date_alerts:
         title: Date alerts
+        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
         submit_button: Update date alerts
         start_date: Start date
         due_date: Finish date
@@ -3668,6 +3672,7 @@ ro:
           seven_days_after: 7 days after
       non_participating:
         title: Non-participating
+        description: Additional notifications for activities in all projects.
         submit_button: Update preferences
         work_package_created: New work packages
         work_package_commented: All new comments
@@ -3676,6 +3681,7 @@ ro:
         work_package_scheduled: All date changes
       project_specific_settings:
         title: Project-specific notification settings
+        description: These project-specific settings override default settings above.
         add_button: Add project-specific notifications
         dialog_title: Add project-specific notifications
         list_header: Projects with specific notifications
@@ -3898,7 +3904,7 @@ ro:
   label_duplicated_by: dublat de
   label_duplicate: duplicat
   label_duplicates: dublează
-  label_edit: Editare
+  label_edit: Editează
   label_edit_x: 'Editare: %{x}'
   label_view_x: 'View: %{x}'
   label_enable_multi_select: Comutare selecție multiplă
@@ -3955,7 +3961,7 @@ ro:
   label_global_roles: Roluri globale
   label_git_path: Calea catre directorul .git
   label_greater_or_equal: ">="
-  label_group_by: Grupare după
+  label_group_by: Grupează după
   label_group_new: Grupare nouă
   label_group: Grup
   label_group_named: Grup %{name}

@@ -28,7 +28,7 @@ fr:
   wikis:
     buttons:
       save_and_continue: Enregistrer et continuer
-      done_continue: Done, continue
+      done_continue: Terminé, continuer
       wiki_page: Page wiki
     inline_page_links_component:
       empty_heading: Aucun lien intégré dans la page
@@ -41,16 +41,16 @@ fr:
       empty_text: Ajouter manuellement des liens vers d'autres pages wiki liées.
       heading: Pages liées
     oauth_login_component:
-      connect_button: Connect %{provider} account
+      connect_button: Connectez votre compte %{provider}
     admin:
       oauth_application_info_component:
-        label_pending: Pending
-        replace_oauth_application: Replace OpenProject OAuth application
+        label_pending: En attente
+        replace_oauth_application: Remplacer l'application OAuth OpenProject
         confirm_replace_oauth_application: This action will reset the current OAuth credentials. After confirming you will have to reenter the credentials in your XWiki instance and all users will have to reauthorize. Are you sure you want to proceed?
       oauth_client_info_component:
-        label_pending: Pending
-        replace_oauth_client: Replace XWiki OAuth application
-        confirm_replace_oauth_client: This action will reset the current XWiki OAuth credentials. All users will need to reauthorize against XWiki. Are you sure you want to proceed?
+        label_pending: En attente
+        replace_oauth_client: Remplacer l'application XWiki OAuth
+        confirm_replace_oauth_client: Cette action réinitialisera les identifiants XWiki OAuth actuels. Tous les utilisateurs devront réautoriser sur XWiki. Êtes-vous sûr de vouloir continuer ?
       wiki_provider_list_component:
         label_name: Name
         label_provider: Provider

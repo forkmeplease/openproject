@@ -262,6 +262,7 @@ es:
               caption: Revise la configuración de importación y comience la importación
               caption_done: Completado
               label_available_data: Datos disponibles para importar
+              label_users_import_explanation: Users that are involved in selected projects (group memberships included)
               button_start: Iniciar importación
               description: Está a punto de iniciar una importación con la siguiente configuración.
               label_progress: Importando...
@@ -1433,7 +1434,7 @@ es:
           automatic_with_children: Fechas determinadas por paquetes de trabajo secundarios.
           automatic_with_predecessor: La fecha de inicio la fija un predecesor.
           manual_mobile: Programado manualmente.
-          manually_scheduled: Programado manualmente. Fechas no afectadas por relaciones.
+          manually_scheduled: Programado manualmente. No afectadas por relaciones.
       blankslate:
         title: Sin predecesores
         description: Para activar la programación automática, este paquete de trabajo debe tener al menos un predecesor. Entonces se programará automáticamente para que comience después del predecesor más cercano.
@@ -3550,7 +3551,7 @@ es:
         personal_reminder: Notificarme para recibir recordatorios personales
       daily_reminders:
         title: Enviarme recordatorios por correo electrónico diarios con las notificaciones sin leer
-        caption: Recibirás estos recordatorios solo para las notificaciones no leídas y únicamente a las horas que indiques. Hasta que configures una zona horaria para tu cuenta, se considerará que las horas están en UTC.
+        description: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
         enabled: Habilitar recordatorios por correo electrónico diarios
         add_time: Añadir tiempo
         remove_time: Eliminar el tiempo
@@ -3564,6 +3565,7 @@ es:
         date_range: Período de pausa
       email_alerts:
         title: Alertas por correo electrónico de otros elementos que no sean paquetes de trabajo
+        description: Notifications today are limited to work packages. You can choose to continue receiving email alerts for these events until they are included in notifications.
         news_added: Noticias añadidas
         news_commented: Comentarios en un elemento de noticias
         document_added: Documento agregado
@@ -3576,6 +3578,7 @@ es:
     notifications:
       participating:
         title: Participando
+        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
         submit_button: Actualizar preferencias
         mentioned: Mencionado
         watched: Observando
@@ -3584,6 +3587,7 @@ es:
         shared: Compartido conmigo
       date_alerts:
         title: Alertas de fecha
+        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
         submit_button: Alertas de fecha de actualización
         start_date: Fecha de inicio
         due_date: Fecha de finalización
@@ -3598,6 +3602,7 @@ es:
           seven_days_after: 7 días después
       non_participating:
         title: No participando
+        description: Additional notifications for activities in all projects.
         submit_button: Actualizar preferencias
         work_package_created: Nuevos paquetes de trabajo
         work_package_commented: Todos los nuevos comentarios
@@ -3606,6 +3611,7 @@ es:
         work_package_scheduled: Todos los cambios de fecha
       project_specific_settings:
         title: Configuración de notificaciones específicas de proyectos
+        description: These project-specific settings override default settings above.
         add_button: Añadir notificaciones específicas del proyecto
         dialog_title: Añadir notificaciones específicas del proyecto
         list_header: Proyectos con notificaciones específicas

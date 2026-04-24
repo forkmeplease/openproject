@@ -262,6 +262,7 @@ pt-PT:
               caption: Analise as suas definições de importação e inicie a importação
               caption_done: Concluído
               label_available_data: Dados disponíveis para importação
+              label_users_import_explanation: Users that are involved in selected projects (group memberships included)
               button_start: Iniciar importação
               description: Está prestes a iniciar uma execução de importação com as seguintes definições.
               label_progress: Importação em curso...
@@ -3557,7 +3558,7 @@ pt-PT:
         personal_reminder: Notificar-me para receber lembretes pessoais
       daily_reminders:
         title: Enviar-me lembretes diários de e-mail para notificações não lidas
-        caption: Receberá estes lembretes apenas para notificações não lidas e apenas nas horas que especificar. Até configurar um fuso horário para a sua conta, as horas serão interpretadas em UTC.
+        description: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
         enabled: Ativar lembretes diários por e-mail
         add_time: Adicionar hora
         remove_time: Remover hora
@@ -3571,6 +3572,7 @@ pt-PT:
         date_range: Período de pausa
       email_alerts:
         title: Alertas de e-mail para outros elementos que não pacotes de trabalho
+        description: Notifications today are limited to work packages. You can choose to continue receiving email alerts for these events until they are included in notifications.
         news_added: Notícia adicionada
         news_commented: Comentar numa notícia
         document_added: Documento adicionado
@@ -3583,6 +3585,7 @@ pt-PT:
     notifications:
       participating:
         title: Participante
+        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
         submit_button: Atualizar preferências
         mentioned: Mencionou
         watched: A ver
@@ -3591,6 +3594,7 @@ pt-PT:
         shared: Partilhado comigo
       date_alerts:
         title: Alertas de data
+        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
         submit_button: Atualizar alertas de data
         start_date: Data de início
         due_date: Data de término
@@ -3605,6 +3609,7 @@ pt-PT:
           seven_days_after: 7 dias depois
       non_participating:
         title: Não participante
+        description: Additional notifications for activities in all projects.
         submit_button: Atualizar preferências
         work_package_created: Novos pacotes de trabalho
         work_package_commented: Todos os novos comentários
@@ -3613,6 +3618,7 @@ pt-PT:
         work_package_scheduled: Todas as alterações de datas
       project_specific_settings:
         title: Definições de notificação específicas do projeto
+        description: These project-specific settings override default settings above.
         add_button: Adicionar notificações específicas do projeto
         dialog_title: Adicionar notificações específicas do projeto
         list_header: Projetos com notificações específicas

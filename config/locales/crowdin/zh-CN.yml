@@ -89,7 +89,7 @@ zh-CN:
         token_caption: 要详细了解如何激活企业版，请查阅我们的[文档](docs_url)。
       add_token: 上传企业版支持令牌
       replace_token: 替换您当前的支持令牌
-      order: 订购本地部署的 Enterprise edition
+      order: 订购本地部署版的 Enterprise edition
       paste: 粘贴您企业版的支持令牌
       required_for_feature: 此功能仅限具激活的企业版支持令牌的订阅者使用。
       enterprise_link: 如需了解详细信息，请单击此处。
@@ -256,6 +256,7 @@ zh-CN:
               caption: 审核导入设置并开始导入
               caption_done: 已完成
               label_available_data: 可导入的数据
+              label_users_import_explanation: Users that are involved in selected projects (group memberships included)
               button_start: 开始导入
               description: 您即将使用以下设置开始导入运行。
               label_progress: 正在导入…
@@ -1682,7 +1683,7 @@ zh-CN:
         page: 页
         row_count: 行数
         column_count: 列数
-        widgets: 小部件
+        widgets: 微件
       journal:
         notes: 备注
         cause_type: Cause 类型
@@ -3494,7 +3495,7 @@ zh-CN:
         personal_reminder: 有个人提醒时通知我
       daily_reminders:
         title: 向我发送针对未读通知的每日电子邮件提醒
-        caption: 您仅会收到针对未读通知的提醒，且仅会在您指定的时间收到提醒。在您为帐户配置时区前，时间将解释为采用 UTC 格式。
+        description: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
         enabled: 启用每日电子邮件提醒
         add_time: 添加时间
         remove_time: 移除时间
@@ -3508,6 +3509,7 @@ zh-CN:
         date_range: 暂停时间段
       email_alerts:
         title: 其他条目（非工作包）的电子邮件提醒
+        description: Notifications today are limited to work packages. You can choose to continue receiving email alerts for these events until they are included in notifications.
         news_added: 新闻已添加
         news_commented: 评论新闻条目
         document_added: 文档已添加
@@ -3520,6 +3522,7 @@ zh-CN:
     notifications:
       participating:
         title: 参与
+        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
         submit_button: 更新偏好设置
         mentioned: 被提及
         watched: 关注中
@@ -3528,6 +3531,7 @@ zh-CN:
         shared: 与我共享
       date_alerts:
         title: 日期提醒
+        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
         submit_button: 更新日期提醒
         start_date: 开始日期
         due_date: 完成日期
@@ -3542,6 +3546,7 @@ zh-CN:
           seven_days_after: 推后 7 天
       non_participating:
         title: 不参与
+        description: Additional notifications for activities in all projects.
         submit_button: 更新偏好设置
         work_package_created: 新工作包
         work_package_commented: 所有新评论
@@ -3550,6 +3555,7 @@ zh-CN:
         work_package_scheduled: 所有日期更改
       project_specific_settings:
         title: 项目特定通知设置
+        description: These project-specific settings override default settings above.
         add_button: 添加项目特定通知
         dialog_title: 添加项目特定通知
         list_header: 具有特定通知的项目
@@ -4127,7 +4133,7 @@ zh-CN:
   label_revision_id: 修订版本 %{value}
   label_revision_plural: 修订
   label_roadmap: 路线图
-  label_roadmap_edit: 编辑路线图 %{name}
+  label_roadmap_edit: 编辑路线图%{name}
   label_roadmap_due_in: "%{value} 到期"
   label_roadmap_no_work_packages: 该版本没有工作包。
   label_roadmap_overdue: "%{value} 超时"
@@ -4887,7 +4893,7 @@ zh-CN:
       managed: 在 OpenProject 中创建新的存储库
     storage:
       not_available: 磁盘存储开销不可用于此存储库。
-      update_timeout: 在 N 分钟内保留存储库最后所需磁盘空间的信息。由于计算存储库所需的磁盘空间可能增加系统开销，增加该值可以减少性能影响。
+      update_timeout: 在 N 分钟内保留存储库最后所需的磁盘空间信息。由于计算存储库所需的磁盘空间可能增加系统开销，增加该值可以减少性能影响。
       oauth_application_details_html: 关闭此窗口后，将无法再次访问客户端密钥值。请将这些值复制到 Nextcloud OpenProject 集成设置中：
       oauth_application_details_link_text: 转到设置页面
       setup_documentation_details: 如果您在配置新文件存储方面需要帮助，请查看文档：
@@ -5115,7 +5121,7 @@ zh-CN:
   setting_session_ttl_hint: 当设置的值低于5时，其作用类似于禁用。
   setting_session_ttl_enabled: 会话过期
   setting_start_of_week: 一周起始日
-  setting_sys_api_enabled: 启用版本库管理 web 服务
+  setting_sys_api_enabled: 启用存储库管理网页服务
   setting_sys_api_description: 存储库管理网页服务提供了集成的，用户授权的存储库访问。
   setting_time_format: 时间
   setting_total_percent_complete_mode: 计算 完成% 层次结构总数
@@ -5601,7 +5607,7 @@ zh-CN:
   warning_user_limit_reached_admin_html: '添加额外的用户将超出当前限值。请[升级您的方案](upgrade_url)，以确保外部用户能够访问此实例。
 
     '
-  warning_user_limit_reached_instructions: '您达到了用户限制（%{current}/%{max}活跃用户）。 请联系sales@openproject.com以升级您的Enterprise edition计划并添加其他用户。
+  warning_user_limit_reached_instructions: '您已达到用户限制（%{current}/%{max} 活跃用户）。请联系 sales@openproject.com 升级您的企业版计划以添加额外用户。
 
     '
   warning_protocol_mismatch_html: ''
