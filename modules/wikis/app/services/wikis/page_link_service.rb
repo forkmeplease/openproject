@@ -50,7 +50,7 @@ module Wikis
 
     def inline_page_link_infos_for(linkable:)
       InlinePageLink.where(linkable:)
-                    .order(created_at: :desc)
+                    .order(created_at: :asc)
                     .map { page_info(provider: it.provider, identifier: it.identifier) }
     end
 
