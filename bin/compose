@@ -91,5 +91,5 @@ elif [[ "$1" = "rspec" ]]; then
 
   $DOCKER_COMPOSE -f $COMPOSE_FILE exec backend-test bundle exec rspec "${@:2}"
 else
-  $DOCKER_COMPOSE -f $COMPOSE_FILE $*
+  $DOCKER_COMPOSE -f $COMPOSE_FILE "$@"
 fi
