@@ -47,8 +47,10 @@ RSpec.describe Backlogs::BacklogBucketsController, with_flag: { backlog_buckets:
       post :create, format: :turbo_stream, params: params
 
       expect(response).to be_successful
-      expect(response.body).to include("action=\"redirect_to\"")
-      expect(response.body).to include(project_backlogs_backlog_path(project))
+      expect(response.body).to have_turbo_stream(
+        action: "redirect_to",
+        url: project_backlogs_backlog_path(project)
+      )
       expect(flash[:notice]).to eq(I18n.t(:notice_successful_create))
     end
 
@@ -56,7 +58,10 @@ RSpec.describe Backlogs::BacklogBucketsController, with_flag: { backlog_buckets:
       it "redirects to backlogs preserving the all param" do
         post :create, format: :turbo_stream, params: params.merge(all: 1)
 
-        expect(response.body).to include(project_backlogs_backlog_path(project, all: 1))
+        expect(response.body).to have_turbo_stream(
+          action: "redirect_to",
+          url: project_backlogs_backlog_path(project, all: 1)
+        )
       end
     end
   end
@@ -70,8 +75,10 @@ RSpec.describe Backlogs::BacklogBucketsController, with_flag: { backlog_buckets:
       put :update, format: :turbo_stream, params: params
 
       expect(response).to be_successful
-      expect(response.body).to include("action=\"redirect_to\"")
-      expect(response.body).to include(project_backlogs_backlog_path(project))
+      expect(response.body).to have_turbo_stream(
+        action: "redirect_to",
+        url: project_backlogs_backlog_path(project)
+      )
       expect(backlog_bucket.reload.name).to eq("Renamed bucket")
       expect(flash[:notice]).to eq(I18n.t(:notice_successful_update))
     end
@@ -80,7 +87,10 @@ RSpec.describe Backlogs::BacklogBucketsController, with_flag: { backlog_buckets:
       it "redirects to backlogs preserving the all param" do
         put :update, format: :turbo_stream, params: params.merge(all: 1)
 
-        expect(response.body).to include(project_backlogs_backlog_path(project, all: 1))
+        expect(response.body).to have_turbo_stream(
+          action: "redirect_to",
+          url: project_backlogs_backlog_path(project, all: 1)
+        )
       end
     end
   end
@@ -94,8 +104,10 @@ RSpec.describe Backlogs::BacklogBucketsController, with_flag: { backlog_buckets:
       delete :destroy, format: :turbo_stream, params: params
 
       expect(response).to be_successful
-      expect(response.body).to include("action=\"redirect_to\"")
-      expect(response.body).to include(project_backlogs_backlog_path(project))
+      expect(response.body).to have_turbo_stream(
+        action: "redirect_to",
+        url: project_backlogs_backlog_path(project)
+      )
       expect(flash[:notice]).to eq(I18n.t(:notice_successful_delete))
     end
 
@@ -103,7 +115,10 @@ RSpec.describe Backlogs::BacklogBucketsController, with_flag: { backlog_buckets:
       it "redirects to backlogs preserving the all param" do
         delete :destroy, format: :turbo_stream, params: params.merge(all: 1)
 
-        expect(response.body).to include(project_backlogs_backlog_path(project, all: 1))
+        expect(response.body).to have_turbo_stream(
+          action: "redirect_to",
+          url: project_backlogs_backlog_path(project, all: 1)
+        )
       end
     end
   end
