@@ -364,6 +364,14 @@ RSpec.describe Projects::Identifier do
       end
     end
 
+    describe "#raw_values" do
+      it "returns slug values verbatim (no case folding)" do
+        FriendlyId::Slug.create!(sluggable: renamed_project, slug: "MixedCase")
+        values = Project.historical_identifiers.raw_values
+        expect(values).to contain_exactly("active-id", "current-id", "old-slug", "MixedCase")
+      end
+    end
+
     it "composes scopes (truly_historical + upcased_values)" do
       values = Project.historical_identifiers.truly_historical.upcased_values
       expect(values).to contain_exactly("OLD-SLUG")

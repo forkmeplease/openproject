@@ -99,6 +99,9 @@ module Projects::Identifier
 
     def upcased_values   = pluck(Arel.sql("UPPER(slug)"))
     def downcased_values = pluck(Arel.sql("LOWER(slug)"))
+    # Verbatim values, no case folding. Named `raw_values` to avoid colliding
+    # with `ActiveRecord::Relation#values` (an internal Rails method).
+    def raw_values = pluck(:slug)
   end
 
   class_methods do
