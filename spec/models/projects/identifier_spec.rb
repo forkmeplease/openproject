@@ -201,6 +201,42 @@ RSpec.describe Projects::Identifier do
     end
   end
 
+  describe "semantic_conversion context", with_settings: { work_packages_identifier: "classic" } do
+    let!(:project) { create(:project, identifier: "classic-id") }
+
+    it "rejects a semantic identifier under normal classic-mode validation" do
+      project.identifier = "PROJ"
+      expect(project).not_to be_valid
+      expect(project.errors[:identifier]).to be_present
+    end
+
+    it "accepts a semantic identifier when validated with the :semantic_conversion context" do
+      project.identifier = "PROJ"
+      expect(project.valid?(:semantic_conversion)).to be(true)
+    end
+
+    it "persists the semantic identifier when saved with the :semantic_conversion context" do
+      project.identifier = "PROJ"
+      project.save!(context: :semantic_conversion)
+      expect(project.reload.identifier).to eq("PROJ")
+    end
+
+    it "still rejects an invalid semantic identifier under :semantic_conversion context" do
+      project.identifier = "bad-format"
+      expect(project.valid?(:semantic_conversion)).to be(false)
+      expect(project.errors[:identifier]).to be_present
+    end
+
+    it "rejects an identifier already used historically by another project" do
+      other = create(:project, identifier: "other-id")
+      FriendlyId::Slug.create!(sluggable: other, slug: "PROJ")
+
+      project.identifier = "PROJ"
+      expect(project.valid?(:semantic_conversion)).to be(false)
+      expect(project.errors[:identifier]).to include(I18n.t("activerecord.errors.messages.taken"))
+    end
+  end
+
   describe ".suggest_identifier" do
     context "with semantic identifiers", with_settings: { work_packages_identifier: "semantic" } do
       it "delegates to ProjectIdentifierSuggestionGenerator with an exclusion set" do

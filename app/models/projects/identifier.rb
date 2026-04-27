@@ -122,7 +122,7 @@ module Projects::Identifier
   def validate_identifier
     validate_identifier_not_reserved_keyword
 
-    if Setting::WorkPackageIdentifier.semantic?
+    if Setting::WorkPackageIdentifier.semantic? || Array(validation_context).include?(:semantic_conversion)
       validate_identifier_semantic_format
     else
       validate_identifier_classic_format

@@ -85,9 +85,8 @@ module ProjectIdentifiers
       raise "Generated identifier is blank for project #{project.id}" if new_identifier.blank?
 
       project.identifier = new_identifier
-      # Bypass validation, because we're technically still in classic mode, so the model would be applying
-      # validation for classic identifiers.
-      project.save!(validate: false)
+      # Save with the validation context that allows to save semantic ID while system is in classic mode
+      project.save!(context: :semantic_conversion)
     end
 
     def reset_stale_identifiers
