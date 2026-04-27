@@ -83,13 +83,31 @@ module Projects::Identifier
     def unset_slug_if_invalid; end
   end
 
+  # Domain-named scopes for the FriendlyId::Slug relation returned by Project.historical_slugs.
+  # Lets callers compose against verbs like .truly_historical / .matching / .upcased_values
+  # instead of raw SQL fragments — keeping FriendlyId::Slug column knowledge in one place.
+  module HistoricalIdentifierScopes
+    # Slugs that are no longer used as any active project's identifier.
+    def truly_historical
+      where("LOWER(slug) NOT IN (SELECT LOWER(identifier) FROM projects)")
+    end
+
+    # Slugs whose lowercase form equals the lowercased input.
+    def matching(value)
+      where("LOWER(slug) = ?", value.downcase)
+    end
+
+    def upcased_values   = pluck(Arel.sql("UPPER(slug)"))
+    def downcased_values = pluck(Arel.sql("LOWER(slug)"))
+  end
+
   class_methods do
     def classic_identifier_format?(str)
       str.match?(CLASSIC_IDENTIFIER_FORMAT)
     end
 
     def historical_slugs
-      FriendlyId::Slug.where(sluggable_type: name)
+      FriendlyId::Slug.where(sluggable_type: name).extending(HistoricalIdentifierScopes)
     end
 
     def suggest_identifier(name, mode: Setting[:work_packages_identifier])
@@ -172,7 +190,7 @@ module Projects::Identifier
 
   def identifier_used_by_other_project_in_past?
     self.class.historical_slugs
-              .where("LOWER(slug) = ?", identifier.downcase)
+              .matching(identifier)
               .where.not(sluggable_id: id)
               .exists?
   end

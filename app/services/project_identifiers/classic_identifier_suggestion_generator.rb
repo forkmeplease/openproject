@@ -79,7 +79,7 @@ module ProjectIdentifiers
       current    = Project.unscoped.pluck(:identifier).compact.to_set(&:downcase)
       historical = Project.historical_slugs
                          .then { |q| project ? q.where.not(sluggable_id: project.id) : q }
-                         .pluck(:slug).to_set(&:downcase)
+                         .downcased_values.to_set
       reserved   = Projects::Identifier::RESERVED_IDENTIFIERS.to_set
       current | historical | reserved
     end
