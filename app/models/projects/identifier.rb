@@ -88,6 +88,10 @@ module Projects::Identifier
       str.match?(CLASSIC_IDENTIFIER_FORMAT)
     end
 
+    def historical_slugs
+      FriendlyId::Slug.where(sluggable_type: name)
+    end
+
     def suggest_identifier(name, mode: Setting[:work_packages_identifier])
       if mode == Setting::WorkPackageIdentifier::SEMANTIC
         exclude = ProjectIdentifiers::IdentifierAutofix::ProblematicIdentifiers.reserved_identifiers
@@ -167,11 +171,10 @@ module Projects::Identifier
   end
 
   def identifier_used_by_other_project_in_past?
-    FriendlyId::Slug
-      .where("LOWER(slug) = ?", identifier.downcase)
-      .where(sluggable_type: self.class.to_s)
-      .where.not(sluggable_id: id)
-      .exists?
+    self.class.historical_slugs
+              .where("LOWER(slug) = ?", identifier.downcase)
+              .where.not(sluggable_id: id)
+              .exists?
   end
 
   def generate_semantic_identifier
