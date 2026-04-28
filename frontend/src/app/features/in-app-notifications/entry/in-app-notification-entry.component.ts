@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
@@ -12,6 +12,7 @@ import { INotification } from 'core-app/core/state/in-app-notifications/in-app-n
 import { IanCenterService } from 'core-app/features/in-app-notifications/center/state/ian-center.service';
 import { DeviceService } from 'core-app/core/browser/device.service';
 import { UrlParamsService } from 'core-app/core/navigation/url-params.service';
+import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
 
 @Component({
   selector: 'op-in-app-notification-entry',
@@ -21,14 +22,22 @@ import { UrlParamsService } from 'core-app/core/navigation/url-params.service';
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class InAppNotificationEntryComponent implements OnInit {
+export class InAppNotificationEntryComponent extends UntilDestroyedMixin implements OnInit {
   @HostBinding('class.op-ian-item') className = true;
 
   @Input() notification:INotification;
 
   @Input() aggregatedNotifications:INotification[];
 
-  workPackage$:Observable<WorkPackageResource>|null = null;
+  // Single source of truth for the loaded work package. Fed explicitly from
+  // ngOnInit's subscription (not via template subscription) so click handlers
+  // can read .value synchronously regardless of whether the template has
+  // subscribed to workPackage$ yet.
+  private workPackageSubject = new BehaviorSubject<WorkPackageResource|null>(null);
+
+  workPackage$:Observable<WorkPackageResource> = this.workPackageSubject.pipe(
+    filter((wp):wp is WorkPackageResource => wp !== null),
+  );
 
   showDateAlert = false;
   hasReminderAlert = false;
@@ -48,12 +57,7 @@ export class InAppNotificationEntryComponent implements OnInit {
 
   private clickTimer:ReturnType<typeof setTimeout>;
 
-  private workPackageId:string|null;
-
-  // The loaded work package, captured via tap() on workPackage$. Click handlers
-  // prefer this.workPackage.displayId so the URL carries the semantic identifier;
-  // fall back to the numeric PK if the resource hasn't emitted yet.
-  private workPackage:WorkPackageResource|null = null;
+  workPackageId:string|null;
 
   constructor(
     readonly apiV3Service:ApiV3Service,
@@ -64,10 +68,7 @@ export class InAppNotificationEntryComponent implements OnInit {
     readonly deviceService:DeviceService,
     readonly urlParams:UrlParamsService,
   ) {
-  }
-
-  private routingId():string {
-    return this.workPackage?.displayId ?? this.workPackageId ?? '';
+    super();
   }
 
   ngOnInit():void {
@@ -87,14 +88,17 @@ export class InAppNotificationEntryComponent implements OnInit {
 
   private loadWorkPackage() {
     // not a work package reference
-    if (this.workPackageId) {
-      this.workPackage$ = this
-        .apiV3Service
-        .work_packages
-        .id(this.workPackageId)
-        .requireAndStream()
-        .pipe(tap((wp) => { this.workPackage = wp; }));
+    if (!this.workPackageId) {
+      return;
     }
+
+    this
+      .apiV3Service
+      .work_packages
+      .id(this.workPackageId)
+      .requireAndStream()
+      .pipe(this.untilDestroyed())
+      .subscribe((wp) => this.workPackageSubject.next(wp));
   }
 
   onClick():void {
@@ -112,7 +116,8 @@ export class InAppNotificationEntryComponent implements OnInit {
     }
 
     const tab = this.showDateAlert ? 'overview' : 'activity';
-    this.storeService.openSplitScreen(this.routingId(), tab);
+    const id = this.workPackageSubject.value?.displayId ?? this.workPackageId;
+    this.storeService.openSplitScreen(id, tab);
   }
 
   onDoubleClick():void {
@@ -125,7 +130,8 @@ export class InAppNotificationEntryComponent implements OnInit {
       return;
     }
 
-    const link = this.pathHelper.workPackagePath(this.routingId()) + window.location.search;
+    const id = this.workPackageSubject.value?.displayId ?? this.workPackageId;
+    const link = this.pathHelper.workPackagePath(id) + window.location.search;
     Turbo.visit(link, { action: 'advance' });
   }
 
