@@ -36,6 +36,15 @@ module OpenProject
 
       attr_reader :work_package, :project, :container, :current_user
 
+      # @param work_package [WorkPackage] the work package this card represents.
+      # @param project [Project] the project this card is rendered in. May
+      #   differ from `work_package.project` when sprints or buckets are
+      #   shared across projects.
+      # @param container [Sprint, BacklogBucket, NilClass] the parent
+      #   list this card is rendered into. Drives `drop_url` and `menu_src`. `nil`
+      #   means inbox.
+      # @param current_user [User] used for the draggable permission check;
+      #   defaults to `User.current`.
       def initialize(work_package:, project:, container:, current_user: User.current)
         super()
 

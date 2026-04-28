@@ -34,10 +34,23 @@ module OpenProject
       include Primer::AttributesHelper
       include OpPrimer::ComponentHelpers
 
+      # Renders a `Header` above the card list with the title, count badge, and
+      # consumer-provided actions/menu/description.
+      #
+      # @param title [String] heading text rendered inside the collapsible header.
+      # @param count [Integer, NilClass] optional count badge displayed alongside
+      #   the title; hidden when zero or nil.
       renders_one :header, ->(title:, count: nil) {
         Header.new(title:, count:, container:, list_id:, collapsed: folded?)
       }
 
+      # Renders a `Primer::Beta::Blankslate` when `work_packages` is empty. The
+      # slot is required — `before_render` raises if it is not set.
+      #
+      # @param title [String] blankslate heading.
+      # @param description [String, NilClass] optional secondary text.
+      # @param icon [Symbol, NilClass] optional Octicon name.
+      # @param system_arguments [Hash] forwarded to `Primer::Beta::Blankslate`.
       renders_one :empty_state, ->(title:, description: nil, icon: nil, **system_arguments) {
         system_arguments[:role] = "status"
         system_arguments[:aria] = merge_aria(
@@ -52,14 +65,36 @@ module OpenProject
         blankslate
       }
 
+      # When set, the box truncates `work_packages` to the first `truncate_middle`
+      # rows plus a derived tail (`max(truncate_middle / 5, 1)`) and inserts a
+      # show-more affordance between them. Truncation only triggers when
+      # `work_packages.size > truncate_middle + 2 * tail_size`.
+      #
+      # @param truncate_middle [Integer] first-page size.
+      # @param text [String, NilClass] copy override for the show-more label.
+      #   Supports a `%{count}` placeholder. Defaults to the
+      #   `work_package_card_box_component.show_more` translation key.
       renders_one :show_more, ->(truncate_middle:, text: nil) {
         ShowMore.new(truncate_middle:, text:)
       }
 
+      # Renders a free-form footer row below the card list.
       renders_one :footer
 
       attr_reader :work_packages, :project, :container, :current_user
 
+      # @param work_packages [Enumerable<WorkPackage>] the work packages to render
+      #   as cards. Truncated when the `:show_more` slot is set and the count
+      #   exceeds the derived threshold.
+      # @param project [Project] the project this card box is rendered in. May
+      #   differ from individual `work_package.project` values when sprints or
+      #   buckets are shared across projects.
+      # @param container [Sprint, BacklogBucket, NilClass] drives the box DOM id,
+      #   list id, and drop-target wiring. `nil` for the inbox case.
+      # @param current_user [User] passed through to each `WorkPackageCardComponent`
+      #   for permission checks; defaults to `User.current`.
+      # @param system_arguments [Hash] forwarded to the underlying
+      #   `Primer::Beta::BorderBox`.
       def initialize(work_packages:, project:, container:, current_user: User.current, **system_arguments)
         super()
 
