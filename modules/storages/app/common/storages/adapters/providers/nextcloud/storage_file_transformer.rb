@@ -47,7 +47,7 @@ module Storages
               mime_type: prop_text(xml, "d:getcontenttype").presence || "application/x-op-directory",
               last_modified_at: Time.zone.parse(prop_text(xml, "d:getlastmodified")),
               created_by_name: prop_text(xml, "oc:owner-display-name").presence || "Unknown",
-              location: UrlBuilder.path(location),
+              location:,
               permissions: parse_permissions(prop_text(xml, "oc:permissions"))
             )
           end

@@ -126,7 +126,7 @@ module Storages
                   parent: Results::StorageFile.new(
                     name: CGI.unescape(json[:webUrl].gsub(/.*#{site_name}\//, "")),
                     id: json[:parentReference][:driveId],
-                    location: json[:webUrl].gsub(/.*#{site_name}/, ""),
+                    location: CGI.unescape(json[:webUrl].gsub(/.*#{site_name}/, "")),
                     permissions: %i[readable writeable]
                   ),
                   ancestors: [site_root]
