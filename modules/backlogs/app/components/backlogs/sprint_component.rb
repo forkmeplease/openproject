@@ -90,9 +90,8 @@ module Backlogs
         story: true,
         controller: "backlogs--story",
         backlogs__story_id_value: story.id,
-        backlogs__story_split_url_value: project_backlogs_backlog_details_path(project, story,
-                                                                               all_backlogs_params),
-        backlogs__story_full_url_value: work_package_path(story),
+        backlogs__story_split_url_value: split_url(story),
+        backlogs__story_full_url_value: full_url(story),
         backlogs__story_selected_class: "Box-row--blue",
         test_selector: card_test_selector(story)
       )
@@ -104,8 +103,20 @@ module Backlogs
       {
         draggable_id: story.id,
         draggable_type: "story",
-        drop_url: move_project_backlogs_work_package_path(project, sprint, story, all_backlogs_params)
+        drop_url: drop_url(story)
       }
+    end
+
+    def drop_url(story)
+      move_project_backlogs_work_package_path(project, sprint, story, all_backlogs_params)
+    end
+
+    def split_url(story)
+      project_backlogs_backlog_details_path(project, story, all_backlogs_params)
+    end
+
+    def full_url(story)
+      work_package_path(story)
     end
 
     def card_test_selector(story)

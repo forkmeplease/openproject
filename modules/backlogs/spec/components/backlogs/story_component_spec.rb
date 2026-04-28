@@ -93,7 +93,7 @@ RSpec.describe Backlogs::StoryComponent, type: :component do
   end
 
   context "when params[:all] is true" do
-    before { vc_test_controller.params.merge!(all: "1") }
+    before { vc_test_controller.params[:all] = "1" }
 
     it "includes the all param on the deferred menu src" do
       render_component

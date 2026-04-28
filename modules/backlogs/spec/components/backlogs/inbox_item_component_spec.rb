@@ -52,16 +52,16 @@ RSpec.describe Backlogs::InboxItemComponent, type: :component do
   let(:work_packages) { WorkPackage.where(id: work_package.id).order(:position, :id) }
   let(:show_all_backlog) { false }
 
-  before do
+  def render_component
     vc_test_controller.params[:all] = "1" if show_all_backlog
-    render_inline(
-      Backlogs::InboxComponent.new(
-        work_packages:,
-        project:,
-        current_user: user
-      )
+    render_inline Backlogs::InboxComponent.new(
+      work_packages:,
+      project:,
+      current_user: user
     )
   end
+
+  before { render_component }
 
   it "rendering renders the Inbox Component", :aggregate_failures do
     # renders the work package subject

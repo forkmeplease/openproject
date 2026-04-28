@@ -42,7 +42,8 @@ RSpec.describe Backlogs::BacklogBucketItemComponent, type: :component do
 
   let(:project) { create(:project) }
   let(:backlog_bucket) { create(:backlog_bucket, project:) }
-  let(:work_package) do
+  let(:show_all_backlog) { false }
+  let!(:work_package) do
     create(:work_package,
            subject: "Bucket Work Package",
            project:,
@@ -51,19 +52,18 @@ RSpec.describe Backlogs::BacklogBucketItemComponent, type: :component do
            priority: default_priority,
            position: 1)
   end
-  let(:show_all_backlog) { false }
 
-  before do
+  def render_component
     vc_test_controller.params[:all] = "1" if show_all_backlog
-    work_package
-    render_inline(
-      Backlogs::BacklogBucketComponent.new(
-        backlog_bucket:,
-        project:,
-        current_user: user
-      )
+
+    render_inline Backlogs::BacklogBucketComponent.new(
+      backlog_bucket:,
+      project:,
+      current_user: user
     )
   end
+
+  before { render_component }
 
   it "renders the work package card", :aggregate_failures do
     expect(page).to have_text("Bucket Work Package")
@@ -104,6 +104,24 @@ RSpec.describe Backlogs::BacklogBucketItemComponent, type: :component do
     end
   end
 
+  context "when show_all_backlog is active" do
+    let(:show_all_backlog) { true }
+
+    subject(:row) { page.find(".Box-row#work_package_#{work_package.id}") }
+
+    it "includes all=1 in the split-view URL" do
+      expect(row["data-backlogs--story-split-url-value"]).to include("all=1")
+    end
+
+    it "includes all=1 in the drop URL" do
+      expect(row["data-drop-url"]).to include("all=1")
+    end
+
+    it "includes all=1 in the action-menu src" do
+      expect(row).to have_css(%(include-fragment[src*="all=1"]))
+    end
+  end
+
   context "when the user lacks the manage_sprint_items permission" do
     let(:role) { create(:project_role, permissions: %i[view_sprints view_work_packages]) }
     let(:user) { create(:user, member_with_roles: { project => role }) }
@@ -117,16 +135,6 @@ RSpec.describe Backlogs::BacklogBucketItemComponent, type: :component do
       expect(row["data-draggable-id"]).to be_nil
       expect(row["data-draggable-type"]).to be_nil
       expect(row["data-drop-url"]).to be_nil
-    end
-  end
-
-  describe "with show_all_backlog true" do
-    let(:show_all_backlog) { true }
-
-    subject(:row) { page.find(".Box-row#work_package_#{work_package.id}") }
-
-    it "adds the all query to the menu fragment URL" do
-      expect(row).to have_css(%(include-fragment[src*="all=1"]))
     end
   end
 end

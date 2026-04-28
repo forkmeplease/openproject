@@ -59,14 +59,12 @@ RSpec.describe Backlogs::InboxMenuComponent, type: :component do
   def render_component(position: 2, max_position: 3, open_sprints_exist: true, show_all_backlog: false)
     work_package.update!(position:)
     vc_test_controller.params[:all] = "1" if show_all_backlog
-    render_inline(
-      described_class.new(
-        work_package:,
-        project:,
-        max_position:,
-        open_sprints_exist:,
-        current_user: user
-      )
+    render_inline described_class.new(
+      work_package:,
+      project:,
+      max_position:,
+      open_sprints_exist:,
+      current_user: user
     )
   end
 
