@@ -28,30 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin::Forms
-  class OAuthClientFormComponent < Wikis::Admin::WikiProviderComponent
-    def self.wrapper_key = :wiki_provider_oauth_client_section
+module Wikis
+  module Admin
+    module WikiProvidersHelper
+      # TODO: temp helper — unblocks work until a proper per-user connection status
+      # is tracked and surfaced via a dedicated component.
+      def current_user_xwiki_token_missing?(wiki_provider)
+        oauth_client = wiki_provider.oauth_client
+        return false if oauth_client.nil?
 
-    options in_wizard: false,
-            oauth_client: nil
+        token = OAuthClientToken.find_by(user: current_user, oauth_client:)
+        return true if token.nil?
 
-    def form_url
-      query = in_wizard ? { continue_wizard: wiki_provider.id } : {}
-      url_helpers.admin_settings_wiki_provider_oauth_client_path(wiki_provider, query)
-    end
-
-    def form_method
-      resolved_oauth_client.persisted? ? :patch : :post
-    end
-
-    def cancel_button_path
-      url_helpers.edit_admin_settings_wiki_provider_path(wiki_provider)
-    end
-
-    def resolved_oauth_client
-      oauth_client ||
-        wiki_provider.oauth_client ||
-        wiki_provider.build_oauth_client(client_id: Wikis::XWikiProvider.generate_client_id)
+        token.expires_in.present? && token.updated_at + token.expires_in.seconds < Time.current
+      end
     end
   end
 end

@@ -28,30 +28,36 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin::Forms
-  class OAuthClientFormComponent < Wikis::Admin::WikiProviderComponent
-    def self.wrapper_key = :wiki_provider_oauth_client_section
+require "spec_helper"
+require_module_spec_helper
+require "contracts/shared/model_contract_shared_context"
 
-    options in_wizard: false,
-            oauth_client: nil
+RSpec.describe Wikis::OAuthClients::XWikiCreateContract do
+  include_context "ModelContract shared context"
 
-    def form_url
-      query = in_wizard ? { continue_wizard: wiki_provider.id } : {}
-      url_helpers.admin_settings_wiki_provider_oauth_client_path(wiki_provider, query)
+  let(:current_user) { create(:admin) }
+  let(:client_id) { SecureRandom.uuid }
+  let(:client_secret) { nil }
+  let(:integration) { create(:xwiki_provider) }
+  let(:oauth_client) { build(:oauth_client, client_id:, client_secret:, integration:) }
+
+  let(:contract) { described_class.new(oauth_client, current_user) }
+
+  describe "client_secret" do
+    context "when absent (nil)" do
+      include_examples "contract is valid"
     end
 
-    def form_method
-      resolved_oauth_client.persisted? ? :patch : :post
+    context "when empty string" do
+      let(:client_secret) { "" }
+
+      include_examples "contract is valid"
     end
 
-    def cancel_button_path
-      url_helpers.edit_admin_settings_wiki_provider_path(wiki_provider)
-    end
+    context "when too long" do
+      let(:client_secret) { "X" * 257 }
 
-    def resolved_oauth_client
-      oauth_client ||
-        wiki_provider.oauth_client ||
-        wiki_provider.build_oauth_client(client_id: Wikis::XWikiProvider.generate_client_id)
+      include_examples "contract is invalid", client_secret: :too_long
     end
   end
 end

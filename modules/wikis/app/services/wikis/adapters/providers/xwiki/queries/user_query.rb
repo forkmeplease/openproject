@@ -28,30 +28,37 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin::Forms
-  class OAuthClientFormComponent < Wikis::Admin::WikiProviderComponent
-    def self.wrapper_key = :wiki_provider_oauth_client_section
+module Wikis
+  module Adapters
+    module Providers
+      module XWiki
+        module Queries
+          class UserQuery < BaseQuery
+            def call(input_data)
+              url = "#{provider.url.chomp('/')}/rest/"
+              handle_response(OpenProject.httpx.bearer_auth(input_data.access_token).get(url))
+            end
 
-    options in_wizard: false,
-            oauth_client: nil
+            private
 
-    def form_url
-      query = in_wizard ? { continue_wizard: wiki_provider.id } : {}
-      url_helpers.admin_settings_wiki_provider_oauth_client_path(wiki_provider, query)
-    end
+            def handle_response(response)
+              return failure(code: :connection_error) if response.is_a?(HTTPX::ErrorResponse)
 
-    def form_method
-      resolved_oauth_client.persisted? ? :patch : :post
-    end
+              case response
+              in { status: 200..299 }
+                handle_success_response(response)
+              else
+                failure(code: :request_failed)
+              end
+            end
 
-    def cancel_button_path
-      url_helpers.edit_admin_settings_wiki_provider_path(wiki_provider)
-    end
-
-    def resolved_oauth_client
-      oauth_client ||
-        wiki_provider.oauth_client ||
-        wiki_provider.build_oauth_client(client_id: Wikis::XWikiProvider.generate_client_id)
+            def handle_success_response(response)
+              xwiki_user = response.headers["xwiki-user"]
+              xwiki_user.present? ? success(xwiki_user) : failure(code: :unauthorized)
+            end
+          end
+        end
+      end
     end
   end
 end
