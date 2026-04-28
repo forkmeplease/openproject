@@ -45,12 +45,12 @@ export class UiStateLinkBuilder {
       const projectIdentifier = this.currentProject.identifier;
       href = this.pathHelper.genericWorkPackagePath(projectIdentifier, idForHref, this.keepTab.currentShowTab) + window.location.search;
     } else {
-      const tab = this.keepTab.currentDetailsTab;
+      const tabIdentifier = this.keepTab.currentDetailsTab;
       href = this.$state.href(
         'work-packages.partitioned.list.details.tabs',
         {
           workPackageId: idForHref,
-          tab,
+          tabIdentifier,
         },
       );
     }

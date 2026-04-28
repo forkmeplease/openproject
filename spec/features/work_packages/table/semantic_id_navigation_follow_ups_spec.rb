@@ -30,6 +30,20 @@ RSpec.describe "Work package table navigation follow-ups use displayId",
     wp_table.expect_work_package_listed(work_package, other_wp)
   end
 
+  describe "row 'Open details view' anchor" do
+    it "renders an href that contains the semantic identifier (not the literal string 'null')" do
+      semantic_id = work_package.reload.identifier
+
+      details_anchor = within(wp_table.row(work_package)) do
+        find_link(title: "Open details view", visible: :all)
+      end
+
+      expect(details_anchor[:href]).to include("/details/#{semantic_id}")
+      expect(details_anchor[:href]).not_to end_with("/null")
+      expect(details_anchor[:href]).not_to include("/details/#{work_package.id}")
+    end
+  end
+
   describe "right-click context menu 'Open fullscreen' item" do
     it "links to the semantic identifier URL" do
       semantic_id = work_package.reload.identifier
