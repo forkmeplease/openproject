@@ -92,8 +92,7 @@ RSpec.describe Backlogs::StoryMenuListComponent, type: :component do
       it "adds the all param to the open details href" do
         render_component
 
-        href = page.find("#work_package_#{story.id}_menu_open_details")[:href]
-        expect(href).to match(/all=1/)
+        expect(page).to have_css(%(#work_package_#{story.id}_menu_open_details[href*="all=1"]))
       end
     end
 
@@ -262,8 +261,7 @@ RSpec.describe Backlogs::StoryMenuListComponent, type: :component do
       it "adds the all param to the move to sprint href" do
         render_component(open_sprints_exist: true)
 
-        href = page.find("#work_package_#{story.id}_menu_move_to_sprint")[:href]
-        expect(href).to match(/all=1/)
+        expect(page).to have_css(%(#work_package_#{story.id}_menu_move_to_sprint[href*="all=1"]))
       end
     end
   end

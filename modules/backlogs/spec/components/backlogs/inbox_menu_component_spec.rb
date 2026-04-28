@@ -96,8 +96,7 @@ RSpec.describe Backlogs::InboxMenuComponent, type: :component do
       it "adds the all param to the open details link" do
         render_component(show_all_backlog: true)
 
-        href = page.find("#work_package_#{work_package.id}_menu_open_details")[:href]
-        expect(href).to match(/all=1/)
+        expect(page).to have_css(%(#work_package_#{work_package.id}_menu_open_details[href*="all=1"]))
       end
     end
 

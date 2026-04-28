@@ -98,8 +98,7 @@ RSpec.describe Backlogs::StoryComponent, type: :component do
     it "includes the all param on the deferred menu src" do
       render_component
 
-      src = page.find("include-fragment", visible: :all)["src"]
-      expect(src).to match(/all=1/)
+      expect(page).to have_css(%(include-fragment[src*="all=1"]))
     end
   end
 

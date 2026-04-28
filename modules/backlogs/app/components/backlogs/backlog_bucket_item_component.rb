@@ -31,6 +31,7 @@
 module Backlogs
   class BacklogBucketItemComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
+    include CommonHelper
 
     with_collection_parameter :work_package
 

@@ -51,8 +51,10 @@ RSpec.describe Backlogs::BacklogBucketItemComponent, type: :component do
            priority: default_priority,
            position: 1)
   end
+  let(:show_all_backlog) { false }
 
   before do
+    vc_test_controller.params[:all] = "1" if show_all_backlog
     work_package
     render_inline(
       Backlogs::BacklogBucketComponent.new(
@@ -115,6 +117,16 @@ RSpec.describe Backlogs::BacklogBucketItemComponent, type: :component do
       expect(row["data-draggable-id"]).to be_nil
       expect(row["data-draggable-type"]).to be_nil
       expect(row["data-drop-url"]).to be_nil
+    end
+  end
+
+  describe "with show_all_backlog true" do
+    let(:show_all_backlog) { true }
+
+    subject(:row) { page.find(".Box-row#work_package_#{work_package.id}") }
+
+    it "adds the all query to the menu fragment URL" do
+      expect(row).to have_css(%(include-fragment[src*="all=1"]))
     end
   end
 end

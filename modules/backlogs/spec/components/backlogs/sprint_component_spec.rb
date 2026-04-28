@@ -128,8 +128,7 @@ RSpec.describe Backlogs::SprintComponent, type: :component do
         it "includes the all param on story drop URLs" do
           render_component
 
-          story_row = page.find(".Box-row[id='work_package_#{story1.id}']")
-          expect(story_row["data-drop-url"]).to match(/all=1/)
+          expect(page).to have_css(%(.Box-row#work_package_#{story1.id}[data-drop-url*="all=1"]))
         end
       end
 
