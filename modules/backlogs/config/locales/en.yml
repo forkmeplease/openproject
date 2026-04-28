@@ -129,9 +129,10 @@ en:
     bucket_component:
       blankslate_title: "Backlog bucket is empty"
       blankslate_description: "Drag items here to add them."
-
-    bucket_item_component:
-      label_actions: "Work package actions"
+      label_actions: "Backlog bucket actions"
+      action_menu:
+        edit_backlog_bucket: "Edit backlog bucket"
+        delete_backlog_bucket: "Delete backlog bucket"
 
     sprint_component:
       blankslate_title: "%{name} is empty"
@@ -176,18 +177,6 @@ en:
         create_description_text: "To start planning your sprint, create one here."
         manage_description_html: "To start planning your sprint, go to the %{settings_link} to receive sprints from a different project."
         no_actions_description_text: "No sprints are available for this project yet."
-
-    bucket_menu_component:
-      label_actions: "Backlog bucket actions"
-      action_menu:
-        edit_backlog_bucket: "Edit backlog bucket"
-        delete_backlog_bucket: "Delete backlog bucket"
-
-    bucket_header_component:
-      label_work_package_count:
-        zero: "No stories in backlog bucket"
-        one: "%{count} story in backlog bucket"
-        other: "%{count} stories in backlog bucket"
 
     finish_sprint_dialog_component:
       title: "There are work in progress items"

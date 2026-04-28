@@ -348,8 +348,13 @@ module Pages
 
     def expect_backlog_bucket_work_package_count(bucket, count)
       within_backlog_bucket(bucket) do
-        label = count == 1 ? "1 story in backlog bucket" : "#{count} stories in backlog bucket"
-        expect(page).to have_css(".Counter", accessible_name: label)
+        expect(page).to have_css(
+          ".Counter",
+          accessible_name: I18n.t(
+            "open_project.common.work_package_card_box_component.header.label_work_package_count",
+            count:
+          )
+        )
       end
     end
 
@@ -466,7 +471,7 @@ module Pages
         expect(page).to have_css(
           ".Counter",
           accessible_name: I18n.t(
-            "backlogs.work_package_card_box_component.header.label_work_package_count",
+            "open_project.common.work_package_card_box_component.header.label_work_package_count",
             count:
           )
         )

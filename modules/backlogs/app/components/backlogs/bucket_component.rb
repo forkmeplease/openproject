@@ -30,31 +30,22 @@
 
 module Backlogs
   class BucketComponent < ApplicationComponent
-    include Primer::AttributesHelper
+    include OpPrimer::ComponentHelpers
     include OpTurbo::Streamable
     include CommonHelper
 
     with_collection_parameter :backlog_bucket
 
-    attr_reader :backlog_bucket, :project, :work_packages, :current_user
+    attr_reader :backlog_bucket, :project, :current_user
 
-    def initialize(backlog_bucket:, project:, current_user: User.current, **system_arguments)
+    delegate :work_packages, to: :backlog_bucket
+
+    def initialize(backlog_bucket:, project:, current_user: User.current)
       super()
 
       @backlog_bucket = backlog_bucket
       @project = project
       @current_user = current_user
-      @work_packages = backlog_bucket.work_packages
-
-      @system_arguments = system_arguments
-      @system_arguments[:id] = dom_id(backlog_bucket)
-      @system_arguments[:list_id] = "#{@system_arguments[:id]}-list"
-      @system_arguments[:padding] = :condensed
-      @system_arguments[:data] = merge_data(
-        @system_arguments,
-        { data: drop_target_config },
-        { data: { test_selector: "backlog-bucket-#{backlog_bucket.id}" } }
-      )
     end
 
     def wrapper_uniq_by
@@ -63,17 +54,8 @@ module Backlogs
 
     private
 
-    def folded?
-      current_user.pref[:backlogs_versions_default_fold_state] == "closed"
-    end
-
-    def drop_target_config
-      {
-        generic_drag_and_drop_target: "container mirrorContainer",
-        target_container_accessor: ":scope > ul",
-        target_id: backlog_bucket.persisted? ? "backlog_bucket:#{backlog_bucket.id}" : "inbox",
-        target_allowed_drag_type: "story"
-      }
+    def show_menu?
+      backlog_bucket.persisted? && current_user.allowed_in_project?(:create_sprints, project)
     end
   end
 end

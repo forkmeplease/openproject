@@ -28,21 +28,48 @@ See COPYRIGHT and LICENSE files for more details.
 ++# %>
 
 <%= component_wrapper(tag: :section) do %>
-  <%= render(Primer::Beta::BorderBox.new(**@system_arguments)) do |border_box| %>
-    <% border_box.with_header(id: dom_target(backlog_bucket, :header)) do %>
-      <%= render(Backlogs::BucketHeaderComponent.new(backlog_bucket:, project:, work_packages:, folded: folded?)) %>
-    <% end %>
-    <% if work_packages.empty? %>
-      <% border_box.with_row(data: { empty_list_item: true }) do %>
-        <!-- TODO: separate inbox component also to have different blankslate titles? -->
-        <%=
-          render Primer::Beta::Blankslate.new(role: "status", aria: { live: "polite" }) do |blankslate|
-            blankslate.with_heading(tag: :h4).with_content(t(".blankslate_title"))
-            blankslate.with_description_content(t(".blankslate_description"))
-          end
-        %>
+  <%= render(
+        OpenProject::Common::WorkPackageCardBoxComponent.new(
+          work_packages:,
+          project:,
+          container: backlog_bucket,
+          current_user:,
+          data: { test_selector: "backlog-bucket-#{backlog_bucket.id}" }
+        )
+      ) do |box| %>
+    <% box.with_header(title: backlog_bucket.name, count: work_packages.size) do |header| %>
+      <% if show_menu? %>
+        <% header.with_menu(button_aria_label: t(".label_actions")) do |menu| %>
+          <% with_item_group(menu) do %>
+            <% menu.with_item(
+                 id: dom_target(backlog_bucket, :menu, :edit_backlog_bucket),
+                 label: t(".action_menu.edit_backlog_bucket"),
+                 href: edit_dialog_project_backlogs_backlog_bucket_path(project, backlog_bucket, all_backlogs_params),
+                 content_arguments: { data: { controller: "async-dialog" } }
+               ) do |item| %>
+              <% item.with_leading_visual_icon(icon: :pencil) %>
+            <% end %>
+
+            <% menu.with_item(
+                 id: dom_target(backlog_bucket, :menu, :delete_backlog_bucket),
+                 label: t(".action_menu.delete_backlog_bucket"),
+                 scheme: :danger,
+                 href: project_backlogs_backlog_bucket_path(project, backlog_bucket, all_backlogs_params),
+                 form_arguments: {
+                   method: :delete,
+                   data: { turbo_confirm: t("text_are_you_sure") }
+                 }
+               ) do |item| %>
+              <% item.with_leading_visual_icon(icon: :trash) %>
+            <% end %>
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
-    <%= render Backlogs::BucketItemComponent.with_collection(work_packages, container: border_box, project:) %>
+
+    <% box.with_empty_state(
+         title: t(".blankslate_title"),
+         description: t(".blankslate_description")
+       ) %>
   <% end %>
 <% end %>
