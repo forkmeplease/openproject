@@ -208,5 +208,14 @@ RSpec.describe Projects::IdentifierValidator do
       project.save!(context: :semantic_conversion)
       expect(project.reload.identifier).to eq("PROJ")
     end
+
+    it "rejects a semantic identifier reserved by another project's slug history" do
+      other = create(:project, identifier: "other-id")
+      FriendlyId::Slug.create!(sluggable: other, slug: "PROJ")
+
+      project.identifier = "PROJ"
+      expect(project.valid?(:semantic_conversion)).to be(false)
+      expect(project.errors[:identifier]).to include(I18n.t("activerecord.errors.messages.taken"))
+    end
   end
 end
