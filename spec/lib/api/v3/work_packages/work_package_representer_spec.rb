@@ -1121,6 +1121,12 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
               .to eq(intermediate.subject)
             expect(work_package).to have_received(:visible_ancestors)
           end
+
+          it "exposes displayId on each ancestor link" do
+            links = parse_json(subject)["_links"]["ancestors"]
+            expect(links[0]["displayId"]).to eq(root.display_id.to_s)
+            expect(links[1]["displayId"]).to eq(intermediate.display_id.to_s)
+          end
         end
 
         context "when ancestors are invisible" do
@@ -1158,6 +1164,10 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
 
           it do
             expect(parse_json(subject)["_links"]["children"][0]["title"]).to eq(child.subject)
+          end
+
+          it "exposes displayId on each child link" do
+            expect(parse_json(subject)["_links"]["children"][0]["displayId"]).to eq(child.display_id.to_s)
           end
         end
       end
@@ -1722,6 +1732,21 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
         expect do
           work_package.updated_at = 20.seconds.from_now
         end.to change(representer, :json_cache_key)
+      end
+
+      it "changes when the work package identifier mode is toggled" do
+        # Without this, JSON rendered while in classic mode keeps serving
+        # numeric `displayId` values after an admin switches to semantic mode,
+        # because nothing else in the cache key reflects the setting flip.
+        with_flags(semantic_work_package_ids: true)
+
+        with_settings(work_packages_identifier: "classic")
+        classic_key = representer.json_cache_key
+
+        with_settings(work_packages_identifier: "semantic")
+        semantic_key = representer.json_cache_key
+
+        expect(semantic_key).not_to eq(classic_key)
       end
 
       it "factors in the eager loaded cache_checksum" do
