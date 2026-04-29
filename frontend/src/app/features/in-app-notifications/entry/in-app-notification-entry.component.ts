@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
@@ -29,15 +29,11 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
 
   @Input() aggregatedNotifications:INotification[];
 
-  // Single source of truth for the loaded work package. Fed explicitly from
-  // ngOnInit's subscription (not via template subscription) so click handlers
-  // can read .value synchronously regardless of whether the template has
-  // subscribed to workPackage$ yet.
-  private workPackageSubject = new BehaviorSubject<WorkPackageResource|null>(null);
+  workPackage$:Observable<WorkPackageResource>|null = null;
 
-  workPackage$:Observable<WorkPackageResource> = this.workPackageSubject.pipe(
-    filter((wp):wp is WorkPackageResource => wp !== null),
-  );
+  // Latest streamed work package, cached for synchronous reads from click
+  // handlers (which need displayId to build the URL).
+  private latestWorkPackage:WorkPackageResource|null = null;
 
   showDateAlert = false;
   hasReminderAlert = false;
@@ -92,13 +88,15 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
       return;
     }
 
-    this
+    this.workPackage$ = this
       .apiV3Service
       .work_packages
       .id(this.workPackageId)
       .requireAndStream()
-      .pipe(this.untilDestroyed())
-      .subscribe((wp) => this.workPackageSubject.next(wp));
+      .pipe(
+        tap((wp) => { this.latestWorkPackage = wp; }),
+        this.untilDestroyed(),
+      );
   }
 
   onClick():void {
@@ -116,7 +114,7 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
     }
 
     const tab = this.showDateAlert ? 'overview' : 'activity';
-    const id = this.workPackageSubject.value?.displayId ?? this.workPackageId;
+    const id = this.latestWorkPackage?.displayId ?? this.workPackageId;
     this.storeService.openSplitScreen(id, tab);
   }
 
@@ -130,7 +128,7 @@ export class InAppNotificationEntryComponent extends UntilDestroyedMixin impleme
       return;
     }
 
-    const id = this.workPackageSubject.value?.displayId ?? this.workPackageId;
+    const id = this.latestWorkPackage?.displayId ?? this.workPackageId;
     const link = this.pathHelper.workPackagePath(id) + window.location.search;
     Turbo.visit(link, { action: 'advance' });
   }
