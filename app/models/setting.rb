@@ -91,6 +91,13 @@ class Setting < ApplicationRecord
               allow_nil: true,
               if: ->(setting) { setting.nullable_integer_format? }
             }
+  validates :value,
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 1,
+              less_than_or_equal_to: 128,
+              if: ->(setting) { setting.name == "password_min_length" }
+            }
 
   def nullable_integer_format?
     format == :integer && definition.default.nil?
