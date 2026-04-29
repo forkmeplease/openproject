@@ -111,7 +111,7 @@ class ProjectIdentifierValidator < ActiveModel::EachValidator
   def used_by_other_project_in_past?(record, value)
     Project.identifier_slugs
            .for_identifier(value)
-           .where.not(sluggable_id: record.id)
+           .excluding_project(record)
            .exists?
   end
 end
