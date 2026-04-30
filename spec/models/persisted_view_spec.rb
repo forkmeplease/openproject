@@ -215,6 +215,13 @@ RSpec.describe PersistedView do
     end
   end
 
+  describe "#visible?" do
+    it "raises SubclassResponsibilityError on the abstract base class" do
+      view = described_class.new(name: "V")
+      expect { view.visible?(build(:user)) }.to raise_error(SubclassResponsibilityError)
+    end
+  end
+
   describe ".allowed_children" do
     let(:base_class) { Class.new(described_class) }
     let(:other_class) { Class.new(described_class) }

@@ -42,6 +42,13 @@ class ResourcePlanner < PersistedView
 
   after_initialize :set_default_category
 
+  def visible?(user)
+    return false if project.nil?
+    return false unless user.allowed_in_project?(:view_resource_planners, project)
+
+    public? || principal == user
+  end
+
   private
 
   def set_default_category

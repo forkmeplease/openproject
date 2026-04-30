@@ -73,6 +73,13 @@ class PersistedView < ApplicationRecord
     query || parent&.effective_query
   end
 
+  # Whether the given user is permitted to see this view. Visibility rules
+  # depend on the concrete view type (e.g. project membership, sharing,
+  # public flag), so subclasses must implement this.
+  def visible?(_user)
+    raise SubclassResponsibilityError
+  end
+
   private
 
   def parent_allows_this_child_class
