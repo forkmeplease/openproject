@@ -27,7 +27,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++# %>
 
-<%= grid_layout("op-backlogs-story", tag: :article) do |grid| %>
+<%= grid_layout("op-work-package-card", tag: :article) do |grid| %>
   <% grid.with_area(:info_line) do %>
     <%= render(WorkPackages::InfoLineComponent.new(work_package:)) %>
   <% end %>
@@ -35,7 +35,7 @@ See COPYRIGHT and LICENSE files for more details.
   <% grid.with_area(:points) do %>
     <%= render(Primer::Beta::Text.new(color: :subtle)) do %>
       <%= story_points %>
-      <span class="op-backlogs-points-label"> <%= t(:"backlogs.points_label", count: story_points) %></span>
+      <span class="op-work-package-card-points-label"> <%= t(:"backlogs.points_label", count: story_points) %></span>
     <% end %>
   <% end %>
 
