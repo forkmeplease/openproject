@@ -236,7 +236,7 @@ module Pages
 
     def open_sprint_story_details(story)
       within(work_package_selector(story)) do
-        button = find(:button, accessible_name: "Story actions")
+        button = find(:button, accessible_name: "Work package actions")
         open_controlled_menu(button).find(:menuitem, text: I18n.t(:"js.button_open_details")).click
       end
       expect_details_view(story)
@@ -277,7 +277,7 @@ module Pages
 
     def within_sprint_story_menu(story, &)
       within(work_package_selector(story)) do
-        button = find(:button, accessible_name: "Story actions")
+        button = find(:button, accessible_name: "Work package actions")
         within(open_controlled_menu(button), &)
       end
 
@@ -292,7 +292,7 @@ module Pages
 
     def click_in_sprint_story_move_menu(story, item_name)
       button = within(work_package_selector(story)) do
-        find(:button, accessible_name: "Story actions")
+        find(:button, accessible_name: "Work package actions")
       end
       menu = open_controlled_menu(button)
       submenu = open_move_submenu(menu)
@@ -463,7 +463,13 @@ module Pages
 
     def expect_sprint_story_count(sprint, count)
       within(sprint_selector(sprint)) do
-        expect(page).to have_css ".Counter", accessible_name: "#{count} stories in sprint"
+        expect(page).to have_css(
+          ".Counter",
+          accessible_name: I18n.t(
+            "backlogs.work_package_card_box_component.header.label_work_package_count",
+            count:
+          )
+        )
       end
     end
 
@@ -488,7 +494,7 @@ module Pages
 
     def within_story_menu(story, &)
       within_story(story) do
-        button = find(:button, accessible_name: "Story actions")
+        button = find(:button, accessible_name: "Work package actions")
         within(open_controlled_menu(button), &)
       end
     end
@@ -538,6 +544,8 @@ module Pages
         button = find(:button, accessible_name: "Sprint actions")
         within(open_controlled_menu(button), &)
       end
+
+      dismiss_menu(sprint)
     end
 
     def within_work_package_row(work_package, &)
