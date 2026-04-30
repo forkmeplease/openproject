@@ -106,9 +106,7 @@ module WorkPackage::SemanticIdentifier
   # (see lib/api/v3/work_packages/work_package_representer.rb) so HAL
   # self-links remain numeric and stable for API consumers.
   def to_param
-    return super if new_record?
-
-    display_id.to_s
+    display_id&.to_s
   end
 
   # Allocates the next semantic identifier in the current project and assigns it to the WP.

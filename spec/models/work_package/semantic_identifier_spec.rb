@@ -443,6 +443,8 @@ RSpec.describe WorkPackage::SemanticIdentifier do
   end
 
   describe "#to_param" do
+    include Rails.application.routes.url_helpers
+
     context "when semantic mode is active",
             with_flag: { semantic_work_package_ids: true },
             with_settings: { work_packages_identifier: "semantic" } do
@@ -456,8 +458,11 @@ RSpec.describe WorkPackage::SemanticIdentifier do
       end
 
       it "makes work_package_path produce a semantic URL" do
-        path = Rails.application.routes.url_helpers.work_package_path(work_package)
-        expect(path).to end_with("/work_packages/MYPROJ-1")
+        expect(work_package_path(work_package)).to end_with("/work_packages/MYPROJ-1")
+      end
+
+      it "returns nil for new (unsaved) records" do
+        expect(WorkPackage.new.to_param).to be_nil
       end
     end
 
@@ -468,8 +473,7 @@ RSpec.describe WorkPackage::SemanticIdentifier do
       end
 
       it "makes work_package_path produce a numeric URL" do
-        path = Rails.application.routes.url_helpers.work_package_path(work_package)
-        expect(path).to end_with("/work_packages/#{work_package.id}")
+        expect(work_package_path(work_package)).to end_with("/work_packages/#{work_package.id}")
       end
     end
 
