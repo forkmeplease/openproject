@@ -268,20 +268,12 @@ class ApplicationController < ActionController::Base
     @project = @object.project
   end
 
-  # Filter for bulk work package operations.
-  #
-  # :work_package_id (single-WP routes) may be semantic ("PROJ-42") and is
-  # resolved to a primary key first; :ids (bulk routes) already arrives numeric
-  # from form submissions.
+  # Filter for bulk work package operations. Either :work_package_id (single-WP
+  # routes) or :ids (bulk routes) may carry numeric or semantic identifiers
+  # ("PROJ-42") since both originate from human-facing URLs or forms.
   def find_work_packages
-    ids = if params[:work_package_id]
-            WorkPackage.find_by_display_id(params[:work_package_id])&.id
-          else
-            params[:ids]
-          end
-
-    @work_packages = WorkPackage.includes(:project)
-                                .where(id: ids)
+    @work_packages = WorkPackage.where_display_id_in(params[:work_package_id] || params[:ids])
+                                .includes(:project)
                                 .order("id ASC")
     fail ActiveRecord::RecordNotFound if @work_packages.empty?
 

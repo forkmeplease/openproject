@@ -138,11 +138,13 @@ RSpec.describe WorkPackages::MovesController, with_settings: { journal_aggregati
           post :create, params: {
             work_package_id: semantic_work_package.display_id,
             new_project_id: semantic_target_project.id,
-            new_type_id: semantic_target_project.types.first.id
+            new_type_id: semantic_target_project.types.first.id,
+            follow: "1"
           }
 
           expect(response).to be_redirect
           expect(semantic_work_package.reload.project_id).to eq(semantic_target_project.id)
+          expect(response.location).to match(%r{/work_packages/#{semantic_target_project.identifier}-\d+})
         end
       end
     end
