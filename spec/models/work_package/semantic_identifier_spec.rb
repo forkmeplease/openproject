@@ -466,8 +466,9 @@ RSpec.describe WorkPackage::SemanticIdentifier do
       end
     end
 
-    context "when semantic mode is not active",
-            with_flag: { semantic_work_package_ids: false } do
+    context "when classic mode is active",
+            with_flag: { semantic_work_package_ids: false },
+            with_settings: { work_packages_identifier: "classic" } do
       it "returns the numeric id as a string" do
         expect(work_package.to_param).to eq(work_package.id.to_s)
       end
@@ -475,10 +476,10 @@ RSpec.describe WorkPackage::SemanticIdentifier do
       it "makes work_package_path produce a numeric URL" do
         expect(work_package_path(work_package)).to end_with("/work_packages/#{work_package.id}")
       end
-    end
 
-    it "returns nil for new (unsaved) records" do
-      expect(WorkPackage.new.to_param).to be_nil
+      it "returns nil for new (unsaved) records" do
+        expect(WorkPackage.new.to_param).to be_nil
+      end
     end
   end
 
