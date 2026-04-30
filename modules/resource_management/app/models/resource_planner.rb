@@ -40,11 +40,11 @@ class ResourcePlanner < PersistedView
   validates :principal, :project,
             presence: true
 
-  before_validation :set_category
+  after_initialize :set_default_category
 
   private
 
-  def set_category
-    self.category = "resource_management"
+  def set_default_category
+    self.category ||= "resource_management" if new_record?
   end
 end
