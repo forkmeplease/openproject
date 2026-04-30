@@ -113,11 +113,11 @@ module Backlogs
     end
 
     def split_url(story)
-      project_backlogs_backlog_details_path(project, story.display_id, all_backlogs_params)
+      project_backlogs_backlog_details_path(project, story, all_backlogs_params)
     end
 
     def full_url(story)
-      work_package_path(story.display_id)
+      work_package_path(story)
     end
 
     def card_test_selector(story)
