@@ -31,7 +31,7 @@ See COPYRIGHT and LICENSE files for more details.
   <% flex.with_column(mr: 2) do %>
     <%= render(Meetings::MeetingFilterButtonComponent.new(query: @query, project: @project)) %>
   <% end %>
-  <% flex.with_column do %>
+  <% flex.with_column(mr: 2) do %>
     <%= render(
           QuickFilter::BooleanComponent.new(
             name: I18n.t("label_recurring_filter"),
@@ -41,6 +41,22 @@ See COPYRIGHT and LICENSE files for more details.
             true_href: path_for_recurring("t"),
             false_href: path_for_recurring("f"),
             all_href: path_for_recurring(nil)
+          )
+        ) %>
+  <% end %>
+  <% flex.with_column do %>
+    <%= render(
+          QuickFilter::BooleanComponent.new(
+            name: I18n.t(:label_meeting_date_time),
+            true_label: I18n.t(:label_upcoming_meetings_short),
+            false_label: I18n.t(:label_past_meetings_short),
+            current_value: time_filter_value,
+            true_value: "future",
+            false_value: "past",
+            true_href: path_for_time("future"),
+            false_href: path_for_time("past"),
+            show_all: false,
+            true_first: true
           )
         ) %>
   <% end %>

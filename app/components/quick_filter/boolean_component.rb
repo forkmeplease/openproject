@@ -31,7 +31,7 @@
 module QuickFilter
   class BooleanComponent < ApplicationComponent
     def initialize(name:, true_label:, false_label:, current_value:, true_href:, false_href:,
-                   all_href: nil, show_all: true, true_value: "t", false_value: "f")
+                   all_href: nil, show_all: true, true_value: "t", false_value: "f", true_first: false)
       super
 
       @name = name
@@ -44,6 +44,15 @@ module QuickFilter
       @show_all = show_all
       @true_value = true_value
       @false_value = false_value
+      @true_first = true_first
+    end
+
+    def items
+      items = [
+        { href: @false_href, label: @false_label, selected: @current_value == @false_value },
+        { href: @true_href, label: @true_label, selected: @current_value == @true_value }
+      ]
+      @true_first ? items.reverse : items
     end
   end
 end

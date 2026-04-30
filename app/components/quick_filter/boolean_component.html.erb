@@ -36,16 +36,12 @@ See COPYRIGHT and LICENSE files for more details.
          selected: @current_value.nil?
        ) %>
   <% end %>
-  <% control.with_item(
-       tag: :a,
-       href: @false_href,
-       label: @false_label,
-       selected: @current_value == @false_value
-     ) %>
-  <% control.with_item(
-       tag: :a,
-       href: @true_href,
-       label: @true_label,
-       selected: @current_value == @true_value
-     ) %>
+  <% items.each do |item| %>
+    <% control.with_item(
+         tag: :a,
+         href: item[:href],
+         label: item[:label],
+         selected: item[:selected]
+       ) %>
+  <% end %>
 <% end %>
