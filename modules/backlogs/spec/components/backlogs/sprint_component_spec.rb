@@ -93,6 +93,7 @@ RSpec.describe Backlogs::SprintComponent, type: :component do
       it "wires drop-target data attributes for the sprint" do
         expect(rendered_component).to have_css(".Box") do |box|
           expect(box["data-generic-drag-and-drop-target"]).to eq("container mirrorContainer")
+          expect(box["data-target-container-accessor"]).to eq(":scope > ul")
           expect(box["data-target-id"]).to eq("sprint:#{sprint.id}")
           expect(box["data-target-allowed-drag-type"]).to eq("story")
         end
@@ -106,6 +107,7 @@ RSpec.describe Backlogs::SprintComponent, type: :component do
         expect(rendered_component).to have_css(".Box-row#work_package_#{work_package1.id}") do |row|
           expect(row["data-draggable-id"]).to eq(work_package1.id.to_s)
           expect(row["data-draggable-type"]).to eq("story")
+          expect(row["data-backlogs--story-display-id-value"]).to eq(work_package1.display_id.to_s)
           expect(row["data-drop-url"])
             .to end_with(move_project_backlogs_work_package_path(project, sprint, work_package1))
         end

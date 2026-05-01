@@ -28,37 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Import
-  class JiraUser < ApplicationRecord
-    self.table_name = "jira_users"
-
-    belongs_to :jira, class_name: "Import::Jira"
-    belongs_to :jira_import, class_name: "Import::JiraImport"
-
-    def to_op_attributes
-      firstname, lastname = split_display_name(payload["displayName"])
-      {
-        login: payload["name"],
-        password: OpenProject::Passwords::Generator.random_password,
-        firstname:,
-        lastname:,
-        mail: payload["emailAddress"],
-        status: :locked
-      }
-    end
-
-    def try_to_find_existing_op_users
-      op_attributes = to_op_attributes
-      User.where(login: op_attributes[:login]).or(
-        User.where(mail: op_attributes[:mail])
-      )
-    end
-
-    private
-
-    def split_display_name(display_name)
-      parts = display_name.split
-      parts.length > 1 ? [parts[0..-2].join(" "), parts[-1]] : [parts[0], parts[0]]
+module Patterns
+  # @hidden
+  class SelectPanelPreview < ViewComponent::Preview
+    # @display min_height 400px
+    def footer_buttons
+      render_with_template
     end
   end
 end
