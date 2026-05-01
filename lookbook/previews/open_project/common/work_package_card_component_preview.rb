@@ -54,6 +54,19 @@ module OpenProject
         end
       end
 
+      def with_menu
+        work_package = WorkPackage.first
+        return preview_message("No work packages in the database.") unless work_package
+
+        render OpenProject::Common::WorkPackageCardComponent.new(
+          work_package:
+        ) do |card|
+          card.with_menu do |menu|
+            menu.with_item(label: "Open", href: "/work_packages/#{work_package.id}")
+          end
+        end
+      end
+
       private
 
       def preview_message(text)

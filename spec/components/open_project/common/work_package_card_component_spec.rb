@@ -96,5 +96,34 @@ RSpec.describe OpenProject::Common::WorkPackageCardComponent, type: :component d
     it "uses the provided menu src" do
       expect(rendered_component).to have_element "include-fragment", src: menu_src
     end
+
+    it "supports inline menu items through the menu slot" do
+      rendered = render_inline(component) do |card|
+        card.with_menu(button_aria_label: "Card actions") do |menu|
+          menu.with_item(label: "Open", href: "/work_packages/#{work_package.id}")
+        end
+      end
+
+      expect(rendered).to have_link "Open", href: "/work_packages/#{work_package.id}"
+      expect(rendered).to have_button(menu_button_id, accessible_name: "Card actions")
+      expect(rendered).to have_no_element "include-fragment"
+    end
+
+    it "supports deferred menu loading through the menu slot" do
+      rendered = render_inline(described_class.new(work_package:)) do |card|
+        card.with_menu(src: menu_src)
+      end
+
+      expect(rendered).to have_element "include-fragment", src: menu_src
+    end
+
+    it "uses the menu slot before the initializer menu source" do
+      rendered = render_inline(component) do |card|
+        card.with_menu(src: "/slot-menu")
+      end
+
+      expect(rendered).to have_element "include-fragment", src: "/slot-menu"
+      expect(rendered).to have_no_element "include-fragment", src: menu_src
+    end
   end
 end

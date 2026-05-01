@@ -32,6 +32,8 @@ module Backlogs
   class WorkPackageCardComponent < ApplicationComponent
     attr_reader :work_package, :menu_src
 
+    delegate :with_menu, to: :card
+
     def initialize(work_package:, menu_src: nil)
       super()
 
@@ -40,11 +42,21 @@ module Backlogs
     end
 
     def call
-      render(OpenProject::Common::WorkPackageCardComponent.new(work_package:, menu_src:)) do |card|
-        card.with_metric do
+      render(card) do |common_card|
+        common_card.with_metric do
           render(Backlogs::StoryPointsComponent.new(work_package:))
         end
       end
+    end
+
+    private
+
+    def card
+      @card ||= OpenProject::Common::WorkPackageCardComponent.new(work_package:, menu_src:)
+    end
+
+    def before_render
+      content
     end
   end
 end

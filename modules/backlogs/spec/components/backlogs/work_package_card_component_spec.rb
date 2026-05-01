@@ -60,4 +60,20 @@ RSpec.describe Backlogs::WorkPackageCardComponent, type: :component do
     expect(rendered_component).to have_element "include-fragment",
                                                src: menu_src
   end
+
+  it "supports inline menu items through the menu slot" do
+    rendered = render_inline(described_class.new(work_package:, menu_src:)) do |card|
+      card.with_menu(button_aria_label: "Backlogs card actions") do |menu|
+        menu.with_item(label: "Open", href: "/work_packages/#{work_package.id}")
+      end
+    end
+
+    expect(rendered).to have_link "Open", href: "/work_packages/#{work_package.id}"
+    expect(rendered).to have_button(
+      "work_package_#{work_package.id}_menu-button",
+      accessible_name: "Backlogs card actions"
+    )
+    expect(rendered).to have_no_element "include-fragment"
+    expect(rendered).to have_text("5 points", normalize_ws: true)
+  end
 end

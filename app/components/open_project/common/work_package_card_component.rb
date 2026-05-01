@@ -35,11 +35,20 @@ module OpenProject
       include OpPrimer::ComponentHelpers
 
       renders_one :metric, Primer::Content
+      renders_one :menu, ->(src: nil, button_aria_label: nil, **system_arguments) {
+        Menu.new(
+          work_package:,
+          src:,
+          button_aria_label:,
+          **system_arguments
+        )
+      }
 
       attr_reader :work_package, :menu_src
 
       # @param work_package [WorkPackage] the work package this card represents.
-      # @param menu_src [String, NilClass] optional lazy menu source.
+      # @param menu_src [String, NilClass] optional lazy menu source. Prefer the
+      #   `with_menu(src:)` slot for new call sites.
       def initialize(work_package:, menu_src: nil)
         super()
 

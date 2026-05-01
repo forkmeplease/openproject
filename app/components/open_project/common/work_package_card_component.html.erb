@@ -39,13 +39,17 @@ See COPYRIGHT and LICENSE files for more details.
   <% end %>
 
   <% grid.with_area(:menu) do %>
-    <%= render(
-          OpenProject::Common::WorkPackageCardComponent::Menu.new(
-            work_package:,
-            src: menu_src,
-            button_aria_label: t(".menu.label_actions")
-          )
-        ) %>
+    <% if menu? %>
+      <%= menu %>
+    <% else %>
+      <%= render(
+            OpenProject::Common::WorkPackageCardComponent::Menu.new(
+              work_package:,
+              src: menu_src,
+              button_aria_label: t(".menu.label_actions")
+            )
+          ) %>
+    <% end %>
   <% end %>
 
   <% grid.with_area(:subject) do %>
