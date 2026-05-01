@@ -113,7 +113,7 @@ RSpec.describe Backlogs::InboxController do
 
       it "replaces the inbox without a show-more row in the stream" do
         expect(response).to be_successful
-        expect(response.body).not_to include("inbox_#{project.id}-show-more")
+        expect(response.body).not_to include("inbox_project_#{project.id}_show_more")
       end
     end
 
@@ -226,7 +226,7 @@ RSpec.describe Backlogs::InboxController do
 
       it "replaces the inbox without a show-more row in the stream" do
         expect(response).to be_successful
-        expect(response.body).not_to include("inbox_#{project.id}-show-more")
+        expect(response.body).not_to include("inbox_project_#{project.id}_show_more")
       end
     end
 

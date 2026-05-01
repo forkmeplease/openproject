@@ -87,7 +87,7 @@ RSpec.describe "Backlog bucket display",
 
       backlogs_page.expect_no_new_backlog_bucket_button
       backlogs_page.expect_no_backlog_bucket(bucket_alpha)
-      expect(page).to have_css("#inbox_#{project.id}")
+      expect(page).to have_css("#inbox_project_#{project.id}")
     end
   end
 

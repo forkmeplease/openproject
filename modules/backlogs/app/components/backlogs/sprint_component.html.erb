@@ -33,6 +33,10 @@ See COPYRIGHT and LICENSE files for more details.
           work_packages:,
           project:,
           container: sprint,
+          drag_and_drop: {
+            target_id: "sprint:#{sprint.id}",
+            allowed_drag_type: "story"
+          },
           current_user:,
           data: { test_selector: "sprint-#{sprint.id}" }
         )

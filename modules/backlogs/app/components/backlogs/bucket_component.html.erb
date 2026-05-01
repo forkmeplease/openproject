@@ -33,6 +33,10 @@ See COPYRIGHT and LICENSE files for more details.
           work_packages:,
           project:,
           container: backlog_bucket,
+          drag_and_drop: {
+            target_id: "backlog_bucket:#{backlog_bucket.id}",
+            allowed_drag_type: "story"
+          },
           current_user:,
           data: { test_selector: "backlog-bucket-#{backlog_bucket.id}" }
         )

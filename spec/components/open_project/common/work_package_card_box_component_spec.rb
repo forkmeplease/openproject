@@ -45,18 +45,26 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
   shared_let(:backlog_bucket) { create(:backlog_bucket, project:, name: "Bucket A") }
 
   let(:container) { sprint }
+  let(:drag_and_drop) { nil }
   let(:work_packages) { [] }
   let(:system_arguments) { {} }
   let(:header_arguments) { nil }
   let(:footer_content) { nil }
 
   subject(:rendered_component) do
-    render_component(work_packages:, container:, system_arguments:)
+    render_component(work_packages:, container:, drag_and_drop:, system_arguments:)
   end
 
-  def render_component(work_packages:, container:, system_arguments:)
+  def render_component(work_packages:, container:, drag_and_drop:, system_arguments:)
     render_inline(
-      described_class.new(work_packages:, project:, container:, current_user: user, **system_arguments)
+      described_class.new(
+        work_packages:,
+        project:,
+        container:,
+        drag_and_drop:,
+        current_user: user,
+        **system_arguments
+      )
     ) do |box|
       box.with_header(**header_arguments) if header_arguments
       box.with_empty_state(title: "Sprint 1 is empty", description: "Drag work packages here")
@@ -73,20 +81,33 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
     context "when container is a Sprint" do
       let(:container) { sprint }
 
-      it "uses dom_id(sprint) as the box id" do
+      it "uses dom_target(sprint) as the box id" do
         expect(rendered_component).to have_css(".Box#sprint_#{sprint.id}")
       end
 
-      it "uses a derived list id for the collapsible BorderBox body" do
-        expect(rendered_component).to have_css("ul#sprint_#{sprint.id}-list")
+      it "uses dom_target(sprint, :list) for the collapsible BorderBox body" do
+        expect(rendered_component).to have_css("ul#sprint_#{sprint.id}_list")
       end
 
-      it "uses the sprint drop-target id" do
-        expect(rendered_component).to have_css(".Box[data-target-id='sprint:#{sprint.id}']")
+      it "does not emit drag-and-drop data by default" do
+        expect(rendered_component).to have_no_css(".Box[data-generic-drag-and-drop-target]")
+        expect(rendered_component).to have_no_css(".Box[data-target-id]")
+        expect(rendered_component).to have_no_css(".Box[data-target-allowed-drag-type]")
       end
 
-      it "uses container mirrorContainer as the drop target type" do
-        expect(rendered_component).to have_css(".Box[data-generic-drag-and-drop-target='container mirrorContainer']")
+      context "with drag_and_drop configured" do
+        let(:drag_and_drop) do
+          { target_id: "sprint:#{sprint.id}", allowed_drag_type: "story" }
+        end
+
+        it "uses the configured drag-and-drop data" do
+          expect(rendered_component).to have_css(".Box") do |box|
+            expect(box["data-generic-drag-and-drop-target"]).to eq("container mirrorContainer")
+            expect(box["data-target-container-accessor"]).to eq(":scope > ul")
+            expect(box["data-target-id"]).to eq("sprint:#{sprint.id}")
+            expect(box["data-target-allowed-drag-type"]).to eq("story")
+          end
+        end
       end
 
       it "does not emit a default test selector" do
@@ -97,20 +118,12 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
     context "when container is a BacklogBucket" do
       let(:container) { backlog_bucket }
 
-      it "uses dom_id(backlog_bucket) as the box id" do
+      it "uses dom_target(backlog_bucket) as the box id" do
         expect(rendered_component).to have_css(".Box#backlog_bucket_#{backlog_bucket.id}")
       end
 
-      it "uses a derived list id for the collapsible BorderBox body" do
-        expect(rendered_component).to have_css("ul#backlog_bucket_#{backlog_bucket.id}-list")
-      end
-
-      it "uses the backlog bucket drop-target id" do
-        expect(rendered_component).to have_css(".Box[data-target-id='backlog_bucket:#{backlog_bucket.id}']")
-      end
-
-      it "uses container mirrorContainer as the drop target type" do
-        expect(rendered_component).to have_css(".Box[data-generic-drag-and-drop-target='container mirrorContainer']")
+      it "uses dom_target(backlog_bucket, :list) for the collapsible BorderBox body" do
+        expect(rendered_component).to have_css("ul#backlog_bucket_#{backlog_bucket.id}_list")
       end
 
       it "does not emit a default test selector" do
@@ -118,32 +131,40 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
       end
     end
 
-    context "when container is nil (inbox)" do
-      let(:container) { nil }
+    context "when container is a Symbol" do
+      let(:container) { :inbox }
 
-      it "uses inbox_<project.id> as the box id" do
-        expect(rendered_component).to have_css(".Box#inbox_#{project.id}")
+      it "uses dom_target(container) as the box id" do
+        expect(rendered_component).to have_css(".Box#inbox")
       end
 
-      it "uses a derived list id for the collapsible BorderBox body" do
-        expect(rendered_component).to have_css("ul#inbox_#{project.id}-list")
-      end
-
-      it "uses inbox as the drop-target id" do
-        expect(rendered_component).to have_css(".Box[data-target-id='inbox']")
-      end
-
-      it "uses container mirrorContainer as the drop target type" do
-        expect(rendered_component).to have_css(".Box[data-generic-drag-and-drop-target='container mirrorContainer']")
-      end
-
-      it "does not emit a default test selector" do
-        expect(rendered_component).to have_no_css(".Box[data-test-selector]")
+      it "uses dom_target(container, :list) for the list id" do
+        expect(rendered_component).to have_css("ul#inbox_list")
       end
     end
 
-    it "always sets target_allowed_drag_type to story" do
-      expect(rendered_component).to have_css(".Box[data-target-allowed-drag-type='story']")
+    context "when container is a String" do
+      let(:container) { "custom_box" }
+
+      it "uses dom_target(container) as the box id" do
+        expect(rendered_component).to have_css(".Box#custom_box")
+      end
+
+      it "uses dom_target(container, :list) for the list id" do
+        expect(rendered_component).to have_css("ul#custom_box_list")
+      end
+    end
+
+    context "when container is a model class" do
+      let(:container) { Project }
+
+      it "uses dom_target(container) as the box id" do
+        expect(rendered_component).to have_css(".Box#project")
+      end
+
+      it "uses dom_target(container, :list) for the list id" do
+        expect(rendered_component).to have_css("ul#project_list")
+      end
     end
 
     context "when data[:test_selector] is provided by the caller" do
@@ -169,6 +190,10 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
 
       it "renders the provided title" do
         expect(rendered_component).to have_heading "Sprint 1", level: 4
+      end
+
+      it "uses dom_target(container, :header) as the header row id" do
+        expect(rendered_component).to have_css(".Box-header#sprint_#{sprint.id}_header")
       end
     end
   end
@@ -283,7 +308,7 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
 
       it "does not render a show-more row" do
         rendered = render_with_show_more
-        expect(rendered).to have_no_css("[id$='-show-more']")
+        expect(rendered).to have_no_css("[id$='_show_more']")
       end
 
       it "renders all work packages" do
@@ -298,7 +323,7 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
       it "does not truncate" do
         rendered = render_with_show_more(truncate_middle: 5)
         expect(rendered).to have_css(".Box-row", count: 7)
-        expect(rendered).to have_no_css("[id$='-show-more']")
+        expect(rendered).to have_no_css("[id$='_show_more']")
       end
     end
 
@@ -312,7 +337,7 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
 
       it "places the show-more row immediately after the first 5 rows" do
         rendered = render_with_show_more(truncate_middle: 5)
-        expect(rendered).to have_css("li.Box-row:nth-child(6) a#sprint_#{sprint.id}-show-more")
+        expect(rendered).to have_css("li.Box-row:nth-child(6) a#sprint_#{sprint.id}_show_more")
       end
 
       it "renders the show-more row with the last omitted work package id" do
@@ -324,7 +349,7 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent, type: :componen
       it "renders the show-more anchor with the right href and turbo attrs" do
         rendered = render_with_show_more(truncate_middle: 5)
         expect(rendered).to have_css(
-          "a#sprint_#{sprint.id}-show-more" \
+          "a#sprint_#{sprint.id}_show_more" \
           "[href*='all=1']" \
           "[data-turbo-frame='backlogs_container']" \
           "[data-turbo-action='advance']"

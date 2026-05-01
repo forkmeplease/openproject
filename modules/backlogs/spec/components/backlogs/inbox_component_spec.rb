@@ -59,7 +59,15 @@ RSpec.describe Backlogs::InboxComponent, type: :component do
 
   describe "container" do
     it "renders a Primer::Beta::BorderBox with the inbox DOM id" do
-      expect(page).to have_css(".Box#inbox_#{project.id}")
+      expect(page).to have_css(".Box#inbox_project_#{project.id}")
+    end
+
+    it "wires drop-target data attributes for the inbox" do
+      expect(page).to have_css(".Box#inbox_project_#{project.id}") do |box|
+        expect(box["data-generic-drag-and-drop-target"]).to eq("container mirrorContainer")
+        expect(box["data-target-id"]).to eq("inbox")
+        expect(box["data-target-allowed-drag-type"]).to eq("story")
+      end
     end
   end
 
@@ -98,7 +106,7 @@ RSpec.describe Backlogs::InboxComponent, type: :component do
     let(:truncate_middle) { described_class::TRUNCATE_MIDDLE }
     let(:tail_size) { [truncate_middle / 5, 1].max }
     let(:threshold) { truncate_middle + (tail_size * 2) }
-    let(:show_more_id) { "inbox_#{project.id}-show-more" }
+    let(:show_more_id) { "inbox_project_#{project.id}_show_more" }
 
     context "when work packages do not exceed the threshold" do
       let(:work_packages) { create_list(:work_package, threshold, project:) }

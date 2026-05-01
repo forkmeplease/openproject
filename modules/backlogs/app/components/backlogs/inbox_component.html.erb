@@ -32,7 +32,11 @@ See COPYRIGHT and LICENSE files for more details.
         OpenProject::Common::WorkPackageCardBoxComponent.new(
           work_packages:,
           project:,
-          container: nil,
+          container: dom_target(:inbox, project),
+          drag_and_drop: {
+            target_id: "inbox",
+            allowed_drag_type: "story"
+          },
           current_user:,
           data: { test_selector: "backlog-inbox" }
         )

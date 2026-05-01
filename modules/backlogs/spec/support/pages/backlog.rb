@@ -216,20 +216,20 @@ module Pages
 
     def expect_inbox_show_more
       within_inbox do
-        expect(page).to have_css("#inbox_#{project.id}-show-more")
+        expect(page).to have_css("#inbox_project_#{project.id}_show_more")
       end
     end
 
     def expect_no_inbox_show_more
       wait_for_network_idle
       within_inbox do
-        expect(page).to have_no_css("#inbox_#{project.id}-show-more")
+        expect(page).to have_no_css("#inbox_project_#{project.id}_show_more")
       end
     end
 
     def click_inbox_show_more
       within_inbox do
-        find("#inbox_#{project.id}-show-more").click
+        find("#inbox_project_#{project.id}_show_more").click
       end
       wait_for_network_idle
     end
@@ -311,7 +311,7 @@ module Pages
 
     def drag_sprint_item_to_inbox(work_package)
       moved_element = find(draggable_work_package_selector(work_package))
-      target_element = find("#inbox_#{project.id}")
+      target_element = find("#inbox_project_#{project.id}")
       moved_element.native.drag_to(target_element.native, delay: 0.1)
     rescue Capybara::Cuprite::ObsoleteNode
       retry
@@ -613,7 +613,7 @@ module Pages
     end
 
     def within_inbox(&)
-      within("#inbox_#{project.id}", &)
+      within("#inbox_project_#{project.id}", &)
     end
 
     def within_backlog_bucket(bucket, &)

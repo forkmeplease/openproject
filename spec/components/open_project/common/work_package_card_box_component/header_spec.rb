@@ -42,7 +42,7 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent::Header, type: :
 
   let(:title) { "Sprint 1" }
   let(:container) { sprint }
-  let(:list_id) { "sprint-1-list" }
+  let(:list_id) { "sprint_1_list" }
   let(:count) { 4 }
   let(:menu_button_id) { "sprint_#{sprint.id}_menu-button" }
 
@@ -64,7 +64,7 @@ RSpec.describe OpenProject::Common::WorkPackageCardBoxComponent::Header, type: :
     end
 
     it "passes the provided list id to the collapsible trigger" do
-      expect(rendered_component).to have_css ".CollapsibleHeader-triggerArea", aria: { controls: "sprint-1-list" }
+      expect(rendered_component).to have_css ".CollapsibleHeader-triggerArea", aria: { controls: "sprint_1_list" }
     end
 
     it "uses the work-package-count aria label on the count badge" do

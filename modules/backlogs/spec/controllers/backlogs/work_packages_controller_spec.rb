@@ -179,7 +179,7 @@ RSpec.describe Backlogs::WorkPackagesController do
                      format: :turbo_stream
 
           expect(response).to be_successful
-          expect(response.body).not_to include("inbox_#{project.id}-show-more")
+          expect(response.body).not_to include("inbox_project_#{project.id}_show_more")
         end
       end
     end

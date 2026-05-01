@@ -81,7 +81,7 @@ module OpenProject
       # Renders a free-form footer row below the card list.
       renders_one :footer
 
-      attr_reader :work_packages, :project, :container, :current_user
+      attr_reader :work_packages, :project, :container, :drag_and_drop, :current_user
 
       # @param work_packages [Enumerable<WorkPackage>] the work packages to render
       #   as cards. Truncated when the `:show_more` slot is set and the count
@@ -89,38 +89,35 @@ module OpenProject
       # @param project [Project] the project this card box is rendered in. May
       #   differ from individual `work_package.project` values when sprints or
       #   buckets are shared across projects.
-      # @param container [Sprint, BacklogBucket, NilClass] drives the box DOM id,
-      #   list id, and drop-target wiring. `nil` for the inbox case.
+      # @param container [Symbol, String, Class, ApplicationRecord] drives the box
+      #   DOM id and related ids via `dom_target`.
+      # @param drag_and_drop [Hash, NilClass] optional generic drag-and-drop
+      #   target data. Requires `:target_id` and `:allowed_drag_type` when set.
       # @param current_user [User] passed through to each `WorkPackageCardComponent`
       #   for permission checks; defaults to `User.current`.
       # @param system_arguments [Hash] forwarded to the underlying
       #   `Primer::Beta::BorderBox`.
-      def initialize(work_packages:, project:, container:, current_user: User.current, **system_arguments)
+      def initialize(
+        work_packages:,
+        project:,
+        container:,
+        drag_and_drop: nil,
+        current_user: User.current,
+        **system_arguments
+      )
         super()
 
         @work_packages = work_packages
         @project = project
         @container = container
+        @drag_and_drop = drag_and_drop
         @current_user = current_user
 
         @system_arguments = system_arguments
         @system_arguments[:id] = container_id
         @system_arguments[:list_id] = list_id
         @system_arguments[:padding] = :condensed
-        @system_arguments[:data] = merge_data(
-          {
-            data: {
-              # Sprint historically used "container" alone. The shared box keeps the
-              # first mirror container on the page for now until parent-specific DnD
-              # handling is extracted in follow-up work.
-              generic_drag_and_drop_target: "container mirrorContainer",
-              target_container_accessor: ":scope > ul",
-              target_id: drop_target_id,
-              target_allowed_drag_type: "story"
-            }
-          },
-          @system_arguments
-        )
+        merge_drag_and_drop_data! if drag_and_drop
       end
 
       def before_render
@@ -148,24 +145,36 @@ module OpenProject
       end
 
       def container_id
-        case container
-        when Sprint, BacklogBucket
-          dom_id(container)
-        else
-          "inbox_#{project.id}"
-        end
+        dom_target(container)
       end
 
       def list_id
-        "#{container_id}-list"
+        dom_target(container, :list)
       end
 
-      def drop_target_id
-        case container
-        when Sprint then "sprint:#{container.id}"
-        when BacklogBucket then "backlog_bucket:#{container.id}"
-        else "inbox"
-        end
+      def header_id
+        dom_target(container, :header)
+      end
+
+      def merge_drag_and_drop_data!
+        @system_arguments[:data] = merge_data(
+          {
+            data: drag_and_drop_data
+          },
+          @system_arguments
+        )
+      end
+
+      def drag_and_drop_data
+        {
+          # Sprint historically used "container" alone. The shared box keeps the
+          # first mirror container on the page for now until parent-specific DnD
+          # handling is extracted in follow-up work.
+          generic_drag_and_drop_target: "container mirrorContainer",
+          target_container_accessor: ":scope > ul",
+          target_id: drag_and_drop.fetch(:target_id),
+          target_allowed_drag_type: drag_and_drop.fetch(:allowed_drag_type)
+        }
       end
 
       def visible_work_packages
@@ -197,7 +206,7 @@ module OpenProject
       end
 
       def show_more_id
-        "#{container_id}-show-more"
+        dom_target(container, :show_more)
       end
 
       def show_more_label
