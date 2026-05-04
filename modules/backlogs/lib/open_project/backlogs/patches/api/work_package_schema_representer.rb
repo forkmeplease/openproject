@@ -59,7 +59,7 @@ module OpenProject::Backlogs
                                          backlogs_constraint_passed?(:sprint)
                                      },
                                      href_callback: ->(*) {
-                                       api_v3_paths.project_sprints(represented.project_id)
+                                       "#{api_v3_paths.project_sprints(represented.project_id)}?pageSize=-1"
                                      }
 
             define_method :backlogs_constraint_passed? do |attribute|

@@ -111,7 +111,7 @@ RSpec.describe API::V3::WorkPackages::Schema::WorkPackageSchemaRepresenter do
     end
 
     it_behaves_like "links to allowed values via collection link" do
-      let(:href) { api_v3_paths.project_sprints(project.id) }
+      let(:href) { "#{api_v3_paths.project_sprints(project.id)}?pageSize=-1" }
     end
 
     context "when lacking permission to set the sprint" do
