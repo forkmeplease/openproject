@@ -30,29 +30,70 @@
 
 module QuickFilter
   class BooleanComponent < ApplicationComponent
-    def initialize(name:, true_label:, false_label:, current_value:, true_href:, false_href:,
-                   all_href: nil, show_all: true, true_value: "t", false_value: "f", true_first: false)
+    include ApplicationHelper
+
+    def initialize(name:, query:, filter_key:, true_label:, false_label:, path_args:,
+                   show_all: true, true_value: "t", false_value: "f", true_first: false, orders: nil)
       super
 
       @name = name
+      @query = query
+      @filter_key = filter_key
       @true_label = true_label
       @false_label = false_label
-      @current_value = current_value
-      @true_href = true_href
-      @false_href = false_href
-      @all_href = all_href
+      @path_args = path_args
       @show_all = show_all
       @true_value = true_value
       @false_value = false_value
       @true_first = true_first
+      @orders = orders
+    end
+
+    private
+
+    def current_value
+      @query.find_active_filter(@filter_key)&.values&.first
     end
 
     def items
       items = [
-        { href: @false_href, label: @false_label, selected: @current_value == @false_value },
-        { href: @true_href, label: @true_label, selected: @current_value == @true_value }
+        { href: href_for(@false_value), label: @false_label, selected: current_value == @false_value },
+        { href: href_for(@true_value), label: @true_label, selected: current_value == @true_value }
       ]
       @true_first ? items.reverse : items
+    end
+
+    def all_href
+      href_for(nil)
+    end
+
+    def href_for(value)
+      params = {}
+      filters = filters_params(value)
+      params[:filters] = filters.to_json if filters.any?
+
+      sort = sort_params(value)
+      params[:sortBy] = sort.to_json if sort.any?
+
+      polymorphic_path(@path_args, params)
+    end
+
+    def sort_params(value)
+      order_override = @orders && @orders[value]
+      if order_override
+        order_override.map { |attr, dir| [attr.to_s, dir.to_s] }
+      else
+        @query.orders.map { |o| [o.class.key.to_s, o.direction.to_s] }
+      end
+    end
+
+    def filters_params(value)
+      filters = @query.filters
+        .reject { |f| f.name == @filter_key }
+        .map { |f| { f.class.key.to_s => { "operator" => f.operator.to_s, "values" => f.values } } }
+
+      filters << { @filter_key.to_s => { "operator" => "=", "values" => [value] } } if value
+      filters
     end
   end
 end

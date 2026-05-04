@@ -30,54 +30,10 @@
 
 module Meetings
   class MeetingFilterContainerComponent < ApplicationComponent
-    include ApplicationHelper
-
-    def initialize(query:, params:, project: nil)
+    def initialize(query:, project: nil)
       super
       @query = query
-      @params = params
       @project = project
-    end
-
-    def recurring_filter_value
-      filter = @query.filters.find { |f| f.name == :type }
-      filter&.values&.first
-    end
-
-    def time_filter_value
-      filter = @query.filters.find { |f| f.name == :time }
-      filter&.values&.first
-    end
-
-    def path_for_recurring(value)
-      path_with_filter("type", value)
-    end
-
-    def path_for_time(value)
-      direction = value == Queries::Meetings::Filters::TimeFilter::PAST_VALUE ? "desc" : "asc"
-      path_with_filter("time", value, sort_by: [["start_time", direction]])
-    end
-
-    private
-
-    def path_with_filter(key, value, sort_by: nil)
-      filters = existing_filters.reject { |f| f.key?(key) }
-      filters << { key => { "operator" => "=", "values" => [value] } } if value
-
-      merged = current_params.except(:filters, :sortBy)
-      merged[:filters] = filters.to_json if filters.any?
-      merged[:sortBy] = sort_by.to_json if sort_by
-      polymorphic_path([@project, :meetings], merged)
-    end
-
-    def current_params
-      @current_params ||= @params.slice(:filters, :page, :per_page).permit!
-    end
-
-    def existing_filters
-      return [] if @params[:filters].blank?
-
-      JSON.parse(@params[:filters])
     end
   end
 end

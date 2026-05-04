@@ -35,12 +35,11 @@ See COPYRIGHT and LICENSE files for more details.
     <%= render(
           QuickFilter::BooleanComponent.new(
             name: I18n.t("label_recurring_filter"),
+            query: @query,
+            filter_key: :type,
             true_label: I18n.t("meeting.types.recurring"),
             false_label: I18n.t("meeting.types.one_time"),
-            current_value: recurring_filter_value,
-            true_href: path_for_recurring("t"),
-            false_href: path_for_recurring("f"),
-            all_href: path_for_recurring(nil)
+            path_args: [@project, :meetings]
           )
         ) %>
   <% end %>
@@ -48,15 +47,16 @@ See COPYRIGHT and LICENSE files for more details.
     <%= render(
           QuickFilter::BooleanComponent.new(
             name: I18n.t(:label_meeting_date_time),
+            query: @query,
+            filter_key: :time,
             true_label: I18n.t(:label_upcoming_meetings_short),
             false_label: I18n.t(:label_past_meetings_short),
-            current_value: time_filter_value,
             true_value: "future",
             false_value: "past",
-            true_href: path_for_time("future"),
-            false_href: path_for_time("past"),
             show_all: false,
-            true_first: true
+            true_first: true,
+            orders: { "future" => { start_time: :asc }, "past" => { start_time: :desc } },
+            path_args: [@project, :meetings]
           )
         ) %>
   <% end %>

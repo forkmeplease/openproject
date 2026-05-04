@@ -467,8 +467,9 @@ class MeetingsController < ApplicationController
   def load_meetings
     @query = load_query
 
+    time_filter = @query.find_active_filter(:time)
     # We group meetings into individual groups, but only for upcoming meetings
-    if params[:upcoming] == "false"
+    if time_filter&.past?
       @meetings = show_more_pagination(@query.results, limit: params[:limit])
     else
       service = ::GroupMeetingsService.new(@query.results, limit: params[:limit])

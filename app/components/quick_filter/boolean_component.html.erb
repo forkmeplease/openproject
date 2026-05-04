@@ -31,9 +31,9 @@ See COPYRIGHT and LICENSE files for more details.
   <% if @show_all %>
     <% control.with_item(
          tag: :a,
-         href: @all_href,
+         href: all_href,
          label: I18n.t(:label_all_uppercase),
-         selected: @current_value.nil?
+         selected: current_value.nil?
        ) %>
   <% end %>
   <% items.each do |item| %>
