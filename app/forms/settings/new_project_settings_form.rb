@@ -55,33 +55,38 @@ module Settings
         input_width: :medium,
         include_blank: false
       ) do |select|
-        new_project_user_role_options.each do |role, qualifies|
-          label = qualifies ? role.name : I18n.t(:label_role_missing_permissions, role: role.name)
-          select.option(
-            value: role.id.to_s,
-            label:,
-            selected: Setting.new_project_user_role_id == role.id
-          )
-        end
+        build_new_project_user_role_options(select)
       end
 
       f.submit
     end
 
-    # Returns roles to be listed in the new_project_user_role_id select, paired with whether
-    # the role qualifies as a default for project creators. Roles that pass the
+    # Adds the role options to the new_project_user_role_id select. Roles that pass the
     # `assignable_to_project_creator` filter are listed first; the currently configured role is
-    # always included even when it has lost required permissions, so the admin can see and change
-    # the current selection.
-    def new_project_user_role_options
+    # always included even when it has lost required permissions (with a label suffix), so the
+    # admin can see and change the current selection.
+    def build_new_project_user_role_options(select)
       assignable = ProjectRole.assignable_to_project_creator.to_a
-      configured = ProjectRole.givable.find_by(id: Setting.new_project_user_role_id)
+      assignable.each { |role| add_assignable_role_option(select, role) }
 
-      options = assignable.map { |role| [role, true] }
-      if configured && assignable.exclude?(configured)
-        options << [configured, false]
-      end
-      options
+      configured = ProjectRole.givable.find_by(id: Setting.new_project_user_role_id)
+      add_non_qualifying_role_option(select, configured) if configured && assignable.exclude?(configured)
+    end
+
+    def add_assignable_role_option(select, role)
+      select.option(
+        value: role.id.to_s,
+        label: role.name,
+        selected: Setting.new_project_user_role_id == role.id
+      )
+    end
+
+    def add_non_qualifying_role_option(select, role)
+      select.option(
+        value: role.id.to_s,
+        label: I18n.t(:label_role_missing_permissions, role: role.name),
+        selected: true
+      )
     end
   end
 end
