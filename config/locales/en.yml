@@ -4388,6 +4388,7 @@ en:
   label_role_new: "New role"
   label_role_grantable: "Grantable role"
   label_role_plural: "Roles"
+  label_role_missing_permissions: "%{role} (missing required permissions)"
   label_role_search: "Assign role to new members"
   label_scm: "SCM"
   label_scroll_left: "Scroll left"

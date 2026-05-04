@@ -55,16 +55,33 @@ module Settings
         input_width: :medium,
         include_blank: false
       ) do |select|
-        ProjectRole.assignable_to_project_creator.each do |role|
+        new_project_user_role_options.each do |role, qualifies|
+          label = qualifies ? role.name : I18n.t(:label_role_missing_permissions, role: role.name)
           select.option(
             value: role.id.to_s,
-            label: role.name,
+            label:,
             selected: Setting.new_project_user_role_id == role.id
           )
         end
       end
 
       f.submit
+    end
+
+    # Returns roles to be listed in the new_project_user_role_id select, paired with whether
+    # the role qualifies as a default for project creators. Roles that pass the
+    # `assignable_to_project_creator` filter are listed first; the currently configured role is
+    # always included even when it has lost required permissions, so the admin can see and change
+    # the current selection.
+    def new_project_user_role_options
+      assignable = ProjectRole.assignable_to_project_creator.to_a
+      configured = ProjectRole.givable.find_by(id: Setting.new_project_user_role_id)
+
+      options = assignable.map { |role| [role, true] }
+      if configured && assignable.exclude?(configured)
+        options << [configured, false]
+      end
+      options
     end
   end
 end
