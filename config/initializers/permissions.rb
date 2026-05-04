@@ -554,7 +554,8 @@ Rails.application.reloader.to_prepare do
 
       wiki.permission :manage_wiki,
                       {
-                        wikis: %i[edit destroy protect edit_parent_page update_parent_page],
+                        wiki: %i[destroy protect edit_parent_page update_parent_page],
+                        wikis: %i[edit destroy],
                         wiki_menu_items: %i[edit update select_main_menu_item replace_main_menu_item]
                       },
                       dependencies: :edit_wiki_pages,

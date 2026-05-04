@@ -222,7 +222,7 @@ class WikiController < ApplicationController
   def wiki_root_menu_items
     MenuItems::WikiMenuItem
       .main_items(@wiki.id)
-      .map { OpenStruct.new name: it.name, caption: it.title, item: it }
+      .map { { name: it.name, caption: it.title, item: it } }
   end
 
   def edit_parent_page
@@ -252,12 +252,11 @@ class WikiController < ApplicationController
   # show page history
   def history
     # don't load text
-    @versions = @page
-                .journals
-                .select(:id, :user_id, :notes, :created_at, :version)
-                .order(Arel.sql("version DESC"))
-                .page(page_param)
-                .per_page(per_page_param)
+    @versions = @page.journals
+                     .select(:id, :user_id, :notes, :created_at, :version)
+                     .order(Arel.sql("version DESC"))
+                     .page(page_param)
+                     .per_page(per_page_param)
 
     render layout: !request.xhr?
   end
@@ -406,9 +405,9 @@ class WikiController < ApplicationController
     # Using the empty contract here as we use the method to instantiate the model, not to save it (new and new_child action).
     # Errors are expected here as the user has not yet entered any data.
     @page = WikiPages::SetAttributesService
-            .new(model: WikiPage.new, user: current_user, contract_class: EmptyContract)
-            .call(wiki: @wiki, title: wiki_page_title.presence, parent_id: flash[:_related_wiki_page_id])
-            .result
+              .new(model: WikiPage.new, user: current_user, contract_class: EmptyContract)
+              .call(wiki: @wiki, title: wiki_page_title.presence, parent_id: flash[:_related_wiki_page_id])
+              .result
   end
 
   # Returns true if the current user is allowed to edit the page, otherwise false
