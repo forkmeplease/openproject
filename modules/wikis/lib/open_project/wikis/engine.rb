@@ -66,12 +66,6 @@ module OpenProject::Wikis
 
     register "openproject-wikis", author_url: "https://openproject.org" do
       project_module :work_package_tracking do
-        permission :view_wiki_page_links,
-                   {},
-                   permissible_on: :project,
-                   dependencies: %i[view_work_packages],
-                   contract_actions: { wiki_page_links: %i[view] }
-
         permission :manage_wiki_page_links,
                    {},
                    permissible_on: :project,
