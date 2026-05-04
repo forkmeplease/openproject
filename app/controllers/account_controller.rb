@@ -357,9 +357,8 @@ class AccountController < ApplicationController
 
   def direct_login(user)
     if !flash_message_pending?
-      ps = {}.tap do |p|
-        p[:origin] = params[:back_url] if params[:back_url]
-      end
+      ps = {}
+      ps[:origin] = params[:back_url] if params[:back_url]
 
       redirect_to direct_login_provider_url(ps)
     elsif Setting.login_required?
