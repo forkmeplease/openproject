@@ -30,7 +30,6 @@ en:
       make_private: "Make private"
       delete: "Delete"
     sidebar:
-      favorite: "Favorite"
       public: "Public"
       private: "Private"
     blankslate:

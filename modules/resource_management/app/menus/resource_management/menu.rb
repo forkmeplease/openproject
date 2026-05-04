@@ -38,39 +38,34 @@ module ResourceManagement
 
     def menu_items
       [
-        menu_group(header: I18n.t("resource_management.sidebar.favorite"), children: favorite_planners),
-        menu_group(header: I18n.t("resource_management.sidebar.public"),   children: public_planners),
-        menu_group(header: I18n.t("resource_management.sidebar.private"),  children: private_planners)
+        menu_group(header: I18n.t("resource_management.sidebar.public"),  children: public_planners),
+        menu_group(header: I18n.t("resource_management.sidebar.private"), children: private_planners)
       ]
-    end
-
-    def favorite_planners
-      base_scope
-        .favorited_by(User.current.id)
-        .order(:name)
-        .map { |planner| planner_item(planner) }
     end
 
     def public_planners
       base_scope
         .public_views
-        .order(:name)
         .map { |planner| planner_item(planner) }
     end
 
     def private_planners
       base_scope
         .private_views(User.current)
-        .order(:name)
         .map { |planner| planner_item(planner) }
     end
 
     private
 
+    # Order favorited items first, then alphabetically. `with_favorited_by_user`
+    # adds a virtual `favorited` column so we can both sort by it and read it
+    # back without a second query.
     def base_scope
       ResourcePlanner
         .visible(User.current)
         .where(project:)
+        .with_favorited_by_user(User.current)
+        .order(favorited: :desc, name: :asc)
     end
 
     def planner_item(planner)
@@ -80,7 +75,7 @@ module ResourceManagement
         icon: nil,
         count: nil,
         selected: planner.id.to_s == params[:id].to_s,
-        favorited: planner.favorited_by?(User.current),
+        favorited: planner.favorited,
         show_enterprise_icon: false
       )
     end
