@@ -8,10 +8,13 @@
   },
   "files": [
     "src/test-setup.ts",
+    "src/test-providers.ts",
     "src/polyfills.ts"
   ],
   "include": [
     "src/**/*.spec.ts",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/main.ts",
+    "src/app/**/*.module.ts"
   ]
 }
