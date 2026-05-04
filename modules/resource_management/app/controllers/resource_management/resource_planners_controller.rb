@@ -30,6 +30,8 @@
 
 module ::ResourceManagement
   class ResourcePlannersController < BaseController
+    menu_item :resource_management
+
     before_action :find_project_by_project_id
     before_action :authorize
     before_action :find_resource_planner, only: %i[show edit update destroy toggle_public]

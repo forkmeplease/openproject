@@ -28,24 +28,52 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  #  resources :resource_management,
-  #            controller: "resource_management/resource_management",
-  #            only: %i[] do
-  #    collection do
-  #      get "/", to: "resource_management/resource_management#overview", as: :overview
-  #    end
-  #  end
+module ResourcePlanners
+  class TableComponent < ::OpPrimer::BorderBoxTableComponent
+    options :current_project
 
-  scope "projects/:project_id", as: "project" do
-    resources :resource_planners, controller: "resource_management/resource_planners" do
-      member do
-        post :toggle_public
-      end
+    columns :name, :work_packages, :members, :start_date, :finish_date
 
-      collection do
-        get "menu" => "resource_management/menus#show"
-      end
+    mobile_columns :name, :start_date
+
+    main_column :name
+
+    def sortable?
+      false
+    end
+
+    def paginated?
+      false
+    end
+
+    def has_actions?
+      true
+    end
+
+    def mobile_title
+      I18n.t("resource_management.label_resource_planner_plural")
+    end
+
+    def headers
+      [
+        [:name, { caption: ResourcePlanner.human_attribute_name(:name) }],
+        [:work_packages, { caption: I18n.t(:label_work_package_plural) }],
+        [:members, { caption: I18n.t(:label_member_plural) }],
+        [:start_date, { caption: ResourcePlanner.human_attribute_name(:start_date) }],
+        [:finish_date, { caption: I18n.t("resource_management.label_finish_date") }]
+      ]
+    end
+
+    def columns
+      headers.map(&:first)
+    end
+
+    def blank_title
+      I18n.t("resource_management.blankslate.title")
+    end
+
+    def blank_description
+      I18n.t("resource_management.blankslate.desc")
     end
   end
 end

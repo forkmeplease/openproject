@@ -28,24 +28,15 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  #  resources :resource_management,
-  #            controller: "resource_management/resource_management",
-  #            only: %i[] do
-  #    collection do
-  #      get "/", to: "resource_management/resource_management#overview", as: :overview
-  #    end
-  #  end
+module ::ResourceManagement
+  class MenusController < ApplicationController
+    before_action :find_project_by_project_id,
+                  :authorize
 
-  scope "projects/:project_id", as: "project" do
-    resources :resource_planners, controller: "resource_management/resource_planners" do
-      member do
-        post :toggle_public
-      end
+    def show
+      @submenu_menu_items = ::ResourceManagement::Menu.new(project: @project, params:).menu_items
 
-      collection do
-        get "menu" => "resource_management/menus#show"
-      end
+      render layout: nil
     end
   end
 end

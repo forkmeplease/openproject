@@ -28,24 +28,48 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  #  resources :resource_management,
-  #            controller: "resource_management/resource_management",
-  #            only: %i[] do
-  #    collection do
-  #      get "/", to: "resource_management/resource_management#overview", as: :overview
-  #    end
-  #  end
+module ResourcePlanners
+  class RowComponent < ::OpPrimer::BorderBoxRowComponent
+    delegate :current_project, to: :table
+    delegate :project, to: :model
 
-  scope "projects/:project_id", as: "project" do
-    resources :resource_planners, controller: "resource_management/resource_planners" do
-      member do
-        post :toggle_public
-      end
+    def name
+      icon = if model.favorited_by?(User.current)
+               render(Primer::Beta::Octicon.new(icon: :"star-fill", color: :attention, mr: 2))
+             end
 
-      collection do
-        get "menu" => "resource_management/menus#show"
-      end
+      link = render(Primer::Beta::Link.new(
+                      href: project_resource_planner_path(project, model),
+                      font_weight: :bold
+                    )) { model.name }
+
+      safe_join([icon, link].compact)
+    end
+
+    def work_packages
+      # TODO: Implement a proper count
+      "—"
+    end
+
+    def members
+      # TODO: Implement a proper count
+      "—"
+    end
+
+    def start_date
+      helpers.format_date(model.start_date) if model.start_date.present?
+    end
+
+    def finish_date
+      helpers.format_date(model.end_date) if model.end_date.present?
+    end
+
+    def button_links
+      [action_menu_placeholder]
+    end
+
+    def action_menu_placeholder
+      render(Primer::Beta::IconButton.new(icon: "kebab-horizontal", "aria-label": t(:label_more), scheme: :invisible))
     end
   end
 end

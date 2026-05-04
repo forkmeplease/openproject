@@ -52,8 +52,10 @@ module OpenProject::ResourceManagement
         # contracts — the controller filter just establishes that the user
         # has *some* business in the resource planner area.
         permission :view_resource_planners,
-                   { "resource_management/resource_planners":
-                       %i[index show overview new create edit update destroy] },
+                   {
+                     "resource_management/resource_planners": %i[index show overview new create edit update destroy],
+                     "resource_management/menus": %i[show]
+                   },
                    permissible_on: :project
 
         # `manage_public_resource_planners` adds the publish-flip action. The
@@ -94,6 +96,14 @@ module OpenProject::ResourceManagement
            caption: :label_resource_management,
            after: :work_packages,
            icon: "people"
+
+      menu :project_menu,
+           :resource_planners_menu,
+           { controller: "/resource_management/resource_planners", action: :index },
+           parent: :resource_management,
+           partial: "resource_management/menus/menu",
+           last: true,
+           caption: :label_resource_management
     end
   end
 end

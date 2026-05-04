@@ -1,0 +1,11 @@
+<%= render(Primer::OpenProject::PageHeader.new) do |header|
+      header.with_title { page_title }
+      header.with_breadcrumbs(breadcrumb_items)
+
+      header.with_action_menu(
+        menu_arguments: { anchor_align: :end },
+        button_arguments: { icon: "kebab-horizontal", "aria-label": t(:label_more) }
+      ) do |_menu|
+        # Placeholder — actions wired up in a later iteration.
+      end
+    end %>

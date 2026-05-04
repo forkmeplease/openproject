@@ -18,3 +18,15 @@ en:
     shared publicly.
 
   label_resource_management: "Resource planning"
+
+  resource_management:
+    label_resource_planner: "Resource planner"
+    label_resource_planner_plural: "Resource planners"
+    label_finish_date: "Finish date"
+    sidebar:
+      favorite: "Favorite"
+      public: "Public"
+      private: "Private"
+    blankslate:
+      title: "No resource planners yet"
+      desc: "Create a resource planner to start planning capacity for this project."

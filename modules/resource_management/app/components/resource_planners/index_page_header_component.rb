@@ -28,24 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  #  resources :resource_management,
-  #            controller: "resource_management/resource_management",
-  #            only: %i[] do
-  #    collection do
-  #      get "/", to: "resource_management/resource_management#overview", as: :overview
-  #    end
-  #  end
+module ResourcePlanners
+  class IndexPageHeaderComponent < ApplicationComponent
+    include ApplicationHelper
 
-  scope "projects/:project_id", as: "project" do
-    resources :resource_planners, controller: "resource_management/resource_planners" do
-      member do
-        post :toggle_public
-      end
+    def initialize(project:)
+      super
+      @project = project
+    end
 
-      collection do
-        get "menu" => "resource_management/menus#show"
-      end
+    def page_title
+      I18n.t(:label_resource_management)
+    end
+
+    def breadcrumb_items
+      [
+        { href: project_overview_path(@project.id), text: @project.name },
+        page_title
+      ]
     end
   end
 end
