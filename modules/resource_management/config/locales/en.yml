@@ -54,3 +54,5 @@ en:
     blankslate:
       title: "No resource planners yet"
       desc: "Create a resource planner to start planning capacity for this project."
+    show:
+      placeholder: "The detailed view for this resource planner is coming soon."
