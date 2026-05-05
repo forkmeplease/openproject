@@ -28,20 +28,12 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%= render(Primer::Alpha::SegmentedControl.new("aria-label": @name, full_width: false)) do |control| %>
-  <% if @show_all %>
-    <% control.with_item(
-         tag: :a,
-         href: all_href,
-         label: I18n.t(:label_all_uppercase),
-         selected: current_value.nil?
-       ) %>
-  <% end %>
   <% items.each do |item| %>
     <% control.with_item(
          tag: :a,
-         href: item[:href],
-         label: item[:label],
-         selected: item[:selected]
+         href: href_for(item.value),
+         label: item.label,
+         selected: current_value == item.value
        ) %>
   <% end %>
 <% end %>

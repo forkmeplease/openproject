@@ -33,31 +33,30 @@ See COPYRIGHT and LICENSE files for more details.
   <% end %>
   <% flex.with_column(mr: 2) do %>
     <%= render(
-          QuickFilter::BooleanComponent.new(
+          QuickFilter::SegmentedComponent.new(
             name: I18n.t("label_recurring_filter"),
             query: @query,
             filter_key: :type,
-            true_label: I18n.t("meeting.types.recurring"),
-            false_label: I18n.t("meeting.types.one_time"),
             path_args: [@project, :meetings]
           )
-        ) %>
+        ) do |component|
+          component.with_item(label: I18n.t(:label_all_uppercase), value: nil)
+          component.with_item(label: I18n.t("meeting.types.one_time"), value: "f")
+          component.with_item(label: I18n.t("meeting.types.recurring"), value: "t")
+        end %>
   <% end %>
   <% flex.with_column do %>
     <%= render(
-          QuickFilter::BooleanComponent.new(
+          QuickFilter::SegmentedComponent.new(
             name: I18n.t(:label_meeting_date_time),
             query: @query,
             filter_key: :time,
-            true_label: I18n.t(:label_upcoming_meetings_short),
-            false_label: I18n.t(:label_past_meetings_short),
-            true_value: "future",
-            false_value: "past",
-            show_all: false,
-            true_first: true,
             orders: { "future" => { start_time: :asc }, "past" => { start_time: :desc } },
             path_args: [@project, :meetings]
           )
-        ) %>
+        ) do |component|
+          component.with_item(label: I18n.t(:label_upcoming_meetings_short), value: "future")
+          component.with_item(label: I18n.t(:label_past_meetings_short), value: "past")
+        end %>
   <% end %>
 <% end %>
