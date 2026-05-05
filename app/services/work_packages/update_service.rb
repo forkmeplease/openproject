@@ -121,7 +121,7 @@ class WorkPackages::UpdateService < BaseServices::Update
       next unless (identifier = assignments[wp.id])
 
       wp.assign_attributes(identifier:, sequence_number: identifier.split("-").last.to_i)
-      wp.clear_changes_information
+      wp.clear_attribute_changes(%i[identifier sequence_number])
     end
   end
 
