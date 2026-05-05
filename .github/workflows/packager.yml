@@ -35,19 +35,20 @@ jobs:
           - el:9
           - sles:15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Setup
         id: setup
         run: |
           VERSION=$(ruby -r ./lib/open_project/version.rb -e "puts OpenProject::VERSION")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             MAJOR=$(ruby -r ./lib/open_project/version.rb -e "puts OpenProject::VERSION::MAJOR")
             echo "channel=stable/${MAJOR}" >> $GITHUB_OUTPUT
           else
-            echo "channel=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "channel=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
           fi
       - name: Package
         uses: pkgr/action/package@main
