@@ -28,23 +28,14 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-module API
-  module V3
-    module Sprints
-      class SprintsByProjectAPI < ::API::OpenProjectAPI
-        resources :sprints do
-          after_validation do
-            authorize_in_project(:view_sprints, project: @project)
-          end
-
-          get &::API::V3::Utilities::Endpoints::Index
-                 .new(
-                   model: Sprint,
-                   scope: -> { Sprint.for_project(@project).visible }
-                 )
-                 .mount
-        end
-      end
+class Queries::Sprints::Filters::StatusFilter < Queries::Sprints::Filters::SprintFilter
+  def allowed_values
+    Sprint.statuses.map do |key, value|
+      [I18n.t(:"activerecord.attributes.sprint.statuses.#{key}"), value]
     end
+  end
+
+  def type
+    :list
   end
 end

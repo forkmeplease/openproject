@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,23 +26,29 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module API
-  module V3
-    module Sprints
-      class SprintsByProjectAPI < ::API::OpenProjectAPI
-        resources :sprints do
-          after_validation do
-            authorize_in_project(:view_sprints, project: @project)
-          end
+require "support/pages/page"
 
-          get &::API::V3::Utilities::Endpoints::Index
-                 .new(
-                   model: Sprint,
-                   scope: -> { Sprint.for_project(@project).visible }
-                 )
-                 .mount
+module Pages
+  module Admin
+    module Authentication
+      class Passwords < ::Pages::Page
+        def path
+          admin_settings_authentication_path(tab: "passwords")
+        end
+
+        def save
+          click_button "Save"
+          expect_and_dismiss_flash(message: "Successful update.")
+        end
+
+        def expect_rule_checked(rule)
+          expect(page).to have_checked_field I18n.t("label_password_rule_#{rule}")
+        end
+
+        def expect_rule_unchecked(rule)
+          expect(page).to have_unchecked_field I18n.t("label_password_rule_#{rule}")
         end
       end
     end
