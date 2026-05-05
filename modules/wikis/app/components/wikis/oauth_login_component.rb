@@ -29,39 +29,23 @@
 #++
 
 module Wikis
-  class Provider < ApplicationRecord
-    self.table_name = "wiki_providers"
+  class OAuthLoginComponent < ApplicationComponent
+    include ApplicationHelper
+    include OpPrimer::ComponentHelpers
 
-    has_many :page_links, dependent: :destroy
+    alias_method :provider, :model
 
-    scope :enabled, -> { where(enabled: true) }
-    scope :visible, lambda { |user = User.current|
-      if user.admin? || user.allowed_in_any_project?(:view_wiki_page_links)
-        all
-      else
-        none
-      end
-    }
-
-    validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
-
-    before_create :generate_universal_identifier
-
-    def to_s = self.class.registry_prefix
-    def user_connected?(_user) = raise SubclassResponsibilityError
-
-    class << self
-      def registry_prefix = raise SubclassResponsibilityError
+    def initialize(model = nil, return_url:, **)
+      super(model, **)
+      @return_url = return_url
     end
 
-    def resolve(registry_path, **init_options)
-      Adapters::Registry["#{self.class.registry_prefix}.#{registry_path}"].new(model: self, **init_options)
-    end
-
-    private
-
-    def generate_universal_identifier
-      self.universal_identifier ||= SecureRandom.uuid
+    def login_url
+      oauth_clients_ensure_connection_url(
+        oauth_client_id: provider.oauth_client.client_id,
+        storage_id: provider.id,
+        destination_url: @return_url
+      )
     end
   end
 end
