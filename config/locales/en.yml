@@ -6279,9 +6279,6 @@ en:
       scopes: "Permissions"
       successful_application_revocation: "Revocation of application %{application_name} successful."
       none_given: "No OAuth applications have been granted access to your user account."
-    x_active_tokens:
-      one: "one active token"
-      other: "%{count} active token"
     flows:
       authorization_code: "Authorization code flow"
       client_credentials: "Client credentials flow"
@@ -6291,8 +6288,10 @@ en:
     client_credentials_impersonation_html: >
       By default, OpenProject provides OAuth 2.0 authorization via %{authorization_code_flow_link}.
       You can optionally enable %{client_credentials_flow_link}, but you must provide a user on whose behalf requests will be performed.
+    confirm_revoke_my_application:
+      one: "Do you really want to remove this application? This will revoke one token active for it."
+      other: "Do you really want to remove this application? This will revoke %{count} tokens active for it."
     authorization_error: "An authorization error has occurred."
-    revoke_my_application_confirmation: "Do you really want to remove this application? This will revoke %{token_count} active for it."
     my_registered_applications: "Registered OAuth applications"
 
   oauth_client:
