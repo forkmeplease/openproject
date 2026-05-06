@@ -1,0 +1,8 @@
+rules:
+  artipacked:
+    ignore:
+      # These workflows intentionally persist credentials because they push commits/branches
+      - create-merge-from-previous-release-branch-pr.yml
+      - create-merge-release-into-dev-pr.yml
+      - crowdin.yml
+      - sync-internal-fork.yml
