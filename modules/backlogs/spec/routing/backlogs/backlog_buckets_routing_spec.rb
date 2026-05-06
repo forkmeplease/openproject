@@ -49,6 +49,14 @@ RSpec.describe Backlogs::BacklogBucketsController do
 
     it {
       route = "/projects/project_42/backlogs/backlog_buckets/23"
+      expect(put(route)).to route_to(controller: "backlogs/backlog_buckets",
+                                     action: "update",
+                                     project_id: "project_42",
+                                     id: "23")
+    }
+
+    it {
+      route = "/projects/project_42/backlogs/backlog_buckets/23"
       expect(delete(route)).to route_to(controller: "backlogs/backlog_buckets",
                                         action: "destroy",
                                         project_id: "project_42",
@@ -80,6 +88,11 @@ RSpec.describe Backlogs::BacklogBucketsController do
   end
 
   describe "named routing" do
+    it {
+      expect(project_backlogs_backlog_buckets_path(project_id: "project_42"))
+        .to eq("/projects/project_42/backlogs/backlog_buckets")
+    }
+
     it {
       expect(project_backlogs_backlog_bucket_path(project_id: "project_42", id: "23"))
         .to eq("/projects/project_42/backlogs/backlog_buckets/23")

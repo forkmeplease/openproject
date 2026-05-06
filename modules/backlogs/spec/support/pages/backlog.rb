@@ -533,8 +533,12 @@ module Pages
       end
     end
 
-    def expect_backlog_bucket_delete_modal
+    def expect_and_confirm_backlog_bucket_delete_modal
       expect(page).to have_selector backlog_bucket_destroy_modal_selector
+
+      within backlog_bucket_destroy_modal_selector do
+        click_button "Delete"
+      end
     end
 
     def within_sprint_menu(sprint, &)
@@ -586,12 +590,6 @@ module Pages
         choose I18n.t("backlogs.finish_sprint_dialog_component.actions.move_to_bottom_of_backlog")
 
         click_button "Complete sprint"
-      end
-    end
-
-    def confirm_backlog_bucket_delete_modal
-      within backlog_bucket_destroy_modal_selector do
-        click_button "Delete"
       end
     end
 

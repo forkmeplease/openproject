@@ -62,8 +62,7 @@ RSpec.describe "Backlog bucket deletion",
 
     backlogs_page.click_in_backlog_bucket_menu(bucket, "Delete backlog bucket")
 
-    backlogs_page.expect_backlog_bucket_delete_modal
-    backlogs_page.confirm_backlog_bucket_delete_modal
+    backlogs_page.expect_and_confirm_backlog_bucket_delete_modal
 
     expect_and_dismiss_flash type: :success, exact_message: "Successful deletion."
     backlogs_page.expect_no_backlog_bucket(bucket)

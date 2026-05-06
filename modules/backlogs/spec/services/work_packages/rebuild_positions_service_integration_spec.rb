@@ -75,13 +75,13 @@ RSpec.describe WorkPackages::RebuildPositionsService, "integration", type: :mode
   shared_let(:sprint3_wp3) { create_work_package(subject: "Sprint 3 WorkPackage 3", sprint: sprint3, position: nil) }
 
   shared_let(:inbox_wp1) do
-    create_work_package(subject: "Inbox WorkPackage 1", project: project1, sprint: nil, position: nil)
+    create_work_package(subject: "Inbox WorkPackage 1", project: project1, position: nil)
   end
   shared_let(:inbox_wp2) do
-    create_work_package(subject: "Inbox WorkPackage 2", project: project1, sprint: nil, position: nil)
+    create_work_package(subject: "Inbox WorkPackage 2", project: project1, position: nil)
   end
   shared_let(:inbox_wp3) do
-    create_work_package(subject: "Inbox WorkPackage 3", project: project1, sprint: nil, position: nil)
+    create_work_package(subject: "Inbox WorkPackage 3", project: project1, position: nil)
   end
 
   shared_let(:bucket1_wp1) { create_work_package(subject: "Bucket 1 WorkPackage 1", backlog_bucket: bucket1, position: nil) }

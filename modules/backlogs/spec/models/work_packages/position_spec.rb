@@ -52,9 +52,9 @@ RSpec.describe WorkPackage, "positions" do # rubocop:disable RSpec/SpecFilePathF
   let!(:sprint2_wp2) { create_work_package(subject: "Sprint 2 WorkPackage 2", sprint: sprint2) }
   let!(:sprint2_wp3) { create_work_package(subject: "Sprint 2 WorkPackage 3", sprint: sprint2) }
 
-  let!(:inbox_wp1) { create_work_package(subject: "Inbox WorkPackage 1", sprint: nil) }
-  let!(:inbox_wp2) { create_work_package(subject: "Inbox WorkPackage 2", sprint: nil) }
-  let!(:inbox_wp3) { create_work_package(subject: "Inbox WorkPackage 3", sprint: nil) }
+  let!(:inbox_wp1) { create_work_package(subject: "Inbox WorkPackage 1") }
+  let!(:inbox_wp2) { create_work_package(subject: "Inbox WorkPackage 2") }
+  let!(:inbox_wp3) { create_work_package(subject: "Inbox WorkPackage 3") }
 
   let!(:bucket1_wp1) { create_work_package(subject: "Bucket 1 WorkPackage 1", backlog_bucket: bucket1) }
   let!(:bucket1_wp2) { create_work_package(subject: "Bucket 1 WorkPackage 2", backlog_bucket: bucket1) }
@@ -94,7 +94,7 @@ RSpec.describe WorkPackage, "positions" do # rubocop:disable RSpec/SpecFilePathF
 
   context "when creating a work_package in the inbox" do
     it "puts them in order" do
-      new_work_package = create_work_package(subject: "Newest WorkPackage", sprint: nil)
+      new_work_package = create_work_package(subject: "Newest WorkPackage")
 
       expect(wp_of_inbox_by_id_and_position)
         .to eq(inbox_wp1.id => 1,
@@ -290,9 +290,7 @@ RSpec.describe WorkPackage, "positions" do # rubocop:disable RSpec/SpecFilePathF
 
   context "when moving a work_package from a backlog into a sprint bucket" do
     it "reorders the remaining sprint work_packages and the ones in the bucket" do
-      bucket1_wp3.backlog_bucket = nil
-      bucket1_wp3.sprint = sprint1
-      bucket1_wp3.save!
+      bucket1_wp3.update(backlog_bucket: nil, sprint: sprint1)
 
       expect(wp_of_bucket_by_id_and_position(bucket1))
         .to eq(bucket1_wp1.id => 1,
@@ -564,7 +562,7 @@ RSpec.describe WorkPackage, "positions" do # rubocop:disable RSpec/SpecFilePathF
       end
     end
 
-    context "when in the inbox with a previous that does not exist outside" do
+    context "when in the inbox with a previous referencing a work package not in it" do
       it "moves the work_package to the top position" do
         inbox_wp3.move_after(prev_id: sprint2_wp2.id)
 

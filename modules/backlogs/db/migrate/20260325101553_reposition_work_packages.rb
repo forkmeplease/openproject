@@ -6,7 +6,7 @@ class RepositionWorkPackages < ActiveRecord::Migration[8.1]
       direction.up do
         # Used to be copied 1:1 from modules/backlogs/app/services/work_packages/rebuild_positions_service.rb.
         # In the meantime, the implementation of the service changed to accommodate backlog buckets.
-        # But those do not exist at the time this migration represents.
+        # But those did not exist at the time this migration represents.
         execute <<~SQL.squish
           UPDATE work_packages
           SET position = mapping.new_position
