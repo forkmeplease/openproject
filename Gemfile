@@ -384,8 +384,6 @@ group :development, :test do
   gem "active_record_doctor", "~> 2.0.1"
 end
 
-gem "bootsnap", "~> 1.24.0", require: false
-
 # API gems
 gem "grape", "~> 3.2.0"
 gem "grape_logging", "~> 3.0.0"
