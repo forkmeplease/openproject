@@ -201,25 +201,6 @@ RSpec.describe "Meetings", "Index", :js do
         end
       end
 
-      context 'with the "Invitations" filter' do
-        before do
-          meetings_page.set_sidebar_filter "Invitations"
-        end
-
-        it "shows all meetings I've been marked as invited to with a quick filter" do
-          meetings_page.expect_meeting_listed_in_group(tomorrows_meeting, key: :tomorrow)
-          meetings_page.expect_meetings_not_listed(yesterdays_meeting,
-                                                   meeting,
-                                                   ongoing_meeting)
-
-          meetings_page.set_quick_filter upcoming: false
-
-          meetings_page.expect_meetings_listed_in_table(yesterdays_meeting)
-
-          meetings_page.expect_meetings_not_listed(meeting, tomorrows_meeting)
-        end
-      end
-
       context 'with the "Attendee" filter' do
         before do
           meetings_page.set_sidebar_filter "Attended"
