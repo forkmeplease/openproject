@@ -30,24 +30,28 @@
 
 require "rails_helper"
 
-RSpec.describe Storages::Admin::Health::CheckResultComponent, type: :component do
+RSpec.describe HealthReports::ResultComponent, type: :component do
   let(:group_key) { :base_configuration }
 
-  subject(:check_result_component) { described_class.new(group: group_key, result: check_result) }
+  subject(:result_component) { described_class.new(group: group_key, result: check_result, i18n_scope: "test.scope") }
 
   before do
-    render_inline(check_result_component)
+    allow(I18n).to receive(:t).and_call_original
+    allow(I18n).to receive(:t).with("#{group_key}.#{check_result.key}", scope: "test.scope").and_return("Translated check")
+    allow(I18n).to receive(:t).with("errors.#{check_result.code}", scope: "test.scope").and_return("Translated error")
+
+    render_inline(result_component)
   end
 
   context "if check result is successful" do
     let(:check_result) { HealthReport::Result.success(:capabilities_request) }
 
     it "renders the component" do
-      expect(page).to have_text(I18n.t("storages.health.checks.#{group_key}.#{check_result.key}"))
+      expect(page).to have_text("Translated check")
       expect(page).to have_css(".color-fg-success", text: "Passed")
       expect(page).to have_no_css(".Label")
       expect(page).to have_no_link("More information")
-      expect(page).not_to have_test_selector("op-storages--health-status-check-information")
+      expect(page).not_to have_test_selector("op-health-report--result-status")
     end
   end
 
@@ -55,11 +59,11 @@ RSpec.describe Storages::Admin::Health::CheckResultComponent, type: :component d
     let(:check_result) { HealthReport::Result.skipped(:capabilities_request) }
 
     it "renders the component" do
-      expect(page).to have_text(I18n.t("storages.health.checks.#{group_key}.#{check_result.key}"))
+      expect(page).to have_text("Translated check")
       expect(page).to have_css(".color-fg-attention", text: "Skipped")
       expect(page).to have_no_css(".Label")
       expect(page).to have_no_link("More information")
-      expect(page).not_to have_test_selector("op-storages--health-status-check-information")
+      expect(page).not_to have_test_selector("op-health-report--result-status")
     end
   end
 
@@ -70,11 +74,12 @@ RSpec.describe Storages::Admin::Health::CheckResultComponent, type: :component d
     end
 
     it "renders the component" do
-      expect(page).to have_text(I18n.t("storages.health.checks.#{group_key}.#{check_result.key}"))
+      expect(page).to have_text("Translated check")
       expect(page).to have_css(".color-fg-attention", text: "Warning")
       expect(page).to have_css(".Label", text: "WRN_#{check_result.code.upcase}")
+      expect(page).to have_text("Translated error")
       expect(page).to have_link("More information")
-      expect(page).to have_test_selector("op-storages--health-status-check-information")
+      expect(page).to have_test_selector("op-health-report--result-status")
     end
   end
 
@@ -84,11 +89,12 @@ RSpec.describe Storages::Admin::Health::CheckResultComponent, type: :component d
     end
 
     it "renders the component" do
-      expect(page).to have_text(I18n.t("storages.health.checks.#{group_key}.#{check_result.key}"))
+      expect(page).to have_text("Translated check")
       expect(page).to have_css(".color-fg-danger", text: "Failed")
       expect(page).to have_css(".Label", text: "ERR_#{check_result.code.upcase}")
+      expect(page).to have_text("Translated error")
       expect(page).to have_link("More information")
-      expect(page).to have_test_selector("op-storages--health-status-check-information")
+      expect(page).to have_test_selector("op-health-report--result-status")
     end
   end
 end

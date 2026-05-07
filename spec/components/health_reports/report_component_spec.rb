@@ -30,57 +30,44 @@
 
 require "rails_helper"
 
-RSpec.describe Storages::Admin::Health::HealthReportComponent, type: :component do
-  let(:storage) { create(:nextcloud_storage_configured) }
+RSpec.describe HealthReports::ReportComponent, type: :component do
+  let(:report) do
+    # rubocop:disable Naming/VariableNumber
+    generate_test_report(
+      group_1: %i[success success],
+      group_2: %i[skipped skipped],
+      group_3: %i[success success warning warning],
+      group_4: %i[success failure failure],
+      group_5: %i[success failure warning]
+    )
+    # rubocop:enable Naming/VariableNumber
+  end
 
-  subject(:health_report_component) { described_class.new(storage:, report:) }
+  subject(:health_report_component) { described_class.new(report, i18n_scope: "test.scope") }
 
   before do
     render_inline(health_report_component)
   end
 
-  context "if report is not available" do
-    let(:report) { nil }
-
-    it "renders a placeholder blankslate" do
-      expect(page).to have_text("No report available")
-      expect(page).to have_link("Run checks now")
-    end
+  it "renders a summary" do
+    expect(page).to have_text("3 checks failed")
+    expect(page).to have_text("Some checks failed and the system does not work as expected.")
   end
 
-  context "if report is available" do
-    let(:report) do
-      # rubocop:disable Naming/VariableNumber
-      generate_test_report(
-        group_1: %i[success success],
-        group_2: %i[skipped skipped],
-        group_3: %i[success success warning warning],
-        group_4: %i[success failure failure],
-        group_5: %i[success failure warning]
-      )
-      # rubocop:enable Naming/VariableNumber
-    end
+  it "renders each group separately" do
+    expect(page).to have_test_selector("op-health-report--result-group", count: 5)
 
-    it "renders a summary" do
-      expect(page).to have_text("3 checks failed")
-      expect(page).to have_text("Some checks failed and the system does not work as expected.")
-    end
+    summaries = {
+      0 => "All checks passed",
+      1 => "All checks passed",
+      2 => "2 checks returned a warning",
+      3 => "2 checks failed",
+      4 => "1 check failed"
+    }
 
-    it "renders each group separately" do
-      expect(page).to have_test_selector("op-storages--health-report-group", count: 5)
-
-      summaries = {
-        0 => "All checks passed",
-        1 => "All checks passed",
-        2 => "2 checks returned a warning",
-        3 => "2 checks failed",
-        4 => "1 check failed"
-      }
-
-      page.all(test_selector("op-storages--health-report-group")).each_with_index do |group, idx|
-        expect(group).to have_text("Group #{idx + 1}")
-        expect(group).to have_text(summaries[idx])
-      end
+    page.all(test_selector("op-health-report--result-group")).each_with_index do |group, idx|
+      expect(group).to have_text("Group #{idx + 1}")
+      expect(group).to have_text(summaries[idx])
     end
   end
 
@@ -103,9 +90,9 @@ RSpec.describe Storages::Admin::Health::HealthReportComponent, type: :component 
                end
 
       group.results << result
-      allow(I18n).to receive(:t).with("storages.health.checks.#{group_key}.#{key}").and_return(key.to_s.humanize)
+      allow(I18n).to receive(:t).with("#{group_key}.#{key}", scope: "test.scope").and_return(key.to_s.humanize)
       if result.code.present?
-        allow(I18n).to receive(:t).with("storages.health.connection_validation.#{result.code}")
+        allow(I18n).to receive(:t).with("errors.#{result.code}", scope: "test.scope")
                                   .and_return(result.code.to_s.humanize)
       end
     end
@@ -119,7 +106,7 @@ RSpec.describe Storages::Admin::Health::HealthReportComponent, type: :component 
 
     map.each_pair do |key, values|
       report.results << generate_test_group(key, values)
-      allow(I18n).to receive(:t).with("storages.health.checks.#{key}.header").and_return(key.to_s.humanize)
+      allow(I18n).to receive(:t).with("#{key}.header", scope: "test.scope").and_return(key.to_s.humanize)
     end
 
     report

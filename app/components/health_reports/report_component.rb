@@ -23,46 +23,48 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Storages
-  module Admin
-    module Health
-      class HealthReportComponent < ApplicationComponent
-        include OpPrimer::ComponentHelpers
-        include OpTurbo::Streamable
+module HealthReports
+  class ReportComponent < ApplicationComponent
+    include OpPrimer::ComponentHelpers
+    include OpTurbo::Streamable
 
-        def initialize(storage:, report:)
-          super(storage)
-          @report = report
-        end
+    alias report model
 
-        private
+    # The i18n_scope parameter defines the I18n scope that should be used to resolve
+    # names of groups, checks and error messages indicated by the results.
+    def initialize(*, i18n_scope:, **)
+      super(*, **)
+      @i18n_scope = i18n_scope
+    end
 
-        def summary_icon(check_tally)
-          case check_tally
-          in { failure: 1.. }
-            { icon: :alert, color: :danger }
-          in { warning: 1.. }
-            { icon: :alert, color: :attention }
-          else
-            { icon: :"check-circle", color: :success }
-          end
-        end
+    private
 
-        def humanize_summary(check_tally)
-          case check_tally
-          in { failure: 1.. }
-            I18n.t("health_report.checks.failures", count: check_tally[:failure])
-          in { warning: 1.. }
-            I18n.t("health_report.checks.warnings", count: check_tally[:warning])
-          else
-            I18n.t("health_report.checks.success")
-          end
-        end
+    attr_reader :i18n_scope
+
+    def summary_icon(check_tally)
+      case check_tally
+      in { failure: 1.. }
+        { icon: :alert, color: :danger }
+      in { warning: 1.. }
+        { icon: :alert, color: :attention }
+      else
+        { icon: :"check-circle", color: :success }
+      end
+    end
+
+    def humanize_summary(check_tally)
+      case check_tally
+      in { failure: 1.. }
+        t(".checks.failures", count: check_tally[:failure])
+      in { warning: 1.. }
+        t(".checks.warnings", count: check_tally[:warning])
+      else
+        t(".checks.success")
       end
     end
   end
