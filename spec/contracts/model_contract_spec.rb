@@ -236,12 +236,15 @@ RSpec.describe ModelContract do
 
         def validate_model? = false
       end
+      
+      expect(multi_class.writable_attributes)
+        .to contain_exactly("settings",
+                            "settings_id",
+                            "sprint_sharing",
+                            "sprint_sharing_id",
+                            "deactivate_work_package_attachments",
+                            "deactivate_work_package_attachments_id")
 
-      project.sprint_sharing = "share_subprojects"
-      project.deactivate_work_package_attachments = true
-      contract = multi_class.new(project, user)
-
-      expect(contract).to be_valid
     end
 
     context "with inheritance" do
