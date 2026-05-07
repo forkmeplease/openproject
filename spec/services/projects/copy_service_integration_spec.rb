@@ -383,6 +383,8 @@ RSpec.describe(
 
     context "when source project has a non-zero wp_sequence_counter",
             with_settings: { work_packages_identifier: "semantic" } do
+      let(:target_project_params) { { name: "Target Project Name", identifier: "COPY1" } }
+
       before do
         source.update_column(:wp_sequence_counter, 5)
       end
