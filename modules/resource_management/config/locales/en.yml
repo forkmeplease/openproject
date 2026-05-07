@@ -8,9 +8,21 @@ en:
         default_view_class_name: "Default view"
         public: "Public"
         favorite: "Favorite"
+      resource_allocation:
+        entity: "Entity"
+        principal: "Assignee"
+        state: "State"
+        start_date: "Start date"
+        end_date: "Finish date"
+        allocated_time: "Allocated time"
+        user_filter: "User filter"
     errors:
       models:
         resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: "must be after the start date."
+        resource_allocation:
           attributes:
             end_date:
               greater_than_start_date: "must be after the start date."
