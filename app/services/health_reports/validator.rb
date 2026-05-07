@@ -23,44 +23,40 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Storages
-  module Adapters
-    module ConnectionValidators
-      class BaseConnectionValidator
-        class << self
-          def validation_groups
-            @validation_groups ||= []
-          end
+module HealthReports
+  class Validator
+    class << self
+      def validation_groups
+        @validation_groups ||= []
+      end
 
-          def register_group(klass, precondition: ->(*) { true })
-            validation_groups << { klass:, precondition: }
-          end
-        end
-
-        def initialize(storage)
-          @storage = storage
-        end
-
-        def call
-          health_report = @storage.health_reports.build
-          validation_groups.each do |group_metadata|
-            if group_metadata[:precondition].call(@storage, health_report)
-              health_report.results << group_metadata[:klass].call(@storage)
-            end
-          end
-
-          health_report
-        end
-
-        private
-
-        def validation_groups = self.class.validation_groups
+      def register_group(klass, precondition: ->(*) { true })
+        validation_groups << { klass:, precondition: }
       end
     end
+
+    def initialize(subject)
+      @subject = subject
+    end
+
+    def call
+      health_report = @subject.health_reports.build
+      validation_groups.each do |group_metadata|
+        if group_metadata[:precondition].call(@subject, health_report)
+          health_report.results << group_metadata[:klass].call(@subject)
+        end
+      end
+
+      health_report
+    end
+
+    private
+
+    def validation_groups = self.class.validation_groups
   end
 end
