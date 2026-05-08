@@ -97,7 +97,7 @@ module Backlogs
 
     def drop_target_config
       {
-        generic_drag_and_drop_target: "container mirrorContainer",
+        generic_drag_and_drop_target: "container",
         target_container_accessor: ":scope > ul",
         target_id: "inbox",
         target_allowed_drag_type: "story"
