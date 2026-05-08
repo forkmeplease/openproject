@@ -31,8 +31,9 @@
 module My
   module TimeTrackingHelper
     def week_date_range(date) # rubocop:disable Metrics/AbcSize
-      bow = date.beginning_of_week
-      eow = date.end_of_week
+      start_day = OpenProject::Internationalization::Date.beginning_of_week
+      bow = date.beginning_of_week(start_day)
+      eow = date.end_of_week(start_day)
 
       if bow.year == eow.year && bow.month == eow.month
         [I18n.l(bow, format: "%d."), I18n.l(eow, format: "%d. %B %Y")].join(" - ")
