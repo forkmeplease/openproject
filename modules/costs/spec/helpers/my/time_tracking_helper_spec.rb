@@ -67,5 +67,25 @@ RSpec.describe My::TimeTrackingHelper do
         it { is_expected.to eq("03. - 09. May 2026") }
       end
     end
+
+    context "when rendering the date range string", with_settings: { start_of_week: 1 } do
+      context "when the week falls within the same month" do
+        let(:date) { Date.new(2026, 5, 7) }
+
+        it { is_expected.to eq("04. - 10. May 2026") }
+      end
+
+      context "when the week spans two months" do
+        let(:date) { Date.new(2026, 4, 30) }
+
+        it { is_expected.to eq("27. April - 03. May 2026") }
+      end
+
+      context "when the week spans two years" do
+        let(:date) { Date.new(2025, 12, 31) }
+
+        it { is_expected.to eq("29. December 2025 - 04. January 2026") }
+      end
+    end
   end
 end
