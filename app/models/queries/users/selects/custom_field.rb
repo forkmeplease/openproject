@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,32 +26,41 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class UserQuery < PersistedQuery
-  def self.model
-    User
+class Queries::Users::Selects::CustomField < Queries::Selects::Base
+  include Queries::Selects::Shared::CustomFieldSelect
+
+  self.custom_field_context = Queries::Users::CustomFieldContext
+
+  validates :custom_field, presence: { message: I18n.t(:"activerecord.errors.messages.does_not_exist") }
+
+  KEY = /\Acf_(\d+)\z/
+
+  def self.key
+    KEY
   end
 
-  def default_scope
-    # Excludes the SystemUser, DeletedUser, AnonymousUser STI descendants of User.
-    User.user
+  def self.all_available
+    return [] unless available?
+
+    custom_field_context
+      .custom_fields
+      .pluck(:id)
+      .map { |id| new(:"cf_#{id}") }
   end
 
-  register_query do
-    filter Queries::Users::Filters::NameFilter
-    filter Queries::Users::Filters::AnyNameAttributeFilter
-    filter Queries::Users::Filters::GroupFilter
-    filter Queries::Users::Filters::StatusFilter
-    filter Queries::Users::Filters::LoginFilter
-    filter Queries::Users::Filters::BlockedFilter
-    filter Queries::Users::Filters::CustomFieldFilter
+  def caption
+    custom_field.name
+  end
 
-    order Queries::Users::Orders::DefaultOrder
-    order Queries::Users::Orders::NameOrder
-    order Queries::Users::Orders::GroupOrder
-    order Queries::Users::Orders::CustomFieldOrder
+  def custom_field
+    return @custom_field if defined?(@custom_field)
 
-    select Queries::Users::Selects::CustomField
+    @custom_field = custom_field_context.find_custom_field(attribute[KEY, 1])
+  end
+
+  def available?
+    custom_field.present?
   end
 end

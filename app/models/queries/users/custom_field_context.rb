@@ -28,18 +28,21 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Queries::Projects::CustomFieldContext
+module Queries::Users::CustomFieldContext
   class << self
     def custom_field_class
-      ::ProjectCustomField
+      ::UserCustomField
     end
 
     def model
-      ::Project
+      ::User
     end
 
+    # User / Group / PlaceholderUser all persist as Principal in
+    # custom_values.customized_type (STI base class). Constraining the
+    # join by `custom_field_id` to a UserCustomField scopes us to user CFs.
     def customized_type
-      model.name
+      "Principal"
     end
 
     def custom_fields(_context = nil)
@@ -48,51 +51,30 @@ module Queries::Projects::CustomFieldContext
 
     def find_custom_field(id)
       custom_field_cache.fetch(id.to_i) do |key|
-        preload_custom_fields([key]).first
+        custom_field_cache[key] = custom_fields.where(id: key).first
       end
-    end
-
-    def preload_custom_fields(ids) # rubocop:disable Metrics/AbcSize
-      ids_to_load = ids.map(&:to_i) - custom_field_cache.keys
-
-      if ids_to_load.any?
-        found = custom_fields_eager_loaded
-                  .where(id: ids_to_load)
-                  .index_by(&:id)
-        # Iterating over the ids_to_load will also cache missing custom fields
-        # as nil, making sure we only try to load them once.
-        ids_to_load.each { |id| custom_field_cache[id] = found[id] }
-      end
-
-      ids.filter_map { |id| custom_field_cache[id.to_i] }
     end
 
     def where_subselect_joins(custom_field)
+      # Custom values are stored against Principal (the STI base class of User / Group /
+      # PlaceholderUser), all sharing the `users` table. Constraining the join by
+      # `custom_field_id` to a UserCustomField is what scopes the rows to users.
       <<~SQL.squish
         LEFT OUTER JOIN #{cv_db_table}
-          ON #{cv_db_table}.customized_type='Project'
-          AND #{cv_db_table}.customized_id=#{project_db_table}.id
-          AND #{cv_db_table}.custom_field_id=#{custom_field.id}
-        INNER JOIN project_custom_field_project_mappings
-          ON project_custom_field_project_mappings.project_id = #{project_db_table}.id
-          AND project_custom_field_project_mappings.custom_field_id = #{custom_field.id}
+          ON #{cv_db_table}.customized_type = 'Principal'
+          AND #{cv_db_table}.customized_id = #{users_db_table}.id
+          AND #{cv_db_table}.custom_field_id = #{custom_field.id}
       SQL
     end
 
     def where_subselect_conditions
-      # Allow searching projects only with :view_project_attributes permission
-      allowed_project_ids = Project.allowed_to(User.current, :view_project_attributes)
-                                   .select(:id)
-      <<~SQL.squish
-        #{project_db_table}.id IN (#{allowed_project_ids.to_sql})
-      SQL
+      nil
     end
 
     private
 
-    def custom_fields_eager_loaded = custom_fields.includes(:calculated_value_errors)
-    def custom_field_cache = RequestStore.fetch("Queries::Projects::CustomFieldContext/cache") { {} }
     def cv_db_table = CustomValue.table_name
-    def project_db_table = Project.table_name
+    def users_db_table = User.table_name
+    def custom_field_cache = RequestStore.fetch("Queries::Users::CustomFieldContext/cache") { {} }
   end
 end
