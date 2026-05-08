@@ -60,20 +60,26 @@ class Queries::Users::Orders::CustomFieldOrder < Queries::Orders::Base
   private
 
   def order(scope)
-    if (join_statement = custom_field.order_join_statement)
-      scope = scope.joins(join_statement)
-    end
-
-    if (order_statement = custom_field.order_statement)
-      order_statement = "#{order_statement} #{direction}"
-
-      if (null_handling = custom_field.order_null_handling(direction == :asc))
-        order_statement = "#{order_statement} #{null_handling}"
+    with_raise_on_invalid do
+      if (join_statement = custom_field.order_join_statement)
+        scope = scope.joins(join_statement)
       end
 
-      scope = scope.order(Arel.sql(order_statement))
-    end
+      if (order_statement = custom_field.order_statement)
+        # `direction` is validated by the base class and re-checked above; pin the
+        # SQL fragment to a literal here so static analysis (Brakeman) can prove
+        # no user input flows into the interpolation.
+        direction_sql = direction == :desc ? "DESC" : "ASC"
+        order_clause = "#{order_statement} #{direction_sql}"
 
-    scope
+        if (null_handling = custom_field.order_null_handling(direction == :asc))
+          order_clause = "#{order_clause} #{null_handling}"
+        end
+
+        scope = scope.order(Arel.sql(order_clause))
+      end
+
+      scope
+    end
   end
 end
