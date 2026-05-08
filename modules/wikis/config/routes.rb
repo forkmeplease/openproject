@@ -43,6 +43,11 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resource :wiki_page_link_macro, controller: "wikis/page_link" do
+    get :load
+  end
+
   resources :projects, only: %i[] do
     resources :work_packages, only: %i[] do
       resources :wikis, only: %i[] do
