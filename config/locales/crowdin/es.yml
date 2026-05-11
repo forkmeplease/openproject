@@ -1377,11 +1377,11 @@ es:
     copies:
       form:
         source_role_id:
-          label: Source role
+          label: Rol fuente
         target_role_ids:
-          label: Target roles
+          label: Roles de destino
         target_type_ids:
-          label: Target types
+          label: Tipos de destino
         mode:
           from_role:
             label: Copiar a otros roles
@@ -1392,8 +1392,8 @@ es:
       from_roles:
         create:
           notice:
-            one: Successfully copied workflow to '%{role_name}' role.
-            other: Successfully copied workflow to %{count} roles.
+            one: Se ha copiado correctamente el flujo de trabajo al rol «%{role_name}».
+            other: Se ha copiado correctamente el flujo de trabajo a los roles «%{count}».
       from_types:
         create:
           notice:
