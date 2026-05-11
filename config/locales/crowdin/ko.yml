@@ -455,7 +455,7 @@ ko:
         label: '역할: %{role}'
         no_role: 역할 선택
         roles:
-          other: "%{count}개 역할 선택됨"
+          other: "%{count} roles selected"
       blankslate:
         title: 구성된 상태 전환 없음
         description: 상태를 추가하여 이 역할에 대한 워크플로 구성을 시작합니다
@@ -4703,13 +4703,13 @@ ko:
       work_package_card_component:
         menu:
           label_actions: 작업 패키지 액션
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: 메뉴 열기
+          label_actions: Open menu
           label_work_package_count:
-            zero: 작업 패키지 없음
-            one: "%{count}개 작업 패키지"
-            other: "%{count}개 작업 패키지"
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: 코멘트 추가
   permission_add_work_packages: 작업 패키지 추가
   permission_add_messages: 메시지 게시

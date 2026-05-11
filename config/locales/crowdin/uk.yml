@@ -481,10 +481,10 @@ uk:
         label: 'Роль: %{role}'
         no_role: Виберіть роль
         roles:
-          one: Вибрано %{count} роль
-          few: Вибрано %{count} ролі
-          many: Вибрано %{count} ролей
-          other: Вибрано %{count} ролі
+          one: One role selected
+          few: "%{count} roles selected"
+          many: "%{count} roles selected"
+          other: "%{count} roles selected"
       blankslate:
         title: Переходи статусів не налаштовано
         description: Додайте статуси, щоб почати налаштовувати робочі процеси для цієї ролі
@@ -4888,13 +4888,13 @@ uk:
       work_package_card_component:
         menu:
           label_actions: Дії з пакетом робіт
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: Відкрити меню
+          label_actions: Open menu
           label_work_package_count:
-            zero: Немає пакетів робіт
-            one: "%{count} пакет робіт"
-            other: 'Пакетів робіт: %{count}'
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: Додавання коментарів
   permission_add_work_packages: Додати робочі пакети
   permission_add_messages: Відправка повідомлень

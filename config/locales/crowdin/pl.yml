@@ -481,10 +481,10 @@ pl:
         label: 'Rola: %{role}'
         no_role: Wybierz rolę
         roles:
-          one: Wybrano %{count} rolę
-          few: Wybrano %{count} role
-          many: Wybrano %{count} ról
-          other: Wybrano %{count} roli
+          one: One role selected
+          few: "%{count} roles selected"
+          many: "%{count} roles selected"
+          other: "%{count} roles selected"
       blankslate:
         title: Nie skonfigurowano przejść statusów
         description: Dodaj statusy, aby rozpocząć konfigurowanie przepływów pracy dla tej roli
@@ -4886,13 +4886,13 @@ pl:
       work_package_card_component:
         menu:
           label_actions: Działania pakietu roboczego
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: Otwórz menu
+          label_actions: Open menu
           label_work_package_count:
-            zero: Brak pakietów roboczych
-            one: "%{count} pakiet roboczy"
-            other: 'Liczba pakietów roboczych: %{count}'
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: Dodaj komentarze
   permission_add_work_packages: Dodawanie pakietów roboczych
   permission_add_messages: Wysyłanie wiadomości

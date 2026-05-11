@@ -465,8 +465,8 @@ de:
         label: 'Rolle: %{role}'
         no_role: Rolle auswählen
         roles:
-          one: "%{count} Rolle ausgewählt"
-          other: "%{count} Rollen ausgewählt"
+          one: One role selected
+          other: "%{count} roles selected"
       blankslate:
         title: Keine Statusübergänge konfiguriert
         description: Status hinzufügen, um mit der Konfiguration von Arbeitsabläufen für diese Rolle zu beginnen
@@ -4750,13 +4750,13 @@ de:
       work_package_card_component:
         menu:
           label_actions: Arbeitspaket-Aktionen
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: Menü öffnen
+          label_actions: Open menu
           label_work_package_count:
-            zero: Keine Arbeitspakete
-            one: "%{count} Arbeitspakete"
-            other: "%{count} Arbeitspakete"
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: Kommentare hinzufügen
   permission_add_work_packages: Arbeitspakete hinzufügen
   permission_add_messages: Forenbeiträge hinzufügen

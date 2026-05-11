@@ -455,7 +455,7 @@ zh-CN:
         label: 角色：%{role}
         no_role: 选择角色
         roles:
-          other: 已选择 %{count} 个角色
+          other: "%{count} roles selected"
       blankslate:
         title: 未配置状态过渡
         description: 添加状态，以开始为此角色配置工作流
@@ -4682,13 +4682,13 @@ zh-CN:
       work_package_card_component:
         menu:
           label_actions: 工作包操作
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: 打开菜单
+          label_actions: Open menu
           label_work_package_count:
-            zero: 无工作包
-            one: "%{count} 个工作包"
-            other: "%{count} 个工作包"
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: 添加评论
   permission_add_work_packages: 添加工作包
   permission_add_messages: 发布消息

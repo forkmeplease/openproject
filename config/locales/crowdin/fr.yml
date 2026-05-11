@@ -465,8 +465,8 @@ fr:
         label: 'Rôle : %{role}'
         no_role: Sélectionner un rôle
         roles:
-          one: "%{count} rôle sélectionné"
-          other: "%{count} rôles sélectionnés"
+          one: One role selected
+          other: "%{count} roles selected"
       blankslate:
         title: Aucune transition de statut configurée
         description: Ajouter des statuts pour commencer à configurer des flux de travail pour ce rôle
@@ -4745,13 +4745,13 @@ fr:
       work_package_card_component:
         menu:
           label_actions: Actions du lot de travaux
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: Ouvrir le menu
+          label_actions: Open menu
           label_work_package_count:
-            zero: Aucun lot de travaux
-            one: "%{count} lot de travaux"
-            other: Lots de travaux %{count}
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: Ajouter des commentaires
   permission_add_work_packages: Ajouter des lots de travaux
   permission_add_messages: Poster des messages

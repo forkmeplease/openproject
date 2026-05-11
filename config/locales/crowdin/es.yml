@@ -465,8 +465,8 @@ es:
         label: 'Rol: %{role}'
         no_role: Seleccionar rol
         roles:
-          one: "%{count} rol seleccionado"
-          other: "%{count} roles seleccionados"
+          one: One role selected
+          other: "%{count} roles selected"
       blankslate:
         title: No hay transiciones de estado configuradas
         description: Añade estados para empezar a configurar los flujos de trabajo de este rol
@@ -720,17 +720,17 @@ es:
     move_user_dialog:
       title: El usuario ya está en un departamento
       heading: "¿Mover al usuario a este departamento?"
-      description: "%{user} is currently a member of %{from_department}. Moving them will remove them from that department."
-      confirm: Move user
+      description: "%{user} es actualmente miembro de %{from_department}. Si se le traslada, dejará de formar parte de ese departamento."
+      confirm: Mover usuario
     context_menu:
-      add_sub_department: Add sub-department
-      add_user: Add user
+      add_sub_department: Añadir subdepartamento
+      add_user: Agregar usuario
     flash:
       user_added: El usuario se ha añadido correctamente al departamento.
       user_removed: El usuario se ha eliminado correctamente al departamento.
       department_created: El departamento se ha creado correctamente.
     errors:
-      move_user_failed: Failed to move user between departments.
+      move_user_failed: No se ha podido trasladar al usuario de un departamento a otro.
   pagination:
     label: Paginación
     prev: Anterior
@@ -4743,13 +4743,13 @@ es:
       work_package_card_component:
         menu:
           label_actions: Acciones del paquete de trabajo
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: Abrir menú
+          label_actions: Open menu
           label_work_package_count:
-            zero: Sin paquetes de trabajo
-            one: "%{count} paquete de trabajo"
-            other: "%{count} paquetes de trabajo"
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: Añadir comentarios
   permission_add_work_packages: Añadir paquetes de trabajo
   permission_add_messages: Publicar mensajes

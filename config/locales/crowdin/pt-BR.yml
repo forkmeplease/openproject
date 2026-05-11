@@ -465,8 +465,8 @@ pt-BR:
         label: 'Função: %{role}'
         no_role: Selecionar função
         roles:
-          one: "%{count} função selecionada"
-          other: "%{count} funções selecionadas"
+          one: One role selected
+          other: "%{count} roles selected"
       blankslate:
         title: Nenhuma transição de status configurada
         description: Adicione status para começar a configurar fluxos de trabalho para esta função
@@ -4748,13 +4748,13 @@ pt-BR:
       work_package_card_component:
         menu:
           label_actions: Ações do pacote de trabalho
-      work_package_card_box_component:
+      work_package_card_list_component:
         header:
-          label_actions: Abrir menu
+          label_actions: Open menu
           label_work_package_count:
-            zero: Nenhum pacote de trabalho
-            one: "%{count} pacote de trabalho"
-            other: "%{count} pacotes de trabalho"
+            zero: No work packages
+            one: "%{count} work package"
+            other: "%{count} work packages"
   permission_add_work_package_comments: Adicionar comentários
   permission_add_work_packages: Adicionar pacotes de trabalho
   permission_add_messages: Postar mensagens
