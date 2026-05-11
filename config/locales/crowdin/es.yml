@@ -465,7 +465,7 @@ es:
         label: 'Rol: %{role}'
         no_role: Seleccionar rol
         roles:
-          one: One role selected
+          one: Un rol seleccionado
           other: "%{count} roles selected"
       blankslate:
         title: No hay transiciones de estado configuradas
@@ -1113,7 +1113,7 @@ es:
       no_results_content_text: Añadir un elemento de noticias
   roles:
     edit:
-      default_for_new_projects_warning: 'This role is configured as the default role given to non-admin users who create a project. Do not remove the following permissions, otherwise project creators will be unable to complete the setup of their newly created projects:'
+      default_for_new_projects_warning: 'Este rol está configurado como el rol predeterminado que se asigna a los usuarios que no son administradores y que crean un proyecto. No elimine los siguientes permisos, ya que, de lo contrario, los creadores de proyectos no podrán completar la configuración de los proyectos que acaben de crear:'
     permissions:
       section_check_all_label: Asignar todos los permisos de %{module}
       section_uncheck_all_label: Quitar todos los permisos de %{module}
@@ -1384,11 +1384,11 @@ es:
     copies:
       form:
         source_role_id:
-          label: Source role
+          label: Rol fuente
         target_role_ids:
-          label: Target roles
+          label: Roles de destino
         target_type_ids:
-          label: Target types
+          label: Tipos de destino
         mode:
           from_role:
             label: Copiar a otros roles
@@ -1399,15 +1399,15 @@ es:
       from_roles:
         create:
           notice:
-            one: Successfully copied workflow to '%{role_name}' role.
-            other: Successfully copied workflow to %{count} roles.
+            one: Se ha copiado correctamente el flujo de trabajo al rol «%{role_name}».
+            other: Se ha copiado correctamente el flujo de trabajo a los roles «%{count}».
       from_types:
         create:
           notice:
-            one: Successfully copied workflow to '%{type_name}' type.
-            other: Successfully copied workflow to %{count} types.
+            one: Se ha copiado correctamente el flujo de trabajo al tipo «%{type_name}.
+            other: Se ha copiado correctamente el flujo de trabajo a los tipos «%{count}».
       new:
-        title: Copy workflow of "%{source_type}"
+        title: Copiar el flujo de trabajo de «%{source_type}»
     form:
       matrix_caption: Matriz de flujo de trabajo
       matrix_caption_assignee: Matriz de flujo de trabajo para el asignado
@@ -1419,10 +1419,10 @@ es:
       matrix_check_uncheck_all_in_col_label_html: Conmutar transiciones de todos los estados antiguos a <em>%{new_status}</em>
     index:
       type_filter:
-        label: Filter by type name…
+        label: Filtrar por nombre de tipo…
     page_headers:
       index_component:
-        description: Configure status transitions for each work package type.
+        description: Configura las transiciones de estado para cada tipo de paquete de trabajo.
   work_flows:
     index:
       no_results_title_text: Actualmente no existen flujos de trabajo.
@@ -1901,7 +1901,7 @@ es:
         identity_url: URL de identidad
         parent: Grupo principal
         organizational_unit: Unidad organizativa
-        group_users: Group users
+        group_users: Usuarios de grupo
       group_detail:
         parent: Grupo principal
         organizational_unit: Unidad organizativa
@@ -2082,7 +2082,7 @@ es:
         not_a_datetime: no es una fecha/hora válida.
         not_a_number: No es un número.
         not_allowed: no es válido porque faltan permisos.
-        host_not_allowed: is not an allowed host.
+        host_not_allowed: no es un host permitido.
         not_json: no se puede analizar como JSON.
         not_json_object: no es un objeto JSON.
         not_an_integer: No es un entero.
@@ -2540,7 +2540,7 @@ es:
       unsupported_storage_type: no es un tipo de almacenamiento compatible.
       storage_error: Se ha producido un error en la conexión de almacenamiento.
       invalid_input: La entrada no es válida.
-      invalid_child_for_parent: is not allowed as a parent for this view type.
+      invalid_child_for_parent: no está permitido como elemento principal para este tipo de vista.
   activity:
     item:
       created_by_on: creado por %{user} el %{datetime}
@@ -5199,7 +5199,7 @@ es:
   setting_mail_handler_body_delimiter_regex: Truncar correos que coincidan con esta expresión regular
   setting_mail_handler_ignore_filenames: Archivos adjuntos de email ignorados
   setting_new_project_user_role_id: Papel ortorgado a usuario no administrador que crea un proyecto
-  setting_new_project_user_role_id_caption: 'Only roles that include the permissions to edit project attributes and to manage members are listed, so that the creator can complete the project setup.
+  setting_new_project_user_role_id_caption: 'Solo se muestran los roles que incluyen los permisos para editar los atributos del proyecto y gestionar a los miembros, de modo que el creador pueda completar la configuración del proyecto.
 
     '
   setting_new_project_send_confirmation_email: Enviar notificación al autor al crear un nuevo proyecto
