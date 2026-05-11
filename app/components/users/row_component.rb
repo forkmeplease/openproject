@@ -98,32 +98,25 @@ module Users
       user.admin? && !table.current_user.admin?
     end
 
-    private
-
-    def custom_field_id(column)
-      match = Queries::Users::Selects::CustomField::KEY.match(column.to_s)
-      return unless match
-
-      match.captures.first.to_i
-    end
-
     def column_value(column)
-      if (cf_id = custom_field_id(column))
-        custom_field = UserCustomField.find_by(id: cf_id)
-        custom_field ? user.formatted_custom_value_for(custom_field).to_s : ""
-      else
-        send(column)
-      end
+      return custom_field_column(column) if custom_field_column?(column)
+
+      send(column.respond_to?(:attribute) ? column.attribute : column)
     end
 
     def column_css_class(column)
-      if column == :mail
-        "email"
-      elsif column == :login
-        "username"
-      else
-        super
+      attr = column.respond_to?(:attribute) ? column.attribute : column
+      case attr
+      when :mail then "email"
+      when :login then "username"
+      else attr.to_s
       end
+    end
+
+    private
+
+    def custom_field_column_subject
+      user
     end
   end
 end

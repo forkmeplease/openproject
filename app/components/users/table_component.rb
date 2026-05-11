@@ -40,7 +40,7 @@ module Users
 
     def columns
       @columns ||= if @user_query&.selects&.any?
-                     @user_query.selects.map(&:attribute)
+                     @user_query.selects
                    else
                      super
                    end
@@ -51,20 +51,17 @@ module Users
     end
 
     def headers
-      columns.map do |name|
-        [name.to_s, header_options(name)]
+      columns.map do |column|
+        key = column.respond_to?(:attribute) ? column.attribute.to_s : column.to_s
+        [key, header_options(column)]
       end
     end
 
-    def header_options(name)
-      caption = if @user_query
-                  @user_query.selects.find { |s| s.attribute == name }&.caption || User.human_attribute_name(name)
-                else
-                  User.human_attribute_name(name)
-                end
-
+    def header_options(column)
+      attr = column.respond_to?(:attribute) ? column.attribute : column
+      caption = column.respond_to?(:caption) ? column.caption : User.human_attribute_name(attr)
       options = { caption: }
-      options[:default_order] = "desc" if desc_by_default.include?(name)
+      options[:default_order] = "desc" if desc_by_default.include?(attr)
       options
     end
 
