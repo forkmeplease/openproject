@@ -30,7 +30,7 @@
 
 module OpPrimer
   module QuickFilter
-    class SegmentedComponent < ApplicationComponent
+    class SegmentedControlComponent < ApplicationComponent
       include ApplicationHelper
       include OpTurbo::Streamable
 
