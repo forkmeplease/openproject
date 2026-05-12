@@ -157,8 +157,8 @@ es:
     backlog_bucket_menu_component:
       label_actions: Acciones de bucket de backlog
       action_menu:
-        edit_backlog_bucket: Edit backlog bucket
-        delete_backlog_bucket: Delete backlog bucket
+        edit_backlog_bucket: Editar bucket de backlog
+        delete_backlog_bucket: Eliminar bucket de backlog
     backlog_bucket_header_component:
       label_work_package_count:
         zero: No hay historias en el bucket de backlog

@@ -126,9 +126,9 @@ es:
         title: Configuración de Jira
         new: Nueva configuración
       banner:
-        title: Beta - Try it out!
-        description: This Jira Migrator is currently in beta. We currently only support Jira Server/Data Center versions 10.x and 11.x. Cloud instances are not supported at this time.
-        contribution_callout: 'Please, help us improve the Jira Migrator with your feedback and private data donations. You can [join the development community](link) of the Jira Migrator.
+        title: Beta - ¡Pruébelo!
+        description: Este Migrador de Jira se encuentra actualmente en fase beta. En este momento solo es compatible con las versiones 10.x y 11.x de Jira Server/Data Center. Por el momento, no es compatible con instancias en la nube.
+        contribution_callout: 'Le rogamos que nos ayude a mejorar el Migrador de Jira con sus comentarios y aportando datos privados. Puede [unirse a la comunidad de desarrollo](link) del Migrador de Jira.
 
           '
         supported_versions: ''
@@ -1393,12 +1393,12 @@ es:
         create:
           notice:
             one: Se ha copiado correctamente el flujo de trabajo al rol «%{role_name}».
-            other: Se ha copiado correctamente el flujo de trabajo a los roles «%{count}».
+            other: Se ha copiado correctamente el flujo de trabajo a %{count} roles.
       from_types:
         create:
           notice:
             one: Se ha copiado correctamente el flujo de trabajo al tipo «%{type_name}.
-            other: Se ha copiado correctamente el flujo de trabajo a los tipos «%{count}».
+            other: Se ha copiado correctamente el flujo de trabajo a %{count} tipos.
       new:
         title: Copiar el flujo de trabajo de «%{source_type}»
     form:
@@ -2038,7 +2038,7 @@ es:
         inclusion: no está establecido a uno de los valores permitidos.
         inclusion_nested: no está establecido en uno de los valores permitidos en la ruta '%{path}'.
         invalid: no es válido.
-        invalid_uri: debe ser una URL válida.
+        invalid_uri: debe ser un URI válido.
         invalid_url: no es una URL válida.
         invalid_url_scheme: 'no es un protocolo admitido (permitidos: %{allowed_schemes}).'
         less_than_or_equal_to: debe ser menor o igual a %{count}.
@@ -5011,7 +5011,7 @@ es:
 
     '
   setting_after_login_default_redirect_url: Después de la redirección de inicio de sesión
-  setting_after_login_default_redirect_url_example_html: 'Set a default path to redirect users after login, if no back link was provided. Redirects to home page if not set. <br/> Example: %{example_code}
+  setting_after_login_default_redirect_url_example_html: 'Establezca una ruta por defecto para redirigir a los usuarios tras el inicio de sesión, si no se ha proporcionado un enlace de vuelta. Redirige a la página de inicio si no se establece. <br/> Ejemplo: %{example_code}
 
     '
   setting_apiv3_cors_title: Intercambio de recursos entre orígenes (CORS)
