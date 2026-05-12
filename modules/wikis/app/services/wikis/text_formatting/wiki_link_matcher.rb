@@ -72,9 +72,9 @@ module Wikis
       def resolve_page(provider, identifier)
         return Failure() if provider.nil?
 
-        Adapters::Input::PageInfo.build(identifier:).bind do |input|
+        Adapters::Input::PageInfo.build(identifier:).bind do |input_data|
           provider.auth_strategy_for(User.current).bind do |auth_strategy|
-            provider.resolve("queries.page_info").call(input_data: input, auth_strategy:)
+            provider.resolve("queries.page_info").call(input_data:, auth_strategy:)
           end
         end
       end
