@@ -55,4 +55,4 @@ jobs:
         run: npx playwright install --only-shell --with-deps ${{ matrix.browser }}
 
       - name: Test
-        run: npm test -- --browsers ${{ matrix.browser }}
+        run: npm test -- --browsers ${{ matrix.browser }} --reporters dot --reporters github-actions
