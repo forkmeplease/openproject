@@ -30,6 +30,8 @@
 
 module Wikis
   class PageLinkController < ApplicationController
+    include Dry::Monads[:result]
+
     before_action :find_provider
 
     authorization_checked! :load
@@ -52,7 +54,7 @@ module Wikis
     end
 
     def find_provider
-      @provider = Provider.find(params[:provider_id])
+      @provider = Provider.find_by(id: params[:provider_id])
     end
 
     def identifier

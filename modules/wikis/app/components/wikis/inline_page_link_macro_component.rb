@@ -34,13 +34,5 @@ module Wikis
     include OpPrimer::ComponentHelpers
 
     alias_method :page_info_result, :model
-
-    attr_reader :provider
-
-    def initialize(model = nil, provider:, **)
-      @provider = provider
-
-      super(model, **)
-    end
   end
 end
