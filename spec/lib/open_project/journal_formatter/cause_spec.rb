@@ -174,9 +174,6 @@ RSpec.describe OpenProject::JournalFormatter::Cause do
 
       it "renders the related work package's formatted_id in the link label in HTML mode" do
         wp = work_package.reload
-        # The visible link label should be `… formatted_id: subject`, not
-        # `… #1234: subject`. The href is mode-agnostic and uses display_id
-        # via `to_param` regardless.
         expect(cause).to render_html_variant(a_string_including("#{wp.formatted_id}:"))
         expect(cause).not_to render_html_variant(a_string_including(" ##{wp.id}:"))
       end
