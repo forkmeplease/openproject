@@ -77,24 +77,24 @@ module OpenProject::TextFormatting
       def work_package_mention(work_package, mention)
         # Render the mention with the same label and URL convention used for
         # `#N` text references elsewhere in the markdown pipeline.
-        href_id = work_package.display_id
+        display_id = work_package.display_id
 
         case mention.text.count("#")
         when 3
           ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                     "",
-                                                    data: { id: work_package.id, display_id: href_id, detailed: true }
+                                                    data: { id: work_package.id, display_id:, detailed: true }
         when 2
           ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                     "",
-                                                    data: { id: work_package.id, display_id: href_id, detailed: false }
+                                                    data: { id: work_package.id, display_id:, detailed: false }
         else
           link_to(work_package.formatted_id,
-                  work_package_path_or_url(id: href_id, only_path: context[:only_path]),
+                  work_package_path_or_url(id: display_id, only_path: context[:only_path]),
                   class: "issue work_package",
                   data: {
                     hover_card_trigger_target: "trigger",
-                    hover_card_url: hover_card_work_package_path(href_id)
+                    hover_card_url: hover_card_work_package_path(display_id)
                   })
         end
       end
