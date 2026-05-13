@@ -35,9 +35,9 @@ module WorkPackagesHelper
   # Displays a link to +work_package+ with its subject.
   # Examples:
   #
-  #   link_to_work_package(package)                            # => Defect #6: This is the subject
-  #   link_to_work_package(package, link_subject: true)        # => Defect #6: This is the subject (everything within the link)
-  #   link_to_work_package(package, display_project: true)     # => Foo - Defect #6: This is the subject
+  #   link_to_work_package(package)                            # => Defect <id>: This is the subject
+  #   link_to_work_package(package, link_subject: true)        # => Defect <id>: This is the subject (everything within the link)
+  #   link_to_work_package(package, display_project: true)     # => Foo - Defect <id>: This is the subject
   def link_to_work_package(work_package, display_project: false, link_subject: false) # rubocop:disable Metrics/AbcSize
     output = ActiveSupport::SafeBuffer.new
     output << "#{work_package.project} - " if display_project && work_package.project_id
