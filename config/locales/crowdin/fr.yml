@@ -1425,8 +1425,8 @@ fr:
     bulk_delete_dialog:
       title: Supprimer %{count} lots de travaux
       heading: Supprimer définitivement ces %{count} lots de travaux ?
-      description: 'Les lots de travaux suivants, y compris les enfants et toutes les données associées, seront définitivement supprimés :'
-      description_with_children: 'Les lots de travaux suivants, y compris les lots de travaux enfants, et toutes les données associées seront définitivement supprimés :'
+      description: 'The following work packages and all associated data will be permanently deleted:'
+      description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
       confirm_children_deletion: Je reconnais que tous les lots de travaux sélectionnés et leurs enfants seront définitivement supprimés.
       cross_project_warning: 'Ces lots de travaux s''étendent sur plusieurs projets : %{projects}'
       children_label: 'Les enfants suivants seront également supprimés :'

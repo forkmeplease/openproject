@@ -725,7 +725,7 @@ ru:
       add_button: Добавить
     detail_blankslate:
       heading: Это подразделение не имеет дочерних подразделений
-      description: Add departments or users to create sub-items inside another one.
+      description: Добавить подразделения или пользователей для создания дочерних элементов.
       add_button: Добавить
     add_department_form:
       name_label: Наименование подразделения
@@ -1431,15 +1431,15 @@ ru:
         create:
           notice:
             one: Рабочий процесс успешно скопирован в роль '%{role_name}'.
-            few: Successfully copied workflow to %{count} roles.
-            many: Successfully copied workflow to %{count} roles.
+            few: Рабочий процесс успешно скопирован в %{count} ролей.
+            many: Рабочий процесс успешно скопирован в %{count} ролей.
             other: Рабочий процесс успешно скопирован в %{count} ролей.
       from_types:
         create:
           notice:
             one: Рабочий процесс успешно скопирован в тип '%{type_name}'.
-            few: Successfully copied workflow to %{count} types.
-            many: Successfully copied workflow to %{count} types.
+            few: Рабочий процесс успешно скопирован в %{count} типов.
+            many: Рабочий процесс успешно скопирован в %{count} типов.
             other: Рабочий процесс успешно скопирован в %{count} типов.
       new:
         title: Копировать рабочий процесс из типа "%{source_type}"
@@ -1471,8 +1471,8 @@ ru:
     bulk_delete_dialog:
       title: Удалить %{count} пакетов работ
       heading: Окончательно удалить эти %{count} пакеты работ?
-      description: 'Следующие рабочие пакеты, включая дочерние и все связанные с ними данные, будут навсегда удалены:'
-      description_with_children: 'Следующие рабочие пакеты, включая дочерние пакеты работ и все связанные с ними данные, будут навсегда удалены:'
+      description: 'The following work packages and all associated data will be permanently deleted:'
+      description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
       confirm_children_deletion: Я подтверждаю, что все выбранные пакеты работ, включая дочерние, будут удалены навсегда.
       cross_project_warning: 'Эти пакеты работ охватывают несколько проектов: %{projects}'
       children_label: 'Следующие дочерние пакеты работ также будут удалены:'
@@ -5147,7 +5147,7 @@ ru:
 
     '
   setting_after_login_default_redirect_url: Перенаправление после входа
-  setting_after_login_default_redirect_url_example_html: 'Set a default path to redirect users after login, if no back link was provided. Redirects to home page if not set. <br/> Example: %{example_code}
+  setting_after_login_default_redirect_url_example_html: 'Установите путь по умолчанию для перенаправления пользователей после входа в систему, если обратная ссылка не была предоставлена. Если путь не задан, он перенаправляет на домашнюю страницу. <br/> Пример: %{example_code}
 
     '
   setting_apiv3_cors_title: Совместное использование ресурсов между источниками (Cross-Origin Resource Sharing, CORS)

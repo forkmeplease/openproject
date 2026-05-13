@@ -437,7 +437,7 @@ fr:
     widgets:
       blankslate:
         heading: Aucune réunion à venir
-        description: Les prochaines réunions dont vous êtes l'organisateur ou un participant apparaîtront ici.
+        description: Upcoming meetings you are participating in will appear here.
       view_details: Voir toutes les réunions
   meeting_section:
     untitled_title: Section sans titre

@@ -1430,8 +1430,8 @@ it:
     bulk_delete_dialog:
       title: Elimina %{count} macro-attività
       heading: Eliminare definitivamente queste %{count} macro-attività?
-      description: 'Le seguenti macro-attività, inclusi gli elementi figli e tutti i dati associati, verranno eliminate definitivamente:'
-      description_with_children: 'Le seguenti macro-attività, incluse le macro-attività figlie e tutti i dati associati, verranno eliminate definitivamente:'
+      description: 'The following work packages and all associated data will be permanently deleted:'
+      description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
       confirm_children_deletion: Confermo che tutte le macro-attività selezionate e le relative macro-attività figlie verranno eliminate definitivamente.
       cross_project_warning: 'Queste macro-attività comprendono più progetti: %{projects}'
       children_label: 'Verranno inoltre cancellati i seguenti figli:'

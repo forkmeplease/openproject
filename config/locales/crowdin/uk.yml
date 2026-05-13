@@ -1467,8 +1467,8 @@ uk:
     bulk_delete_dialog:
       title: Видалити пакети робіт (%{count})
       heading: Видалити ці пакети робіт (%{count}) остаточно?
-      description: 'Наведені нижче пакети робіт, зокрема їх дочірні елементи й усі пов’язані дані, буде видалено назавжди:'
-      description_with_children: 'Наведені нижче пакети робіт, зокрема дочірні пакети робіт і всі пов’язані дані, буде видалено назавжди:'
+      description: 'The following work packages and all associated data will be permanently deleted:'
+      description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
       confirm_children_deletion: Я усвідомлюю, що всі вибрані пакети робіт і їх дочірні елементи буде видалено назавжди.
       cross_project_warning: 'Ці пакети робіт використовуються в кількох проєктах: %{projects}'
       children_label: 'Також видаляться наведені нижче дочірні елементи:'

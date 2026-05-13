@@ -447,7 +447,7 @@ ru:
     widgets:
       blankslate:
         heading: Нет предстоящих встреч
-        description: Здесь будут отображаться предстоящие встречи, в которых Вы являетесь организатором или участником.
+        description: Upcoming meetings you are participating in will appear here.
       view_details: Просмотреть все встречи
   meeting_section:
     untitled_title: Раздел без названия

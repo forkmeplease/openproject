@@ -28,7 +28,7 @@ de:
   wikis:
     buttons:
       save_and_continue: Speichern und fortsetzen
-      done_continue: Fertig, Fortfahren
+      done_continue: Fertig, fortfahren
       wiki_page: Wiki-Seite
     inline_page_links_component:
       empty_heading: Keine Inline-Links
@@ -46,17 +46,17 @@ de:
       oauth_application_info_component:
         label_pending: Ausstehend
         replace_oauth_application: OpenProject OAuth-Anwendung ersetzen
-        confirm_replace_oauth_application: Diese Aktion setzt die aktuellen OAuth-Anmeldedaten zurück. Nach der Bestätigung müssen Sie die Anmeldedaten erneut in Ihre XWiki-Instanz eingeben und alle Benutzer müssen sich erneut autorisieren. Sind Sie sicher, dass Sie fortfahren möchten?
+        confirm_replace_oauth_application: Diese Aktion setzt die aktuellen OAuth-Anmeldedaten zurück. Nach der Bestätigung müssen Sie die Anmeldedaten erneut in Ihre XWiki-Instanz eingeben und alle Konten müssen sich erneut autorisieren. Sind Sie sicher, dass Sie fortfahren möchten?
       oauth_client_info_component:
         label_pending: Ausstehend
         replace_oauth_client: XWiki OAuth-Anwendung ersetzen
-        confirm_replace_oauth_client: Diese Aktion setzt die aktuellen XWiki OAuth-Anmeldedaten zurück. Alle Benutzer müssen sich erneut bei XWiki autorisieren. Sind Sie sicher, dass Sie fortfahren möchten?
+        confirm_replace_oauth_client: Diese Aktion setzt die aktuellen XWiki OAuth-Zugangsdaten zurück. Alle Konten müssen sich erneut gegenüber XWiki autorisieren. Sind Sie sicher, dass Sie fortfahren möchten?
       wiki_provider_list_component:
         label_name: Name
         label_provider: Anbieter
         label_creation_time: Angelegt
         no_results_title: Sie haben noch keine Wiki-Anbieter eingerichtet.
-        no_results_description: Fügen Sie einen Anbieter hinzu, um sie hier zu sehen.
+        no_results_description: Wiki-Anbieter hinzufügen, um sie hier anzuzeigen.
       destroy_confirmation_dialog_component:
         title: Wiki-Anbieter löschen
         warning_html: Sie sind dabei, %{wiki_provider} zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.

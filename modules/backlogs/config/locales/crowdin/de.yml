@@ -117,13 +117,13 @@ de:
       title: Die Einstellungen des Backlogs-Moduls sind derzeit in der Entwicklung
       text: Wir gestalten gerade das Backlogs-Modul neu. Die Einstellungen für Sprints und Backlogs werden in naher Zukunft hier sichtbar sein. Einstellungen auf Projektebene bleiben weiterhin verfügbar.
     backlog_bucket_component:
-      blankslate_title: Eingangs Backlog ist leer
+      blankslate_title: Backlog Bucket ist leer
       blankslate_description: Ziehen Sie Arbeitspakete hierher, um sie hinzuzufügen.
     backlog_bucket_destroy_modal_component:
       title: Backlog Bucket löschen?
       details: Der Backlog Bucket '%{name}' wird gelöscht und alle Arbeitspakete werden in den Eingangs Backlog verschoben. Kein Arbeitspaket wird gelöscht.
     backlog_bucket_item_component:
-      label_actions: Arbeitspaket-Aktionen
+      label_actions: Arbeitspaket Aktionen
     sprint_component:
       blankslate_title: "%{name} ist leer"
       blankslate_description: Noch keine Arbeitspakete geplant. Ziehen Sie Arbeitspakete hierher, um sie hinzuzufügen.
@@ -205,7 +205,7 @@ de:
     story_points_ideal: Story-Points (ideal)
   label_backlog: Backlog
   label_backlog_bucket_edit: Backlog Bucket bearbeiten
-  label_backlog_bucket_new: Neuer Backlog-Bucket
+  label_backlog_bucket_new: Neuer Backlog Bucket
   label_inbox: Posteingang
   label_backlogs: Backlogs
   label_burndown_chart: Burndown-Diagramm

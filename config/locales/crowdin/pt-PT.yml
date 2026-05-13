@@ -1430,8 +1430,8 @@ pt-PT:
     bulk_delete_dialog:
       title: Eliminar %{count} pacotes de trabalho
       heading: Eliminar permanentemente estes %{count} pacotes de trabalho?
-      description: 'Os seguintes pacotes de trabalho, incluindo os secundários e todos os dados associados, serão permanentemente eliminados:'
-      description_with_children: 'Os seguintes pacotes de trabalho, incluindo os pacotes de trabalho secundários e todos os dados associados, serão permanentemente eliminados:'
+      description: 'The following work packages and all associated data will be permanently deleted:'
+      description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
       confirm_children_deletion: Reconheço que todos os pacotes de trabalho selecionados e os seus filhos serão permanentemente eliminados.
       cross_project_warning: 'Estes pacotes de trabalho abrangem vários projetos: %{projects}'
       children_label: 'Os seguintes filhos também serão eliminados:'
