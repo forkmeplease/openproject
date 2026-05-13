@@ -166,7 +166,7 @@ de:
         other: "%{count} Arbeitspakete im Backlog Bucket"
     sprint_header_component:
       label_start_sprint: Beginn
-      label_complete_sprint: Fertigstellen
+      label_complete_sprint: Abschließen
       start_sprint_disabled_reason_active_sprint: Ein weiterer Sprint ist bereits aktiv.
       start_sprint_disabled_reason_missing_dates: Start- und Enddatum sind erforderlich, um den Sprint zu starten.
       label_story_count:

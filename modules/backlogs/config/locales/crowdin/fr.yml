@@ -120,8 +120,8 @@ fr:
       blankslate_title: Le backlog est vide
       blankslate_description: Faites glisser les éléments ici pour les ajouter.
     backlog_bucket_destroy_modal_component:
-      title: Delete backlog bucket?
-      details: The backlog bucket '%{name}' will be deleted and all work packages will be moved to the backlog inbox. No work package will be deleted.
+      title: Supprimer le bucket de backlog ?
+      details: Le bucket de backlog « %{name} » sera supprimé et tous les lots de travaux seront déplacés vers la boîte de réception des backlogs. Aucun lot de travaux ne sera supprimé.
     backlog_bucket_item_component:
       label_actions: Actions du lot de travaux
     sprint_component:
