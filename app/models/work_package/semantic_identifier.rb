@@ -84,6 +84,34 @@ module WorkPackage::SemanticIdentifier
     end
   end
 
+  # Returns true when value looks like a semantic work package identifier
+  # ("PROJ-42"). Non-strings (Integer, Hash, nil, Array) and numeric strings
+  # ("123", " 456 ") return false — these fall through to standard PK lookup.
+  #
+  # The round-trip check (rather than a regex) is intentional for performance.
+  # Every value that reaches a work-package finder either parses as an integer
+  # or doesn't, and that's enough to dispatch correctly. Don't tighten it.
+  def self.semantic_id?(value)
+    value.is_a?(String) && value.strip.to_i.to_s != value.strip
+  end
+
+  # Returns true when value is a canonical numeric ID —
+  # an Integer, or a String that round-trips through `to_i.to_s` ("0", "123").
+  # Rejects leading-zero strings ("0123"), non-numeric strings, and nil.
+  #
+  # For Strings the predicate is the exact complement of `semantic_id?`,
+  # so the routing question (lookup by primary key vs by identifier/alias)
+  # has a single source of truth. For non-String inputs the two diverge:
+  # Integers are numeric-only (no string-lookup routing applies); nil and
+  # other types are neither and both return false.
+  def self.numeric_id?(value)
+    case value
+    when Integer then true
+    when String  then !semantic_id?(value)
+    else false
+    end
+  end
+
   # Returns the user-facing identifier for this work package.
   # In semantic mode: the project-based identifier (e.g. "PROJ-42")
   # In classic mode: the numeric database ID
