@@ -44,7 +44,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :wiki_page_link_macro, controller: "wikis/page_link" do
+  resource :wiki_page_link_macro, controller: "wikis/inline_page_link_macro", only: [] do
     get :load
   end
 
@@ -53,6 +53,12 @@ Rails.application.routes.draw do
       resources :wikis, only: %i[] do
         collection do
           resources :tab, only: %i[index], controller: "work_package_wikis_tab", as: "wikis_tab"
+        end
+      end
+
+      resources :relation_wiki_page_links, only: %i[destroy], controller: "wikis/relation_page_link" do
+        member do
+          get :confirm_delete
         end
       end
     end

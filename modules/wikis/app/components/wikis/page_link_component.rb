@@ -54,7 +54,37 @@ module Wikis
     end
 
     def show_action_menu?
-      actions.any?
+      page_info_result.success? && actions.any?
+    end
+
+    def menu_items(menu)
+      if actions.include?(:remove)
+        deletion_action_item(menu)
+      end
+    end
+
+    private
+
+    def page_link
+      page_info_result.value!.page_link
+    end
+
+    def work_package_id = page_link.linkable_id
+
+    def project_id = page_link.linkable.project_id
+
+    def deletion_action_item(menu)
+      href = url_helpers.confirm_delete_project_work_package_relation_wiki_page_link_path(page_link,
+                                                                                          work_package_id:,
+                                                                                          project_id:)
+
+      menu.with_item(label: t(".remove"),
+                     scheme: :danger,
+                     tag: :a,
+                     href:,
+                     content_arguments: { data: { controller: "async-dialog" } }) do |item|
+        item.with_leading_visual_icon(icon: :trash)
+      end
     end
   end
 end

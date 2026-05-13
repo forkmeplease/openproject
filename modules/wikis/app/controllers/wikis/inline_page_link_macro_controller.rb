@@ -29,7 +29,7 @@
 #++
 
 module Wikis
-  class PageLinkController < ApplicationController
+  class InlinePageLinkMacroController < ApplicationController
     include Dry::Monads[:result]
 
     before_action :find_provider

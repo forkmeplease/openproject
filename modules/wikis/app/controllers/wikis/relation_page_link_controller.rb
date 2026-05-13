@@ -29,26 +29,26 @@
 #++
 
 module Wikis
-  module Adapters
-    module Providers
-      module Internal
-        module Queries
-          class RelationPageLinks < BaseQuery
-            def call(input_data:, auth_strategy:)
-              page_link_infos = provider.page_links
-                                        .merge(RelationPageLink.all)
-                                        .where(linkable: input_data.linkable)
-                                        .map do |page_link|
-                page_info(identifier: page_link.identifier, auth_strategy:).fmap do |page_info|
-                  page_info.with(page_link:)
-                end
-              end
+  class RelationPageLinkController < ApplicationController
+    include OpTurbo::ComponentStream
 
-              success(page_link_infos)
-            end
-          end
-        end
-      end
+    before_action :find_page_link
+    before_action :authorize, except: %i[confirm_delete]
+
+    no_authorization_required! :confirm_delete
+
+    def destroy
+      # TODO: implement delete service
+    end
+
+    def confirm_delete
+      respond_with_dialog(DeletePageLinkConfirmationDialogComponent.new(page_link: @page_link))
+    end
+
+    private
+
+    def find_page_link
+      @page_link = RelationPageLink.find(params[:id])
     end
   end
 end

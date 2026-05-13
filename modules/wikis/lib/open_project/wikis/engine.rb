@@ -72,7 +72,7 @@ module OpenProject::Wikis
     register "openproject-wikis", author_url: "https://openproject.org" do
       project_module :work_package_tracking do
         permission :manage_wiki_page_links,
-                   {},
+                   { "wikis/relation_page_link": %i[destroy] },
                    permissible_on: :project,
                    dependencies: %i[edit_work_packages],
                    contract_actions: { wiki_page_links: %i[manage] }

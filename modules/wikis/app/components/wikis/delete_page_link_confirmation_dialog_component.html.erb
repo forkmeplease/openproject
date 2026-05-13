@@ -27,21 +27,10 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%= render(Primer::Alpha::Stack.new(direction: :horizontal, gap: :condensed, align: :center)) do %>
-  <%= render(Primer::Beta::Octicon.new(icon: :"op-file-doc")) %>
-
-  <%=
-    render(Primer::Alpha::StackItem.new(grow: true, classes: "ellipsis")) do
-      render(Primer::Beta::Link.new(href: page_href, scheme: :primary)) { page_title }
+<%=
+  render(Primer::OpenProject::DangerDialog.new(title: t(".title"), form_arguments:)) do |dialog|
+    dialog.with_confirmation_message do |message|
+      message.with_heading(tag: :h2) { t(".heading") }
     end
-  %>
-
-  <%=
-    if show_action_menu?
-      render(Primer::Alpha::ActionMenu.new) do |menu|
-        menu.with_show_button(icon: :"kebab-horizontal", "aria-label": t(:label_more), scheme: :invisible)
-        menu_items(menu)
-      end
-    end
-  %>
-<% end %>
+  end
+%>

@@ -29,26 +29,33 @@
 #++
 
 module Wikis
-  module Adapters
-    module Providers
-      module Internal
-        module Queries
-          class RelationPageLinks < BaseQuery
-            def call(input_data:, auth_strategy:)
-              page_link_infos = provider.page_links
-                                        .merge(RelationPageLink.all)
-                                        .where(linkable: input_data.linkable)
-                                        .map do |page_link|
-                page_info(identifier: page_link.identifier, auth_strategy:).fmap do |page_info|
-                  page_info.with(page_link:)
-                end
-              end
+  class DeletePageLinkConfirmationDialogComponent < ApplicationComponent
+    include OpTurbo::Streamable
 
-              success(page_link_infos)
-            end
-          end
-        end
-      end
+    def initialize(page_link:)
+      super
+      @page_link = page_link
+    end
+
+    def form_arguments
+      {
+        action: page_link_url,
+        method: :delete
+      }
+    end
+
+    private
+
+    def page_link_url
+      url_helpers.project_work_package_relation_wiki_page_link_path(@page_link, work_package_id:, project_id:)
+    end
+
+    def work_package_id
+      @page_link.linkable_id
+    end
+
+    def project_id
+      @page_link.linkable.project_id
     end
   end
 end
