@@ -45,7 +45,7 @@ jobs:
           package-manager-cache: false
 
       - name: Install Dependencies
-        run: npm i
+        run: npm ci
 
       - name: Register plugins
         run: npm run ci:plugins:register_frontend
