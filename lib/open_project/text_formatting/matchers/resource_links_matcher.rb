@@ -193,7 +193,7 @@ module OpenProject::TextFormatting
       # only its current identifier, so unmapped inputs must be filled in
       # from `WorkPackageSemanticAlias`.
       def self.build_lookup(identifiers)
-        work_packages = WorkPackage.where_display_id_in(identifiers).select(:id, :identifier).to_a
+        work_packages = WorkPackage.where_display_id_in(*identifiers).select(:id, :identifier).to_a
         lookup = index_by_id_and_identifier(work_packages)
         fold_in_alias_keys(lookup, identifiers)
         lookup
