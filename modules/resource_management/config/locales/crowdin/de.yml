@@ -40,7 +40,7 @@ de:
 
       '
     view_types:
-      UserCardView: Users cards
+      UserCardView: Benutzer-Karten
     action:
       favorite: Zu Favoriten hinzufügen
       unfavorite: Aus Favoriten entfernen
