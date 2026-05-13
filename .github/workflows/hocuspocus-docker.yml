@@ -52,6 +52,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'opf/openproject'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -88,15 +89,21 @@ jobs:
           BRANCH=$(echo "${INPUT_BRANCH:-$FALLBACK_BRANCH}" | tr / -)
           SPECIFIC_TAG=$BRANCH-$SHORT_SHA
           LATEST_TAG=$BRANCH-latest
+          MINOR_TAG=
+          MAJOR_TAG=
 
           if [ -n "$INPUT_TAG" ]; then
             SPECIFIC_TAG=$(echo "$INPUT_TAG" | tr -d v)
             LATEST_TAG=latest
+            MINOR_TAG=$(echo $SPECIFIC_TAG | cut -d. -f1-2)
+            MAJOR_TAG=$(echo $SPECIFIC_TAG | cut -d. -f1)
           fi
 
           echo 'tags<<EOF' >> $GITHUB_OUTPUT
           echo $REGISTRY:$SPECIFIC_TAG >> $GITHUB_OUTPUT
           echo $REGISTRY:$LATEST_TAG >> $GITHUB_OUTPUT
+          [ -n "$MINOR_TAG" ] && echo $REGISTRY:$MINOR_TAG >> $GITHUB_OUTPUT
+          [ -n "$MAJOR_TAG" ] && echo $REGISTRY:$MAJOR_TAG >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - name: Login to Docker Hub
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
