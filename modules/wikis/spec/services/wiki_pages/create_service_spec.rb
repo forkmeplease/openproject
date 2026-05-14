@@ -291,6 +291,21 @@ RSpec.describe WikiPages::CreateService do
         expect(Wikis::ReverseInlinePageLink.count).to eq(0)
       end
     end
+
+    context "when the body mixes a numeric and a semantic reference" do
+      let(:numeric_work_package) { create(:work_package) }
+      let(:text) do
+        "Mixed: ##{numeric_work_package.id} and ##{work_package.identifier}."
+      end
+
+      it "creates a reverse page link per referenced work package" do
+        subject
+
+        wiki_page = WikiPage.first
+        links = Wikis::ReverseInlinePageLink.where(provider: internal_provider, identifier: wiki_page.id)
+        expect(links.pluck(:linkable_id)).to contain_exactly(numeric_work_package.id, work_package.id)
+      end
+    end
   end
 
   context "with a semantic-shape reference in classic mode",
