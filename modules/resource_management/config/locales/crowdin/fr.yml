@@ -9,12 +9,24 @@ fr:
         default_view_class_name: Vue par défaut
         public: Public
         favorite: Favori
+      resource_allocation:
+        entity: Entity
+        principal: Assignee
+        state: State
+        start_date: Start date
+        end_date: Finish date
+        allocated_time: Allocated time
+        user_filter: User filter
     errors:
       models:
         resource_planner:
           attributes:
             end_date:
               greater_than_start_date: doit être postérieure à la date de début.
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: must be after the start date.
   plugin_openproject_resource_management:
     name: Gestion des ressources d'OpenProject
     description: Assure la gestion des ressources et la planification des capacités.
@@ -25,6 +37,10 @@ fr:
     '
   permission_manage_public_resource_planners: Gérer les planificateurs de ressources publiques
   permission_manage_public_resource_planners_explanation: 'Permet aux utilisateurs de créer et de gérer des planificateurs de ressources publics. Cela leur permet de visualiser, de créer, de gérer et de publier leurs propres planificateurs de ressources. Cela ne leur permet pas de visualiser les planificateurs de ressources qui ont été créés par d''autres utilisateurs et qui ne sont pas partagés publiquement.
+
+    '
+  permission_allocate_user_resources: Allocate user resources
+  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
 
     '
   label_resource_management: Planification des ressources
