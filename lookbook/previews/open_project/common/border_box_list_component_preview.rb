@@ -39,7 +39,7 @@ module OpenProject
         ) do |list|
           list.with_header(title: "Things we're building", count: true) do |header|
             header.with_description { "There's lots to look forward to" }
-            header.with_action_button(scheme: :invisible) do |button|
+            header.with_action_button do |button|
               button.with_leading_visual_icon(icon: :pencil)
               "Edit"
             end

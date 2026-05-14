@@ -44,6 +44,8 @@ module OpenProject
         include Primer::AttributesHelper
         include HasMenu
 
+        DEFAULT_ACTION_SCHEME = :default
+
         DEFAULT_COUNT_ARGUMENTS = {
           scheme: :primary,
           round: true,
@@ -67,8 +69,8 @@ module OpenProject
         #   def with_action_button(**system_arguments, &block)
         #   end
         renders_many :actions, types: {
-          button: ->(**system_arguments) do
-            Primer::Beta::Button.new(**system_arguments)
+          button: ->(scheme: DEFAULT_ACTION_SCHEME, **system_arguments) do
+            Primer::Beta::Button.new(scheme:, **system_arguments)
           end
         }
 
