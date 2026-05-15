@@ -42,28 +42,6 @@ module OpenProject::TextFormatting
       end
 
       def call
-        with_matcher_preloads(self.class.matchers.dup) { process_text_nodes }
-        doc
-      end
-
-      private
-
-      # Wraps the per-node loop in each matcher's `with_preloaded_resources`
-      # hook so matchers can warm per-render caches and save/restore them
-      # around nested `format_text` calls. Opt-in: matchers without the hook
-      # are skipped.
-      def with_matcher_preloads(matchers, &)
-        matcher = matchers.shift
-        return yield if matcher.nil?
-
-        if matcher.respond_to?(:with_preloaded_resources)
-          matcher.with_preloaded_resources(doc, context) { with_matcher_preloads(matchers, &) }
-        else
-          with_matcher_preloads(matchers, &)
-        end
-      end
-
-      def process_text_nodes
         doc.search(".//text()").each do |node|
           next if has_ancestor?(node, OpenProject::TextFormatting::PreformattedBlocks::BLOCKS)
 
@@ -71,6 +49,7 @@ module OpenProject::TextFormatting
             matcher.call(node, doc:, context:)
           end
         end
+        doc
       end
     end
   end
