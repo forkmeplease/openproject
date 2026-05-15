@@ -72,21 +72,83 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
     end
   end
 
-  describe "per-reference query cost",
+  describe ".with_preloaded_resources save/restore semantics",
+           with_flag: { semantic_work_package_ids: true },
+           with_settings: { work_packages_identifier: "semantic" } do
+    # A custom-field formatter or recursive markdown render may invoke the
+    # text-formatting pipeline while an outer render is mid-iteration. The
+    # lookup must save on entry and restore on exit so the outer render's
+    # remaining `#N` matchers still see its WPs after the inner call returns.
+    include_context "with author signed in"
+
+    let(:project) { create(:project, identifier: "NESTED") }
+    let(:outer_wp) { create(:work_package, project:, author:) }
+    let(:inner_wp) { create(:work_package, project:, author:) }
+    let(:matcher) { OpenProject::TextFormatting::Matchers::ResourceLinksMatcher }
+
+    before do
+      outer_wp.allocate_and_register_semantic_id
+      inner_wp.allocate_and_register_semantic_id
+    end
+
+    it "preserves the outer lookup across a nested call" do
+      outer = outer_wp.reload
+      inner = inner_wp.reload
+      outer_doc = Nokogiri::HTML.fragment("##{outer.id}")
+      inner_doc = Nokogiri::HTML.fragment("##{inner.id}")
+
+      matcher.with_preloaded_resources(outer_doc, {}) do
+        expect(matcher.work_package_for(outer.id)).to eq(outer)
+
+        matcher.with_preloaded_resources(inner_doc, {}) do
+          expect(matcher.work_package_for(inner.id)).to eq(inner)
+        end
+
+        expect(matcher.work_package_for(outer.id))
+          .to eq(outer), "outer lookup should be restored after nested call"
+      end
+
+      expect(matcher.work_package_for(outer.id)).to be_nil
+    end
+  end
+
+  describe "classic mode is query-free",
+           with_flag: { semantic_work_package_ids: false },
+           with_settings: { work_packages_identifier: "classic" } do
+    # Rendering a `#N` reference in classic mode must not run any
+    # WorkPackage SELECTs: the preload is a no-op when `display_id` and
+    # `formatted_id` would collapse to the numeric form, so the link
+    # handler can build the link from the matched id alone.
+    include_context "with author signed in"
+    let(:project) { create(:project, identifier: "classicproj") }
+
+    it "does not query work_packages when rendering #N" do
+      wps = create_list(:work_package, 3, project:, author:)
+      ids_text = wps.map { |wp| "##{wp.id}" }.join(" ")
+
+      recorder = ActiveRecord::QueryRecorder.new { format_text(ids_text) }
+      wp_selects = recorder.log.grep(/FROM "work_packages"/i)
+
+      expect(wp_selects).to be_empty,
+                            "classic mode added unexpected WP SELECTs:\n#{wp_selects.join("\n")}"
+    end
+  end
+
+  describe "N+1 query bound",
            with_flag: { semantic_work_package_ids: true },
            with_settings: { work_packages_identifier: "semantic" } do
     include_context "with author signed in"
     let(:project) { create(:project, identifier: "NPLUSONE") }
 
-    it "issues one work_packages SELECT per `#N` reference" do
+    it "loads referenced work packages with a single SELECT regardless of count" do
       wps = create_list(:work_package, 5, project:, author:)
       ids_text = wps.map { |wp| "##{wp.id}" }.join(" ")
 
       recorder = ActiveRecord::QueryRecorder.new { format_text(ids_text) }
       wp_selects = recorder.log.grep(/FROM "work_packages"/i)
 
-      expect(wp_selects.size).to eq(5),
-                                 "expected one SELECT per reference, got #{wp_selects.size}:\n#{wp_selects.join("\n")}"
+      expect(wp_selects.size).to eq(1),
+                                 "expected exactly one work_packages SELECT, got #{wp_selects.size}:\n#{wp_selects.join("\n")}"
     end
   end
 
@@ -140,7 +202,7 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
     end
 
     context "with mixed numeric and semantic references in one render" do
-      it "resolves both with one work_packages SELECT per reference" do
+      it "resolves both with a single work_packages SELECT" do
         wps = create_list(:work_package, 2, project:, author:)
         wps.each(&:allocate_and_register_semantic_id)
         loaded = wps.map(&:reload)
@@ -150,8 +212,8 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
         recorder = ActiveRecord::QueryRecorder.new { rendered = format_text(text) }
         wp_selects = recorder.log.grep(/FROM "work_packages"/i)
 
-        expect(wp_selects.size).to eq(2),
-                                   "expected one SELECT per reference, got #{wp_selects.size}:\n#{wp_selects.join("\n")}"
+        expect(wp_selects.size).to eq(1),
+                                   "expected exactly one work_packages SELECT, got #{wp_selects.size}:\n#{wp_selects.join("\n")}"
 
         # Both render with the user-facing display_id, regardless of which
         # form the user typed.
@@ -161,7 +223,7 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
     end
 
     context "with a historical alias reference" do
-      it "resolves via the alias table without a separate alias round-trip" do
+      it "resolves via the alias table with two round-trips total" do
         wp = work_package.reload
         # Simulate a project rename: the WP keeps its current MACROPROJ-N
         # identifier on the row, but a historical OLD-prefix alias row
@@ -172,14 +234,15 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
         rendered = nil
         recorder = ActiveRecord::QueryRecorder.new { rendered = format_text("see #OLDPROJ-1") }
 
-        # `find_by_display_id` runs one WP SELECT whose WHERE clause is
-        # `identifier = ? OR EXISTS (SELECT 1 FROM aliases …)`, so the
-        # alias table is consulted in-line — no separate alias-only SELECT.
+        # Two database round-trips: (1) `where_display_id_in` runs a single
+        # WP SELECT whose WHERE clause includes an EXISTS subquery against
+        # the alias table; (2) the sidecar alias pluck maps the historical
+        # input string back to its WP for the cache.
         wp_selects = recorder.log.grep(/FROM "work_packages"/i)
         alias_only_selects = recorder.log.grep(/FROM "work_package_semantic_aliases"/i)
                                      .grep_v(/FROM "work_packages"/i)
         expect(wp_selects.size).to eq(1)
-        expect(alias_only_selects).to be_empty
+        expect(alias_only_selects.size).to eq(1)
 
         # Renders against the WP's CURRENT display_id, not the historical
         # alias the user typed — old content stays alive but points at the
