@@ -210,6 +210,20 @@ RSpec.describe Backlogs::WorkPackageCardListComponent, type: :component do
         expect(rendered_component).to have_no_css(".Counter")
       end
     end
+
+    context "when the count label is overridden" do
+      let(:header_arguments) do
+        { title: "Sprint 1", count: 7, count_label: "7 backlog stories" }
+      end
+
+      it "renders the provided count and accessible label" do
+        expect(rendered_component).to have_css(
+          ".Counter",
+          text: "7",
+          aria: { label: "7 backlog stories" }
+        )
+      end
+    end
   end
 
   describe "delegated footer" do

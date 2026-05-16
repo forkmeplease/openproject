@@ -72,14 +72,19 @@ module Backlogs
       )
     end
 
-    def with_header(title:, **system_arguments, &)
-      count = work_packages.size
-
+    def with_header(
+      title:,
+      count: work_packages.size,
+      count_label: default_count_label(count),
+      collapsed: folded?,
+      **system_arguments,
+      &
+    )
       @list.with_header(
         title:,
         count:,
-        count_label: I18n.t(:label_x_work_packages, count:),
-        collapsed: folded?,
+        count_label:,
+        collapsed:,
         **system_arguments,
         &
       )
@@ -117,6 +122,12 @@ module Backlogs
 
     def folded?
       current_user.pref[:backlogs_versions_default_fold_state] == "closed"
+    end
+
+    def default_count_label(count)
+      return unless count
+
+      I18n.t(:label_x_work_packages, count: count == true ? work_packages.size : count)
     end
 
     def populate_list!
