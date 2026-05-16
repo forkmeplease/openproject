@@ -143,6 +143,14 @@ RSpec.describe Backlogs::WorkPackageCardListComponent, type: :component do
       expect(rendered_component).to have_heading "Sprint 1", level: 4
     end
 
+    it "announces dynamic counter updates" do
+      expect(rendered_component).to have_css(
+        ".Counter",
+        aria: { label: I18n.t(:label_x_work_packages, count: 0), live: "polite" },
+        visible: :all
+      )
+    end
+
     context "when the user prefers closed folds" do
       before do
         user.pref[:backlogs_versions_default_fold_state] = "closed"
@@ -218,6 +226,10 @@ RSpec.describe Backlogs::WorkPackageCardListComponent, type: :component do
     it "renders the blankslate when work_packages is empty" do
       expect(rendered_component).to have_text("Sprint 1 is empty")
       expect(rendered_component).to have_text("Drag work packages here")
+    end
+
+    it "announces dynamic empty-state updates" do
+      expect(rendered_component).to have_role(:status, aria: { live: "polite" })
     end
 
     context "when work_packages is nil" do

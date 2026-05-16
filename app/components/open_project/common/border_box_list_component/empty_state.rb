@@ -36,16 +36,16 @@ module OpenProject
       # This component is part of {BorderBoxListComponent} and should not be
       # used as a standalone component.
       #
-      # The component announces changes politely by default while preserving
-      # caller-provided aria attributes.
       class EmptyState < ApplicationComponent
         include Primer::AttributesHelper
 
         # @param title [String] empty-state heading.
         # @param description [String, nil] optional supporting text.
         # @param icon [Symbol, nil] optional Primer icon.
+        # @param interactive [Boolean] whether empty-state updates should be
+        #   announced politely to assistive technology.
         # @param system_arguments [Hash] forwarded to `Primer::Beta::Blankslate`.
-        def initialize(title:, description: nil, icon: nil, **system_arguments)
+        def initialize(title:, description: nil, icon: nil, interactive: false, **system_arguments)
           super()
 
           @title = title
@@ -53,10 +53,12 @@ module OpenProject
           @icon = icon
 
           @system_arguments = system_arguments
-          @system_arguments[:role] = "status"
+          return unless interactive
+
+          @system_arguments[:role] ||= "status"
           @system_arguments[:aria] = merge_aria(
-            system_arguments,
-            aria: { live: "polite" }
+            { aria: { live: "polite" } },
+            @system_arguments
           )
         end
 

@@ -83,7 +83,7 @@ RSpec.describe Backlogs::SprintComponent, type: :component do
         expect(rendered_component).to have_css(
           ".Counter",
           text: "2",
-          aria: { label: I18n.t(:label_x_work_packages, count: 2) }
+          aria: { label: I18n.t(:label_x_work_packages, count: 2), live: "polite" }
         )
       end
 

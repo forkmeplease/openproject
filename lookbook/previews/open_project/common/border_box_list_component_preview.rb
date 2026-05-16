@@ -33,9 +33,11 @@ module OpenProject
     # @logical_path OpenProject/Common
     class BorderBoxListComponentPreview < ViewComponent::Preview
       # @label Default
-      def default
+      # @param interactive toggle
+      def default(interactive: false)
         render OpenProject::Common::BorderBoxListComponent.new(
-          container: "border-box-list-preview"
+          container: "border-box-list-preview",
+          interactive: boolean_preview_param(interactive)
         ) do |list|
           list.with_header(title: "Things we're building", count: true) do |header|
             header.with_description { "There's lots to look forward to" }
@@ -58,12 +60,14 @@ module OpenProject
       end
 
       # @label With work package items
-      def with_work_package_items
+      # @param interactive toggle
+      def with_work_package_items(interactive: false)
         work_packages = WorkPackage.includes(:project).limit(2).to_a
         return preview_message("No work packages in the database.") if work_packages.empty?
 
         render OpenProject::Common::BorderBoxListComponent.new(
-          container: "border-box-list-work-package-preview"
+          container: "border-box-list-work-package-preview",
+          interactive: boolean_preview_param(interactive)
         ) do |list|
           list.with_header(title: "Work packages", count: true)
 
@@ -84,14 +88,17 @@ module OpenProject
       # @param count [Symbol] select [inferred, hidden, explicit, zero]
       # @param count_scheme [Symbol] select [primary, secondary]
       # @param hide_zero_count toggle
+      # @param interactive toggle
       def playground(
         title_tag: :h4,
         count: :inferred,
         count_scheme: :primary,
-        hide_zero_count: true
+        hide_zero_count: true,
+        interactive: false
       )
         render OpenProject::Common::BorderBoxListComponent.new(
-          container: "border-box-list-playground-preview"
+          container: "border-box-list-playground-preview",
+          interactive: boolean_preview_param(interactive)
         ) do |list|
           list.with_header(
             title: "Playground list",
@@ -100,7 +107,7 @@ module OpenProject
             count_arguments: {
               scheme: count_scheme.to_sym,
               hide_if_zero: boolean_preview_param(hide_zero_count),
-              aria: { label: "Visible list item count", live: "polite" }
+              aria: { label: "Visible list item count" }
             }
           ) do |header|
             header.with_description { "Advanced header options" }
@@ -114,9 +121,11 @@ module OpenProject
 
       # @label Empty state
       # List with a header and an empty state (Blankslate), no items.
-      def empty_state
+      # @param interactive toggle
+      def empty_state(interactive: false)
         render OpenProject::Common::BorderBoxListComponent.new(
-          container: "border-box-list-empty-preview"
+          container: "border-box-list-empty-preview",
+          interactive: boolean_preview_param(interactive)
         ) do |list|
           list.with_header(title: "Empty list", count: 0)
           list.with_empty_state(

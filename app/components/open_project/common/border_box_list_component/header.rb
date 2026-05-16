@@ -80,6 +80,7 @@ module OpenProject
                     :count_arguments,
                     :title_tag,
                     :list_id,
+                    :interactive,
                     :collapsed
 
         attr_writer :collapsible_id
@@ -95,6 +96,8 @@ module OpenProject
         #   Values are merged over the default counter arguments.
         # @param title_tag [Symbol] tag used for the title heading.
         # @param list_id [String, nil] id of the collapsible list body.
+        # @param interactive [Boolean] whether counter updates should be
+        #   announced politely to assistive technology.
         # @param collapsed [Boolean] whether the collapsible header starts closed.
         # @param system_arguments [Hash] forwarded to `Primer::Beta::BorderBox#with_header`.
         def initialize(
@@ -104,6 +107,7 @@ module OpenProject
           count_arguments: {},
           title_tag: :h4,
           list_id: nil,
+          interactive: false,
           collapsed: false,
           **system_arguments
         )
@@ -115,6 +119,7 @@ module OpenProject
           @count_arguments = count_arguments
           @title_tag = title_tag
           @list_id = list_id
+          @interactive = interactive
           @collapsible_id = list_id
           @collapsed = collapsed
           @system_arguments = system_arguments
@@ -142,9 +147,11 @@ module OpenProject
         # @return [Hash] merged arguments forwarded to `Primer::Beta::Counter`.
         def counter_arguments
           merged = DEFAULT_COUNT_ARGUMENTS.merge(count_arguments).merge(count:)
+          default_aria = { label: count_label }
+          default_aria[:live] = "polite" if interactive
           merged[:aria] = merge_aria(
-            merged,
-            { aria: { label: count_label, live: "polite" } }
+            { aria: default_aria },
+            merged
           )
           merged
         end

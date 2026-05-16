@@ -67,6 +67,7 @@ module Backlogs
       @list = OpenProject::Common::BorderBoxListComponent.new(
         container:,
         current_user:,
+        interactive: true,
         **@system_arguments
       )
     end

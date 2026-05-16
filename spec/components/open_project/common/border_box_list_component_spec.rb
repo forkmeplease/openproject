@@ -297,7 +297,7 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_css(".Counter:not([hidden])", text: "0")
     end
 
-    it "sets default aria-label and aria-live on the counter" do
+    it "sets a default aria-label on the counter" do
       rendered = render_inline(
         described_class.new(container: "hdr-default-aria")
       ) do |list|
@@ -308,7 +308,45 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_css(
         ".Counter",
         text: "5",
+        aria: { label: I18n.t(:label_x_items, count: 5), live: nil }
+      )
+    end
+
+    it "adds aria-live to the counter when the list is interactive" do
+      rendered = render_inline(
+        described_class.new(container: "hdr-interactive-aria", interactive: true)
+      ) do |list|
+        list.with_header(title: "Counted", count: 5)
+        list.with_item { "row" }
+      end
+
+      expect(rendered).to have_css(
+        ".Counter",
+        text: "5",
         aria: { label: I18n.t(:label_x_items, count: 5), live: "polite" }
+      )
+    end
+
+    it "preserves caller-provided counter aria attributes" do
+      rendered = render_inline(
+        described_class.new(container: "hdr-custom-counter-aria", interactive: true)
+      ) do |list|
+        list.with_header(
+          title: "Counted",
+          count: 5,
+          count_arguments: { aria: { describedby: "counter-help", live: "assertive" } }
+        )
+        list.with_item { "row" }
+      end
+
+      expect(rendered).to have_css(
+        ".Counter",
+        text: "5",
+        aria: {
+          label: I18n.t(:label_x_items, count: 5),
+          describedby: "counter-help",
+          live: "assertive"
+        }
       )
     end
 
@@ -324,7 +362,7 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_css(
         ".Counter",
         text: "2",
-        aria: { label: I18n.t(:label_x_items, count: 2), live: "polite" }
+        aria: { label: I18n.t(:label_x_items, count: 2) }
       )
     end
 
@@ -339,7 +377,7 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_css(
         ".Counter",
         text: "3",
-        aria: { label: "3 work packages", live: "polite" }
+        aria: { label: "3 work packages" }
       )
     end
 
@@ -546,14 +584,39 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_text("Has content")
     end
 
-    it "sets aria role and live attributes on the empty state" do
+    it "does not set aria role and live attributes on the empty state by default" do
       rendered = render_inline(
         described_class.new(container: "empty-aria")
       ) do |list|
         list.with_empty_state(title: "Empty")
       end
 
-      expect(rendered).to have_css("[role='status'][aria-live='polite']")
+      expect(rendered).to have_no_role(:status)
+      expect(rendered).to have_css(".blankslate", aria: { live: nil })
+    end
+
+    it "sets aria role and live attributes on the empty state when the list is interactive" do
+      rendered = render_inline(
+        described_class.new(container: "empty-interactive-aria", interactive: true)
+      ) do |list|
+        list.with_empty_state(title: "Empty")
+      end
+
+      expect(rendered).to have_role(:status, aria: { live: "polite" })
+    end
+
+    it "preserves caller-provided empty state aria attributes" do
+      rendered = render_inline(
+        described_class.new(container: "empty-custom-aria", interactive: true)
+      ) do |list|
+        list.with_empty_state(
+          title: "Empty",
+          role: "alert",
+          aria: { live: "assertive", describedby: "empty-help" }
+        )
+      end
+
+      expect(rendered).to have_alert(aria: { live: "assertive", describedby: "empty-help" })
     end
   end
 

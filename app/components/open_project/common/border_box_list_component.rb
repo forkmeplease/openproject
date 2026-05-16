@@ -53,6 +53,7 @@ module OpenProject
       renders_one :header, ->(**system_arguments) {
         system_arguments[:id] = header_id
         system_arguments[:list_id] = list_id
+        system_arguments[:interactive] = interactive?
 
         Header.new(**system_arguments)
       }
@@ -130,7 +131,7 @@ module OpenProject
       #   def with_empty_state(title:, description: nil, icon: nil, **system_arguments)
       #   end
       renders_one :empty_state, ->(title:, description: nil, icon: nil, **system_arguments) {
-        EmptyState.new(title:, description:, icon:, **system_arguments)
+        EmptyState.new(title:, description:, icon:, interactive: interactive?, **system_arguments)
       }
 
       # Optional footer row.
@@ -152,13 +153,16 @@ module OpenProject
 
       # @param container [String, Symbol, Class, Object] value passed to
       #   `dom_target` to derive DOM ids for the list and related controls.
+      # @param interactive [Boolean] whether dynamic list updates should be
+      #   announced politely to assistive technology.
       # @param current_user [User] user context passed to work-package items.
       # @param system_arguments [Hash] forwarded to `Primer::Beta::BorderBox`.
       #   Pass `id:` to set the box id; related ids are derived from it.
-      def initialize(container:, current_user: User.current, **system_arguments)
+      def initialize(container:, interactive: false, current_user: User.current, **system_arguments)
         super()
 
         @container = container
+        @interactive = interactive
         @current_user = current_user
         @system_arguments = system_arguments
 
@@ -178,6 +182,10 @@ module OpenProject
       end
 
       private
+
+      def interactive?
+        @interactive == true
+      end
 
       def configure_header!
         return unless header?
