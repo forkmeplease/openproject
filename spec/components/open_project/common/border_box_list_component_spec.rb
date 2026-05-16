@@ -669,6 +669,20 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_css(".Box-header#my-widget_header")
     end
 
+    it "derives the header ids when explicit slot ids are provided" do
+      rendered = render_inline(
+        described_class.new(container: "ignored", id: "explicit-box")
+      ) do |list|
+        list.with_header(title: "Header", id: "explicit-header", list_id: "explicit-list")
+        list.with_item { "row" }
+      end
+
+      expect(rendered).to have_css(".Box-header#explicit-box_header")
+      expect(rendered).to have_element(aria: { controls: "explicit-box_list" })
+      expect(rendered).to have_no_css(".Box-header#explicit-header")
+      expect(rendered).to have_no_element(aria: { controls: "explicit-list" })
+    end
+
     it "derives the list id from the explicit box id" do
       rendered = render_inline(
         described_class.new(container: "ignored", id: "explicit-box", list_id: "explicit-list")
@@ -692,7 +706,7 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
 
       expect(rendered).to have_css(".Box-footer#explicit-box_footer")
       expect(rendered).to have_no_css(".Box-footer#explicit-footer")
-      expect(rendered).to have_css("[aria-controls='explicit-box_list explicit-box_footer']")
+      expect(rendered).to have_element(aria: { controls: "explicit-box_list explicit-box_footer" })
     end
   end
 

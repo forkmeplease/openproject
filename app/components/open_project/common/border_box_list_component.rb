@@ -51,6 +51,7 @@ module OpenProject
       #   def with_header(**system_arguments, &block)
       #   end
       renders_one :header, ->(**system_arguments) {
+        system_arguments = system_arguments.except(:id, :list_id)
         system_arguments[:id] = header_id
         system_arguments[:list_id] = list_id
         system_arguments[:interactive] = interactive?
@@ -146,6 +147,7 @@ module OpenProject
       #   def with_footer(**system_arguments, &block)
       #   end
       renders_one :footer, ->(**system_arguments) {
+        system_arguments = system_arguments.except(:id)
         system_arguments[:id] = footer_id
 
         Footer.new(**system_arguments)
@@ -164,7 +166,7 @@ module OpenProject
         @container = container
         @interactive = interactive
         @current_user = current_user
-        @system_arguments = system_arguments
+        @system_arguments = system_arguments.except(:list_id)
 
         @system_arguments[:id] ||= dom_target(container)
         @system_arguments[:list_id] = dom_target(@system_arguments[:id], :list)
