@@ -40,7 +40,7 @@ fr:
 
     '
   permission_allocate_user_resources: Allocate user resources
-  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
+  permission_allocate_user_resources_explanation: 'Permet aux utilisateurs de créer, mettre à jour et supprimer les allocations de ressources dans un planificateur de ressources. Cela inclut l''assignation d''utilisateurs (ou des filtres d''utilisateurs) à un planificateur et l''ajustement de la plage de temps et de dates allouées.
 
     '
   label_resource_management: Planification des ressources
