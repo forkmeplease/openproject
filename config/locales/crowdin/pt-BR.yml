@@ -1429,8 +1429,8 @@ pt-BR:
     bulk_delete_dialog:
       title: Excluir %{count} pacotes de trabalho
       heading: Excluir estes %{count} pacotes de trabalho de forma permanente?
-      description: 'The following work packages and all associated data will be permanently deleted:'
-      description_with_children: 'The following work packages, including children and all associated data, will be permanently deleted:'
+      description: 'Os seguintes pacotes de trabalho e todos os dados associados serão excluídos permanentemente:'
+      description_with_children: 'Os seguintes pacotes de trabalho, incluindo filhos e todos os dados associados, serão permanentemente excluídos:'
       confirm_children_deletion: Reconheço que todos os pacotes de trabalho selecionados e seus itens filhos serão excluídos permanentemente.
       cross_project_warning: 'Esses pacotes de trabalho abrangem vários projetos: %{projects}'
       children_label: 'Os seguintes itens filhos também serão excluídos:'
@@ -5014,7 +5014,7 @@ pt-BR:
 
     '
   setting_after_login_default_redirect_url: Após redirecionamento de login
-  setting_after_login_default_redirect_url_example_html: 'Set a default path to redirect users after login, if no back link was provided. Redirects to home page if not set. <br/> Example: %{example_code}
+  setting_after_login_default_redirect_url_example_html: 'Defina um caminho padrão para redirecionar os usuários após o login, se nenhum link de retorno foi fornecido. Redireciona para a página inicial se não estiver definido. <br/> Exemplo: %{example_code}
 
     '
   setting_apiv3_cors_title: Compartilhamento de recursos entre origens (CORS)
