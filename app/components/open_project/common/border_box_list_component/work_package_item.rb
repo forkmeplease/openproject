@@ -23,18 +23,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
 module OpenProject
   module Common
-    class WorkPackageCardListComponent
-      # Internal row bridge between the card list and the visual card. It owns
-      # the surrounding BorderBox row arguments while `WorkPackageCardComponent`
-      # renders the card body.
-      class Item < ApplicationComponent
+    class BorderBoxListComponent
+      # BorderBox list row that renders a work package card.
+      #
+      # Specialized rows can subclass this component and override `build_card`
+      # to provide a different card component while keeping row behavior.
+      class WorkPackageItem < ApplicationComponent
         include ActionView::RecordIdentifier
         include Primer::ClassNameHelper
         include Primer::AttributesHelper
@@ -45,8 +46,16 @@ module OpenProject
                     :params,
                     :current_user
 
-        delegate :with_metric, to: :card
+        # Delegates card slots so callers can configure the rendered card from
+        # `with_work_package_item`.
+        delegate :with_metric, :with_menu, to: :card
 
+        # @param work_package [WorkPackage] work package rendered by the card.
+        # @param project [Project] project context for row behavior.
+        # @param container [String, Array<String, Symbol>] parent list container id seed.
+        # @param params [Hash] request params used by specialized item classes.
+        # @param current_user [User] user context for specialized item classes.
+        # @param system_arguments [Hash] forwarded to Primer's BorderBox row.
         def initialize(
           work_package:,
           project:,
@@ -65,11 +74,16 @@ module OpenProject
           @system_arguments = system_arguments
         end
 
+        # @return [Hash] arguments forwarded to Primer's BorderBox row.
         def row_args
           row_arguments = @system_arguments.deep_dup
           row_arguments[:id] ||= dom_id(work_package)
           row_arguments[:tabindex] ||= 0
-          row_arguments[:classes] = class_names(row_classes, row_arguments[:classes])
+          row_arguments[:test_selector] ||= "work-package-#{work_package.id}"
+          row_arguments[:classes] = class_names(
+            row_classes,
+            row_arguments[:classes]
+          )
           row_arguments[:data] = merge_data(
             { data: row_data },
             row_arguments
@@ -77,15 +91,27 @@ module OpenProject
           row_arguments
         end
 
-        def card
-          @card ||= WorkPackageCardComponent.new(work_package:)
+        def before_render
+          content
         end
 
-        def render? = false
+        def call
+          render(card)
+        end
 
-        def empty_item? = false
+        # @return [ApplicationComponent] card component rendered inside the row.
+        def card
+          @card ||= build_card
+        end
 
         private
+
+        # Override in subclasses to render a specialized work-package card.
+        #
+        # @return [ApplicationComponent]
+        def build_card
+          WorkPackageCardComponent.new(work_package:)
+        end
 
         def row_classes
           class_names(
@@ -97,11 +123,7 @@ module OpenProject
         end
 
         def row_data
-          data = {
-            test_selector: "work-package-#{work_package.id}"
-          }
-
-          draggable? ? data.merge(draggable_data) : data
+          draggable? ? draggable_data : {}
         end
 
         def draggable?

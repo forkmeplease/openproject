@@ -29,25 +29,25 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= render(Primer::Beta::BorderBox.new(**@system_arguments)) do |border_box| %>
   <% if header? %>
-    <% border_box.with_header(id: header_id) do %>
+    <% border_box.with_header(**header.row_args) do %>
       <%= header %>
     <% end %>
   <% end %>
 
-  <% if items.empty? %>
-    <% border_box.with_row(data: { empty_list_item: true }) do %>
-      <%= empty_state %>
-    <% end %>
-  <% else %>
+  <% if items.any? %>
     <% items.each do |item| %>
       <% border_box.with_row(**item.row_args) do %>
-        <%= render(item.card) %>
+        <%= item %>
       <% end %>
+    <% end %>
+  <% elsif empty_state? %>
+    <% border_box.with_row(data: { empty_list_item: true }) do %>
+      <%= empty_state %>
     <% end %>
   <% end %>
 
   <% if footer? %>
-    <% border_box.with_row(scheme: :neutral) do %>
+    <% border_box.with_footer(**footer.footer_args) do %>
       <%= footer %>
     <% end %>
   <% end %>

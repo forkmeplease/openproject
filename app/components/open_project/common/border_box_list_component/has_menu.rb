@@ -23,55 +23,60 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
 module OpenProject
   module Common
-    class WorkPackageCardListComponent
-      class Header < ApplicationComponent
-        include OpPrimer::ComponentHelpers
+    class BorderBoxListComponent
+      # Adds the standard list action menu slot used by list headers and items.
+      module HasMenu
+        extend ActiveSupport::Concern
+        include Primer::ClassNameHelper
 
-        renders_one :description
-
-        renders_many :actions, types: {
-          button: ->(**system_arguments) do
-            Primer::Beta::Button.new(**system_arguments)
+        included do
+          # @!parse
+          #   # Adds a trailing action menu.
+          #   #
+          #   # @param menu_id [String, nil] id prefix for the Primer action menu.
+          #   # @param button_aria_label [String, nil] accessible label for the
+          #   #   menu button.
+          #   # @param system_arguments [Hash] forwarded to
+          #   #   `Primer::Alpha::ActionMenu`.
+          #   # @return [ViewComponent::Slot]
+          #   def with_menu(menu_id: nil, button_aria_label: nil, **system_arguments, &block)
+          #   end
+          renders_one :menu, ->(menu_id: nil, button_aria_label: nil, **system_arguments) do
+            build_menu(menu_id:, button_aria_label:, **system_arguments)
           end
-        }
+        end
 
-        renders_one :menu, ->(menu_id: nil, button_aria_label: nil, **system_arguments) do
+        private
+
+        def build_menu(menu_id: nil, button_aria_label: nil, **system_arguments)
           system_arguments[:classes] = class_names(
             system_arguments[:classes],
             "hide-when-print"
           )
 
           menu = Primer::Alpha::ActionMenu.new(
-            menu_id: menu_id || dom_target(container, :menu),
+            menu_id: menu_id || default_menu_id,
             anchor_align: :end,
             **system_arguments
           )
           menu.with_show_button(
             scheme: :invisible,
             icon: :"kebab-horizontal",
-            "aria-label": button_aria_label || t(".label_actions"),
+            "aria-label": button_aria_label || I18n.t(:label_actions),
             tooltip_direction: :se
           )
           menu
         end
 
-        attr_reader :title, :container, :list_id, :collapsed, :count
-
-        def initialize(title:, container:, list_id:, collapsed: false, count: nil)
-          super()
-
-          @title = title
-          @container = container
-          @list_id = list_id
-          @collapsed = collapsed
-          @count = count
+        def default_menu_id
+          self.class.generate_id
         end
       end
     end

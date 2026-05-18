@@ -23,31 +23,33 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
 module OpenProject
   module Common
-    class WorkPackageCardListComponent
-      # Item bridge for caller-provided content.
-      class ContentItem < ApplicationComponent
+    class BorderBoxListComponent
+      # Footer row rendered below list items.
+      #
+      # This component is part of {BorderBoxListComponent} and should not be
+      # used as a standalone component.
+      class Footer < ApplicationComponent
+        attr_reader :id
+
+        # @param system_arguments [Hash] forwarded to Primer's BorderBox footer.
         def initialize(**system_arguments)
           super()
 
+          @id = system_arguments[:id]
           @system_arguments = system_arguments
         end
 
-        def row_args
+        # @return [Hash] arguments forwarded to Primer's BorderBox footer.
+        def footer_args
           @system_arguments.deep_dup
         end
-
-        def card
-          self
-        end
-
-        def empty_item? = false
 
         def call
           content

@@ -23,33 +23,32 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "rails_helper"
+module OpenProject
+  module Common
+    class BorderBoxListComponent
+      # Generic BorderBox list row that renders the slot content directly.
+      class Item < ApplicationComponent
+        # @param system_arguments [Hash] forwarded to Primer's BorderBox row.
+        def initialize(**system_arguments)
+          super()
 
-RSpec.describe OpenProject::Common::WorkPackageCardListComponent::EmptyItem, type: :component do
-  describe "#row_args" do
-    it "marks the row as an empty list item by default" do
-      item = described_class.new
+          @system_arguments = system_arguments
+        end
 
-      expect(item.row_args[:data]).to include(empty_list_item: true)
-    end
+        # @return [Hash] arguments forwarded to Primer's BorderBox row.
+        def row_args
+          @system_arguments.deep_dup
+        end
 
-    it "lets caller-supplied data override the default empty item data" do
-      item = described_class.new(
-        data: {
-          empty_list_item: false,
-          test_selector: "custom-empty-row"
-        }
-      )
-
-      expect(item.row_args[:data]).to include(
-        empty_list_item: false,
-        test_selector: "custom-empty-row"
-      )
+        def call
+          content
+        end
+      end
     end
   end
 end
