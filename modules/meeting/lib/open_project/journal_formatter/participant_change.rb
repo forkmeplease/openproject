@@ -27,25 +27,15 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-module MeetingParticipants
-  class CreateService < BaseServices::Create
-    def initialize(user:, model: nil, contract_class: nil, contract_options: {}, notify: true)
-      @notify = notify
-      super(user:, model:, contract_class:, contract_options:)
-    end
 
-    protected
+class OpenProject::JournalFormatter::ParticipantChange < JournalFormatter::Base
+  def render(key, values, options = { html: true })
+    label_text = label(key)
+    label_text = content_tag(:strong, label_text) if options[:html]
 
-    def after_perform(call)
-      meeting = call.result.meeting
-      meeting.touch_and_save_journals
+    value_text = values.last.to_s
+    value_text = content_tag(:i, h(value_text)) if options[:html]
 
-      if @notify
-        since_invited_ids = meeting.participants.where(invited: true).where.not(id: call.result.id).pluck(:user_id)
-        Meetings::NotificationDebounceJob.debounce(meeting, since_invited_ids:)
-      end
-
-      call
-    end
+    I18n.t(:text_journal_of, label: label_text, value: value_text)
   end
 end
