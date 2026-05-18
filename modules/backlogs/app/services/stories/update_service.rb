@@ -51,8 +51,6 @@ class Stories::UpdateService
         create_call.result.move_after(position: position.to_i)
       end
     end
-
-    create_call
   end
 
   private
