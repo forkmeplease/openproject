@@ -15,7 +15,7 @@ Contains the info line (type, ID, status), followed by optional elements: assign
 The work package title, always visible.
 
 **Row 3 — Footer** *(only rendered when content is present)*
-Shows a link to the parent work package (when `show_parent_link: true` and a parent exists) and/or the `with_bottom_line` slot.
+Shows a link to the parent work package (when `show_parent: true` and a parent exists) and/or the `with_additional_details` slot.
 
 ## Parameters
 
@@ -26,7 +26,7 @@ Shows a link to the parent work package (when `show_parent_link: true` and a par
 | `show_assignee` | `Boolean` | `false` | Show the assignee icon and name |
 | `show_priority` | `Boolean` | `false` | Show a priority badge |
 | `show_drag_handle` | `Boolean` | `false` | Show a drag handle icon |
-| `show_parent_link` | `Boolean` | `false` | Show a link to the parent work package in row 3. Only rendered when `work_package.parent` is present. |
+| `show_parent` | `Boolean` | `false` | Show a link to the parent work package in row 3. Only rendered when `work_package.parent` is present. |
 | `status_scheme` | `Symbol` | `:default` | Status label style: `:default` (highlighted) or `:secondary` (neutral label) |
 
 ## Slots
@@ -35,7 +35,7 @@ Shows a link to the parent work package (when `show_parent_link: true` and a par
 |---|---|
 | `with_metric` | Numeric value shown in row 1 (e.g. story points) |
 | `with_menu` | Custom actions menu, replaces the default lazy menu |
-| `with_bottom_line` | Additional content appended to row 3 |
+| `with_additional_details` | Additional content appended to row 3 |
 
 ## Variants
 
@@ -48,14 +48,14 @@ render OpenProject::Common::WorkPackageCardComponent.new(
   work_package: @work_package,
   show_assignee: true,
   show_priority: true,
-  show_parent_link: true,
+  show_parent: true,
   status_scheme: :secondary
 ) do |card|
   card.with_metric { @work_package.story_points }
   card.with_menu do |menu|
     menu.with_item(label: "Open", href: work_package_path(@work_package))
   end
-  card.with_bottom_line do
+  card.with_additional_details do
     # Whatever else you want to show
   end
 end

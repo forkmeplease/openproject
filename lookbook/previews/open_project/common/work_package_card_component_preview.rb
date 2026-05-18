@@ -37,14 +37,15 @@ module OpenProject
       # @param show_assignee toggle
       # @param show_priority toggle
       # @param show_drag_handle toggle
-      # @param show_parent_link toggle
+      # @param show_parent toggle
+      # @param link_subject toggle
       # @param show_metric toggle
       # @param show_menu toggle
-      # @param show_bottom toggle
+      # @param additional_details toggle
       # @param status_scheme select [default, secondary]
       def playground(show_assignee: false, show_priority: false, show_drag_handle: false,
-                     show_parent_link: false, show_metric: false, show_menu: false,
-                     show_bottom: false, status_scheme: :default)
+                     show_parent: false, link_subject: true, show_metric: false, show_menu: false,
+                     additional_details: false, status_scheme: :default)
         work_package = WorkPackage.visible.where.not(parent_id: nil).first || WorkPackage.visible.first
         return preview_message("No work packages in the database.") unless work_package
 
@@ -54,10 +55,11 @@ module OpenProject
                                show_assignee:,
                                show_priority:,
                                show_drag_handle:,
-                               show_parent_link:,
+                               show_parent:,
+                               link_subject:,
                                show_metric:,
                                show_menu:,
-                               show_bottom:,
+                               additional_details:,
                                status_scheme:
                              })
       end
@@ -106,24 +108,24 @@ module OpenProject
         )
       end
 
-      # Card with show_parent_link enabled. Renders a link to the parent work package in row 3.
+      # Card with show_parent enabled. Renders a link to the parent work package in row 3.
       # Only visible when the work package actually has a parent.
-      def with_parent_link
+      def with_parent
         work_package = WorkPackage.visible.where.not(parent_id: nil).first
         return preview_message("No work packages with a parent found.") unless work_package
 
         render OpenProject::Common::WorkPackageCardComponent.new(
           work_package:,
-          show_parent_link: true
+          show_parent: true
         )
       end
 
       # Card with additional content in the bottom slot (row 3), rendered alongside the parent link.
-      def with_bottom_line
+      def with_additional_details
         work_package = WorkPackage.visible.first
         return preview_message("No work packages in the database.") unless work_package
 
-        render_with_template(template: "open_project/common/work_package_card_component_preview/with_bottom_line",
+        render_with_template(template: "open_project/common/work_package_card_component_preview/with_additional_details",
                              locals: { work_package: })
       end
 

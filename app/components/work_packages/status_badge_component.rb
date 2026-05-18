@@ -36,7 +36,8 @@ class WorkPackages::StatusBadgeComponent < ApplicationComponent
 
     @status = status
     @system_arguments = system_arguments
-    unless @system_arguments[:scheme]
+    if @system_arguments[:scheme].nil? || @system_arguments[:scheme] == :default
+      @system_arguments.delete(:scheme)
       @system_arguments[:classes] = class_names(
         @system_arguments[:classes],
         "__hl_background_status_#{@status.id}"

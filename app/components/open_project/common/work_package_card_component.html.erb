@@ -30,14 +30,11 @@ See COPYRIGHT and LICENSE files for more details.
 <%= grid_layout(
       "op-work-package-card",
       tag: :article,
-      classes: {
-        "op-work-package-card_with-drag-handle": show_drag_handle,
-        "op-work-package-card_with-footer": show_footer?
-      }
+      classes: layout_classes
     ) do |grid| %>
   <% if show_drag_handle %>
-    <% grid.with_area(:drag_handle) do %>
-      <%= render(Primer::Beta::Octicon.new(icon: :grabber, "aria-label": t(".drag_handle.label"))) %>
+    <% grid.with_area(:drag_handle, classes: "hide-when-print") do %>
+      <%= render(Primer::OpenProject::DragHandle.new) %>
     <% end %>
   <% end %>
 
@@ -65,7 +62,9 @@ See COPYRIGHT and LICENSE files for more details.
               tag: :span,
               classes: "__hl_inline_priority_#{work_package.priority.id} __hl_inline__small_dot"
             )
-          ) { work_package.priority.name } %>
+          ) do %>
+        <span class="op-work-package-card--priority-name"><%= work_package.priority.name %></span>
+      <% end %>
     <% end %>
 
     <% if menu? %>
@@ -82,30 +81,36 @@ See COPYRIGHT and LICENSE files for more details.
   <% end %>
 
   <% grid.with_area(:subject) do %>
-    <%= render(Primer::Beta::Link.new(href: work_package_path(work_package), font_weight: :semibold)) { work_package.subject } %>
+    <% if link_subject %>
+      <%= render(Primer::Beta::Link.new(href: work_package_path(work_package), font_weight: :semibold)) { work_package.subject } %>
+    <% else %>
+      <%= render(Primer::Beta::Text.new(font_weight: :semibold)) { work_package.subject } %>
+    <% end %>
   <% end %>
 
   <% if show_footer? %>
     <% grid.with_area(:footer) do %>
       <% flex_layout do |flex| %>
-        <% if show_parent_link && work_package.parent.present? %>
+        <% if show_parent? %>
           <% flex.with_row do %>
-            <%= render(
-                  Primer::Beta::Link.new(
-                    href: work_package_path(work_package.parent),
-                    underline: false,
-                    color: :default
-                  )
-                ) do %>
-              <%= render(Primer::Beta::Text.new(color: :subtle)) { "#{t('.parent')}: " } %>
-              <%= work_package.parent.subject %>
+            <%= render(Primer::Beta::Text.new(color: :muted, font_size: :small)) do %>
+              <%= "#{t('.parent')}: " %>
+              <%= render(
+                    Primer::Beta::Link.new(
+                      href: work_package_path(work_package.parent),
+                      underline: false,
+                      color: :default
+                    )
+                  ) do %>
+                <%= work_package.parent.subject %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
 
-        <% if bottom_line? %>
+        <% if additional_details? %>
           <% flex.with_row do %>
-            <%= bottom_line %>
+            <%= additional_details %>
           <% end %>
         <% end %>
       <% end %>

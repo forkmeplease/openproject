@@ -3,7 +3,8 @@
       show_assignee:,
       show_priority:,
       show_drag_handle:,
-      show_parent_link:,
+      show_parent:,
+      link_subject:,
       status_scheme: status_scheme.to_sym
     ) do |card|
       card.with_metric { (work_package.try(:story_points) || 5).to_s } if show_metric
@@ -17,8 +18,8 @@
         end
       end
 
-      if show_bottom
-        card.with_bottom_line do
+      if additional_details
+        card.with_additional_details do
           render(Primer::Beta::Text.new(tag: :span, font_size: :small, color: :subtle)) { "Some bottom line" }
         end
       end

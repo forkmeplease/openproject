@@ -32,7 +32,8 @@
   grid-template-rows: auto auto
   grid-template-areas: "info_line actions" "subject subject"
   align-items: center
-  margin-top: calc(-1 * var(--base-size-4))
+  grid-row-gap: var(--base-size-4)
+  margin-top: var(--base-size-4)
   margin-bottom: var(--base-size-4)
   container-type: inline-size
 
@@ -47,6 +48,21 @@
     &.op-work-package-card_with-footer
       grid-template-rows: auto auto auto
       grid-template-areas: "drag_handle info_line actions" ". subject subject" ". footer footer"
+
+  // --------- START: Menu positioning ---------
+  // This is a hack to avoid that the IconButton of the menu blows up the height of the first row
+  // resulting in different spacing between the rows.
+  // By positioning the menu absolutely, we can ensure that the height of the first row is not affected.
+  &_with-menu
+    .op-work-package-card--actions
+      position: relative
+      // 1rem column gap + 2rem button width - 0.5rem visual gap of the invisible button to it's icon
+      padding-right: 2.5rem
+
+  &--menu
+    position: absolute
+    right: 0
+  // --------- END: Menu positioning ---------
 
   &--drag_handle
     align-self: center
@@ -64,15 +80,15 @@
     font-variant-numeric: tabular-nums
     text-align: right
 
-  // parent_link and bottom_line auto-place into implicit rows, spanning full width
+  // parent_link and additional_details auto-place into implicit rows, spanning full width
   &--parent_link,
-  &--bottom_line
+  &--additional_details
     grid-column: 1 / -1
     padding-top: var(--base-size-4)
 
   &_with-drag-handle
     .op-work-package-card--parent_link,
-    .op-work-package-card--bottom_line
+    .op-work-package-card--additional_details
       grid-column: 2 / -1
 
   &--subject
@@ -80,11 +96,8 @@
     word-wrap: break-word
     overflow-wrap: break-word
 
-
   // < 768px: hide text labels, show only icons
   @container (width < 768px)
-    .op-work-package-card--assignee-name
+    .op-work-package-card--assignee-name,
+    .op-work-package-card--priority-name
       display: none
-
-    .op-work-package-card--actions .__hl_inline__small_dot
-      font-size: 0

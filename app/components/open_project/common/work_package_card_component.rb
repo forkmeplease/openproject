@@ -43,10 +43,12 @@ module OpenProject
           **system_arguments
         )
       }
-      renders_one :bottom_line, Primer::Content
+      renders_one :additional_details, Primer::Content
 
       attr_reader :work_package, :menu_src, :show_drag_handle, :show_assignee, :show_priority,
-                  :show_parent_link, :status_scheme
+                  :show_parent, :link_subject, :status_scheme
+
+      alias_method :show_drag_handle?, :show_drag_handle
 
       # @param work_package [WorkPackage] the work package this card represents.
       # @param menu_src [String, NilClass] optional lazy menu source. Prefer the
@@ -54,11 +56,12 @@ module OpenProject
       # @param show_drag_handle [Boolean] whether to show a drag handle icon.
       # @param show_assignee [Boolean] whether to show the assignee (icon + name when space allows).
       # @param show_priority [Boolean] whether to show the priority badge.
-      # @param show_parent_link [Boolean] whether to show a link to the parent work package in row 3.
+      # @param show_parent [Boolean] whether to show a link to the parent work package in row 3.
       #   Only rendered when the work package actually has a parent.
+      # @param link_subject [Boolean] whether to link the subject to the WP or render as plain text instead.
       # @param status_scheme [Symbol] status label scheme for the info line. One of :default or :secondary.
       def initialize(work_package:, menu_src: nil, show_drag_handle: false,
-                     show_assignee: false, show_priority: false, show_parent_link: false,
+                     show_assignee: false, show_priority: false, show_parent: false, link_subject: true,
                      status_scheme: :default)
         super()
 
@@ -67,14 +70,27 @@ module OpenProject
         @show_drag_handle = show_drag_handle
         @show_assignee = show_assignee
         @show_priority = show_priority
-        @show_parent_link = show_parent_link
+        @show_parent = show_parent
+        @link_subject = link_subject
         @status_scheme = status_scheme
       end
 
       private
 
+      def layout_classes
+        {
+          "op-work-package-card_with-drag-handle": show_drag_handle?,
+          "op-work-package-card_with-footer": show_footer?,
+          "op-work-package-card_with-menu": menu? || menu_src.present?
+        }
+      end
+
+      def show_parent?
+        show_parent && work_package.parent&.visible?
+      end
+
       def show_footer?
-        bottom_line? || (show_parent_link && work_package.parent.present?)
+        additional_details? || show_parent?
       end
     end
   end

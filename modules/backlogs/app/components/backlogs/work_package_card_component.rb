@@ -59,7 +59,7 @@ module Backlogs
         menu_src:,
         show_assignee: true,
         show_priority: true,
-        show_parent_link: true,
+        show_parent: true,
         status_scheme: :secondary
       )
     end
