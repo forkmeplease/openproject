@@ -193,7 +193,7 @@ en:
     stories:
       update_service:
         missing_target: "target_id or direction must be present."
-        invalid_target_type: "target_type must be one of: backlog_bucket, sprint, inbox."
+        invalid_target_type: "target_type must be one of: backlog_bucket:<backlog_bucket_id>, sprint:<sprint_id>, inbox."
         invalid_direction: "direction must be one of: higher, highest, lower, lowest."
 
     story_menu_list_component:

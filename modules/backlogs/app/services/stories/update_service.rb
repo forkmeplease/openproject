@@ -68,19 +68,13 @@ class Stories::UpdateService
   end
 
   def attributes_result_from_target(target_id)
-    target_type, target_id = target_id.to_s.split(":", 2)
-
-    attributes = case target_type
-                 when "sprint"
-                   { backlog_bucket_id: nil, sprint_id: target_id }
-                 when "backlog_bucket"
-                   { backlog_bucket_id: target_id, sprint_id: nil }
-                 when "inbox"
-                   { backlog_bucket_id: nil, sprint_id: nil }
-                 end
-
-    if attributes
-      ServiceResult.success(result: attributes)
+    case target_id.to_s.split(":", 2)
+    in ["sprint", /\A\d+\z/ => sprint_id]
+      ServiceResult.success(result: { backlog_bucket_id: nil, sprint_id: })
+    in ["backlog_bucket", /\A\d+\z/ => backlog_bucket_id]
+      ServiceResult.success(result: { backlog_bucket_id:, sprint_id: nil })
+    in ["inbox"]
+      ServiceResult.success(result: { backlog_bucket_id: nil, sprint_id: nil })
     else
       ServiceResult.failure(message: I18n.t("backlogs.stories.update_service.invalid_target_type"))
     end
