@@ -83,6 +83,8 @@ module OpenProject
       #   # @param project [Project] project context for the work package.
       #   # @param params [Hash] request params used by specialized item classes.
       #   # @param component_klass [Class] item component class to instantiate.
+      #   #   Custom classes must accept `work_package:`, `project:`, `params:`,
+      #   #   `container:`, `current_user:`, and any forwarded item arguments.
       #   # @param item_arguments [Hash] forwarded to the item component.
       #   # @return [ViewComponent::Slot]
       #   def with_work_package_item(
