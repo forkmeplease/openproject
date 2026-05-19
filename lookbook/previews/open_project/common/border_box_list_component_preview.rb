@@ -33,11 +33,13 @@ module OpenProject
     # @logical_path OpenProject/Common
     class BorderBoxListComponentPreview < ViewComponent::Preview
       # @label Default
+      # @param padding [Symbol] select [default, condensed, spacious]
       # @param interactive toggle
       # @param collapsible toggle
-      def default(interactive: false, collapsible: false)
+      def default(padding: :default, interactive: false, collapsible: false)
         render OpenProject::Common::BorderBoxListComponent.new(
           container: "border-box-list-preview",
+          padding:,
           interactive: boolean_preview_param(interactive),
           collapsible: boolean_preview_param(collapsible)
         ) do |list|
@@ -62,14 +64,16 @@ module OpenProject
       end
 
       # @label Transparent scheme
+      # @param padding [Symbol] select [default, condensed, spacious]
       # @param interactive toggle
       # @param collapsible [Boolean] toggle
       def transparent(padding: :default, interactive: false, collapsible: false)
         render OpenProject::Common::BorderBoxListComponent.new(
           container: "border-box-list-transparent-preview",
           scheme: :transparent,
+          padding:,
           interactive: boolean_preview_param(interactive),
-          collapsible:
+          collapsible: boolean_preview_param(collapsible)
         ) do |list|
           list.with_header(title: "Sprint backlog", count: true) do |header|
             header.with_description { "3 points remaining" }
@@ -91,14 +95,16 @@ module OpenProject
       end
 
       # @label With work package items
+      # @param padding [Symbol] select [default, condensed, spacious]
       # @param interactive toggle
       # @param collapsible toggle
-      def with_work_package_items(interactive: false, collapsible: false)
+      def with_work_package_items(padding: :default, interactive: false, collapsible: false)
         work_packages = WorkPackage.includes(:project).limit(2).to_a
         return preview_message("No work packages in the database.") if work_packages.empty?
 
         render OpenProject::Common::BorderBoxListComponent.new(
           container: "border-box-list-work-package-preview",
+          padding:,
           interactive: boolean_preview_param(interactive),
           collapsible: boolean_preview_param(collapsible)
         ) do |list|
@@ -108,22 +114,25 @@ module OpenProject
       end
 
       # @label Playground
-      # @param collapsible toggle
       # @param title_tag [Symbol] select [h2, h3, h4, h5]
       # @param count [Symbol] select [inferred, hidden, explicit, zero]
       # @param count_scheme [Symbol] select [primary, secondary]
       # @param hide_zero_count toggle
+      # @param padding [Symbol] select [default, condensed, spacious]
       # @param interactive toggle
+      # @param collapsible toggle
       def playground(
-        collapsible: false,
         title_tag: :h4,
         count: :inferred,
         count_scheme: :primary,
         hide_zero_count: true,
-        interactive: false
+        padding: :default,
+        interactive: false,
+        collapsible: false
       )
         render OpenProject::Common::BorderBoxListComponent.new(
           container: "border-box-list-playground-preview",
+          padding:,
           interactive: boolean_preview_param(interactive),
           collapsible: boolean_preview_param(collapsible)
         ) do |list|
@@ -148,11 +157,13 @@ module OpenProject
 
       # @label Empty state
       # List with a header and an empty state (Blankslate), no items.
+      # @param padding [Symbol] select [default, condensed, spacious]
       # @param interactive toggle
       # @param collapsible toggle
-      def empty_state(interactive: false, collapsible: false)
+      def empty_state(padding: :default, interactive: false, collapsible: false)
         render OpenProject::Common::BorderBoxListComponent.new(
           container: "border-box-list-empty-preview",
+          padding:,
           interactive: boolean_preview_param(interactive),
           collapsible: boolean_preview_param(collapsible)
         ) do |list|
