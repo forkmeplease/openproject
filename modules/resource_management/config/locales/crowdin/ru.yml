@@ -9,9 +9,21 @@ ru:
         default_view_class_name: Представление по умолчанию
         public: Публичный
         favorite: Избранное
+      resource_allocation:
+        entity: Сущность
+        principal: Исполнитель
+        state: Состояние
+        start_date: Дата начала
+        end_date: Дата окончания
+        allocated_time: Распределенное время
+        user_filter: Фильтры пользователей
     errors:
       models:
         resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: должно быть после даты начала.
+        resource_allocation:
           attributes:
             end_date:
               greater_than_start_date: должно быть после даты начала.
@@ -25,6 +37,10 @@ ru:
     '
   permission_manage_public_resource_planners: Управление общедоступными планировщиками ресурсов
   permission_manage_public_resource_planners_explanation: 'Позволяет пользователям создавать и управлять общедоступными планировщиками ресурсов. Это позволяет просматривать, создавать, управлять и публиковать свои собственные планировщики ресурсов. Он не позволяет пользователям просматривать планировщики ресурсов, созданные другими пользователями, которые не являются общедоступными.
+
+    '
+  permission_allocate_user_resources: Распределение пользовательских ресурсов
+  permission_allocate_user_resources_explanation: 'Позволяет пользователям создавать, обновлять и удалять распределение ресурсов в планировщике ресурсов. Сюда входит назначение пользователей (или фильтров) на планировщик и корректировка выделенного времени и диапазона дат.
 
     '
   label_resource_management: Планирование ресурсов
