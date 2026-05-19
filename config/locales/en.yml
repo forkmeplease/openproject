@@ -163,6 +163,11 @@ en:
       client:
         connection_error: "Failed to connect to Jira server: %{message}"
         connection_timeout: "Connection to Jira server timed out: %{message}"
+        ssrf_blocked: >-
+          Connection blocked: the Jira host resolves to a private IP address. If your Jira instance
+          runs on an internal network, allow its IP via the OPENPROJECT_SSRF__PROTECTION__IP__ALLOWLIST
+          environment variable.
+        ssrf_block_doc_link: "Please see our [documentation](docs_url)."
         parse_error: "Failed to parse Jira API response: %{message}"
         api_error: "Jira API returned error status %{status}"
         401_error: "Jira API returned a 401 error. Your authentication token may have expired or lack the required permissions. Please ensure the token belongs to a Jira administrator."

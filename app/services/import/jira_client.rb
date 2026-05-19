@@ -34,6 +34,8 @@ module Import
 
     class ConnectionError < Error; end
 
+    class SsrfError < ConnectionError; end
+
     class ParseError < Error; end
 
     class ApiError < Error
@@ -262,6 +264,8 @@ module Import
         end
       end
       nil
+    rescue SsrfFilter::PrivateIPAddress
+      raise SsrfError, I18n.t("admin.jira.client.ssrf_blocked")
     rescue SsrfFilter::Error => e
       raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: e.message)
     rescue Timeout::Error => e
@@ -284,6 +288,8 @@ module Import
         params:,
         http_options: HTTP_OPTIONS
       )
+    rescue SsrfFilter::PrivateIPAddress
+      raise SsrfError, I18n.t("admin.jira.client.ssrf_blocked")
     rescue SsrfFilter::Error, SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
       raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: e.message)
     rescue Timeout::Error => e
