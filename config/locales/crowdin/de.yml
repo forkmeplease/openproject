@@ -108,7 +108,7 @@ de:
         trial: Probezeitraum
     jemalloc_allocator: Jemalloc Speicher allocator
     journal_aggregation:
-      caption: 'Benutzeraktionen an einem Arbeitspaket (Ändern der Beschreibung, des Status, der Werte oder Schreiben von Kommentaren) werden gruppiert, wenn sie innerhalb dieses Zeitraums durchgeführt werden. Sie steuert auch die Verzögerungen bei Benachrichtigungen und [webhook] (webhook_link).
+      caption: 'Benutzeraktionen an einem Arbeitspaket (Ändern der Beschreibung, des Status, der Werte oder Schreiben von Kommentaren) werden gruppiert, wenn sie innerhalb dieses Zeitraums durchgeführt werden. Sie steuert auch die Verzögerungen bei Benachrichtigungen und [webhook](webhook_link).
 
         '
     import:
@@ -266,7 +266,7 @@ de:
                 permissions: Berechtigungen
                 projects: Projekte
                 issues: Tickets
-                issue_details: Beschreibung, Verlaud, Kommentare und Anhänge
+                issue_details: Beschreibung, Verlauf, Kommentare und Anhänge
                 custom_fields: Ein Teil der benutzerdefinierten Felder
                 users: Beteiligte Benutzer und Gruppen
             confirm_import:
@@ -1263,7 +1263,7 @@ de:
           one: 1 Arbeitstag
           other: "%{count} Arbeitstage"
   user_preferences:
-    disable_keyboard_shortcuts_caption: 'Sie können die standardmäßigen[Tastenkombinationen](docs_url) deaktivieren, wenn Sie einen Screenreader verwenden oder unbeabsichtigtes Auslösen einer Aktion durch eine Tastenkombination vermeiden möchten.
+    disable_keyboard_shortcuts_caption: 'Sie können die standardmäßigen [Tastenkombinationen](docs_url) deaktivieren, wenn Sie einen Screenreader verwenden oder unbeabsichtigtes Auslösen einer Aktion durch eine Tastenkombination vermeiden möchten.
 
       '
   page:
@@ -3465,8 +3465,8 @@ de:
       status:
         failed: Fehlgeschlagen
         passed: Bestanden
-        skipped: Skipped
-        warning: Warning
+        skipped: Übersprungen
+        warning: Warnung
   homescreen:
     additional:
       projects: Neueste sichtbare Projekte in dieser Instanz.
@@ -3649,7 +3649,7 @@ de:
         personal_reminder: Bei persönlichen Erinnerungen benachrichtigen
       daily_reminders:
         title: Tägliche E-Mail-Erinnerungen für ungelesene Benachrichtigungen zusenden
-        description: You will receive these reminders only for unread notifications and only at hours you specify. Until you configure a time zone for your account, the times will be interpreted to be in UTC.
+        description: Sie erhalten diese Erinnerungen nur für ungelesene Benachrichtigungen und nur zu den von Ihnen angegebenen Zeiten. Solange Sie keine Zeitzone für Ihr Konto konfigurieren, werden die Zeiten in UTC interpretiert.
         enabled: Tägliche E-Mail-Erinnerungen aktivieren
         add_time: Zeit hinzufügen
         remove_time: Zeit entfernen
@@ -3663,7 +3663,7 @@ de:
         date_range: Pausenzeiten
       email_alerts:
         title: E-Mail-Benachrichtigungen für andere Objekte (die keine Arbeitspakete sind)
-        description: Notifications today are limited to work packages. You can choose to continue receiving email alerts for these events until they are included in notifications.
+        description: Die Benachrichtigungen sind aktuell auf Arbeitspakete beschränkt. Sie können die E-Mail-Benachrichtigungen für diese Ereignisse so lange erhalten, bis sie in den Benachrichtigungen enthalten sind.
         news_added: Neuigkeit hinzugefügt
         news_commented: Kommentar zu einer Neuigkeit
         document_added: Dokument hinzugefügt
@@ -3676,7 +3676,7 @@ de:
     notifications:
       participating:
         title: Beteiligt
-        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
+        description: Benachrichtigungen für alle Aktivitäten in Arbeitspaketen, an denen Sie beteiligt sind (Zugewiesen an, Verantwortlich(e/r) oder Beobachter).
         submit_button: Einstellungen aktualisieren
         mentioned: Erwähnt
         watched: Beobachtet
@@ -3685,7 +3685,7 @@ de:
         shared: Mit mir geteilt
       date_alerts:
         title: Datums-Erinnerungen
-        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
+        description: Automatische Benachrichtigungen, wenn wichtige Termine für offene Arbeitspakete bevorstehen, an denen Sie beteiligt (z. B. zugewiesen, verantwortlich oder Beobachter) sind.
         submit_button: Datums-Erinnerungen aktualisieren
         start_date: Anfangstermin
         due_date: Endtermin
@@ -3709,7 +3709,7 @@ de:
         work_package_scheduled: Alle Datumsänderungen
       project_specific_settings:
         title: Projektspezifische Benachrichtigungen
-        description: These project-specific settings override default settings above.
+        description: Diese projektspezifischen Einstellungen überschreiben die Standardeinstellungen oben
         add_button: Projektspezifische Benachrichtigungen hinzufügen
         dialog_title: Projektspezifische Benachrichtigungen hinzufügen
         list_header: Projekte mit spezifischen Benachrichtigungen
@@ -3878,8 +3878,8 @@ de:
   label_copy_source: Quelle
   label_copy_target: Ziel
   label_copy_workflow_from: Workflow kopieren von
-  label_copy_workflow_from_type: Copy to another type
-  label_copy_workflow_from_role: Copy to other roles
+  label_copy_workflow_from_type: In einen anderen Typ kopieren
+  label_copy_workflow_from_role: In andere Rollen kopieren
   label_copy_project: Projekt kopieren
   label_core_version: Core Version
   label_core_build: Core-Buildinformation
@@ -4078,8 +4078,8 @@ de:
   label_custom_pdf_export_settings: Benutzerdefinierte PDF-Export-Einstellungen
   label_custom_favicon: Benutzerdefiniertes Favicon
   label_custom_touch_icon: Benutzerdefiniertes Touch-Icon
-  label_departments: Organization
-  label_departments_description_html: 'Define your company’s structure by creating departments and sub-departments in a hierarchical way. This allows you to reflect reporting lines and maintain a clear, structured overview of your organization within OpenProject. You can also import an existing organization structure through [LDAP group synchronisation](ldap_docs_article).
+  label_departments: Organisation
+  label_departments_description_html: 'Definieren Sie die Struktur Ihres Unternehmens, indem Sie Abteilungen und Unterabteilungen in hierarchischer Form anlegen. So können Sie Berichtslinien abbilden und einen klaren, strukturierten Überblick über Ihre Organisation in OpenProject behalten. Sie können auch eine bestehende Organisationsstruktur über [LDAP-Gruppensynchronisation](ldap_docs_article) importieren.
 
     '
   label_logout: Abmelden
@@ -4187,7 +4187,7 @@ de:
   label_password_rule_numeric: Ziffern
   label_password_rule_special: Sonderzeichen
   label_password_rule_uppercase: Großbuchstaben
-  label_password_requirement_lowercase: Must contain at least one lowercase character.
+  label_password_requirement_lowercase: Muss mindestens einen Kleinbuchstaben enthalten.
   label_password_requirement_numeric: Muss mindestens ein numerisches Zeichen enthalten.
   label_password_requirement_special: Muss mindestens ein Sonderzeichen enthalten.
   label_password_requirement_uppercase: Muss mindestens einen Großbuchstaben enthalten.
@@ -4445,6 +4445,10 @@ de:
     one: Ein Kommentar
     other: "%{count} Kommentare"
     zero: Keine Kommentare
+  label_x_items:
+    one: 1 item
+    other: "%{count} items"
+    zero: no items
   label_x_open_work_packages_abbr:
     one: 1 offen
     other: "%{count} offen"
@@ -4781,13 +4785,6 @@ de:
       work_package_card_component:
         menu:
           label_actions: Arbeitspaket-Aktionen
-      work_package_card_list_component:
-        header:
-          label_actions: Open menu
-          label_work_package_count:
-            zero: No work packages
-            one: "%{count} Arbeitspaket"
-            other: "%{count} Arbeitspakete"
   permission_add_work_package_comments: Kommentare hinzufügen
   permission_add_work_packages: Arbeitspakete hinzufügen
   permission_add_messages: Forenbeiträge hinzufügen
