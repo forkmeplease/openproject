@@ -87,12 +87,14 @@ RSpec.describe Wikis::RelationPageLinksComponent, type: :component do
   end
 
   context "when the user has a token and there are page links" do
+    let(:page_link) { create(:relation_wiki_page_link, linkable: work_package, provider:) }
     let(:page_info) do
       Wikis::Adapters::Results::PageInfo.new(
         identifier: "MyPage",
         provider:,
         title: "My Wiki Page",
-        href: "https://wiki.example.com/MyPage"
+        href: "https://wiki.example.com/MyPage",
+        page_link:
       )
     end
 
