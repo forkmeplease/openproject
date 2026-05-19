@@ -52,10 +52,8 @@ module OpenProject::Backlogs::Patches::EnabledModulePatch
 
     # Normalize the HABTM association explicitly by clearing and setting it:
     project.class.transaction do
-      project.done_statuses = []
+      project.done_statuses = [] # This explicit clearing is necessary for some weird reason
       project.done_statuses = Status.where(id: merged_ids)
     end
   end
 end
-
-EnabledModule.include OpenProject::Backlogs::Patches::EnabledModulePatch
