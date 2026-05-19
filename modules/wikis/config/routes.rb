@@ -37,6 +37,11 @@ Rails.application.routes.draw do
           get :edit_general_info
           delete :replace_oauth_application
         end
+
+        resource :health_status_report, controller: "/wikis/admin/health_status", only: %i[show create] do
+          post :create_health_status_report
+        end
+
         resource :oauth_client, controller: "/wikis/admin/oauth_clients", only: %i[new create] do
           patch :update, on: :member
         end
