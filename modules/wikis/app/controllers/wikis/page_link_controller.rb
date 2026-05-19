@@ -37,7 +37,7 @@ module Wikis
     authorization_checked! :load
 
     def load
-      provider = Provider.find_by(id: params[:provider_id])
+      provider = Provider.visible.find_by(id: params[:provider_id])
       @page_info_result = page_info_result(provider)
       @turbo_frame_id = turbo_frame_id
 
