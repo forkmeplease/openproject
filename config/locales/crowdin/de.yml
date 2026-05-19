@@ -4445,6 +4445,10 @@ de:
     one: Ein Kommentar
     other: "%{count} Kommentare"
     zero: Keine Kommentare
+  label_x_items:
+    one: 1 item
+    other: "%{count} items"
+    zero: no items
   label_x_open_work_packages_abbr:
     one: 1 offen
     other: "%{count} offen"
@@ -4781,13 +4785,6 @@ de:
       work_package_card_component:
         menu:
           label_actions: Arbeitspaket-Aktionen
-      work_package_card_list_component:
-        header:
-          label_actions: Menü öffnen
-          label_work_package_count:
-            zero: Keine Arbeitspakete
-            one: "%{count} Arbeitspaket"
-            other: "%{count} Arbeitspakete"
   permission_add_work_package_comments: Kommentare hinzufügen
   permission_add_work_packages: Arbeitspakete hinzufügen
   permission_add_messages: Forenbeiträge hinzufügen
