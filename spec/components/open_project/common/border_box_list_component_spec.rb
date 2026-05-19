@@ -195,7 +195,7 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       end
 
       expect(rendered).to have_heading("My title", level: 4)
-      expect(rendered).to have_text("Some description")
+      expect(rendered).to have_css(".op-border-box-list-header--description", text: "Some description")
     end
 
     it "renders multiple action buttons" do
@@ -765,6 +765,23 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       end
 
       expect(rendered).to have_css("collapsible-header")
+    end
+
+    it "adds a collapsible modifier without rendering a grid description container" do
+      rendered = render_inline(
+        described_class.new(container: "explicit-collapse", collapsible: true)
+      ) do |list|
+        list.with_header(title: "Collapsible header") do |header|
+          header.with_description { "Collapsible description" }
+        end
+        list.with_item { "row" }
+      end
+
+      expect(rendered).to have_css(
+        ".op-border-box-list-header.op-border-box-list-header_collapsible"
+      )
+      expect(rendered).to have_no_css(".op-border-box-list-header--description")
+      expect(rendered).to have_text("Collapsible description")
     end
   end
 

@@ -19,8 +19,16 @@
 .op-border-box-list-header
   display: grid
   grid-template-columns: 1fr minmax(5rem, max-content) auto
-  grid-template-areas: "collapsible actions menu"
+  grid-template-areas: "heading actions menu" "description description description"
   align-items: center
+
+  &_collapsible
+    grid-template-areas: "heading actions menu"
+
+  &--description
+    display: flex
+    align-items: center
+    gap: var(--stack-gap-normal)
 
   &--actions,
   &--menu
@@ -29,3 +37,7 @@
     // Unfortunately, the invisible button style bites us here again.
     margin-top: -6px
 
+  &--heading-line
+    display: flex
+    align-items: center
+    gap: var(--stack-gap-condensed)
