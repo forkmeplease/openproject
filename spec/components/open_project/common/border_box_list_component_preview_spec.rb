@@ -85,4 +85,17 @@ RSpec.describe OpenProject::Common::BorderBoxListComponentPreview, type: :compon
       "A longer playground description that demonstrates wrapping behavior in the list header preview."
     )
   end
+
+  it "renders the playground preview with a header padding override" do
+    render_preview(
+      :playground,
+      from: described_class,
+      params: {
+        padding: :condensed,
+        header_padding: :default
+      }
+    )
+
+    expect(page).to have_css(".Box.Box--condensed.op-border-box-list_header-padding-default")
+  end
 end

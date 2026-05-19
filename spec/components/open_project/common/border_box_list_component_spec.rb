@@ -820,4 +820,35 @@ RSpec.describe OpenProject::Common::BorderBoxListComponent, type: :component do
       expect(rendered).to have_css("collapsible-header")
     end
   end
+
+  describe "header padding" do
+    it "inherits the underlying BorderBox header padding by default" do
+      rendered = render_inline(
+        described_class.new(container: "header-padding-inherit")
+      ) do |list|
+        list.with_header(title: "Inherited padding")
+        list.with_item { "row" }
+      end
+
+      expect(rendered).to have_css(".Box.op-border-box-list")
+      expect(rendered).to have_no_css("[class*='op-border-box-list_header-padding-']")
+    end
+
+    it "adds a header padding modifier when configured" do
+      rendered = render_inline(
+        described_class.new(container: "header-padding-default", padding: :condensed, header_padding: :default)
+      ) do |list|
+        list.with_header(title: "Default header padding")
+        list.with_item { "row" }
+      end
+
+      expect(rendered).to have_css(".Box.Box--condensed.op-border-box-list_header-padding-default")
+    end
+
+    it "raises for unsupported values in test" do
+      expect do
+        described_class.new(container: "header-padding-unsupported", header_padding: :unsupported)
+      end.to raise_error Primer::FetchOrFallbackHelper::InvalidValueError
+    end
+  end
 end
