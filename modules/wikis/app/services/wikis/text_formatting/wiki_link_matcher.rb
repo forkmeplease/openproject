@@ -64,7 +64,7 @@ module Wikis
         view_context = ApplicationController.new.view_context
         page_info_result = resolve_page(provider, @identifier)
 
-        InlinePageLinkMacroComponent.new(page_info_result, provider:).render_in(view_context)
+        InlinePageLinkMacroComponent.new(page_info_result).render_in(view_context)
       end
 
       private

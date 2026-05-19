@@ -32,12 +32,13 @@ module Wikis
   class PageLinkController < ApplicationController
     include Dry::Monads[:result]
 
-    before_action :find_provider
-
+    # The view component shown in `load` will be rendered regardless of the current user's authorization status.
+    # The component itself handles the states of "unauthorized", "forbidden", and "not_found".
     authorization_checked! :load
 
     def load
-      @page_info_result = page_info_result
+      provider = Provider.find_by(id: params[:provider_id])
+      @page_info_result = page_info_result(provider)
       @turbo_frame_id = turbo_frame_id
 
       render layout: false
@@ -45,18 +46,14 @@ module Wikis
 
     private
 
-    def page_info_result
-      return Failure() if @provider.nil?
+    def page_info_result(provider)
+      return Failure() if provider.nil?
 
       Adapters::Input::PageInfo.build(identifier:).bind do |input_data|
-        @provider.auth_strategy_for(User.current).bind do |auth_strategy|
-          @provider.resolve("queries.page_info").call(input_data:, auth_strategy:)
+        provider.auth_strategy_for(User.current).bind do |auth_strategy|
+          provider.resolve("queries.page_info").call(input_data:, auth_strategy:)
         end
       end
-    end
-
-    def find_provider
-      @provider = Provider.find_by(id: params[:provider_id])
     end
 
     def identifier

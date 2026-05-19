@@ -28,5 +28,5 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <turbo-frame id="<%= @turbo_frame_id %>">
-  <%= render(::Wikis::InlinePageLinkMacroComponent.new(@page_info_result, provider: @provider)) %>
+  <%= render(::Wikis::InlinePageLinkMacroComponent.new(@page_info_result)) %>
 </turbo-frame>
