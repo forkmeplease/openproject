@@ -30,12 +30,12 @@
 
 require "spec_helper"
 
-RSpec.describe OpenProject::Backlogs::Patches::EnabledModulePatch do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe "Backlogs MODULE_ENABLED event" do # rubocop:disable RSpec/DescribeClass
   let!(:closed_status1) { create(:status, is_closed: true) }
   let!(:closed_status2) { create(:status, is_closed: true) }
   let!(:open_status) { create(:status, is_closed: false) }
 
-  describe "seed_backlogs_done_statuses callback" do
+  describe "seeding done_statuses on backlogs module enable" do
     context "when the backlogs module is enabled on a project" do
       it "seeds all is_closed statuses as done_statuses for the project" do
         project = create(:project, enabled_module_names: %w[backlogs work_package_tracking])

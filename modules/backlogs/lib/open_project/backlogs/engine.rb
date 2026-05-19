@@ -130,8 +130,7 @@ module OpenProject::Backlogs
 
     patches %i[PermittedParams
                WorkPackage
-               Project
-               EnabledModule]
+               Project]
 
     patch_with_namespace :BasicData, :SettingSeeder
     patch_with_namespace :Projects, :CopyService
@@ -193,6 +192,29 @@ module OpenProject::Backlogs
 
     initializer "openproject_backlogs.event_subscriptions" do
       Rails.application.config.after_initialize do
+        # When the backlogs module is first enabled on a project, automatically populate
+        # the project's done_statuses with all statuses that are globally marked as closed
+        # (is_closed: true). This mirrors the form behavior where these statuses are
+        # pre-selected and disabled, so users never have to visit the settings page just
+        # to get sensible defaults.
+        OpenProject::Notifications.subscribe(OpenProject::Events::MODULE_ENABLED) do |payload|
+          enabled_module = payload[:enabled_module]
+          next unless enabled_module.name == "backlogs"
+
+          project = enabled_module.project
+          next unless project
+
+          mandatory_ids = Status.where(is_closed: true).pluck(:id)
+          next if mandatory_ids.empty?
+
+          merged_ids = project.done_statuses.reorder(nil).pluck(:id) | mandatory_ids
+
+          project.class.transaction do
+            project.done_statuses = [] # explicit clearing is necessary due to HABTM cache behavior
+            project.done_statuses = Status.where(id: merged_ids)
+          end
+        end
+
         OpenProject::Notifications.subscribe(OpenProject::Events::MODULE_DISABLED) do |payload|
           disabled_module = payload[:disabled_module]
           next unless disabled_module.name == "backlogs"

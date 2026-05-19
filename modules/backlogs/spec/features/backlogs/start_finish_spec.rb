@@ -195,7 +195,7 @@ RSpec.describe "Start and finish sprints", :js do
       before do
         # closed_status is a lazy `let` created after the shared_let(:project), so
         # it is not present when the backlogs module is first enabled on the project
-        # and therefore not auto-seeded by EnabledModulePatch. We add it manually here.
+        # and therefore not auto-seeded by the MODULE_ENABLED event. We add it manually here.
         project.done_statuses << closed_status unless project.done_statuses.include?(closed_status)
       end
 
