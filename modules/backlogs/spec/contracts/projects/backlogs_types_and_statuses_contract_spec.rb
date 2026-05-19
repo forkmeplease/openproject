@@ -52,7 +52,6 @@ RSpec.describe Projects::BacklogsTypesAndStatusesContract, type: :model do
 
   describe "validations" do
     context "with valid done statuses and excluded types" do
-      let!(:closed_status) { create(:status, is_closed: true) }
       let!(:open_status) { create(:status, is_closed: false) }
 
       before do
@@ -61,27 +60,12 @@ RSpec.describe Projects::BacklogsTypesAndStatusesContract, type: :model do
       end
 
       it_behaves_like "contract is valid"
-
-      it "merges mandatory closed statuses into done_status_ids" do
-        contract.validate
-
-        expect(project.done_status_ids).to include(open_status.id)
-        expect(project.done_status_ids).to include(closed_status.id)
-      end
     end
 
     context "with empty done_status_ids" do
-      let!(:closed_status) { create(:status, is_closed: true) }
-
       before { project.done_status_ids = [] }
 
       it_behaves_like "contract is valid"
-
-      it "still populates done_status_ids with mandatory closed statuses" do
-        contract.validate
-
-        expect(project.done_status_ids).to contain_exactly(closed_status.id)
-      end
     end
 
     context "when user cannot update backlogs type and status settings" do

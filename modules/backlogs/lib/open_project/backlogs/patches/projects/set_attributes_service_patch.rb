@@ -28,40 +28,23 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Projects
-  class BacklogsTypesAndStatusesContract < ::ModelContract
-    validate :validate_permissions
-    validate :validate_done_status_ids
-    validate :validate_backlog_excluded_type_ids
+module OpenProject::Backlogs::Patches::Projects::SetAttributesServicePatch
+  def self.included(base)
+    base.prepend InstanceMethods
+  end
 
-    def validate_model? = false
-
+  module InstanceMethods
     private
 
-    def validate_permissions
-      unless user.allowed_in_project?(:select_backlog_types_and_statuses, model)
-        errors.add :base, :error_unauthorized
-      end
-    end
+    def set_attributes(params)
+      super
 
-    def validate_done_status_ids
-      submitted_ids = model.done_status_ids.map(&:to_i)
+      return unless params.key?(:done_status_ids)
 
-      existing_ids = Status.where(id: submitted_ids).ids
-      invalid_ids = submitted_ids - existing_ids
-
-      errors.add :done_status_ids, :invalid if invalid_ids.any?
-    end
-
-    def validate_backlog_excluded_type_ids
-      submitted_ids = model.backlog_excluded_type_ids
-      return if submitted_ids.empty?
-
-      # Only types enabled on the project are allowed:
-      project_type_ids = model.types.pluck(:id)
-      invalid_ids = submitted_ids.map(&:to_i) - project_type_ids
-
-      errors.add :backlog_excluded_type_ids, :invalid if invalid_ids.any?
+      # Statuses marked as globally closed are mandatory and must always be
+      # included regardless of what the user submitted.
+      mandatory_ids = Status.where(is_closed: true).ids
+      model.done_status_ids = (model.done_status_ids | mandatory_ids) if mandatory_ids.any?
     end
   end
 end
