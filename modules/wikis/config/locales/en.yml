@@ -59,6 +59,8 @@ en:
     work_package_wikis_tab_component:
       inline_page_links: Inline page links
       referencing_pages: Referenced in
+    link_existing_wiki_page_dialog:
+      title: Add existing wiki page
     page_links:
       errors:
         page_not_found: Linked wiki page no longer available
@@ -67,6 +69,8 @@ en:
     page_link_component:
       remove: Remove page link
     relation_page_links_component:
+      link_existing: Existing wiki page
+      link_new: New wiki page
       empty_heading: No related pages
       empty_text: Manually add links to other related wiki pages.
     oauth_login_component:

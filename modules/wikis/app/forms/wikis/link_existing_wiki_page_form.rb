@@ -29,35 +29,18 @@
 #++
 
 module Wikis
-  class WorkPackageWikisTabComponent < ApplicationComponent
-    include ApplicationHelper
-    include OpPrimer::ComponentHelpers
-    include OpTurbo::Streamable
+  class LinkExistingWikiPageForm < ApplicationForm
+    form do |f|
+      f.hidden(name: :provider_id)
+      f.hidden(name: :linkable_type)
+      f.hidden(name: :linkable_id)
 
-    TURBO_FRAME_ID = "work-package-wikis-tab-content"
-
-    alias_method :work_package, :model
-
-    def providers
-      Wikis::Provider.enabled
-    end
-
-    def show_inline_and_references_section?
-      inline_page_links.any? || referencing_wiki_pages.any?
-    end
-
-    def inline_page_links
-      @inline_page_links ||= page_link_service.inline_page_link_infos_for(linkable: work_package)
-    end
-
-    def referencing_wiki_pages
-      @referencing_wiki_pages ||= page_link_service.referencing_wiki_page_infos_for(linkable: work_package)
-    end
-
-    private
-
-    def page_link_service
-      @page_link_service ||= PageLinkService.new
+      f.text_field(
+        name: :identifier,
+        label: RelationPageLink.human_attribute_name(:identifier),
+        required: true,
+        input_width: :large
+      )
     end
   end
 end
