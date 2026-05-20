@@ -69,6 +69,10 @@ module Wikis
       page_info_result.value!.page_link
     end
 
+    def project
+      page_link.linkable.project
+    end
+
     def deletion_action_item(menu)
       href = url_helpers.confirm_delete_dialog_relation_wiki_page_link_path(page_link)
 
@@ -76,9 +80,14 @@ module Wikis
                      scheme: :danger,
                      tag: :a,
                      href:,
+                     disabled: !user_allowed_to_delete?,
                      content_arguments: { data: { controller: "async-dialog" } }) do |item|
         item.with_leading_visual_icon(icon: :trash)
       end
+    end
+
+    def user_allowed_to_delete?
+      helpers.current_user.allowed_in_project?(:manage_wiki_page_links, project)
     end
   end
 end

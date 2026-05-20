@@ -29,39 +29,25 @@
 #++
 
 module Wikis
-  class InlinePageLinkMacroController < ApplicationController
-    include Dry::Monads[:result]
+  class DeleteRelationPageLinkConfirmationDialog < ApplicationComponent
+    include OpTurbo::Streamable
 
-    # The view component shown in `load` will be rendered regardless of the current user's authorization status.
-    # The component itself handles the states of "unauthorized", "forbidden", and "not_found".
-    authorization_checked! :load
+    def initialize(page_link:)
+      super
+      @page_link = page_link
+    end
 
-    def load
-      provider = Provider.visible.find_by(id: params[:provider_id])
-      @page_info_result = page_info_result(provider)
-      @turbo_frame_id = turbo_frame_id
-
-      render layout: false
+    def form_arguments
+      {
+        action: page_link_url,
+        method: :delete
+      }
     end
 
     private
 
-    def page_info_result(provider)
-      return Failure() if provider.nil?
-
-      Adapters::Input::PageInfo.build(identifier:).bind do |input_data|
-        provider.auth_strategy_for(User.current).bind do |auth_strategy|
-          provider.resolve("queries.page_info").call(input_data:, auth_strategy:)
-        end
-      end
-    end
-
-    def identifier
-      params[:page_identifier]
-    end
-
-    def turbo_frame_id
-      params[:turbo_frame_id]
+    def page_link_url
+      url_helpers.relation_wiki_page_link_path(@page_link)
     end
   end
 end

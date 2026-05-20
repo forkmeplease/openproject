@@ -49,11 +49,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :wiki_page_link_macro, controller: "wikis/inline_page_link_macro", only: [] do
+  resource :wiki_page_link_macro, controller: "wikis/page_link_macro", only: [] do
     get :load
   end
 
-  resources :relation_wiki_page_links, only: %i[destroy], controller: "wikis/relation_page_link" do
+  resources :relation_wiki_page_links, only: %i[destroy], controller: "wikis/relation_page_links" do
     member do
       get :confirm_delete_dialog
     end

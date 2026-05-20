@@ -29,25 +29,26 @@
 #++
 
 module Wikis
-  class DeletePageLinkConfirmationDialogComponent < ApplicationComponent
-    include OpTurbo::Streamable
+  class RelationPageLinksController < ApplicationController
+    include OpTurbo::ComponentStream
 
-    def initialize(page_link:)
-      super
-      @page_link = page_link
+    before_action :find_page_link
+    before_action :authorize, except: %i[confirm_delete_dialog]
+
+    no_authorization_required! :confirm_delete_dialog
+
+    def destroy
+      # TODO: implement delete service
     end
 
-    def form_arguments
-      {
-        action: page_link_url,
-        method: :delete
-      }
+    def confirm_delete_dialog
+      respond_with_dialog(DeleteRelationPageLinkConfirmationDialog.new(page_link: @page_link))
     end
 
     private
 
-    def page_link_url
-      url_helpers.relation_wiki_page_link_path(@page_link)
+    def find_page_link
+      @page_link = RelationPageLink.find(params.expect(:id))
     end
   end
 end

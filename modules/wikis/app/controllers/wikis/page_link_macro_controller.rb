@@ -29,26 +29,39 @@
 #++
 
 module Wikis
-  class RelationPageLinkController < ApplicationController
-    include OpTurbo::ComponentStream
+  class PageLinkMacroController < ApplicationController
+    include Dry::Monads[:result]
 
-    before_action :find_page_link
-    before_action :authorize, except: %i[confirm_delete_dialog]
+    # The view component shown in `load` will be rendered regardless of the current user's authorization status.
+    # The component itself handles the states of "unauthorized", "forbidden", and "not_found".
+    authorization_checked! :load
 
-    no_authorization_required! :confirm_delete_dialog
+    def load
+      provider = Provider.visible.find_by(id: params[:provider_id])
+      @page_info_result = page_info_result(provider)
+      @turbo_frame_id = turbo_frame_id
 
-    def destroy
-      # TODO: implement delete service
-    end
-
-    def confirm_delete_dialog
-      respond_with_dialog(DeletePageLinkConfirmationDialogComponent.new(page_link: @page_link))
+      render layout: false
     end
 
     private
 
-    def find_page_link
-      @page_link = RelationPageLink.find(params.expect(:id))
+    def page_info_result(provider)
+      return Failure() if provider.nil?
+
+      Adapters::Input::PageInfo.build(identifier:).bind do |input_data|
+        provider.auth_strategy_for(User.current).bind do |auth_strategy|
+          provider.resolve("queries.page_info").call(input_data:, auth_strategy:)
+        end
+      end
+    end
+
+    def identifier
+      params[:page_identifier]
+    end
+
+    def turbo_frame_id
+      params[:turbo_frame_id]
     end
   end
 end
