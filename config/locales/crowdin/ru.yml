@@ -2483,10 +2483,10 @@ ru:
       template:
         body: 'Пожалуйста, проверьте следующие поля:'
         header:
-          one: 1 ошибка не позволила сохранить эту %{model}
+          one: 1 ошибка не позволила сохранить %{model}
           few: "%{count} ошибки не позволили сохранить %{model}"
           many: "%{count} ошибок не позволили сохранить %{model}"
-          other: "%{count} ошибки не позволили сохранить %{model}"
+          other: "%{count} ошибок не позволили сохранить %{model}"
     models:
       attachment: Файл
       attribute_help_text:
