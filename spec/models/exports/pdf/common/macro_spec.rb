@@ -252,6 +252,7 @@ RSpec.describe Exports::PDF::Common::Macro do
 
           it "resolves the alias and renders the current identifier" do
             expect(formatted).to include(%(data-id="#{semantic_work_package.identifier}"))
+            expect(formatted).to include(%(data-text="##{semantic_work_package.identifier}"))
             expect(formatted).not_to include(">#OLD-1<")
           end
         end
@@ -263,6 +264,21 @@ RSpec.describe Exports::PDF::Common::Macro do
             expect(formatted).to include("#GHOST-99")
             expect(formatted).not_to include("<mention")
             expect(formatted).not_to include('data-id="0"')
+          end
+        end
+
+        describe "for a work package the user cannot see" do
+          let(:hidden_project) { create(:project, identifier: "HIDDEN") }
+          let(:hidden_work_package) do
+            wp = create(:work_package, project: hidden_project, type: type_task, subject: "Hidden")
+            wp.allocate_and_register_semantic_id
+            wp.reload
+          end
+          let(:markdown) { "see ##{hidden_work_package.identifier} here" }
+
+          it "falls through to literal text and does not disclose the work package" do
+            expect(formatted).to include("##{hidden_work_package.identifier}")
+            expect(formatted).not_to include("<mention")
           end
         end
       end

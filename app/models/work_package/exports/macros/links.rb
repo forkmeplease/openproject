@@ -43,29 +43,27 @@ module WorkPackage::Exports
         end
       end
 
-      # PDF rendering walks Markly nodes via `app/models/exports/pdf/common/macro.rb`
-      # rather than the `PatternMatcherFilter` preload pipeline, so each semantic
-      # reference does its own `find_by_display_id` round-trip. A cache miss
-      # returns nil so the matcher emits literal text rather than a mention
-      # pointing at a non-existent identifier.
+      # PDF rendering walks Markly nodes directly rather than the in-app
+      # preload pipeline, so each semantic reference does its own round-trip.
+      # Resolution is visibility-scoped: a reference to a work package the
+      # current user cannot see falls through to literal text, identical to
+      # an unknown identifier, so semantic ids cannot act as an existence
+      # oracle.
       def call
         if WorkPackage::SemanticIdentifier.semantic_id?(matcher.identifier)
-          wp = WorkPackage.find_by_display_id(matcher.identifier)
+          wp = WorkPackage.visible.find_by_display_id(matcher.identifier)
           return nil unless wp
 
           render_link(wp.display_id, matcher)
         else
-          render_link(matcher.identifier.to_i.to_s, matcher)
+          render_link(matcher.identifier, matcher)
         end
       end
 
       def render_link(data_id, matcher)
-        # `data_id` is regex-constrained at the matcher layer (numeric `\d+`
-        # or semantic `[A-Z][A-Z0-9_]*-\d+` per `ID_ROUTE_CONSTRAINT`) and
-        # for semantic input is sourced from `wp.display_id`. Escape both
-        # interpolated values so a future widening of the constraint, or a
-        # caller that bypasses the matcher, cannot regress into HTML
-        # attribute injection.
+        # Defence-in-depth: the matcher regex constrains data_id today, but
+        # escaping survives a future widening or a caller that bypasses the
+        # matcher.
         escaped_id = ERB::Util.html_escape(data_id)
         link = "#{matcher.sep}#{escaped_id}"
         %(<mention class="mention" data-id="#{escaped_id}" data-type="work_package" data-text="#{link}">#{link}</mention>)
