@@ -168,6 +168,7 @@ en:
           runs on an internal network, allow its IP via the OPENPROJECT_SSRF__PROTECTION__IP__ALLOWLIST
           environment variable.
         ssrf_block_doc_link: "Please see our [documentation](docs_url)."
+        ssl_error: "SSL error connecting to Jira server: %{message}"
         parse_error: "Failed to parse Jira API response: %{message}"
         api_error: "Jira API returned error status %{status}"
         401_error: "Jira API returned a 401 error. Your authentication token may have expired or lack the required permissions. Please ensure the token belongs to a Jira administrator."

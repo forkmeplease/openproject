@@ -268,6 +268,8 @@ module Import
       raise SsrfError, I18n.t("admin.jira.client.ssrf_blocked")
     rescue SsrfFilter::Error => e
       raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: e.message)
+    rescue OpenSSL::SSL::SSLError => e
+      raise ConnectionError, I18n.t("admin.jira.client.ssl_error", message: e.message)
     rescue Timeout::Error => e
       raise ConnectionError, I18n.t("admin.jira.client.connection_timeout", message: e.message)
     ensure
@@ -292,6 +294,8 @@ module Import
       raise SsrfError, I18n.t("admin.jira.client.ssrf_blocked")
     rescue SsrfFilter::Error, SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
       raise ConnectionError, I18n.t("admin.jira.client.connection_error", message: e.message)
+    rescue OpenSSL::SSL::SSLError => e
+      raise ConnectionError, I18n.t("admin.jira.client.ssl_error", message: e.message)
     rescue Timeout::Error => e
       raise ConnectionError, I18n.t("admin.jira.client.connection_timeout", message: e.message)
     end
