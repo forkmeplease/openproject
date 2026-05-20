@@ -50,33 +50,20 @@ module Projects
             name: :sprint_sharing,
             label: I18n.t("projects.settings.backlog_sharing.sprint_sharing")
           ) do |group|
-            group.radio_button(
-              label: sharing_option_label(Project::NO_SHARING),
-              value: Project::NO_SHARING,
-              caption: sharing_option_caption(Project::NO_SHARING),
-              data: { "show-when-value-selected-target": "cause" }
-            )
-            group.radio_button(
-              label: sharing_option_label(Project::SHARE_ALL_PROJECTS),
-              value: Project::SHARE_ALL_PROJECTS,
-              disabled: only_fallback_allowed || all_projects_shared_by_other_project?,
-              caption: shared_all_projects_caption,
-              data: { "show-when-value-selected-target": "cause" }
-            )
-            group.radio_button(
-              label: sharing_option_label(Project::SHARE_SUBPROJECTS),
-              value: Project::SHARE_SUBPROJECTS,
-              disabled: only_fallback_allowed,
-              caption: sharing_option_caption(Project::SHARE_SUBPROJECTS),
-              data: { "show-when-value-selected-target": "cause" }
-            )
-            group.radio_button(
-              label: sharing_option_label(Project::RECEIVE_SHARED),
-              value: Project::RECEIVE_SHARED,
-              disabled: only_fallback_allowed,
-              caption: sharing_option_caption(Project::RECEIVE_SHARED),
-              data: { "show-when-value-selected-target": "cause" }
-            )
+            group_radio_button(group,
+                               sharing: Project::NO_SHARING,
+                               disabled: false)
+
+            group_radio_button(group,
+                               sharing: Project::SHARE_ALL_PROJECTS,
+                               disabled: only_fallback_allowed || all_projects_shared_by_other_project?,
+                               caption: shared_all_projects_caption)
+
+            group_radio_button(group,
+                               sharing: Project::SHARE_SUBPROJECTS)
+
+            group_radio_button(group,
+                               sharing: Project::RECEIVE_SHARED)
           end
 
           sharing_form.html_content { banner_for(Project::SHARE_SUBPROJECTS, type: :info) }
@@ -97,6 +84,19 @@ module Projects
         private
 
         attr_reader :only_fallback_allowed
+
+        def group_radio_button(group,
+                               sharing:,
+                               disabled: only_fallback_allowed,
+                               caption: sharing_option_caption(sharing))
+          group.radio_button(
+            label: sharing_option_label(sharing),
+            value: sharing,
+            caption:,
+            disabled:,
+            data: { "show-when-value-selected-target": "cause" }
+          )
+        end
 
         def sharing_option_caption(option)
           sharing_option_text(option, :caption)
