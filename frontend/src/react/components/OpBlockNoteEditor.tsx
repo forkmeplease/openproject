@@ -35,7 +35,14 @@ import { filterSuggestionItems } from '@blocknote/core/extensions';
 import { BlockNoteView } from '@blocknote/mantine';
 import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
 import { HocuspocusProvider } from '@hocuspocus/provider';
-import { initializeOpBlockNoteExtensions, openProjectWorkPackageBlockSpec, openProjectWorkPackageSlashMenu } from 'op-blocknote-extensions';
+import {
+  initializeOpBlockNoteExtensions,
+  openProjectWorkPackageBlockSpec,
+  openProjectWorkPackageInlineSpec,
+  workPackageSlashMenu,
+  useInlineWpEvents,
+  useHashWpMenu,
+} from 'op-blocknote-extensions';
 import { useCallback, useEffect, useMemo } from 'react';
 import * as Y from 'yjs';
 import { useBlockNoteAttachments } from '../hooks/useBlockNoteAttachments';
@@ -60,7 +67,10 @@ export interface OpBlockNoteEditorProps {
 
 const schema = BlockNoteSchema.create().extend({
   blockSpecs: {
-    openProjectWorkPackage: openProjectWorkPackageBlockSpec(),
+    openProjectWorkPackageBlock: openProjectWorkPackageBlockSpec(),
+  },
+  inlineContentSpecs: {
+    openProjectWorkPackageInline: openProjectWorkPackageInlineSpec,
   },
 });
 
@@ -113,13 +123,15 @@ export function OpBlockNoteEditor({
   }, [hocuspocusProvider, doc, activeUser, localeDictionary, attachmentsEnabled, uploadFile, captureExternalLinks]);
 
   const editor = useCreateBlockNote(editorParams, [activeUser]);
+  useInlineWpEvents(editor);
   type EditorType = typeof editor;
   const theme = useOpTheme();
 
   const getCustomSlashMenuItems = useCallback((editorInstance:EditorType) => [
     ...getDefaultReactSlashMenuItems(editorInstance),
-    openProjectWorkPackageSlashMenu(editorInstance),
+    workPackageSlashMenu(editorInstance),
   ], []);
+  const { getHashItems, HashWpMenu } = useHashWpMenu(editor);
 
   return (
     <>
@@ -133,6 +145,11 @@ export function OpBlockNoteEditor({
         <SuggestionMenuController
           triggerCharacter="/"
           getItems={async (query:string) => Promise.resolve(filterSuggestionItems(getCustomSlashMenuItems(editor), query))}
+        />
+        <SuggestionMenuController
+          triggerCharacter="#"
+          getItems={getHashItems}
+          suggestionMenuComponent={HashWpMenu}
         />
       </BlockNoteView>
     </>
