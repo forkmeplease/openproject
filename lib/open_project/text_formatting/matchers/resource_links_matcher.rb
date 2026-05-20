@@ -181,12 +181,15 @@ module OpenProject::TextFormatting
         identifier
       end
 
-      # 1 SELECT in the common case. A second targeted SELECT only fires
-      # when references hit historical aliases — the loaded WP row carries
-      # only its current identifier, so unmapped inputs must be filled in
-      # from `WorkPackageSemanticAlias`.
+      # 1 SELECT in the common case. A second targeted SELECT fires for
+      # historical aliases — the loaded WP row carries only its current
+      # identifier, so unmapped inputs must be filled in from
+      # `WorkPackageSemanticAlias`. Both queries scope through
+      # `WorkPackage.visible`: the link handler reads attributes
+      # directly off the cached records into rendered output, so the
+      # cache must only carry records the current user can see.
       def self.build_lookup(identifiers)
-        work_packages = WorkPackage.where_display_id_in(*identifiers).select(:id, :identifier).to_a
+        work_packages = WorkPackage.visible.where_display_id_in(*identifiers).select(:id, :identifier).to_a
         lookup = index_by_id_and_identifier(work_packages)
         fold_in_alias_keys(lookup, identifiers)
         lookup
@@ -205,7 +208,7 @@ module OpenProject::TextFormatting
         return if unmapped.empty?
 
         WorkPackageSemanticAlias
-          .where(identifier: unmapped)
+          .where(work_package_id: WorkPackage.visible.select(:id), identifier: unmapped)
           .pluck(:identifier, :work_package_id)
           .each { |ident, wp_id| lookup[ident] = lookup[wp_id.to_s] }
       end

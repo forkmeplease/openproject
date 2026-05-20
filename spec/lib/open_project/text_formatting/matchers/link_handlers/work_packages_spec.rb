@@ -234,15 +234,13 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
         rendered = nil
         recorder = ActiveRecord::QueryRecorder.new { rendered = format_text("see #OLDPROJ-1") }
 
-        # Two database round-trips: (1) `where_display_id_in` runs a single
-        # WP SELECT whose WHERE clause includes an EXISTS subquery against
-        # the alias table; (2) the sidecar alias pluck maps the historical
-        # input string back to its WP for the cache.
-        wp_selects = recorder.log.grep(/FROM "work_packages"/i)
-        alias_only_selects = recorder.log.grep(/FROM "work_package_semantic_aliases"/i)
-                                     .grep_v(/FROM "work_packages"/i)
-        expect(wp_selects.size).to eq(1)
-        expect(alias_only_selects.size).to eq(1)
+        # Two database round-trips: (1) `where_display_id_in` runs a
+        # single WP SELECT whose WHERE clause includes an EXISTS
+        # subquery against the alias table; (2) a sidecar alias pluck
+        # maps the historical input string back to its WP for the
+        # cache. A third statement would indicate an N+1 regression.
+        expect(recorder.log.size).to eq(2)
+        expect(recorder.log.last).to match(/FROM "work_package_semantic_aliases"/)
 
         # Renders against the WP's CURRENT display_id, not the historical
         # alias the user typed — old content stays alive but points at the
@@ -295,6 +293,80 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
                                  "expected zero versions SELECTs for semantic-shaped input, got:\n" \
                                  "#{version_selects.join("\n")}"
       expect(rendered).to include("version#PROJ-1")
+    end
+  end
+
+  describe "visibility scoping",
+           with_flag: { semantic_work_package_ids: true },
+           with_settings: { work_packages_identifier: "semantic" } do
+    # The lookup cache must scope through `WorkPackage.visible` —
+    # anything it surfaces ends up in the rendered link, so an
+    # unscoped cache would let any user read back the project
+    # identifier of a WP just by guessing its primary key, semantic
+    # identifier, or historical alias.
+    include_context "with author signed in"
+
+    let(:project) { create(:project, identifier: "VISIBLE") }
+    let(:hidden_project) { create(:project, identifier: "HIDDEN") }
+    let(:visible_wp) { create(:work_package, project:, author:) }
+    let(:hidden_wp) { create(:work_package, project: hidden_project) }
+
+    before do
+      visible_wp.allocate_and_register_semantic_id
+      hidden_wp.allocate_and_register_semantic_id
+    end
+
+    context "with a semantic-shaped ref to an inaccessible work package" do
+      it "renders literal text and never surfaces the WP's display id" do
+        wp = hidden_wp.reload
+        rendered = format_text("see ##{wp.display_id} here")
+
+        expect(rendered).to include("##{wp.display_id}")
+        expect(rendered).not_to include(%(href="/work_packages/#{wp.display_id}"))
+        expect(rendered).not_to include("opce-macro-wp-quickinfo")
+      end
+    end
+
+    context "with a numeric ref to an inaccessible work package in semantic mode" do
+      it "renders the numeric label and href without upgrading to the semantic identifier" do
+        wp = hidden_wp.reload
+        rendered = format_text("see ##{wp.id} here")
+
+        # The link still renders — `#42` was already in the user's input —
+        # but the upgrade to the WP's `formatted_id` / `display_id` (which
+        # would leak the project identifier) does not happen.
+        expect(rendered).to include(%(href="/work_packages/#{wp.id}"))
+        expect(rendered).to include(">##{wp.id}<")
+        expect(rendered).not_to include(%(href="/work_packages/#{wp.display_id}"))
+        expect(rendered).not_to include(">#{wp.formatted_id}<")
+      end
+    end
+
+    context "with a historical alias for an inaccessible work package" do
+      it "renders literal text and does not resolve via the alias table" do
+        wp = hidden_wp.reload
+        WorkPackageSemanticAlias.create!(work_package_id: wp.id, identifier: "OLDHIDDEN-1")
+
+        rendered = format_text("see #OLDHIDDEN-1 here")
+
+        expect(rendered).to include("#OLDHIDDEN-1")
+        expect(rendered).not_to include(%(href="/work_packages/#{wp.display_id}"))
+        expect(rendered).not_to include(">#{wp.formatted_id}<")
+      end
+    end
+
+    context "with visible and invisible refs mixed in one input" do
+      it "renders the visible ref normally and falls back to literal text for the invisible one" do
+        visible = visible_wp.reload
+        hidden = hidden_wp.reload
+        rendered = format_text("see ##{visible.display_id} and ##{hidden.display_id}")
+
+        expect(rendered).to include(%(href="/work_packages/#{visible.display_id}"))
+        expect(rendered).to include(">#{visible.formatted_id}<")
+
+        expect(rendered).not_to include(%(href="/work_packages/#{hidden.display_id}"))
+        expect(rendered).to include("##{hidden.display_id}")
+      end
     end
   end
 end
