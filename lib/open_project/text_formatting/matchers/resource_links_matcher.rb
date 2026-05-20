@@ -184,14 +184,14 @@ module OpenProject::TextFormatting
       # 1 SELECT in the common case. A second targeted SELECT fires for
       # historical aliases — the loaded WP row carries only its current
       # identifier, so unmapped inputs must be filled in from
-      # `WorkPackageSemanticAlias`. Both queries scope through
-      # `WorkPackage.visible`: the link handler reads attributes
-      # directly off the cached records into rendered output, so the
-      # cache must only carry records the current user can see.
+      # `WorkPackageSemanticAlias`. The visible-id set passes through
+      # to the alias fold-in explicitly so each query enforces
+      # visibility at its own boundary, leaving no implicit trust for
+      # the cache to leak through.
       def self.build_lookup(identifiers)
         work_packages = WorkPackage.visible.where_display_id_in(*identifiers).select(:id, :identifier).to_a
         lookup = index_by_id_and_identifier(work_packages)
-        fold_in_alias_keys(lookup, identifiers)
+        fold_in_alias_keys(lookup, identifiers, visible_wp_ids: work_packages.map(&:id))
         lookup
       end
 
@@ -203,12 +203,12 @@ module OpenProject::TextFormatting
       end
       private_class_method :index_by_id_and_identifier
 
-      def self.fold_in_alias_keys(lookup, identifiers)
+      def self.fold_in_alias_keys(lookup, identifiers, visible_wp_ids:)
         unmapped = identifiers.map(&:to_s) - lookup.keys
-        return if unmapped.empty?
+        return if unmapped.empty? || visible_wp_ids.empty?
 
         WorkPackageSemanticAlias
-          .where(work_package_id: WorkPackage.visible.select(:id), identifier: unmapped)
+          .where(work_package_id: visible_wp_ids, identifier: unmapped)
           .pluck(:identifier, :work_package_id)
           .each { |ident, wp_id| lookup[ident] = lookup[wp_id.to_s] }
       end
