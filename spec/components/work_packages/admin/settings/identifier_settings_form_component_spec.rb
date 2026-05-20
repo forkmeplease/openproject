@@ -71,8 +71,8 @@ RSpec.describe WorkPackages::Admin::Settings::IdentifierSettingsFormComponent, t
 
     it "does not render the save or autofix buttons" do
       render_component(component)
-      expect(page).to have_no_button("Save")
-      expect(page).to have_no_link("Autofix and save")
+      expect(page).to have_no_button("Convert identifiers")
+      expect(page).to have_no_link("Convert identifiers")
     end
 
     it "does not call PreviewQuery" do
@@ -132,7 +132,7 @@ RSpec.describe WorkPackages::Admin::Settings::IdentifierSettingsFormComponent, t
 
     it "renders the save button (hidden until a change is made)" do
       render_component(component)
-      expect(page).to have_button("Save", visible: :all)
+      expect(page).to have_button("Convert identifiers", visible: :all)
     end
 
     it "does not render in-progress or success content" do
@@ -160,12 +160,12 @@ RSpec.describe WorkPackages::Admin::Settings::IdentifierSettingsFormComponent, t
 
       it "hides the plain save button" do
         render_component(component)
-        expect(page).to have_no_button("Save")
+        expect(page).to have_no_button("Convert identifiers")
       end
 
       it "renders the autofix button" do
         render_component(component)
-        expect(page).to have_link("Autofix and save")
+        expect(page).to have_link("Convert identifiers")
       end
     end
   end
