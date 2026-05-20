@@ -3,15 +3,17 @@ en:
   activerecord:
     attributes:
       wikis/page_link:
+        identifier: Identifier
         provider: Wiki Provider
+      wikis/provider:
+        name: Name
+        universal_identifier: Universal identifier
       wikis/xwiki_provider:
         authentication_method: Authentication method
         authentication_methods:
           oauth2_sso: Single-Sign-On through OpenID Connect Identity Provider
           two_way_oauth2: Two-way OAuth 2.0 authorization code flow
-        name: Name
         token_exchange_scope: XWiki Scope
-        universal_identifier: Universal identifier
         url: Instance URL
         wiki_audience: XWiki Audience
     errors: { }
