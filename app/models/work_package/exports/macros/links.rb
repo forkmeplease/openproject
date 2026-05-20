@@ -31,28 +31,40 @@
 module WorkPackage::Exports
   module Macros
     class WorkPackagesLinkHandler < OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
-      # PDF export only handles canonical numeric `#N` references. Semantic and
-      # leading-zero shapes fall through to literal text to avoid emitting a
-      # `<mention data-id="0">` (since `"PROJ-1".to_i == 0`). Semantic-id
-      # support in PDF export is tracked in https://community.openproject.org/wp/74766.
       def applicable?
-        hash_trigger? &&
-          matcher.prefix.blank? &&
-          WorkPackage::SemanticIdentifier.numeric_id?(matcher.identifier)
+        return false unless hash_trigger? && matcher.prefix.blank?
+
+        if WorkPackage::SemanticIdentifier.numeric_id?(matcher.identifier)
+          true
+        elsif WorkPackage::SemanticIdentifier.semantic_id?(matcher.identifier)
+          Setting::WorkPackageIdentifier.semantic_mode_active?
+        else
+          false
+        end
       end
 
-      # PDF rendering walks Markly nodes directly and bypasses the
-      # `PatternMatcherFilter` preload pipeline, so the parent's cache-driven
-      # `call` would miss every reference.
+      # PDF rendering walks Markly nodes directly rather than the in-app
+      # preload pipeline, so each semantic reference does its own round-trip.
+      # Resolution is visibility-scoped: a reference to a work package the
+      # current user cannot see falls through to literal text, identical to
+      # an unknown identifier, so semantic ids cannot act as an existence
+      # oracle.
       def call
-        render_link(matcher.identifier.to_i, matcher)
+        if WorkPackage::SemanticIdentifier.semantic_id?(matcher.identifier)
+          wp = WorkPackage.visible.find_by_display_id(matcher.identifier)
+          return nil unless wp
+
+          render_link(wp.display_id, matcher)
+        else
+          render_link(matcher.identifier, matcher)
+        end
       end
 
-      def render_link(wp_id, matcher)
-        link = "#{matcher.sep}#{wp_id}"
-        "<mention class=\"mention\" data-id=\"#{wp_id}\" data-type=\"work_package\" data-text=\"#{link}\">#{
-          link
-        }</mention>"
+      def render_link(data_id, matcher)
+        link = "#{matcher.sep}#{data_id}"
+        content_tag(:mention, link,
+                    class: "mention",
+                    data: { id: data_id, type: "work_package", text: link })
       end
     end
 
@@ -61,9 +73,11 @@ module WorkPackage::Exports
         [WorkPackagesLinkHandler]
       end
 
-      # Faster inclusion check before the full regex is being applied
+      # Faster inclusion check before the full regex is being applied.
+      # Matches `#1`, `##42`, `#PROJ-7` openings — semantic-only bodies
+      # must reach the regex too.
       def self.applicable?(content)
-        /#\d/.match(content)
+        /#[A-Z\d]/.match(content)
       end
     end
   end
