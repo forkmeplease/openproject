@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -27,31 +28,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module RecurringMeetings
-  class BaseContract < ::ModelContract
-    def self.model
-      RecurringMeeting
-    end
-
-    attribute :title
-    attribute :author_id
-    attribute :project_id
-    attribute :start_time
-    attribute :start_date
-    attribute :start_time_hour
-    attribute :frequency
-    attribute :monthly_day
-    attribute :monthly_ordinal
-    attribute :monthly_weekday
-    attribute :end_after
-    attribute :end_date
-    attribute :iterations
-    attribute :interval
-    attribute :time_zone
-    attribute :notify
-
-    # Virtual attributes for the form
-    attribute :duration
-    attribute :location
+class RecurringMeeting::DayOfMonth < ApplicationForm
+  form do |meeting_form|
+    meeting_form.text_field(
+      name: :monthly_day,
+      required: true,
+      type: :number,
+      step: 1,
+      min: 1,
+      max: 31,
+      label: I18n.t("activerecord.attributes.recurring_meeting.monthly_day"),
+      data: {
+        action: "input->recurring-meetings--form#updateFrequencyText"
+      }
+    )
   end
 end
