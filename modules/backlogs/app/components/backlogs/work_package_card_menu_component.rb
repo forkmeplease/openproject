@@ -29,9 +29,9 @@
 #++
 
 module Backlogs
-  # Renders Primer::Alpha::ActionMenu::List for the deferred menu (Backlogs::InboxController#menu).
-  # +menu_id+ must match the row ActionMenu in InboxItemComponent.
-  class InboxMenuComponent < ApplicationComponent
+  # Renders Primer::Alpha::ActionMenu::List for the deferred menu (Backlogs::WorkPackagesController#menu).
+  # +menu_id+ must match the row ActionMenu in WorkPackageCardComponent.
+  class WorkPackageCardMenuComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
     include CommonHelper
 
@@ -42,9 +42,9 @@ module Backlogs
 
       @work_package = work_package
       @project = project
-      @current_user = current_user
       @max_position = max_position
       @open_sprints_exist = open_sprints_exist
+      @current_user = current_user
     end
 
     def menu_id
@@ -53,10 +53,6 @@ module Backlogs
 
     private
 
-    def show_move_submenu?
-      show_move_items? || show_move_to_sprint?
-    end
-
     def show_move_items?
       allowed_to_manage_sprint_items? &&
         !(first_item? && last_item?)
@@ -64,6 +60,10 @@ module Backlogs
 
     def show_move_to_sprint?
       allowed_to_manage_sprint_items? && open_sprints_exist
+    end
+
+    def show_move_submenu?
+      show_move_items? || show_move_to_sprint?
     end
 
     def allowed_to_manage_sprint_items?
