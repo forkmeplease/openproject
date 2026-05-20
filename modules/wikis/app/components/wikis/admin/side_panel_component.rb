@@ -23,31 +23,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs
-  # TODO: remove this very temporary concern
-  module Move
-    extend ActiveSupport::Concern
+module Wikis
+  module Admin
+    class SidePanelComponent < ApplicationComponent
+      include ApplicationHelper
+      include OpTurbo::Streamable
+      include OpPrimer::ComponentHelpers
 
-    private
-
-    def move_attributes_from_target
-      target_type, target_id = move_params[:target_id].split(":", 2)
-
-      case target_type
-      when "sprint"
-        { backlog_bucket_id: nil, sprint_id: target_id }
-      when "backlog_bucket"
-        { backlog_bucket_id: target_id, sprint_id: nil }
-      when "inbox"
-        { backlog_bucket_id: nil, sprint_id: nil }
-      else
-        raise ArgumentError, "target_type must be one of: backlog_bucket, sprint, inbox."
-      end
+      alias wiki_provider model
     end
   end
 end

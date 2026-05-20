@@ -171,7 +171,7 @@ class Journal < ApplicationRecord
 
   def visible?(user = User.current)
     if internal?
-      user.allowed_in_project?(:view_internal_comments, project)
+      journable.visible?(user) && user.allowed_in_project?(:view_internal_comments, project)
     else
       journable.visible?(user)
     end

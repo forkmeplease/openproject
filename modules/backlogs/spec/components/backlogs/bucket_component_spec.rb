@@ -128,7 +128,7 @@ RSpec.describe Backlogs::BucketComponent, type: :component do
       it "renders the shared work-package row menu with inbox src" do
         expect(rendered_component).to have_element(
           "include-fragment",
-          src: menu_project_backlogs_inbox_path(project, work_package)
+          src: menu_project_backlogs_work_package_path(project, work_package)
         )
       end
 
@@ -137,7 +137,7 @@ RSpec.describe Backlogs::BucketComponent, type: :component do
           expect(row["data-controller"]).to eq("backlogs--story")
           expect(row["data-draggable-id"]).to eq(work_package.id.to_s)
           expect(row["data-draggable-type"]).to eq("story")
-          expect(row["data-drop-url"]).to end_with(move_project_backlogs_inbox_path(project, work_package))
+          expect(row["data-drop-url"]).to end_with(move_project_backlogs_work_package_path(project, work_package))
           expect(row["data-backlogs--story-split-url-value"])
             .to end_with(project_backlogs_backlog_details_path(project, work_package))
           expect(row["data-backlogs--story-full-url-value"])
@@ -184,7 +184,7 @@ RSpec.describe Backlogs::BucketComponent, type: :component do
     it "includes all=1 in the action-menu src" do
       expect(rendered_component).to have_element(
         "include-fragment",
-        src: menu_project_backlogs_inbox_path(project, work_package, all: "1")
+        src: menu_project_backlogs_work_package_path(project, work_package, all: "1")
       )
     end
   end
