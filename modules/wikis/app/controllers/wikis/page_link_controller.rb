@@ -29,38 +29,39 @@
 #++
 
 module Wikis
-  module Adapters
-    module Providers
-      module XWiki
-        module Queries
-          class UserQuery < BaseQuery
-            def call(auth_strategy:)
-              url = "#{provider.url.chomp('/')}/rest/"
-              Adapters::Authentication[auth_strategy].call do |http|
-                handle_response(http.get(url))
-              end
-            end
+  class PageLinkController < ApplicationController
+    include Dry::Monads[:result]
 
-            private
+    # The view component shown in `load` will be rendered regardless of the current user's authorization status.
+    # The component itself handles the states of "unauthorized", "forbidden", and "not_found".
+    authorization_checked! :load
 
-            def handle_response(response)
-              return failure(code: :connection_error) if response.is_a?(HTTPX::ErrorResponse)
+    def load
+      provider = Provider.visible.find_by(id: params[:provider_id])
+      @page_info_result = page_info_result(provider)
+      @turbo_frame_id = turbo_frame_id
 
-              case response
-              in { status: 200..299 }
-                handle_success_response(response)
-              else
-                failure(code: :request_failed)
-              end
-            end
+      render layout: false
+    end
 
-            def handle_success_response(response)
-              xwiki_user = response.headers["xwiki-user"]
-              xwiki_user.present? ? success(xwiki_user) : failure(code: :unauthorized)
-            end
-          end
+    private
+
+    def page_info_result(provider)
+      return Failure() if provider.nil?
+
+      Adapters::Input::PageInfo.build(identifier:).bind do |input_data|
+        provider.auth_strategy_for(User.current).bind do |auth_strategy|
+          provider.resolve("queries.page_info").call(input_data:, auth_strategy:)
         end
       end
+    end
+
+    def identifier
+      params[:page_identifier]
+    end
+
+    def turbo_frame_id
+      params[:turbo_frame_id]
     end
   end
 end

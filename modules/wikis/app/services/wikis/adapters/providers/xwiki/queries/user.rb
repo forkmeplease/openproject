@@ -23,40 +23,44 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
+module Wikis
+  module Adapters
+    module Providers
+      module XWiki
+        module Queries
+          class User < BaseQuery
+            def call(auth_strategy:)
+              url = "#{provider.url.chomp('/')}/rest/"
+              Adapters::Authentication[auth_strategy].call do |http|
+                handle_response(http.get(url))
+              end
+            end
 
-RSpec.describe Backlogs::InboxController do
-  describe "routing" do
-    it {
-      expect(put("/projects/project_42/backlogs/inbox/85/move")).to route_to(
-        controller: "backlogs/inbox",
-        action: "move",
-        project_id: "project_42",
-        id: "85"
-      )
-    }
+            private
 
-    it {
-      expect(post("/projects/project_42/backlogs/inbox/85/reorder")).to route_to(
-        controller: "backlogs/inbox",
-        action: "reorder",
-        project_id: "project_42",
-        id: "85"
-      )
-    }
+            def handle_response(response)
+              return failure(code: :connection_error) if response.is_a?(HTTPX::ErrorResponse)
 
-    it {
-      expect(get("/projects/project_42/backlogs/inbox/85/menu")).to route_to(
-        controller: "backlogs/inbox",
-        action: "menu",
-        project_id: "project_42",
-        id: "85"
-      )
-    }
+              case response
+              in { status: 200..299 }
+                handle_success_response(response)
+              else
+                failure(code: :request_failed)
+              end
+            end
+
+            def handle_success_response(response)
+              xwiki_user = response.headers["xwiki-user"]
+              xwiki_user.present? ? success(xwiki_user) : failure(code: :unauthorized)
+            end
+          end
+        end
+      end
+    end
   end
 end
