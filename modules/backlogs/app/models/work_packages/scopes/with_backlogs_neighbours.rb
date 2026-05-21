@@ -38,10 +38,18 @@ module WorkPackages::Scopes::WithBacklogsNeighbours
       # first, leaving the window function with a single row and returning nil for all
       # neighbours. Wrapping in a subquery lets the window function see the full scope,
       # then the outer query filters to the requested record.
+
+      # In order to handle nil positions, the same default order from acts_as_list has to be
+      # applied to the window function as well. This is just for matching the plugin and there should
+      # be no nil positions.
+      window_order = Arel.sql(
+        "ORDER BY #{arel_table[:position].asc.nulls_last.to_sql}, #{arel_table[:id].asc.to_sql}"
+      )
+
       subquery = order_by_position.select(
-        "*, LAG(id)    OVER (ORDER BY position) AS prev_id,
-            LAG(id, 2) OVER (ORDER BY position) AS prev_prev_id,
-            LEAD(id)   OVER (ORDER BY position) AS next_id"
+        "*, LAG(id)    OVER (#{window_order}) AS prev_id,
+            LAG(id, 2) OVER (#{window_order}) AS prev_prev_id,
+            LEAD(id)   OVER (#{window_order}) AS next_id"
       )
       WorkPackage.from(subquery, :work_packages)
     end

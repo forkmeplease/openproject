@@ -70,6 +70,29 @@ RSpec.describe WorkPackages::Scopes::WithBacklogsNeighbours do
       end
     end
 
+    context "when items have nil positions, tiebroken by id" do
+      let!(:wp_with_pos) { create(:work_package, project:, status: open_status, position: 1) }
+      # Bypass acts_as_list callbacks to force nil positions, simulating unpositioned items
+      let!(:wp_nil_lower_id) do
+        create(:work_package, project:, status: open_status, position: nil).tap { |wp| wp.update_columns(position: nil) }
+      end
+      let!(:wp_nil_higher_id) do
+        create(:work_package, project:, status: open_status).tap { |wp| wp.update_columns(position: nil) }
+      end
+
+      context "for the nil-position item with the lower id" do
+        subject { neighbours_scope.find(wp_nil_lower_id.id) }
+
+        it { is_expected.to have_attributes(prev_prev_id: nil, prev_id: wp_with_pos.id, next_id: wp_nil_higher_id.id) }
+      end
+
+      context "for the nil-position item with the higher id" do
+        subject { neighbours_scope.find(wp_nil_higher_id.id) }
+
+        it { is_expected.to have_attributes(prev_prev_id: wp_with_pos.id, prev_id: wp_nil_lower_id.id, next_id: nil) }
+      end
+    end
+
     context "when the scope excludes closed work packages" do
       let(:project) { create(:project) }
       let(:neighbours_scope) { WorkPackage.where(project:, status: open_status).order_by_position.with_backlogs_neighbours }
