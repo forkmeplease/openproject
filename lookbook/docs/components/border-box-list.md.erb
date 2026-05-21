@@ -1,4 +1,4 @@
-The Border Box List component displays compact, structured list items with
+The `BorderBoxListComponent` displays compact, structured list items with
 optional section headers, item actions, empty states, and a footer.
 
 ## Overview
@@ -35,7 +35,7 @@ comparable lists should use headers.
 | `scheme` | `Symbol` | `:default` | Visual scheme. Use `:transparent` for list containers that should blend into their surrounding surface |
 | `padding` | `Symbol` | `:default` | Row padding forwarded to the underlying `Primer::Beta::BorderBox`. Supports Primer BorderBox padding values such as `:condensed`, `:default`, and `:spacious` |
 | `header_padding` | `Symbol` | `:inherit` | Header-only vertical padding override. Supports `:inherit`, `:condensed`, `:default`, and `:spacious` |
-| `interactive` | `Boolean` | `false` | Announces counter and configured empty-state updates politely to assistive technologies |
+| `interactive` | `Boolean` | `false` | Enables polite ARIA live-region announcements for counter and configured empty-state updates |
 | `collapsible` | `Boolean` | `false` | Renders the header as a collapsible toggle when a header is present |
 | `current_user` | `User` | `User.current` | User context forwarded to work package item rows |
 | `system_arguments` | `Hash` | `{}` | Forwarded to the underlying `Primer::Beta::BorderBox` |
@@ -118,7 +118,7 @@ and `icon:` keywords.
 
 <%= embed OpenProject::Common::BorderBoxListComponentPreview, :empty_state, panels: %i[source] %>
 
-## Uses
+## Usage guidelines
 
 Use the Border Box List for compact item collections such as:
 
@@ -130,7 +130,7 @@ Use the Border Box List for compact item collections such as:
 If the content needs table structure with columns and column headers, use the
 [Border Box Table](./tables/border_box_table) component instead.
 
-## Best practices
+### Best practices
 
 **Do**
 
