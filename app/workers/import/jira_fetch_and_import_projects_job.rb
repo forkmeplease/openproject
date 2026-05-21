@@ -94,6 +94,8 @@ module Import
       mention_usernames.compact.each do |username|
         user = jira_client.user_by_username(username:)
         user_keys << user["key"] if user.present?
+      rescue Import::JiraClient::ApiError => e
+        Rails.logger.error "Could not resolve mentioned user '#{username}': #{e.message} - skipping"
       end
     end
 
