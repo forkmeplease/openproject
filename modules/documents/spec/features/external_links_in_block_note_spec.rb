@@ -158,6 +158,38 @@ RSpec.describe "External links in BlockNote editor",
     expect(editor.element).to have_no_css("span.sr-only", visible: :all)
   end
 
+  it "preserves the hint when text is deleted from the end of a surviving link" do
+    editor.paste_links(text: "Trim Me Tail", url: "https://example.com/tail")
+    link = editor.shadow_root.find("a[target='_blank']", text: "Trim Me Tail", wait: 5)
+    expect(link).to have_css("span.sr-only", visible: :all)
+
+    # Edits inside an existing link produce a ReplaceStep whose slice carries
+    # no link mark (the mark is inherited from stored marks, not the slice),
+    # so the apply gate routes through decoration mapping rather than a
+    # rebuild. The widget sits at the end of the link run with `side: -1`;
+    # the mapping must shrink the run from the right and keep the widget
+    # attached to the new tail. If that ever regresses, the hint either
+    # disappears or ends up orphaned at a stale position.
+    page.execute_script(<<~JS)
+      const root = document.querySelector('op-block-note').shadowRoot;
+      const a = root.querySelector('a[target="_blank"]');
+      const textNode = [...a.childNodes].find((n) => n.nodeType === 3);
+      const len = textNode.textContent.length;
+      const range = document.createRange();
+      range.setStart(textNode, len - 4);
+      range.setEnd(textNode, len);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    JS
+    page.driver.browser.action.send_keys(:delete).perform
+
+    surviving = editor.shadow_root.find("a[target='_blank']", text: "Trim Me", wait: 5)
+    hints = surviving.all("span.sr-only", visible: :all)
+    expect(hints.size).to eq(1)
+    expect(hints.first.text(:all)).to include(I18n.t(:open_link_in_a_new_tab))
+  end
+
   it "does not rewrite internal links or attach the sr-only hint" do
     editor.paste_links(text: "Internal Link", url: root_url)
 
