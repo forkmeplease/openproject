@@ -28,17 +28,16 @@
 # See COPYRIGHT and LICENSE files for more details.
 # ++
 
-module WorkPackages::Scopes::BacklogsInboxFor
+module WorkPackages::Scopes::InBacklogFor
   extend ActiveSupport::Concern
 
   class_methods do
-    def backlogs_inbox_for(project:)
+    def in_backlog_for(project:)
       WorkPackage
         .visible
-        .where(project:, sprint_id: nil, backlog_bucket_id: nil)
+        .where(project:, sprint_id: nil)
         .without_excluded_type
         .without_status_considered_closed
-        .includes(:assigned_to, :priority, :parent)
         .order_by_position
         .order(WorkPackage.arel_table[:id].asc)
     end

@@ -104,10 +104,14 @@ module Backlogs
     end
 
     def backlog_component
-      inbox_work_packages = WorkPackage.backlogs_inbox_for(project: @project)
       buckets = BacklogBucket.for_project(@project)
 
-      Backlogs::BacklogComponent.new(inbox_work_packages:, buckets:, project: @project)
+      work_packages_by_backlog_id = WorkPackage
+                                       .in_backlog_for(project: @project)
+                                       .includes(:type, :status, :assigned_to, :priority, :parent)
+                                       .group_by(&:backlog_bucket_id)
+
+      Backlogs::BacklogComponent.new(buckets:, work_packages_by_backlog_id:, project: @project)
     end
 
     def load_work_package
@@ -125,7 +129,7 @@ module Backlogs
       elsif @work_package.backlog_bucket_id?
         @work_packages.merge(@work_package.backlog_bucket.displayed_work_packages)
       else
-        @work_packages.merge(WorkPackage.backlogs_inbox_for(project: @project))
+        @work_packages.merge(WorkPackage.in_backlog_for(project: @project).where(backlog_bucket_id: nil))
       end
     end
   end
