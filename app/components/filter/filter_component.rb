@@ -100,22 +100,8 @@ module Filter
     # @param filter [QueryFilter] the filter for which we want to pass additional attributes
     # @return [Hash] the additional attributes for the filter, yielded in map_filter
     def additional_filter_attributes(filter)
-      case filter
-      when Queries::Filters::Shared::ProjectFilter::Required,
-           Queries::Filters::Shared::ProjectFilter::Optional
-        { autocomplete_options: project_autocomplete_options }
-      when Queries::Filters::Shared::CustomFields::User
-        { autocomplete_options: user_autocomplete_options }
-      when Queries::Filters::Shared::CustomFields::ListOptional
-        { autocomplete_options: custom_field_list_autocomplete_options(filter) }
-      when Queries::Filters::Shared::CustomFields::Hierarchy
-        { autocomplete_options: custom_field_hierarchy_autocomplete_options(filter) }
-      when Queries::Projects::Filters::ProjectStatusFilter,
-           Queries::Projects::Filters::TypeFilter
-        { autocomplete_options: list_autocomplete_options(filter) }
-      else
-        {}
-      end
+      opts = filter.autocomplete_options
+      opts.any? ? { autocomplete_options: opts } : {}
     end
 
     def filter_form_class(filter, additional_attributes)
@@ -130,77 +116,6 @@ module Filter
       else
         Filters::Inputs::TextForm
       end
-    end
-
-    def custom_field_list_autocomplete_options(filter)
-      all_items = custom_field_allowed_items(filter)
-      selected = filter.values
-      options = { items: all_items }
-      options[:groupBy] = "project_name" if filter.custom_field.version?
-      autocomplete_options.merge(options).merge(model: all_items.select { |item| selected.include?(item[:id]) })
-    end
-
-    def custom_field_allowed_items(filter)
-      if filter.custom_field.version?
-        filter.allowed_values.map { |name, id, project_name| { name:, id:, project_name: } }
-      else
-        filter.allowed_values.map { |name, id| { name:, id: } }
-      end
-    end
-
-    def custom_field_hierarchy_autocomplete_options(filter)
-      items = filter.allowed_values.map do |name, id|
-        path = name.split(" / ")
-        { name: path.last, id:, depth: path.length - 1 }
-      end
-      selected = filter.values
-
-      autocomplete_options.merge({ items: }).merge(model: items.select { |item| selected.include?(item[:id]) })
-    end
-
-    def list_autocomplete_options(filter)
-      all_items = filter.allowed_values.map { |name, id| { name:, id: } }
-      selected = filter.values
-      autocomplete_options.merge(
-        items: all_items,
-        model: all_items.select { |item| selected.include?(item[:id]) }
-      )
-    end
-
-    def autocomplete_options
-      {
-        component: "opce-autocompleter",
-        bindValue: "id",
-        bindLabel: "name",
-        hideSelected: true,
-        defaultData: false
-      }
-    end
-
-    def project_autocomplete_options
-      {
-        component: "opce-project-autocompleter",
-        resource: "projects",
-        filters: [
-          { name: "active", operator: "=", values: ["t"] }
-        ]
-      }
-    end
-
-    def user_autocomplete_options
-      {
-        component: "opce-user-autocompleter",
-        hideSelected: true,
-        defaultData: false,
-        placeholder: I18n.t(:label_user_search),
-        resource: "principals",
-        url: ::API::V3::Utilities::PathHelper::ApiV3Path.principals,
-        filters: [
-          { name: "status", operator: "!", values: [Principal.statuses["locked"].to_s] }
-        ],
-        searchKey: "any_name_attribute",
-        focusDirectly: false
-      }
     end
   end
 end

@@ -93,7 +93,7 @@ module Pages
 
         def filter_by_group(value)
           open_filter_panel
-          unless page.has_css?("li.advanced-filters--filter[data-filter-name='group']:not(.hidden)")
+          unless page.has_css?(".advanced-filters--filter[data-filter-name='group']:not([hidden])")
             select "Group", from: "add_filter_select"
           end
 
@@ -134,7 +134,7 @@ module Pages
         end
 
         def within_filter(name, &)
-          within("li.advanced-filters--filter[data-filter-name='#{name}']:not(.hidden)", &)
+          within(".advanced-filters--filter[data-filter-name='#{name}']:not([hidden])", &)
         end
 
         def order_by(key)
