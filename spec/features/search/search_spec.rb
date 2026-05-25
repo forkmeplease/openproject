@@ -461,6 +461,28 @@ RSpec.describe "Search", :js, :selenium, with_settings: { per_page_options: "5" 
     end
   end
 
+  describe "when semantic work package IDs are active" do
+    let(:run_visit) { false }
+    let(:semantic_identifier) { "#{project.identifier}-99" }
+    let!(:semantic_wp) do
+      create(:work_package, subject: "SemanticIdentifierTest WP", project:).tap do |wp|
+        wp.update_column(:identifier, semantic_identifier)
+      end
+    end
+
+    before do
+      allow(Setting::WorkPackageIdentifier).to receive(:semantic_mode_active?).and_return(true)
+      visit search_path(scope: "all", q: "SemanticIdentifierTest")
+    end
+
+    it "classic results link to the semantic identifier URL, not the numeric ID" do
+      within("dt.work_package-edit") do
+        expect(page).to have_link(href: %r{/work_packages/#{Regexp.escape(semantic_identifier)}})
+        expect(page).not_to have_link(href: %r{/work_packages/#{semantic_wp.id}[^-]})
+      end
+    end
+  end
+
   describe "search for notes" do
     let(:work_package) { work_packages[0] }
     let!(:note_one) do

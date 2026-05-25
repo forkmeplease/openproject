@@ -263,7 +263,7 @@ export class GlobalSearchInputComponent implements AfterViewInit, OnDestroy {
   public followItem(item:WorkPackageResource|SearchOptionItem|undefined):void {
     this.selectedItem = item;
     if (item instanceof HalResource) {
-      window.location.href = this.wpPath(item.id!);
+      window.location.href = this.wpPath(item.displayId);
     } else if (item) {
       this.searchInScope(item.projectScope);
     }
