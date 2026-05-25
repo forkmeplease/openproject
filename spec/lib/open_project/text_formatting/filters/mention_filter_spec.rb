@@ -171,6 +171,38 @@ RSpec.describe OpenProject::TextFormatting::Filters::MentionFilter do
       end
     end
 
+    context "with a mention to an inaccessible WP",
+            with_flag: { semantic_work_package_ids: true },
+            with_settings: { work_packages_identifier: "semantic" } do
+      # Label resolution is unscoped so the envelope renders the WP's
+      # current `formatted_id` (e.g. `HIDDEN-1`) rather than the literal
+      # envelope text the author originally typed — keeps the mention
+      # path consistent with `#N` text references in the same render.
+      let(:project) { create(:project, identifier: "VISIBLE") }
+      let(:hidden_project) { create(:project, identifier: "HIDDEN") }
+      let(:hidden_wp) { create(:work_package, project: hidden_project) }
+
+      before { hidden_wp.allocate_and_register_semantic_id }
+
+      it "renders the formatted_id as plain text with no anchor or quickinfo" do
+        wp = hidden_wp.reload
+        rendered = format_text(mention_tag(wp))
+
+        expect(rendered).to include(wp.formatted_id)
+        expect(rendered).not_to match(%r{<a[^>]*>\s*#{Regexp.escape(wp.formatted_id)}\s*</a>})
+        expect(rendered).not_to include(%(href="/work_packages/#{wp.display_id}"))
+        expect(rendered).not_to include("opce-macro-wp-quickinfo")
+      end
+
+      it "renders a quickinfo envelope (`##`) as plain text too" do
+        wp = hidden_wp.reload
+        rendered = format_text(mention_tag(wp, sep: "##"))
+
+        expect(rendered).to include(wp.formatted_id)
+        expect(rendered).not_to include("opce-macro-wp-quickinfo")
+      end
+    end
+
     # Semantic-shaped data-ids must not silently resolve to a WP whose id
     # matches the embedded digits.
     context "with a semantic-shaped data-id whose embedded digits collide with a real WP id",

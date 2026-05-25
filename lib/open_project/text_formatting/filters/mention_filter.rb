@@ -37,6 +37,8 @@ module OpenProject::TextFormatting
       include OpenProject::StaticRouting::UrlHelpers
 
       def call
+        preload_work_package_mentions
+
         doc.search("mention").each do |mention|
           anchor = mention_anchor(mention)
           mention.replace(anchor) if anchor
@@ -46,6 +48,22 @@ module OpenProject::TextFormatting
       end
 
       private
+
+      # Bounded two-SELECT preload for WP mentions: an unscoped fetch (label
+      # resolution regardless of viewer) plus a visibility-scoped id pluck
+      # (gate anchor vs plain-text render). Mirrors the pattern
+      # `ResourceLinksMatcher` uses for `#N` text references so mentions
+      # and references resolve to the same shape for the same recipient,
+      # and avoids the per-mention query the old `.visible.find_by` did.
+      def preload_work_package_mentions
+        ids = mention_work_package_ids
+        @mentioned_work_packages = ids.empty? ? {} : WorkPackage.where(id: ids).index_by(&:id)
+        @visible_mentioned_ids = ids.empty? ? Set.new : WorkPackage.visible.where(id: ids).pluck(:id).to_set
+      end
+
+      def mention_work_package_ids
+        doc.css('mention[data-type="work_package"]').filter_map { |m| mention_id(m)&.to_i }.uniq
+      end
 
       def mention_anchor(mention)
         mention_instance = class_from_mention(mention)
@@ -75,7 +93,7 @@ module OpenProject::TextFormatting
       end
 
       def work_package_mention(work_package, mention)
-        return Nokogiri::XML::Text.new(work_package.formatted_id, mention.document) if context[:plain_text]
+        return Nokogiri::XML::Text.new(work_package.formatted_id, mention.document) if text_only?(work_package)
 
         # Match the label and URL convention used for `#N` text references
         # elsewhere in the markdown pipeline.
@@ -84,6 +102,14 @@ module OpenProject::TextFormatting
         when 2 then work_package_quickinfo(work_package, detailed: false)
         else        work_package_link(work_package)
         end
+      end
+
+      # Plain-text channels and inaccessible WPs both render the
+      # `formatted_id` without an anchor or quickinfo widget — the
+      # latter would resolve to a hover-card endpoint the recipient
+      # can't reach.
+      def text_only?(work_package)
+        context[:plain_text] || @visible_mentioned_ids.exclude?(work_package.id)
       end
 
       def work_package_quickinfo(work_package, detailed:)
@@ -105,21 +131,19 @@ module OpenProject::TextFormatting
                 })
       end
 
+      # WP label resolution is unscoped (preloaded above); visibility is
+      # gated separately in `text_only?` so an inaccessible WP renders
+      # its current formatted_id rather than the envelope text the
+      # author originally typed. User/group mentions stay visibility-gated
+      # at the find — there's no equivalent text-only render path for
+      # principals.
       def class_from_mention(mention)
-        mention_class = case mention.attributes["data-type"].value
-                        when "user"
-                          User
-                        when "group"
-                          Group
-                        when "work_package"
-                          WorkPackage
-                        else
-                          raise ArgumentError
-                        end
-
-        mention_class
-          .visible
-          .find_by(id: mention_id(mention)) || fallback_text(mention)
+        case mention.attributes["data-type"].value
+        when "user"         then User.visible.find_by(id: mention_id(mention))
+        when "group"        then Group.visible.find_by(id: mention_id(mention))
+        when "work_package" then @mentioned_work_packages[mention_id(mention)&.to_i]
+        else raise ArgumentError
+        end || fallback_text(mention)
       end
 
       ##
