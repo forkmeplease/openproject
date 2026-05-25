@@ -94,17 +94,17 @@ RSpec.describe OpenProject::TextFormatting::Matchers::LinkHandlers::WorkPackages
       inner_doc = Nokogiri::HTML.fragment("##{inner.id}")
 
       matcher.with_preloaded_resources(outer_doc, {}) do
-        expect(matcher.work_package_for(outer.id)).to eq(outer)
+        expect(matcher.current_cache.fetch(outer.id)).to eq(outer)
 
         matcher.with_preloaded_resources(inner_doc, {}) do
-          expect(matcher.work_package_for(inner.id)).to eq(inner)
+          expect(matcher.current_cache.fetch(inner.id)).to eq(inner)
         end
 
-        expect(matcher.work_package_for(outer.id))
+        expect(matcher.current_cache.fetch(outer.id))
           .to eq(outer), "outer lookup should be restored after nested call"
       end
 
-      expect(matcher.work_package_for(outer.id)).to be_nil
+      expect(matcher.current_cache.fetch(outer.id)).to be_nil
     end
   end
 

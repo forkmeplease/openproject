@@ -78,7 +78,7 @@ module OpenProject::TextFormatting::Matchers
         # Both quickinfo and plain link need the WP record so the rendered
         # HTML can carry the record id in `data-id`. Unresolved WP →
         # literal text rather than a broken reference.
-        wp = OpenProject::TextFormatting::Matchers::ResourceLinksMatcher.work_package_for(display_id)
+        wp = preload_cache.fetch(display_id)
         return nil unless wp
 
         if quickinfo?
@@ -89,7 +89,7 @@ module OpenProject::TextFormatting::Matchers
       end
 
       def render_for_numeric(wp_id)
-        wp = OpenProject::TextFormatting::Matchers::ResourceLinksMatcher.work_package_for(wp_id)
+        wp = preload_cache.fetch(wp_id)
 
         if quickinfo?
           render_work_package_macro(work_package: wp, fallback_id: wp_id, detailed: detailed?)
@@ -103,8 +103,7 @@ module OpenProject::TextFormatting::Matchers
         display_id = work_package&.display_id || fallback_id
         label = WorkPackage::SemanticIdentifier.format(display_id)
 
-        return label if context[:plain_text]
-        return label if work_package && !visible_to_current_user?(work_package.id)
+        return label if text_only?(work_package)
 
         ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                   "",
@@ -116,8 +115,7 @@ module OpenProject::TextFormatting::Matchers
         # render path bypassing `PatternMatcherFilter`) rather than running a
         # per-link query inside the renderer.
         label = work_package&.formatted_id || "##{fallback_id}"
-        return label if context[:plain_text]
-        return label if work_package && !visible_to_current_user?(work_package.id)
+        return label if text_only?(work_package)
 
         href_id = work_package&.display_id || fallback_id
 
@@ -130,9 +128,16 @@ module OpenProject::TextFormatting::Matchers
                 })
       end
 
-      def visible_to_current_user?(work_package_id)
-        OpenProject::TextFormatting::Matchers::ResourceLinksMatcher
-          .visible_to_current_user?(work_package_id)
+      # Plain-text channels and inaccessible WPs both render the label
+      # without an anchor or quickinfo. Visibility is checked only when a
+      # WP was preloaded — a nil work_package means a classic-mode render
+      # or an unresolved reference, neither of which needs gating.
+      def text_only?(work_package)
+        context[:plain_text] || (work_package && !preload_cache.visible?(work_package.id))
+      end
+
+      def preload_cache
+        OpenProject::TextFormatting::Matchers::ResourceLinksMatcher.current_cache
       end
     end
   end

@@ -137,10 +137,12 @@ module WorkPackage::SemanticIdentifier
     WorkPackage::SemanticIdentifier.format(display_id)
   end
 
-  # Module-level variant for callers that already hold a display id and
-  # don't need the WorkPackage record.
-  def self.format(display_id)
-    display_id.is_a?(String) && display_id.match?(/[A-Za-z]/) ? display_id : "##{display_id}"
+  # Module-level variant of `#formatted_id` for callers that already hold
+  # an identifier value (which may or may not be semantic) and don't need
+  # the WorkPackage record. Semantic shapes pass through unchanged;
+  # numeric shapes get the classic `#N` prefix.
+  def self.format(value)
+    value.is_a?(String) && value.match?(/[A-Za-z]/) ? value : "##{value}"
   end
 
   # Override ActiveRecord's default `to_param` so Rails URL helpers

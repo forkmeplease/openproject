@@ -69,9 +69,32 @@ module OpenProject::TextFormatting
     #     identifier:version:1.0.0
     #     identifier:source:some/file
     class ResourceLinksMatcher < RegexMatcher
-      WORK_PACKAGES_LOOKUP_KEY = :text_formatting_work_packages_lookup
-      VISIBLE_WORK_PACKAGE_IDS_KEY = :text_formatting_visible_work_package_ids
-      private_constant :WORK_PACKAGES_LOOKUP_KEY, :VISIBLE_WORK_PACKAGE_IDS_KEY
+      # Per-render preload state shared between the matcher and the link
+      # handler. Pairs unscoped label resolution (`lookup`) with viewer-scoped
+      # link gating (`visible_ids`) so a single render computes both with a
+      # bounded number of round-trips and renders consistent labels for
+      # invisible WPs.
+      class WorkPackagePreloadCache
+        attr_reader :lookup, :visible_ids
+
+        def initialize(lookup:, visible_ids:)
+          @lookup = lookup
+          @visible_ids = visible_ids
+        end
+
+        def fetch(identifier)
+          lookup[identifier.to_s]
+        end
+
+        def visible?(work_package_id)
+          visible_ids.include?(work_package_id)
+        end
+
+        EMPTY = new(lookup: {}.freeze, visible_ids: Set.new.freeze).freeze
+      end
+
+      CACHE_KEY = :text_formatting_work_package_preload_cache
+      private_constant :CACHE_KEY
 
       include ::OpenProject::TextFormatting::Truncation
       # used for the work package quick links
@@ -131,56 +154,30 @@ module OpenProject::TextFormatting
         ]
       end
 
-      # Returns the preloaded WorkPackage for the given identifier (numeric
-      # or semantic), or nil if no preload is active (classic mode, no `#N`
-      # references) or the WP couldn't be resolved. Lookup keys are always
-      # strings — see `index_by_id_and_identifier`.
-      def self.work_package_for(identifier)
-        RequestStore.store.dig(WORK_PACKAGES_LOOKUP_KEY, identifier.to_s)
-      end
-
-      # The main lookup is unscoped so labels resolve regardless of
-      # current-user permissions. This predicate gates whether the
-      # link handler emits a navigable anchor or a plain-text label.
-      def self.visible_to_current_user?(work_package_id)
-        RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY]&.include?(work_package_id) || false
+      # The active preload cache for the current render, or an empty
+      # singleton when no preload is in scope (classic mode, no `#N`
+      # references, or rendering outside `with_preloaded_resources`).
+      def self.current_cache
+        RequestStore.store[CACHE_KEY] || WorkPackagePreloadCache::EMPTY
       end
 
       # Doc-level preload called by `PatternMatcherFilter`. Save/restores
-      # the lookup so a nested `format_text` (e.g. custom-field formatter
+      # the cache so a nested `format_text` (e.g. custom-field formatter
       # re-entering the pipeline) doesn't clobber the outer render. Classic
       # mode skips the load — `display_id` collapses to numeric, so the
       # link handler can render from the matched id alone.
       def self.with_preloaded_resources(doc, _context)
-        previous = stash_preload_state
+        previous = RequestStore.store[CACHE_KEY]
         return yield unless Setting::WorkPackageIdentifier.semantic?
 
         identifiers = collect_work_package_identifiers(doc)
         return yield if identifiers.empty?
 
-        install_preload_state(*build_lookup(identifiers))
+        RequestStore.store[CACHE_KEY] = build_cache(identifiers)
         yield
       ensure
-        restore_preload_state(previous)
+        RequestStore.store[CACHE_KEY] = previous
       end
-
-      def self.stash_preload_state
-        [RequestStore.store[WORK_PACKAGES_LOOKUP_KEY],
-         RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY]]
-      end
-      private_class_method :stash_preload_state
-
-      def self.install_preload_state(lookup, visible_ids)
-        RequestStore.store[WORK_PACKAGES_LOOKUP_KEY] = lookup
-        RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY] = visible_ids
-      end
-      private_class_method :install_preload_state
-
-      def self.restore_preload_state(previous)
-        RequestStore.store[WORK_PACKAGES_LOOKUP_KEY] = previous[0]
-        RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY] = previous[1]
-      end
-      private_class_method :restore_preload_state
 
       def self.collect_work_package_identifiers(doc)
         identifiers = Set.new
@@ -218,14 +215,15 @@ module OpenProject::TextFormatting
       # for historical aliases — the loaded row carries only the current
       # identifier, so unmapped inputs are filled in from
       # `WorkPackageSemanticAlias`.
-      def self.build_lookup(identifiers)
+      def self.build_cache(identifiers)
         work_packages = WorkPackage.where_display_id_in(*identifiers).select(:id, :identifier).to_a
         all_wp_ids = work_packages.map(&:id)
         visible_ids = WorkPackage.visible.where(id: all_wp_ids).pluck(:id).to_set
         lookup = index_by_id_and_identifier(work_packages)
         fold_in_alias_keys(lookup, identifiers, all_wp_ids:)
-        [lookup, visible_ids]
+        WorkPackagePreloadCache.new(lookup:, visible_ids:)
       end
+      private_class_method :build_cache
 
       # Keys are stringified at write time so callers can read with a single
       # `identifier.to_s` regardless of whether the input is a numeric id or
