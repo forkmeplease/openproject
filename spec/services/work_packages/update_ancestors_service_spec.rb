@@ -1385,4 +1385,43 @@ RSpec.describe WorkPackages::UpdateAncestorsService,
       end
     end
   end
+
+  describe "auto-generated journal note when a child triggers an ancestor recompute",
+           with_settings: { work_package_done_ratio: "status" } do
+    shared_let_work_packages(<<~TABLE)
+      hierarchy | status | work | ∑ work | remaining work | ∑ remaining work | % complete | ∑ % complete
+      parent    | Open   |  10h |    15h |            10h |              15h |         0% |           0%
+        child   | Open   |   5h |        |             5h |                  |         0% |
+    TABLE
+
+    context "in classic mode",
+            with_flag: { semantic_work_package_ids: false },
+            with_settings: { work_package_done_ratio: "status", work_packages_identifier: "classic" } do
+      it "writes the child's hash-prefixed numeric id into the parent's journal note" do
+        set_attributes_on(child, status: closed_status)
+        call_update_ancestors_service(child)
+
+        note = parent.reload.journals.last.notes
+        expect(note).to include("##{child.id}")
+      end
+    end
+
+    context "in semantic mode",
+            with_flag: { semantic_work_package_ids: true },
+            with_settings: { work_package_done_ratio: "status", work_packages_identifier: "semantic" } do
+      before do
+        child.allocate_and_register_semantic_id
+      end
+
+      it "writes the child's hash-prefixed semantic identifier into the parent's journal note" do
+        set_attributes_on(child, status: closed_status)
+        call_update_ancestors_service(child)
+
+        wp = child.reload
+        note = parent.reload.journals.last.notes
+        expect(note).to include("##{wp.display_id}")
+        expect(note).not_to match(/##{wp.id}\b/)
+      end
+    end
+  end
 end

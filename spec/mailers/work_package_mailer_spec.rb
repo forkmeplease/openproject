@@ -290,5 +290,39 @@ RSpec.describe WorkPackageMailer do
         end
       end
     end
+
+    describe "rendering a cross-project WP reference to a recipient without visibility",
+             with_flag: { semantic_work_package_ids: true },
+             with_settings: { work_packages_identifier: "semantic" } do
+      shared_let(:parent_project) { create(:project, identifier: "parent-proj") }
+      shared_let(:child_project) { create(:project, identifier: "child-proj") }
+      shared_let(:parent_wp) { create(:work_package, project: parent_project, subject: "parent") }
+      shared_let(:child_wp) { create(:work_package, project: child_project, subject: "child") }
+      shared_let(:reader_role) { create(:project_role, permissions: %i[view_work_packages]) }
+      shared_let(:reader) { create(:user, member_with_roles: { parent_project => reader_role }) }
+
+      let(:mail) do
+        child_wp.update_columns(identifier: "CHILDPROJ-1", sequence_number: 1)
+        create(:work_package_journal,
+               journable: parent_wp,
+               user: reader,
+               version: parent_wp.journals.maximum(:version).to_i + 1,
+               notes: "Updated automatically by changing values within child work package ##{child_wp.id}")
+        described_class.watcher_changed(parent_wp, reader, reader, "added")
+      end
+
+      it "renders the semantic identifier as plain text in the text body" do
+        body = mail.text_part.body.to_s
+        expect(body).to include("CHILDPROJ-1")
+        expect(body).not_to match(/##{child_wp.id}\b/)
+      end
+
+      it "renders the semantic identifier without an anchor in the html body" do
+        body = mail.html_part.body.to_s
+        expect(body).to include("CHILDPROJ-1")
+        expect(body).not_to include(%(href="/work_packages/#{child_wp.id}"))
+        expect(body).not_to include(%(href="/work_packages/CHILDPROJ-1"))
+      end
+    end
   end
 end

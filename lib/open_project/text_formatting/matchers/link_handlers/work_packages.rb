@@ -82,7 +82,7 @@ module OpenProject::TextFormatting::Matchers
         return nil unless wp
 
         if quickinfo?
-          render_work_package_macro(id: wp.id, display_id: wp.display_id, detailed: detailed?)
+          render_work_package_macro(work_package: wp, fallback_id: display_id, detailed: detailed?)
         else
           render_work_package_link(wp, fallback_id: display_id)
         end
@@ -92,18 +92,19 @@ module OpenProject::TextFormatting::Matchers
         wp = OpenProject::TextFormatting::Matchers::ResourceLinksMatcher.work_package_for(wp_id)
 
         if quickinfo?
-          # Prefer the resolved WP's identifiers; fall back to the matched
-          # id when no preload is available (classic mode).
-          record_id = wp&.id || wp_id
-          display_id = wp&.display_id || wp_id
-          render_work_package_macro(id: record_id, display_id:, detailed: detailed?)
+          render_work_package_macro(work_package: wp, fallback_id: wp_id, detailed: detailed?)
         else
           render_work_package_link(wp, fallback_id: wp_id)
         end
       end
 
-      def render_work_package_macro(id:, display_id:, detailed: false)
-        return WorkPackage::SemanticIdentifier.format(display_id) if context[:plain_text]
+      def render_work_package_macro(work_package:, fallback_id:, detailed: false)
+        id = work_package&.id || fallback_id
+        display_id = work_package&.display_id || fallback_id
+        label = WorkPackage::SemanticIdentifier.format(display_id)
+
+        return label if context[:plain_text]
+        return label if work_package && !visible_to_current_user?(work_package.id)
 
         ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                   "",
@@ -116,6 +117,7 @@ module OpenProject::TextFormatting::Matchers
         # per-link query inside the renderer.
         label = work_package&.formatted_id || "##{fallback_id}"
         return label if context[:plain_text]
+        return label if work_package && !visible_to_current_user?(work_package.id)
 
         href_id = work_package&.display_id || fallback_id
 
@@ -126,6 +128,11 @@ module OpenProject::TextFormatting::Matchers
                   hover_card_trigger_target: "trigger",
                   hover_card_url: hover_card_work_package_path(href_id)
                 })
+      end
+
+      def visible_to_current_user?(work_package_id)
+        OpenProject::TextFormatting::Matchers::ResourceLinksMatcher
+          .visible_to_current_user?(work_package_id)
       end
     end
   end

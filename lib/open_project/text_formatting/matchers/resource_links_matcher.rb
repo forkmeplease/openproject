@@ -70,7 +70,8 @@ module OpenProject::TextFormatting
     #     identifier:source:some/file
     class ResourceLinksMatcher < RegexMatcher
       WORK_PACKAGES_LOOKUP_KEY = :text_formatting_work_packages_lookup
-      private_constant :WORK_PACKAGES_LOOKUP_KEY
+      VISIBLE_WORK_PACKAGE_IDS_KEY = :text_formatting_visible_work_package_ids
+      private_constant :WORK_PACKAGES_LOOKUP_KEY, :VISIBLE_WORK_PACKAGE_IDS_KEY
 
       include ::OpenProject::TextFormatting::Truncation
       # used for the work package quick links
@@ -138,24 +139,48 @@ module OpenProject::TextFormatting
         RequestStore.store.dig(WORK_PACKAGES_LOOKUP_KEY, identifier.to_s)
       end
 
+      # The main lookup is unscoped so labels resolve regardless of
+      # current-user permissions. This predicate gates whether the
+      # link handler emits a navigable anchor or a plain-text label.
+      def self.visible_to_current_user?(work_package_id)
+        RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY]&.include?(work_package_id) || false
+      end
+
       # Doc-level preload called by `PatternMatcherFilter`. Save/restores
       # the lookup so a nested `format_text` (e.g. custom-field formatter
       # re-entering the pipeline) doesn't clobber the outer render. Classic
       # mode skips the load — `display_id` collapses to numeric, so the
       # link handler can render from the matched id alone.
       def self.with_preloaded_resources(doc, _context)
-        previous = RequestStore.store[WORK_PACKAGES_LOOKUP_KEY]
-
+        previous = stash_preload_state
         return yield unless Setting::WorkPackageIdentifier.semantic?
 
         identifiers = collect_work_package_identifiers(doc)
         return yield if identifiers.empty?
 
-        RequestStore.store[WORK_PACKAGES_LOOKUP_KEY] = build_lookup(identifiers)
+        install_preload_state(*build_lookup(identifiers))
         yield
       ensure
-        RequestStore.store[WORK_PACKAGES_LOOKUP_KEY] = previous
+        restore_preload_state(previous)
       end
+
+      def self.stash_preload_state
+        [RequestStore.store[WORK_PACKAGES_LOOKUP_KEY],
+         RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY]]
+      end
+      private_class_method :stash_preload_state
+
+      def self.install_preload_state(lookup, visible_ids)
+        RequestStore.store[WORK_PACKAGES_LOOKUP_KEY] = lookup
+        RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY] = visible_ids
+      end
+      private_class_method :install_preload_state
+
+      def self.restore_preload_state(previous)
+        RequestStore.store[WORK_PACKAGES_LOOKUP_KEY] = previous[0]
+        RequestStore.store[VISIBLE_WORK_PACKAGE_IDS_KEY] = previous[1]
+      end
+      private_class_method :restore_preload_state
 
       def self.collect_work_package_identifiers(doc)
         identifiers = Set.new
@@ -182,18 +207,24 @@ module OpenProject::TextFormatting
         identifier
       end
 
-      # 1 SELECT in the common case. A second targeted SELECT fires for
-      # historical aliases — the loaded WP row carries only its current
-      # identifier, so unmapped inputs must be filled in from
-      # `WorkPackageSemanticAlias`. The visible-id set passes through
-      # to the alias fold-in explicitly so each query enforces
-      # visibility at its own boundary, leaving no implicit trust for
-      # the cache to leak through.
+      # Label resolution is unscoped: a reference to an inaccessible
+      # work package still renders as its semantic identifier (e.g.
+      # `DCP-1`), just without a navigable anchor. Visibility is
+      # captured separately so the link handler can pick anchor-vs-text
+      # per WP without re-querying.
+      #
+      # Two SELECTs in the common case: one unscoped fetch by identifier,
+      # one visibility-scoped id pluck. A third targeted SELECT fires
+      # for historical aliases — the loaded row carries only the current
+      # identifier, so unmapped inputs are filled in from
+      # `WorkPackageSemanticAlias`.
       def self.build_lookup(identifiers)
-        work_packages = WorkPackage.visible.where_display_id_in(*identifiers).select(:id, :identifier).to_a
+        work_packages = WorkPackage.where_display_id_in(*identifiers).select(:id, :identifier).to_a
+        all_wp_ids = work_packages.map(&:id)
+        visible_ids = WorkPackage.visible.where(id: all_wp_ids).pluck(:id).to_set
         lookup = index_by_id_and_identifier(work_packages)
-        fold_in_alias_keys(lookup, identifiers, visible_wp_ids: work_packages.map(&:id))
-        lookup
+        fold_in_alias_keys(lookup, identifiers, all_wp_ids:)
+        [lookup, visible_ids]
       end
 
       # Keys are stringified at write time so callers can read with a single
@@ -207,12 +238,12 @@ module OpenProject::TextFormatting
       end
       private_class_method :index_by_id_and_identifier
 
-      def self.fold_in_alias_keys(lookup, identifiers, visible_wp_ids:)
+      def self.fold_in_alias_keys(lookup, identifiers, all_wp_ids:)
         unmapped = identifiers.map(&:to_s) - lookup.keys
-        return if unmapped.empty? || visible_wp_ids.empty?
+        return if unmapped.empty? || all_wp_ids.empty?
 
         WorkPackageSemanticAlias
-          .where(work_package_id: visible_wp_ids, identifier: unmapped)
+          .where(work_package_id: all_wp_ids, identifier: unmapped)
           .pluck(:identifier, :work_package_id)
           .each { |ident, wp_id| lookup[ident] = lookup[wp_id.to_s] }
       end
