@@ -103,6 +103,8 @@ module OpenProject::TextFormatting::Matchers
       end
 
       def render_work_package_macro(id:, display_id:, detailed: false)
+        return WorkPackage::SemanticIdentifier.format(display_id) if context[:plain_text]
+
         ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                   "",
                                                   data: { id:, display_id:, detailed: }
@@ -113,6 +115,8 @@ module OpenProject::TextFormatting::Matchers
         # render path bypassing `PatternMatcherFilter`) rather than running a
         # per-link query inside the renderer.
         label = work_package&.formatted_id || "##{fallback_id}"
+        return label if context[:plain_text]
+
         href_id = work_package&.display_id || fallback_id
 
         link_to(label,

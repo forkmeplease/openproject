@@ -129,6 +129,44 @@ RSpec.describe WorkPackageMailer do
       expect(mail["X-OpenProject-WorkPackage-Assignee"].value)
         .to eql work_package.assigned_to.login
     end
+
+    describe "rendering a journal note containing a WP reference" do
+      shared_let(:persisted_project) { create(:project, identifier: "demo") }
+      shared_let(:persisted_recipient) { create(:admin) }
+      shared_let(:referenced_wp) { create(:work_package, project: persisted_project, subject: "child") }
+      shared_let(:parent_wp) { create(:work_package, project: persisted_project, subject: "parent") }
+
+      let(:persisted_journal) do
+        create(:work_package_journal,
+               journable: parent_wp,
+               user: persisted_recipient,
+               version: parent_wp.journals.maximum(:version).to_i + 1,
+               notes: "see ##{referenced_wp.id}")
+      end
+      let(:mail) { described_class.mentioned(persisted_recipient, persisted_journal) }
+
+      context "with classic mode",
+              with_flag: { semantic_work_package_ids: false },
+              with_settings: { work_packages_identifier: "classic" } do
+        it "renders the hash-prefixed numeric id in the text body" do
+          expect(mail.text_part.body.to_s).to include("##{referenced_wp.id}")
+        end
+      end
+
+      context "with semantic mode",
+              with_flag: { semantic_work_package_ids: true },
+              with_settings: { work_packages_identifier: "semantic" } do
+        before do
+          referenced_wp.update_columns(identifier: "DEMO-1", sequence_number: 1)
+        end
+
+        it "renders the bare semantic identifier in the text body" do
+          body = mail.text_part.body.to_s
+          expect(body).to include("DEMO-1")
+          expect(body).not_to match(/##{referenced_wp.id}\b/)
+        end
+      end
+    end
   end
 
   describe "#watcher_changed" do
@@ -207,6 +245,49 @@ RSpec.describe WorkPackageMailer do
       it "has a references header" do
         expect(mail.references)
           .to eql "op.work_package-#{work_package.id}@example.net"
+      end
+    end
+
+    describe "rendering the latest comment containing a WP reference" do
+      shared_let(:persisted_project) { create(:project, identifier: "demo") }
+      shared_let(:persisted_recipient) { create(:admin) }
+      shared_let(:referenced_wp) { create(:work_package, project: persisted_project, subject: "child") }
+      shared_let(:parent_wp) { create(:work_package, project: persisted_project, subject: "parent") }
+
+      let(:mail) do
+        create(:work_package_journal,
+               journable: parent_wp,
+               user: persisted_recipient,
+               version: parent_wp.journals.maximum(:version).to_i + 1,
+               notes: "Updated automatically by changing values within child work package ##{referenced_wp.id}")
+        described_class.watcher_changed(parent_wp, persisted_recipient, persisted_recipient, "added")
+      end
+
+      context "with classic mode",
+              with_flag: { semantic_work_package_ids: false },
+              with_settings: { work_packages_identifier: "classic" } do
+        it "renders the hash-prefixed numeric id in the text body" do
+          expect(mail.text_part.body.to_s).to include("##{referenced_wp.id}")
+        end
+      end
+
+      context "with semantic mode",
+              with_flag: { semantic_work_package_ids: true },
+              with_settings: { work_packages_identifier: "semantic" } do
+        before do
+          referenced_wp.update_columns(identifier: "DEMO-1", sequence_number: 1)
+        end
+
+        it "renders the bare semantic identifier in the text body" do
+          body = mail.text_part.body.to_s
+          expect(body).to include("DEMO-1")
+          expect(body).not_to match(/##{referenced_wp.id}\b/)
+        end
+
+        it "renders the bare semantic identifier in the html body" do
+          body = mail.html_part.body.to_s
+          expect(body).to include("DEMO-1")
+        end
       end
     end
   end

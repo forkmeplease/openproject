@@ -29,36 +29,14 @@
 #++
 
 module OpenProject::TextFormatting
-  module Renderer
-    module_function
-
-    # @note
-    #   Consider the {OpenProject::TextFormatting#format_text} convenience
-    #   method instead, particularly if you are formatting model attributes.
-    #
-    # @param [String] text the raw text to be formatted, typically Markdown.
-    # @param (see .formatter_for)
-    # @param [Hash] context context arguments to pass to underlying rendering
-    #   pipeline (see {Formats::BaseFormatter#initialize}).
-    # @return [String] the formatted text as an HTML-safe String.
-    def format_text(text, format: :rich, **context)
-      return "".html_safe if text.blank?
-
-      formatter_for(format)
-        .new(context)
-        .to_html(text)
-    end
-
-    # @param [:plain, :plain_text, :rich] format the text format.
-    # @return [Formats::BaseFormatter] a formatter implementation.
-    def formatter_for(format)
-      case format.to_sym
-      when :plain
-        Formats.plain_formatter
-      when :plain_text
-        Formats::Plain::TextFormatter
-      else
-        Formats.rich_formatter
+  module Filters
+    # Final stage of the plain-text pipeline. Earlier filters resolve
+    # mentions and macros to their text-mode shapes (driven by
+    # `context[:plain_text]`); this stage collapses any remaining markup
+    # so the pipeline output is suitable for `text/plain` bodies.
+    class PlainTextOutputFilter < HTML::Pipeline::Filter
+      def call
+        doc.text
       end
     end
   end

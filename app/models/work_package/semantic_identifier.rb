@@ -134,8 +134,13 @@ module WorkPackage::SemanticIdentifier
   # Semantic mode: "PROJ-42" (no prefix — self-describing)
   # Classic mode: "#42" (hash-prefixed)
   def formatted_id
-    did = display_id
-    did.is_a?(String) && did.match?(/[A-Za-z]/) ? did : "##{did}"
+    WorkPackage::SemanticIdentifier.format(display_id)
+  end
+
+  # Module-level variant for callers that already hold a display id and
+  # don't need the WorkPackage record.
+  def self.format(display_id)
+    display_id.is_a?(String) && display_id.match?(/[A-Za-z]/) ? display_id : "##{display_id}"
   end
 
   # Override ActiveRecord's default `to_param` so Rails URL helpers

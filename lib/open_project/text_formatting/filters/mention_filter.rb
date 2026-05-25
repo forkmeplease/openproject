@@ -75,28 +75,34 @@ module OpenProject::TextFormatting
       end
 
       def work_package_mention(work_package, mention)
-        # Render the mention with the same label and URL convention used for
-        # `#N` text references elsewhere in the markdown pipeline.
-        display_id = work_package.display_id
+        return Nokogiri::XML::Text.new(work_package.formatted_id, mention.document) if context[:plain_text]
 
+        # Match the label and URL convention used for `#N` text references
+        # elsewhere in the markdown pipeline.
         case mention.text.count("#")
-        when 3
-          ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
-                                                    "",
-                                                    data: { id: work_package.id, display_id:, detailed: true }
-        when 2
-          ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
-                                                    "",
-                                                    data: { id: work_package.id, display_id:, detailed: false }
-        else
-          link_to(work_package.formatted_id,
-                  work_package_path_or_url(id: display_id, only_path: context[:only_path]),
-                  class: "issue work_package",
-                  data: {
-                    hover_card_trigger_target: "trigger",
-                    hover_card_url: hover_card_work_package_path(display_id)
-                  })
+        when 3 then work_package_quickinfo(work_package, detailed: true)
+        when 2 then work_package_quickinfo(work_package, detailed: false)
+        else        work_package_link(work_package)
         end
+      end
+
+      def work_package_quickinfo(work_package, detailed:)
+        ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
+                                                  "",
+                                                  data: { id: work_package.id,
+                                                          display_id: work_package.display_id,
+                                                          detailed: }
+      end
+
+      def work_package_link(work_package)
+        display_id = work_package.display_id
+        link_to(work_package.formatted_id,
+                work_package_path_or_url(id: display_id, only_path: context[:only_path]),
+                class: "issue work_package",
+                data: {
+                  hover_card_trigger_target: "trigger",
+                  hover_card_url: hover_card_work_package_path(display_id)
+                })
       end
 
       def class_from_mention(mention)
