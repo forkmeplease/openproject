@@ -53,9 +53,6 @@
               },
               "src/styles.scss",
               "node_modules/codemirror/lib/codemirror.css",
-              "src/vendor/jquery-ui-1.14.1/jquery-ui.css",
-              "src/vendor/jquery-ui-1.14.1/jquery-ui.structure.css",
-              "src/vendor/jquery-ui-1.14.1/jquery-ui.theme.css",
               "node_modules/flatpickr/dist/flatpickr.min.css",
               "src/vendor/ckeditor/ckeditor.css"
             ],

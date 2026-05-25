@@ -30,7 +30,7 @@
  * Initialize jQuery 4 + jquery-migrate as globals for legacy code.
  *
  * This module sets up window.jQuery and window.$ for compatibility with
- * legacy jQuery plugins (jquery-ui, tablesorter) that expect these globals.
+ * legacy jQuery plugins (tablesorter) that expect these globals.
  *
  * Import this BEFORE importing any jQuery-dependent libraries.
  */

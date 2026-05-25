@@ -36,12 +36,7 @@ import lodash from 'lodash';
 import moment from 'moment';
 import './init-moment-locales';
 
-import 'jquery.caret';
-// Text highlight for autocompleter
-import 'mark.js/dist/jquery.mark.min';
-
 import 'moment-timezone/builds/moment-timezone-with-data.min';
-// eslint-disable-next-line import/extensions,import/no-extraneous-dependencies
 import '@openproject/primer-view-components/app/assets/javascripts/primer_view_components.js';
 
 import URI from 'urijs';
