@@ -34,7 +34,7 @@ import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { WorkPackageRelationsService } from './wp-relations.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
-import { renderStreamMessage, type TurboSubmitEndEvent } from '@hotwired/turbo';
+import { type FrameElement, renderStreamMessage, type TurboSubmitEndEvent } from '@hotwired/turbo';
 import { HalEventsService } from 'core-app/features/hal/services/hal-events.service';
 
 @Component({
@@ -52,7 +52,7 @@ export class WorkPackageRelationsComponent extends UntilDestroyedMixin implement
 
   @Input() public workPackage:WorkPackageResource;
 
-  @ViewChild('frameElement') readonly relationTurboFrame:ElementRef<HTMLIFrameElement>;
+  @ViewChild('frameElement') readonly relationTurboFrame:ElementRef<FrameElement>;
 
   turboFrameSrc:string;
 
