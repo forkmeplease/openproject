@@ -49,6 +49,7 @@ class PersistedView < ApplicationRecord
 
   scope :public_views, -> { where(public: true) }
   scope :private_views, ->(principal = User.current) { where(public: false, principal_id: principal.id) }
+  scope :with_children, -> { includes(:children) }
 
   scope :visible, (lambda do |principal = User.current|
     public_views.or(private_views(principal))
