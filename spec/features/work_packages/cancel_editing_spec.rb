@@ -72,6 +72,8 @@ RSpec.describe "Cancel editing work package", :js, :selenium do
       find(".op-logo--link").click
     end
 
+    expect(page).to have_current_path("/", ignore_query: true)
+    expect(page).to have_no_css("#wp-new-inline-edit--field-subject")
     expect(page).to have_css("#projects-menu", text: "All projects")
   end
 
