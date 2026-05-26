@@ -121,6 +121,13 @@ module WorkPackage::SemanticIdentifier
     end
   end
 
+  # Returns formatted value for inline UI display.
+  #   * Semantic mode: "PROJ-42" (no prefix — self-describing)
+  #   * Classic mode: "#42" (hash-prefixed)
+  def self.format(value)
+    value.is_a?(String) && value.match?(/[A-Za-z]/) ? value : "##{value}"
+  end
+
   # Returns the user-facing identifier for this work package.
   # In semantic mode: the project-based identifier (e.g. "PROJ-42")
   # In classic mode: the numeric database ID
@@ -135,14 +142,6 @@ module WorkPackage::SemanticIdentifier
   # Classic mode: "#42" (hash-prefixed)
   def formatted_id
     WorkPackage::SemanticIdentifier.format(display_id)
-  end
-
-  # Module-level variant of `#formatted_id` for callers that already hold
-  # an identifier value (which may or may not be semantic) and don't need
-  # the WorkPackage record. Semantic shapes pass through unchanged;
-  # numeric shapes get the classic `#N` prefix.
-  def self.format(value)
-    value.is_a?(String) && value.match?(/[A-Za-z]/) ? value : "##{value}"
   end
 
   # Override ActiveRecord's default `to_param` so Rails URL helpers
