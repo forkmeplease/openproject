@@ -104,10 +104,30 @@ module OpenProject::TextFormatting::Matchers
         label = WorkPackage::SemanticIdentifier.format(display_id)
 
         return label if text_only?(work_package)
+        return render_static_work_package_macro(work_package, label, detailed:) if context[:as_static_html]
 
         ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                   "",
                                                   data: { id:, display_id:, detailed: }
+      end
+
+      # Static fallback for channels that cannot hydrate the quickinfo
+      # custom element (HTML mailers, exports). Mirrors the in-app widget's
+      # text composition — type, optional status, formatted_id, subject —
+      # so the anchor reads the same as the rich rendering once flattened.
+      # Unresolved references collapse to the bare label.
+      def render_static_work_package_macro(work_package, label, detailed:)
+        return label unless work_package
+
+        parts = []
+        parts << work_package.status&.name if detailed
+        parts << work_package.type&.name
+        parts << label
+        link_text = "#{parts.compact.join(' ')}: #{work_package.subject}"
+
+        link_to(link_text,
+                work_package_path_or_url(id: work_package.display_id, only_path: context[:only_path]),
+                class: "issue work_package")
       end
 
       def render_work_package_link(work_package, fallback_id:)
@@ -133,7 +153,7 @@ module OpenProject::TextFormatting::Matchers
       # WP was preloaded — a nil work_package means a classic-mode render
       # or an unresolved reference, neither of which needs gating.
       def text_only?(work_package)
-        context[:plain_text] || (work_package && !preload_cache.visible?(work_package.id))
+        context[:as_text] || (work_package && !preload_cache.visible?(work_package.id))
       end
 
       def preload_cache

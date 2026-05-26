@@ -57,8 +57,18 @@ module OpenProject::TextFormatting
       # and avoids the per-mention query the old `.visible.find_by` did.
       def preload_work_package_mentions
         ids = mention_work_package_ids
-        @mentioned_work_packages = ids.empty? ? {} : WorkPackage.where(id: ids).index_by(&:id)
-        @visible_mentioned_ids = ids.empty? ? Set.new : WorkPackage.visible.where(id: ids).pluck(:id).to_set
+        if ids.empty?
+          @mentioned_work_packages = {}
+          @visible_mentioned_ids = Set.new
+          return
+        end
+
+        scope = WorkPackage.where(id: ids)
+        # Static-HTML channels need `type` and `status` to render
+        # quickinfo envelopes as anchors instead of `<opce-*>` widgets.
+        scope = scope.includes(:type, :status) if context[:as_static_html]
+        @mentioned_work_packages = scope.index_by(&:id)
+        @visible_mentioned_ids = WorkPackage.visible.where(id: ids).pluck(:id).to_set
       end
 
       def mention_work_package_ids
@@ -109,15 +119,32 @@ module OpenProject::TextFormatting
       # latter would resolve to a hover-card endpoint the recipient
       # can't reach.
       def text_only?(work_package)
-        context[:plain_text] || @visible_mentioned_ids.exclude?(work_package.id)
+        context[:as_text] || @visible_mentioned_ids.exclude?(work_package.id)
       end
 
       def work_package_quickinfo(work_package, detailed:)
+        return work_package_static_macro(work_package, detailed:) if context[:as_static_html]
+
         ApplicationController.helpers.content_tag "opce-macro-wp-quickinfo",
                                                   "",
                                                   data: { id: work_package.id,
                                                           display_id: work_package.display_id,
                                                           detailed: }
+      end
+
+      # Static fallback shared with the PatternMatcherFilter's `##`/`###`
+      # path so envelope-driven and text-driven references render the same
+      # shape in channels that cannot hydrate the custom element.
+      def work_package_static_macro(work_package, detailed:)
+        parts = []
+        parts << work_package.status&.name if detailed
+        parts << work_package.type&.name
+        parts << work_package.formatted_id
+        link_text = "#{parts.compact.join(' ')}: #{work_package.subject}"
+
+        link_to(link_text,
+                work_package_path_or_url(id: work_package.display_id, only_path: context[:only_path]),
+                class: "issue work_package")
       end
 
       def work_package_link(work_package)

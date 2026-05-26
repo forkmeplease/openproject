@@ -324,5 +324,63 @@ RSpec.describe WorkPackageMailer do
         expect(body).not_to include(%(href="/work_packages/CHILDPROJ-1"))
       end
     end
+
+    describe "rendering a quickinfo/detailed macro in the latest comment" do
+      shared_let(:persisted_project) { create(:project, identifier: "demo") }
+      shared_let(:persisted_recipient) { create(:admin) }
+      shared_let(:macro_type) { create(:type, name: "Task") }
+      shared_let(:macro_status) { create(:status, name: "New") }
+      shared_let(:referenced_wp) do
+        create(:work_package,
+               project: persisted_project,
+               type: macro_type,
+               status: macro_status,
+               subject: "Cats V Dogs")
+      end
+      shared_let(:parent_wp) { create(:work_package, project: persisted_project, subject: "parent") }
+
+      let(:mail) do
+        create(:work_package_journal,
+               journable: parent_wp,
+               user: persisted_recipient,
+               version: parent_wp.journals.maximum(:version).to_i + 1,
+               notes: "ref ##{referenced_wp.id} ##{'#'}#{referenced_wp.id} ###{'#'}#{referenced_wp.id}")
+        described_class.watcher_changed(parent_wp, persisted_recipient, persisted_recipient, "added")
+      end
+
+      context "with semantic mode",
+              with_flag: { semantic_work_package_ids: true },
+              with_settings: { work_packages_identifier: "semantic" } do
+        before { referenced_wp.update_columns(identifier: "DEMO-1", sequence_number: 1) }
+
+        it "renders ## quickinfo as a static anchor with type + id + subject" do
+          body = mail.html_part.body.to_s
+          expect(body).to match(%r{<a\b[^>]*>Task DEMO-1: Cats V Dogs</a>})
+        end
+
+        it "renders ### detailed as a static anchor with status + type + id + subject" do
+          body = mail.html_part.body.to_s
+          expect(body).to match(%r{<a\b[^>]*>New Task DEMO-1: Cats V Dogs</a>})
+        end
+
+        it "never leaks <opce-macro-wp-quickinfo> into the html body" do
+          expect(mail.html_part.body.to_s).not_to include("opce-macro-wp-quickinfo")
+        end
+      end
+
+      context "with classic mode",
+              with_flag: { semantic_work_package_ids: false },
+              with_settings: { work_packages_identifier: "classic" } do
+        it "renders ## quickinfo as a static anchor with type + #N + subject" do
+          body = mail.html_part.body.to_s
+          expect(body).to match(%r{<a\b[^>]*>Task ##{referenced_wp.id}: Cats V Dogs</a>})
+        end
+
+        it "renders ### detailed as a static anchor with status + type + #N + subject" do
+          body = mail.html_part.body.to_s
+          expect(body).to match(%r{<a\b[^>]*>New Task ##{referenced_wp.id}: Cats V Dogs</a>})
+        end
+      end
+    end
   end
 end

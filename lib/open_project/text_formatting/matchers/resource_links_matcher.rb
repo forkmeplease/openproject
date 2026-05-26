@@ -163,17 +163,19 @@ module OpenProject::TextFormatting
 
       # Doc-level preload called by `PatternMatcherFilter`. Save/restores
       # the cache so a nested `format_text` (e.g. custom-field formatter
-      # re-entering the pipeline) doesn't clobber the outer render. Classic
-      # mode skips the load — `display_id` collapses to numeric, so the
-      # link handler can render from the matched id alone.
-      def self.with_preloaded_resources(doc, _context)
+      # re-entering the pipeline) doesn't clobber the outer render.
+      # Classic mode normally skips the load (the link handler renders
+      # `#N` from the matched id alone), but static-HTML channels need
+      # the WP record in both modes to compose the type/subject/status
+      # anchor.
+      def self.with_preloaded_resources(doc, context)
         previous = RequestStore.store[CACHE_KEY]
-        return yield unless Setting::WorkPackageIdentifier.semantic?
+        return yield unless Setting::WorkPackageIdentifier.semantic? || context[:as_static_html]
 
         identifiers = collect_work_package_identifiers(doc)
         return yield if identifiers.empty?
 
-        RequestStore.store[CACHE_KEY] = build_cache(identifiers)
+        RequestStore.store[CACHE_KEY] = build_cache(identifiers, context)
         yield
       ensure
         RequestStore.store[CACHE_KEY] = previous
@@ -214,9 +216,20 @@ module OpenProject::TextFormatting
       # one visibility-scoped id pluck. A third targeted SELECT fires
       # for historical aliases — the loaded row carries only the current
       # identifier, so unmapped inputs are filled in from
-      # `WorkPackageSemanticAlias`.
-      def self.build_cache(identifiers)
-        work_packages = WorkPackage.where_display_id_in(*identifiers).select(:id, :identifier).to_a
+      # `WorkPackageSemanticAlias`. Static-HTML channels also eager-load
+      # `:type` and `:status` so the link handler can render the
+      # static-anchor variant of `##`/`###` macros without N+1 queries —
+      # those associations are the metadata a reader needs to recognise a
+      # WP reference flattened to text. Anything beyond that (project,
+      # versions, custom fields) stays out of this preload.
+      def self.build_cache(identifiers, context = {})
+        scope = WorkPackage.where_display_id_in(*identifiers)
+        scope = if context[:as_static_html]
+                  scope.includes(:type, :status)
+                else
+                  scope.select(:id, :identifier)
+                end
+        work_packages = scope.to_a
         all_wp_ids = work_packages.map(&:id)
         visible_ids = WorkPackage.visible.where(id: all_wp_ids).pluck(:id).to_set
         lookup = index_by_id_and_identifier(work_packages)

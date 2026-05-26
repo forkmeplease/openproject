@@ -28,39 +28,22 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpenProject::TextFormatting
-  module Renderer
-    module_function
+module OpenProject::TextFormatting::Formats
+  module Markdown
+    # Static-HTML sibling of `Markdown::Formatter`. Shares the same filter
+    # chain so identifier resolution, mention handling, and link rendering
+    # stay consistent, but signals `context[:as_static_html]` so matchers
+    # and filters emit server-rendered anchors in place of JS-hydrated
+    # custom elements. Intended for channels that cannot run JS — HTML
+    # mailers, server-side previews, archival exports — where dynamic
+    # widgets would collapse to empty placeholders.
+    class StaticHtmlFormatter < Formatter
+      def initialize(context)
+        super(context.merge(as_static_html: true))
+      end
 
-    # @note
-    #   Consider the {OpenProject::TextFormatting#format_text} convenience
-    #   method instead, particularly if you are formatting model attributes.
-    #
-    # @param [String] text the raw text to be formatted, typically Markdown.
-    # @param (see .formatter_for)
-    # @param [Hash] context context arguments to pass to underlying rendering
-    #   pipeline (see {Formats::BaseFormatter#initialize}).
-    # @return [String] the formatted text as an HTML-safe String.
-    def format_text(text, format: :rich, **context)
-      return "".html_safe if text.blank?
-
-      formatter_for(format)
-        .new(context)
-        .to_html(text)
-    end
-
-    # @param [:plain, :markdown_as_text, :markdown_as_static_html, :rich] format the text format.
-    # @return [Formats::BaseFormatter] a formatter implementation.
-    def formatter_for(format)
-      case format.to_sym
-      when :plain
-        Formats.plain_formatter
-      when :markdown_as_text
-        Formats::Markdown::TextFormatter
-      when :markdown_as_static_html
-        Formats::Markdown::StaticHtmlFormatter
-      else
-        Formats.rich_formatter
+      def self.format
+        :markdown_as_static_html
       end
     end
   end

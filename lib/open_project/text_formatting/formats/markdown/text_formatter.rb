@@ -37,7 +37,7 @@ module OpenProject::TextFormatting::Formats
     # and other channels where HTML would be a foreign body.
     class TextFormatter < OpenProject::TextFormatting::Formats::BaseFormatter
       def initialize(context)
-        super(context.merge(plain_text: true))
+        super(context.merge(as_text: true))
       end
 
       def to_html(text)
