@@ -30,10 +30,12 @@
 
 require "spec_helper"
 
-RSpec.describe OpenProject::TextFormatting::Formats::Markdown::TextFormatter do
-  subject(:formatted) { described_class.new(context).to_html(input).strip }
+RSpec.describe "Markdown plain-text rendering" do # rubocop:disable RSpec/DescribeClass
+  subject(:formatted) { render(input).strip }
 
-  let(:context) { {} }
+  def render(text)
+    OpenProject::TextFormatting::Renderer.format_text(text, plain_text: true)
+  end
 
   describe "plain markdown" do
     let(:input) { "Hello *world*" }
@@ -85,26 +87,22 @@ RSpec.describe OpenProject::TextFormatting::Formats::Markdown::TextFormatter do
       end
 
       it "renders ##N as bare semantic identifier" do
-        input = "see #{'##'}#{work_package.id} please"
-        expect(described_class.new({}).to_html(input).strip).to eq("see DEMO-1 please")
+        expect(render("see #{'##'}#{work_package.id} please").strip).to eq("see DEMO-1 please")
       end
 
       it "renders ###N as bare semantic identifier" do
-        input = "see #{'###'}#{work_package.id} please"
-        expect(described_class.new({}).to_html(input).strip).to eq("see DEMO-1 please")
+        expect(render("see #{'###'}#{work_package.id} please").strip).to eq("see DEMO-1 please")
       end
     end
 
     context "in classic mode",
             with_settings: { work_packages_identifier: "classic" } do
       it "renders ##N as the hash-prefixed numeric id" do
-        input = "see #{'##'}#{work_package.id} please"
-        expect(described_class.new({}).to_html(input).strip).to eq("see ##{work_package.id} please")
+        expect(render("see #{'##'}#{work_package.id} please").strip).to eq("see ##{work_package.id} please")
       end
 
       it "renders ###N as the hash-prefixed numeric id" do
-        input = "see #{'###'}#{work_package.id} please"
-        expect(described_class.new({}).to_html(input).strip).to eq("see ##{work_package.id} please")
+        expect(render("see #{'###'}#{work_package.id} please").strip).to eq("see ##{work_package.id} please")
       end
     end
   end

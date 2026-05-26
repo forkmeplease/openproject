@@ -30,8 +30,8 @@
 
 module OpenProject::TextFormatting
   module Filters
-    # Final stage of the `markdown_as_text` pipeline — strips remaining
-    # markup so the output is safe for `text/plain` bodies.
+    # Terminal stage when the rich pipeline is rendering for `text/plain`
+    # bodies — collapses the DOM to its visible text so no HTML escapes.
     class PlainTextOutputFilter < HTML::Pipeline::Filter
       def call
         doc.text

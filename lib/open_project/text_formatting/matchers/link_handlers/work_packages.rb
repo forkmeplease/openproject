@@ -142,7 +142,7 @@ module OpenProject::TextFormatting::Matchers
       # A nil WP means classic mode skipped the preload, or the reference
       # didn't resolve — neither case needs visibility gating.
       def text_only?(work_package)
-        context[:as_text] || (work_package && !preload_cache.visible?(work_package.id))
+        context[:plain_text] || (work_package && !preload_cache.visible?(work_package.id))
       end
 
       def preload_cache

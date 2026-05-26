@@ -124,7 +124,7 @@ module OpenProject::TextFormatting
       # The hover-card endpoint a quickinfo would link to is unreachable
       # for plain-text recipients and for viewers without view permission.
       def text_only?(work_package)
-        context[:as_text] || @visible_mentioned_ids.exclude?(work_package.id)
+        context[:plain_text] || @visible_mentioned_ids.exclude?(work_package.id)
       end
 
       def work_package_quickinfo(work_package, detailed:)

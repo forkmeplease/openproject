@@ -204,9 +204,9 @@ RSpec.describe OpenProject::TextFormatting::Filters::MentionFilter do
 
     context "in plain-text rendering mode",
             with_settings: { work_packages_identifier: "semantic" } do
-      # The `:markdown_as_text` channel must collapse mention envelopes
-      # to their current `formatted_id` so the plain-text mailer doesn't
-      # leak `<mention>` HTML or stale envelope text.
+      # `plain_text: true` must collapse mention envelopes to their current
+      # `formatted_id` so the `text/plain` mailer doesn't leak `<mention>`
+      # HTML or stale envelope text.
       let(:project) { create(:project, identifier: "MACROPROJ") }
       let(:work_package) { create(:work_package, project:, author:) }
 
@@ -214,7 +214,7 @@ RSpec.describe OpenProject::TextFormatting::Filters::MentionFilter do
 
       it "renders the formatted_id without an anchor or quickinfo" do
         wp = work_package.reload
-        rendered = format_text(mention_tag(wp), format: :markdown_as_text)
+        rendered = format_text(mention_tag(wp), plain_text: true)
 
         expect(rendered).to include(wp.formatted_id)
         expect(rendered).not_to include("<a")
@@ -229,7 +229,7 @@ RSpec.describe OpenProject::TextFormatting::Filters::MentionFilter do
       let(:work_package) { create(:work_package, project:, author:) }
 
       it "renders the hash-prefixed numeric id without an anchor or quickinfo" do
-        rendered = format_text(mention_tag(work_package), format: :markdown_as_text)
+        rendered = format_text(mention_tag(work_package), plain_text: true)
 
         expect(rendered).to include("##{work_package.id}")
         expect(rendered).not_to include("<a")
