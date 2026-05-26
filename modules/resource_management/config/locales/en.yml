@@ -75,7 +75,12 @@ en:
     favorite_caption: >
       Make this view a favorite to add it on the top section of the sidebar menu.
     view_types:
-      UserCardView: "Users cards"
+      user_card:
+        label: "Users card list"
+        caption: "Create a view based on users and see their details and allocation in a list of user cards"
+      resource_work_package_list:
+        label: "Work packages list"
+        caption: "Create a view based on work packages and see its details and allocation in a list"
     action:
       favorite: "Add to favorites"
       unfavorite: "Remove from favorites"
