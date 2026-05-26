@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { EditFormComponent } from 'core-app/shared/components/fields/edit/edit-form/edit-form.component';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
+import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,13 @@ export class GlobalEditFormChangesTrackerService {
   private activeForms = new Map<EditFormComponent, boolean>();
 
   get thereAreFormsWithUnsavedChanges() {
-    return Array.from(this.activeForms.keys()).some((form) => !form.change.inFlight && !form.change.isEmpty());
+    return Array
+      .from(this.activeForms.keys())
+      .some((form) => (
+        form.editing
+        && !form.change.inFlight
+        && (isNewResource(form.resource) || !form.change.isEmpty())
+      ));
   }
 
   constructor() {

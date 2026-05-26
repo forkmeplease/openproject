@@ -6,8 +6,16 @@ import { GlobalEditFormChangesTrackerService } from './global-edit-form-changes-
 describe('GlobalEditFormChangesTrackerService', () => {
   let service:GlobalEditFormChangesTrackerService;
   let originalOpenProject:OpenProject;
-  const createForm = (changed?:boolean, inFlight = false) => ({
-    editing: false,
+  const createForm = (
+    changed?:boolean,
+    inFlight = false,
+    resourceId:string|null = '1',
+    editing = Boolean(changed) || resourceId === null,
+  ) => ({
+    editing,
+    resource: {
+      id: resourceId,
+    },
     change: {
       inFlight,
       isEmpty: () => !changed,
@@ -70,6 +78,14 @@ describe('GlobalEditFormChangesTrackerService', () => {
     expect(service.thereAreFormsWithUnsavedChanges).toBe(true);
   });
 
+  it('should report no changes when a changed form is no longer editing', () => {
+    const form = createForm(true, false, '1', false);
+
+    service.addToActiveForms(form);
+
+    expect(service.thereAreFormsWithUnsavedChanges).toBe(false);
+  });
+
   it('should report no changes when one form is editing without changes', () => {
     const form = {
       ...createForm(),
@@ -81,8 +97,32 @@ describe('GlobalEditFormChangesTrackerService', () => {
     expect(service.thereAreFormsWithUnsavedChanges).toBe(false);
   });
 
+  it('should report changes when an unchanged form tracks a new resource', () => {
+    const form = createForm(false, false, null);
+
+    service.addToActiveForms(form);
+
+    expect(service.thereAreFormsWithUnsavedChanges).toBe(true);
+  });
+
+  it('should report no changes when a new resource form is no longer editing', () => {
+    const form = createForm(false, false, null, false);
+
+    service.addToActiveForms(form);
+
+    expect(service.thereAreFormsWithUnsavedChanges).toBe(false);
+  });
+
   it('should report no changes when the only changed form is being saved', () => {
     const form = createForm(true, true);
+
+    service.addToActiveForms(form);
+
+    expect(service.thereAreFormsWithUnsavedChanges).toBe(false);
+  });
+
+  it('should report no changes when a new resource is being saved', () => {
+    const form = createForm(false, true, null);
 
     service.addToActiveForms(form);
 
