@@ -129,18 +129,22 @@ See COPYRIGHT and LICENSE files for more details.
         void setDirectUploadFileName().catch(() => {});
 
         <%# rebuild form to post to S3 directly %>
-        const authenticityToken = document.querySelector('input[name=authenticity_token]');
-        if (authenticityToken) {
+        const form = fileInput.form;
+        if (form) {
+          const authenticityToken = form.querySelector('input[name=authenticity_token]');
+          const uriInput = form.querySelector('input[name=uri]');
+          if (!authenticityToken || !(uriInput instanceof HTMLInputElement)) {
+            return;
+          }
+
           authenticityToken.remove();
-          const methodInput = document.querySelector('input[name=_method]');
+          const methodInput = form.querySelector('input[name=_method]');
           if (methodInput) {
             methodInput.remove();
           }
 
-          const uriInput = document.querySelector('input[name=uri]');
           const url = uriInput.value;
 
-          const form = document.querySelector('form');
           form.setAttribute('action', url);
           form.setAttribute('enctype', 'multipart/form-data');
 
