@@ -27,6 +27,7 @@
 #++
 
 # English strings go here for Rails i18n
+---
 en:
   plugin_openproject_meeting:
     name: "OpenProject Meeting"
