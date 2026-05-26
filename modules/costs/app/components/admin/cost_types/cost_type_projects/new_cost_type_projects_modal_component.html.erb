@@ -41,6 +41,20 @@ See COPYRIGHT and LICENSE files for more details.
       variant: :large
     )
 
-    render(form_modal_component)
+    dialog.with_body(
+      id: dialog_body_id,
+      test_selector: dialog_body_id,
+      aria: { label: title },
+      classes: "Overlay-body_autocomplete_height"
+    ) do
+      render(form_modal_component)
+    end
+
+    dialog.with_footer(show_divider: false) do
+      component_collection do |footer|
+        footer.with_component(Primer::Beta::Button.new(data: { "close-dialog-id": dialog_id })) { cancel_button_text }
+        footer.with_component(Primer::Beta::Button.new(scheme: :primary, type: :submit, form: form_id)) { submit_button_text }
+      end
+    end
   end
 %>

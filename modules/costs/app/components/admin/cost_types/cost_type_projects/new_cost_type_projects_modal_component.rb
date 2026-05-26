@@ -50,9 +50,18 @@ module Admin
 
         def dialog_id = NewCostTypeProjectsFormModalComponent::DIALOG_ID
         def dialog_body_id = NewCostTypeProjectsFormModalComponent::DIALOG_BODY_ID
+        def form_id = NewCostTypeProjectsFormModalComponent::FORM_ID
 
         def title
           I18n.t(:label_add_projects)
+        end
+
+        def cancel_button_text
+          I18n.t("button_cancel")
+        end
+
+        def submit_button_text
+          I18n.t("button_add")
         end
 
         def form_modal_component

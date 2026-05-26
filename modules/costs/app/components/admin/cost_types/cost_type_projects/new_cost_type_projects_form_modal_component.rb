@@ -50,23 +50,9 @@ module Admin
           url_helpers.admin_cost_type_projects_path(@cost_type)
         end
 
-        def dialog_id = DIALOG_ID
-        def dialog_body_id = DIALOG_BODY_ID
         def form_id = FORM_ID
 
         attr_reader :cost_type_project_mapping, :cost_type
-
-        def title
-          I18n.t(:label_add_projects)
-        end
-
-        def cancel_button_text
-          I18n.t("button_cancel")
-        end
-
-        def submit_button_text
-          I18n.t("button_add")
-        end
       end
     end
   end

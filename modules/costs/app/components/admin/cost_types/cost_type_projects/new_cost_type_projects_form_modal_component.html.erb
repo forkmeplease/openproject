@@ -28,30 +28,14 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%=
   component_wrapper do
-    concat(
-      render(
-        Primer::Alpha::Dialog::Body.new(
-          id: dialog_body_id, test_selector: dialog_body_id, aria: { label: title },
-          classes: "Overlay-body_autocomplete_height"
-        )
-      ) do
-        primer_form_with(
-          model: @cost_type_project_mapping,
-          id: form_id,
-          url:,
-          data: { turbo: true },
-          method: :post
-        ) do |form|
-          render(::CostTypes::CostTypeProjects::CostTypeMappingForm.new(form, project_mapping: @cost_type_project_mapping))
-        end
-      end
-    )
-
-    concat(
-      render(Primer::Alpha::Dialog::Footer.new(show_divider: false)) do
-        concat(render(Primer::Beta::Button.new(data: { "close-dialog-id": dialog_id })) { cancel_button_text })
-        concat(render(Primer::Beta::Button.new(scheme: :primary, type: :submit, form: form_id)) { submit_button_text })
-      end
-    )
+    primer_form_with(
+      model: @cost_type_project_mapping,
+      id: form_id,
+      url:,
+      data: { turbo: true },
+      method: :post
+    ) do |form|
+      render(::CostTypes::CostTypeProjects::CostTypeMappingForm.new(form, project_mapping: @cost_type_project_mapping))
+    end
   end
 %>
