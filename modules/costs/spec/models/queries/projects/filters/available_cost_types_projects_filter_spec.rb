@@ -40,9 +40,9 @@ RSpec.describe Queries::Projects::Filters::AvailableCostTypesProjectsFilter do
   describe "#allowed_values" do
     before { CostType.destroy_all }
 
-    let!(:scoped_a) { create(:cost_type, is_for_all: false, name: "Disk") }
-    let!(:scoped_b) { create(:cost_type, is_for_all: false, name: "License") }
-    let!(:_global)  { create(:cost_type, is_for_all: true, name: "Travel") }
+    let!(:scoped_a) { create(:cost_type, for_all_projects: false, name: "Disk") }
+    let!(:scoped_b) { create(:cost_type, for_all_projects: false, name: "License") }
+    let!(:_global)  { create(:cost_type, for_all_projects: true, name: "Travel") }
 
     it "lists only non-global cost types (so filter validates even before any mapping exists)" do
       expect(instance.allowed_values).to contain_exactly(
@@ -60,7 +60,7 @@ RSpec.describe Queries::Projects::Filters::AvailableCostTypesProjectsFilter do
 
   describe "applying the filter via ProjectQuery" do
     let(:admin) { create(:admin) }
-    let!(:cost_type) { create(:cost_type, is_for_all: false) }
+    let!(:cost_type) { create(:cost_type, for_all_projects: false) }
     let!(:mapped_project) { create(:project) }
     let!(:unmapped_project) { create(:project) }
 
@@ -80,7 +80,7 @@ RSpec.describe Queries::Projects::Filters::AvailableCostTypesProjectsFilter do
     end
 
     it "returns no projects when the cost type has no mappings (and query stays valid)" do
-      cost_type_without_mappings = create(:cost_type, is_for_all: false)
+      cost_type_without_mappings = create(:cost_type, for_all_projects: false)
 
       query = ProjectQuery.new(name: "t2") do |q|
         q.where(:available_cost_types_projects, "=", [cost_type_without_mappings.id])

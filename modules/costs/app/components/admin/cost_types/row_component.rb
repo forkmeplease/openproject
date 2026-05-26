@@ -50,7 +50,7 @@ module Admin
       end
 
       def active_projects
-        if cost_type.is_for_all?
+        if cost_type.for_all_projects?
           I18n.t("settings.project_attributes.label_for_all_projects")
         else
           count = Project.active.joins(:cost_types_projects)

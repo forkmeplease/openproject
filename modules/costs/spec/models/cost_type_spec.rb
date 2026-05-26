@@ -62,9 +62,9 @@ RSpec.describe CostType do
   describe ".available_for_project" do
     let(:project) { create(:project) }
     let(:other_project) { create(:project) }
-    let!(:global_ct) { create(:cost_type, is_for_all: true) }
-    let!(:scoped_ct) { create(:cost_type, is_for_all: false) }
-    let!(:unrelated_ct) { create(:cost_type, is_for_all: false) }
+    let!(:global_ct) { create(:cost_type, for_all_projects: true) }
+    let!(:scoped_ct) { create(:cost_type, for_all_projects: false) }
+    let!(:unrelated_ct) { create(:cost_type, for_all_projects: false) }
 
     before do
       CostTypesProject.create!(cost_type: scoped_ct, project: project)
@@ -84,8 +84,8 @@ RSpec.describe CostType do
     let(:project) { create(:project) }
 
     context "when the global default is available in the project" do
-      let!(:default_ct) { create(:cost_type, is_for_all: true, default: true) }
-      let!(:_other) { create(:cost_type, is_for_all: true) }
+      let!(:default_ct) { create(:cost_type, for_all_projects: true, default: true) }
+      let!(:_other) { create(:cost_type, for_all_projects: true) }
 
       it "returns the default" do
         expect(described_class.default_for_project(project)).to eq(default_ct)
@@ -102,7 +102,7 @@ RSpec.describe CostType do
     end
 
     context "when no cost type is available in the project" do
-      let!(:_unrelated) { create(:cost_type, is_for_all: false) }
+      let!(:_unrelated) { create(:cost_type, for_all_projects: false) }
 
       it "returns nil" do
         expect(described_class.default_for_project(project)).to be_nil

@@ -42,10 +42,10 @@ class CostType < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
 
   scope :active, -> { where(deleted_at: nil) }
-  scope :for_all, -> { where(is_for_all: true) }
+  scope :for_all, -> { where(for_all_projects: true) }
   scope :available_for_project, ->(project) {
     project_id = project.is_a?(Project) ? project.id : project
-    where(is_for_all: true)
+    where(for_all_projects: true)
       .or(where(id: CostTypesProject.where(project_id:).select(:cost_type_id)))
   }
 

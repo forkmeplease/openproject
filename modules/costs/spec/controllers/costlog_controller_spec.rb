@@ -180,7 +180,7 @@ RSpec.describe CostlogController do
     end
 
     describe "WHEN no cost type is available in the project" do
-      let(:scoped_cost_type) { create(:cost_type, is_for_all: false) }
+      let(:scoped_cost_type) { create(:cost_type, for_all_projects: false) }
 
       before do
         CostType.destroy_all
@@ -200,7 +200,7 @@ RSpec.describe CostlogController do
 
       before do
         CostType.destroy_all
-        cost_type.is_for_all = true
+        cost_type.for_all_projects = true
         cost_type.default = true
         cost_type.save!
         grant_current_user_permissions user, %i[view_project view_work_packages log_costs]
@@ -211,8 +211,8 @@ RSpec.describe CostlogController do
 
     describe "WHEN the global default cost type is unavailable in the project, " \
              "but another non-global cost type is enabled" do
-      let(:scoped_cost_type) { create(:cost_type, is_for_all: false) }
-      let(:global_default) { create(:cost_type, is_for_all: false, default: true) }
+      let(:scoped_cost_type) { create(:cost_type, for_all_projects: false) }
+      let(:global_default) { create(:cost_type, for_all_projects: false, default: true) }
       let(:expected_cost_type) { scoped_cost_type }
 
       before do

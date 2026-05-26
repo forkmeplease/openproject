@@ -56,7 +56,7 @@ module Costs::Patches::PermittedParamsPatch
                                         :unit,
                                         :unit_plural,
                                         :default,
-                                        :is_for_all,
+                                        :for_all_projects,
                                         :current_rate,
                                         { new_rate_attributes: %i[valid_from rate] },
                                         existing_rate_attributes: %i[valid_from rate])

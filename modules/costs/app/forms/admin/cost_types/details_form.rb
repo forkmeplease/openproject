@@ -68,8 +68,8 @@ module Admin
         )
 
         f.check_box(
-          name: :is_for_all,
-          label: ::CostType.human_attribute_name(:is_for_all)
+          name: :for_all_projects,
+          label: ::CostType.human_attribute_name(:for_all_projects)
         )
       end
 

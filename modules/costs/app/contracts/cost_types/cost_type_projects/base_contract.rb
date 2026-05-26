@@ -63,7 +63,7 @@ module CostTypes
       end
 
       def not_for_all
-        return if model.cost_type.nil? || !model.cost_type.is_for_all?
+        return if model.cost_type.nil? || !model.cost_type.for_all_projects?
 
         errors.add :cost_type_id, :is_for_all_cannot_modify
       end

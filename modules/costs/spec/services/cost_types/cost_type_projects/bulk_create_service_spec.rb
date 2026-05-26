@@ -32,7 +32,7 @@ require_relative "../../../spec_helper"
 require Rails.root.join("spec/services/bulk_services/project_mappings/behaves_like_bulk_project_mapping_create_service")
 
 RSpec.describe CostTypes::CostTypeProjects::BulkCreateService do
-  shared_let(:cost_type) { create(:cost_type, is_for_all: false) }
+  shared_let(:cost_type) { create(:cost_type, for_all_projects: false) }
 
   it_behaves_like "BulkServices project mappings create service" do
     let(:model) { cost_type }

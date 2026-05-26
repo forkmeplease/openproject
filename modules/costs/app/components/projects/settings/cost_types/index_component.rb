@@ -58,11 +58,11 @@ module Projects
         end
 
         def toggle_checked?(cost_type)
-          cost_type.is_for_all? || enabled?(cost_type)
+          cost_type.for_all_projects? || enabled?(cost_type)
         end
 
         def toggle_disabled?(cost_type)
-          cost_type.is_for_all?
+          cost_type.for_all_projects?
         end
 
         def toggle_data_attributes(cost_type)

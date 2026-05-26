@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# Join table for cost types on projects, used when CostType#is_for_all is not set
+# Join table for cost types on projects, used when CostType#for_all_projects is not set
 # to find which cost types are activated.
 class CostTypesProject < ApplicationRecord
   belongs_to :cost_type

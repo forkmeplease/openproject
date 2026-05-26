@@ -32,7 +32,7 @@ require_relative "../../../spec_helper"
 
 RSpec.describe CostTypes::CostTypeProjects::DeleteService do
   shared_let(:project) { create(:project) }
-  shared_let(:cost_type) { create(:cost_type, is_for_all: false) }
+  shared_let(:cost_type) { create(:cost_type, for_all_projects: false) }
 
   let!(:mapping) { CostTypesProject.create!(project:, cost_type:) }
 
@@ -56,10 +56,10 @@ RSpec.describe CostTypes::CostTypeProjects::DeleteService do
     end
   end
 
-  context "when the cost type is is_for_all" do
+  context "when the cost type is for all projects" do
     let(:user) { create(:admin) }
 
-    before { cost_type.update!(is_for_all: true) }
+    before { cost_type.update!(for_all_projects: true) }
 
     it "refuses to delete the mapping" do
       result = described_class.new(user:, model: mapping).call

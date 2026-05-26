@@ -32,7 +32,7 @@ require_relative "../spec_helper"
 
 RSpec.describe CostTypesProject do
   let(:project) { create(:project) }
-  let(:cost_type) { create(:cost_type, is_for_all: false) }
+  let(:cost_type) { create(:cost_type, for_all_projects: false) }
 
   it "creates a mapping with both belongs_to associations" do
     mapping = described_class.create!(project:, cost_type:)

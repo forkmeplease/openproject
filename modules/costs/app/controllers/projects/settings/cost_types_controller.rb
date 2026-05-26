@@ -38,7 +38,7 @@ class Projects::Settings::CostTypesController < Projects::SettingsController
   end
 
   def toggle
-    if @cost_type.is_for_all?
+    if @cost_type.for_all_projects?
       respond_with_status(:unprocessable_entity)
       return
     end

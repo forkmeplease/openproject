@@ -41,7 +41,7 @@ module Admin
         end
 
         def render?
-          !cost_type.is_for_all?
+          !cost_type.for_all_projects?
         end
 
         private

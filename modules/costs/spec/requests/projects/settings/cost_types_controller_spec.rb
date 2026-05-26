@@ -36,8 +36,8 @@ RSpec.describe Projects::Settings::CostTypesController, :skip_csrf, type: :rails
   let(:permissions) { %i[manage_project_activities] }
   let(:user) { create(:user, member_with_permissions: { project => permissions }) }
 
-  let!(:global_ct) { create(:cost_type, is_for_all: true) }
-  let!(:scoped_ct) { create(:cost_type, is_for_all: false) }
+  let!(:global_ct) { create(:cost_type, for_all_projects: true) }
+  let!(:scoped_ct) { create(:cost_type, for_all_projects: false) }
 
   before { login_as(user) }
 

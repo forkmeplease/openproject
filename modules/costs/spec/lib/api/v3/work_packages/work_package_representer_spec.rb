@@ -75,7 +75,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
 
   # Create a cost type that enables the log unit cost paths
   let!(:cost_type) do
-    create(:cost_type, is_for_all: true)
+    create(:cost_type, for_all_projects: true)
   end
 
   before do
@@ -313,7 +313,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
       before { CostType.destroy_all }
 
       context "when at least one cost type is available in the project" do
-        before { create(:cost_type, is_for_all: true) }
+        before { create(:cost_type, for_all_projects: true) }
 
         it "has the logCosts link" do
           expect(subject).to have_json_path("_links/logCosts/href")
@@ -321,7 +321,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
       end
 
       context "when no cost type is available in the project" do
-        before { create(:cost_type, is_for_all: false) }
+        before { create(:cost_type, for_all_projects: false) }
 
         it "omits the logCosts link" do
           expect(subject).not_to have_json_path("_links/logCosts/href")
@@ -329,7 +329,7 @@ RSpec.describe API::V3::WorkPackages::WorkPackageRepresenter do
       end
 
       context "when a non-global cost type is explicitly enabled in the project" do
-        let!(:scoped_cost_type) { create(:cost_type, is_for_all: false) }
+        let!(:scoped_cost_type) { create(:cost_type, for_all_projects: false) }
 
         before { CostTypesProject.create!(project:, cost_type: scoped_cost_type) }
 

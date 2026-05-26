@@ -38,7 +38,7 @@ class Queries::Projects::Filters::AvailableCostTypesProjectsFilter < Queries::Pr
   end
 
   def allowed_values
-    @allowed_values ||= CostType.where(is_for_all: false).pluck(:name, :id)
+    @allowed_values ||= CostType.where(for_all_projects: false).pluck(:name, :id)
   end
 
   def available?
