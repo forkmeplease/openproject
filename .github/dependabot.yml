@@ -69,6 +69,10 @@ updates:
       uirouter:
         patterns:
           - '@uirouter/*'
+      vitest:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
     ignore:
       - dependency-name: "@angular/*"
         update-types: ["version-update:semver-major"]
