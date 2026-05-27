@@ -59,6 +59,9 @@ updates:
           - 'react-dom'
           - '@types/react'
           - '@types/react-dom'
+      testing-library:
+        patterns:
+          - '@testing-library/*'
     ignore:
       - dependency-name: "@angular/*"
         update-types: ["version-update:semver-major"]
