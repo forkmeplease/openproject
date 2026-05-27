@@ -62,6 +62,10 @@ updates:
       testing-library:
         patterns:
           - '@testing-library/*'
+      typescript-eslint:
+        patterns:
+          - 'typescript-eslint'
+          - '@typescript-eslint/*'
     ignore:
       - dependency-name: "@angular/*"
         update-types: ["version-update:semver-major"]
