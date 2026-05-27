@@ -66,6 +66,9 @@ updates:
         patterns:
           - 'typescript-eslint'
           - '@typescript-eslint/*'
+      uirouter:
+        patterns:
+          - '@uirouter/*'
     ignore:
       - dependency-name: "@angular/*"
         update-types: ["version-update:semver-major"]
