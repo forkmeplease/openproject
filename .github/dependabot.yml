@@ -13,7 +13,13 @@ updates:
     groups:
       angular:
         patterns:
-          - '@angular*'
+          - '@angular/*'
+          - '@angular-devkit/*'
+          - '@angular-builders/*'
+      angular-eslint:
+        patterns:
+          - 'angular-eslint'
+          - '@angular-eslint/*'
       blocknote:
         patterns:
           - '@blocknote/*'
@@ -36,7 +42,15 @@ updates:
           - '@types/react'
           - '@types/react-dom'
     ignore:
-      - dependency-name: "@angular*"
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@angular-builders/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@angular-devkit/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "angular-eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@angular-eslint/*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@openproject/octicons"
       - dependency-name: "@openproject/primer-view-components"
