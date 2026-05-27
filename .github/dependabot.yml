@@ -44,6 +44,9 @@ updates:
         patterns:
           - 'jquery'
           - 'jquery-migrate'
+      mantine:
+        patterns:
+          - '@mantine/*'
       ng-select:
         patterns:
           - '@ng-select/*'
