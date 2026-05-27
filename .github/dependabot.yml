@@ -36,6 +36,10 @@ updates:
       html-eslint:
         patterns:
           - '@html-eslint/*'
+      hotwired:
+        patterns:
+          - '@hotwired/turbo'
+          - '@hotwired/turbo-rails'
       ng-select:
         patterns:
           - '@ng-select/*'
