@@ -28,53 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlanners
-  class SubViewsComponent < ApplicationComponent
+module ResourcePlannerViews
+  # Dialog for editing an existing view. Unlike the new-view flow there is no
+  # type-selection step — it opens straight on the reusable configure form,
+  # pre-filled with the view and its query.
+  class EditDialogComponent < ApplicationComponent
     include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-    attr_reader :resource_planner, :selected_view
+    DIALOG_ID = "edit-resource-planner-view-dialog"
+    FORM_ID = "edit-resource-planner-view-form"
+    FOOTER_ID = "edit-resource-planner-view-footer"
 
-    def initialize(resource_planner:, selected_view: nil)
+    def initialize(view:, project:, resource_planner:)
       super
 
+      @view = view
+      @project = project
       @resource_planner = resource_planner
-      @selected_view = selected_view
-    end
-
-    def call
-      component_wrapper do
-        render(Primer::Alpha::TabNav.new(label: I18n.t("resource_management.sub_views"))) do |component|
-          resource_planner.children.each { |child| add_view_tab(component, child) }
-          add_create_tab(component) if can_add_views?
-        end
-      end
     end
 
     private
 
-    def add_view_tab(component, child)
-      component.with_tab(
-        selected: child.id == selected_view_id,
-        href: project_resource_planner_view_path(resource_planner.project, resource_planner, child)
-      ) { child.name }
+    def title
+      I18n.t("resource_management.configure_view_dialog.title")
     end
 
-    def add_create_tab(component)
-      component.with_tab(
-        href: new_project_resource_planner_view_path(resource_planner.project, resource_planner),
-        data: { controller: "async-dialog" }
-      ) do
-        render(Primer::Beta::Octicon.new(icon: :plus, size: :medium))
-      end
-    end
-
-    def selected_view_id
-      selected_view&.id || resource_planner.default_view_id
-    end
-
-    def can_add_views?
-      # TODO: Proper permission check
-      true
+    def form_url
+      project_resource_planner_view_path(@project, @resource_planner, @view)
     end
   end
 end

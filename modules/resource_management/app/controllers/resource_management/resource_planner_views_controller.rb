@@ -51,7 +51,13 @@ module ::ResourceManagement
       end
     end
 
-    def edit; end
+    def edit
+      respond_with_dialog ResourcePlannerViews::EditDialogComponent.new(
+        view: @view,
+        project: @project,
+        resource_planner: @resource_planner
+      )
+    end
 
     def create
       view_class = allowed_view_class(params[:view_class_name])
@@ -64,7 +70,13 @@ module ::ResourceManagement
       call.success? ? render_create_success(call.result) : render_configure_step(call.result, status: :unprocessable_entity)
     end
 
-    def update; end
+    def update
+      call = ResourcePlannerViews::UpdateService
+               .new(user: current_user, model: @view)
+               .call(view_params)
+
+      call.success? ? render_update_success(call.result) : render_edit_step(call.result, status: :unprocessable_entity)
+    end
 
     def destroy; end
 
@@ -85,6 +97,57 @@ module ::ResourceManagement
         status:
       )
       replace_via_turbo_stream(component: ResourcePlannerViews::ConfigureStep::FooterComponent.new)
+      respond_with_turbo_streams
+    end
+
+    # Re-renders the edit dialog's form and footer in place when the update
+    # fails validation. Mirrors render_configure_step but targets the edit
+    # dialog's form/footer ids and uses the PATCH update path.
+    def render_edit_step(view, status: :ok)
+      replace_via_turbo_stream(
+        component: ResourcePlannerViews::ConfigureStep::FormComponent.new(
+          view:,
+          url: project_resource_planner_view_path(@project, @resource_planner, view),
+          method: :patch,
+          form_id: ResourcePlannerViews::EditDialogComponent::FORM_ID,
+          filter_query: view.effective_query
+        ),
+        status:
+      )
+      replace_via_turbo_stream(
+        component: ResourcePlannerViews::ConfigureStep::FooterComponent.new(
+          submit_label: I18n.t(:button_save),
+          dialog_id: ResourcePlannerViews::EditDialogComponent::DIALOG_ID,
+          form_id: ResourcePlannerViews::EditDialogComponent::FORM_ID,
+          footer_id: ResourcePlannerViews::EditDialogComponent::FOOTER_ID
+        ),
+        status:
+      )
+      respond_with_turbo_streams
+    end
+
+    # On a successful update we don't navigate away: the edit dialog is closed
+    # and both the tab nav (the view's name may have changed) and the view's
+    # content are replaced in place. The generic ContentComponent knows how to
+    # render whichever view type this is.
+    def render_update_success(view)
+      # The cached children association still holds the pre-update name.
+      @resource_planner.children.reload
+
+      replace_via_turbo_stream(
+        component: ResourcePlanners::SubViewsComponent.new(
+          resource_planner: @resource_planner,
+          selected_view: view
+        )
+      )
+      replace_via_turbo_stream(
+        component: ResourcePlannerViews::ContentComponent.new(
+          view:,
+          project: @project,
+          resource_planner: @resource_planner
+        )
+      )
+      close_dialog_via_turbo_stream("##{ResourcePlannerViews::EditDialogComponent::DIALOG_ID}")
       respond_with_turbo_streams
     end
 

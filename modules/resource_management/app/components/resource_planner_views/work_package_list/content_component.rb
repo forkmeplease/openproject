@@ -28,53 +28,23 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlanners
-  class SubViewsComponent < ApplicationComponent
-    include OpTurbo::Streamable
-
-    attr_reader :resource_planner, :selected_view
-
-    def initialize(resource_planner:, selected_view: nil)
+module ResourcePlannerViews::WorkPackageList
+  # Renders the work package list view results (sub header + table). Dispatched
+  # to by the generic ResourcePlannerViews::ContentComponent, which owns the
+  # turbo-streamable wrapper.
+  class ContentComponent < ApplicationComponent
+    def initialize(view:, project:, resource_planner:)
       super
 
+      @view = view
+      @project = project
       @resource_planner = resource_planner
-      @selected_view = selected_view
-    end
-
-    def call
-      component_wrapper do
-        render(Primer::Alpha::TabNav.new(label: I18n.t("resource_management.sub_views"))) do |component|
-          resource_planner.children.each { |child| add_view_tab(component, child) }
-          add_create_tab(component) if can_add_views?
-        end
-      end
     end
 
     private
 
-    def add_view_tab(component, child)
-      component.with_tab(
-        selected: child.id == selected_view_id,
-        href: project_resource_planner_view_path(resource_planner.project, resource_planner, child)
-      ) { child.name }
-    end
-
-    def add_create_tab(component)
-      component.with_tab(
-        href: new_project_resource_planner_view_path(resource_planner.project, resource_planner),
-        data: { controller: "async-dialog" }
-      ) do
-        render(Primer::Beta::Octicon.new(icon: :plus, size: :medium))
-      end
-    end
-
-    def selected_view_id
-      selected_view&.id || resource_planner.default_view_id
-    end
-
-    def can_add_views?
-      # TODO: Proper permission check
-      true
+    def work_packages
+      @view.effective_query&.results&.work_packages || WorkPackage.none
     end
   end
 end

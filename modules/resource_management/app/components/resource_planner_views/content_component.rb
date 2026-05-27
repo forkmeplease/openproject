@@ -28,53 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlanners
-  class SubViewsComponent < ApplicationComponent
+module ResourcePlannerViews
+  # Generic, turbo-streamable wrapper around a view's rendered content. It owns
+  # the wrapper element (so the controller can replace it without knowing the
+  # view type) and dispatches to the matching per-type content component.
+  class ContentComponent < ApplicationComponent
     include OpTurbo::Streamable
 
-    attr_reader :resource_planner, :selected_view
-
-    def initialize(resource_planner:, selected_view: nil)
+    def initialize(view:, project:, resource_planner:)
       super
 
+      @view = view
+      @project = project
       @resource_planner = resource_planner
-      @selected_view = selected_view
-    end
-
-    def call
-      component_wrapper do
-        render(Primer::Alpha::TabNav.new(label: I18n.t("resource_management.sub_views"))) do |component|
-          resource_planner.children.each { |child| add_view_tab(component, child) }
-          add_create_tab(component) if can_add_views?
-        end
-      end
     end
 
     private
 
-    def add_view_tab(component, child)
-      component.with_tab(
-        selected: child.id == selected_view_id,
-        href: project_resource_planner_view_path(resource_planner.project, resource_planner, child)
-      ) { child.name }
-    end
-
-    def add_create_tab(component)
-      component.with_tab(
-        href: new_project_resource_planner_view_path(resource_planner.project, resource_planner),
-        data: { controller: "async-dialog" }
-      ) do
-        render(Primer::Beta::Octicon.new(icon: :plus, size: :medium))
+    # Returns the component rendering the body for the current view type, or nil
+    # for types that don't have a dedicated content component yet.
+    def inner_component
+      case @view
+      when ResourceWorkPackageList
+        ResourcePlannerViews::WorkPackageList::ContentComponent.new(
+          view: @view,
+          project: @project,
+          resource_planner: @resource_planner
+        )
       end
     end
 
-    def selected_view_id
-      selected_view&.id || resource_planner.default_view_id
-    end
-
-    def can_add_views?
-      # TODO: Proper permission check
-      true
+    def placeholder_heading
+      @view&.name || @resource_planner.name
     end
   end
 end

@@ -61,7 +61,7 @@ en:
     a planner and adjusting the allocated time and date range.
 
   label_resource_management: "Resource planning"
-  button_next: "Save"  # TODO: This should be "Next" but we need to check the flow first
+  button_next: "Save" # TODO: This should be "Next" but we need to check the flow first
 
   resource_management:
     label_resource_planner: "Resource planner"
@@ -107,3 +107,30 @@ en:
       desc: "Create a resource planner to start planning capacity for this project."
     show:
       placeholder: "The detailed view for this resource planner is coming soon."
+    work_package_list:
+      mobile_title: "Work packages"
+      allocation_placeholder: "—"
+      columns:
+        dates: "Dates"
+        allocation: "Allocation"
+        allocated_members: "Allocated members"
+      blank:
+        title: "No work packages to display"
+        description: "There are no work packages matching this view's filters yet."
+      subheader:
+        search: "Search"
+        sort: "Sort"
+        hierarchy: "Display hierarchy"
+        type: "Type"
+        status: "Status"
+        all_filters: "All filters"
+        settings: "Configure view"
+        add: "Add"
+      context_menu:
+        label: "More actions"
+        see_allocation: "See allocation"
+        edit_total_work: "Edit total work"
+        add_user_group: "Add user group"
+        add_filter_criteria: "Add filter criteria"
+        move: "Move"
+        remove: "Remove"

@@ -32,7 +32,7 @@
         end
       )
 
-      if @filter_query
+      if has_filter_query?
         concat(
           content_tag(
             :div,

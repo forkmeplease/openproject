@@ -61,8 +61,15 @@ module ResourcePlannerViews
 
       attr_reader :wrapper_key
 
+      private
+
       def initial_filter_mode_automatic?
         @view.errors.empty?
+      end
+
+      def has_filter_query?
+        # TODO: Properly handle the WorkPackage Query in the filter component as well
+        @filter_query.present? && !@filter_query.is_a?(::Query)
       end
     end
   end
