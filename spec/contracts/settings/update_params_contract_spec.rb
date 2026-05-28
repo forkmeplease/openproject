@@ -28,22 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module Settings
-    class AggregationSettingsForm < ApplicationForm
-      include Redmine::I18n
+require "spec_helper"
+require "contracts/shared/model_contract_shared_context"
 
-      settings_form do |f|
-        allowed = ::Settings::Definition[:journal_aggregation_time_minutes].allowed
-        f.text_field name: :journal_aggregation_time_minutes,
-                     type: :number,
-                     min: allowed.min,
-                     max: allowed.max,
-                     input_width: :medium,
-                     trailing_visual: { text: { text: I18n.t("datetime.units.minute_abbreviated", count: 2) } }
+RSpec.describe Settings::UpdateParamsContract do
+  include_context "ModelContract shared context"
 
-        f.submit
+  let(:current_user) { build_stubbed(:admin) }
+  let(:contract) do
+    described_class.new(nil, current_user, params:)
+  end
+
+  describe "journal_aggregation_time_minutes validation" do
+    [0, 5, 120].each do |valid_value|
+      context "with value #{valid_value}" do
+        let(:params) { { journal_aggregation_time_minutes: valid_value.to_s } }
+
+        it_behaves_like "contract is valid"
       end
+    end
+
+    [121, 9_999_999, -1].each do |invalid_value|
+      context "with value #{invalid_value}" do
+        let(:params) { { journal_aggregation_time_minutes: invalid_value.to_s } }
+
+        it_behaves_like "contract is invalid", journal_aggregation_time_minutes: :inclusion
+      end
+    end
+
+    context "when not present in params" do
+      let(:params) { {} }
+
+      it_behaves_like "contract is valid"
     end
   end
 end

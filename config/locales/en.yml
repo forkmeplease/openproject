@@ -138,7 +138,7 @@ en:
     jemalloc_allocator: Jemalloc memory allocator
     journal_aggregation:
       caption: >
-        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays.
+        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays. The maximum is %{max} minutes.
     import:
       title: "Import"
     jira:

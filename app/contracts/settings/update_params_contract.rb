@@ -28,21 +28,19 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Admin
-  module Settings
-    class AggregationSettingsForm < ApplicationForm
-      include Redmine::I18n
+module Settings
+  class UpdateParamsContract < ::ParamsContract
+    validate :journal_aggregation_time_minutes_is_within_bounds
 
-      settings_form do |f|
-        allowed = ::Settings::Definition[:journal_aggregation_time_minutes].allowed
-        f.text_field name: :journal_aggregation_time_minutes,
-                     type: :number,
-                     min: allowed.min,
-                     max: allowed.max,
-                     input_width: :medium,
-                     trailing_visual: { text: { text: I18n.t("datetime.units.minute_abbreviated", count: 2) } }
+    protected
 
-        f.submit
+    def journal_aggregation_time_minutes_is_within_bounds
+      value = params[:journal_aggregation_time_minutes]
+      return if value.nil?
+
+      allowed = Settings::Definition[:journal_aggregation_time_minutes].allowed
+      unless allowed.cover?(value.to_i)
+        errors.add(:journal_aggregation_time_minutes, :inclusion)
       end
     end
   end
