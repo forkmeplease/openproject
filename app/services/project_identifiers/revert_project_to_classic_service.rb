@@ -64,7 +64,7 @@ module ProjectIdentifiers
     def handle_update_failure(classic_id, error)
       Rails.logger.warn "#{self.class}: Could not set identifier '#{classic_id}' for project #{project.id}; " \
                         "falling back to a randomized suffix. (#{error.message})"
-      project.update!(identifier: "project-#{SecureRandom.alphanumeric(5).downcase}")
+      project.update!(identifier: "project-#{SecureRandom.alphanumeric(10).downcase}")
     end
 
     def identifier_generator
