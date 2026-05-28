@@ -1808,6 +1808,7 @@ en:
       attachment:
         attachment_content: "Attachment content"
         attachment_file_name: "Attachment file name"
+        charset: "Character set"
         content_type: "Content-type"
         downloads: "Downloads"
         file: "File"

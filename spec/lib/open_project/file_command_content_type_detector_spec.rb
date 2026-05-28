@@ -59,35 +59,36 @@
 require "spec_helper"
 
 RSpec.describe OpenProject::FileCommandContentTypeDetector do
-  it "returns a content type based on the content of the file" do
+  it "returns a [mime_type, charset] tuple for a text file" do
     tempfile = Tempfile.new("something")
     tempfile.write("This is a file.")
     tempfile.rewind
 
-    expect(described_class.new(tempfile.path).detect).to eq("text/plain")
+    mime, charset = described_class.new(tempfile.path).detect
+    expect(mime).to eq("text/plain")
+    expect(charset).to be_a(String)
 
     tempfile.close
   end
 
-  it "returns a sensible default when the file command is missing" do
+  it "returns [sensible_default, nil] when the file command is missing" do
     allow(Open3).to receive(:capture2).and_raise "o noes!"
-    filename = "/path/to/something"
-    expect(described_class.new(filename).detect).to eq("application/binary")
+    expect(described_class.new("/path/to/something").detect).to eq(["application/binary", nil])
   end
 
-  it "returns a sensible default on the odd chance that run returns nil" do
+  it "returns [sensible_default, nil] on the odd chance that run returns nil" do
     allow(Open3).to receive(:capture2).and_return [nil, 0]
-    expect(described_class.new("windows").detect).to eq("application/binary")
+    expect(described_class.new("windows").detect).to eq(["application/binary", nil])
   end
 
-  it "returns a sensible default when the file command returns an error code" do
+  it "returns [sensible_default, nil] when the file command returns an error code" do
     allow(Open3).to receive(:capture2).and_return ["text/plain", 1]
-    expect(described_class.new("windows").detect).to eq("application/binary")
+    expect(described_class.new("windows").detect).to eq(["application/binary", nil])
   end
 
-  it "returns a sensible default when the file command returns a type with parentheses" do
+  it "returns [sensible_default, nil] when the file command returns a type with parentheses" do
     allow(Open3).to receive(:capture2).and_return ["text/plain (with something)", 0]
-    expect(described_class.new("windows").detect).to eq("application/binary")
+    expect(described_class.new("windows").detect).to eq(["application/binary", nil])
   end
 
   it "uses end-of-input delimiter to prevent command injection" do
@@ -96,5 +97,25 @@ RSpec.describe OpenProject::FileCommandContentTypeDetector do
     described_class.new("--help").detect
 
     expect(Open3).to have_received(:capture2).with("file", "-b", "--mime", "--", "--help")
+  end
+
+  describe "charset detection from real fixture files" do
+    let(:utf8_fixture)    { Rails.root.join("spec/fixtures/encoding/utf-8.txt").to_s }
+    let(:iso8859_fixture) { Rails.root.join("spec/fixtures/encoding/iso-8859-1.txt").to_s }
+    let(:png_fixture)     { Rails.root.join("spec/fixtures/files/image.png").to_s }
+
+    it "detects utf-8 charset for a UTF-8 encoded file" do
+      expect(described_class.new(utf8_fixture).detect).to eq(["text/plain", "utf-8"])
+    end
+
+    it "detects iso-8859-1 charset for an ISO-8859-1 encoded file" do
+      expect(described_class.new(iso8859_fixture).detect).to eq(["text/plain", "iso-8859-1"])
+    end
+
+    it "returns nil charset for non-text files" do
+      mime, charset = described_class.new(png_fixture).detect
+      expect(mime).to eq("image/png")
+      expect(charset).to be_nil
+    end
   end
 end

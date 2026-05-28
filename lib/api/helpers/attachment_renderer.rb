@@ -103,7 +103,8 @@ module API
         if attachment.is_text?
           # Even if the text mime type might differ, always output plain text
           # so this doesn't get interpreted as e.g., a script or html file
-          "text/plain"
+          charset = attachment.charset.presence || Setting.attachment_default_charset
+          "text/plain; charset=#{charset}"
         elsif attachment.inlineable?
           attachment.content_type
         else

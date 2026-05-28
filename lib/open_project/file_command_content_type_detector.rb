@@ -69,23 +69,31 @@ module OpenProject
       @filename = filename
     end
 
+    # Returns [mime_type, charset_or_nil], e.g.:
+    #   ["text/plain", "utf-8"]
+    #   ["image/png",  nil]
     def detect
-      type_from_file_command
+      @detect ||= parse_file_command
     end
 
     private
 
-    def type_from_file_command
+    def parse_file_command
       # On BSDs, `file` doesn't give a result code of 1 if the file doesn't exist.
       type, status = Open3.capture2("file", "-b", "--mime", "--", @filename)
+      return [SENSIBLE_DEFAULT, nil] if type.nil? || status.to_i > 0 || type.match(/\(.*?\)/)
 
-      if type.nil? || status.to_i > 0 || type.match(/\(.*?\)/)
-        type = SENSIBLE_DEFAULT
-      end
-      type.split(/[:;\s]+/)[0]
+      extract_mime_and_charset(type.strip)
     rescue StandardError => e
       Rails.logger.info { "Failed to get mime type from #{@filename}: #{e} #{e.message}" }
-      SENSIBLE_DEFAULT
+      [SENSIBLE_DEFAULT, nil]
+    end
+
+    def extract_mime_and_charset(type)
+      mime, charset_param = type.split(";", 2).map(&:strip)
+      charset = charset_param&.match(/\Acharset=(.+)\z/)&.[](1)
+      charset = nil if charset == "binary"
+      [mime, charset]
     end
   end
 end

@@ -119,6 +119,17 @@ class Attachment < ApplicationRecord
     end
   end
 
+  # Returns the content type to use when serving the file to a browser.
+  # For text files, ensures a charset is always present so browsers don't
+  # fall back to ISO-8859-1.
+  # We use a configurable fallback (default utf-8) so that administrators
+  # can control content types for previously uploaded attachments
+  def serving_content_type
+    return content_type unless is_text?
+
+    "#{content_type}; charset=#{charset.presence || Setting.attachment_default_charset}"
+  end
+
   def visible?(user = User.current)
     allowed_or_author?(user) do
       container.attachments_visible?(user)
@@ -227,7 +238,7 @@ class Attachment < ApplicationRecord
   end
 
   def set_content_type(file)
-    self.content_type = self.class.content_type_for(file.path)
+    self.content_type, self.charset = OpenProject::ContentTypeDetector.new(file.path).detect_with_charset
   end
 
   def set_digest(file)
