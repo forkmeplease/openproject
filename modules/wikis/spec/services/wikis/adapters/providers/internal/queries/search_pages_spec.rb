@@ -35,18 +35,18 @@ RSpec.describe Wikis::Adapters::Providers::Internal::Queries::SearchPages do
 
   let(:provider) { create(:internal_wiki_provider) }
   let(:input_data) { Wikis::Adapters::Input::SearchPages.build(query:).value! }
-  let(:auth_strategy) { provider.auth_strategy_for(current_user).value! }
+  let(:auth_strategy) { provider.auth_strategy_for(user).value! }
   let(:query) { wiki_page.title }
 
   let(:wiki_page) { create(:wiki_page, title: "Wiki Page with a Title you will love") }
   let(:wiki_project) { wiki_page.project }
   let(:wiki_project_permissions) { %i[view_wiki_pages] }
 
-  current_user { create(:user) }
+  let(:user) { create(:user) }
 
   before do
     create(:member, project: wiki_project,
-                    user: current_user,
+                    user:,
                     roles: [create(:project_role, permissions: wiki_project_permissions)])
 
     wiki_page
