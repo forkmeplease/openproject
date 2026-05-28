@@ -156,7 +156,7 @@ RSpec.describe ProjectIdentifiers::RevertInstanceToClassicIdsJob do
         end
 
         it "assigns project_conflict a project-NNNNN fallback identifier" do
-          expect(project_conflict.reload.identifier).to match(/\Aproject-[a-z0-9]{10}\z/)
+          expect(project_conflict.reload.identifier).to match(/\Aproject-[a-z0-9]{5}\z/)
         end
       end
     end
