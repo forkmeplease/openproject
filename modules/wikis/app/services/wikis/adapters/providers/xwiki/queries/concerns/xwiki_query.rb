@@ -33,23 +33,41 @@ module Wikis
     module Providers
       module XWiki
         module Queries
-          class PageInfo < BaseQuery
-            include Concerns::XWikiQuery
+          module Concerns
+            module XWikiQuery
+              ACCEPT_HEADERS = { "Accept" => "application/json" }.freeze
 
-            def call(input_data:, auth_strategy:)
-              ref = PageReference.parse(input_data.identifier)
-              return failure(code: :not_found) unless ref
+              def authenticated(auth_strategy)
+                Adapters::Authentication[auth_strategy].call do |http|
+                  yield http.with(headers: ACCEPT_HEADERS)
+                end
+              end
 
-              authenticated(auth_strategy) do |http|
-                handle_response(http.get(rest_url(ref.rest_path))) do |data|
-                  success(
-                    Results::PageInfo.new(
-                      identifier: input_data.identifier,
-                      title: data["title"],
-                      href: data["xwikiAbsoluteUrl"],
-                      provider:
-                    )
-                  )
+              def rest_url(path, query: nil)
+                url = "#{provider.url.chomp('/')}/rest/#{path.delete_prefix('/')}"
+                return url if query.nil?
+
+                "#{url}?#{query.to_query}"
+              end
+
+              def handle_response(response)
+                return failure(code: :connection_error) if response.is_a?(HTTPX::ErrorResponse)
+
+                case response
+                in { status: 200..299 }
+                  begin
+                    json = response.json
+                  rescue MultiJson::ParseError
+                    return failure(code: :invalid_response)
+                  end
+
+                  yield json
+                in { status: 401 | 403 }
+                  failure(code: :unauthorized)
+                in { status: 404 }
+                  failure(code: :not_found)
+                else
+                  failure(code: :request_failed)
                 end
               end
             end
