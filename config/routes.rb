@@ -750,7 +750,9 @@ Rails.application.routes.draw do
           get :new_link
         end
       end
-      resource :working_days_and_hours, controller: "/admin/settings/working_days_and_hours_settings", only: %i[show update]
+      resource :working_days_and_hours, controller: "/admin/settings/working_days_and_hours_settings", only: %i[show update] do
+        post :confirm_changes
+      end
       resource :users, controller: "/admin/settings/users_settings", only: %i[show update]
       resource :date_format, controller: "/admin/settings/date_format_settings", only: %i[show update]
       resource :icalendar, controller: "/admin/settings/icalendar_settings", only: %i[show update]
