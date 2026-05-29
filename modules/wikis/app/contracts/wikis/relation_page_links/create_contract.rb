@@ -28,17 +28,43 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class NameInputForm < ApplicationForm
-    form do |f|
-      f.text_field(
-        name: :name,
-        label: model.class.human_attribute_name(:name),
-        required: true,
-        caption: I18n.t("wikis.admin.wiki_providers.name_caption"),
-        placeholder: I18n.t("wikis.admin.wiki_providers.name_placeholder"),
-        input_width: :large
-      )
+module Wikis
+  module RelationPageLinks
+    class CreateContract < ::ModelContract
+      attribute :author
+      attribute :identifier
+      attribute :linkable_type
+      attribute :linkable_id
+      attribute :provider
+      attribute :type
+
+      validates :identifier, presence: true
+      validates :linkable_type, presence: true
+      validates :linkable_id, presence: true
+      validates :provider, presence: true
+      validates :type, inclusion: { in: [RelationPageLink.name] }
+
+      validate :provider_exists?
+      validate :author_must_be_user
+      validate :validate_user_allowed_to_manage
+
+      private
+
+      def author_must_be_user
+        errors.add(:author, :invalid) unless author == user
+      end
+
+      def validate_user_allowed_to_manage
+        linkable = model.linkable
+
+        if linkable.present? && !user.allowed_in_project?(:manage_wiki_page_links, linkable.project)
+          errors.add(:base, :error_unauthorized)
+        end
+      end
+
+      def provider_exists?
+        errors.add(:provider, :does_not_exist) if model.provider.is_a?(InexistentProvider)
+      end
     end
   end
 end

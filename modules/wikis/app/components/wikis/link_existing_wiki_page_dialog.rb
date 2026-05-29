@@ -29,38 +29,35 @@
 #++
 
 module Wikis
-  module PageLinks
-    class RelationPageLinkCreateContract < ::ModelContract
-      attribute :author
-      attribute :identifier
-      attribute :linkable
-      attribute :provider
+  class LinkExistingWikiPageDialog < ApplicationComponent
+    include OpTurbo::Streamable
 
-      validates :identifier, presence: true
-      validates :linkable, presence: true
-      validates :provider, presence: true
+    attr_reader :linkable, :provider
 
-      validate :provider_exists?
-      validate :author_must_be_user
-      validate :validate_user_allowed_to_manage
+    def initialize(linkable:, provider:, **)
+      super(nil, **)
 
-      private
+      @linkable = linkable
+      @provider = provider
+    end
 
-      def author_must_be_user
-        errors.add(:author, :invalid) unless author == user
-      end
+    def id = "link-existing-wiki-page-dialog"
 
-      def validate_user_allowed_to_manage
-        linkable = model.linkable
+    def form_id = "#{id}-form"
 
-        if linkable.present? && !user.allowed_in_project?(:manage_wiki_page_links, linkable.project)
-          errors.add(:base, :error_unauthorized)
-        end
-      end
+    def form_options
+      {
+        id: form_id,
+        model: RelationPageLink.new(provider:, linkable:),
+        url: relation_wiki_page_links_path,
+        data: {
+          turbo_frame: WorkPackageWikisTabComponent::TURBO_FRAME_ID
+        }
+      }
+    end
 
-      def provider_exists?
-        errors.add(:provider, :does_not_exist) if model.provider.is_a?(InexistentProvider)
-      end
+    def system_arguments
+      options
     end
   end
 end

@@ -29,8 +29,18 @@
 #++
 
 module Wikis
-  module PageLinks
-    class SetAttributesService < ::BaseServices::SetAttributes
+  class LinkExistingWikiPageForm < ApplicationForm
+    form do |f|
+      f.hidden(name: :provider_id)
+      f.hidden(name: :linkable_type)
+      f.hidden(name: :linkable_id)
+
+      f.text_field(
+        name: :identifier,
+        label: RelationPageLink.human_attribute_name(:identifier),
+        required: true,
+        input_width: :large
+      )
     end
   end
 end

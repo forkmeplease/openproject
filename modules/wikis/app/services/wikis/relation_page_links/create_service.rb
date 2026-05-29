@@ -28,17 +28,9 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis::Admin
-  class NameInputForm < ApplicationForm
-    form do |f|
-      f.text_field(
-        name: :name,
-        label: model.class.human_attribute_name(:name),
-        required: true,
-        caption: I18n.t("wikis.admin.wiki_providers.name_caption"),
-        placeholder: I18n.t("wikis.admin.wiki_providers.name_placeholder"),
-        input_width: :large
-      )
+module Wikis
+  module RelationPageLinks
+    class CreateService < ::BaseServices::Create
     end
   end
 end

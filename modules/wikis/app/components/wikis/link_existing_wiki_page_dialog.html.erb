@@ -27,28 +27,14 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%=
-  content_tag("turbo-frame", id: TURBO_FRAME_ID) do
-    component_wrapper do
-      flex_layout(test_selector: "op-work-package-wikis-tab-container") do |container|
-        providers.each do |provider|
-          container.with_row(mb: 3) do
-            render(::Wikis::RelationPageLinksComponent.new(provider, work_package:))
-          end
-        end
-
-        if inline_page_links.any?
-          container.with_row(mb: 3) do
-            render(::Wikis::CollapsiblePageLinksComponent.new(inline_page_links, heading: t(".inline_page_links")))
-          end
-        end
-
-        if referencing_wiki_pages.any?
-          container.with_row do
-            render(::Wikis::CollapsiblePageLinksComponent.new(referencing_wiki_pages, heading: t(".referencing_pages")))
-          end
-        end
-      end
+<%= render(Primer::Alpha::Dialog.new(id:, title: t(".title"), size: :large, **system_arguments)) do |dialog| %>
+  <% dialog.with_body do
+    primer_form_with(**form_options) do |form|
+      render(Wikis::LinkExistingWikiPageForm.new(form))
     end
-  end
-%>
+  end %>
+  <% dialog.with_footer do %>
+    <%= render(Primer::Beta::Button.new(data: { "close-dialog-id": id })) { t("button_cancel") } %>
+    <%= render(Primer::Beta::Button.new(scheme: :primary, form: form_id, type: :submit)) { t("button_add") } %>
+  <% end %>
+<% end %>

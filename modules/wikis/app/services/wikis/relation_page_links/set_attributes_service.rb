@@ -29,11 +29,8 @@
 #++
 
 module Wikis
-  module PageLinks
-    class CreateService < ::BaseServices::Create
-      private
-
-      def default_contract_class = RelationPageLinkCreateContract
+  module RelationPageLinks
+    class SetAttributesService < ::BaseServices::SetAttributes
     end
   end
 end
