@@ -208,6 +208,15 @@ class Query < ApplicationRecord
     filters.delete_if { |f| f.field.to_s == name.to_s }
   end
 
+  # Mirrors `Queries::BaseQuery#find_active_filter` so that consumers built
+  # on top of the modern query API (e.g. `Filters::FilterForm`) can ask any
+  # query — including this legacy work-package one — for its active filter
+  # by name. Signature kept identical to BaseQuery's (symbol arg in, filter
+  # or nil out).
+  def find_active_filter(name)
+    filters.detect { |f| f.name == name }
+  end
+
   def normalized_name
     name.parameterize.underscore
   end

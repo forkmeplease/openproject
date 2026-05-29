@@ -28,37 +28,36 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Filters::Inputs::ListForm < Filters::Inputs::BaseFilterForm
-  def add_operand(group)
-    filter_name = @filter.name
-    filter_values = @filter.values || []
-    items = @filter.allowed_values.map { |name, id| { name:, id: } }
+module OpenProject
+  module Filter
+    # @logical_path OpenProject/Filter
+    class FilterFormPreview < Lookbook::Preview
+      # @display min_height 600px
+      def default
+        render_with_template(locals: { query: UserQuery.new })
+      end
 
-    group.autocompleter(
-      name: operand_name,
-      label: :value,
-      visually_hide_label: true,
-      wrapper_classes: ["advanced-filters--filter-value"],
-      wrapper_data_attributes: {
-        "filter--filters-form-target": "filterValueContainer",
-        "filter-name": filter_name,
-        "filter-autocomplete": "true"
-      },
-      autocomplete_options: {
-        component: "opce-autocompleter",
-        id: operand_name,
-        multiple: true,
-        multipleAsSeparateInputs: false,
-        inputName: "value",
-        inputValue: filter_values,
-        items:,
-        model: items.select { |item| filter_values.include?(item[:id]) },
-        bindLabel: "name",
-        bindValue: "id",
-        hideSelected: true,
-        defaultData: false,
-        hiddenFieldAction: "change->filter--filters-form#autocompleteSendForm"
-      }.merge(@additional_attributes[:autocomplete_options] || {})
-    )
+      # @display min_height 600px
+      # @label With an active filter
+      def with_active_filter
+        query = UserQuery.new
+        query.where(:login, "~", ["admin"])
+        render_with_template(locals: { query: })
+      end
+
+      # @display min_height 600px
+      # @label Hidden input mode
+      # @param output_format [Symbol] select [json, params]
+      # This also renders a field that shows the value of the hidden input to show the different serialization formats.
+      def with_hidden_input(output_format: :json)
+        render_with_template(locals: { query: UserQuery.new, output_format: output_format.to_sym })
+      end
+
+      # @display min_height 600px
+      # @label Combined with other inputs
+      def combined_with_other_inputs
+        render_with_template(locals: { query: UserQuery.new })
+      end
+    end
   end
 end

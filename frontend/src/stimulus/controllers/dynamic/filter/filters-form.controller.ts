@@ -63,6 +63,7 @@ export default class FiltersFormController extends Controller {
     'singleDay',
     'dateRange',
     'simpleValue',
+    'filtersInput',
   ];
 
   declare readonly filterFormToggleTarget:HTMLButtonElement;
@@ -76,8 +77,10 @@ export default class FiltersFormController extends Controller {
   declare readonly singleDayTargets:HTMLInputElement[];
   declare readonly dateRangeTargets:HTMLInputElement[];
   declare readonly simpleValueTargets:HTMLInputElement[];
+  declare readonly filtersInputTarget:HTMLInputElement;
 
   declare readonly hasFilterFormToggleTarget:boolean;
+  declare readonly hasFiltersInputTarget:boolean;
 
   static values = {
     displayFilters: { type: Boolean, default: false },
@@ -125,6 +128,12 @@ export default class FiltersFormController extends Controller {
     if (this.formLoadedResolver) {
       this.formLoadedResolver();
       this.formLoadedResolver = null;
+    }
+
+    // Populate the hidden field with the current serialized filters so the
+    // initial form state is submittable without any user interaction.
+    if (this.hasFiltersInputTarget) {
+      this.writeFiltersToHiddenInput();
     }
   }
 
@@ -244,8 +253,12 @@ export default class FiltersFormController extends Controller {
     }
   }
 
+  private get liveUpdatesEnabled():boolean {
+    return this.performTurboRequestsValue || this.hasFiltersInputTarget;
+  }
+
   private addChangeListener(target:HTMLElement) {
-    if (!this.performTurboRequestsValue) { return; }
+    if (!this.liveUpdatesEnabled) { return; }
 
     if (target instanceof HTMLInputElement) {
       target.addEventListener('input', this.boundListener);
@@ -255,7 +268,7 @@ export default class FiltersFormController extends Controller {
   }
 
   private removeChangeListener(target:HTMLElement) {
-    if (!this.performTurboRequestsValue) { return; }
+    if (!this.liveUpdatesEnabled) { return; }
 
     if (target instanceof HTMLInputElement) {
       target.removeEventListener('input', this.boundListener);
@@ -279,7 +292,7 @@ export default class FiltersFormController extends Controller {
 
     this.focusFilterValueIfPossible(selectedFilter);
 
-    if (this.performTurboRequestsValue) {
+    if (this.liveUpdatesEnabled) {
       this.sendForm();
     }
   }
@@ -321,7 +334,7 @@ export default class FiltersFormController extends Controller {
     const removedFilterOption = selectOptions.find((option) => option.value === filterName);
     removedFilterOption?.removeAttribute('disabled');
 
-    if (this.performTurboRequestsValue) {
+    if (this.liveUpdatesEnabled) {
       this.sendForm();
     }
   }
@@ -368,12 +381,23 @@ export default class FiltersFormController extends Controller {
   }
 
   autocompleteSendForm() {
-    if (this.performTurboRequestsValue) {
+    if (this.liveUpdatesEnabled) {
       this.sendForm();
     }
   }
 
   sendForm() {
+    // When we want the filter content to be written to a hidden input, do this.
+    // When we do not also want the turbo requests, we can exit early here. Otherwise the automatic redirect
+    // would also be triggered. We do not want this in the case where we use the filter input in another form
+    if (this.hasFiltersInputTarget) {
+      this.writeFiltersToHiddenInput();
+
+      if (!this.performTurboRequestsValue) {
+        return;
+      }
+    }
+
     const params = new URLSearchParams(window.location.search);
     const newFilters = this.buildFiltersParam(this.parseFilters());
 
@@ -410,6 +434,10 @@ export default class FiltersFormController extends Controller {
     } else {
       window.location.href = url;
     }
+  }
+
+  private writeFiltersToHiddenInput() {
+    this.filtersInputTarget.value = this.buildFiltersParam(this.parseFilters());
   }
 
   private parseFilters():InternalFilterValue[] {

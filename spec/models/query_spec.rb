@@ -65,6 +65,28 @@ RSpec.describe Query,
     end
   end
 
+  describe "#find_active_filter" do
+    let(:query) { described_class.new }
+
+    it "returns the active filter matching the given name" do
+      query.add_filter("status_id", "=", ["1"])
+
+      expect(query.find_active_filter(:status_id))
+        .to be_a(Queries::WorkPackages::Filter::StatusFilter)
+    end
+
+    it "returns nil when no filter with that name is active" do
+      expect(query.find_active_filter(:status_id)).to be_nil
+    end
+
+    it "matches by symbol, like Queries::BaseQuery#find_active_filter" do
+      query.add_filter("status_id", "=", ["1"])
+
+      expect(query.find_active_filter("status_id")).to be_nil
+      expect(query.find_active_filter(:status_id)).not_to be_nil
+    end
+  end
+
   describe "include_subprojects" do
     let(:query) { described_class.new name: "foo" }
 
