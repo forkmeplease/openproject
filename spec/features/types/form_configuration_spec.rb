@@ -156,7 +156,7 @@ RSpec.describe "form configuration", :js, :selenium do
         form.drag_and_drop(form.find_attribute_handle(:version), form.inactive_group)
         form.expect_inactive(:version)
 
-        # Rename group
+        # Rename section
         form.rename_group("Details", "Whatever")
         form.rename_group("People", "Cool Stuff")
 
