@@ -28,8 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs::BacklogBuckets
-  class CreateContract < BaseContract
-    attribute :project_id
+module Backlogs::Buckets
+  class UpdateContract < BaseContract
   end
 end

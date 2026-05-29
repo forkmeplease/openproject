@@ -29,7 +29,7 @@
 #++
 
 module Backlogs
-  class BacklogBucketsController < BaseController
+  class BucketsController < BaseController
     include OpTurbo::ComponentStream
 
     before_action :find_backlog_bucket, only: %i[edit_dialog destroy_dialog update destroy]
@@ -49,7 +49,7 @@ module Backlogs
     end
 
     def create
-      call = ::Backlogs::BacklogBuckets::CreateService
+      call = ::Backlogs::Buckets::CreateService
                .new(user: current_user)
                .call(attributes: backlog_bucket_params)
 
@@ -63,7 +63,7 @@ module Backlogs
     end
 
     def update
-      call = ::Backlogs::BacklogBuckets::UpdateService
+      call = ::Backlogs::Buckets::UpdateService
                .new(user: current_user, model: @backlog_bucket)
                .call(attributes: edit_backlog_bucket_params)
 
@@ -77,7 +77,7 @@ module Backlogs
     end
 
     def destroy
-      call = ::Backlogs::BacklogBuckets::DeleteService
+      call = ::Backlogs::Buckets::DeleteService
                .new(user: current_user, model: @backlog_bucket)
                .call
 

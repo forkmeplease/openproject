@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Backlogs::BacklogBuckets::DeleteService < BaseServices::Delete
+class Backlogs::Buckets::DeleteService < BaseServices::Delete
   private
 
   def after_validate(service_call)

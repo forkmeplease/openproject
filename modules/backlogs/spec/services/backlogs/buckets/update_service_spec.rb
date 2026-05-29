@@ -28,8 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs::BacklogBuckets
-  class DeleteContract < ::DeleteContract
-    delete_permission :create_sprints
+require "spec_helper"
+require "services/base_services/behaves_like_update_service"
+
+RSpec.describe Backlogs::Buckets::UpdateService, type: :model do
+  it_behaves_like "BaseServices update service" do
+    let(:model_class) { BacklogBucket }
+    let(:factory) { :backlog_bucket }
   end
 end

@@ -29,39 +29,12 @@
 #++
 
 require "spec_helper"
-require "contracts/shared/model_contract_shared_context"
+require_relative "shared_contract_examples"
 
-RSpec.describe ::Backlogs::BacklogBuckets::DeleteContract do
-  include_context "ModelContract shared context"
+RSpec.describe Backlogs::Buckets::CreateContract do
+  include_context "as backlog bucket contract"
 
-  let(:project) { build_stubbed(:project) }
-  let(:backlog_bucket) { build_stubbed(:backlog_bucket, project:) }
-  let(:user) { build_stubbed(:user) }
-  let(:permissions) { [:create_sprints] }
-
-  let(:contract) { described_class.new(backlog_bucket, user) }
-
-  before do
-    mock_permissions_for(user) do |mock|
-      mock.allow_in_project(*permissions, project:)
-    end
+  let(:backlog_bucket) do
+    BacklogBucket.new(name:, project:)
   end
-
-  context "when user has create_sprints permission" do
-    it_behaves_like "contract is valid"
-  end
-
-  context "when user does not have create_sprints permission" do
-    let(:permissions) { [] }
-
-    it_behaves_like "contract is invalid", base: :error_unauthorized
-  end
-
-  context "when user has an unrelated permission" do
-    let(:permissions) { [:view_work_packages] }
-
-    it_behaves_like "contract is invalid", base: :error_unauthorized
-  end
-
-  include_examples "contract reuses the model errors"
 end

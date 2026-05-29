@@ -28,8 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Backlogs::BacklogBuckets::UpdateService < BaseServices::Update
-  def instance_class
-    BacklogBucket
+module Backlogs::Buckets
+  class CreateContract < BaseContract
+    attribute :project_id
   end
 end

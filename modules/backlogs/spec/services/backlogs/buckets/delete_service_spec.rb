@@ -31,7 +31,7 @@
 require "spec_helper"
 require "services/base_services/behaves_like_delete_service"
 
-RSpec.describe ::Backlogs::BacklogBuckets::DeleteService, type: :model do
+RSpec.describe Backlogs::Buckets::DeleteService, type: :model do
   shared_let(:project) { create(:project, enabled_module_names: %w[backlogs work_package_tracking]) }
   shared_let(:bucket) { create(:backlog_bucket, project:) }
   shared_let(:no_bucket_wp1) { create(:work_package, project:) }
@@ -44,7 +44,10 @@ RSpec.describe ::Backlogs::BacklogBuckets::DeleteService, type: :model do
 
   subject { instance.call }
 
-  it_behaves_like "BaseServices delete service"
+  it_behaves_like "BaseServices delete service" do
+    let(:model_class) { BacklogBucket }
+    let(:factory) { :backlog_bucket }
+  end
 
   context "when the contract is valid" do
     it "moves the work packages to the inbox (no bucket - updating the positions)", :aggregate_failures do

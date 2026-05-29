@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -23,27 +23,34 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class Backlogs::BacklogBuckets::BaseContract < ModelContract
-  validate :user_authorized
+require "spec_helper"
+require_relative "shared_contract_examples"
 
-  def self.model
-    BacklogBucket
+RSpec.describe Backlogs::Buckets::UpdateContract do
+  include_context "as backlog bucket contract"
+
+  let(:backlog_bucket) do
+    build_stubbed(:backlog_bucket, name:, project:)
   end
 
-  attribute :name
-
-  private
-
-  def user_authorized
-    return unless model.project
-
-    unless user.allowed_in_project?(:create_sprints, model.project)
-      errors.add :base, :error_unauthorized
+  context "when trying to update project id" do
+    before do
+      backlog_bucket.project_id = build_stubbed(:project).id
     end
+
+    it_behaves_like "contract is invalid", project_id: :error_readonly
+  end
+
+  context "when trying to update project" do
+    before do
+      backlog_bucket.project = build_stubbed(:project)
+    end
+
+    it_behaves_like "contract is invalid", project_id: :error_readonly
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,31 +26,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-require "spec_helper"
-require_relative "shared_contract_examples"
-
-RSpec.describe ::Backlogs::BacklogBuckets::UpdateContract do
-  include_context "as backlog bucket contract"
-
-  let(:backlog_bucket) do
-    build_stubbed(:backlog_bucket, name:, project:)
-  end
-
-  context "when trying to update project id" do
-    before do
-      backlog_bucket.project_id = build_stubbed(:project).id
-    end
-
-    it_behaves_like "contract is invalid", project_id: :error_readonly
-  end
-
-  context "when trying to update project" do
-    before do
-      backlog_bucket.project = build_stubbed(:project)
-    end
-
-    it_behaves_like "contract is invalid", project_id: :error_readonly
+class Backlogs::Buckets::CreateService < BaseServices::Create
+  def instance_class
+    BacklogBucket
   end
 end

@@ -28,7 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs::BacklogBuckets
-  class UpdateContract < BaseContract
+require "spec_helper"
+require "services/base_services/behaves_like_create_service"
+
+RSpec.describe Backlogs::Buckets::CreateService, type: :model do
+  it_behaves_like "BaseServices create service" do
+    let(:model_class) { BacklogBucket }
+    let(:factory) { :backlog_bucket }
   end
 end

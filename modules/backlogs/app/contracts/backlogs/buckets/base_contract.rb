@@ -23,13 +23,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class Backlogs::BacklogBuckets::CreateService < BaseServices::Create
-  def instance_class
+class Backlogs::Buckets::BaseContract < ModelContract
+  validate :user_authorized
+
+  def self.model
     BacklogBucket
+  end
+
+  attribute :name
+
+  private
+
+  def user_authorized
+    return unless model.project
+
+    unless user.allowed_in_project?(:create_sprints, model.project)
+      errors.add :base, :error_unauthorized
+    end
   end
 end

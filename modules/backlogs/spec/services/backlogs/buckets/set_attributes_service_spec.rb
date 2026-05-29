@@ -30,10 +30,10 @@
 
 require "spec_helper"
 
-RSpec.describe ::Backlogs::BacklogBuckets::SetAttributesService, type: :model do
+RSpec.describe Backlogs::Buckets::SetAttributesService, type: :model do
   let(:user) { build_stubbed(:user) }
   let(:contract_class) do
-    contract = class_double(::Backlogs::BacklogBuckets::CreateContract)
+    contract = class_double(Backlogs::Buckets::CreateContract)
 
     allow(contract)
       .to receive(:new)

@@ -30,57 +30,57 @@
 
 require "spec_helper"
 
-RSpec.describe Backlogs::BacklogBucketsController do
+RSpec.describe Backlogs::BucketsController do
   describe "routing" do
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets"
-      expect(post(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets"
+      expect(post(route)).to route_to(controller: "backlogs/buckets",
                                       action: "create",
                                       project_id: "project_42")
     }
 
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets/23"
-      expect(patch(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets/23"
+      expect(patch(route)).to route_to(controller: "backlogs/buckets",
                                        action: "update",
                                        project_id: "project_42",
                                        id: "23")
     }
 
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets/23"
-      expect(put(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets/23"
+      expect(put(route)).to route_to(controller: "backlogs/buckets",
                                      action: "update",
                                      project_id: "project_42",
                                      id: "23")
     }
 
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets/23"
-      expect(delete(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets/23"
+      expect(delete(route)).to route_to(controller: "backlogs/buckets",
                                         action: "destroy",
                                         project_id: "project_42",
                                         id: "23")
     }
 
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets/new_dialog"
-      expect(get(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets/new_dialog"
+      expect(get(route)).to route_to(controller: "backlogs/buckets",
                                      action: "new_dialog",
                                      project_id: "project_42")
     }
 
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets/23/edit_dialog"
-      expect(get(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets/23/edit_dialog"
+      expect(get(route)).to route_to(controller: "backlogs/buckets",
                                      action: "edit_dialog",
                                      project_id: "project_42",
                                      id: "23")
     }
 
     it {
-      route = "/projects/project_42/backlogs/backlog_buckets/23/destroy_dialog"
-      expect(get(route)).to route_to(controller: "backlogs/backlog_buckets",
+      route = "/projects/project_42/backlogs/buckets/23/destroy_dialog"
+      expect(get(route)).to route_to(controller: "backlogs/buckets",
                                      action: "destroy_dialog",
                                      project_id: "project_42",
                                      id: "23")
@@ -89,28 +89,28 @@ RSpec.describe Backlogs::BacklogBucketsController do
 
   describe "named routing" do
     it {
-      expect(project_backlogs_backlog_buckets_path(project_id: "project_42"))
-        .to eq("/projects/project_42/backlogs/backlog_buckets")
+      expect(project_backlogs_buckets_path(project_id: "project_42"))
+        .to eq("/projects/project_42/backlogs/buckets")
     }
 
     it {
-      expect(project_backlogs_backlog_bucket_path(project_id: "project_42", id: "23"))
-        .to eq("/projects/project_42/backlogs/backlog_buckets/23")
+      expect(project_backlogs_bucket_path(project_id: "project_42", id: "23"))
+        .to eq("/projects/project_42/backlogs/buckets/23")
     }
 
     it {
-      expect(new_dialog_project_backlogs_backlog_buckets_path(project_id: "project_42"))
-        .to eq("/projects/project_42/backlogs/backlog_buckets/new_dialog")
+      expect(new_dialog_project_backlogs_buckets_path(project_id: "project_42"))
+        .to eq("/projects/project_42/backlogs/buckets/new_dialog")
     }
 
     it {
-      expect(edit_dialog_project_backlogs_backlog_bucket_path(project_id: "project_42", id: "23"))
-        .to eq("/projects/project_42/backlogs/backlog_buckets/23/edit_dialog")
+      expect(edit_dialog_project_backlogs_bucket_path(project_id: "project_42", id: "23"))
+        .to eq("/projects/project_42/backlogs/buckets/23/edit_dialog")
     }
 
     it {
-      expect(destroy_dialog_project_backlogs_backlog_bucket_path(project_id: "project_42", id: "23"))
-        .to eq("/projects/project_42/backlogs/backlog_buckets/23/destroy_dialog")
+      expect(destroy_dialog_project_backlogs_bucket_path(project_id: "project_42", id: "23"))
+        .to eq("/projects/project_42/backlogs/buckets/23/destroy_dialog")
     }
   end
 end

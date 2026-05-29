@@ -28,13 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-require "spec_helper"
-require_relative "shared_contract_examples"
-
-RSpec.describe ::Backlogs::BacklogBuckets::CreateContract do
-  include_context "as backlog bucket contract"
-
-  let(:backlog_bucket) do
-    BacklogBucket.new(name:, project:)
+module Backlogs::Buckets
+  class DeleteContract < ::DeleteContract
+    delete_permission :create_sprints
   end
 end
