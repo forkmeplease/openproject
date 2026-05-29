@@ -217,7 +217,7 @@ PATH
   remote: modules/two_factor_authentication
   specs:
     openproject-two_factor_authentication (1.0.0)
-      aws-sdk-sns (>= 1.101, < 1.114)
+      aws-sdk-sns (~> 1.116)
       messagebird-rest (>= 1.4.2, < 5.1.0)
       rotp (~> 6.1)
       webauthn (~> 3.0)
@@ -377,8 +377,8 @@ GEM
       aws-sdk-core (~> 3, >= 3.248.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-sns (1.113.0)
-      aws-sdk-core (~> 3, >= 3.244.0)
+    aws-sdk-sns (1.116.0)
+      aws-sdk-core (~> 3, >= 3.248.0)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
@@ -1834,7 +1834,7 @@ CHECKSUMS
   aws-sdk-core (3.250.0) sha256=8df71164c7e5f2ff411782a3dc3a1ab5c0a73170284409ead111f385e9992963
   aws-sdk-kms (1.128.0) sha256=20ce3957f80c7b40b3115a7e902af52b15a6eef42fe6b2e19db72f8e8c9e5658
   aws-sdk-s3 (1.224.0) sha256=7d443c4ae9eda795b60e081d41f49b498e2483f1fc204f3239176ec922ed7879
-  aws-sdk-sns (1.113.0) sha256=15fe37d010e86f4c28b4c2f2133c463ce5c14189ec3673a1f43c30dfee511b0f
+  aws-sdk-sns (1.116.0) sha256=5536532b8f9d54c92a44d8f38fae84333e5eea9b53fdf30bee18cba99e29a9c2
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   axe-core-api (4.11.3) sha256=f5f6e802743644a50e2d8ef24c22aefbb6df49dd169024ff0144b47f37e652ba
   axe-core-rspec (4.11.3) sha256=246c8d443517354e9a9962a10a8cc456bcef4c617516c0924b051a9af9d7da99
