@@ -44,6 +44,7 @@ module Wikis
               end
 
               def rest_url(path, query: nil)
+                # TODO: we might be able to extract a common URL formatting helper from Storages::UrlBuilder
                 url = "#{provider.url.chomp('/')}/rest/#{path.delete_prefix('/')}"
                 return url if query.nil?
 
