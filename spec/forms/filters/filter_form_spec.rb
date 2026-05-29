@@ -53,11 +53,12 @@ RSpec.describe Filters::FilterForm, type: :forms do
     before { render_form }
 
     it "renders an Add filter select with one option per allowed filter" do
-      select = page.find('select[name="add_filter_select"]')
-
-      expect(select).to be_present
-      # Sanity: at least the well-known UserQuery filters are advertised.
-      expect(select.all("option").map(&:value)).to include("name", "status", "login")
+      expect(rendered_form).to have_select "add_filter_select" do |select|
+        expect(select).to have_selector :option, count: 3
+        expect(select).to have_selector :option, "Name",   with: "name"
+        expect(select).to have_selector :option, "Status", with: "status"
+        expect(select).to have_selector :option, "Login",  with: "login"
+      end
     end
 
     it "renders a hidden row per allowed filter, plus active rows visible" do
