@@ -57,28 +57,43 @@ describe('GlobalSearchInputComponent#followItem', () => {
     };
   });
 
-  describe('when item is a HalResource', () => {
-    let item:WorkPackageResource;
+  describe('when item is a work package resource', () => {
+    // Build a real WorkPackageResource off its prototype and feed it a HAL $source,
+    // so followItem exercises the production displayId getter rather than a stub.
+    function buildWorkPackage(source:{ id:number, displayId?:string }):WorkPackageResource {
+      const item = Object.create(WorkPackageResource.prototype) as WorkPackageResource;
+      item.$source = source;
+      return item;
+    }
 
-    beforeEach(() => {
-      item = Object.create(HalResource.prototype) as WorkPackageResource;
-      Object.defineProperty(item, 'id', { get: () => '42', configurable: true });
-      Object.defineProperty(item, 'displayId', { get: () => 'PROJ-42', configurable: true });
+    it('is recognised as a HalResource', () => {
+      expect(buildWorkPackage({ id: 42 }) instanceof HalResource).toBe(true);
     });
 
-    it('calls wpPath with displayId', () => {
-      callFollowItem(item);
-      expect(wpPathArgs).toEqual(['PROJ-42']);
+    describe('in semantic mode (source carries a semantic displayId)', () => {
+      let item:WorkPackageResource;
+
+      beforeEach(() => {
+        item = buildWorkPackage({ id: 42, displayId: 'PROJ-42' });
+      });
+
+      it('navigates via the semantic displayId, not the numeric id', () => {
+        callFollowItem(item);
+        expect(wpPathArgs).toEqual(['PROJ-42']);
+        expect(wpPathArgs).not.toContain('42');
+      });
+
+      it('sets selectedItem to the item', () => {
+        callFollowItem(item);
+        expect(context.selectedItem).toBe(item);
+      });
     });
 
-    it('does not call wpPath with the numeric id', () => {
-      callFollowItem(item);
-      expect(wpPathArgs).not.toContain('42');
-    });
-
-    it('sets selectedItem to the item', () => {
-      callFollowItem(item);
-      expect(context.selectedItem).toBe(item);
+    describe('in classic mode (source has only the numeric id)', () => {
+      it('falls back to the numeric id through displayId', () => {
+        callFollowItem(buildWorkPackage({ id: 42 }));
+        expect(wpPathArgs).toEqual(['42']);
+      });
     });
   });
 
