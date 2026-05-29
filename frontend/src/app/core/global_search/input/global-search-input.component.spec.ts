@@ -37,7 +37,7 @@ describe('GlobalSearchInputComponent#followItem', () => {
   let searchInScopeArgs:string[];
   let context:Pick<GlobalSearchInputComponent, 'wpPath'|'selectedItem'> & { searchInScope:(scope:string) => void };
 
-  function callFollowItem(item:unknown):void {
+  function callFollowItem(item:Parameters<GlobalSearchInputComponent['followItem']>[0]):void {
     GlobalSearchInputComponent.prototype.followItem.call(context, item);
   }
 
