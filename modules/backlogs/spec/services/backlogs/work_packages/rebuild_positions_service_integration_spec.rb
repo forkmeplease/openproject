@@ -76,7 +76,7 @@ RSpec.describe Backlogs::WorkPackages::RebuildPositionsService, "integration", t
   shared_let(:bucket2_wp3) { create_work_package(subject: "Bucket 2 WorkPackage 3", backlog_bucket: bucket2, position: nil) }
 
   def have_positions(**) # rubocop:disable Naming/PredicatePrefix
-    have_attr(:position, identified_by: :subject, **)
+    pluck(:position).eq(**)
   end
 
   context "with the project provided" do
