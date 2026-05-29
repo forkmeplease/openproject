@@ -171,11 +171,7 @@ class Filters::FilterForm < ApplicationForm
     opts.any? ? { autocomplete_options: opts } : {}
   end
 
-  # Dispatch reads `filter.autocomplete_options` directly rather than the
-  # derived `additional_attributes[:autocomplete_options]`: the latter may
-  # carry form-level extras (e.g. `appendTo`) for ListForm filters too,
-  # which would otherwise misroute them to AutocompleteForm.
-  def filter_form_class(filter, _additional_attributes)
+  def filter_form_class(filter)
     if filter.is_a?(Queries::Filters::Shared::BooleanFilter)
       Filters::Inputs::BooleanForm
     elsif filter.autocomplete_options.any?
