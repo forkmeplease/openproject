@@ -70,10 +70,22 @@ module ProjectIdentifiers
 
       raise "Generated identifier is blank for project #{project.id}" if new_identifier.blank?
 
+      save_identifier!(new_identifier)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
+      handle_identifier_conflict(new_identifier, e)
+    end
+
+    def handle_identifier_conflict(attempted_id, error)
+      Rails.logger.warn "#{self.class}: Could not set identifier '#{attempted_id}' for project #{project.id}; " \
+                        "falling back to a random identifier. (#{error.message})"
+      save_identifier!("P#{SecureRandom.alphanumeric(5).upcase}")
+    end
+
+    def save_identifier!(new_identifier)
       project.identifier = new_identifier
-      # Save with the validation context that allows to save semantic ID while system is in classic mode.
       # Suppress notifications: this is a background system operation, not a user edit.
       Journal::NotificationConfiguration.with(false) do
+        # Uses :semantic_conversion context to allow saving a semantic ID while the system is in classic mode.
         project.save!(context: :semantic_conversion)
       end
     end
