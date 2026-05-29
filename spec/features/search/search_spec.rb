@@ -461,24 +461,25 @@ RSpec.describe "Search", :js, :selenium, with_settings: { per_page_options: "5" 
     end
   end
 
-  describe "when semantic work package IDs are active" do
+  describe "when semantic work package IDs are active",
+           with_settings: { work_packages_identifier: "semantic" } do
     let(:run_visit) { false }
-    let(:semantic_identifier) { "#{project.identifier}-99" }
-    let!(:semantic_wp) do
-      create(:work_package, subject: "SemanticIdentifierTest WP", project:).tap do |wp|
-        wp.update_column(:identifier, semantic_identifier)
-      end
+    let(:semantic_project) { create(:project, :semantic) }
+    let(:semantic_wp) do
+      create(:work_package, subject: "SemanticIdentifierTest WP", project: semantic_project)
     end
 
     before do
-      allow(Setting::WorkPackageIdentifier).to receive(:semantic_mode_active?).and_return(true)
+      semantic_wp
       visit search_path(scope: "all", q: "SemanticIdentifierTest")
     end
 
-    it "classic results link to the semantic identifier URL, not the numeric ID" do
+    it "links results to the semantic identifier URL, not the numeric ID" do
+      identifier = semantic_wp.reload.identifier
+
       within("dt.work_package-edit") do
-        expect(page).to have_link(href: %r{/work_packages/#{Regexp.escape(semantic_identifier)}})
-        expect(page).not_to have_link(href: %r{/work_packages/#{semantic_wp.id}[^-]})
+        expect(page).to have_link(href: %r{/work_packages/#{Regexp.escape(identifier)}(?:$|[#?])})
+        expect(page).to have_no_link(href: %r{/work_packages/#{semantic_wp.id}(?:$|[#?])})
       end
     end
   end
