@@ -48,6 +48,7 @@ module OpenProject
       # @display min_height 600px
       # @label Hidden input mode
       # @param output_format [Symbol] select [json, params]
+      # This also renders a field that shows the value of the hidden input to show the different serialization formats.
       def with_hidden_input(output_format: :json)
         render_with_template(locals: { query: UserQuery.new, output_format: output_format.to_sym })
       end
