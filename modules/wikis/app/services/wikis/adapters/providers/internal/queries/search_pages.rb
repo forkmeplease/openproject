@@ -33,37 +33,16 @@ module Wikis
     module Providers
       module Internal
         module Queries
-          class PageInfo < BaseQuery
-            class << self
-              def wiki_page_to_page_info(wiki_page, provider:)
-                Results::PageInfo.new(
-                  identifier: wiki_page.id.to_s,
-                  title: wiki_page.title,
-                  provider:,
-                  href: url_for(only_path: true,
-                                controller: "/wiki",
-                                action: "show",
-                                project_id: wiki_page.project.identifier,
-                                id: wiki_page.slug)
-                )
-              end
-
-              private
-
-              delegate :url_for, to: :url_helpers
-
-              def url_helpers
-                @url_helpers ||= OpenProject::StaticRouting::StaticRouter.new.url_helpers
-              end
-            end
+          class SearchPages < BaseQuery
+            MAXIMUM_RESULTS = 50
 
             def call(input_data:, auth_strategy:)
-              Adapters::Authentication[auth_strategy].call do |user|
-                wiki_page = WikiPage.visible(user).find_by(id: input_data.identifier)
-                return failure(code: :not_found) if wiki_page.nil?
-
-                success(self.class.wiki_page_to_page_info(wiki_page, provider:))
-              end
+              success(
+                WikiPage.visible(auth_strategy.user)
+                        .where("title ILIKE ?", "%#{input_data.query}%")
+                        .limit(MAXIMUM_RESULTS)
+                        .map { PageInfo.wiki_page_to_page_info(it, provider:) }
+              )
             end
           end
         end

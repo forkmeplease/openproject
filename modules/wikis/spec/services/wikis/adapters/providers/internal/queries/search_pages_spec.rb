@@ -30,23 +30,17 @@
 
 require "spec_helper"
 
-RSpec.describe Wikis::Adapters::Providers::Internal::Queries::ReferencingPages do
+RSpec.describe Wikis::Adapters::Providers::Internal::Queries::SearchPages do
   subject { described_class.new(model: provider).call(input_data:, auth_strategy:) }
 
   let(:provider) { create(:internal_wiki_provider) }
-  let(:input_data) { Wikis::Adapters::Input::ReferencingPages.build(linkable:).value! }
+  let(:input_data) { Wikis::Adapters::Input::SearchPages.build(query:).value! }
   let(:auth_strategy) { provider.auth_strategy_for(user).value! }
-  let(:linkable) { create(:work_package) }
+  let(:query) { wiki_page.title }
 
-  let(:wiki_page) { create(:wiki_page) }
+  let(:wiki_page) { create(:wiki_page, title: "Wiki Page with a Title you will love") }
   let(:wiki_project) { wiki_page.project }
   let(:wiki_project_permissions) { %i[view_wiki_pages] }
-
-  let(:reverse_page_links) do
-    [
-      create(:reverse_inline_wiki_page_link, provider:, linkable:, identifier: wiki_page.id)
-    ]
-  end
 
   let(:user) { create(:user) }
 
@@ -55,20 +49,40 @@ RSpec.describe Wikis::Adapters::Providers::Internal::Queries::ReferencingPages d
                     user:,
                     roles: [create(:project_role, permissions: wiki_project_permissions)])
 
-    reverse_page_links.each(&:save!)
+    wiki_page
   end
 
   it { is_expected.to be_success }
 
-  it "returns pages indicated by reverse links" do
-    results = subject.value!
-    expect(results).to all(be_success)
-    infos = results.map(&:value!)
-    expect(infos.map(&:title)).to contain_exactly(wiki_page.title)
+  it "returns pages matching the search term exactly" do
+    expect(subject.value!).not_to be_empty
+    expect(subject.value!.first.title).to eq(wiki_page.title)
   end
 
-  context "when there are no reverse links" do
-    let(:reverse_page_links) { [] }
+  context "when the search term only matches partially" do
+    let(:query) { "a Title" }
+
+    it { is_expected.to be_success }
+
+    it "returns matching pages" do
+      expect(subject.value!).not_to be_empty
+      expect(subject.value!.first.title).to eq(wiki_page.title)
+    end
+  end
+
+  context "when the search term has wrong casing" do
+    let(:query) { wiki_page.title.downcase }
+
+    it { is_expected.to be_success }
+
+    it "returns matching pages" do
+      expect(subject.value!).not_to be_empty
+      expect(subject.value!.first.title).to eq(wiki_page.title)
+    end
+  end
+
+  context "when there are no matching pages" do
+    let(:query) { "the title" }
 
     it { is_expected.to be_success }
 
@@ -77,28 +91,13 @@ RSpec.describe Wikis::Adapters::Providers::Internal::Queries::ReferencingPages d
     end
   end
 
-  context "when there are reverse links to other linkables" do
-    let(:reverse_page_links) do
-      [
-        create(:reverse_inline_wiki_page_link, provider:, identifier: wiki_page.id)
-      ]
-    end
-
-    it "does not return them" do
-      expect(subject.value!).to eq([])
-    end
-  end
-
-  context "when user can't see linked wiki page" do
+  context "when user can't see a matching wiki page" do
     let(:wiki_project_permissions) { %i[] }
 
     it { is_expected.to be_success }
 
-    it "returns a result with a failure" do
-      results = subject.value!
-      expect(results).to all(be_failure)
-      errors = results.map(&:failure)
-      expect(errors.map(&:code)).to contain_exactly(:not_found)
+    it "returns an empty result" do
+      expect(subject.value!).to eq([])
     end
   end
 end
