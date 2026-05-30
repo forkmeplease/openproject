@@ -34,7 +34,7 @@ module OpPrimer
   # Two truncation modes are supported:
   #
   # - `:horizontal` clips a single line with `Primer::Beta::Truncate`.
-  # - `:vertical` clamps to `lines` rows via the CSS `line-clamp` utility.
+  # - `:vertical` clamps to `lines` rows with `OpPrimer::VerticalTruncateComponent`.
   #
   # The companion `truncation` Stimulus controller toggles the expanded state.
   # With `inline: true` the expander reveals the text in place; with
@@ -44,10 +44,7 @@ module OpPrimer
     TRUNCATION_OPTIONS = %i[horizontal vertical].freeze
     TRUNCATION_DEFAULT = :horizontal
 
-    # Supported `.line-clamp-N` utility classes (see `_text_utils.sass`).
-    LINE_CLAMP_RANGE = (1..6)
-
-    attr_reader :truncation, :lines, :inline, :expander_arguments
+    attr_reader :truncation, :inline
 
     # @param truncation [Symbol] truncation direction. `:horizontal` clips a
     #   single line; `:vertical` clamps to `lines` rows.
@@ -72,7 +69,6 @@ module OpPrimer
       @truncation = ActiveSupport::StringInquirer.new(
         fetch_or_fallback(TRUNCATION_OPTIONS, truncation, TRUNCATION_DEFAULT).to_s
       )
-      @lines = lines.to_i.clamp(LINE_CLAMP_RANGE)
       @inline = inline
 
       @system_arguments = deny_tag_argument(**system_arguments)
@@ -91,6 +87,14 @@ module OpPrimer
         @system_arguments[:classes],
         "gap-1 min-width-0"
       )
+
+      truncate_arguments = { flex: 1, data: { truncation_target: "truncate" } }
+      @truncate_component =
+        if @truncation.vertical?
+          OpPrimer::VerticalTruncateComponent.new(lines:, **truncate_arguments)
+        else
+          Primer::Beta::Truncate.new(**truncate_arguments)
+        end
 
       set_expander_arguments!(expander_arguments)
     end

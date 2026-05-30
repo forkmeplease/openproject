@@ -30,24 +30,36 @@
 
 require "rails_helper"
 
-RSpec.describe OpenProject::Common::AttributeComponent, type: :component do
-  def render_component(lines:)
-    render_inline(described_class.new("dialog-1", "Description", "Some long text", lines:, format: false))
+RSpec.describe OpPrimer::VerticalTruncateComponent, type: :component do
+  def render_component(**, &)
+    render_inline(described_class.new(**), &)
   end
 
-  describe "truncation direction derived from `lines`" do
-    it "truncates a single line horizontally" do
-      render_component(lines: 1)
+  it "wraps content in a line-clamped div" do
+    render_component(lines: 3) { "Multi-line content" }
 
-      expect(page).to have_css("[data-truncation-mode-value='horizontal']")
-      expect(page).to have_css(".Truncate[data-truncation-target='truncate']", text: "Some long text")
-    end
+    expect(page).to have_css("div.op-vertical-truncate.op-vertical-truncate--lines-3", text: "Multi-line content")
+  end
 
-    it "truncates multiple lines vertically with a matching op-vertical-truncate" do
-      render_component(lines: 3)
+  it "clamps the line count to the supported range" do
+    render_component(lines: 99) { "Content" }
+    expect(page).to have_css("div.op-vertical-truncate--lines-6")
 
-      expect(page).to have_css("[data-truncation-mode-value='vertical']")
-      expect(page).to have_css(".op-vertical-truncate--lines-3[data-truncation-target='truncate']", text: "Some long text")
-    end
+    render_component(lines: 0) { "Content" }
+    expect(page).to have_css("div.op-vertical-truncate--lines-1")
+  end
+
+  it "forwards system arguments to the wrapper" do
+    render_component(flex: 1, data: { truncation_target: "truncate" }) { "Content" }
+
+    expect(page).to have_css("div.op-vertical-truncate.flex-1[data-truncation-target='truncate']")
+  end
+
+  it "defaults to a div but allows overriding the tag" do
+    render_component { "Content" }
+    expect(page).to have_css("div.op-vertical-truncate")
+
+    render_component(tag: :span) { "Content" }
+    expect(page).to have_css("span.op-vertical-truncate")
   end
 end

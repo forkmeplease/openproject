@@ -74,7 +74,7 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
     render_preview(:vertical, from: described_class, params: { lines: 4 })
 
     expect(page).to have_css("[data-truncation-mode-value='vertical']")
-    expect(page).to have_css(".line-clamp-4[data-truncation-target='truncate']")
+    expect(page).to have_css(".op-vertical-truncate--lines-4[data-truncation-target='truncate']")
   end
 
   it "renders the dialog preview (inline: false)" do
@@ -88,6 +88,6 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
     render_preview(:playground, from: described_class, params: { truncation: "vertical", lines: 2 })
 
     expect(page).to have_css("[data-controller='truncation'][data-truncation-mode-value='vertical']")
-    expect(page).to have_css(".line-clamp-2[data-truncation-target='truncate']")
+    expect(page).to have_css(".op-vertical-truncate--lines-2[data-truncation-target='truncate']")
   end
 end

@@ -6,7 +6,7 @@
 
 The component is a flex container with two children:
 
-- **Truncation wrapper** — either `Primer::Beta::Truncate` (horizontal, single-line CSS ellipsis) or a `div` with a `line-clamp-N` class (vertical, multi-line)
+- **Truncation wrapper** — either `Primer::Beta::Truncate` (horizontal, single-line CSS ellipsis) or `OpPrimer::VerticalTruncateComponent` (vertical, multi-line `-webkit-line-clamp` via `.op-vertical-truncate`)
 - **Expander button** — a `Primer::Alpha::HiddenTextExpander`, initially hidden, shown by the Stimulus `truncation` controller when overflow is detected
 
 ## Two axes
@@ -16,7 +16,7 @@ The component is a flex container with two children:
 | Mode | CSS mechanism | Use case |
 |------|--------------|----------|
 | `horizontal` (default) | `text-overflow: ellipsis` via Primer Truncate | Single-line labels in table cells, list items |
-| `vertical` | `-webkit-line-clamp` via `line-clamp-N` utility classes | Multi-line descriptions, rich text previews |
+| `vertical` | `-webkit-line-clamp` via `OpPrimer::VerticalTruncateComponent` (`.op-vertical-truncate--lines-N`) | Multi-line descriptions, rich text previews |
 
 ### Expansion mode
 
@@ -64,8 +64,8 @@ The Stimulus `truncation` controller:
 
 - Uses `ResizeObserver` (via `stimulus-use`) to reactively detect when content overflows its container
 - **Horizontal:** compares `scrollWidth > clientWidth` on the `.Truncate-text` element
-- **Vertical:** compares `scrollHeight > clientHeight` on the truncation target (works with `line-clamp`)
-- Toggles `Truncate--expanded` (horizontal) or `expandable-text--expanded` (vertical) CSS class for inline expansion
+- **Vertical:** compares `scrollHeight > clientHeight` on the truncation target (works with `-webkit-line-clamp`)
+- Toggles `Truncate--expanded` (horizontal) or `op-vertical-truncate--expanded` (vertical) CSS class for inline expansion
 - Updates `aria-label` and `aria-expanded` for accessibility
 
 ## In a table

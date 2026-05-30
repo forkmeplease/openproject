@@ -81,7 +81,7 @@ export default class TruncationController extends Controller<HTMLElement> {
       this.expanderButton.setAttribute('aria-expanded', String(value));
 
       if (this.modeValue === 'vertical') {
-        this.truncateTarget.classList.toggle('expandable-text--expanded', value);
+        this.truncateTarget.classList.toggle('op-vertical-truncate--expanded', value);
       } else {
         this.truncateTarget.classList.toggle('Truncate--expanded', value);
       }

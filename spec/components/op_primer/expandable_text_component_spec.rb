@@ -66,13 +66,16 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
   end
 
   describe "vertical mode" do
-    it "renders with line-clamp instead of Truncate" do
+    it "renders an op-vertical-truncate instead of a Truncate" do
       render_component(truncation: :vertical, lines: 3) { "Multi-line content" }
 
       expect(page).to have_css(
         "div.d-flex[data-truncation-mode-value='vertical']"
       )
-      expect(page).to have_css("div.line-clamp-3[data-truncation-target='truncate']", text: "Multi-line content")
+      expect(page).to have_css(
+        "div.op-vertical-truncate.op-vertical-truncate--lines-3[data-truncation-target='truncate']",
+        text: "Multi-line content"
+      )
       expect(page).to have_no_css(".Truncate")
     end
 
@@ -86,15 +89,15 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
     it "supports configurable line count" do
       render_component(truncation: :vertical, lines: 5) { "Content" }
 
-      expect(page).to have_css("div.line-clamp-5[data-truncation-target='truncate']")
+      expect(page).to have_css("div.op-vertical-truncate--lines-5[data-truncation-target='truncate']")
     end
 
     it "clamps the line count to the supported range" do
       render_component(truncation: :vertical, lines: 99) { "Content" }
-      expect(page).to have_css("div.line-clamp-6[data-truncation-target='truncate']")
+      expect(page).to have_css("div.op-vertical-truncate--lines-6[data-truncation-target='truncate']")
 
       render_component(truncation: :vertical, lines: 0) { "Content" }
-      expect(page).to have_css("div.line-clamp-1[data-truncation-target='truncate']")
+      expect(page).to have_css("div.op-vertical-truncate--lines-1[data-truncation-target='truncate']")
     end
   end
 

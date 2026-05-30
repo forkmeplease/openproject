@@ -47,7 +47,7 @@ const horizontalTemplate = `
 
 const verticalTemplate = `
   <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="true">
-    <div data-truncation-target="truncate" class="line-clamp-3" style="overflow: hidden;">
+    <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
       <p>Line one of a multi-line block of text.</p>
       <p>Line two with more content.</p>
       <p>Line three extends beyond the clamp limit.</p>
@@ -61,7 +61,7 @@ const verticalTemplate = `
 
 const dialogTemplate = `
   <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="false">
-    <div data-truncation-target="truncate" class="line-clamp-3" style="overflow: hidden;">
+    <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
       <p>Content that opens in a dialog.</p>
     </div>
     <div data-truncation-target="expander">
@@ -390,7 +390,7 @@ describe('TruncationController', () => {
       expect(expander.hidden).toBe(true);
     });
 
-    it('toggles expandable-text--expanded class instead of Truncate--expanded', async () => {
+    it('toggles op-vertical-truncate--expanded class instead of Truncate--expanded', async () => {
       ctx.appendHTML(verticalTemplate);
       await ctx.nextFrame();
 
@@ -400,13 +400,13 @@ describe('TruncationController', () => {
       controller.expandedValue = true;
       await ctx.nextFrame();
 
-      expect(truncateEl).toHaveClass('expandable-text--expanded');
+      expect(truncateEl).toHaveClass('op-vertical-truncate--expanded');
       expect(truncateEl).not.toHaveClass('Truncate--expanded');
 
       controller.expandedValue = false;
       await ctx.nextFrame();
 
-      expect(truncateEl).not.toHaveClass('expandable-text--expanded');
+      expect(truncateEl).not.toHaveClass('op-vertical-truncate--expanded');
     });
 
     it('handles click to toggle expansion', async () => {
@@ -419,13 +419,13 @@ describe('TruncationController', () => {
       button.click();
       await ctx.nextFrame();
 
-      expect(truncateEl).toHaveClass('expandable-text--expanded');
+      expect(truncateEl).toHaveClass('op-vertical-truncate--expanded');
       expect(button).toHaveAttribute('aria-expanded', 'true');
 
       button.click();
       await ctx.nextFrame();
 
-      expect(truncateEl).not.toHaveClass('expandable-text--expanded');
+      expect(truncateEl).not.toHaveClass('op-vertical-truncate--expanded');
       expect(button).toHaveAttribute('aria-expanded', 'false');
     });
   });
@@ -441,7 +441,7 @@ describe('TruncationController', () => {
       button.click();
       await ctx.nextFrame();
 
-      expect(truncateEl).not.toHaveClass('expandable-text--expanded');
+      expect(truncateEl).not.toHaveClass('op-vertical-truncate--expanded');
     });
 
     it('still manages expander visibility based on truncation', async () => {
@@ -463,7 +463,7 @@ describe('TruncationController', () => {
     it('preserves server-rendered expander when content fits but has omitted paragraphs', async () => {
       const serverVisibleTemplate = `
         <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="false">
-          <div data-truncation-target="truncate" class="line-clamp-3" style="overflow: hidden;">
+          <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <span>Short first paragraph that fits.</span>
           </div>
           <div data-truncation-target="expander">
@@ -492,7 +492,7 @@ describe('TruncationController', () => {
     it('toggles a server-hidden expander based on truncation', async () => {
       const serverHiddenTemplate = `
         <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="false">
-          <div data-truncation-target="truncate" class="line-clamp-3" style="overflow: hidden;">
+          <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <span>Single paragraph.</span>
           </div>
           <div data-truncation-target="expander" hidden>
