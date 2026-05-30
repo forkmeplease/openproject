@@ -1,8 +1,8 @@
 <%= render(
       OpPrimer::ExpandableTextComponent.new(
-        truncation: truncation_direction,
+        direction: truncation_direction,
         lines:,
-        inline: false,
+        expansion: :external,
         expander_arguments: {
           hidden: !show_expander?,
           aria: { label: I18n.t("label_attribute_expand_text", attribute: name) },

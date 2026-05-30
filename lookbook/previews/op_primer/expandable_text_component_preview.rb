@@ -62,12 +62,12 @@ module OpPrimer
     # Interactive playground for all modes
     # @param text "The text content to display" text
     # @param width "Container width in pixels" range { min: 100, max: 600, step: 10 }
-    # @param truncation "Truncation direction" select { choices: [horizontal, vertical] }
+    # @param direction "Truncation direction" select { choices: [horizontal, vertical] }
     # @param lines "Lines (vertical mode only)" range { min: 1, max: 6, step: 1 }
-    # @param inline "Expand inline or via external action" toggle
+    # @param expansion "Expand inline or via external action" select { choices: [inline, external] }
     def playground(text: "Automatically managed project folders: Share files and manage permissions",
-                   width: 200, truncation: :horizontal, lines: 3, inline: true)
-      render_with_template(locals: { text:, width:, truncation: truncation.to_sym, lines:, inline: })
+                   width: 200, direction: :horizontal, lines: 3, expansion: :inline)
+      render_with_template(locals: { text:, width:, direction: direction.to_sym, lines:, expansion: expansion.to_sym })
     end
   end
 end

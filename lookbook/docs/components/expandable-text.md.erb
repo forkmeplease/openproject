@@ -7,7 +7,7 @@
 The component is a flex container with two children:
 
 - **Truncation wrapper** — either `Primer::Beta::Truncate` (horizontal, single-line CSS ellipsis) or `OpPrimer::VerticalTruncateComponent` (vertical, multi-line `-webkit-line-clamp` via `.op-vertical-truncate`)
-- **Expander button** — a `Primer::Alpha::HiddenTextExpander`, initially hidden, shown by the Stimulus `truncation` controller when overflow is detected
+- **Expander button** — a `Primer::Alpha::HiddenTextExpander`, initially hidden, shown by the private `expandable-text` Stimulus controller when overflow is detected
 
 ## Two axes
 
@@ -22,8 +22,8 @@ The component is a flex container with two children:
 
 | Mode | Behaviour | Use case |
 |------|-----------|----------|
-| `inline: true` (default) | Clicking the expander toggles the text in place | Permission names, status labels |
-| `inline: false` | Expander button triggers an external action (e.g. opening a dialog) | Long-form project attributes with formatted content |
+| `expansion: :inline` (default) | Clicking the expander toggles the text in place | Permission names, status labels |
+| `expansion: :external` | Expander button triggers an external action (e.g. opening a dialog) | Long-form project attributes with formatted content |
 
 All four combinations are valid.
 
@@ -44,7 +44,7 @@ All four combinations are valid.
 **Don't**
 
 - Don't set a fixed width on the component itself — constrain the parent container
-- Don't use horizontal mode for multi-line content — use `truncation: :vertical` with a `lines:` count
+- Don't use horizontal mode for multi-line content — use `direction: :vertical` with a `lines:` count
 
 ## Vertical truncation
 
@@ -52,7 +52,7 @@ All four combinations are valid.
 
 ## Dialog expansion
 
-When `inline: false`, the controller only manages expander visibility. The click action is handled externally — for example, wiring the button to a `Primer::Alpha::Dialog` via `data-show-dialog-id`.
+When `expansion: :external`, the controller only manages expander visibility. The click action is handled externally — for example, wiring the button to a `Primer::Alpha::Dialog` via `data-show-dialog-id`.
 
 <%= embed OpPrimer::ExpandableTextComponentPreview, :dialog %>
 
@@ -60,7 +60,7 @@ When `inline: false`, the controller only manages expander visibility. The click
 
 <%= embed OpPrimer::ExpandableTextComponentPreview, :playground, panels: %i[params source] %>
 
-The Stimulus `truncation` controller:
+The private `expandable-text` Stimulus controller (for `ExpandableTextComponent` only):
 
 - Uses `ResizeObserver` (via `stimulus-use`) to reactively detect when content overflows its container
 - **Horizontal:** compares `scrollWidth > clientWidth` on the `.Truncate-text` element

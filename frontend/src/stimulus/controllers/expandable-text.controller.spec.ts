@@ -29,48 +29,48 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment */
 
-import TruncationController from './truncation.controller';
+import ExpandableTextController from './expandable-text.controller';
 import { setupStimulusTest, type StimulusTestContext } from 'core-stimulus/test-helpers';
 
 const horizontalTemplate = `
-  <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="horizontal" data-truncation-inline-value="true">
-    <div data-truncation-target="truncate" style="width: 200px; overflow: hidden;">
+  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="horizontal" data-expandable-text-inline-value="true">
+    <div data-expandable-text-target="truncate" style="width: 200px; overflow: hidden;">
       <span class="Truncate-text" style="display: inline-block; white-space: nowrap;">
         This is a very long text that should be truncated when it exceeds the container width
       </span>
     </div>
-    <div data-truncation-target="expander">
+    <div data-expandable-text-target="expander">
       <button type="button">Toggle</button>
     </div>
   </div>
 `;
 
 const verticalTemplate = `
-  <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="true">
-    <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
+  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="true">
+    <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
       <p>Line one of a multi-line block of text.</p>
       <p>Line two with more content.</p>
       <p>Line three extends beyond the clamp limit.</p>
       <p>Line four is hidden by the clamp.</p>
     </div>
-    <div data-truncation-target="expander">
+    <div data-expandable-text-target="expander">
       <button type="button">Toggle</button>
     </div>
   </div>
 `;
 
 const dialogTemplate = `
-  <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="false">
-    <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
+  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+    <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
       <p>Content that opens in a dialog.</p>
     </div>
-    <div data-truncation-target="expander">
+    <div data-expandable-text-target="expander">
       <button type="button" data-show-dialog-id="my-dialog">Toggle</button>
     </div>
   </div>
 `;
 
-describe('TruncationController', () => {
+describe('ExpandableTextController', () => {
   let ctx:StimulusTestContext;
   let originalI18n:any;
 
@@ -90,7 +90,7 @@ describe('TruncationController', () => {
 
   beforeEach(async () => {
     ctx = await setupStimulusTest({
-      controllers: { truncation: TruncationController },
+      controllers: { 'expandable-text': ExpandableTextController },
     });
   });
 
@@ -112,7 +112,7 @@ describe('TruncationController', () => {
       });
 
       it('connects successfully', () => {
-        const controller = ctx.getController('truncation');
+        const controller = ctx.getController('expandable-text');
 
         expect(controller).toBeDefined();
       });
@@ -124,11 +124,11 @@ describe('TruncationController', () => {
       });
 
       it('adds Truncate--expanded class when expanded value is true', async () => {
-        const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
+        const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
 
         expect(truncateEl).not.toHaveClass('Truncate--expanded');
 
-        const controller = ctx.getController<TruncationController>('truncation');
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
         controller.expandedValue = true;
         await ctx.nextFrame();
@@ -145,7 +145,7 @@ describe('TruncationController', () => {
 
       it('toggles expanded state', async () => {
         const button = ctx.screen.getByRole('button', { name: 'Expand text', hidden: true });
-        const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
+        const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
 
         expect(truncateEl).not.toHaveClass('Truncate--expanded');
         expect(button).toHaveAttribute('aria-expanded', 'false');
@@ -174,7 +174,7 @@ describe('TruncationController', () => {
 
       it('updates aria-label when expanded', async () => {
         const button = ctx.screen.getByRole('button', { name: 'Expand text', hidden: true });
-        const controller = ctx.getController<TruncationController>('truncation');
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
         expect(button).toHaveAttribute('aria-label', 'Expand text');
 
@@ -186,7 +186,7 @@ describe('TruncationController', () => {
 
       it('updates aria-expanded attribute', async () => {
         const button = ctx.screen.getByRole('button', { name: 'Expand text', hidden: true });
-        const controller = ctx.getController<TruncationController>('truncation');
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
         expect(button).toHaveAttribute('aria-expanded', 'false');
 
@@ -197,8 +197,8 @@ describe('TruncationController', () => {
       });
 
       it('toggles Truncate--expanded class', async () => {
-        const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-        const controller = ctx.getController<TruncationController>('truncation');
+        const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
         expect(truncateEl).not.toHaveClass('Truncate--expanded');
 
@@ -223,13 +223,13 @@ describe('TruncationController', () => {
 
       it('hides expander when content is not truncated', async () => {
         const shortTextTemplate = `
-          <div data-controller="truncation" data-truncation-expanded-value="false">
-            <div data-truncation-target="truncate" style="width: 500px; overflow: hidden;">
+          <div data-controller="expandable-text" data-expandable-text-expanded-value="false">
+            <div data-expandable-text-target="truncate" style="width: 500px; overflow: hidden;">
               <span class="Truncate-text" style="display: inline-block; white-space: nowrap;">
                 Short text
               </span>
             </div>
-            <div data-truncation-target="expander">
+            <div data-expandable-text-target="expander">
               <button type="button">Toggle</button>
             </div>
           </div>
@@ -238,20 +238,20 @@ describe('TruncationController', () => {
         ctx.appendHTML(shortTextTemplate);
         await waitForResize();
 
-        const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+        const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
         expect(expander.hidden).toBe(true);
       });
 
       it('shows expander when content is truncated', async () => {
         const longTextTemplate = `
-          <div data-controller="truncation" data-truncation-expanded-value="false">
-            <div data-truncation-target="truncate" style="width: 50px; overflow: hidden;">
+          <div data-controller="expandable-text" data-expandable-text-expanded-value="false">
+            <div data-expandable-text-target="truncate" style="width: 50px; overflow: hidden;">
               <span class="Truncate-text" style="display: inline-block; white-space: nowrap; width: 300px;">
                 This is a very long text that should definitely be truncated
               </span>
             </div>
-            <div data-truncation-target="expander">
+            <div data-expandable-text-target="expander">
               <button type="button">Toggle</button>
             </div>
           </div>
@@ -265,7 +265,7 @@ describe('TruncationController', () => {
 
         await waitForResize();
 
-        const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+        const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
         expect(expander.hidden).toBe(false);
       });
@@ -276,7 +276,7 @@ describe('TruncationController', () => {
         ctx.appendHTML(horizontalTemplate);
         await ctx.nextFrame();
 
-        const controller = ctx.getController<TruncationController>('truncation');
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
         // Spy on the private update method to verify resize() calls it
         const updateSpy = vi.spyOn(controller as any, 'update');
@@ -290,8 +290,8 @@ describe('TruncationController', () => {
         ctx.appendHTML(horizontalTemplate);
         await ctx.nextFrame();
 
-        const controller = ctx.getController<TruncationController>('truncation');
-        const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
+        const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
         const truncateText = ctx.container.querySelector<HTMLElement>('.Truncate-text')!;
 
         const originalScrollWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollWidth');
@@ -330,8 +330,8 @@ describe('TruncationController', () => {
         ctx.appendHTML(horizontalTemplate);
         await ctx.nextFrame();
 
-        const controller = ctx.getController<TruncationController>('truncation');
-        const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+        const controller = ctx.getController<ExpandableTextController>('expandable-text');
+        const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
         // Initially short text, expander should be hidden
         controller.resize();
@@ -353,7 +353,7 @@ describe('TruncationController', () => {
       ctx.appendHTML(verticalTemplate);
       await ctx.nextFrame();
 
-      const controller = ctx.getController('truncation');
+      const controller = ctx.getController('expandable-text');
 
       expect(controller).toBeDefined();
     });
@@ -362,13 +362,13 @@ describe('TruncationController', () => {
       ctx.appendHTML(verticalTemplate);
       await ctx.nextFrame();
 
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-      const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+      const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
       Object.defineProperty(truncateEl, 'scrollHeight', { configurable: true, value: 200 });
       Object.defineProperty(truncateEl, 'clientHeight', { configurable: true, value: 60 });
 
-      const controller = ctx.getController<TruncationController>('truncation');
+      const controller = ctx.getController<ExpandableTextController>('expandable-text');
       controller.resize();
 
       expect(expander.hidden).toBe(false);
@@ -378,13 +378,13 @@ describe('TruncationController', () => {
       ctx.appendHTML(verticalTemplate);
       await ctx.nextFrame();
 
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-      const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+      const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
       Object.defineProperty(truncateEl, 'scrollHeight', { configurable: true, value: 60 });
       Object.defineProperty(truncateEl, 'clientHeight', { configurable: true, value: 60 });
 
-      const controller = ctx.getController<TruncationController>('truncation');
+      const controller = ctx.getController<ExpandableTextController>('expandable-text');
       controller.resize();
 
       expect(expander.hidden).toBe(true);
@@ -394,8 +394,8 @@ describe('TruncationController', () => {
       ctx.appendHTML(verticalTemplate);
       await ctx.nextFrame();
 
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-      const controller = ctx.getController<TruncationController>('truncation');
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+      const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
       controller.expandedValue = true;
       await ctx.nextFrame();
@@ -414,7 +414,7 @@ describe('TruncationController', () => {
       await ctx.nextFrame();
 
       const button = ctx.screen.getByRole('button', { name: 'Expand text', hidden: true });
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
 
       button.click();
       await ctx.nextFrame();
@@ -435,8 +435,8 @@ describe('TruncationController', () => {
       ctx.appendHTML(dialogTemplate);
       await ctx.nextFrame();
 
-      const button = ctx.container.querySelector<HTMLButtonElement>('[data-truncation-target="expander"] button')!;
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
+      const button = ctx.container.querySelector<HTMLButtonElement>('[data-expandable-text-target="expander"] button')!;
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
 
       button.click();
       await ctx.nextFrame();
@@ -448,13 +448,13 @@ describe('TruncationController', () => {
       ctx.appendHTML(dialogTemplate);
       await ctx.nextFrame();
 
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-      const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+      const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
       Object.defineProperty(truncateEl, 'scrollHeight', { configurable: true, value: 200 });
       Object.defineProperty(truncateEl, 'clientHeight', { configurable: true, value: 60 });
 
-      const controller = ctx.getController<TruncationController>('truncation');
+      const controller = ctx.getController<ExpandableTextController>('expandable-text');
       controller.resize();
 
       expect(expander.hidden).toBe(false);
@@ -462,11 +462,11 @@ describe('TruncationController', () => {
 
     it('preserves server-rendered expander when content fits but has omitted paragraphs', async () => {
       const serverVisibleTemplate = `
-        <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="false">
-          <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
+        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+          <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <span>Short first paragraph that fits.</span>
           </div>
-          <div data-truncation-target="expander">
+          <div data-expandable-text-target="expander">
             <button type="button" data-show-dialog-id="my-dialog">Toggle</button>
           </div>
         </div>
@@ -475,14 +475,14 @@ describe('TruncationController', () => {
       ctx.appendHTML(serverVisibleTemplate);
       await ctx.nextFrame();
 
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-      const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+      const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
 
       // Content fits — no physical truncation
       Object.defineProperty(truncateEl, 'scrollHeight', { configurable: true, value: 40 });
       Object.defineProperty(truncateEl, 'clientHeight', { configurable: true, value: 60 });
 
-      const controller = ctx.getController<TruncationController>('truncation');
+      const controller = ctx.getController<ExpandableTextController>('expandable-text');
       controller.resize();
 
       // Expander must stay visible — server decided to show it because full content has more paragraphs
@@ -491,11 +491,11 @@ describe('TruncationController', () => {
 
     it('toggles a server-hidden expander based on truncation', async () => {
       const serverHiddenTemplate = `
-        <div data-controller="truncation" data-truncation-expanded-value="false" data-truncation-mode-value="vertical" data-truncation-inline-value="false">
-          <div data-truncation-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
+        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+          <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <span>Single paragraph.</span>
           </div>
-          <div data-truncation-target="expander" hidden>
+          <div data-expandable-text-target="expander" hidden>
             <button type="button" data-show-dialog-id="my-dialog">Toggle</button>
           </div>
         </div>
@@ -504,9 +504,9 @@ describe('TruncationController', () => {
       ctx.appendHTML(serverHiddenTemplate);
       await ctx.nextFrame();
 
-      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-truncation-target="truncate"]')!;
-      const expander = ctx.container.querySelector<HTMLElement>('[data-truncation-target="expander"]')!;
-      const controller = ctx.getController<TruncationController>('truncation');
+      const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
+      const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
+      const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
       // Content fits — server-hidden expander stays hidden
       Object.defineProperty(truncateEl, 'scrollHeight', { configurable: true, value: 60 });

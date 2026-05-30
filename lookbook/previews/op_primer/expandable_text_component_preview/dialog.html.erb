@@ -1,9 +1,9 @@
 <div style="max-width: 300px;">
   <%= render(
         OpPrimer::ExpandableTextComponent.new(
-          truncation: :vertical,
+          direction: :vertical,
           lines: 2,
-          inline: false,
+          expansion: :external,
           expander_arguments: {
             button_arguments: { "data-show-dialog-id": "expandable-text-dialog" }
           }

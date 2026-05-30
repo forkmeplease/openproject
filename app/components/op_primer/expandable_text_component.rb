@@ -31,56 +31,61 @@
 module OpPrimer
   # Truncates block content and exposes an expander to reveal the full text.
   #
-  # Two truncation modes are supported:
+  # Two truncation directions are supported:
   #
   # - `:horizontal` clips a single line with `Primer::Beta::Truncate`.
   # - `:vertical` clamps to `lines` rows with `OpPrimer::VerticalTruncateComponent`.
   #
-  # The companion `truncation` Stimulus controller toggles the expanded state.
-  # With `inline: true` the expander reveals the text in place; with
-  # `inline: false` the expander is left to a caller-provided action (for
+  # The companion `expandable-text` Stimulus controller toggles the expanded state.
+  # With `expansion: :inline` the expander reveals the text in place; with
+  # `expansion: :external` the expander is left to a caller-provided action (for
   # example, a dialog) and only its visibility is managed.
   class ExpandableTextComponent < Primer::Component
-    TRUNCATION_OPTIONS = %i[horizontal vertical].freeze
-    TRUNCATION_DEFAULT = :horizontal
+    DIRECTION_OPTIONS = %i[horizontal vertical].freeze
+    DIRECTION_DEFAULT = :horizontal
 
-    attr_reader :truncation, :inline
+    EXPANSION_OPTIONS = %i[inline external].freeze
+    EXPANSION_DEFAULT = :inline
 
-    # @param truncation [Symbol] truncation direction. `:horizontal` clips a
+    attr_reader :direction, :expansion
+
+    # @param direction [Symbol] truncation direction. `:horizontal` clips a
     #   single line; `:vertical` clamps to `lines` rows.
     # @param lines [Integer] number of visible rows in `:vertical` mode, clamped to `1..6`.
-    # @param inline [Boolean] whether the expander reveals the text in place.
-    #   When `false`, the expander's click is left to the caller (e.g. a dialog)
-    #   and only its visibility is managed.
+    # @param expansion [Symbol] `:inline` reveals the text in place; `:external`
+    #   leaves the expander's click to the caller (e.g. a dialog) and only manages
+    #   its visibility.
     # @param expander_arguments [Hash] system arguments forwarded to the
     #   `Primer::Alpha::HiddenTextExpander`.
     # @param system_arguments [Hash] forwarded to the wrapping
     #   `Primer::BaseComponent`.
     # rubocop:disable Metrics/AbcSize
     def initialize(
-      truncation: TRUNCATION_DEFAULT,
+      direction: DIRECTION_DEFAULT,
       lines: 3,
-      inline: true,
+      expansion: EXPANSION_DEFAULT,
       expander_arguments: {},
       **system_arguments
     )
       super()
 
-      @truncation = ActiveSupport::StringInquirer.new(
-        fetch_or_fallback(TRUNCATION_OPTIONS, truncation, TRUNCATION_DEFAULT).to_s
+      @direction = ActiveSupport::StringInquirer.new(
+        fetch_or_fallback(DIRECTION_OPTIONS, direction, DIRECTION_DEFAULT).to_s
       )
-      @inline = inline
+      @expansion = ActiveSupport::StringInquirer.new(
+        fetch_or_fallback(EXPANSION_OPTIONS, expansion, EXPANSION_DEFAULT).to_s
+      )
 
       @system_arguments = deny_tag_argument(**system_arguments)
       @system_arguments[:tag] = :div
       @system_arguments[:display] = :flex
-      @system_arguments[:align_items] = @truncation.vertical? ? :flex_end : :baseline
+      @system_arguments[:align_items] = @direction.vertical? ? :flex_end : :baseline
       @system_arguments[:data] = merge_data(
         @system_arguments,
         data: {
-          controller: "truncation",
-          truncation_mode_value: @truncation,
-          truncation_inline_value: inline
+          controller: "expandable-text",
+          expandable_text_mode_value: @direction,
+          expandable_text_inline_value: @expansion.inline?
         }
       )
       @system_arguments[:classes] = class_names(
@@ -88,9 +93,9 @@ module OpPrimer
         "gap-1 min-width-0"
       )
 
-      truncate_arguments = { flex: 1, data: { truncation_target: "truncate" } }
+      truncate_arguments = { flex: 1, data: { expandable_text_target: "truncate" } }
       @truncate_component =
-        if @truncation.vertical?
+        if @direction.vertical?
           OpPrimer::VerticalTruncateComponent.new(lines:, **truncate_arguments)
         else
           Primer::Beta::Truncate.new(**truncate_arguments)
@@ -111,7 +116,7 @@ module OpPrimer
         @expander_arguments
       )
       @expander_arguments[:data] = merge_data(
-        { data: { truncation_target: "expander" } },
+        { data: { expandable_text_target: "expander" } },
         @expander_arguments
       )
     end

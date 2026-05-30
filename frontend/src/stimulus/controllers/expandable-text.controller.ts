@@ -31,7 +31,11 @@
 import { Controller } from '@hotwired/stimulus';
 import { useResize } from 'stimulus-use';
 
-export default class TruncationController extends Controller<HTMLElement> {
+// Private controller for `OpPrimer::ExpandableTextComponent`. It operates on the
+// DOM that component renders — including `Primer::Beta::Truncate`'s internal
+// `.Truncate-text` element for horizontal measurement — and is not meant for
+// standalone use.
+export default class ExpandableTextController extends Controller<HTMLElement> {
   static targets = ['truncate', 'expander'];
   static values = {
     expanded: Boolean,

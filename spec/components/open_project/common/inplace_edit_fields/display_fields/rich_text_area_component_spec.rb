@@ -59,7 +59,7 @@ RSpec.describe OpenProject::Common::InplaceEditFields::DisplayFields::RichTextAr
       )
     )
 
-    expect(rendered_content).to have_css("[data-controller='truncation']", text: "Hello")
+    expect(rendered_content).to have_css("[data-controller='expandable-text']", text: "Hello")
     expect(rendered_content).to have_css(".ellipsis-expander", visible: :all)
   end
 

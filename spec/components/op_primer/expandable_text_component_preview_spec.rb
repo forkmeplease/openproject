@@ -53,41 +53,41 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
   it "renders the default (horizontal) preview" do
     render_preview(:default, from: described_class)
 
-    expect(page).to have_css("[data-controller='truncation'][data-truncation-mode-value='horizontal']")
-    expect(page).to have_css(".Truncate[data-truncation-target='truncate']")
+    expect(page).to have_css("[data-controller='expandable-text'][data-expandable-text-mode-value='horizontal']")
+    expect(page).to have_css(".Truncate[data-expandable-text-target='truncate']")
   end
 
   it "renders the short_text preview" do
     render_preview(:short_text, from: described_class)
 
-    expect(page).to have_css("[data-controller='truncation']", text: "Short text")
+    expect(page).to have_css("[data-controller='expandable-text']", text: "Short text")
   end
 
   it "renders the in_table preview" do
     render_preview(:in_table, from: described_class)
 
-    expect(page).to have_css("table [data-controller='truncation']")
+    expect(page).to have_css("table [data-controller='expandable-text']")
     expect(page).to have_text("Automatically managed project folders")
   end
 
   it "renders the vertical preview with a configurable line count" do
     render_preview(:vertical, from: described_class, params: { lines: 4 })
 
-    expect(page).to have_css("[data-truncation-mode-value='vertical']")
-    expect(page).to have_css(".op-vertical-truncate--lines-4[data-truncation-target='truncate']")
+    expect(page).to have_css("[data-expandable-text-mode-value='vertical']")
+    expect(page).to have_css(".op-vertical-truncate--lines-4[data-expandable-text-target='truncate']")
   end
 
   it "renders the dialog preview (inline: false)" do
     render_preview(:dialog, from: described_class)
 
-    expect(page).to have_css("[data-truncation-inline-value='false']")
+    expect(page).to have_css("[data-expandable-text-inline-value='false']")
     expect(page).to have_css("#expandable-text-dialog", visible: :all)
   end
 
   it "renders the playground preview" do
-    render_preview(:playground, from: described_class, params: { truncation: "vertical", lines: 2 })
+    render_preview(:playground, from: described_class, params: { direction: "vertical", lines: 2 })
 
-    expect(page).to have_css("[data-controller='truncation'][data-truncation-mode-value='vertical']")
-    expect(page).to have_css(".op-vertical-truncate--lines-2[data-truncation-target='truncate']")
+    expect(page).to have_css("[data-controller='expandable-text'][data-expandable-text-mode-value='vertical']")
+    expect(page).to have_css(".op-vertical-truncate--lines-2[data-expandable-text-target='truncate']")
   end
 end
