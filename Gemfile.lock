@@ -649,7 +649,7 @@ GEM
       mini_mime (~> 1.1)
       representable (~> 3.0)
       retriable (~> 3.1)
-    google-apis-gmail_v1 (0.50.0)
+    google-apis-gmail_v1 (0.51.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-env (2.3.1)
       base64 (~> 0.2)
@@ -1949,7 +1949,7 @@ CHECKSUMS
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   good_job (4.18.2) sha256=7e557a15865fc7b7ad4ab71644cf1d4189a2a1869d3b381e5e88741c540beca6
   google-apis-core (1.0.2) sha256=ba4579aaadc902d6cc7bc8db88f566ab00f5e31ea87ab41e9f9a032c470f2629
-  google-apis-gmail_v1 (0.50.0) sha256=4feb5e6766c2243f86142b603a22359c36401d51786e2a6cbed63a42173a17c1
+  google-apis-gmail_v1 (0.51.0) sha256=cec89406ee645e71697a0eb0237e972df213d4dde86a772b05979175c48a6d11
   google-cloud-env (2.3.1) sha256=0faac01eb27be78c2591d64433663b1a114f8f7af55a4f819755426cac9178e7
   google-logging-utils (0.2.0) sha256=675462b4ea5affa825a3442694ca2d75d0069455a1d0956127207498fca3df7b
   google-protobuf (4.35.0) sha256=95346162c792ed78c9a28cbf2d937a53f706de6df36a27471582f63f03c30c0d
