@@ -34,6 +34,23 @@ module ResourcePlannerViews::WorkPackageList
 
     mobile_columns :subject, :priority
 
+    # The view (and its project/planner) are threaded through so each row can
+    # build its manage URLs and decide whether the manual-list actions (remove,
+    # move, drag) apply.
+    attr_reader :view, :project, :resource_planner
+
+    def initialize(view:, project:, resource_planner:, **)
+      super(**)
+
+      @view = view
+      @project = project
+      @resource_planner = resource_planner
+    end
+
+    # Whether this list is a manually hand-picked one, enabling the row-level
+    # manage actions and drag-and-drop reordering.
+    def manual? = view.manually_picked?
+
     main_column :subject
 
     def sortable? = false

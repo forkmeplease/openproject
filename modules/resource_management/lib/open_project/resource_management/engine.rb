@@ -57,7 +57,9 @@ module OpenProject::ResourceManagement
                    {
                      "resource_management/resource_planners": %i[index show overview new create edit update destroy],
                      "resource_management/resource_planner_views": %i[show new create edit update destroy
-                                                                      new_work_package add_work_package],
+                                                                      new_work_package add_work_package
+                                                                      remove_work_package move_work_package
+                                                                      reorder_work_package],
                      "resource_management/menus": %i[show]
                    },
                    permissible_on: :project

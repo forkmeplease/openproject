@@ -36,7 +36,10 @@ module ::ResourceManagement
     before_action :find_project_by_project_id
     before_action :authorize
     before_action :find_resource_planner
-    before_action :find_view, only: %i[show edit update destroy new_work_package add_work_package]
+    before_action :find_view,
+                  only: %i[show edit update destroy
+                           new_work_package add_work_package remove_work_package
+                           move_work_package reorder_work_package]
 
     def show; end
 
@@ -114,7 +117,49 @@ module ::ResourceManagement
       return render_400(message: I18n.t(:notice_file_not_found)) if work_package.nil?
 
       append_work_package(work_package)
-      render_work_package_added
+
+      replace_work_package_list
+      close_dialog_via_turbo_stream(
+        "##{ResourcePlannerViews::WorkPackageList::AddWorkPackageDialogComponent::DIALOG_ID}"
+      )
+      respond_with_turbo_streams
+    end
+
+    # Drops the chosen work package from the manually hand-picked query and
+    # re-renders the list in place.
+    def remove_work_package
+      @view.effective_query
+           .ordered_work_packages
+           .where(work_package_id: params[:work_package_id])
+           .destroy_all
+
+      replace_work_package_list
+      respond_with_turbo_streams
+    end
+
+    # Moves a work package within the manually hand-picked order. `direction`
+    # is one of top/up/down/bottom (from the row's Move sub-menu).
+    def move_work_package
+      move_to_index(params[:work_package_id]) do |index, count|
+        case params[:direction].to_s
+        when "top" then 0
+        when "bottom" then count - 1
+        when "up" then index - 1
+        when "down" then index + 1
+        end
+      end
+
+      replace_work_package_list
+      respond_with_turbo_streams
+    end
+
+    # Drag-and-drop drop target. The generic-drag-and-drop controller posts the
+    # 1-based index the row was dropped at; convert it to a 0-based target.
+    def reorder_work_package
+      move_to_index(params[:work_package_id]) { params[:position].to_i - 1 }
+
+      replace_work_package_list
+      respond_with_turbo_streams
     end
 
     private
@@ -127,7 +172,32 @@ module ::ResourceManagement
       query.ordered_work_packages.create!(work_package:, position: next_position)
     end
 
-    def render_work_package_added
+    # Reorders the ordered work package identified by `work_package_id`. The
+    # block receives the current index and total count and returns the desired
+    # index; positions are then re-packed 1..n. Re-packing keeps the logic the
+    # same whether the move comes from the menu or a drag-and-drop drop, and
+    # tolerates the sparse positions the work-package table may have left.
+    def move_to_index(work_package_id)
+      ordered = @view.effective_query.ordered_work_packages.order(:position).to_a
+      from = ordered.index { |owp| owp.work_package_id == work_package_id.to_i }
+      return if from.nil?
+
+      target = yield(from, ordered.size).clamp(0, ordered.size - 1)
+      reorder_and_repack(ordered, from, target) unless target == from
+    end
+
+    def reorder_and_repack(ordered, from, target)
+      ordered.insert(target, ordered.delete_at(from))
+      repack_positions(ordered)
+    end
+
+    def repack_positions(ordered)
+      ordered.each_with_index do |owp, index|
+        owp.update_column(:position, index + 1) unless owp.position == index + 1
+      end
+    end
+
+    def replace_work_package_list
       replace_via_turbo_stream(
         component: ResourcePlannerViews::ContentComponent.new(
           view: @view,
@@ -135,10 +205,6 @@ module ::ResourceManagement
           resource_planner: @resource_planner
         )
       )
-      close_dialog_via_turbo_stream(
-        "##{ResourcePlannerViews::WorkPackageList::AddWorkPackageDialogComponent::DIALOG_ID}"
-      )
-      respond_with_turbo_streams
     end
 
     def render_configure_step(view, status: :ok)
@@ -175,15 +241,8 @@ module ::ResourceManagement
         ),
         status:
       )
-      replace_via_turbo_stream(
-        component: ResourcePlannerViews::ConfigureStep::FooterComponent.new(
-          submit_label: I18n.t(:button_save),
-          dialog_id: ResourcePlannerViews::EditDialogComponent::DIALOG_ID,
-          form_id: ResourcePlannerViews::EditDialogComponent::FORM_ID,
-          footer_id: ResourcePlannerViews::EditDialogComponent::FOOTER_ID
-        ),
-        status:
-      )
+      # The edit dialog's footer is static (rendered once with the dialog), so
+      # only the form is re-rendered on validation failure.
       respond_with_turbo_streams
     end
 

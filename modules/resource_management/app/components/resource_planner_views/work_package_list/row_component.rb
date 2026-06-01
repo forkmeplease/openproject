@@ -32,9 +32,37 @@ module ResourcePlannerViews::WorkPackageList
   class RowComponent < ::OpPrimer::BorderBoxRowComponent
     alias_method :work_package, :model
 
-    # The type / id / status info line stacked above the linked subject.
+    # Drag type shared with the container in ContentComponent so the
+    # generic-drag-and-drop controller only accepts rows from this list.
+    DRAGGABLE_TYPE = "resource-work-package"
+
+    # Manual lists are reorderable: tag each row with the attributes the
+    # generic-drag-and-drop controller expects (type, id and the drop URL it
+    # PUTs to). Automatic lists render plain rows.
+    # NB: `row_data` is invoked by the parent table while building the row
+    # wrapper, before this component enters the render pipeline, so `helpers`
+    # is not yet available — use the route helpers module directly.
+    def row_data
+      return {} unless manual?
+
+      {
+        draggable_type: DRAGGABLE_TYPE,
+        draggable_id: work_package.id,
+        drop_url: Rails.application.routes.url_helpers.reorder_work_package_project_resource_planner_view_path(
+          table.project, table.resource_planner, table.view, work_package_id: work_package.id
+        )
+      }
+    end
+
+    def row_css_id
+      "resource-work-package-row-#{work_package.id}" if manual?
+    end
+
+    # The type / id / status info line stacked above the linked subject. For
+    # manual lists a drag handle is prepended — the generic-drag-and-drop
+    # controller only starts a drag from a `.DragHandle` (handle: true).
     def subject
-      safe_join(
+      content = safe_join(
         [
           render(WorkPackages::InfoLineComponent.new(work_package:, show_status: true)),
           render(
@@ -46,6 +74,13 @@ module ResourcePlannerViews::WorkPackageList
           ) { work_package.subject }
         ]
       )
+
+      return content unless manual?
+
+      flex_layout(align_items: :center) do |row|
+        row.with_column(mr: 2) { render(Primer::OpenProject::DragHandle.new) }
+        row.with_column(flex: 1) { content }
+      end
     end
 
     def priority
@@ -85,8 +120,9 @@ module ResourcePlannerViews::WorkPackageList
       I18n.t("resource_management.work_package_list.allocation_placeholder")
     end
 
-    # Stubbed context menu mirroring the intended actions. Each item gets its own
-    # method so it can be wired up individually later. None are functional yet.
+    # Context menu for a row. Most items are still stubs. The manual-list
+    # actions (reorder + remove) only apply to hand-picked views; automatic
+    # (filtered) views instead offer the filter-criteria shortcut.
     def context_menu
       render(Primer::Alpha::ActionMenu.new) do |menu|
         menu.with_show_button(icon: "kebab-horizontal",
@@ -96,9 +132,13 @@ module ResourcePlannerViews::WorkPackageList
         see_allocation_item(menu)
         edit_total_work_item(menu)
         add_user_group_item(menu)
-        add_filter_criteria_item(menu)
-        move_item(menu)
-        remove_item(menu)
+
+        if manual?
+          move_item(menu)
+          remove_item(menu)
+        else
+          add_filter_criteria_item(menu)
+        end
       end
     end
 
@@ -130,19 +170,68 @@ module ResourcePlannerViews::WorkPackageList
       end
     end
 
+    # Reorder sub-menu. Edge moves are omitted when the row already sits at the
+    # top/bottom, mirroring the agenda-item and phase-definition menus.
     def move_item(menu)
-      menu.with_item(label: t("resource_management.work_package_list.context_menu.move"),
-                     disabled: true) do |item|
-        item.with_leading_visual_icon(icon: :"arrow-right")
+      menu.with_sub_menu_item(label: t("resource_management.work_package_list.context_menu.move")) do |submenu|
+        submenu.with_leading_visual_icon(icon: :"arrow-right")
+
+        ns = "resource_management.work_package_list.context_menu"
+        unless first?
+          move_action(submenu, direction: "top", label: t("#{ns}.move_to_top"), icon: "move-to-top")
+          move_action(submenu, direction: "up", label: t("#{ns}.move_up"), icon: "chevron-up")
+        end
+        unless last?
+          move_action(submenu, direction: "down", label: t("#{ns}.move_down"), icon: "chevron-down")
+          move_action(submenu, direction: "bottom", label: t("#{ns}.move_to_bottom"), icon: "move-to-bottom")
+        end
+      end
+    end
+
+    def move_action(submenu, direction:, label:, icon:)
+      submenu.with_item(
+        label:,
+        href: helpers.move_work_package_project_resource_planner_view_path(
+          table.project, table.resource_planner, table.view, work_package_id: work_package.id, direction:
+        ),
+        form_arguments: { method: :put }
+      ) do |item|
+        item.with_leading_visual_icon(icon:)
       end
     end
 
     def remove_item(menu)
-      menu.with_item(label: t("resource_management.work_package_list.context_menu.remove"),
-                     scheme: :danger,
-                     disabled: true) do |item|
+      menu.with_item(
+        label: t("resource_management.work_package_list.context_menu.remove"),
+        scheme: :danger,
+        href: helpers.remove_work_package_project_resource_planner_view_path(
+          table.project, table.resource_planner, table.view, work_package_id: work_package.id
+        ),
+        form_arguments: {
+          method: :delete,
+          data: { turbo_confirm: t("resource_management.work_package_list.context_menu.remove_confirmation") }
+        }
+      ) do |item|
         item.with_leading_visual_icon(icon: :trash)
       end
+    end
+
+    def manual?
+      table.manual?
+    end
+
+    # Position of this row within the manually ordered list, used to drop the
+    # edge move actions.
+    def position_index
+      @position_index ||= table.rows.index { |wp| wp.id == work_package.id }
+    end
+
+    def first?
+      position_index.zero?
+    end
+
+    def last?
+      position_index == table.rows.size - 1
     end
   end
 end

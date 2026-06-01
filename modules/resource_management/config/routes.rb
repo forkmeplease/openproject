@@ -51,6 +51,9 @@ Rails.application.routes.draw do
           # endpoints that add/remove a work package to/from the query.
           get :new_work_package
           post :work_packages, action: :add_work_package
+          put "work_packages/:work_package_id/move", action: :move_work_package, as: :move_work_package
+          put "work_packages/:work_package_id/reorder", action: :reorder_work_package, as: :reorder_work_package
+
           delete "work_packages/:work_package_id", action: :remove_work_package, as: :remove_work_package
         end
       end
