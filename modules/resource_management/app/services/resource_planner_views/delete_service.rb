@@ -28,36 +28,25 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  #  resources :resource_management,
-  #            controller: "resource_management/resource_management",
-  #            only: %i[] do
-  #    collection do
-  #      get "/", to: "resource_management/resource_management#overview", as: :overview
-  #    end
-  #  end
+module ResourcePlannerViews
+  # Destroying the view also tears down its dependents: the backing query is
+  # removed by PersistedView#destroy_query_if_orphaned (which cascades to the
+  # query's ordered_work_packages at the database level) and favorites are
+  # cleaned up by acts_as_favoritable.
+  class DeleteService < ::BaseServices::Delete
+    private
 
-  scope "projects/:project_id", as: "project" do
-    resources :resource_planners, controller: "resource_management/resource_planners" do
-      member do
-        post :toggle_public
+    # Keep the parent planner consistent: if the deleted view was its default,
+    # repoint the default at a remaining view (or clear it).
+    def after_perform(call)
+      return call unless call.success?
+
+      planner = call.result.parent
+      if planner.is_a?(ResourcePlanner) && planner.default_view_id == call.result.id
+        planner.update!(default_view_id: planner.children.reload.first&.id)
       end
 
-      resources :views,
-                controller: "resource_management/resource_planner_views",
-                only: %i[show new create edit update destroy] do
-        member do
-          # Search-and-pick dialog for manually hand-picked views, and the
-          # endpoints that add/remove a work package to/from the query.
-          get :new_work_package
-          post :work_packages, action: :add_work_package
-          delete "work_packages/:work_package_id", action: :remove_work_package, as: :remove_work_package
-        end
-      end
-
-      collection do
-        get "menu" => "resource_management/menus#show"
-      end
+      call
     end
   end
 end

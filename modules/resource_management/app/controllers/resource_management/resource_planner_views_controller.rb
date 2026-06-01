@@ -78,7 +78,21 @@ module ::ResourceManagement
       call.success? ? render_update_success(call.result) : render_edit_step(call.result, status: :unprocessable_entity)
     end
 
-    def destroy; end
+    def destroy
+      call = ResourcePlannerViews::DeleteService.new(user: current_user, model: @view).call
+
+      if call.success?
+        flash[:notice] = I18n.t(:notice_successful_delete)
+      else
+        flash[:error] = call.message
+      end
+
+      # The deleted view was a tab; navigate back to the planner, which falls
+      # back to a remaining view (or the blank slate).
+      render turbo_stream: turbo_stream.redirect_to(
+        project_resource_planner_path(@project, @resource_planner)
+      )
+    end
 
     # Opens the search dialog for manually hand-picked views.
     def new_work_package

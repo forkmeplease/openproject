@@ -28,36 +28,23 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-Rails.application.routes.draw do
-  #  resources :resource_management,
-  #            controller: "resource_management/resource_management",
-  #            only: %i[] do
-  #    collection do
-  #      get "/", to: "resource_management/resource_management#overview", as: :overview
-  #    end
-  #  end
+module ResourcePlannerViews
+  # Deleting a view follows the same authorization rules as managing it: the
+  # owner of the parent planner (with view permission), a public-planner
+  # manager, or an admin.
+  class DeleteContract < ::DeleteContract
+    delete_permission(lambda do
+      next true if user.active_admin?
 
-  scope "projects/:project_id", as: "project" do
-    resources :resource_planners, controller: "resource_management/resource_planners" do
-      member do
-        post :toggle_public
-      end
+      planner = model.parent
+      next false if planner.nil? || planner.project.nil?
 
-      resources :views,
-                controller: "resource_management/resource_planner_views",
-                only: %i[show new create edit update destroy] do
-        member do
-          # Search-and-pick dialog for manually hand-picked views, and the
-          # endpoints that add/remove a work package to/from the query.
-          get :new_work_package
-          post :work_packages, action: :add_work_package
-          delete "work_packages/:work_package_id", action: :remove_work_package, as: :remove_work_package
-        end
-      end
+      owns_planner = planner.principal == user &&
+                     user.allowed_in_project?(:view_resource_planners, planner.project)
+      can_manage_public = planner.public? &&
+                          user.allowed_in_project?(:manage_public_resource_planners, planner.project)
 
-      collection do
-        get "menu" => "resource_management/menus#show"
-      end
-    end
+      owns_planner || can_manage_public
+    end)
   end
 end
