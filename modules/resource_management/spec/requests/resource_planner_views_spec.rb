@@ -217,5 +217,118 @@ RSpec.describe "ResourcePlannerViews requests",
         expect(response).to have_http_status(:bad_request)
       end
     end
+
+    describe "PUT move_work_package" do
+      shared_let(:other_wp) { create(:work_package, project:) }
+
+      before do
+        manual_view.query.ordered_work_packages.create!(work_package:, position: 1)
+        manual_view.query.ordered_work_packages.create!(work_package: other_wp, position: 2)
+      end
+
+      def ordered_ids
+        manual_view.query.ordered_work_packages.order(:position).pluck(:work_package_id)
+      end
+
+      it "moves a work package down and re-packs positions" do
+        put move_work_package_project_resource_planner_view_path(
+          project, resource_planner, manual_view, work_package_id: work_package.id, direction: "down"
+        ), as: :turbo_stream
+
+        expect(response).to have_http_status(:ok)
+        expect(ordered_ids).to eq([other_wp.id, work_package.id])
+        expect(manual_view.query.ordered_work_packages.order(:position).pluck(:position)).to eq([1, 2])
+      end
+
+      it "moves a work package to the top" do
+        put move_work_package_project_resource_planner_view_path(
+          project, resource_planner, manual_view, work_package_id: other_wp.id, direction: "top"
+        ), as: :turbo_stream
+
+        expect(ordered_ids).to eq([other_wp.id, work_package.id])
+      end
+    end
+
+    describe "PUT reorder_work_package (drag-and-drop drop)" do
+      shared_let(:other_wp) { create(:work_package, project:) }
+
+      before do
+        manual_view.query.ordered_work_packages.create!(work_package:, position: 1)
+        manual_view.query.ordered_work_packages.create!(work_package: other_wp, position: 2)
+      end
+
+      it "moves the work package to the dropped 1-based position and re-packs" do
+        put reorder_work_package_project_resource_planner_view_path(
+          project, resource_planner, manual_view, work_package_id: work_package.id
+        ), params: { position: 2 }, as: :turbo_stream
+
+        expect(response).to have_http_status(:ok)
+        expect(manual_view.query.ordered_work_packages.order(:position).pluck(:work_package_id))
+          .to eq([other_wp.id, work_package.id])
+      end
+
+      it "renders the list inside the drag-and-drop container" do
+        put reorder_work_package_project_resource_planner_view_path(
+          project, resource_planner, manual_view, work_package_id: work_package.id
+        ), params: { position: 1 }, as: :turbo_stream
+
+        expect(response.body).to include('data-controller="generic-drag-and-drop"')
+        expect(response.body).to include("data-draggable-type=\"#{ResourcePlannerViews::WorkPackageList::RowComponent::DRAGGABLE_TYPE}\"")
+      end
+    end
+
+    describe "DELETE remove_work_package" do
+      before { manual_view.query.ordered_work_packages.create!(work_package:, position: 1) }
+
+      subject(:perform) do
+        delete remove_work_package_project_resource_planner_view_path(
+          project, resource_planner, manual_view, work_package_id: work_package.id
+        ), as: :turbo_stream
+      end
+
+      it "drops the work package from the query and re-renders the list" do
+        expect { perform }.to change { manual_view.query.ordered_work_packages.count }.by(-1)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('target="resource-planner-views-content-component"')
+      end
+    end
+
+    describe "DELETE destroy" do
+      before { manual_view.query.ordered_work_packages.create!(work_package:, position: 1) }
+
+      it "deletes the view and purges its query and ordered work packages" do
+        query_id = manual_view.query.id
+
+        expect do
+          delete project_resource_planner_view_path(project, resource_planner, manual_view), as: :turbo_stream
+        end.to change(ResourceWorkPackageList, :count).by(-1)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("turbo-stream")
+        expect(Query.exists?(query_id)).to be(false)
+        expect(OrderedWorkPackage.where(query_id:)).to be_empty
+      end
+
+      it "repoints the planner's default view when the deleted view was the default" do
+        resource_planner.update!(default_view_id: manual_view.id)
+
+        delete project_resource_planner_view_path(project, resource_planner, manual_view), as: :turbo_stream
+
+        expect(resource_planner.reload.default_view_id).not_to eq(manual_view.id)
+      end
+
+      context "when another user cannot manage the private planner" do
+        let(:other_user) { create(:user, member_with_permissions: { project => %i[view_resource_planners] }) }
+
+        before { login_as other_user }
+
+        it "does not delete the view" do
+          expect do
+            delete project_resource_planner_view_path(project, resource_planner, manual_view), as: :turbo_stream
+          end.not_to change(ResourceWorkPackageList, :count)
+        end
+      end
+    end
   end
 end
