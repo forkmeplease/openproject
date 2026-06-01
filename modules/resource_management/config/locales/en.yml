@@ -142,11 +142,5 @@ en:
       subheader:
         add: Add
         add_work_package: Add work package
-        all_filters: All filters
         allocate: Allocate
-        hierarchy: Display hierarchy
-        search: Search
         settings: Configure view
-        sort: Sort
-        status: Status
-        type: Type
