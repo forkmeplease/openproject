@@ -4980,6 +4980,7 @@ en:
         menu:
           label_actions: "Work package actions"
         parent: "Parent"
+        undisclosed: "Undisclosed"
 
   permission_add_work_package_comments: "Add comments"
   permission_add_work_packages: "Add work packages"
