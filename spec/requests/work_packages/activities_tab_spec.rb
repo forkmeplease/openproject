@@ -73,5 +73,12 @@ RSpec.describe "Work package activities tab",
       expect(response).to have_http_status(:ok)
       expect(response.body).not_to include(resolved_value_attribute)
     end
+
+    it "omits the resolved-comment value for an unresolvable activity anchor" do
+      get work_package_activities_path(work_package), params: { anchor: "activity-999999" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(resolved_value_attribute)
+    end
   end
 end

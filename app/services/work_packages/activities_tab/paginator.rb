@@ -62,10 +62,6 @@ class WorkPackages::ActivitiesTab::Paginator
   include Pagy::Method
   include WorkPackages::ActivitiesTab::JournalSortingInquirable
 
-  def self.paginate(work_package, params = {})
-    new(work_package, params).call
-  end
-
   attr_reader :work_package, :params, :filter, :resolved_anchor
 
   def initialize(work_package, params = {})
@@ -163,16 +159,20 @@ class WorkPackages::ActivitiesTab::Paginator
     activity_at, anchor_id = locate_anchor(anchor_type, target_record_id)
     return nil unless activity_at && anchor_id
 
-    # A comment anchor already matches the DOM's data-anchor-comment-id. An
-    # activity anchor has no rendered counterpart, so hand the comment id it
-    # resolved to back to the client to scroll to instead.
-    @resolved_anchor = anchor_id if anchor_type.activity?
+    record_resolved_anchor(anchor_type, anchor_id)
 
     rows_ahead = scope
       .where("(journals.created_at, journals.id) > (?, ?)", activity_at, anchor_id)
       .count(:all)
 
     (rows_ahead / limit) + 1
+  end
+
+  # A comment anchor already matches the DOM's data-anchor-comment-id. An activity
+  # anchor has no rendered counterpart, so hand the comment id it resolved to back
+  # to the client to scroll to instead.
+  def record_resolved_anchor(anchor_type, anchor_id)
+    @resolved_anchor = anchor_id if anchor_type.activity?
   end
 
   def locate_anchor(anchor_type, target_record_id)
@@ -190,9 +190,9 @@ class WorkPackages::ActivitiesTab::Paginator
       .pick(:created_at, :id)
   end
 
-  # Eager-loads and the sequence version are applied to the page slice here, not
-  # to activities_scope, so the count query stays off them. Changeset journals
-  # map back to Changeset records; work package journals go through the wrapper.
+  # Eager-loads are applied to the page slice here, not to activities_scope, so
+  # the count query stays off them. Changeset journals map back to Changeset
+  # records; work package journals go through the wrapper.
   def load_activities(page_relation)
     journals = page_journals(page_relation)
     changesets = load_changesets(journals.select { changeset?(it) }.map(&:journable_id))
