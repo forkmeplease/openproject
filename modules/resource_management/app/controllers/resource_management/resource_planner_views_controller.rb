@@ -92,9 +92,7 @@ module ::ResourceManagement
 
       # The deleted view was a tab; navigate back to the planner, which falls
       # back to a remaining view (or the blank slate).
-      render turbo_stream: turbo_stream.redirect_to(
-        project_resource_planner_path(@project, @resource_planner)
-      )
+      redirect_to project_resource_planner_path(@project, @resource_planner), status: :see_other
     end
 
     def new_work_package

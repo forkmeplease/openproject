@@ -304,8 +304,8 @@ RSpec.describe "ResourcePlannerViews requests",
           delete project_resource_planner_view_path(project, resource_planner, manual_view), as: :turbo_stream
         end.to change(ResourceWorkPackageList, :count).by(-1)
 
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include("turbo-stream")
+        expect(response).to redirect_to(project_resource_planner_path(project, resource_planner))
+        expect(response).to have_http_status(:see_other)
         expect(Query.exists?(query_id)).to be(false)
         expect(OrderedWorkPackage.where(query_id:)).to be_empty
       end
