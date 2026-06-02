@@ -38,9 +38,11 @@
   end
 %>
 
-<%= render(
-      WorkPackages::Admin::Settings::IdentifierAutofixTableComponent.new(
-        rows: displayed,
-        remaining_count:
-      )
-    ) %>
+<%= render(Primer::Box.new(mb: 3)) do %>
+  <%= render(
+        WorkPackages::Admin::Settings::IdentifierAutofixTableComponent.new(
+          rows: displayed,
+          remaining_count:
+        )
+      ) %>
+<% end %>
