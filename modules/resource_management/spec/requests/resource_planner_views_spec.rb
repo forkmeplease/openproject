@@ -294,6 +294,45 @@ RSpec.describe "ResourcePlannerViews requests",
       end
     end
 
+    describe "authorization for changing contents on a public planner" do
+      let(:resource_planner) { create(:resource_planner, project:, principal: user, public: true) }
+
+      subject(:perform) do
+        post work_packages_project_resource_planner_view_path(project, resource_planner, manual_view),
+             params: { work_package_id: work_package.id },
+             as: :turbo_stream
+      end
+
+      context "as a non-owner with only view_resource_planners" do
+        let(:viewer) do
+          create(:user, member_with_permissions: { project => %i[view_resource_planners view_work_packages] })
+        end
+
+        before { login_as viewer }
+
+        it "denies changing the contents" do
+          expect { perform }.not_to(change { manual_view.query.ordered_work_packages.count })
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+
+      context "as a non-owner with manage_public_resource_planners" do
+        let(:manager) do
+          create(:user,
+                 member_with_permissions: {
+                   project => %i[view_resource_planners manage_public_resource_planners view_work_packages]
+                 })
+        end
+
+        before { login_as manager }
+
+        it "allows changing the contents" do
+          expect { perform }.to change { manual_view.query.ordered_work_packages.count }.by(1)
+          expect(response).to have_http_status(:ok)
+        end
+      end
+    end
+
     describe "DELETE destroy" do
       before { manual_view.query.ordered_work_packages.create!(work_package:, position: 1) }
 

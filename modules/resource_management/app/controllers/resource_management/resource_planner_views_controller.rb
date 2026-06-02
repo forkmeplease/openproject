@@ -40,6 +40,12 @@ module ::ResourceManagement
                   only: %i[show edit update destroy
                            new_work_package add_work_package remove_work_package
                            move_work_package reorder_work_package]
+    # `view_resource_planners` (the controller-level :authorize) only grants
+    # read access. Changing a view's contents requires owning the planner, or
+    # the manage-public permission on a public planner.
+    before_action :authorize_manage_contents,
+                  only: %i[new_work_package add_work_package remove_work_package
+                           move_work_package reorder_work_package]
 
     def show; end
 
@@ -300,6 +306,10 @@ module ::ResourceManagement
 
     def find_view
       @view = @resource_planner.children.find(params.expect(:id))
+    end
+
+    def authorize_manage_contents
+      deny_access unless ResourcePlannerViews::ManageContentsContract.new(@view, current_user).valid?
     end
   end
 end
