@@ -28,8 +28,8 @@ fr:
     attributes:
       project:
         sprint_sharing: Partage de sprint
-        backlog_excluded_types: Excluded work package types
-        statuses_considered_closed: Statuses considered closed
+        backlog_excluded_types: Types de lots de travaux exclus
+        statuses_considered_closed: Statuts considérés comme fermés
       sprint:
         duration: Durée
         finish_date: Date de fin
@@ -87,8 +87,8 @@ fr:
       title: Les paramètres d'administration du backlog évoluent
       text: Nous sommes en train de redessiner le module Backlogs. Les paramètres d'administration pour les sprints et les backlogs seront visibles ici dans un futur proche. Les paramètres au niveau du projet restent disponibles.
     bucket_destroy_modal_component:
-      title: Delete backlog bucket?
-      details: The backlog bucket '%{name}' will be deleted and all work packages will be moved to the backlog inbox. No work package will be deleted.
+      title: Supprimer le bucket de backlog ?
+      details: Le bucket de backlog « %{name} » sera supprimé et tous les lots de travaux seront déplacés vers la boîte de réception des backlogs. Aucun lot de travaux ne sera supprimé.
     bucket_component:
       blankslate_title: Le backlog est vide
       blankslate_description: Faites glisser les éléments ici pour les ajouter.
@@ -100,7 +100,7 @@ fr:
       show:
         blankslate_title: Aucune donnée de burndown disponible
         blankslate_description: Définissez les dates de début et de fin du sprint afin de générer un graphique burndown.
-    excluded_work_package_types_caption: 'Choose which work package types to hide from the backlog. Items of the selected types will not appear in the backlog automatically, keeping it focused on the work that matters to your team. For example, types like Epics or Milestones that are managed at a higher level can be hidden to keep the backlog focused on actionable items.
+    excluded_work_package_types_caption: 'Choisissez les types de lots de travail à masquer dans le carnet de commandes. Les éléments des types sélectionnés n''apparaîtront pas automatiquement dans le carnet de commandes, ce qui lui permettra de se concentrer sur le travail qui importe à votre équipe. Par exemple, des types tels que les épopées ou les jalons qui sont gérés à un niveau plus élevé peuvent être masqués pour que le carnet de commandes reste concentré sur les éléments exploitables.
 
       '
     finish_sprint_dialog_component:
@@ -160,10 +160,10 @@ fr:
     story_points:
       one: "%{count} story point"
       other: "%{count} story points"
-    statuses_considered_closed_caption: 'Choose the statuses that represent a closed or finished state in your workflow. These will be treated as the "Closed" state across reporting (e.g. burndown) and sprint planning. For example, statuses like Done, Resolved, or Won''t Fix may all represent a closed work item in your process.
+    statuses_considered_closed_caption: 'Choisissez les statuts qui représentent un état fermé ou terminé dans votre flux de travail. Ils seront traités comme l''état "Fermé" dans les rapports (par exemple, burndown) et la planification de sprint. Par exemple, des statuts tels que Terminé, Résolu, ou Ne pas réparer peuvent tous représenter un élément de travail fermé dans votre processus.
 
       '
-    types_and_statuses: Types and statuses
+    types_and_statuses: Types et statuts
     unassigned: Non assigné
     user_preference:
       header_backlogs: Module des backlogs
@@ -173,7 +173,7 @@ fr:
         missing_target: target_id ou direction doit être présent.
         ambiguous_target: target_id et direction ne peuvent pas être présents tous les deux.
         invalid_target_type: 'target_type doit être l''un des suivants : backlog_bucket :<backlog_bucket_id>, sprint :<sprint_id>, inbox.'
-        invalid_direction: 'direction must be one of: higher, highest, lower, lowest.'
+        invalid_direction: 'la direction doit être l''une des suivantes : plus haut, plus élevé, plus bas, plus faible.'
     work_package_card_menu_component:
       action_menu:
         copy_url_to_clipboard: Copier l'URL dans le presse-papier
@@ -189,7 +189,7 @@ fr:
       sprint_sharing: Partage de sprint
     upsell:
       sprint_sharing:
-        description: Share sprints across projects to align teams and coordinate work in scaled agile setups (SAFe).
+        description: Partager les sprints entre les projets afin d'aligner les équipes et de coordonner le travail dans des configurations agiles à grande échelle (SAFe).
   label_backlog: Backlog
   label_backlog_bucket_edit: Modifier le bucket de backlog
   label_backlog_bucket_new: Nouveau bucket de backlog
@@ -242,6 +242,6 @@ fr:
         sprint_sharing: Partager les sprints
       backlogs:
         sharing_form_component:
-          sharing_description: This project can either share its own sprints, receive shared sprints or handle sprints independently (no sharing).
-          sharing_fallback_description: Lacking a corporate enterprise plan, the sharing options are limited to the project's own sprints. The currently active setting remains active.
+          sharing_description: Ce projet peut soit partager ses propres sprints, soit recevoir des sprints partagés, soit gérer les sprints de manière indépendante (sans partage).
+          sharing_fallback_description: En l'absence d'un plan d'entreprise, les options de partage sont limitées aux sprints du projet. Le paramètre actuellement actif reste actif.
   remaining_hours: travail restant
