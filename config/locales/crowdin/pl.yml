@@ -472,7 +472,7 @@ pl:
         dialog:
           title: Zmień identyfikatory pakietów roboczych
           heading: Czy włączyć identyfikatory pakietów roboczych oparte na projektach?
-          description: 'Spowoduje to zmianę identyfikatorów wszystkich pakietów roboczych we wszystkich projektach w tym wystąpieniu. Poprzednie identyfikatory i adresy URL będą nadal przekierowywać prawidłowo. Wprowadzenie tej zmiany zajmie trochę czasu.
+          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
 
             '
           confirm_button: Zmień identyfikatory
@@ -958,7 +958,7 @@ pl:
       change_identifier_dialog_title: Zmień identyfikator projektu
       change_identifier_format_hint_semantic: Tylko wielkie litery (A–Z), cyfry lub znaki podkreślenia. Maksymalnie 10 znaków. Musi zaczynać się od litery.
       change_identifier_format_hint_legacy: Tylko małe litery (a–z), cyfry, myślniki lub znaki podkreślenia.
-      change_identifier_warning: 'Spowoduje to trwałą zmianę identyfikatorów i adresów URL wszystkich pakietów roboczych w tym projekcie. Poprzednie identyfikatory i adresy URL będą jednak nadal przekierowywać prawidłowo.
+      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
 
         '
       subitems:
@@ -2098,6 +2098,7 @@ pl:
         priority: Priorytet
         progress: "% ukończono"
         readonly: Tylko do odczytu
+        relatable: Relatable to
         remaining_hours: Pozostała praca
         remaining_time: Pozostała praca
         sequence_number: Numer kolejny
@@ -4203,6 +4204,7 @@ pl:
   label_journal_diff: Opis porównania
   label_language: Język
   label_languages: Języki
+  label_export_plural: Exports
   label_external_links: Linki zewnętrzne
   label_locale: Język i region
   label_jump_to_a_project: Skok do projektu...
@@ -4673,6 +4675,7 @@ pl:
   label_total_days_off: Łączna liczba dni wolnych
   macro_execution_error: Błąd podczas wykonywania makra %{macro_name}
   macro_unavailable: Makro %{macro_name} nie może zostać wyświetlone.
+  macro_unknown: Unknown or unsupported macro.
   macros:
     placeholder: "[Placeholder] Makro %{macro_name}"
     errors:
@@ -5355,6 +5358,10 @@ pl:
   setting_consent_required: Wymagana zgoda
   setting_consent_decline_mail: Adres kontaktowy zgody
   setting_cross_project_work_package_relations: Zezwól na powiązania pakietów roboczych pomiędzy projektami
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: Pierwszy tydzień w roku zawiera
   setting_date_format: Data
   setting_default_language: Język domyślny
@@ -5395,6 +5402,9 @@ pl:
   setting_work_package_properties: Właściwości pakietu roboczego
   setting_work_package_startdate_is_adddate: Użyj bieżącej daty jako daty początkowej dla nowych pakietów roboczych
   setting_work_packages_projects_export_limit: Limit eksportu pakietów roboczych / projektów
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Okres agregacji
   setting_log_requesting_user: Rejestrowanie loginu, nazwy i adresu e-mail użytkownika dla wszystkich żądań
   setting_login_required: Wymagane uwierzytelnienie

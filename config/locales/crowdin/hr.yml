@@ -465,7 +465,7 @@ hr:
         dialog:
           title: Change work package identifiers
           heading: Enable project-based work package IDs?
-          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to redirect properly. This change will take some time to complete.
+          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
 
             '
           confirm_button: Change identifiers
@@ -949,7 +949,7 @@ hr:
       change_identifier_dialog_title: Change project identifier
       change_identifier_format_hint_semantic: Only uppercase letters (A–Z), numbers or underscores. Max 10 characters. Must start with a letter.
       change_identifier_format_hint_legacy: Only lowercase letters (a–z), numbers, dashes or underscores.
-      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifier and URLs will nevertheless continue to redirect properly.
+      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
 
         '
       subitems:
@@ -2081,6 +2081,7 @@ hr:
         priority: Prioritet
         progress: "% Complete"
         readonly: Read only
+        relatable: Relatable to
         remaining_hours: Remaining work
         remaining_time: Remaining work
         sequence_number: Sequence number
@@ -4145,6 +4146,7 @@ hr:
   label_journal_diff: Opis uspoređivanja
   label_language: Jezik
   label_languages: Languages
+  label_export_plural: Exports
   label_external_links: External links
   label_locale: Language and region
   label_jump_to_a_project: Pređi na projekt...
@@ -4612,6 +4614,7 @@ hr:
   label_total_days_off: Total days off
   macro_execution_error: Došlo je do pogreške tijekom izvođenja makroa %{macro_name}
   macro_unavailable: Makro %{macro_name} ne možete biti prikazan.
+  macro_unknown: Unknown or unsupported macro.
   macros:
     placeholder: "[Placeholder] Macro %{macro_name}"
     errors:
@@ -5298,6 +5301,10 @@ hr:
   setting_consent_required: Potrebna suglasnost
   setting_consent_decline_mail: E-mail kontakta za suglasnost
   setting_cross_project_work_package_relations: Omogući relacije između unakrsnih projekata
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: First week in year contains
   setting_date_format: Datum
   setting_default_language: Zadani jezik
@@ -5338,6 +5345,9 @@ hr:
   setting_work_package_properties: Postavke radnih paketa
   setting_work_package_startdate_is_adddate: Koristite današanji datum kao početni datum novih radnih paketa
   setting_work_packages_projects_export_limit: Work packages / Projects export limit
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Aggregation period
   setting_log_requesting_user: Zabilježite korisnički pristup, ime, i email adresu za sve zahtjeve
   setting_login_required: Potrebna autentifikacija

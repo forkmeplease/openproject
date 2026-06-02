@@ -458,7 +458,7 @@ it:
         dialog:
           title: Cambia gli identificatori della macro-attività
           heading: Abilitare gli ID delle macro-attività basati sul progetto?
-          description: 'Questa operazione modificherà gli ID di tutte le macro-attività in tutti i progetti di questa istanza. Gli identificatori e gli URL precedenti continueranno a reindirizzare correttamente. Questa modifica richiederà un po'' di tempo per essere completata.
+          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
 
             '
           confirm_button: Cambia identificatori
@@ -938,7 +938,7 @@ it:
       change_identifier_dialog_title: Modifica l'identificatore del progetto
       change_identifier_format_hint_semantic: Solo lettere maiuscole (A–Z), numeri o underscore. Massimo 10 caratteri. Deve iniziare con una lettera.
       change_identifier_format_hint_legacy: Solo lettere minuscole (a–z), numeri, trattini o underscore.
-      change_identifier_warning: 'Questa operazione modificherà in modo permanente gli identificatori e gli URL di tutte le macro-attività in questo progetto. Gli identificatori e gli URL precedenti continueranno comunque a reindirizzare correttamente.
+      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
 
         '
       subitems:
@@ -2058,6 +2058,7 @@ it:
         priority: Priorità
         progress: "% completamento"
         readonly: Sola lettura
+        relatable: Relatable to
         remaining_hours: Lavoro rimanente
         remaining_time: Lavoro rimanente
         sequence_number: Numero progressivo
@@ -4083,6 +4084,7 @@ it:
   label_journal_diff: Confronto Descrizione
   label_language: Lingua
   label_languages: Lingue
+  label_export_plural: Exports
   label_external_links: Link esterni
   label_locale: Lingua e paese
   label_jump_to_a_project: Salta ad altro progetto...
@@ -4547,6 +4549,7 @@ it:
   label_total_days_off: Totale assenze
   macro_execution_error: Errore nell'esecuzione della macro %{macro_name}
   macro_unavailable: Non può essere visualizzata la macro %{macro_name}.
+  macro_unknown: Unknown or unsupported macro.
   macros:
     placeholder: "[Placeholder] Macro %{macro_name}"
     errors:
@@ -5231,6 +5234,10 @@ it:
   setting_consent_required: Consenso richiesto
   setting_consent_decline_mail: Indirizzo mail del contatto di consenso
   setting_cross_project_work_package_relations: Consenti di correlare macro-attività tra più progetti
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: La prima settimana dell'anno contiene
   setting_date_format: Data
   setting_default_language: Lingua predefinita
@@ -5271,6 +5278,9 @@ it:
   setting_work_package_properties: Proprietà della macro-attività
   setting_work_package_startdate_is_adddate: Usa la data corrente come data di inizio per le nuove macro-attività
   setting_work_packages_projects_export_limit: Limite di esportazione di macro-attività/progetti
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Periodo di aggregazione
   setting_log_requesting_user: Registra il nome d'accesso, il nome utente, e l'indirizzo mail per tutte le richieste
   setting_login_required: Autenticazione richiesta

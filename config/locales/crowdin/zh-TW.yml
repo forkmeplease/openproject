@@ -451,7 +451,7 @@ zh-TW:
         dialog:
           title: Change work package identifiers
           heading: Enable project-based work package IDs?
-          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to redirect properly. This change will take some time to complete.
+          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
 
             '
           confirm_button: Change identifiers
@@ -929,7 +929,7 @@ zh-TW:
       change_identifier_dialog_title: Change project identifier
       change_identifier_format_hint_semantic: Only uppercase letters (A–Z), numbers or underscores. Max 10 characters. Must start with a letter.
       change_identifier_format_hint_legacy: Only lowercase letters (a–z), numbers, dashes or underscores.
-      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifier and URLs will nevertheless continue to redirect properly.
+      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
 
         '
       subitems:
@@ -2035,6 +2035,7 @@ zh-TW:
         priority: 優先等級
         progress: 完成度(%)
         readonly: 唯讀
+        relatable: Relatable to
         remaining_hours: 剩餘工作
         remaining_time: 剩餘工作
         sequence_number: Sequence number
@@ -4013,6 +4014,7 @@ zh-TW:
   label_journal_diff: 內容對比
   label_language: 語言
   label_languages: 語言
+  label_export_plural: Exports
   label_external_links: 外部連結
   label_locale: 語言和地區
   label_jump_to_a_project: 前往一個專案...
@@ -4474,6 +4476,7 @@ zh-TW:
   label_total_days_off: Total days off
   macro_execution_error: 執行巨集 (%{macro_name}) 錯誤
   macro_unavailable: 巨集 "%{macro_name}" 無法顯示
+  macro_unknown: Unknown or unsupported macro.
   macros:
     placeholder: "[Placeholder] 巨集 %{macro_name}"
     errors:
@@ -5159,6 +5162,10 @@ zh-TW:
   setting_consent_required: 是否需要使用者允許
   setting_consent_decline_mail: 同意郵件列在通訊錄
   setting_cross_project_work_package_relations: 允許將跨專案之工作套件關聯起來
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: 一年的第一週從哪一天開始
   setting_date_format: 日期
   setting_default_language: 預設語言
@@ -5199,6 +5206,9 @@ zh-TW:
   setting_work_package_properties: 工作套件屬性
   setting_work_package_startdate_is_adddate: 使用目前日期作為新工作套件的開始日期
   setting_work_packages_projects_export_limit: 工作套件/專案匯出數量限制
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Aggregation period
   setting_log_requesting_user: 記錄所有使用者登入、姓名和郵件地址等資料
   setting_login_required: 需要身份驗證

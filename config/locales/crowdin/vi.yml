@@ -451,7 +451,7 @@ vi:
         dialog:
           title: Change gói công việc (work package) identifiers
           heading: Enable project-based gói công việc (work package) IDs?
-          description: 'This will change IDs for all gói công việc (work package)s in all projects in this instance. Previous identifiers and URLs will continue to redirect properly. This change will take some time to complete.
+          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
 
             '
           confirm_button: Change identifiers
@@ -931,7 +931,7 @@ vi:
       change_identifier_dialog_title: Change project identifier
       change_identifier_format_hint_semantic: Only uppercase letters (A–Z), numbers or underscores. Max 10 characters. Must start with a letter.
       change_identifier_format_hint_legacy: Only lowercase letters (a–z), numbers, dashes or underscores.
-      change_identifier_warning: 'This will permanently change identifiers and URLs of all gói công việc (work package)s in this project. The previous identifier and URLs will nevertheless continue to redirect properly.
+      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
 
         '
       subitems:
@@ -2041,6 +2041,7 @@ vi:
         priority: Độ ưu tiên
         progress: "% Hoàn thành"
         readonly: Chỉ đọc
+        relatable: Relatable to
         remaining_hours: Công việc còn lại
         remaining_time: Công việc còn lại
         sequence_number: Sequence number
@@ -4021,6 +4022,7 @@ vi:
   label_journal_diff: So sánh mô tả
   label_language: ngôn ngữ
   label_languages: ngôn ngữ
+  label_export_plural: Exports
   label_external_links: Liên kết ngoài
   label_locale: Ngôn ngữ và khu vực
   label_jump_to_a_project: Chuyển đến một dự án...
@@ -4482,6 +4484,7 @@ vi:
   label_total_days_off: Total days off
   macro_execution_error: Lỗi khi thực thi macro %{macro_name}
   macro_unavailable: Macro %{macro_name} không thể hiển thị.
+  macro_unknown: Unknown or unsupported macro.
   macros:
     placeholder: "[Placeholder] Macro %{macro_name}"
     errors:
@@ -5174,6 +5177,10 @@ vi:
   setting_consent_required: Cần có sự đồng ý
   setting_consent_decline_mail: Địa chỉ email liên hệ đồng ý
   setting_cross_project_work_package_relations: Cho phép quan hệ gói công việc giữa các dự án
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: Tuần đầu tiên trong năm
   setting_date_format: ngày
   setting_default_language: Ngôn ngữ mặc định
@@ -5214,6 +5221,9 @@ vi:
   setting_work_package_properties: Thuộc tính gói công việc
   setting_work_package_startdate_is_adddate: Sử dụng ngày hiện tại làm ngày bắt đầu cho các gói công việc mới
   setting_work_packages_projects_export_limit: Gói công việc / Giới hạn xuất dự án
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Aggregation period
   setting_log_requesting_user: Ghi nhật ký thông tin đăng nhập, tên và địa chỉ thư của người dùng cho tất cả các yêu cầu
   setting_login_required: Yêu cầu xác thực

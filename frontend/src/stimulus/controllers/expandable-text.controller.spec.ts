@@ -107,8 +107,7 @@ describe('ExpandableTextController', () => {
   describe('horizontal mode', () => {
     describe('initialization', () => {
       beforeEach(async () => {
-        ctx.appendHTML(horizontalTemplate);
-        await ctx.nextFrame();
+        await ctx.mount(horizontalTemplate);
       });
 
       it('connects successfully', () => {
@@ -139,8 +138,7 @@ describe('ExpandableTextController', () => {
 
     describe('expander button click', () => {
       beforeEach(async () => {
-        ctx.appendHTML(horizontalTemplate);
-        await ctx.nextFrame();
+        await ctx.mount(horizontalTemplate);
       });
 
       it('toggles expanded state', async () => {
@@ -168,8 +166,7 @@ describe('ExpandableTextController', () => {
 
     describe('expandedValue changes', () => {
       beforeEach(async () => {
-        ctx.appendHTML(horizontalTemplate);
-        await ctx.nextFrame();
+        await ctx.mount(horizontalTemplate);
       });
 
       it('updates aria-label when expanded', async () => {
@@ -273,8 +270,7 @@ describe('ExpandableTextController', () => {
 
     describe('resize() method', () => {
       it('calls update() when resize is triggered', async () => {
-        ctx.appendHTML(horizontalTemplate);
-        await ctx.nextFrame();
+        await ctx.mount(horizontalTemplate);
 
         const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
@@ -287,8 +283,7 @@ describe('ExpandableTextController', () => {
       });
 
       it('updates expander visibility when content dimensions change', async () => {
-        ctx.appendHTML(horizontalTemplate);
-        await ctx.nextFrame();
+        await ctx.mount(horizontalTemplate);
 
         const controller = ctx.getController<ExpandableTextController>('expandable-text');
         const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -327,8 +322,7 @@ describe('ExpandableTextController', () => {
       });
 
       it('keeps expander visible when expanded even if not truncated', async () => {
-        ctx.appendHTML(horizontalTemplate);
-        await ctx.nextFrame();
+        await ctx.mount(horizontalTemplate);
 
         const controller = ctx.getController<ExpandableTextController>('expandable-text');
         const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -350,8 +344,7 @@ describe('ExpandableTextController', () => {
 
   describe('vertical mode', () => {
     it('connects successfully', async () => {
-      ctx.appendHTML(verticalTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(verticalTemplate);
 
       const controller = ctx.getController('expandable-text');
 
@@ -359,8 +352,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('detects vertical truncation via scrollHeight > clientHeight', async () => {
-      ctx.appendHTML(verticalTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(verticalTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -375,8 +367,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('hides expander when content fits within line-clamp', async () => {
-      ctx.appendHTML(verticalTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(verticalTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -391,8 +382,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('toggles op-vertical-truncate--expanded class instead of Truncate--expanded', async () => {
-      ctx.appendHTML(verticalTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(verticalTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const controller = ctx.getController<ExpandableTextController>('expandable-text');
@@ -410,8 +400,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('handles click to toggle expansion', async () => {
-      ctx.appendHTML(verticalTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(verticalTemplate);
 
       const button = ctx.screen.getByRole('button', { name: 'Expand text', hidden: true });
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
@@ -432,8 +421,7 @@ describe('ExpandableTextController', () => {
 
   describe('dialog mode (inline: false)', () => {
     it('does not attach click handler to expander', async () => {
-      ctx.appendHTML(dialogTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(dialogTemplate);
 
       const button = ctx.container.querySelector<HTMLButtonElement>('[data-expandable-text-target="expander"] button')!;
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
@@ -445,8 +433,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('still manages expander visibility based on truncation', async () => {
-      ctx.appendHTML(dialogTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(dialogTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -472,8 +459,7 @@ describe('ExpandableTextController', () => {
         </div>
       `;
 
-      ctx.appendHTML(serverVisibleTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(serverVisibleTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -501,8 +487,7 @@ describe('ExpandableTextController', () => {
         </div>
       `;
 
-      ctx.appendHTML(serverHiddenTemplate);
-      await ctx.nextFrame();
+      await ctx.mount(serverHiddenTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;

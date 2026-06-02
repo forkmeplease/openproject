@@ -458,7 +458,7 @@
         dialog:
           title: Change work package identifiers
           heading: Enable project-based work package IDs?
-          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to redirect properly. This change will take some time to complete.
+          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
 
             '
           confirm_button: Change identifiers
@@ -939,7 +939,7 @@
       change_identifier_dialog_title: Change project identifier
       change_identifier_format_hint_semantic: Only uppercase letters (A–Z), numbers or underscores. Max 10 characters. Must start with a letter.
       change_identifier_format_hint_legacy: Only lowercase letters (a–z), numbers, dashes or underscores.
-      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifier and URLs will nevertheless continue to redirect properly.
+      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
 
         '
       subitems:
@@ -2058,6 +2058,7 @@
         priority: Prioritet
         progress: "% Ferdig"
         readonly: Kun lesetilgang
+        relatable: Relatable to
         remaining_hours: Gjenstående arbeid
         remaining_time: Gjenstående arbeid
         sequence_number: Sequence number
@@ -4081,6 +4082,7 @@
   label_journal_diff: Sammenligning av beskrivelse
   label_language: Språk
   label_languages: Språk
+  label_export_plural: Exports
   label_external_links: External links
   label_locale: Language and region
   label_jump_to_a_project: Gå til et prosjekt...
@@ -4545,6 +4547,7 @@
   label_total_days_off: Total days off
   macro_execution_error: Feil ved kjøring av makroen %{macro_name}
   macro_unavailable: Makroen %{macro_name} kan ikke vises.
+  macro_unknown: Unknown or unsupported macro.
   macros:
     placeholder: "[Placeholder] Makro %{macro_name}"
     errors:
@@ -5231,6 +5234,10 @@
   setting_consent_required: Samtykke kreves
   setting_consent_decline_mail: Samtykke e-postadresse for kontakt
   setting_cross_project_work_package_relations: Tillat relasjoner mellom arbeidspakker i ulike prosjekter
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: Første uke i år inneholder
   setting_date_format: Dato
   setting_default_language: Standardspråk
@@ -5271,6 +5278,9 @@
   setting_work_package_properties: Egenskaper for arbeidspakke
   setting_work_package_startdate_is_adddate: Bruk gjeldende dato som startdato for nye arbeidspakker
   setting_work_packages_projects_export_limit: Eksportgrense for arbeidspakker/prosjekter
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Aggregation period
   setting_log_requesting_user: Logg brukernavn, navn og e-postadresse for alle forespørsler
   setting_login_required: Autentisering er påkrevd
