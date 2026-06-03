@@ -41,7 +41,7 @@ module WorkPackages
             col.with_row { render(Primer::Beta::Text.new) { model[:current_identifier] } }
             if (label = error_label).present?
               col.with_row do
-                render(Primer::Beta::Text.new(color: :danger, font_size: :small)) { label }
+                render(Primer::OpenProject::InlineMessage.new(scheme: :critical, size: :small)) { label }
               end
             end
           end
