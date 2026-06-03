@@ -112,7 +112,7 @@ RSpec.describe Backlogs::BacklogFilters, type: :model do
       let(:params) { { all: "1" } }
 
       it "includes all: 1" do
-        expect(filters.to_h).to eq({ all: 1 })
+        expect(filters.to_h).to eq({ all: true })
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe Backlogs::BacklogFilters, type: :model do
       let(:params) { { all: "1", bucket_ids: %w[1], sprint_ids: %w[2] } }
 
       it "includes everything" do
-        expect(filters.to_h).to eq({ all: 1, bucket_ids: [1], sprint_ids: [2] })
+        expect(filters.to_h).to eq({ all: true, bucket_ids: [1], sprint_ids: [2] })
       end
     end
   end

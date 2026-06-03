@@ -41,7 +41,7 @@ module Backlogs
     def show_all? = show_all
 
     def to_h
-      result = show_all? ? { all: 1 } : {}
+      result = show_all? ? { all: true } : {}
       result[:bucket_ids] = bucket_ids if bucket_ids
       result[:sprint_ids] = sprint_ids if sprint_ids
       result
