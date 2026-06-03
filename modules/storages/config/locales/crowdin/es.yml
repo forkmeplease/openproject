@@ -31,10 +31,15 @@ es:
         authentication_method: Método de autenticación
         creator: Autor
         drive: ID de unidad
+        file_link_origin: File link origin ID
         host: Host
+        linkable_to_storage: Linkable to storage
+        linkable_to_storage_url: Linkable to storage URL
         name: Nombre
         password: Contraseña de aplicación
         provider_type: Tipo de proveedor
+        storage: Storage
+        storage_url: Storage URL
         tenant: Directory (tenant) ID
     errors:
       messages:

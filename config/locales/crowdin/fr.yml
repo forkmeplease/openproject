@@ -1713,6 +1713,7 @@ fr:
       attachment:
         attachment_content: Pièces jointes
         attachment_file_name: Nom de la pièce jointe
+        charset: Jeu de caractères
         content_type: Type de contenu
         downloads: Téléchargements
         file: Fichier
@@ -1807,6 +1808,7 @@ fr:
         title: Titre
         description: Description
       member:
+        blocked: Bloqué
         roles: Rôles
       notification:
         read_ian: Lire dans l'application
@@ -2052,6 +2054,7 @@ fr:
         priority: Priorité
         progress: "% réalisé"
         readonly: Lecture seule
+        relatable: Relatable to
         remaining_hours: Travail restant
         remaining_time: Travail restant
         sequence_number: Numéro de séquence
@@ -3504,6 +3507,9 @@ fr:
     additional:
       projects: Les projets visibles les plus récents de cette instance.
       no_visible_projects: Il n'y a aucun projet visible dans cette instance.
+      favorite_projects:
+        no_results: Vous n'avez pas de projet favori
+        no_results_subtext: Ajoutez un ou plusieurs projets comme favoris dans leur vue d'ensemble ou dans une liste de projets.
       users: Les utilisateurs enregistrés les plus récents de cette instance.
     blocks:
       community: Communauté OpenProject
@@ -4072,6 +4078,7 @@ fr:
   label_journal_diff: Comparaison de description
   label_language: Langue
   label_languages: Langues
+  label_export_plural: Exports
   label_external_links: Liens externes
   label_locale: Langue et région
   label_jump_to_a_project: Accéder à un projet...
@@ -4702,9 +4709,9 @@ fr:
       Un nouvel utilisateur (%{email}) a essayé de créer un compte sur un environnement OpenProject que vous gérez (%{host}).
       L'utilisateur ne peut pas activer son compte puisque la limite d'utilisateurs a été atteinte.
     steps:
-      label: 'Pour permettre à l''utilisateur de se connecter, vous pouvez soit: '
       a: Mettez à jour votre plan de paiement ([here](upgrade_url))
       b: Verrouiller ou supprimer un utilisateur existant ([here](users_url))
+      label: 'Pour permettre à l''utilisateur de se connecter, vous pouvez soit: '
   more_actions: Plus de fonctions
   noscript_description: Vous devez activer JavaScript afin d'utiliser OpenProject!
   noscript_heading: JavaScript désactivé
@@ -5222,6 +5229,10 @@ fr:
   setting_consent_required: Accord requis
   setting_consent_decline_mail: Adresse mail de contact de l'accord
   setting_cross_project_work_package_relations: Autoriser les relations entre lots de travaux de projets différents
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: La première semaine de l'année contient
   setting_date_format: Date
   setting_default_language: Langue par défaut
@@ -5262,6 +5273,9 @@ fr:
   setting_work_package_properties: Propriétés du lot de travaux
   setting_work_package_startdate_is_adddate: Utiliser la date actuelle comme date de début des nouveaux lots de travaux
   setting_work_packages_projects_export_limit: Limite d'exportation des lots de travaux/projets
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Période d'agrégation
   setting_log_requesting_user: Enregistrer le login utilisateur, nom et adresse e-mail pour toutes les requêtes
   setting_login_required: Authentification requise
@@ -5963,6 +5977,17 @@ fr:
     warning: 'La modification des jours de la semaine considérés comme des jours ouvrables ou des jours non ouvrables peut affecter les jours de début et de fin de tous les lots de travaux et les cycles de vie de tous les projets dans ce cas.
 
       '
+    dialog:
+      title: Change working days
+      description: 'Changing which days of the week are considered working days or non-working days can affect the start and finish days of all work packages and life cycles in all projects in this instance.
+
+        '
+      removed_title: 'You will remove the following days from the non-working days list:'
+      warning: 'The changes might take some time to take effect. You will be notified when all relevant work packages and project life cycles have been updated.
+
+        '
+      heading: Change the working days?
+      confirm_button: Save and reschedule
     journal_note:
       changed: _**Jours ouvrables** modifiés (%{changes})._
       days:

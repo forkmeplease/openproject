@@ -31,10 +31,15 @@ zh-CN:
         authentication_method: 身份验证方式
         creator: 创建者
         drive: 驱动器 ID
+        file_link_origin: File link origin ID
         host: 主机
+        linkable_to_storage: Linkable to storage
+        linkable_to_storage_url: Linkable to storage URL
         name: 名称
         password: 应用程序密码
         provider_type: 提供商类型
+        storage: Storage
+        storage_url: Storage URL
         tenant: 目录 (租户) ID
     errors:
       messages:

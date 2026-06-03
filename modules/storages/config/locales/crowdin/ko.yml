@@ -31,10 +31,15 @@ ko:
         authentication_method: 인증 방법
         creator: 생성자
         drive: 드라이브 ID
+        file_link_origin: File link origin ID
         host: 호스트
+        linkable_to_storage: Linkable to storage
+        linkable_to_storage_url: Linkable to storage URL
         name: 이름
         password: 애플리케이션 암호
         provider_type: 공급자 유형
+        storage: Storage
+        storage_url: Storage URL
         tenant: 디렉터리(테넌트) ID
     errors:
       messages:

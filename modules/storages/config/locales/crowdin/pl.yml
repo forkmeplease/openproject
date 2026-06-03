@@ -31,10 +31,15 @@ pl:
         authentication_method: Metoda uwierzytelniania
         creator: Twórca
         drive: Identyfikator dysku
+        file_link_origin: File link origin ID
         host: Host
+        linkable_to_storage: Linkable to storage
+        linkable_to_storage_url: Linkable to storage URL
         name: Nazwa
         password: Hasło aplikacji
         provider_type: Typ dostawcy
+        storage: Storage
+        storage_url: Storage URL
         tenant: Identyfikator katalogu (dzierżawcy)
     errors:
       messages:

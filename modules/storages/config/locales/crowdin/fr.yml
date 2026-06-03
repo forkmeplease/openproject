@@ -31,10 +31,15 @@ fr:
         authentication_method: Méthode d'authentification
         creator: Créateur
         drive: ID du lecteur
+        file_link_origin: File link origin ID
         host: Hôte
+        linkable_to_storage: Linkable to storage
+        linkable_to_storage_url: Linkable to storage URL
         name: Nom
         password: Mot de passe de l'application
         provider_type: Type de fournisseur
+        storage: Storage
+        storage_url: Storage URL
         tenant: ID du répertoire (locataire)
     errors:
       messages:
