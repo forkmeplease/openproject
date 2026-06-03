@@ -274,7 +274,10 @@ module Pages
       end
       menu = open_controlled_menu(button)
       submenu = open_move_submenu(menu)
-      submenu.find(:menuitem, text: item_name).click
+
+      wait_for_turbo_stream do
+        submenu.find(:menuitem, text: item_name).click
+      end
     end
 
     def within_sprint_story_menu(story, &)
