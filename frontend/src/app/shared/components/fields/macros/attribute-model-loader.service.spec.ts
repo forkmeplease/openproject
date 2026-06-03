@@ -84,6 +84,20 @@ describe('AttributeModelLoaderService', () => {
     expect(withOptionalProjectSpy).not.toHaveBeenCalled();
   });
 
+  it('routes a zero or zero-padded id through the show endpoint rather than a subject search', async () => {
+    await firstValueFrom(service.require('workPackage', '0'));
+
+    expect(idSpy).toHaveBeenCalledWith('0');
+    expect(filterSpy).not.toHaveBeenCalled();
+
+    idSpy.mockClear();
+
+    await firstValueFrom(service.require('workPackage', '007'));
+
+    expect(idSpy).toHaveBeenCalledWith('007');
+    expect(filterSpy).not.toHaveBeenCalled();
+  });
+
   it('resolves a free-text subject reference via the typeahead filter', async () => {
     await firstValueFrom(service.require('workPackage', 'Project start'));
 
