@@ -49,7 +49,7 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
   end
 
   describe "GET /api/v3/meetings/:meeting_id/sections" do
-    let(:path) { api_v3_paths.meeting_sections(meeting.id) }
+    let(:path) { api_v3_paths.meeting_sections(meeting_id: meeting.id) }
 
     before { get path }
 
@@ -59,6 +59,10 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
       expect(last_response.body)
         .to be_json_eql("Collection".to_json)
         .at_path("_type")
+
+      expect(last_response.body)
+        .to be_json_eql(api_v3_paths.meeting_section(section.id).to_json)
+        .at_path("_embedded/elements/0/_links/self/href")
     end
 
     context "without view_meetings permission" do
@@ -70,11 +74,16 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
     end
   end
 
-  describe "POST /api/v3/meetings/:meeting_id/sections" do
-    let(:path) { api_v3_paths.meeting_sections(meeting.id) }
+  describe "POST /api/v3/meeting_sections" do
+    let(:path) { api_v3_paths.meeting_sections }
     let(:body) do
       {
-        title: "New Section"
+        title: "New Section",
+        _links: {
+          meeting: {
+            href: api_v3_paths.meeting(meeting.id)
+          }
+        }
       }.to_json
     end
 
@@ -109,7 +118,7 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
   end
 
   describe "GET /api/v3/meetings/:meeting_id/sections/:id" do
-    let(:path) { api_v3_paths.meeting_section(meeting.id, section.id) }
+    let(:path) { api_v3_paths.meeting_section(section.id, meeting_id: meeting.id) }
 
     before { get path }
 
@@ -127,7 +136,7 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
 
     context "with a section from another meeting" do
       let(:other_meeting) { create(:meeting, project:, author: current_user) }
-      let(:path) { api_v3_paths.meeting_section(other_meeting.id, section.id) }
+      let(:path) { api_v3_paths.meeting_section(section.id, meeting_id: other_meeting.id) }
 
       it "returns 404" do
         expect(last_response).to have_http_status(:not_found)
@@ -135,8 +144,34 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
     end
   end
 
-  describe "PATCH /api/v3/meetings/:meeting_id/sections/:id" do
-    let(:path) { api_v3_paths.meeting_section(meeting.id, section.id) }
+  describe "GET /api/v3/meeting_sections/:id" do
+    let(:path) { api_v3_paths.meeting_section(section.id) }
+
+    before { get path }
+
+    it "returns 200 and the section" do
+      expect(last_response).to have_http_status(:ok)
+
+      expect(last_response.body)
+        .to be_json_eql("MeetingSection".to_json)
+        .at_path("_type")
+
+      expect(last_response.body)
+        .to be_json_eql(api_v3_paths.meeting_section(section.id).to_json)
+        .at_path("_links/self/href")
+    end
+
+    context "without view_meetings permission" do
+      let(:permissions) { [] }
+
+      it "returns 404" do
+        expect(last_response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "PATCH /api/v3/meeting_sections/:id" do
+    let(:path) { api_v3_paths.meeting_section(section.id) }
     let(:body) do
       {
         title: "Updated Section Title"
@@ -163,8 +198,8 @@ RSpec.describe "API v3 Meeting Sections sub-resource", content_type: :json do
     end
   end
 
-  describe "DELETE /api/v3/meetings/:meeting_id/sections/:id" do
-    let(:path) { api_v3_paths.meeting_section(meeting.id, section.id) }
+  describe "DELETE /api/v3/meeting_sections/:id" do
+    let(:path) { api_v3_paths.meeting_section(section.id) }
 
     before { delete path }
 
