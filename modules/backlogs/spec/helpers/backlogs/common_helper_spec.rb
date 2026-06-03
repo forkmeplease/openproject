@@ -48,7 +48,7 @@ RSpec.describe Backlogs::CommonHelper do
       let(:params) { { all: "1" } }
 
       it "returns filters with all: 1 in to_h" do
-        expect(helper.backlog_filters.to_h).to eq({ all: 1 })
+        expect(helper.backlog_filters.to_h).to eq({ all: true })
       end
     end
 

@@ -564,7 +564,7 @@ RSpec.describe Backlogs::WorkPackagesController do
       it "embeds the all query in deferred action URLs" do
         subject
 
-        expect(response.body).to match(/all=1/)
+        expect(response.body).to match(/all=true/)
       end
     end
 
@@ -869,7 +869,7 @@ RSpec.describe Backlogs::WorkPackagesController do
       it "embeds the all query in the dialog form action URL" do
         subject
 
-        expect(response.body).to match(/all=1/)
+        expect(response.body).to match(/all=true/)
       end
     end
 
@@ -956,7 +956,7 @@ RSpec.describe Backlogs::WorkPackagesController do
       it "embeds the all query in the dialog form action URL" do
         subject
 
-        expect(response.body).to match(/all=1/)
+        expect(response.body).to match(/all=true/)
       end
     end
 
