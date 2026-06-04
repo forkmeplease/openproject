@@ -1,24 +1,27 @@
 import 'reflect-metadata';
-import { InjectOptions, Injector } from '@angular/core';
+import { InjectOptions, Injector, ProviderToken } from '@angular/core';
 import { debugLog } from 'core-app/shared/helpers/debug_output';
 
 export interface InjectableClass {
   injector:Injector;
 }
 
-export function InjectField(token?:any, defaultValue:any = null, options?:InjectOptions) {
-  return (target:InjectableClass, property:string) => {
-    // eslint-ignore-next-line no-param-reassign
-    if (delete (target as any)[property]) {
+export function InjectField<T = unknown>(
+  token?:ProviderToken<T>,
+  defaultValue:T | null = null,
+  options?:InjectOptions,
+) {
+  return (target:InjectableClass, property:string):void => {
+    if (delete (target as unknown as Record<string, unknown>)[property]) {
       Object.defineProperty(target, property, {
-        get(this:InjectableClass) {
-          if (token) {
-            return this.injector.get<any>(token, defaultValue, options);
-          }
-          const type = Reflect.getMetadata('design:type', target, property);
-          return this.injector.get<any>(type, defaultValue, options);
+        get(this:InjectableClass):T | null {
+          // When no token is given, fall back to the property's reflected
+          // design type (requires emitDecoratorMetadata).
+          const resolvedToken = (token
+            ?? Reflect.getMetadata('design:type', target, property)) as ProviderToken<T>;
+          return this.injector.get(resolvedToken, defaultValue, options);
         },
-        set(this:InjectableClass) {
+        set(this:InjectableClass):void {
           debugLog(`Trying to set InjectField property ${property}`);
         },
       });
