@@ -57,8 +57,8 @@ See COPYRIGHT and LICENSE files for more details.
       end
     end
 
-    card_custom_field_values.group_by(&:custom_field).each do |custom_field, values|
-      formatted = format_multi_values(values)
+    card_sections_with_fields.flat_map(&:last).each do |custom_field|
+      formatted = format_multi_values(@user.formatted_custom_value_for(custom_field))
 
       flex.with_row(data: { test_selector: "user-hover-card-custom-field" }) do
         flex_layout(classes: "op-user-hover-card--custom-field") do |cf|
