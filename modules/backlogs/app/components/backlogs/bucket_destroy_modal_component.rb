@@ -32,6 +32,7 @@ module Backlogs
   class BucketDestroyModalComponent < ApplicationComponent
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
+    include CommonHelper
 
     TEST_SELECTOR = "backlog-bucket-destroy-modal-dialog"
 

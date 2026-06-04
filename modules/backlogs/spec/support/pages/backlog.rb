@@ -357,7 +357,7 @@ module Pages
 
     def open_create_bucket_dialog
       within_owner_backlogs do
-        click_on accessible_name: BacklogBucket.human_model_name
+        find_test_selector("op-backlog-buckets--new-backlog-bucket-button").click
       end
     end
 
