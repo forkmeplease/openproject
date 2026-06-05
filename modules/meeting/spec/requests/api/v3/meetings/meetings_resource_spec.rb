@@ -72,6 +72,48 @@ RSpec.describe "API v3 Meeting resource", content_type: :json do
       end
     end
 
+    context "with multiple participants" do
+      let(:other_user) do
+        create(:user, member_with_permissions: { project => [:view_meetings] })
+      end
+
+      before do
+        create(:meeting_participant, meeting:, user: current_user, invited: true)
+        create(:meeting_participant, meeting:, user: other_user, invited: true)
+        get get_path
+      end
+
+      it "_links.participants count matches _embedded.participants count" do
+        expect(last_response.body)
+          .to have_json_size(2)
+          .at_path("_links/participants")
+
+        expect(last_response.body)
+          .to have_json_size(2)
+          .at_path("_embedded/participants")
+      end
+
+      context "when a further participant is added after the response is cached" do
+        let(:third_user) do
+          create(:user, member_with_permissions: { project => [:view_meetings] })
+        end
+
+        it "returns updated _links.participants consistent with _embedded.participants" do
+          create(:meeting_participant, meeting:, user: third_user, invited: true)
+
+          get get_path
+
+          expect(last_response.body)
+            .to have_json_size(3)
+            .at_path("_links/participants")
+
+          expect(last_response.body)
+            .to have_json_size(3)
+            .at_path("_embedded/participants")
+        end
+      end
+    end
+
     context "without view_meetings permission" do
       let(:permissions) { [] }
 
