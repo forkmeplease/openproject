@@ -34,8 +34,6 @@ module Backlogs
     include OpTurbo::Streamable
     include CommonHelper
 
-    with_collection_parameter :backlog_bucket
-
     attr_reader :backlog_bucket, :work_packages, :project, :current_user
 
     def initialize(backlog_bucket:, project:, work_packages: nil, current_user: User.current)
