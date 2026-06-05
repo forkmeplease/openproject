@@ -57,5 +57,13 @@ module Backlogs
     def total
       @total ||= work_packages_by_backlog_id.values.sum(&:count)
     end
+
+    def work_packages_for_inbox
+      work_packages_by_backlog_id[nil] || []
+    end
+
+    def work_packages_for(bucket)
+      work_packages_by_backlog_id[bucket.id] || []
+    end
   end
 end

@@ -80,13 +80,13 @@ See COPYRIGHT and LICENSE files for more details.
       render Backlogs::BucketComponent.new(
         project:,
         backlog_bucket: bucket,
-        work_packages: work_packages_by_backlog_id[bucket.id] || []
+        work_packages: work_packages_for(bucket)
       )
     %>
   <% end %>
   <%=
     render Backlogs::InboxComponent.new(
-      work_packages: work_packages_by_backlog_id[nil] || [],
+      work_packages: work_packages_for_inbox,
       project: project
     )
   %>
