@@ -32,14 +32,14 @@ module Wikis
   class CreateNewWikiPageDialog < ApplicationComponent
     include OpTurbo::Streamable
 
-    attr_reader :linkable, :provider, :title
+    attr_reader :linkable, :provider, :page_title
 
-    def initialize(linkable:, provider:, title:, **)
+    def initialize(linkable:, provider:, page_title:, **)
       super(nil, **)
 
       @linkable = linkable
       @provider = provider
-      @title = title
+      @page_title = page_title
     end
 
     def id = "create-new-wiki-page-dialog"
@@ -47,13 +47,13 @@ module Wikis
     def form_id = "#{id}-form"
 
     def show_first_step?
-      title.blank?
+      page_title.blank?
     end
 
     def form_options
       {
         id: form_id,
-        model: Forms::CreateNewWikiPageFormModel.new(linkable:, provider:, title:),
+        model: Forms::CreateNewWikiPageFormModel.new(linkable:, provider:, page_title:),
         url: form_url,
         data: {
           turbo_frame: WorkPackageWikisTabComponent::TURBO_FRAME_ID

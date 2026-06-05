@@ -50,14 +50,14 @@ module Wikis
     def create_new_page_dialog
       linkable = WorkPackage.visible.find(params.expect(:linkable))
       provider = Provider.visible.find(params.expect(:provider))
-      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(linkable:, provider:, title: nil)
+      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(linkable:, provider:, page_title: nil)
     end
 
     def continue_create_new_page_dialog
       params = create_new_page_params
       linkable = WorkPackage.visible.find(params[:linkable_id])
       provider = Provider.visible.find(params[:provider_id])
-      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(linkable:, provider:, title: params[:title])
+      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(linkable:, provider:, page_title: params[:page_title])
     end
 
     def search
@@ -83,7 +83,7 @@ module Wikis
     end
 
     def create_new_page_params
-      params.expect(wikis_forms_create_new_wiki_page_form_model: %i[provider_id linkable_type linkable_id title])
+      params.expect(wikis_forms_create_new_wiki_page_form_model: %i[provider_id linkable_type linkable_id page_title])
             .merge(parent_page_identifier: parse_identifier(params[:wiki_page_selection]))
     end
 

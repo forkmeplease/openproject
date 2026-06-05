@@ -36,9 +36,9 @@ module Wikis
       f.hidden(name: :linkable_id)
 
       if first_step?
-        f.text_field(name: :title, label: I18n.t("wikis.create_new_wiki_page_dialog.page_title"), required: true)
+        f.text_field(name: :page_title, label: I18n.t("wikis.create_new_wiki_page_dialog.page_title"), required: true)
       else
-        f.hidden(name: :title)
+        f.hidden(name: :page_title)
 
         f.html_content do
           render(Primer::Beta::Text.new) { I18n.t("wikis.create_new_wiki_page_dialog.parent_help_text") }
@@ -79,7 +79,7 @@ module Wikis
     end
 
     def first_step?
-      model.title.blank?
+      model.page_title.blank?
     end
   end
 end

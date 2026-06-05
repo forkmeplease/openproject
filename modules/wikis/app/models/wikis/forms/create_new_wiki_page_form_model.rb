@@ -33,13 +33,13 @@ module Wikis
     class CreateNewWikiPageFormModel
       extend ActiveModel::Naming
 
-      attr_reader :linkable_id, :linkable_type, :provider_id, :title
+      attr_reader :linkable_id, :linkable_type, :provider_id, :page_title
 
-      def initialize(linkable:, provider:, title:)
+      def initialize(linkable:, provider:, page_title:)
         @linkable_id = linkable.id
         @linkable_type = linkable.class.name
         @provider_id = provider.id
-        @title = title
+        @page_title = page_title
       end
     end
   end
