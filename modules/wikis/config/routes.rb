@@ -62,7 +62,6 @@ Rails.application.routes.draw do
   resources :relation_wiki_page_links, only: %i[create destroy], controller: "wikis/relation_page_links" do
     collection do
       get :link_existing_dialog
-      post :create_and_link_new_wiki_page
     end
 
     member do

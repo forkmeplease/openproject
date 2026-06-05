@@ -50,14 +50,20 @@ module Wikis
     def create_new_page_dialog
       linkable = WorkPackage.visible.find(params.expect(:linkable))
       provider = Provider.visible.find(params.expect(:provider))
-      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(linkable:, provider:, page_title: nil)
+      form_object = Forms::CreateNewWikiPageFormModel.new(linkable_id: linkable.id,
+                                                          linkable_type: linkable.class.name,
+                                                          provider_id: provider.id,
+                                                          page_title: nil)
+      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(form_object)
     end
 
     def continue_create_new_page_dialog
       params = create_new_page_params
-      linkable = WorkPackage.visible.find(params[:linkable_id])
-      provider = Provider.visible.find(params[:provider_id])
-      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(linkable:, provider:, page_title: params[:page_title])
+      form_object = Forms::CreateNewWikiPageFormModel.new(linkable_id: params[:linkable_id],
+                                                          linkable_type: params[:linkable_type],
+                                                          provider_id: params[:provider_id],
+                                                          page_title: params[:page_title])
+      respond_with_dialog Wikis::CreateNewWikiPageDialog.new(form_object)
     end
 
     def search
