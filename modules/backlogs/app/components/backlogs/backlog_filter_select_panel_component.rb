@@ -65,5 +65,9 @@ module Backlogs
     def selector_label
       filter_field == :sprint_ids ? Sprint.human_model_name.pluralize : BacklogBucket.human_model_name.pluralize
     end
+
+    def select_panel_id
+      "#{filter_field.to_s.delete_suffix('_ids')}-filter-select-panel"
+    end
   end
 end
