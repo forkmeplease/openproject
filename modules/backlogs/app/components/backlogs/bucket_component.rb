@@ -43,6 +43,7 @@ module Backlogs
       @project = project
       @current_user = current_user
       @work_packages = work_packages || backlog_bucket.displayed_work_packages
+                                                      .includes(:status, :type, :assigned_to, :priority, :parent)
     end
 
     def wrapper_uniq_by
