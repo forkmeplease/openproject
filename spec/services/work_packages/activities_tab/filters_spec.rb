@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -29,17 +28,28 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkPackages::ActivitiesTab::Journals
-  class HiddenForm < ApplicationForm
-    form do |journals_form|
-      journals_form.hidden(name: :last_update_timestamp, value: @last_server_timestamp)
-      journals_form.hidden(name: :filter, value: @filter)
+require "spec_helper"
+
+RSpec.describe WorkPackages::ActivitiesTab::Filters do
+  describe ".cast" do
+    it "returns a known mode given as a symbol unchanged" do
+      expect(described_class.cast(:only_comments)).to eq(:only_comments)
     end
 
-    def initialize(last_server_timestamp:, filter: WorkPackages::ActivitiesTab::Filters::ALL)
-      super()
-      @last_server_timestamp = last_server_timestamp
-      @filter = filter
+    it "coerces a known mode given as a string to its symbol" do
+      expect(described_class.cast("only_changes")).to eq(:only_changes)
+    end
+
+    it "falls back to ALL for an unknown value" do
+      expect(described_class.cast("bogus")).to eq(described_class::ALL)
+    end
+
+    it "falls back to ALL for a blank string" do
+      expect(described_class.cast("")).to eq(described_class::ALL)
+    end
+
+    it "falls back to ALL for nil" do
+      expect(described_class.cast(nil)).to eq(described_class::ALL)
     end
   end
 end

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -29,17 +28,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module WorkPackages::ActivitiesTab::Journals
-  class HiddenForm < ApplicationForm
-    form do |journals_form|
-      journals_form.hidden(name: :last_update_timestamp, value: @last_server_timestamp)
-      journals_form.hidden(name: :filter, value: @filter)
-    end
+module WorkPackages
+  module ActivitiesTab
+    module Filters
+      ALL           = :all
+      ONLY_COMMENTS = :only_comments
+      ONLY_CHANGES  = :only_changes
 
-    def initialize(last_server_timestamp:, filter: WorkPackages::ActivitiesTab::Filters::ALL)
-      super()
-      @last_server_timestamp = last_server_timestamp
-      @filter = filter
+      VALUES = [ALL, ONLY_COMMENTS, ONLY_CHANGES].freeze
+
+      # Coerces an incoming filter param (string or symbol) to a known mode,
+      # falling back to ALL for anything unrecognised.
+      def self.cast(value)
+        VALUES.find { it.to_s == value.to_s } || ALL
+      end
     end
   end
 end
