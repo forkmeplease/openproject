@@ -42,17 +42,9 @@ module Backlogs
 
     private
 
-    def select_panel_id
-      "#{filter_field.to_s.sub(/_ids$/, '').tr('_', '-')}-filter-select-panel"
-    end
-
-    def selector_type
-      filter_field == :sprint_ids ? :sprints : :buckets
-    end
-
     def filter_fields_for
       backlog_filters.to_h
-        .reject { |name, _| name.to_s.start_with?(filter_field.to_s) }
+        .except(filter_field)
         .flat_map do |name, value|
           if value.is_a?(Array)
             value.map { |v| { name: "#{name}[]", value: v } }
@@ -67,7 +59,7 @@ module Backlogs
     end
 
     def selected_ids
-      filter_field == :sprint_ids ? backlog_filters.sprint_ids : backlog_filters.bucket_ids
+      backlog_filters.public_send(filter_field)
     end
 
     def selector_label

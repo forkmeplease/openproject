@@ -408,7 +408,7 @@ module Pages
 
     def apply_sprint_filter(*sprints)
       within_sprint_backlogs { click_button "Sprints" }
-      within("dialog#sprint-filter-select-panel-dialog[open]") do
+      within("dialog#sprints-filter-select-panel-dialog[open]") do
         sprints.each { |sprint| click_on sprint.name }
         click_on "Apply"
       end
@@ -417,7 +417,7 @@ module Pages
 
     def apply_bucket_filter(*buckets)
       within_owner_backlogs { click_button "Backlog buckets" }
-      within("dialog#bucket-filter-select-panel-dialog[open]") do
+      within("dialog#buckets-filter-select-panel-dialog[open]") do
         buckets.each { |bucket| click_on bucket.name }
         click_on "Apply"
       end
