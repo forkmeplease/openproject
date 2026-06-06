@@ -3102,10 +3102,10 @@ cs:
         other: téměř %{count} let
       half_a_minute: půl minuty
       less_than_x_minutes:
-        one: méně než minuta
-        few: méně než %{count} minut
-        many: méně než %{count} minut
-        other: méně než %{count} minut
+        one: méně než minutou
+        few: méně než %{count} minutami
+        many: méně než %{count} minutami
+        other: méně než %{count} minutami
       less_than_x_seconds:
         one: méně než 1 sekundu
         few: méně než %{count} sekund
@@ -3285,8 +3285,8 @@ cs:
       edit_attribute_groups:
         description: 'Customize form configuration with these additional add-ons:'
         features:
-          groups: Přidat nové skupiny atributů
-          rename: Rename attribute groups
+          groups: Add new attribute sections
+          rename: Rename attribute sections
           related: Add a table of related work packages
       readonly_work_packages:
         description: Mark work packages as read-only for specific statuses.
