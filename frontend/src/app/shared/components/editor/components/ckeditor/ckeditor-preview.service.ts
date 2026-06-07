@@ -26,11 +26,10 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector, inject } from '@angular/core';
+import { ApplicationRef, ComponentRef, Injectable, Injector, inject } from '@angular/core';
 
 @Injectable()
 export class CKEditorPreviewService {
-  private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
   private readonly appRef = inject(ApplicationRef);
   private readonly injector = inject(Injector);
 

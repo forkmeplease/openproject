@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectionStrategy, Component, ComponentFactoryResolver, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { OpModalComponent } from 'core-app/shared/components/modal/modal.component';
 import {
   ActiveTabInterface,
@@ -25,7 +25,6 @@ export class BoardConfigurationModalComponent extends OpModalComponent implement
   readonly boardConfigurationService = inject(BoardConfigurationService);
   readonly injector = inject(Injector);
   readonly appRef = inject(ApplicationRef);
-  readonly componentFactoryResolver = inject(ComponentFactoryResolver);
 
   public text = {
     title: this.I18n.t('js.boards.configuration_modal.title'),
@@ -47,7 +46,6 @@ export class BoardConfigurationModalComponent extends OpModalComponent implement
     this.tabPortalHost = new TabPortalOutlet(
       this.boardConfigurationService.tabs,
       this.tabContentOutlet.nativeElement,
-      this.componentFactoryResolver,
       this.appRef,
       this.injector,
     );
