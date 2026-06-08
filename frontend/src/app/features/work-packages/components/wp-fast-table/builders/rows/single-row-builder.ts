@@ -13,7 +13,8 @@ import {
 } from 'core-app/features/work-packages/components/wp-fast-table/builders/internal-sort-columns';
 import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
 import { debugLog } from 'core-app/shared/helpers/debug_output';
-import { checkedClassName } from '../ui-state-link-builder';
+import { checkedClassName, pressedClassName } from '../ui-state-link-builder';
+import { WorkPackageViewFocusService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-focus.service';
 import { RelationCellbuilder } from '../relation-cell-builder';
 import {
   CellBuilder,
@@ -36,6 +37,8 @@ export const commonRowClassName = 'wp--row';
 export class SingleRowBuilder {
   // Injections
   @LazyInject() wpTableSelection:WorkPackageViewSelectionService;
+
+  @LazyInject() wpTableFocus:WorkPackageViewFocusService;
 
   @LazyInject() wpTableColumns:WorkPackageViewColumnsService;
 
@@ -249,6 +252,11 @@ export class SingleRowBuilder {
     // Set the row selection state
     if (this.wpTableSelection.isSelected(workPackage.id!)) {
       row.classList.add(checkedClassName);
+    }
+
+    // Mark the currently focused (details-panel) row as pressed
+    if (this.wpTableFocus.isFocused(workPackage.id!)) {
+      row.classList.add(pressedClassName);
     }
 
     return [row, false];

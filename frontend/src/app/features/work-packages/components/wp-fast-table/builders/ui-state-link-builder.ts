@@ -5,6 +5,7 @@ import { PathHelperService } from 'core-app/core/path-helper/path-helper.service
 
 export const uiStateLinkClass = '__ui-state-link';
 export const checkedClassName = '-checked';
+export const pressedClassName = '-pressed';
 
 export class UiStateLinkBuilder {
   constructor(

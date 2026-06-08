@@ -140,8 +140,8 @@ fr:
         cannot_delete_with_imports: Impossible de supprimer un hôte Jira avec des importations existantes
         custom_field_creation_failed: 'Échec de la création du champ personnalisé « %{name} » : %{message}'
         semantic_identifiers_must_be_enabled:
-          title: Les identificateurs sémantiques basés sur les projets doivent être activés.
-          description: Jira utilise des identificateurs de ticket composés d'une clé de projet et d'un numéro de séquence (PRJ-123). OpenProject le prend également en charge, mais cela doit être activé [ici](link).
+          title: Les identifiants sémantiques basés sur les projets doivent être activés.
+          description: Jira utilise des identifiants de ticket composés d'une clé de projet et d'un numéro de séquence (PRJ-123). OpenProject le prend également en charge, mais cela doit être activé [ici](link).
       blank:
         title: Aucun hôte Jira n'est encore configuré
         description: Configurez un hôte Jira pour commencer à importer des éléments de Jira vers cette instance d'OpenProject.
@@ -3157,8 +3157,8 @@ fr:
       edit_attribute_groups:
         description: 'Personnalisez la configuration du formulaire avec ces add-ons supplémentaires :'
         features:
-          groups: Ajouter de nouveaux groupes d'attributs
-          rename: Renommer les groupes d'attributs
+          groups: Add new attribute sections
+          rename: Rename attribute sections
           related: Ajouter un tableau des lots de travaux associés
       readonly_work_packages:
         description: Marquer les lots de travaux comme étant en lecture seule pour des statuts spécifiques.
@@ -3525,7 +3525,7 @@ fr:
 
             '
           new_features_list:
-            line_0: Identificateurs de lots de travail basés sur des projets pour des références plus claires.
+            line_0: Identifiants de lots de travaux basés sur des projets pour des références plus claires.
             line_1: Prise en charge par Jira Migrator des identifiants Jira, des dates d'échéance, etc.
             line_2: Possibilité d'exclure des types de lots de travail des carnets de commandes.
             line_3: Refonte des vues de sprint.
@@ -5364,7 +5364,7 @@ fr:
   setting_welcome_on_homescreen: Afficher le bloc de bienvenue sur l'écran d'accueil
   setting_work_packages_identifier_classic: Séquence numérique à l'échelle de l'instance (par défaut)
   setting_work_packages_identifier_classic_caption: 'Chaque lot de travaux reçoit un numéro séquentiel commençant à 1 (par exemple, #1234). Les numéros sont uniques au sein de l''instance et restent identiques même si les lots de travaux sont déplacés entre des projets.'
-  setting_work_packages_identifier_semantic: Identificateurs sémantiques basés sur des projets (Beta)
+  setting_work_packages_identifier_semantic: Identifiants sémantiques basés sur des projets (Beta)
   setting_work_packages_identifier_semantic_caption: Chaque projet possède un identifiant de projet unique préfixé à un numéro (par exemple, PROJ-11). La numérotation de chaque projet commence à 1. Si un lot de travaux est déplacé vers un autre projet, un nouvel identifiant est généré, mais l'ancien continuera de fonctionner.
   setting_work_package_list_default_highlighting_mode: Mode de surbrillance par défaut
   setting_work_package_list_default_highlighted_attributes: Attributs en ligne mis en surbrillance par défaut

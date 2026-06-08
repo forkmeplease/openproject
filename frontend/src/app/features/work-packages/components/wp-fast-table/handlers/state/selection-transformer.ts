@@ -9,7 +9,7 @@ import {
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-selection.service';
 import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
 import { tableRowClassName } from '../../builders/rows/single-row-builder';
-import { checkedClassName } from '../../builders/ui-state-link-builder';
+import { checkedClassName, pressedClassName } from '../../builders/ui-state-link-builder';
 import { locateTableRow, scrollTableRowIntoView } from '../../helpers/wp-table-row-helpers';
 import { WorkPackageTable } from '../../wp-fast-table';
 
@@ -48,6 +48,15 @@ export class SelectionTransformer {
         this.renderSelectionState(state);
       });
 
+    // Update pressed state when the focused (details-panel) WP changes
+    this.wpTableFocus.whenChanged()
+      .pipe(
+        takeUntil(this.querySpace.stopAllSubscriptions),
+      )
+      .subscribe((focusedId:string) => {
+        this.renderPressedState(focusedId);
+      });
+
     this.wpTableSelection.registerSelectAllListener(() => table.renderedRows);
     this.wpTableSelection.registerDeselectAllListener();
   }
@@ -65,5 +74,20 @@ export class SelectionTransformer {
         el.classList.toggle(checkedClassName, selected);
       });
     });
+  }
+
+  /**
+   * Update the pressed state to reflect the currently focused (details-panel) row.
+   */
+  private renderPressedState(focusedId:string|null) {
+    const context = this.table.tableAndTimelineContainer;
+
+    context.querySelectorAll(`.${tableRowClassName}.${pressedClassName}`).forEach((el) => el.classList.remove(pressedClassName));
+
+    if (focusedId) {
+      context.querySelectorAll(`.${tableRowClassName}[data-work-package-id="${focusedId}"]`).forEach((el) => {
+        el.classList.add(pressedClassName);
+      });
+    }
   }
 }
