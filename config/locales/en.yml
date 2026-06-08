@@ -4043,6 +4043,7 @@ en:
   label_send_invitation: Send invitation
   label_calculated_value: "Calculated value"
   label_change_parent: "Change parent"
+  label_change_password: "Change password"
   label_change_plural: "Changes"
   label_change_properties: "Change properties"
   label_change_status: "Change status"
@@ -4326,6 +4327,7 @@ en:
   label_move_column_right: "Move column right"
   label_move_work_package: "Move work package"
   label_my_account: "Account settings"
+  label_my_security: "Security"
   label_my_activity: "My activity"
   label_my_account_data: "My account data"
   label_my_avatar: "My avatar"
