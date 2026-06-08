@@ -29,12 +29,12 @@ RSpec.describe "Generate 2FA backup codes", :js, with_config: { "2fa": { active_
     end
 
     # Confirm with wrong password
-    expect(page).to have_css("h2", text: I18n.t("two_factor_authentication.backup_codes.plural"))
+    expect(page).to have_css(".Subhead-heading", text: I18n.t("two_factor_authentication.backup_codes.plural"))
     click_on I18n.t("two_factor_authentication.backup_codes.generate.title")
     dialog.confirm_flow_with "wrong_password", should_fail: true
 
     # Confirm with correct password
-    expect(page).to have_css("h2", text: I18n.t("two_factor_authentication.backup_codes.plural"))
+    expect(page).to have_css(".Subhead-heading", text: I18n.t("two_factor_authentication.backup_codes.plural"))
     click_on I18n.t("two_factor_authentication.backup_codes.generate.title")
     dialog.confirm_flow_with user_password, should_fail: false
 

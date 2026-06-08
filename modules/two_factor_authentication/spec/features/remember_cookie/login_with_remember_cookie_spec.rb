@@ -65,9 +65,9 @@ RSpec.describe "Login with 2FA remember cookie",
       login_with_cookie
       visit my_security_path
 
-      find(".two-factor-authentication--remove-remember-cookie-link").click
+      find_test_selector("two-factor-authentication--remove-remember-cookie-link").click
       expect_flash(message: I18n.t("two_factor_authentication.remember.cookie_removed"))
-      expect(page).to have_no_css(".two-factor-authentication--remove-remember-cookie-link")
+      expect(page).to have_no_test_selector("two-factor-authentication--remove-remember-cookie-link")
 
       # Log out and in again
       visit "/logout"

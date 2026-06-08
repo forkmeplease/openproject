@@ -24,7 +24,7 @@
 <% if device_form_class %>
   <%= settings_primer_form_with(
         model: @device,
-        as: :device,
+        scope: :device,
         url: { action: :register },
         autocomplete: "off",
         data: {

@@ -25,7 +25,7 @@ RSpec.describe "My Account 2FA configuration",
   it "allows 2FA device management" do
     # Visit empty index
     visit my_security_path
-    expect(page).to have_css(".generic-table--empty-row", text: I18n.t("two_factor_authentication.devices.not_existing"))
+    expect(page).to have_css(".blankslate", text: I18n.t("two_factor_authentication.devices.not_existing"))
     expect(page).to have_css(".on-off-status.-disabled")
 
     # Select SMS
@@ -69,8 +69,8 @@ RSpec.describe "My Account 2FA configuration",
     click_button I18n.t(:button_continue)
 
     # Assert that it exists and is default
-    expect(page).to have_css(".mobile-otp--two-factor-device-row td", text: "Mobile phone (bob) (+49 123456789)")
-    expect(page).to have_css(".mobile-otp--two-factor-device-row td .icon-yes", count: 2)
+    expect(page).to have_css(".mobile-otp--two-factor-device-row", text: "Mobile phone (bob) (+49 123456789)")
+    expect(page).to have_css(".mobile-otp--two-factor-device-row .octicon-check", count: 2)
     expect(page).to have_css(".on-off-status.-enabled")
 
     # Create another one as totp
@@ -104,9 +104,9 @@ RSpec.describe "My Account 2FA configuration",
 
     expect(page).to have_css(".mobile-otp--two-factor-device-row", count: 2)
     rows = page.all(".mobile-otp--two-factor-device-row")
-    expect(rows[0]).to have_css(".mobile-otp--two-factor-device-row td .icon-yes", count: 2)
-    expect(rows[1]).to have_css(".mobile-otp--two-factor-device-row td", text: "custom identifier")
-    expect(rows[1]).to have_css(".mobile-otp--two-factor-device-row td .icon-yes", count: 1)
+    expect(rows[0]).to have_css(".octicon-check", count: 2)
+    expect(rows[1]).to have_text("custom identifier")
+    expect(rows[1]).to have_css(".octicon-check", count: 1)
 
     device.reload
     expect(device.active).to be_truthy
@@ -114,25 +114,25 @@ RSpec.describe "My Account 2FA configuration",
 
     # Make the second one the default
     # Confirm the password wrongly
-    find(".two-factor--mark-default-button").click
+    page.find_test_selector("two-factor--make-default-button").click
     dialog.confirm_flow_with "wrong_password", should_fail: true
 
     # Confirm again
-    find(".two-factor--mark-default-button").click
+    page.find_test_selector("two-factor--make-default-button").click
     dialog.confirm_flow_with user_password, should_fail: false
 
     expect_and_dismiss_flash(message: "Successful update")
 
     expect(page).to have_css(".mobile-otp--two-factor-device-row", count: 2)
     rows = page.all(".mobile-otp--two-factor-device-row")
-    expect(rows[0]).to have_css(".mobile-otp--two-factor-device-row td .icon-yes", count: 1)
-    expect(rows[1]).to have_css(".mobile-otp--two-factor-device-row td .icon-yes", count: 2)
+    expect(rows[0]).to have_css(".octicon-check", count: 1)
+    expect(rows[1]).to have_css(".octicon-check", count: 2)
 
     device.reload
     expect(device.default).to be_truthy
 
     # Delete the sms device
-    rows[0].find(".two-factor--delete-button").click
+    rows[0].find("[data-test-selector='two-factor--delete-button']").click
     dialog.confirm_flow_with user_password, should_fail: false
 
     expect(page).to have_css(".mobile-otp--two-factor-device-row", count: 1)
@@ -140,10 +140,10 @@ RSpec.describe "My Account 2FA configuration",
     expect(user.otp_devices.count).to eq 1
 
     # Delete the totp device
-    find(".two-factor--delete-button").click
+    page.find_test_selector("two-factor--delete-button").click
     dialog.confirm_flow_with user_password, should_fail: false
 
-    expect(page).to have_css(".generic-table--empty-row", text: I18n.t("two_factor_authentication.devices.not_existing"))
+    expect(page).to have_css(".blankslate", text: I18n.t("two_factor_authentication.devices.not_existing"))
     expect(page).to have_css(".on-off-status.-disabled")
     expect(user.otp_devices.count).to eq 0
   end

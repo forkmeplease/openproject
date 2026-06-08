@@ -59,6 +59,7 @@ module ::TwoFactorAuthentication
               tag: :button,
               size: :small,
               type: :submit,
+              test_selector: "two-factor--make-default-button",
               "aria-label": I18n.t(:button_make_default)
             )
           )
@@ -80,6 +81,7 @@ module ::TwoFactorAuthentication
               size: :small,
               type: :submit,
               disabled: deletion_blocked?,
+              test_selector: "two-factor--delete-button",
               "aria-label": if deletion_blocked?
                               I18n.t("two_factor_authentication.devices.is_default_cannot_delete")
                             else
