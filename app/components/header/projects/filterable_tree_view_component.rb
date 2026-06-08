@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -26,23 +28,25 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Redmine::MenuManager::TopMenu::ProjectsMenu
-  def render_projects_top_menu_node
-    return "" if User.current.anonymous? and Setting.login_required?
-    return "" if User.current.anonymous? and User.current.number_of_known_projects.zero?
+module Header
+  module Projects
+    class FilterableTreeViewComponent < ApplicationComponent
+      def initialize(current_project_id:, jump:, filter_mode:)
+        super()
+        @current_project_id = current_project_id
+        @jump = jump
+        @filter_mode = filter_mode
+      end
 
-    render_projects_dropdown
+      private
+
+      def tree_src
+        helpers.header_projects_path(current_project_id: @current_project_id, jump: @jump.presence)
+      end
+
+      def logged?
+        helpers.current_user.logged?
+      end
+    end
   end
-
-  private
-
-  def render_projects_dropdown
-    render(Header::ProjectSelectComponent.new(
-             current_project: @project,
-             current_menu_item: current_menu_item,
-             current_user: User.current
-           ))
-  end
-
-  include OpenProject::StaticRouting::UrlHelpers
 end
