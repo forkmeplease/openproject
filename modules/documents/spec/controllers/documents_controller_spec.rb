@@ -223,7 +223,7 @@ RSpec.describe DocumentsController do
       expect(response).to have_http_status(:ok)
     end
 
-    it "renders pagination links that target the index action, not the search action (regression #STC-811)" do
+    it "renders pagination links that target the index action, not the search action" do
       get :search, params: { project_id: project.identifier, per_page: 1 }, format: :turbo_stream
 
       expect(response.body).not_to include("#{search_project_documents_path(project)}?")
