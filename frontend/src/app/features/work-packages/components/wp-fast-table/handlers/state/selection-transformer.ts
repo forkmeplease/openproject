@@ -7,20 +7,20 @@ import {
   WorkPackageViewSelectionService,
   WorkPackageViewSelectionState,
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-selection.service';
-import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
+import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
 import { tableRowClassName } from '../../builders/rows/single-row-builder';
 import { checkedClassName, pressedClassName } from '../../builders/ui-state-link-builder';
 import { locateTableRow, scrollTableRowIntoView } from '../../helpers/wp-table-row-helpers';
 import { WorkPackageTable } from '../../wp-fast-table';
 
 export class SelectionTransformer {
-  @InjectField() public wpTableSelection:WorkPackageViewSelectionService;
+  @LazyInject() public wpTableSelection:WorkPackageViewSelectionService;
 
-  @InjectField() public wpTableFocus:WorkPackageViewFocusService;
+  @LazyInject() public wpTableFocus:WorkPackageViewFocusService;
 
-  @InjectField() public querySpace:IsolatedQuerySpace;
+  @LazyInject() public querySpace:IsolatedQuerySpace;
 
-  @InjectField() public FocusHelper:FocusHelperService;
+  @LazyInject() public FocusHelper:FocusHelperService;
 
   constructor(public readonly injector:Injector,
     public readonly table:WorkPackageTable) {

@@ -11,7 +11,7 @@ import {
   internalSortColumn,
   sharedUserColumn,
 } from 'core-app/features/work-packages/components/wp-fast-table/builders/internal-sort-columns';
-import { InjectField } from 'core-app/shared/helpers/angular/inject-field.decorator';
+import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
 import { debugLog } from 'core-app/shared/helpers/debug_output';
 import { checkedClassName, pressedClassName } from '../ui-state-link-builder';
 import { WorkPackageViewFocusService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-focus.service';
@@ -36,15 +36,15 @@ export const commonRowClassName = 'wp--row';
 
 export class SingleRowBuilder {
   // Injections
-  @InjectField() wpTableSelection:WorkPackageViewSelectionService;
+  @LazyInject() wpTableSelection:WorkPackageViewSelectionService;
 
-  @InjectField() wpTableFocus:WorkPackageViewFocusService;
+  @LazyInject() wpTableFocus:WorkPackageViewFocusService;
 
-  @InjectField() wpTableColumns:WorkPackageViewColumnsService;
+  @LazyInject() wpTableColumns:WorkPackageViewColumnsService;
 
-  @InjectField() wpTableBaseline:WorkPackageViewBaselineService;
+  @LazyInject() wpTableBaseline:WorkPackageViewBaselineService;
 
-  @InjectField() I18n!:I18nService;
+  @LazyInject() I18n!:I18nService;
 
   // Cell builder instance
   protected cellBuilder = new CellBuilder(this.injector);
