@@ -23,21 +23,28 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-FactoryBot.define do
-  factory :wiki do
-    start_page { "Wiki" }
-    project
+module Wikis
+  module Adapters
+    module Input
+      class PageInfoForUrlContract < DryApplicationContract
+        params do
+          required(:url).filled(:string)
+        end
 
-    after(:create) do |wiki, _|
-      # workaround for projects magically creating a wiki once they are created
-      # the associated project should be associated to THIS wiki, not a random other
-      # one that it created a few milliseconds before
-      Wiki.where(project_id: wiki.project_id).where.not(id: wiki.id).delete_all
+        rule(:url) do
+          uri = URI.parse(value)
+          next if %w[http https].include?(uri.scheme)
+
+          key.failure(:invalid_url)
+        rescue URI::InvalidURIError
+          key.failure(:invalid_url)
+        end
+      end
     end
   end
 end
