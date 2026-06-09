@@ -27,35 +27,22 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<% html_title t(:label_administration), t(:project_module_wiki_platforms) %>
+<% html_title t(:label_administration), Wikis::InternalProvider.model_name.human %>
 
 <% content_for :content_header do %>
   <%= render(Primer::OpenProject::PageHeader.new) do |header| %>
-    <% header.with_title { t(:project_module_wiki_platforms) } %>
-    <% header.with_description { t("wikis.admin.wiki_providers.index_description") } %>
+    <% header.with_title { Wikis::InternalProvider.model_name.human } %>
+    <% header.with_description { t(".description") } %>
     <% header.with_breadcrumbs([
       { href: admin_index_path, text: t(:label_administration) },
       { href: admin_settings_wiki_providers_path, text: t("menus.admin.wikis") },
-      t(:project_module_wiki_platforms)
+      Wikis::InternalProvider.model_name.human
     ]) %>
   <% end %>
-
-  <%= render(Primer::OpenProject::SubHeader.new) do |subheader|
-        subheader.with_action_menu(
-          leading_icon: :plus,
-          trailing_icon: :"triangle-down",
-          label: I18n.t("wikis.admin.wiki_providers.label_wiki_platform"),
-          anchor_align: :end,
-          button_arguments: { scheme: :primary,
-                              aria: { label: I18n.t("wikis.admin.wiki_providers.label_add_new") },
-                              test_selector: "wiki-providers-create-new-button" }
-        ) do |menu|
-          menu.with_item(
-            label: I18n.t("wikis.provider_types.xwiki.name"),
-            href: new_admin_settings_wiki_provider_path
-          )
-        end
-      end %>
 <% end %>
 
-<%= render(Wikis::Admin::WikiProviderListComponent.new(@wiki_providers)) %>
+<%=
+  primer_form_with(model: @provider, url: admin_settings_internal_wiki_provider_path) do |form|
+    render(Wikis::Admin::InternalProviderForm.new(form))
+  end
+%>
