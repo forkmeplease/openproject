@@ -48,34 +48,30 @@ See COPYRIGHT and LICENSE files for more details.
           )
         )
       end
-
-      if backlog_bucket_creation_allowed?
-        head.with_actions do
-          render Primer::Beta::Button.new(
-            tag: :a,
-            label: BacklogBucket.human_model_name,
-            href: new_dialog_project_backlogs_buckets_path(project, backlog_filter_params),
-            data: {
-              controller: "async-dialog",
-              test_selector: "op-backlog-buckets--new-backlog-bucket-button"
-            }
-          ) do |button|
-            button.with_leading_visual_icon(icon: :plus)
-            BacklogBucket.human_model_name
-          end
-        end
-      elsif sprint_creation_allowed?
-        # Ugly hack:
-        # This button will not be rendered, but still takes up space to push the left side down a bit.
-        # Remove as soon as the `+ Sprint` button moves from the Subhead into a SubHeader.
-        head.with_actions do
-          render(Primer::Beta::Button.new(tag: :a, visibility: :hidden)) { "spacer" }
-        end
-      end
     end
   %>
 
-  <%= render Backlogs::BacklogFilterSelectPanelComponent.new(project:, field_name: :bucket_ids) %>
+  <%= render(Primer::OpenProject::FlexLayout.new(justify_content: :space_between, align_items: :center)) do |flex| %>
+    <% flex.with_column do %>
+      <%= render Backlogs::BacklogFilterSelectPanelComponent.new(project:, field_name: :bucket_ids) %>
+    <% end %>
+    <% if backlog_bucket_creation_allowed? %>
+      <% flex.with_column do %>
+        <%= render Primer::Beta::Button.new(
+              tag: :a,
+              label: BacklogBucket.human_model_name,
+              href: new_dialog_project_backlogs_buckets_path(project, backlog_filter_params),
+              data: {
+                controller: "async-dialog",
+                test_selector: "op-backlog-buckets--new-backlog-bucket-button"
+              }
+            ) do |button|
+              button.with_leading_visual_icon(icon: :plus)
+              BacklogBucket.human_model_name
+            end %>
+      <% end %>
+    <% end %>
+  <% end %>
 
   <%= render Backlogs::BucketComponent.with_collection(buckets, project:) %>
 
