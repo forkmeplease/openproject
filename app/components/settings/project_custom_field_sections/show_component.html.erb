@@ -57,6 +57,23 @@
                 else
                   disabled_delete_action_item(menu)
                 end
+
+                menu.with_divider
+
+                menu.with_sub_menu_item(
+                  label: t("settings.project_attributes.label_new_attribute"),
+                  content_arguments: {
+                    aria: { label: t("settings.project_attributes.label_add_attribute") },
+                    data: { test_selector: "new-project-custom-field-in-section-submenu" }
+                  }
+                ) do |sub_menu|
+                  sub_menu.with_leading_visual_icon(icon: :plus)
+                  OpenProject::CustomFieldFormat.available_for_class_name("Project")
+                                                .sort_by(&:name)
+                                                .each do |format|
+                    action_menu_item_for_custom_field_format(sub_menu, format)
+                  end
+                end
               end
             end
 
@@ -94,8 +111,8 @@
 
                 OpenProject::CustomFieldFormat.available_for_class_name("Project")
                                               .sort_by(&:name)
-                                              .map do |format|
-                                                action_menu_item_for_custom_field_format(menu, format)
+                                              .each do |format|
+                  action_menu_item_for_custom_field_format(menu, format)
                 end
               end
             end
