@@ -21,7 +21,7 @@ OpenProject 17.5 introduces **optional project-based work package identifiers in
 > [!NOTE]
 > The setting can be reverted later. Existing numerical IDs remain valid and continue to resolve to the same work packages throughout the application, including existing URLs, bookmarks, and references.
 
-![OpenProject administration to select either 'Instance-wide numerical sequence (default)' or 'Project-based semantic identifiers'](openproject-17-5-identifiers-setting.png)
+![Work package table for version 17.5 with highlighted project-based work package IDs](openproject-community-project-based-ids-highlighted.png)
 
 Project-based work package identifiers are especially useful for organizations migrating from Jira, as [existing Jira issue identifiers can now be preserved in OpenProject](#jira-migrator-support-for-jira-identifiers-due-dates-and-more). Beyond migrations, project-based IDs provide **shorter sequence numbers and clearer project context**, making it easier to recognize, reference, and share work packages across projects, emails, documents, chats, and integrations.
 
@@ -32,7 +32,7 @@ Switching to project-based work package identifiers is an instance-wide administ
 > [!NOTE]
 > Historical references remain functional when project identifiers change.
 
-![OpenProject administration to configure project-based work package identifiers and convert project identifiers](openproject-17-5-project-based-identifier.png)
+![OpenProject administration to select either 'Instance-wide numerical sequence (default)' or 'Project-based semantic identifiers'](openproject-17-5-identifiers-setting.png)
 
 #### Support across URLs, searches, exports, and integrations
 
@@ -42,6 +42,8 @@ Existing integrations such as GitHub and GitLab already support the new identifi
 
 > [!NOTE]
 > Project-based work package identifiers are still in Beta. While the feature is supported across important areas of OpenProject, **some areas may continue to display numerical identifiers until support for project-based identifiers is fully implemented**. In these cases, numerical identifiers remain fully functional and continue to resolve to the same work packages.
+
+[See our system admin guide for detailed information on how to manage work package identifiers](../../system-admin-guide/manage-work-packages/work-package-identifiers/).
 
 #### Releasing unused numerical identifiers
 
@@ -115,14 +117,6 @@ OpenProject 17.5 improves meeting-related email behavior by reducing unnecessary
 Instead of sending an email for every small change, OpenProject now consolidates multiple meeting updates into fewer emails. Emails are only sent after no further changes have been made for one minute. This helps reduce inbox noise during collaborative meeting preparation and editing.
 
 [Read more about OpenProject's Meetings module](../../user-guide/meetings/).
-
-### Nested groups for organizational structures and inherited permissions
-
-OpenProject 17.5 introduces nested groups to better represent organizational structures such as departments, teams, or business units.
-
-Groups can now contain subgroups, allowing administrators to model hierarchies directly in OpenProject. Permissions and memberships can also be inherited from parent groups, making it easier to manage access rights consistently across larger organizations.
-
-![Mockup showing users and permissions sorted into hierarchical groups](openproject-17-5-nested-groups-mockup.png)
 
 ### Allow multi-selection of roles in workflow
 
