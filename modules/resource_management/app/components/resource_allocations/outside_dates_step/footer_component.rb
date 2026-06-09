@@ -39,8 +39,6 @@ module ResourceAllocations
       end
 
       def call
-        # The dialog footer is a flex row. Stretching this wrapper across it and
-        # giving "Back" `mr: :auto` pushes the remaining actions to the right.
         component_wrapper(style: "display: flex; flex: 1; align-items: center") do
           safe_join(
             [

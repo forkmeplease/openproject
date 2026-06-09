@@ -30,10 +30,6 @@
 
 module ResourceAllocations
   module OutsideDatesStep
-    # Confirmation step shown when the allocation dates fall outside the work
-    # package's schedule. Replaces the dialog body; the carried form values are
-    # re-submitted by the footer so "Allocate" recreates the same allocation and
-    # "Back" returns to the editable step.
     class FormComponent < ApplicationComponent
       include ApplicationHelper
       include OpTurbo::Streamable
