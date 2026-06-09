@@ -33,22 +33,39 @@ module Wikis
     module Providers
       module XWiki
         module Queries
-          class PageInfo < BaseQuery
-            include Concerns::XWikiQuery
+          module Internal
+            # Fetch page information using a canonical XWiki identifier
+            class CanonicalPageInfo < BaseQuery
+              include Concerns::XWikiQuery
 
-            def call(input_data:, auth_strategy:)
-              ref = PageReference.parse(input_data.identifier)
-              return failure(code: :not_found) unless ref
+              def call(input_data:, auth_strategy:)
+                ref = CanonicalPageReference.parse(input_data.identifier)
+                return failure(code: :not_found) unless ref
 
-              authenticated(auth_strategy) do |http|
-                handle_response(http.get(rest_url(ref.rest_path))) do |data|
+                perform_request(ref, auth_strategy:) do |data|
                   success(
                     Results::PageInfo.new(
-                      identifier: input_data.identifier,
-                      title: data["title"],
-                      href: data["xwikiAbsoluteUrl"],
+                      identifier: StablePageReference.parse(fetch_json(data, "id")).to_s,
+                      title: data.fetch("title"),
+                      href: data.fetch("xwikiAbsoluteUrl"),
                       provider:
                     )
+                  )
+                end
+              end
+
+              def perform_request(reference, auth_strategy:, &)
+                authenticated(auth_strategy) do |http|
+                  handle_response(
+                    # This query is implemented as a PUT on the XWiki side, because it dynamically creates the
+                    # stable identifier that it returns. Passing an empty JSON body is also required for the
+                    # endpoint to not raise an error 🤷
+                    http.with(headers: { "Content-Type": "application/json" })
+                        .put(
+                          rest_url("openproject/documents", query: { docRef: reference.to_s }),
+                          body: "{}"
+                        ),
+                    &
                   )
                 end
               end
