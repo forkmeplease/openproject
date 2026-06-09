@@ -460,7 +460,7 @@ de:
         dialog:
           title: Arbeitspaket-Kennungen ändern
           heading: Aktivieren Sie projektspezifische Arbeitspaket-Kennungen?
-          description: 'This will change IDs for all work packages in all projects in this instance. Previous identifiers and URLs will continue to work. This change will take some time to complete.
+          description: 'Dadurch werden die IDs für alle Arbeitspakete in allen Projekten in diesem Fall geändert. Die bisherigen Identifikatoren und URLs werden weiterhin funktionieren. Diese Änderung wird einige Zeit in Anspruch nehmen.
 
             '
           confirm_button: Kennungen ändern
@@ -940,7 +940,7 @@ de:
       change_identifier_dialog_title: Projektkennung ändern
       change_identifier_format_hint_semantic: Nur Großbuchstaben (A-Z), Zahlen oder Unterstriche erlaubt. Maximal 10 Zeichen. Muss mit einem Buchstaben beginnen.
       change_identifier_format_hint_legacy: Nur Kleinbuchstaben (a-z), Zahlen, Bindestriche oder Unterstriche erlaubt.
-      change_identifier_warning: 'This will permanently change identifiers and URLs of all work packages in this project. The previous identifiers and URLs will nevertheless continue to work.
+      change_identifier_warning: 'Dies wird die Kennungen und URLs aller Arbeitspakete in diesem Projekt dauerhaft ändern. Die bisherigen Werte werden jedoch weiterhin funktionieren.
 
         '
       subitems:
@@ -2103,17 +2103,14 @@ de:
         before: muss vor %{date} sein.
         before_or_equal_to: muss vor oder gleich %{date} sein.
         blank: muss ausgefüllt werden.
-        not_before_start_date: darf nicht vor dem Startdatum liegen.
-        overlapping_range: überschneidet sich mit einem bereits existierenden arbeitsfreien Zeitraum.
         blank_nested: muss die Eigenschaft '%{property}' gesetzt haben.
         cannot_delete_mapping: ist erforderlich. Kann nicht gelöscht werden.
-        is_for_all_cannot_modify: gilt für alle Projekte und kann daher nicht geändert werden.
         cant_link_a_work_package_with_a_descendant: Ein Arbeitspaket kann nicht mit einer seiner Unteraufgaben verlinkt werden.
         circular_dependency: Diese Beziehung würde eine zyklische Abhängigkeit erzeugen.
         confirmation: stimmt nicht mit %{attribute} überein.
         could_not_be_copied: "%{dependency} konnte nicht (vollständig) kopiert werden."
+        datetime_must_be_in_future: muss in der Zukunft liegen.
         does_not_exist: existiert nicht.
-        user_already_in_department: Der Benutzer %{user_id} ist bereits Mitglied der Abteilung %{department_id}.
         error_enterprise_only: "%{action} ist nur in der OpenProject Enterprise Edition verfügbar."
         error_unauthorized: kann nicht zugegriffen werden.
         error_readonly: wurde versucht zu beschreiben, ist aber nicht beschreibbar.
@@ -2134,36 +2131,38 @@ de:
         greater_than_or_equal_to: muss größer oder gleich %{count} sein.
         greater_than_or_equal_to_start_date: muss größer als oder gleich dem Anfangsdatum sein.
         greater_than_start_date: muss größer als das Anfangsdatum sein.
+        hexcode_invalid: ist kein gültiger 6-stelliger hexadezimaler Farbcode.
         inclusion: ist nicht auf einen erlaubten Wert gesetzt.
         inclusion_nested: ist nicht auf einen der erlaubten Werte im Pfad '%{path} ' gesetzt.
         invalid: ist ungültig.
         invalid_uri: muss eine gültige URI sein.
         invalid_url: ist keine gültige URL.
         invalid_url_scheme: 'ist kein unterstütztes Protokoll (erlaubt: %{allowed_schemes}).'
+        is_for_all_cannot_modify: gilt für alle Projekte und kann daher nicht geändert werden.
         less_than_or_equal_to: muss kleiner oder gleich %{count} sein.
         not_available: ist aufgrund einer Systemkonfiguration nicht verfügbar.
+        not_before_start_date: darf nicht vor dem Startdatum liegen.
         not_deletable: kann nicht entfernt werden.
         not_editable: kann nicht bearbeitet werden, da sie bereits in Kraft ist.
         not_current_user: ist nicht der aktuelle Benutzer.
-        system_wide_non_working_day_exists: widerspricht einem systemweiten Nicht-Arbeitstag für dieses Datum.
         not_found: nicht gefunden.
         not_a_date: ist kein gültiges Datum.
         not_a_datetime: ist kein gültiges Datum.
         not_a_number: ist keine Zahl.
         not_allowed: ist ungültig aufgrund fehlender Berechtigungen.
-        host_not_allowed: ist kein erlaubter Host.
         not_json: konnte nicht als JSON gelsen werden.
         not_json_object: ist kein gültiges JSON-Objekt.
         not_an_integer: ist keine ganzzahlige Zahl.
         not_an_iso_date: 'ist kein gültiges Datum - Erwartetes Format: YYY-MM-DD.'
         not_same_project: gehört nicht zum selben Projekt.
-        datetime_must_be_in_future: muss in der Zukunft liegen.
         odd: muss ungerade sein.
+        overlapping_range: überschneidet sich mit einem bereits existierenden arbeitsfreien Zeitraum.
         regex_match_failed: stimmt nicht mit dem regulären Ausdruck %{expression} überein.
         regex_invalid: konnte nicht mit dem zugehörigen regulären Ausdruck überprüft werden.
         regex_list_invalid: Die Zeilen %{invalid_lines} konnten nicht als regulärer Ausdruck gelesen werden.
-        hexcode_invalid: ist kein gültiger 6-stelliger hexadezimaler Farbcode.
         smaller_than_or_equal_to_max_length: muss kleiner als oder gleich der maximalen Länge sein.
+        ssrf_filtered: violates the SSRF policy of this OpenProject instance.
+        system_wide_non_working_day_exists: widerspricht einem systemweiten Nicht-Arbeitstag für dieses Datum.
         taken: ist bereits vergeben.
         too_long: ist zu lang (nicht mehr als %{count} Zeichen).
         too_short: ist zu kurz (nicht weniger als %{count} Zeichen).
@@ -2176,6 +2175,7 @@ de:
         url_not_secure_context: 'stellt keinen "Secure Context" zur Verfügung: Benutzen Sie entweder HTTPS oder eine Loopback-Adresse, wie z.B. localhost.
 
           '
+        user_already_in_department: Der Benutzer %{user_id} ist bereits Mitglied der Abteilung %{department_id}.
         wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben).
       models:
         group:
@@ -3158,8 +3158,8 @@ de:
       edit_attribute_groups:
         description: 'Anpassen der Form-Konfiguration mit diesen zusätzlichen Add-ons:'
         features:
-          groups: Add new attribute sections
-          rename: Rename attribute sections
+          groups: Neue Attributabschnitte hinzufügen
+          rename: Attributabschnitte umbenennen
           related: Tabelle mit zugehörigen Arbeitspaketen hinzufügen
       readonly_work_packages:
         description: Arbeitspakete in bestimmten Status als schreibgeschützt markieren.
@@ -3469,6 +3469,12 @@ de:
       selected: Ausgewählt
     include_sub_items: Unterelemente einbeziehen
     no_results_text: Keine Ergebnisse
+  header:
+    project_select_component:
+      all_projects: All projects
+      favorites: Favorites
+      leave_project: Leave project
+      title: Projects
   toggle_switch:
     label_on: Ein
     label_off: Aus
@@ -3528,12 +3534,12 @@ de:
           new_features_list:
             line_0: Project-based work package identifiers for clearer references.
             line_1: Jira Migrator support for Jira identifiers, due dates, and more.
-            line_2: Option to exclude work package types from Backlogs.
-            line_3: Redesigned sprint views.
-            line_4: Improved work package linking across Documents and text editors.
-            line_5: More flexible meeting schedules and reduced email notification noise.
-            line_6: Nested groups for organizational structures and inherited permissions.
-            line_7: Improved administration interfaces for workflows, users, and type configuration.
+            line_2: Option Arbeitspakettypen und -status in Backlogs auszuschließen.
+            line_3: Neu gestaltete Sprint-Ansichten.
+            line_4: Verbesserte Verknüpfung von Arbeitspaketen zwischen dem Dokumenten-Modul und Texteditoren.
+            line_5: Flexiblere Besprechungspläne und weniger E-Mail-Benachrichtigungen.
+            line_6: Verschachtelte Gruppen für Organisationsstrukturen und vererbte Berechtigungen.
+            line_7: Verbesserte Verwaltungsoberflächen für Workflows, Benutzer und Typkonfiguration.
     links:
       upgrade_enterprise_edition: Auf Enterprise Edition upgraden
       postgres_migration: Migration Ihrer Installation zu PostgreSQL
@@ -5369,7 +5375,7 @@ de:
   setting_welcome_on_homescreen: Willkommens-Block auf Startseite anzeigen
   setting_work_packages_identifier_classic: Instanzweite numerische Sequenz (Standard)
   setting_work_packages_identifier_classic_caption: 'Every work package gets a sequential number starting with 1 (for example, #1234). The numbers are unique within the instance and remain the same even if work packages are moved between projects.'
-  setting_work_packages_identifier_semantic: Project-based semantic identifiers (Beta)
+  setting_work_packages_identifier_semantic: Projektspezifische semantische Kennungen (Beta)
   setting_work_packages_identifier_semantic_caption: Every project has a unique project identifier prefixed to a number (for example, PROJ-11). The numbering of each project starts at 1. If a work package is moved to another project, a new identifier is generated but the old one will continue to function.
   setting_work_package_list_default_highlighting_mode: Standard Hervorhebung
   setting_work_package_list_default_highlighted_attributes: Voreinstellung Inline Hervorherbung
