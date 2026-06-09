@@ -127,4 +127,48 @@ RSpec.describe ResourceAllocations::Availability do
       expect(availability.fits?(start_date: monday, end_date: friday, minutes: 2400, exclude_id: existing.id)).to be true
     end
   end
+
+  describe "#overbooking_with" do
+    it "is empty when the prospective allocation still fits" do
+      allocate(600)
+
+      ranges = availability.overbooking_with(start_date: monday, end_date: friday, minutes: 1000)
+
+      expect(ranges).to be_empty
+    end
+
+    it "returns the overbooked range including the candidate, flagged by its id" do
+      wp = create(:work_package)
+      allocate(1500, entity: wp)
+      candidate_wp = create(:work_package)
+
+      range = availability
+                .overbooking_with(start_date: monday, end_date: friday, minutes: 1500, work_package_id: candidate_wp.id)
+                .sole
+
+      expect(range.work_package_ids).to contain_exactly(wp.id, candidate_wp.id)
+      candidate = range.items.find { |item| item.id == described_class::CANDIDATE_ID }
+      expect(candidate.work_package_id).to eq(candidate_wp.id)
+      expect(candidate.minutes).to eq(1500)
+    end
+
+    it "overbooks even without existing allocations when the candidate alone exceeds capacity" do
+      # 2400 minutes over Mon-Tue against an 8h/day (960 min) window.
+      ranges = availability.overbooking_with(start_date: monday, end_date: tuesday, minutes: 2400)
+
+      expect(ranges).not_to be_empty
+    end
+  end
+
+  describe "#max_daily_minutes" do
+    it "returns the highest single-day capacity in the range" do
+      expect(availability.max_daily_minutes(start_date: monday, end_date: friday)).to eq(480)
+    end
+
+    it "is zero when the user has no working time configured" do
+      other = described_class.new(user: create(:user))
+
+      expect(other.max_daily_minutes(start_date: monday, end_date: friday)).to eq(0)
+    end
+  end
 end

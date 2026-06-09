@@ -100,11 +100,13 @@ module ResourceAllocations
 
     def overbooked_range(first, last, violations)
       in_block = violations.select { |violation| violation.start_date >= first && violation.end_date <= last }
+      items = in_block.flat_map(&:items).uniq(&:id)
 
       OverbookedRange.new(
         start_date: first,
         end_date: last,
-        work_package_ids: in_block.flat_map { |violation| violation.items.map(&:work_package_id) }.compact.uniq,
+        items:,
+        work_package_ids: items.filter_map(&:work_package_id).uniq,
         over_by_minutes: in_block.map(&:over_by_minutes).max
       )
     end

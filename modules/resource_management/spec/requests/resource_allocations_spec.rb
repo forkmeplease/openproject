@@ -313,6 +313,68 @@ RSpec.describe "ResourceAllocations requests",
         end.to change(ResourceAllocation, :count).by(1)
       end
     end
+
+    context "when the allocation would overbook the assigned user" do
+      shared_let(:working_assignee) do
+        create(:user, member_with_permissions: { project => %i[view_work_packages] }).tap do |assignee|
+          # Mon-Fri 8h => 480 minutes/day of capacity.
+          create(:user_working_hours, user: assignee, valid_from: Date.new(2025, 1, 1))
+        end
+      end
+
+      # 40h (2400 min) across Mon-Tue (960 min of capacity) overbooks the user.
+      let(:base_params) do
+        {
+          allocation_kind: "principal",
+          resource_allocation: {
+            principal_id: working_assignee.id,
+            entity_type: "WorkPackage",
+            entity_id: work_package.id,
+            start_date: "2026-03-02",
+            end_date: "2026-03-03",
+            allocated_hours: "40h"
+          }
+        }
+      end
+
+      it "does not create yet and renders the overbooking confirmation step" do
+        expect do
+          post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
+        end.not_to change(ResourceAllocation, :count)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(I18n.t("resource_management.allocate_resource_dialog.overbooking.title"))
+        expect(response.body).to include('name="confirmed"')
+      end
+
+      it "creates the allocation once confirmed" do
+        expect do
+          post project_resource_allocations_path(project),
+               params: base_params.merge(confirmed: "1"),
+               as: :turbo_stream
+        end.to change(ResourceAllocation, :count).by(1)
+      end
+    end
+
+    context "when the assigned user has no working time configured" do
+      it "skips the overbooking check and creates directly" do
+        expect do
+          post project_resource_allocations_path(project),
+               params: {
+                 allocation_kind: "principal",
+                 resource_allocation: {
+                   principal_id: assignee.id,
+                   entity_type: "WorkPackage",
+                   entity_id: work_package.id,
+                   start_date: "2026-03-02",
+                   end_date: "2026-03-03",
+                   allocated_hours: "40h"
+                 }
+               },
+               as: :turbo_stream
+        end.to change(ResourceAllocation, :count).by(1)
+      end
+    end
   end
 
   context "without the allocate_user_resources permission" do

@@ -40,6 +40,9 @@ module ResourceAllocations
     attribute :end_date, :date
     attribute :work_package_ids, default: -> { [] }
     attribute :over_by_minutes, :integer
+    # The WorkItems forced into this range, carried so a warning can list each
+    # work package's hours and flag the one that was just allocated.
+    attribute :items, default: -> { [] }
 
     def covers?(date)
       (start_date..end_date).cover?(date)

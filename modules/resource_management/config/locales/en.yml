@@ -82,6 +82,13 @@ en:
         description: >-
           The selected resource dates, %{resource_dates}, are outside of the work package's dates, %{work_package_dates}.
         title: Do you want to allocate resources outside the work package's dates?
+      overbooking:
+        description: >-
+          The selected user, %{user}, would be allocated beyond their maximum hours per day during this period.
+          This user works %{hours} per day.
+        other_allocation: Other allocation
+        submit: Allocate overtime
+        title: Do you want to allocate overtime to the user?
       submit: Allocate
       success_message: Resource allocated.
       title: Allocate resource

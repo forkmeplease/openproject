@@ -57,7 +57,7 @@ module ::ResourceManagement
 
       validation = set_attributes(create_params)
       return render_allocation_step(validation.result, status: :unprocessable_entity) if validation.failure?
-      return render_outside_dates_step(validation.result) if needs_date_confirmation?(validation.result)
+      return render_warning_step(validation.result) if needs_confirmation?(validation.result)
 
       persist_allocation
     end
@@ -81,17 +81,23 @@ module ::ResourceManagement
       respond_with_turbo_streams(status:)
     end
 
-    def render_outside_dates_step(allocation)
+    def render_warning_step(allocation)
+      ranges = overbooked_ranges(allocation)
+
       replace_via_turbo_stream(
-        component: ResourceAllocations::OutsideDatesStep::FormComponent.new(
+        component: ResourceAllocations::WarningStep::FormComponent.new(
           allocation:,
           project: @project,
           allocation_kind:,
           form_values: submitted_allocation_params,
-          filters: params[:filters]
+          filters: params[:filters],
+          overbooked_ranges: ranges,
+          daily_working_minutes: daily_working_minutes(allocation, ranges)
         )
       )
-      replace_via_turbo_stream(component: ResourceAllocations::OutsideDatesStep::FooterComponent.new)
+      replace_via_turbo_stream(
+        component: ResourceAllocations::WarningStep::FooterComponent.new(overbooked: ranges.any?)
+      )
       respond_with_turbo_streams
     end
 
@@ -111,8 +117,48 @@ module ::ResourceManagement
       render_allocation_step(set_attributes(create_params).result)
     end
 
-    def needs_date_confirmation?(allocation)
-      allocation.schedule_violation && params[:confirmed].blank?
+    # A final confirmation step is shown when the allocation falls outside its
+    # work package's dates and/or would overbook the assigned user. Both
+    # warnings share the one step for now.
+    def needs_confirmation?(allocation)
+      return false if params[:confirmed].present?
+
+      allocation.schedule_violation.present? || overbooked_ranges(allocation).any?
+    end
+
+    def overbooked_ranges(allocation)
+      @overbooked_ranges ||= compute_overbooked_ranges(allocation)
+    end
+
+    # Overbooking is a user-level concern, so it is only checked for allocations
+    # assigned to a specific user, and only when that user has working time
+    # configured (otherwise their capacity is unknown, not zero).
+    def compute_overbooked_ranges(allocation)
+      return [] unless overbooking_checkable?(allocation)
+
+      availability(allocation).overbooking_with(
+        start_date: allocation.start_date,
+        end_date: allocation.end_date,
+        minutes: allocation.allocated_time,
+        work_package_id: allocation.entity_id
+      )
+    end
+
+    def overbooking_checkable?(allocation)
+      allocation.principal.present? &&
+        allocation.start_date.present? && allocation.end_date.present? &&
+        allocation.allocated_time.to_i.positive? &&
+        UserWorkingHours.for_user(allocation.principal).exists?
+    end
+
+    def daily_working_minutes(allocation, ranges)
+      return if ranges.empty?
+
+      availability(allocation).max_daily_minutes(start_date: allocation.start_date, end_date: allocation.end_date)
+    end
+
+    def availability(allocation)
+      @availability ||= ResourceAllocations::Availability.new(user: allocation.principal)
     end
 
     def set_attributes(attributes)

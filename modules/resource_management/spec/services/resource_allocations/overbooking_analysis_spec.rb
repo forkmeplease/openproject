@@ -65,6 +65,11 @@ RSpec.describe ResourceAllocations::OverbookingAnalysis do
         over_by_minutes: 1200 - 960
       )
     end
+
+    it "carries the forced work items so a warning can list them" do
+      expect(ranges.first.items.map(&:id)).to eq([7])
+      expect(ranges.first.items.map(&:minutes)).to eq([1200])
+    end
   end
 
   context "with two allocations that each fit alone but collide over a shared interval" do

@@ -36,6 +36,10 @@ module ResourceAllocations
   # projects (capacity is a user-level property). Filter-based allocations have no
   # principal and are excluded.
   class Availability
+    # Identifies the prospective allocation amongst the existing work items when
+    # checking a not-yet-persisted allocation.
+    CANDIDATE_ID = :candidate
+
     def initialize(user:)
       @user = user
     end
@@ -67,10 +71,29 @@ module ResourceAllocations
     # Whether a prospective allocation would still fit. `exclude_id` drops an
     # existing allocation from the check (e.g. the one being edited).
     def fits?(start_date:, end_date:, minutes:, exclude_id: nil)
-      candidate = WorkItem.new(id: :candidate, start_date:, end_date:, minutes:)
+      overbooking_with(start_date:, end_date:, minutes:, exclude_id:).empty?
+    end
+
+    # The overbooked ranges that would result from adding a prospective
+    # allocation. The candidate is included in the ranges' items (carrying
+    # `work_package_id`) so a warning can list and flag it. Empty when it fits.
+    # `exclude_id` drops an existing allocation from the check (e.g. the one
+    # being edited).
+    def overbooking_with(start_date:, end_date:, minutes:, work_package_id: nil, exclude_id: nil)
+      candidate = WorkItem.new(id: CANDIDATE_ID, start_date:, end_date:, minutes:, work_package_id:)
       work_items = items.reject { |item| item.id == exclude_id } << candidate
 
-      OverbookingAnalysis.new(calendar: calendar_for(work_items), items: work_items).call.empty?
+      OverbookingAnalysis.new(calendar: calendar_for(work_items), items: work_items).call
+    end
+
+    # The user's highest single-day working capacity (in minutes) across the
+    # range, i.e. the most they could work on any one of those days.
+    def max_daily_minutes(start_date:, end_date:)
+      WorkingTimeCalendar
+        .new(user: @user, range: start_date..end_date)
+        .each_day
+        .map { |_date, minutes| minutes }
+        .max || 0
     end
 
     private
