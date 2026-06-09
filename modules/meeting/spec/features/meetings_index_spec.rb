@@ -114,10 +114,8 @@ RSpec.describe "Meetings", "Index", :js do
   end
 
   def setup_meeting_involvement
-    invite_to_meeting(tomorrows_meeting)
-    invite_to_meeting(yesterdays_meeting)
-    create(:meeting_participant, :attendee, user:, meeting: yesterdays_meeting)
-    create(:meeting_participant, :attendee, user:, meeting: tomorrows_meeting)
+    create(:meeting_participant, :invitee, :attendee, user:, meeting: yesterdays_meeting)
+    create(:meeting_participant, :invitee, :attendee, user:, meeting: tomorrows_meeting)
     meeting.update!(author: user)
   end
 
@@ -188,7 +186,6 @@ RSpec.describe "Meetings", "Index", :js do
           # keeps the past filter selected when changing advanced filters (Regression #61875)" do
           meetings_page.open_filters
           meetings_page.remove_filter "invited_user_id"
-          click_on "Apply"
 
           wait_for_network_idle
 
