@@ -190,6 +190,31 @@ RSpec.describe "ResourceAllocations requests",
       end
     end
 
+    context "with a principal who is not a member of the project" do
+      shared_let(:non_member) { create(:user) }
+
+      subject(:perform) do
+        post project_resource_allocations_path(project),
+             params: {
+               allocation_kind: "principal",
+               resource_allocation: {
+                 principal_id: non_member.id,
+                 entity_type: "WorkPackage",
+                 entity_id: work_package.id,
+                 start_date: "2026-03-02",
+                 end_date: "2026-03-03",
+                 allocated_hours: "40h"
+               }
+             },
+             as: :turbo_stream
+      end
+
+      it "does not create an allocation and re-renders the step" do
+        expect { perform }.not_to change(ResourceAllocation, :count)
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
     context "with an entity type outside the allow-list" do
       subject(:perform) do
         post project_resource_allocations_path(project),

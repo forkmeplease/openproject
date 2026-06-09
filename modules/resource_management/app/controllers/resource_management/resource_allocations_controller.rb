@@ -175,9 +175,18 @@ module ::ResourceManagement
 
     def resource_params(principal_id)
       if filter_based_kind?
-        { principal_explicit: false, principal: nil, user_filter: parsed_user_filter }
+        {
+          principal_explicit: false,
+          principal: nil,
+          user_filter: parsed_user_filter
+        }
       else
-        { principal_explicit: true, principal: User.find_by(id: principal_id), filter_name: nil, user_filter: [] }
+        {
+          principal_explicit: true,
+          principal: User.visible.in_project(@project).find_by(id: principal_id),
+          filter_name: nil,
+          user_filter: []
+        }
       end
     end
 
