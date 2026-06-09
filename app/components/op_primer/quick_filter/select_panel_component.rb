@@ -98,14 +98,18 @@ module OpPrimer
         return unless async?
 
         uri = URI.parse(@src)
-        params = Rack::Utils.parse_nested_query(uri.query.to_s)
-        # Pass other active filters (e.g. time=past) so the fragment endpoint builds
-        # the same query scope as the current page, not its own default
-        params["filters"] = other_filters.to_json if other_filters.any?
-        # Pass currently selected ids so the right items can be marked in the response
-        params["selected"] = current_values.join(",") if current_values.any?
-        uri.query = params.to_query
+        uri.query = panel_src_params(uri).to_query
         uri.to_s
+      end
+
+      def panel_src_params(uri)
+        Rack::Utils.parse_nested_query(uri.query.to_s).tap do |params|
+          # Pass other active filters (e.g. time=past) so the fragment endpoint builds
+          # the same query scope as the current page, not its own default
+          params["filters"] = other_filters.to_json if other_filters.any?
+          # Pass currently selected ids so the right items can be marked in the response
+          params["selected"] = current_values.join(",") if current_values.any?
+        end
       end
 
       def fetch_strategy

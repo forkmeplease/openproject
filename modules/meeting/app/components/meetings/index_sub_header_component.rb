@@ -66,6 +66,5 @@ module Meetings
     def filters_expanded?
       params[:filters].present?
     end
-
   end
 end
