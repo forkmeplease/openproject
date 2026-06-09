@@ -39,40 +39,51 @@ module ResourceAllocations
       end
 
       def call
-        component_wrapper(style: "display: flex; flex: 1; align-items: center") do
-          safe_join(
-            [
-              render(
-                Primer::Beta::Button.new(
-                  scheme: :invisible,
-                  mr: :auto,
-                  form: ResourceAllocations::NewDialogComponent::FORM_ID,
-                  type: :submit,
-                  name: "back",
-                  value: "1"
-                )
-              ) do |button|
-                button.with_leading_visual_icon(icon: :"arrow-left")
-                I18n.t(:button_back)
-              end,
-              render(
-                Primer::Beta::Button.new(
-                  data: { "close-dialog-id": ResourceAllocations::NewDialogComponent::DIALOG_ID },
-                  mr: 1
-                )
-              ) { I18n.t(:button_cancel) },
-              render(
-                Primer::Beta::Button.new(
-                  scheme: :danger,
-                  form: ResourceAllocations::NewDialogComponent::FORM_ID,
-                  type: :submit,
-                  name: "confirmed",
-                  value: "1"
-                )
-              ) { I18n.t("resource_management.allocate_resource_dialog.submit") }
-            ]
-          )
+        component_wrapper(:footer_layout, align_items: :center, flex: 1) do |footer|
+          footer.with_column(mr: :auto) do
+            render(
+              Primer::Beta::Button.new(
+                scheme: :invisible,
+                form: ResourceAllocations::NewDialogComponent::FORM_ID,
+                type: :submit,
+                name: "back",
+                value: "1"
+              )
+            ) do |button|
+              button.with_leading_visual_icon(icon: :"arrow-left")
+              I18n.t(:button_back)
+            end
+          end
+
+          footer.with_column(mr: 1) do
+            render(
+              Primer::Beta::Button.new(
+                data: { "close-dialog-id": ResourceAllocations::NewDialogComponent::DIALOG_ID }
+              )
+            ) { I18n.t(:button_cancel) }
+          end
+
+          footer.with_column do
+            render(
+              Primer::Beta::Button.new(
+                scheme: :danger,
+                form: ResourceAllocations::NewDialogComponent::FORM_ID,
+                type: :submit,
+                name: "confirmed",
+                value: "1"
+              )
+            ) { I18n.t("resource_management.allocate_resource_dialog.submit") }
+          end
         end
+      end
+
+      private
+
+      # Renders the turbo-stream wrapper as a Primer flex container so the footer
+      # layout uses system arguments instead of inline styles. Receives the
+      # wrapper arguments (including the `id`) from `component_wrapper`.
+      def footer_layout(system_arguments, &)
+        flex_layout(**system_arguments, &)
       end
     end
   end
