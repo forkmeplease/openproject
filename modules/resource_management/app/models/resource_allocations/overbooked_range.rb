@@ -28,10 +28,27 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-class NonWorkingDay < ApplicationRecord
-  validates :name, :date, presence: true
-  validates :date, uniqueness: true
+module ResourceAllocations
+  # A contiguous span in which a user is overbooked, carrying the work packages
+  # forced into it and the largest amount (in minutes) it is over by. Used to
+  # highlight ranges in the allocation calendar.
+  class OverbookedRange
+    include ActiveModel::Model
+    include ActiveModel::Attributes
 
-  scope :for_dates, ->(date_range) { where(date: date_range) }
-  scope :for_year, ->(year) { for_dates(Date.new(year, 1, 1)..Date.new(year, 12, 31)) }
+    attribute :start_date, :date
+    attribute :end_date, :date
+    attribute :work_package_ids, default: -> { [] }
+    attribute :over_by_minutes, :integer
+    # The user's total working capacity (in minutes) across the range, so a
+    # warning can contrast it with the hours scheduled into it.
+    attribute :available_minutes, :integer
+    # The WorkItems forced into this range, carried so a warning can list each
+    # work package's hours and flag the one that was just allocated.
+    attribute :items, default: -> { [] }
+
+    def covers?(date)
+      (start_date..end_date).cover?(date)
+    end
+  end
 end

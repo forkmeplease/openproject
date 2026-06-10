@@ -79,6 +79,58 @@ RSpec.describe "ResourceAllocations requests",
     end
   end
 
+  describe "GET refresh_form" do
+    shared_let(:dated_work_package) do
+      create(:work_package, project:, start_date: Date.new(2026, 1, 15), due_date: Date.new(2026, 2, 20))
+    end
+
+    def refresh(start_date:, end_date:, entity_id: dated_work_package.id)
+      get refresh_form_project_resource_allocations_path(project),
+          params: {
+            allocation_kind: "principal",
+            resource_allocation: {
+              principal_id: assignee.id,
+              entity_type: "WorkPackage",
+              entity_id:,
+              start_date:,
+              end_date:,
+              allocated_hours: "40h"
+            }
+          },
+          as: :turbo_stream
+    end
+
+    it "streams the inline warning banner when the dates fall outside the work package" do
+      refresh(start_date: "2026-02-24", end_date: "2026-02-25")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("outside of the work")
+      # Only the banner is replaced; the form and its focused date field stay untouched.
+      expect(response.body).not_to include("opce-user-autocompleter")
+    end
+
+    it "streams an empty banner when the dates fit" do
+      refresh(start_date: "2026-01-20", end_date: "2026-01-21")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include("outside of the work")
+    end
+
+    it "does not leak the dates of a work package the user cannot see" do
+      invisible_work_package = create(:work_package, project: create(:project),
+                                                     start_date: Date.new(2026, 1, 15),
+                                                     due_date: Date.new(2026, 2, 20))
+
+      # The same dates trigger the warning against a visible work package.
+      refresh(start_date: "2026-02-24", end_date: "2026-02-25", entity_id: invisible_work_package.id)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include("outside of the work")
+      expect(response.body).not_to include(I18n.l(Date.new(2026, 1, 15)))
+      expect(response.body).not_to include(I18n.l(Date.new(2026, 2, 20)))
+    end
+  end
+
   describe "POST create" do
     context "for an explicit user" do
       subject(:perform) do
@@ -257,36 +309,14 @@ RSpec.describe "ResourceAllocations requests",
         }
       end
 
-      it "does not create yet and renders the confirmation step" do
+      # Falling outside the work package's dates no longer blocks creation; it is
+      # surfaced as an inline warning in the editable step instead.
+      it "creates the allocation directly without a confirmation step" do
         expect do
           post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
-        end.not_to change(ResourceAllocation, :count)
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include("outside of the work")
-        expect(response.body).to include('name="confirmed"')
-      end
-
-      it "creates the allocation once confirmed" do
-        expect do
-          post project_resource_allocations_path(project),
-               params: base_params.merge(confirmed: "1"),
-               as: :turbo_stream
         end.to change(ResourceAllocation, :count).by(1)
 
         expect(ResourceAllocation.last.entity).to eq(dated_work_package)
-      end
-
-      it "returns to the editable step without creating when going back" do
-        expect do
-          post project_resource_allocations_path(project),
-               params: base_params.merge(back: "1"),
-               as: :turbo_stream
-        end.not_to change(ResourceAllocation, :count)
-
-        expect(response).to have_http_status(:ok)
-        # The editable step re-renders the user autocompleter.
-        expect(response.body).to include("opce-user-autocompleter")
       end
     end
 
@@ -306,6 +336,112 @@ RSpec.describe "ResourceAllocations requests",
                    entity_id: dated_work_package.id,
                    start_date: "2026-01-20",
                    end_date: "2026-01-21",
+                   allocated_hours: "40h"
+                 }
+               },
+               as: :turbo_stream
+        end.to change(ResourceAllocation, :count).by(1)
+      end
+    end
+
+    context "when the allocation would overbook the assigned user" do
+      shared_let(:working_assignee) do
+        create(:user, member_with_permissions: { project => %i[view_work_packages] }).tap do |assignee|
+          # Mon-Fri 8h => 480 minutes/day of capacity.
+          create(:user_working_hours, user: assignee, valid_from: Date.new(2025, 1, 1))
+        end
+      end
+
+      # 40h (2400 min) across Mon-Tue (960 min of capacity) overbooks the user.
+      let(:base_params) do
+        {
+          allocation_kind: "principal",
+          resource_allocation: {
+            principal_id: working_assignee.id,
+            entity_type: "WorkPackage",
+            entity_id: work_package.id,
+            start_date: "2026-03-02",
+            end_date: "2026-03-03",
+            allocated_hours: "40h"
+          }
+        }
+      end
+
+      it "does not create yet and renders the overbooking confirmation step" do
+        expect do
+          post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
+        end.not_to change(ResourceAllocation, :count)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(I18n.t("resource_management.allocate_resource_dialog.overbooking.title"))
+        # The user's compact working schedule is shown in the description. The
+        # availability factor is omitted at 100%.
+        expect(response.body).to include("Mon-Fri 8h")
+        expect(response.body).not_to include("available for project work")
+        expect(response.body).to include('name="confirmed"')
+      end
+
+      it "shows the availability factor when the user is only partially available for project work" do
+        partially_available = create(:user, member_with_permissions: { project => %i[view_work_packages] })
+        create(:user_working_hours, user: partially_available, valid_from: Date.new(2025, 1, 1), availability_factor: 80)
+
+        params = base_params.deep_merge(resource_allocation: { principal_id: partially_available.id })
+        post project_resource_allocations_path(project), params:, as: :turbo_stream
+
+        expect(response.body).to include("Mon-Fri 8h (80% available for project work)")
+      end
+
+      it "lists each schedule with its effective dates when the schedule changes during the period" do
+        # Switches to Mon-Fri 6h at 80% on the second day of the allocation.
+        create(:user_working_hours, user: working_assignee, valid_from: Date.new(2026, 3, 3),
+                                    monday: 360, tuesday: 360, wednesday: 360, thursday: 360, friday: 360,
+                                    availability_factor: 80)
+
+        post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
+
+        expect(response.body).to include(
+          "Mon-Fri 8h until #{I18n.l(Date.new(2026, 3, 2))}, " \
+          "then Mon-Fri 6h (80% available for project work)"
+        )
+      end
+
+      it "creates the allocation once confirmed" do
+        expect do
+          post project_resource_allocations_path(project),
+               params: base_params.merge(confirmed: "1"),
+               as: :turbo_stream
+        end.to change(ResourceAllocation, :count).by(1)
+      end
+
+      it "collapses allocations of work packages the requester cannot see into a lump sum" do
+        hidden_work_package = create(:work_package, project: create(:project), subject: "Confidential rocket plans")
+        create(:resource_allocation,
+               principal: working_assignee,
+               entity: hidden_work_package,
+               allocated_time: 600,
+               start_date: Date.new(2026, 3, 2),
+               end_date: Date.new(2026, 3, 3))
+
+        post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
+
+        expect(response.body).to include(I18n.t("resource_management.allocate_resource_dialog.overbooking.hidden_work"))
+        expect(response.body).to include("10h")
+        expect(response.body).not_to include("Confidential rocket plans")
+      end
+    end
+
+    context "when the assigned user has no working time configured" do
+      it "skips the overbooking check and creates directly" do
+        expect do
+          post project_resource_allocations_path(project),
+               params: {
+                 allocation_kind: "principal",
+                 resource_allocation: {
+                   principal_id: assignee.id,
+                   entity_type: "WorkPackage",
+                   entity_id: work_package.id,
+                   start_date: "2026-03-02",
+                   end_date: "2026-03-03",
                    allocated_hours: "40h"
                  }
                },

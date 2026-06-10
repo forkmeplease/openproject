@@ -29,41 +29,39 @@
 #++
 
 module ResourceAllocations
-  module OutsideDatesStep
-    class FormComponent < ApplicationComponent
-      include ApplicationHelper
+  module AllocationStep
+    # The inline "outside dates" warning below the date fields. It has its own
+    # streamable wrapper so date changes can refresh just this banner instead
+    # of the whole form — replacing the form would make Turbo restore focus to
+    # the date input afterwards, reopening its date picker.
+    class ScheduleViolationBannerComponent < ApplicationComponent
       include OpTurbo::Streamable
-      include OpPrimer::ComponentHelpers
 
-      def initialize(allocation:, project:, allocation_kind:, form_values:, filters: nil)
+      def initialize(allocation:)
         super
         @allocation = allocation
-        @project = project
-        @allocation_kind = allocation_kind
-        @form_values = form_values
-        @filters = filters
       end
 
-      def wrapper_key
-        ResourceAllocations::NewDialogComponent::BODY_ID
+      def call
+        component_wrapper do
+          if schedule_violation?
+            render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert, mt: 2)) { warning_text }
+          end
+        end
       end
 
       private
 
-      def heading
-        I18n.t("resource_management.allocate_resource_dialog.outside_dates.title")
+      def schedule_violation?
+        @allocation.schedule_violation.present?
       end
 
-      def description
+      def warning_text
         I18n.t(
           "resource_management.allocate_resource_dialog.outside_dates.description",
           resource_dates: date_range(@allocation.start_date, @allocation.end_date),
           work_package_dates: date_range(@allocation.entity_start_date, @allocation.entity_due_date)
         )
-      end
-
-      def confirmation
-        I18n.t("resource_management.allocate_resource_dialog.outside_dates.confirm_#{@allocation.schedule_violation}")
       end
 
       def date_range(from_date, to_date)

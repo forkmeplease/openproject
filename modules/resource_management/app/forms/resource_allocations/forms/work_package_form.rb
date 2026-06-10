@@ -31,6 +31,11 @@
 module ResourceAllocations
   module Forms
     class WorkPackageForm < ApplicationForm
+      # Switching the work package changes the dates the allocation is checked
+      # against, so it refreshes the "outside dates" banner like the date
+      # fields do.
+      REFRESH_ACTION = "change->refresh-on-form-changes#triggerTurboStream"
+
       form do |f|
         f.hidden name: :entity_type, value: "WorkPackage"
         f.work_package_autocompleter(
@@ -44,7 +49,8 @@ module ResourceAllocations
             focusDirectly: false,
             dropdownPosition: "bottom",
             appendTo: "##{@dialog_id}",
-            filters: [{ name: "project_id", operator: "=", values: [@project.id.to_s] }]
+            filters: [{ name: "project_id", operator: "=", values: [@project.id.to_s] }],
+            hiddenFieldAction: REFRESH_ACTION
           }
         )
       end

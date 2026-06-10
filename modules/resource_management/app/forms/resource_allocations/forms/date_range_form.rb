@@ -31,6 +31,8 @@
 module ResourceAllocations
   module Forms
     class DateRangeForm < ApplicationForm
+      REFRESH_ACTION = "change->refresh-on-form-changes#triggerTurboStream"
+
       form do |f|
         f.group(layout: :horizontal) do |dates|
           dates.single_date_picker(
@@ -38,15 +40,19 @@ module ResourceAllocations
             label: ResourceAllocation.human_attribute_name(:start_date),
             required: true,
             value: model.start_date&.iso8601,
-            datepicker_options: { inDialog: @dialog_id }
+            datepicker_options: { inDialog: @dialog_id, data: { action: REFRESH_ACTION } }
           )
           dates.single_date_picker(
             name: :end_date,
             label: ResourceAllocation.human_attribute_name(:end_date),
             required: true,
             value: model.end_date&.iso8601,
-            datepicker_options: { inDialog: @dialog_id }
+            datepicker_options: { inDialog: @dialog_id, data: { action: REFRESH_ACTION } }
           )
+        end
+
+        f.html_content do
+          render(ResourceAllocations::AllocationStep::ScheduleViolationBannerComponent.new(allocation: model))
         end
       end
 

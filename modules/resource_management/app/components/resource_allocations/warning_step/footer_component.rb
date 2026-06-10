@@ -29,7 +29,7 @@
 #++
 
 module ResourceAllocations
-  module OutsideDatesStep
+  module WarningStep
     class FooterComponent < ApplicationComponent
       include OpTurbo::Streamable
       include OpPrimer::ComponentHelpers
