@@ -57,8 +57,7 @@ module Wikis
               def perform_request(reference, auth_strategy:, &)
                 authenticated(auth_strategy) do |http|
                   handle_response(
-                    http.with(headers: { "Content-Type": "application/json" })
-                        .get(rest_url("openproject/documents", query: { docRef: reference.to_s })),
+                    http.get(rest_url("openproject/documents", query: { docRef: reference.to_s })),
                     &
                   )
                 end
