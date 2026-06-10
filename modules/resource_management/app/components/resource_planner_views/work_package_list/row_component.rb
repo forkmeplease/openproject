@@ -129,7 +129,7 @@ module ResourcePlannerViews::WorkPackageList
                               scheme: :invisible)
 
         see_allocation_item(menu)
-        edit_total_work_item(menu)
+        edit_total_work_item(menu) if allowed_to_edit_work?
         add_user_group_item(menu)
 
         if manual?
@@ -153,8 +153,14 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     def edit_total_work_item(menu)
-      menu.with_item(label: t("resource_management.work_package_list.context_menu.edit_total_work"),
-                     disabled: true) do |item|
+      menu.with_item(
+        label: t("resource_management.work_package_list.context_menu.edit_total_work"),
+        tag: :a,
+        href: helpers.edit_project_resource_planner_view_work_package_progress_path(
+          table.project, table.resource_planner, table.view, work_package
+        ),
+        content_arguments: { data: { controller: "async-dialog" } }
+      ) do |item|
         item.with_leading_visual_icon(icon: :pencil)
       end
     end
@@ -219,6 +225,10 @@ module ResourcePlannerViews::WorkPackageList
 
     def manual?
       table.manual?
+    end
+
+    def allowed_to_edit_work?
+      User.current.allowed_in_project?(:edit_work_packages, work_package.project)
     end
 
     def position_index
