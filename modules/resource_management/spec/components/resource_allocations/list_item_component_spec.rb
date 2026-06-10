@@ -70,8 +70,10 @@ RSpec.describe ResourceAllocations::ListItemComponent, type: :component do
              entity: work_package, principal_explicit: false, principal: nil, filter_name: "Full stack developer")
     end
 
-    it "shows the filter name" do
+    it "shows the filter name with a person-add icon instead of an avatar" do
       expect(rendered).to have_text("Full stack developer")
+      expect(rendered).to have_css(".octicon-person-add")
+      expect(rendered).to have_no_css("avatar-fallback")
     end
   end
 end

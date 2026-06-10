@@ -61,15 +61,21 @@ module ResourceAllocations
       end
     end
 
-    # Only a visible principal exposes a real avatar (and an identity-revealing
-    # initials/colour seed). Everything else falls back to a generated avatar
-    # keyed to the allocation, so a hidden user cannot be correlated.
-    def avatar
-      Primer::OpenProject::AvatarWithFallback.new(size: AVATAR_SIZE, **avatar_options)
+    # An allocation without a user yet (filter placeholder or lost principal)
+    # shows a person-add icon instead of an avatar.
+    def leading_visual
+      if allocation.principal
+        Primer::OpenProject::AvatarWithFallback.new(size: AVATAR_SIZE, **avatar_options)
+      else
+        Primer::Beta::Octicon.new(icon: :"person-add", color: :muted, "aria-hidden": true)
+      end
     end
 
+    # Only a visible principal exposes a real avatar (and an identity-revealing
+    # initials/colour seed). A hidden one falls back to a generated avatar keyed
+    # to the allocation, so the user cannot be correlated.
     def avatar_options
-      if allocation.principal && visible?
+      if visible?
         {
           src: avatar_url(allocation.principal),
           alt: allocation.principal.name,
