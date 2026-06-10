@@ -49,7 +49,8 @@ module Projects
       ""
     end
 
-    def favorited # rubocop:disable Metrics/AbcSize
+    def favorited # rubocop:disable Metrics/AbcSize,Metrics/PerceivedComplexity
+      return nil unless User.current.logged?
       return nil if project.archived?
 
       render(Primer::Beta::IconButton.new(
