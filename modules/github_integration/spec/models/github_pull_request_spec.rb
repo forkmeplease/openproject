@@ -104,10 +104,31 @@ RSpec.describe GithubPullRequest do
     end
 
     context "when the url does not match" do
-      it "returns nothing even when the id matches" do
+      it "falls back to the id so renamed repositories keep their records" do
         expect(described_class.find_by_github_identifiers(id: pull_request.github_id,
                                                           url: "#{pull_request.github_html_url}zzzz"))
+          .to eql pull_request
+      end
+
+      it "returns nothing when the id does not match either" do
+        expect(described_class.find_by_github_identifiers(id: pull_request.github_id + 1,
+                                                          url: "#{pull_request.github_html_url}zzzz"))
           .to be_nil
+      end
+    end
+
+    context "when the url matches one record and the id another" do
+      let!(:other_pull_request) do
+        create(:github_pull_request,
+               github_id: github_id + 1,
+               github_html_url: "#{github_url}4")
+      end
+
+      before { pull_request }
+
+      it "prefers the url match" do
+        expect(described_class.find_by_github_identifiers(id: other_pull_request.github_id, url: github_url))
+          .to eql pull_request
       end
     end
 

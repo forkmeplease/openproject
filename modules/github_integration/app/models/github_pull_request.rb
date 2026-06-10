@@ -63,7 +63,11 @@ class GithubPullRequest < ApplicationRecord
   def self.find_by_github_identifiers(url:, id: nil, initialize: false)
     raise ArgumentError, "needs an url" if url.blank?
 
-    found = find_by(github_html_url: url)
+    # The URL matches across every payload shape (comment payloads carry no
+    # pull request id). The id fallback covers repository renames: GitHub ids
+    # are globally unique, so a URL miss with an id hit is the same pull
+    # request under a new URL, which the next upsert writes back.
+    found = find_by(github_html_url: url) || (find_by(github_id: id) if id)
     found || (new(github_id: id, github_html_url: url) if initialize)
   end
 

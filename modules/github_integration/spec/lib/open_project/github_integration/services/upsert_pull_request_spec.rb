@@ -126,6 +126,17 @@ RSpec.describe OpenProject::GithubIntegration::Services::UpsertPullRequest do
     end
   end
 
+  context "when the repository was renamed and only the id still matches" do
+    let!(:github_pull_request) do
+      create(:github_pull_request, github_id:, github_html_url: "https://github.com/test_user/old_repo_name")
+    end
+
+    it "updates the existing record and stores the new url instead of duplicating" do
+      expect { upsert }.not_to change(GithubPullRequest, :count)
+      expect(github_pull_request.reload.github_html_url).to eql github_html_url
+    end
+  end
+
   context "when a partial github pull request with that html_url already exists" do
     let(:github_pull_request) do
       create(:github_pull_request,
