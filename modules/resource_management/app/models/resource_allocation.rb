@@ -78,6 +78,42 @@ class ResourceAllocation < ApplicationRecord
     Principal.visible(user).where(id: principal_ids).pluck(:id).to_set
   end
 
+  # The ids of the given allocations that fall into a range in which their
+  # assigned user is overbooked. Users without configured working hours are
+  # skipped — their capacity is unknown, not zero (mirroring the check made
+  # when an allocation is created). The users' working hours and booked
+  # allocations are each fetched in one query; only the per-user capacity
+  # calendar still queries per checked user.
+  def self.overbooked_ids(allocations)
+    checkable = overbooking_checkable_principals(allocations)
+    return Set.new if checkable.empty?
+
+    booked = allocated.for_principal(checkable).group_by(&:principal_id)
+    overbooked = checkable.flat_map { |principal| overbooked_ids_of(principal, booked.fetch(principal.id, [])) }
+
+    overbooked.to_set & allocations.map(&:id)
+  end
+
+  # The ids of all allocations falling into a range in which the user is
+  # overbooked, given the user's booked allocations.
+  def self.overbooked_ids_of(principal, booked)
+    ResourceAllocations::Availability
+      .new(user: principal, allocations: booked)
+      .overbooked_ranges
+      .flat_map { |range| range.items.map(&:id) }
+  end
+  private_class_method :overbooked_ids_of
+
+  # The given allocations' assigned users whose capacity is known, i.e. who
+  # have working hours configured, fetched in a single query.
+  def self.overbooking_checkable_principals(allocations)
+    principals = allocations.filter_map(&:principal).uniq
+    checkable_ids = UserWorkingHours.for_user(principals).distinct.pluck(:user_id).to_set
+
+    principals.select { |principal| checkable_ids.include?(principal.id) }
+  end
+  private_class_method :overbooking_checkable_principals
+
   validates :state, :start_date, :end_date, presence: true
   validates :allocated_time,
             presence: true,

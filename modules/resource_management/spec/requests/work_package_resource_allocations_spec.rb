@@ -75,6 +75,24 @@ RSpec.describe "WorkPackage resource allocations requests", type: :rails_request
       expect(response.body).not_to include("Secret Agent")
       expect(response.body).to include(I18n.t("resource_management.work_package_allocations_dialog.hidden_user"))
     end
+
+    context "when an assigned user is overbooked" do
+      let!(:overbooked_allocation) do
+        create(:resource_allocation,
+               entity: work_package, principal: assignee,
+               start_date: Date.new(2026, 2, 2), end_date: Date.new(2026, 2, 2), allocated_time: 16 * 60)
+      end
+
+      before do
+        create(:user_working_hours, user: assignee, valid_from: Date.new(2025, 1, 1))
+      end
+
+      it "flags the overbooked allocation with a warning" do
+        get path, as: :turbo_stream
+
+        expect(response.body).to include("resource-allocation-overbooked-#{overbooked_allocation.id}")
+      end
+    end
   end
 
   describe "authorization" do

@@ -38,11 +38,12 @@ module ResourceAllocations
 
     AVATAR_SIZE = 24
 
-    def initialize(allocation:, visible:)
+    def initialize(allocation:, visible:, overbooked: false)
       super
 
       @allocation = allocation
       @visible = visible
+      @overbooked = overbooked
     end
 
     private
@@ -51,6 +52,10 @@ module ResourceAllocations
 
     def visible?
       @visible
+    end
+
+    def overbooked?
+      @overbooked
     end
 
     def name
@@ -92,6 +97,14 @@ module ResourceAllocations
     # Formatted per the instance's duration format setting, e.g. "2d 4h".
     def duration
       DurationConverter.output(allocation.allocated_hours)
+    end
+
+    def overbooked_icon_id
+      "resource-allocation-overbooked-#{allocation.id}"
+    end
+
+    def overbooked_message
+      t("resource_management.work_package_allocations_dialog.overbooked")
     end
 
     def hidden_label

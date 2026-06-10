@@ -38,21 +38,26 @@ module ResourceAllocations
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    def initialize(project:, work_package:, allocations:, visible_principal_ids:)
+    def initialize(project:, work_package:, allocations:, visible_principal_ids:, overbooked_ids: Set.new)
       super
 
       @project = project
       @work_package = work_package
       @allocations = allocations
       @visible_principal_ids = visible_principal_ids
+      @overbooked_ids = overbooked_ids
     end
 
     private
 
-    attr_reader :project, :work_package, :allocations, :visible_principal_ids
+    attr_reader :project, :work_package, :allocations, :visible_principal_ids, :overbooked_ids
 
     def visible_principal?(allocation)
       allocation.principal_id.nil? || visible_principal_ids.include?(allocation.principal_id)
+    end
+
+    def overbooked?(allocation)
+      overbooked_ids.include?(allocation.id)
     end
   end
 end

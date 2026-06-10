@@ -32,7 +32,7 @@ See COPYRIGHT and LICENSE files for more details.
     dialog.with_header(variant: :large)
 
     dialog.with_body do
-      render(ResourceAllocations::ListComponent.new(project:, work_package:, allocations:, visible_principal_ids:))
+      render(ResourceAllocations::ListComponent.new(project:, work_package:, allocations:, visible_principal_ids:, overbooked_ids:))
     end
 
     dialog.with_footer(show_divider: true) do

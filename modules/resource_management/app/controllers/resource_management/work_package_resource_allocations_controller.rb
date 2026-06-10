@@ -46,7 +46,8 @@ module ::ResourceManagement
         project: @project,
         work_package: @work_package,
         allocations:,
-        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations, current_user)
+        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations, current_user),
+        overbooked_ids: ResourceAllocation.overbooked_ids(allocations)
       )
     end
 

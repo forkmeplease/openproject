@@ -37,18 +37,19 @@ module ResourceAllocations
 
     DIALOG_ID = "work-package-allocations-dialog"
 
-    def initialize(project:, work_package:, allocations:, visible_principal_ids:)
+    def initialize(project:, work_package:, allocations:, visible_principal_ids:, overbooked_ids: Set.new)
       super
 
       @project = project
       @work_package = work_package
       @allocations = allocations
       @visible_principal_ids = visible_principal_ids
+      @overbooked_ids = overbooked_ids
     end
 
     private
 
-    attr_reader :project, :work_package, :allocations, :visible_principal_ids
+    attr_reader :project, :work_package, :allocations, :visible_principal_ids, :overbooked_ids
 
     def title
       I18n.t("resource_management.work_package_allocations_dialog.title")

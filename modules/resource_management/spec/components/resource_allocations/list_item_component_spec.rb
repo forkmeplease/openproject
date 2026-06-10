@@ -35,9 +35,10 @@ RSpec.describe ResourceAllocations::ListItemComponent, type: :component do
   shared_let(:member) { create(:user, firstname: "Sarah", lastname: "Smith") }
 
   let(:visible) { true }
+  let(:overbooked) { false }
 
   subject(:rendered) do
-    render_inline(described_class.new(allocation:, visible:))
+    render_inline(described_class.new(allocation:, visible:, overbooked:))
     page
   end
 
@@ -50,6 +51,16 @@ RSpec.describe ResourceAllocations::ListItemComponent, type: :component do
       expect(rendered).to have_text("Sarah Smith")
       expect(rendered).to have_css(".Label", text: "12h")
       expect(rendered).to have_css("avatar-fallback[data-unique-id='#{member.id}']")
+      expect(rendered).to have_no_css(".octicon-alert-fill")
+    end
+  end
+
+  context "with an overbooked assigned member" do
+    let(:allocation) { create(:resource_allocation, entity: work_package, principal: member, allocated_time: 720) }
+    let(:overbooked) { true }
+
+    it "shows a danger warning icon" do
+      expect(rendered).to have_css(".octicon-alert-fill#resource-allocation-overbooked-#{allocation.id}")
     end
   end
 

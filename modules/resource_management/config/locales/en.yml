@@ -136,6 +136,7 @@ en:
     work_package_allocations_dialog:
       allocate_resource: Allocate resource
       hidden_user: Hidden user
+      overbooked: The user is allocated beyond their working hours during this period.
       title: Allocation
     work_package_list:
       add_work_package_dialog:

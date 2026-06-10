@@ -37,4 +37,20 @@ See COPYRIGHT and LICENSE files for more details.
   <%= row.with_column do %>
     <%= render(Primer::Beta::Label.new(size: :large)) { duration } %>
   <% end %>
+  <% if overbooked? %>
+    <%= row.with_column(ml: 2, classes: "d-flex") do %>
+      <%= render Primer::Beta::Octicon.new(
+            icon: :"alert-fill",
+            color: :danger,
+            id: overbooked_icon_id,
+            "aria-label": overbooked_message
+          ) %>
+      <%= render Primer::Alpha::Tooltip.new(
+            for_id: overbooked_icon_id,
+            type: :description,
+            text: overbooked_message,
+            direction: :s
+          ) %>
+    <% end %>
+  <% end %>
 <% end %>

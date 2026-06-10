@@ -643,4 +643,49 @@ RSpec.describe ResourceAllocation do
       expect(allocations_for(work_package)).to eq({})
     end
   end
+
+  describe ".overbooked_ids" do
+    shared_let(:work_package) { create(:work_package) }
+    shared_let(:assignee) { create(:user) }
+
+    # The factory books Mon-Fri 2026-01-05..09 with 40 hours — exactly the
+    # capacity of a full-time (8h/day) week.
+    def allocation(**attributes)
+      create(:resource_allocation, entity: work_package, principal: assignee, **attributes)
+    end
+
+    def overbooked_allocation
+      allocation(start_date: Date.new(2026, 2, 2), end_date: Date.new(2026, 2, 2), allocated_time: 16 * 60)
+    end
+
+    context "when the assigned user has working hours configured" do
+      shared_let(:working_hours) { create(:user_working_hours, user: assignee, valid_from: Date.new(2025, 1, 1)) }
+
+      it "returns the ids of the allocations in overbooked ranges" do
+        fitting = allocation
+        overbooked = overbooked_allocation
+
+        expect(described_class.overbooked_ids([fitting, overbooked])).to eq(Set[overbooked.id])
+      end
+
+      it "is empty when every allocation fits" do
+        fitting = allocation
+
+        expect(described_class.overbooked_ids([fitting])).to be_empty
+      end
+    end
+
+    context "when the assigned user has no working hours configured" do
+      it "is empty, since the user's capacity is unknown rather than zero" do
+        expect(described_class.overbooked_ids([overbooked_allocation])).to be_empty
+      end
+    end
+
+    it "ignores filter-based allocations without an assigned user" do
+      filter = create(:resource_allocation,
+                      entity: work_package, principal_explicit: false, principal: nil, filter_name: "Developer")
+
+      expect(described_class.overbooked_ids([filter])).to be_empty
+    end
+  end
 end

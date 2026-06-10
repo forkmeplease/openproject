@@ -37,7 +37,11 @@ See COPYRIGHT and LICENSE files for more details.
         <%= render(Primer::Beta::BorderBox.new) do |box| %>
           <% allocations.each do |allocation| %>
             <% box.with_row do %>
-              <%= render(ResourceAllocations::ListItemComponent.new(allocation:, visible: visible_principal?(allocation))) %>
+              <%= render ResourceAllocations::ListItemComponent.new(
+                    allocation:,
+                    visible: visible_principal?(allocation),
+                    overbooked: overbooked?(allocation)
+                  ) %>
             <% end %>
           <% end %>
         <% end %>
