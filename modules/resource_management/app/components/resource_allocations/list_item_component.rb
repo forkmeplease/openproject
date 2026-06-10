@@ -84,7 +84,7 @@ module ResourceAllocations
     end
 
     def hours
-      t("resource_management.work_package_list.allocation.hours",
+      t("resource_management.allocation.hours",
         value: helpers.number_with_precision(allocation.allocated_hours, precision: 1, strip_insignificant_zeros: true))
     end
 

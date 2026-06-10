@@ -63,6 +63,10 @@ en:
       make_private: Make private
       make_public: Make public
       unfavorite: Remove from favorites
+    allocation:
+      hours: "%{value}h"
+      no_work: No work planned on this work package
+      summary: "%{allocated} / %{scheduled}"
     allocate_resource_dialog:
       kind:
         filter:
@@ -142,10 +146,6 @@ en:
           one: "%{count} user"
           other: "%{count} users"
         unassigned: Unassigned
-      allocation:
-        hours: "%{value}h"
-        no_work: No work planned on this work package
-        summary: "%{allocated} / %{scheduled}"
       allocation_placeholder: —
       blank:
         description: There are no work packages matching this view's filters yet.

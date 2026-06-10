@@ -28,11 +28,12 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews::WorkPackageList
+module ResourceAllocations
   # Renders how much of a work package's scheduled work is covered by resource
   # allocations: an "12h / 35h" label (allocated / scheduled), a percentage,
-  # and a colored bar. The allocations are the ones loaded once for the page.
-  class AllocationProgressComponent < ApplicationComponent
+  # and a colored bar. Shared by the work package list column and the
+  # allocations dialog.
+  class ProgressComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
     def initialize(work_package:, allocations:)
@@ -83,7 +84,7 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     def summary
-      t("resource_management.work_package_list.allocation.summary",
+      t("resource_management.allocation.summary",
         allocated: hours_label(allocated_hours),
         scheduled: hours_label(scheduled_hours))
     end
@@ -93,12 +94,12 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     def hours_label(hours)
-      t("resource_management.work_package_list.allocation.hours",
+      t("resource_management.allocation.hours",
         value: helpers.number_with_precision(hours, precision: 1, strip_insignificant_zeros: true))
     end
 
     def no_work_message
-      t("resource_management.work_package_list.allocation.no_work")
+      t("resource_management.allocation.no_work")
     end
 
     def no_work_tooltip_id

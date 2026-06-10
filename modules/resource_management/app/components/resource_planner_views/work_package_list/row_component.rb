@@ -99,7 +99,7 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     def allocation
-      render(AllocationProgressComponent.new(work_package:, allocations:))
+      render(ResourceAllocations::ProgressComponent.new(work_package:, allocations:))
     end
 
     def allocated_members

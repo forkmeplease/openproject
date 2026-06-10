@@ -30,7 +30,7 @@
 
 require "rails_helper"
 
-RSpec.describe ResourcePlannerViews::WorkPackageList::AllocationProgressComponent, type: :component do
+RSpec.describe ResourceAllocations::ProgressComponent, type: :component do
   # `derived_hours` mimics a parent's rolled-up total work; `own_hours` mimics a
   # leaf whose work lives in `estimated_hours` (where derived stays nil).
   def work_package_with(derived_hours: nil, own_hours: nil)
@@ -109,7 +109,7 @@ RSpec.describe ResourcePlannerViews::WorkPackageList::AllocationProgressComponen
     it "renders a danger alert icon instead of a bar" do
       expect(rendered).to have_no_css(".Progress-item")
       expect(rendered).to have_css(".octicon-alert-fill")
-      expect(rendered).to have_text(I18n.t("resource_management.work_package_list.allocation.no_work"))
+      expect(rendered).to have_text(I18n.t("resource_management.allocation.no_work"))
     end
   end
 end
