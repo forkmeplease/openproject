@@ -158,6 +158,8 @@ In previous releases, we have introduced improved mechanisms to prevent Server-S
 In most installations, this will not require any changes.
 However, if you operate your SAML using internal IP addresses, you may need to add your IP or range to the `OPENPROJECT_SSRF_PROTECTION_IP_ALLOWLIST` configuration. Please see [the configuration guide for SSRF](https://www.openproject.org/docs/installation-and-operations/configuration/ssrf-protection/) for more information.
 
+We'd like to thank GitHub user [@aslantugay](https://github.com/aslantugay) for reporting on the SAML integration still lacking SSRF protection as part of GitHub advisory https://github.com/opf/openproject/security/advisories/GHSA-mq29-cmv3-rcmr.
+
 <!-- Remove this section if empty, add to it in pull requests linking to tickets and provide information -->
 
 <!-- BEGIN SECURITY FIXES AUTOMATED SECTION -->
