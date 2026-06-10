@@ -34,6 +34,8 @@ module ResourcePlannerViews::WorkPackageList
   # body keeps the `work_package_progress_modal` turbo frame the live preview
   # navigates, and carries its own submit button.
   class EditTotalWorkDialogComponent < ApplicationComponent
+    include OpTurbo::Streamable
+
     DIALOG_ID = "edit-total-work-dialog"
 
     def initialize(modal_component:)

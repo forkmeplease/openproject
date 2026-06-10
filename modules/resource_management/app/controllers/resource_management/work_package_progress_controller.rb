@@ -48,9 +48,10 @@ module ::ResourceManagement
     before_action :find_resource_planner
     before_action :find_view
     before_action :find_work_package
-    before_action :authorize
     before_action :authorize_edit_work_package
 
+    # The `.visible` finders above enforce read access (view_resource_planners /
+    # view_work_packages); `authorize_edit_work_package` gates the edit itself.
     authorization_checked! :edit, :update, :preview
 
     def edit
