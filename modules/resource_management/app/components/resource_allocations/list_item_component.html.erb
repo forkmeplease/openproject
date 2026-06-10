@@ -35,6 +35,6 @@ See COPYRIGHT and LICENSE files for more details.
     <%= render(Primer::Beta::Text.new(font_size: :small)) { name } %>
   <% end %>
   <%= row.with_column do %>
-    <%= render(Primer::Beta::Text.new(font_size: :small, color: :muted)) { hours } %>
+    <%= render(Primer::Beta::Label.new(size: :large)) { duration } %>
   <% end %>
 <% end %>

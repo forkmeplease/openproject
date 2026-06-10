@@ -83,9 +83,9 @@ module ResourceAllocations
       end
     end
 
-    def hours
-      t("resource_management.allocation.hours",
-        value: helpers.number_with_precision(allocation.allocated_hours, precision: 1, strip_insignificant_zeros: true))
+    # Formatted per the instance's duration format setting, e.g. "2d 4h".
+    def duration
+      DurationConverter.output(allocation.allocated_hours)
     end
 
     def hidden_label

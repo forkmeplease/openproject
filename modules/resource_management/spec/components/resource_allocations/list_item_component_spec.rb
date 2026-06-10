@@ -48,7 +48,7 @@ RSpec.describe ResourceAllocations::ListItemComponent, type: :component do
 
     it "shows the member's name, avatar and allocated hours" do
       expect(rendered).to have_text("Sarah Smith")
-      expect(rendered).to have_text("12h")
+      expect(rendered).to have_css(".Label", text: "12h")
       expect(rendered).to have_css("avatar-fallback[data-unique-id='#{member.id}']")
     end
   end
