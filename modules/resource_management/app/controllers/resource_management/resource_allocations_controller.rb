@@ -169,7 +169,7 @@ module ::ResourceManagement
     def working_schedule(allocation, ranges)
       return if ranges.empty?
 
-      availability(allocation).working_schedule_summary(date: allocation.start_date)
+      availability(allocation).working_schedule(date: allocation.start_date)
     end
 
     def availability(allocation)

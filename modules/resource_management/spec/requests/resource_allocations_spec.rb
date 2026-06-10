@@ -360,9 +360,21 @@ RSpec.describe "ResourceAllocations requests",
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include(I18n.t("resource_management.allocate_resource_dialog.overbooking.title"))
-        # The user's compact working schedule is shown in the description.
+        # The user's compact working schedule is shown in the description. The
+        # availability factor is omitted at 100%.
         expect(response.body).to include("Mon-Fri 8h")
+        expect(response.body).not_to include("available for project work")
         expect(response.body).to include('name="confirmed"')
+      end
+
+      it "shows the availability factor when the user is only partially available for project work" do
+        partially_available = create(:user, member_with_permissions: { project => %i[view_work_packages] })
+        create(:user_working_hours, user: partially_available, valid_from: Date.new(2025, 1, 1), availability_factor: 80)
+
+        params = base_params.deep_merge(resource_allocation: { principal_id: partially_available.id })
+        post project_resource_allocations_path(project), params:, as: :turbo_stream
+
+        expect(response.body).to include("Mon-Fri 8h (80% available for project work)")
       end
 
       it "creates the allocation once confirmed" do

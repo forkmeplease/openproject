@@ -160,22 +160,23 @@ RSpec.describe ResourceAllocations::Availability do
     end
   end
 
-  describe "#working_schedule_summary" do
-    it "summarises the schedule effective on the given date" do
-      expect(availability.working_schedule_summary(date: monday)).to eq("Mon-Fri 8h")
+  describe "#working_schedule" do
+    it "returns the working hours effective on the given date" do
+      expect(availability.working_schedule(date: monday))
+        .to have_attributes(working_days_summary: "Mon-Fri 8h", availability_factor: 100)
     end
 
     it "is nil when the user has no working time configured" do
       other = described_class.new(user: create(:user))
 
-      expect(other.working_schedule_summary(date: monday)).to be_nil
+      expect(other.working_schedule(date: monday)).to be_nil
     end
 
     it "is nil when no schedule is in effect yet on that date" do
       future_user = create(:user)
       create(:user_working_hours, user: future_user, valid_from: Date.new(2027, 1, 1))
 
-      expect(described_class.new(user: future_user).working_schedule_summary(date: monday)).to be_nil
+      expect(described_class.new(user: future_user).working_schedule(date: monday)).to be_nil
     end
   end
 end

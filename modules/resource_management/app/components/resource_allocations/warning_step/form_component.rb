@@ -72,7 +72,14 @@ module ResourceAllocations
       end
 
       def schedule_note
-        t("resource_management.allocate_resource_dialog.overbooking.schedule_note", schedule: @working_schedule)
+        schedule = @working_schedule.working_days_summary
+
+        if @working_schedule.availability_factor < 100
+          t("resource_management.allocate_resource_dialog.overbooking.schedule_note_with_availability",
+            schedule:, factor: @working_schedule.availability_factor)
+        else
+          t("resource_management.allocate_resource_dialog.overbooking.schedule_note", schedule:)
+        end
       end
 
       def capacity_summary(range)

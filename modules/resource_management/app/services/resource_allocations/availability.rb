@@ -86,11 +86,13 @@ module ResourceAllocations
       OverbookingAnalysis.new(calendar: calendar_for(work_items), items: work_items).call
     end
 
-    # A compact, human-readable description of the user's working schedule
-    # active on the given date, e.g. "Mon-Fri 8h". Nil when no schedule is in
+    # The user's working schedule active on the given date, carrying the
+    # per-day hours and the availability factor. Nil when no schedule is in
     # effect on that date.
-    def working_schedule_summary(date:)
-      UserWorkingHours.for_user(@user).valid_for_date(date)&.working_days_summary
+    #
+    # @return [UserWorkingHours, nil]
+    def working_schedule(date:)
+      UserWorkingHours.for_user(@user).valid_for_date(date)
     end
 
     private
