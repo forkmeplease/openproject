@@ -84,14 +84,14 @@ RSpec.describe "ResourceAllocations requests",
       create(:work_package, project:, start_date: Date.new(2026, 1, 15), due_date: Date.new(2026, 2, 20))
     end
 
-    def refresh(start_date:, end_date:)
+    def refresh(start_date:, end_date:, entity_id: dated_work_package.id)
       get refresh_form_project_resource_allocations_path(project),
           params: {
             allocation_kind: "principal",
             resource_allocation: {
               principal_id: assignee.id,
               entity_type: "WorkPackage",
-              entity_id: dated_work_package.id,
+              entity_id:,
               start_date:,
               end_date:,
               allocated_hours: "40h"
@@ -100,20 +100,34 @@ RSpec.describe "ResourceAllocations requests",
           as: :turbo_stream
     end
 
-    it "re-renders the editable step with the inline warning when the dates fall outside the work package" do
+    it "streams the inline warning banner when the dates fall outside the work package" do
       refresh(start_date: "2026-02-24", end_date: "2026-02-25")
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("opce-user-autocompleter")
       expect(response.body).to include("outside of the work")
+      # Only the banner is replaced; the form and its focused date field stay untouched.
+      expect(response.body).not_to include("opce-user-autocompleter")
     end
 
-    it "re-renders the editable step without the warning when the dates fit" do
+    it "streams an empty banner when the dates fit" do
       refresh(start_date: "2026-01-20", end_date: "2026-01-21")
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("opce-user-autocompleter")
       expect(response.body).not_to include("outside of the work")
+    end
+
+    it "does not leak the dates of a work package the user cannot see" do
+      invisible_work_package = create(:work_package, project: create(:project),
+                                                     start_date: Date.new(2026, 1, 15),
+                                                     due_date: Date.new(2026, 2, 20))
+
+      # The same dates trigger the warning against a visible work package.
+      refresh(start_date: "2026-02-24", end_date: "2026-02-25", entity_id: invisible_work_package.id)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include("outside of the work")
+      expect(response.body).not_to include(I18n.l(Date.new(2026, 1, 15)))
+      expect(response.body).not_to include(I18n.l(Date.new(2026, 2, 20)))
     end
   end
 
@@ -397,6 +411,22 @@ RSpec.describe "ResourceAllocations requests",
                params: base_params.merge(confirmed: "1"),
                as: :turbo_stream
         end.to change(ResourceAllocation, :count).by(1)
+      end
+
+      it "collapses allocations of work packages the requester cannot see into a lump sum" do
+        hidden_work_package = create(:work_package, project: create(:project), subject: "Confidential rocket plans")
+        create(:resource_allocation,
+               principal: working_assignee,
+               entity: hidden_work_package,
+               allocated_time: 600,
+               start_date: Date.new(2026, 3, 2),
+               end_date: Date.new(2026, 3, 3))
+
+        post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
+
+        expect(response.body).to include(I18n.t("resource_management.allocate_resource_dialog.overbooking.hidden_work"))
+        expect(response.body).to include("10h")
+        expect(response.body).not_to include("Confidential rocket plans")
       end
     end
 

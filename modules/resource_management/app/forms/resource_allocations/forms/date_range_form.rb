@@ -51,38 +51,14 @@ module ResourceAllocations
           )
         end
 
-        if schedule_violation?
-          f.html_content do
-            render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert, mt: 2)) { outside_dates_warning }
-          end
+        f.html_content do
+          render(ResourceAllocations::AllocationStep::ScheduleViolationBannerComponent.new(allocation: model))
         end
       end
 
       def initialize(dialog_id:)
         super()
         @dialog_id = dialog_id
-      end
-
-      private
-
-      def schedule_violation?
-        model.schedule_violation.present?
-      end
-
-      def outside_dates_warning
-        I18n.t(
-          "resource_management.allocate_resource_dialog.outside_dates.description",
-          resource_dates: date_range(model.start_date, model.end_date),
-          work_package_dates: date_range(model.entity_start_date, model.entity_due_date)
-        )
-      end
-
-      def date_range(from_date, to_date)
-        "#{format_or_dash(from_date)} - #{format_or_dash(to_date)}"
-      end
-
-      def format_or_dash(date)
-        date.present? ? helpers.format_date(date) : "—"
       end
     end
   end

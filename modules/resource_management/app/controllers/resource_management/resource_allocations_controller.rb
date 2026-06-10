@@ -48,17 +48,15 @@ module ::ResourceManagement
       render_allocation_step(ResourceAllocation.new(entity: context_work_package))
     end
 
-    # Re-renders the editable step so the inline "outside dates" warning can be
-    # recomputed whenever a date field changes. Uses the EmptyContract so
-    # in-progress input never surfaces validation errors while the user types.
+    # Recomputes the inline "outside dates" warning whenever a date field
+    # changes. Only the banner is replaced — replacing the whole form would
+    # make Turbo restore focus to the date input afterwards, reopening its
+    # date picker. Uses the EmptyContract so in-progress input never surfaces
+    # validation errors while the user types.
     def refresh_form
       allocation = set_attributes(create_params, contract_class: EmptyContract).result
       replace_via_turbo_stream(
-        component: ResourceAllocations::AllocationStep::FormComponent.new(
-          allocation:,
-          project: @project,
-          allocation_kind:
-        )
+        component: ResourceAllocations::AllocationStep::ScheduleViolationBannerComponent.new(allocation:)
       )
       respond_with_turbo_streams
     end
