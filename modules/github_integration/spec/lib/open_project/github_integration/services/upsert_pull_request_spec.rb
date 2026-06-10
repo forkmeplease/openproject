@@ -79,7 +79,7 @@ RSpec.describe OpenProject::GithubIntegration::Services::UpsertPullRequest do
   let(:work_packages) { create_list(:work_package, 1) }
   let(:github_user) { create(:github_user) }
   let(:upsert_github_user_service) { instance_double(OpenProject::GithubIntegration::Services::UpsertGithubUser) }
-  let(:github_id) { rand(1..100) }
+  let(:github_id) { 123 }
   let(:github_html_url) { "https://github.com/test_user/repo" }
 
   before do
@@ -210,7 +210,7 @@ RSpec.describe OpenProject::GithubIntegration::Services::UpsertPullRequest do
     let(:labels_payload) do
       [
         {
-          "id" => rand(1..100),
+          "id" => 42,
           "name" => "grey",
           "color" => "#666",
           "description" => "An evil'ish gray tone"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
@@ -159,6 +161,27 @@ RSpec.describe OpenProject::GitlabIntegration::NotificationHandler::PipelineHook
       expect(upsert_service).to have_received(:call)
         .with(a_kind_of(OpenProject::GitlabIntegration::NotificationHandler::Helper::Payload),
               merge_request: gitlab_merge_request)
+    end
+  end
+
+  context "when the payload carries the merge request URL (fork pipeline)" do
+    shared_let(:target_project_merge_request) do
+      create(:gitlab_merge_request,
+             gitlab_id: 5,
+             gitlab_html_url: "http://79dfcd98b723/root/upstream/-/merge_requests/5")
+    end
+
+    let(:payload) do
+      super().deep_merge(
+        "merge_request" => { "url" => target_project_merge_request.gitlab_html_url }
+      )
+    end
+
+    it "attaches the pipeline to the merge request at the payload URL, not the pipeline's project" do
+      expect { process }.to change(GitlabPipeline, :count).by(1)
+      expect(upsert_service).to have_received(:call)
+        .with(a_kind_of(OpenProject::GitlabIntegration::NotificationHandler::Helper::Payload),
+              merge_request: target_project_merge_request)
     end
   end
 end

@@ -7,6 +7,8 @@
 # two rows. Surviving duplicates are folded into the most recent row first;
 # none are expected, since every write path already keys on the URL.
 class AddUniqueIndexToIntegrationHtmlUrls < ActiveRecord::Migration[8.1]
+  disable_ddl_transaction!
+
   ENTITIES = {
     "github_pull_requests" => {
       url_column: "github_html_url",
@@ -28,15 +30,15 @@ class AddUniqueIndexToIntegrationHtmlUrls < ActiveRecord::Migration[8.1]
   def up
     ENTITIES.each do |table, config|
       say_with_time "Deduplicating #{table} by #{config[:url_column]}" do
-        fold_duplicates(table, config)
+        transaction { fold_duplicates(table, config) }
       end
-      add_index table, config[:url_column], unique: true
+      add_index table, config[:url_column], unique: true, algorithm: :concurrently, if_not_exists: true
     end
   end
 
   def down
     ENTITIES.each do |table, config|
-      remove_index table, config[:url_column]
+      remove_index table, config[:url_column], algorithm: :concurrently, if_exists: true
     end
   end
 

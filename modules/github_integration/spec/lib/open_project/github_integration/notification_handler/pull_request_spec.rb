@@ -83,7 +83,7 @@ RSpec.describe OpenProject::GithubIntegration::NotificationHandler::PullRequest 
   let(:pr_body) { "Mentioning OP##{work_package.id}" }
   let(:pr_merged) { false }
   let(:pr_draft) { false }
-  let(:github_id) { rand(1..100) }
+  let(:github_id) { 123 }
   let(:github_html_url) { "https://github.com/test_user/repo" }
 
   before do
