@@ -377,6 +377,20 @@ RSpec.describe "ResourceAllocations requests",
         expect(response.body).to include("Mon-Fri 8h (80% available for project work)")
       end
 
+      it "lists each schedule with its effective dates when the schedule changes during the period" do
+        # Switches to Mon-Fri 6h at 80% on the second day of the allocation.
+        create(:user_working_hours, user: working_assignee, valid_from: Date.new(2026, 3, 3),
+                                    monday: 360, tuesday: 360, wednesday: 360, thursday: 360, friday: 360,
+                                    availability_factor: 80)
+
+        post project_resource_allocations_path(project), params: base_params, as: :turbo_stream
+
+        expect(response.body).to include(
+          "Mon-Fri 8h until #{I18n.l(Date.new(2026, 3, 2))}, " \
+          "then Mon-Fri 6h (80% available for project work)"
+        )
+      end
+
       it "creates the allocation once confirmed" do
         expect do
           post project_resource_allocations_path(project),

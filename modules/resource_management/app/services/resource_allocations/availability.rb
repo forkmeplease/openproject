@@ -86,13 +86,21 @@ module ResourceAllocations
       OverbookingAnalysis.new(calendar: calendar_for(work_items), items: work_items).call
     end
 
-    # The user's working schedule active on the given date, carrying the
-    # per-day hours and the availability factor. Nil when no schedule is in
-    # effect on that date.
+    # The user's working schedules effective within the given date range, in
+    # chronological order: the schedule active at the range start (if any)
+    # followed by any schedules taking effect within the range. Empty when no
+    # schedule is in effect at any point of the range.
     #
-    # @return [UserWorkingHours, nil]
-    def working_schedule(date:)
-      UserWorkingHours.for_user(@user).valid_for_date(date)
+    # @return [Array<UserWorkingHours>]
+    def working_schedules(range)
+      records = UserWorkingHours
+                  .for_user(@user)
+                  .where(valid_from: ..range.end)
+                  .order(:valid_from)
+                  .to_a
+      active_index = records.rindex { |record| record.valid_from <= range.begin }
+
+      active_index.nil? ? records : records[active_index..]
     end
 
     private

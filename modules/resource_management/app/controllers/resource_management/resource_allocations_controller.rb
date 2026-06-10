@@ -107,7 +107,7 @@ module ::ResourceManagement
           form_values: submitted_allocation_params,
           filters: params[:filters],
           overbooked_ranges: ranges,
-          working_schedule: working_schedule(allocation, ranges)
+          working_schedules: working_schedules(allocation, ranges)
         )
       )
       replace_via_turbo_stream(
@@ -166,10 +166,13 @@ module ::ResourceManagement
         UserWorkingHours.for_user(allocation.principal).exists?
     end
 
-    def working_schedule(allocation, ranges)
-      return if ranges.empty?
+    # The schedule note covers the span of the displayed overbooked ranges so
+    # it explains the capacity figures the user actually sees.
+    def working_schedules(allocation, ranges)
+      return [] if ranges.empty?
 
-      availability(allocation).working_schedule(date: allocation.start_date)
+      span = ranges.map(&:start_date).min..ranges.map(&:end_date).max
+      availability(allocation).working_schedules(span)
     end
 
     def availability(allocation)

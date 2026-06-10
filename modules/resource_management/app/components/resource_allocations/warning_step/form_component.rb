@@ -38,14 +38,14 @@ module ResourceAllocations
       include OpPrimer::ComponentHelpers
 
       def initialize(allocation:, project:, allocation_kind:, form_values:, overbooked_ranges: [],
-                     working_schedule: nil, filters: nil)
+                     working_schedules: [], filters: nil)
         super
         @allocation = allocation
         @project = project
         @allocation_kind = allocation_kind
         @form_values = form_values
         @overbooked_ranges = overbooked_ranges
-        @working_schedule = working_schedule
+        @working_schedules = working_schedules
         @filters = filters
       end
 
@@ -68,18 +68,31 @@ module ResourceAllocations
       end
 
       def working_schedule?
-        @working_schedule.present?
+        @working_schedules.any?
       end
 
+      # One sentence chaining each schedule effective during the overbooked
+      # span, e.g. "This user works Mon-Fri 8h until 03/31/2026, then Mon-Thu
+      # 6h (80% available for project work)."
       def schedule_note
-        schedule = @working_schedule.working_days_summary
+        first, *rest = @working_schedules
 
-        if @working_schedule.availability_factor < 100
-          t("resource_management.allocate_resource_dialog.overbooking.schedule_note_with_availability",
-            schedule:, factor: @working_schedule.availability_factor)
-        else
-          t("resource_management.allocate_resource_dialog.overbooking.schedule_note", schedule:)
+        segments = [schedule_summary(first)]
+        rest.each do |schedule|
+          segments << t("resource_management.allocate_resource_dialog.overbooking.schedule_change",
+                        date: helpers.format_date(schedule.valid_from - 1),
+                        schedule: schedule_summary(schedule))
         end
+
+        t("resource_management.allocate_resource_dialog.overbooking.schedule_note", schedule: segments.join(" "))
+      end
+
+      def schedule_summary(schedule)
+        summary = schedule.working_days_summary
+        return summary if schedule.availability_factor >= 100
+
+        t("resource_management.allocate_resource_dialog.overbooking.schedule_availability",
+          schedule: summary, factor: schedule.availability_factor)
       end
 
       def capacity_summary(range)

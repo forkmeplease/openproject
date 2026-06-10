@@ -160,23 +160,44 @@ RSpec.describe ResourceAllocations::Availability do
     end
   end
 
-  describe "#working_schedule" do
-    it "returns the working hours effective on the given date" do
-      expect(availability.working_schedule(date: monday))
-        .to have_attributes(working_days_summary: "Mon-Fri 8h", availability_factor: 100)
+  describe "#working_schedules" do
+    it "returns the single schedule covering the whole range" do
+      expect(availability.working_schedules(monday..friday))
+        .to contain_exactly(have_attributes(working_days_summary: "Mon-Fri 8h"))
     end
 
-    it "is nil when the user has no working time configured" do
+    it "includes schedules taking effect within the range, in order" do
+      switched = create(:user_working_hours, user:, valid_from: tuesday)
+
+      expect(availability.working_schedules(monday..friday).last).to eq(switched)
+      expect(availability.working_schedules(monday..friday).size).to eq(2)
+    end
+
+    it "drops schedules superseded before the range starts" do
+      create(:user_working_hours, user:, valid_from: Date.new(2024, 1, 1))
+
+      expect(availability.working_schedules(monday..friday))
+        .to contain_exactly(have_attributes(valid_from: Date.new(2025, 1, 1)))
+    end
+
+    it "excludes schedules taking effect after the range ends" do
+      create(:user_working_hours, user:, valid_from: Date.new(2027, 1, 1))
+
+      expect(availability.working_schedules(monday..friday))
+        .to contain_exactly(have_attributes(valid_from: Date.new(2025, 1, 1)))
+    end
+
+    it "starts with a mid-range schedule when none is in effect at the range start" do
+      newcomer = create(:user)
+      starting = create(:user_working_hours, user: newcomer, valid_from: tuesday)
+
+      expect(described_class.new(user: newcomer).working_schedules(monday..friday)).to eq([starting])
+    end
+
+    it "is empty when the user has no working time configured" do
       other = described_class.new(user: create(:user))
 
-      expect(other.working_schedule(date: monday)).to be_nil
-    end
-
-    it "is nil when no schedule is in effect yet on that date" do
-      future_user = create(:user)
-      create(:user_working_hours, user: future_user, valid_from: Date.new(2027, 1, 1))
-
-      expect(described_class.new(user: future_user).working_schedule(date: monday)).to be_nil
+      expect(other.working_schedules(monday..friday)).to be_empty
     end
   end
 end
