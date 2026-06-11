@@ -4,8 +4,8 @@ module ::TwoFactorAuthentication
   module Devices
     class TableComponent < ::OpPrimer::BorderBoxTableComponent
       options :admin_table
-      columns :device_type, :default, :confirmed
-      mobile_labels :default, :confirmed
+      columns :device_type, :default, :active
+      mobile_labels :default, :active
 
       def mobile_title
         I18n.t("two_factor_authentication.label_devices")
@@ -49,7 +49,7 @@ module ::TwoFactorAuthentication
         [
           [:device_type, { caption: I18n.t("two_factor_authentication.label_device_type") }],
           [:default, { caption: I18n.t(:label_default) }],
-          [:confirmed, { caption: I18n.t(:label_confirmed) }]
+          [:active, { caption: I18n.t(:label_active) }]
         ]
       end
     end

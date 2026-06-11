@@ -59,6 +59,7 @@ RSpec.describe "Admin 2FA management", :js, :selenium, with_settings: {
 
     SeleniumHubWaiter.wait
     # Delete the one
+    find_test_selector("two-factor--actions-button").click
     find_test_selector("two-factor--delete-button").click
     dialog.confirm_flow_with user_password, should_fail: false
 

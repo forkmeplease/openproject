@@ -83,8 +83,7 @@ RSpec.describe MyController do
       end
 
       it "shows an error message" do
-        expect(response).to have_http_status :unprocessable_entity
-        assert_template "password"
+        expect(response).to redirect_to action: "security"
         expect(user.errors.attribute_names).to eq([:password_confirmation])
         expect(user.errors.map(&:message).flatten)
           .to contain_exactly("Password confirmation does not match password.")
@@ -92,7 +91,6 @@ RSpec.describe MyController do
     end
 
     describe "with wrong password" do
-      render_views
       before do
         @current_password = user.current_password.id
         post :change_password,
@@ -104,8 +102,7 @@ RSpec.describe MyController do
       end
 
       it "shows an error message" do
-        expect(response).to have_http_status :unprocessable_entity
-        assert_template "password"
+        expect(response).to redirect_to action: "security"
         expect(flash[:error]).to eq("Wrong password")
       end
 
@@ -151,7 +148,7 @@ RSpec.describe MyController do
         end
 
         it "blocks the attempt even with correct password" do
-          expect(response).to have_http_status :unprocessable_entity
+          expect(response).to redirect_to action: "security"
         end
 
         it "does not change the password" do

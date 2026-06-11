@@ -39,7 +39,7 @@ RSpec.describe "Password change with OTP", :js, with_settings: {
       fill_in("password", with: user_password)
       fill_in("new_password", with: new_user_password)
       fill_in("new_password_confirmation", with: new_user_password)
-      click_link_or_button I18n.t(:button_save)
+      click_button I18n.t(:button_change_password)
     end
 
     if requires_otp

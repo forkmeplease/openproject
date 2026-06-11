@@ -38,6 +38,6 @@ See COPYRIGHT and LICENSE files for more details.
   end
 %>
 
-<%= render "my/password" %>
+<%= render partial: "my/password", locals: { submit_button_scheme: :secondary } %>
 
 <%= call_hook(:view_my_security_2fa_section, user: @user, cookies:) %>

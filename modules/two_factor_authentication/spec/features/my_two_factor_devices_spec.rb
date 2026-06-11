@@ -114,10 +114,17 @@ RSpec.describe "My Account 2FA configuration",
 
     # Make the second one the default
     # Confirm the password wrongly
+    within rows[1] do
+      page.find_test_selector("two-factor--actions-button").click
+    end
     page.find_test_selector("two-factor--make-default-button").click
     dialog.confirm_flow_with "wrong_password", should_fail: true
 
     # Confirm again
+    rows = page.all(".mobile-otp--two-factor-device-row")
+    within rows[1] do
+      page.find_test_selector("two-factor--actions-button").click
+    end
     page.find_test_selector("two-factor--make-default-button").click
     dialog.confirm_flow_with user_password, should_fail: false
 
@@ -132,6 +139,9 @@ RSpec.describe "My Account 2FA configuration",
     expect(device.default).to be_truthy
 
     # Delete the sms device
+    within rows[0] do
+      page.find_test_selector("two-factor--actions-button").click
+    end
     rows[0].find("[data-test-selector='two-factor--delete-button']").click
     dialog.confirm_flow_with user_password, should_fail: false
 
@@ -140,6 +150,10 @@ RSpec.describe "My Account 2FA configuration",
     expect(user.otp_devices.count).to eq 1
 
     # Delete the totp device
+    rows = page.all(".mobile-otp--two-factor-device-row")
+    within rows[0] do
+      page.find_test_selector("two-factor--actions-button").click
+    end
     page.find_test_selector("two-factor--delete-button").click
     dialog.confirm_flow_with user_password, should_fail: false
 

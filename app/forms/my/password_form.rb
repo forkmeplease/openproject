@@ -29,10 +29,11 @@
 #++
 
 class My::PasswordForm < ApplicationForm
-  def initialize(user:, back_url: nil)
+  def initialize(user:, back_url: nil, submit_button_scheme: :primary)
     super()
     @user = user
     @back_url = back_url
+    @submit_button_scheme = submit_button_scheme
   end
 
   form do |f|
@@ -69,7 +70,7 @@ class My::PasswordForm < ApplicationForm
         autocomplete: "new-password"
       )
 
-      fg.submit(name: :submit, label: helpers.t(:button_save), scheme: :primary)
+      fg.submit(name: :submit, label: helpers.t(:button_change_password), scheme: @submit_button_scheme)
     end
   end
 end
