@@ -104,6 +104,17 @@ module OpPrimer
       "op-border-box-grid"
     end
 
+    # Desktop column template. Data columns share the available width evenly (a
+    # `main_column` taking a double share), while the optional actions column is
+    # sized to its content so that a lone icon button does not claim a full
+    # column's worth of width. Exposed to the grid as a CSS custom property.
+    def grid_template_columns
+      data_tracks = columns.sum { |column| main_column?(column) ? 2 : 1 }
+      template = "repeat(#{data_tracks}, minmax(0, 1fr))"
+      template += " auto" if has_actions?
+      template
+    end
+
     def has_actions?
       false
     end

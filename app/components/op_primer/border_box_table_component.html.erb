@@ -32,6 +32,7 @@ See COPYRIGHT and LICENSE files for more details.
     OpPrimer::BorderBoxTableComponent::InternalBoxComponent.new(
       id: container_id,
       classes: container_class,
+      style: "--op-border-box-grid-template-columns: #{grid_template_columns};",
       role: :table,
       aria: { label: mobile_title, colcount: column_count },
       list_arguments: { tag: :div, role: :rowgroup },
