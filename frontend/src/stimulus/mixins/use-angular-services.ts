@@ -67,16 +67,20 @@ interface ServiceConsumer {
  * - `this.pluginContext` — resolves to the full `OpenProjectPluginContext`,
  *   the escape hatch for `classes`, `helpers` and `injector`
  *
- * Both promises never settle while the controller is disconnected at context
- * resolution time — whether obtained before or after the disconnect — so code
- * after an `await` cannot act on a dead element.
+ * Both promises never settle once the controller disconnects — whether they
+ * were obtained before the disconnect or while disconnected — so code after
+ * an `await` cannot act on a dead element. Only promises obtained from the
+ * current connection resolve.
  */
 export function useAngularServices(controller:Controller):void {
   const declaredServices = (controller.constructor as unknown as { services?:ServiceKey[] }).services ?? [];
 
   // Each disconnect invalidates anything still pending from the previous
-  // connection — replaces the per-controller Symbol-token pattern.
+  // connection, and a reconnect invalidates anything requested while
+  // disconnected — replaces the per-controller Symbol-token pattern. The
+  // first connect must not bump: initialize() may already hold promises.
   let epoch = 0;
+  let disconnected = false;
 
   const guarded = <T>(map:(context:OpenProjectPluginContext) => T):Promise<T> => {
     const token = epoch;
@@ -123,12 +127,17 @@ export function useAngularServices(controller:Controller):void {
   const originalDisconnect = controller.disconnect.bind(controller);
 
   controller.connect = () => {
+    if (disconnected) {
+      epoch += 1;
+      disconnected = false;
+    }
     originalConnect();
     void connectServices();
   };
 
   controller.disconnect = () => {
     epoch += 1;
+    disconnected = true;
     originalDisconnect();
   };
 

@@ -226,6 +226,27 @@ describe('useAngularServices', () => {
     expect(resolved).not.toHaveBeenCalled();
   });
 
+  it('never resolves a services promise requested while disconnected once reconnected', async () => {
+    const context = deferred<unknown>();
+    stubPluginContext(() => context.promise);
+
+    const { controller, element } = await mountController<TestController>('use-services-test');
+
+    element.remove();
+    await ctx.nextFrame();
+
+    const resolved = vi.fn();
+    void controller.services.then(resolved);
+
+    ctx.container.append(element);
+    await ctx.nextFrame();
+
+    context.resolve(pluginContext);
+    await ctx.nextFrame();
+
+    expect(resolved).not.toHaveBeenCalled();
+  });
+
   it('exposes a pluginContext promise resolving to the full context', async () => {
     const { controller } = await mountController<TestController>('use-services-test');
 
