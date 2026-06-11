@@ -240,7 +240,7 @@ export class WorkPackageBaseResource extends HalResource {
   public getEditorContext(fieldName:string):ICKEditorContext {
     return {
       type: fieldName === 'description' ? 'full' : 'constrained',
-      macros: false,
+      macros: ['OpMacroWikiPageLinkAddExisting'],
       ...(fieldName.startsWith('customField') && { disabledMentions: ['user'] }),
     };
   }

@@ -42,7 +42,7 @@ module Wikis
             form_arguments: { builder: rails_builder(f), name: "wiki_page_selection" },
             filter_mode_control_arguments: { hidden: true },
             filter_input_arguments: {
-              placeholder: I18n.t("wikis.link_existing_wiki_page_form.placeholder"),
+              placeholder: I18n.t("wikis.search_pages.placeholder"),
               # every other property is just refilling the default values,
               # as those are not merged into custom arguments
               name: :filter,
@@ -53,7 +53,7 @@ module Wikis
               show_clear_button: true
             },
             include_sub_items_check_box_arguments: { hidden: true },
-            no_results_node_arguments: { label: I18n.t("wikis.link_existing_wiki_page_form.no_results") }
+            no_results_node_arguments: { label: I18n.t("wikis.search_pages.no_results") }
           )
         )
       end

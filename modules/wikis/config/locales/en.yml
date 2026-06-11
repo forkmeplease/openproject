@@ -150,9 +150,6 @@ en:
         oauth_application_details_html: The client secret value will not be accessible again after you close this window. Please copy these values into the [XWiki OpenProject Integration settings](xwiki_admin_link).
     link_existing_wiki_page_dialog:
       title: Add existing wiki page
-    link_existing_wiki_page_form:
-      no_results: No wiki pages found
-      placeholder: Search for a wiki page
     oauth_login_component:
       connect_button: Connect %{provider} account
       description: Log in to %{provider} to view and manage related wiki pages from this OpenProject instance.
@@ -172,6 +169,9 @@ en:
       empty_text: Manually add links to other related wiki pages.
       link_existing: Existing wiki page
       link_new: New wiki page
+    search_pages:
+      no_results: No wiki pages found
+      placeholder: Search for a wiki page
     work_package_wikis_tab_component:
       inline_page_links: Inline page links
       referencing_pages: Referenced in
