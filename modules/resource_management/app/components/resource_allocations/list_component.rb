@@ -28,39 +28,41 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews
-  class ContentComponent < ApplicationComponent
+module ResourceAllocations
+  # The body of the work package allocations dialog: the allocation progress
+  # summary and one row per allocation. Streamable so the dialog content can be
+  # refreshed after an allocation changes. Allocations whose principal is not
+  # visible to the current user are still listed, but anonymised.
+  class ListComponent < ApplicationComponent
     include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-    def initialize(view:, project:, resource_planner:, work_packages: [], allocations: {}, visible_principal_ids: nil)
+    def initialize(project:, work_package:, allocations:, visible_principal_ids:, overbooked_ids: Set.new)
       super
 
-      @view = view
       @project = project
-      @resource_planner = resource_planner
-      @work_packages = work_packages
+      @work_package = work_package
       @allocations = allocations
       @visible_principal_ids = visible_principal_ids
+      @overbooked_ids = overbooked_ids
     end
 
     private
 
-    def inner_component
-      case @view
-      when ResourceWorkPackageList
-        ResourcePlannerViews::WorkPackageList::ContentComponent.new(
-          view: @view,
-          project: @project,
-          resource_planner: @resource_planner,
-          work_packages: @work_packages,
-          allocations: @allocations,
-          visible_principal_ids: @visible_principal_ids
-        )
-      end
+    attr_reader :project, :work_package, :allocations, :visible_principal_ids, :overbooked_ids
+
+    def visible_principal?(allocation)
+      allocation.principal_id.nil? || visible_principal_ids.include?(allocation.principal_id)
     end
 
-    def placeholder_heading
-      @view&.name || @resource_planner.name
+    def overbooked?(allocation)
+      overbooked_ids.include?(allocation.id)
+    end
+
+    def editable?
+      return @editable if defined?(@editable)
+
+      @editable = User.current.allowed_in_project?(:allocate_user_resources, project)
     end
   end
 end

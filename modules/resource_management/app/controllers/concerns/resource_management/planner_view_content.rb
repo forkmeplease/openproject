@@ -28,39 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews
-  class ContentComponent < ApplicationComponent
-    include OpTurbo::Streamable
+module ResourceManagement
+  # Builds the content component for a resource planner view. Loads the view's
+  # work packages and their allocations in one place so the allocation columns
+  # (progress bar and members) share a single query rather than each issuing
+  # their own. Requires @project and @resource_planner to be set.
+  module PlannerViewContent
+    def work_package_list_content(view)
+      work_packages = view.is_a?(ResourceWorkPackageList) ? view.work_packages.to_a : []
+      allocations = ResourceAllocation.allocated_for_work_packages(work_packages)
 
-    def initialize(view:, project:, resource_planner:, work_packages: [], allocations: {}, visible_principal_ids: nil)
-      super
-
-      @view = view
-      @project = project
-      @resource_planner = resource_planner
-      @work_packages = work_packages
-      @allocations = allocations
-      @visible_principal_ids = visible_principal_ids
-    end
-
-    private
-
-    def inner_component
-      case @view
-      when ResourceWorkPackageList
-        ResourcePlannerViews::WorkPackageList::ContentComponent.new(
-          view: @view,
-          project: @project,
-          resource_planner: @resource_planner,
-          work_packages: @work_packages,
-          allocations: @allocations,
-          visible_principal_ids: @visible_principal_ids
-        )
-      end
-    end
-
-    def placeholder_heading
-      @view&.name || @resource_planner.name
+      ResourcePlannerViews::ContentComponent.new(
+        view:,
+        project: @project,
+        resource_planner: @resource_planner,
+        work_packages:,
+        allocations:,
+        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations.values.flatten, current_user)
+      )
     end
   end
 end

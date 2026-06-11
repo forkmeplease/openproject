@@ -69,5 +69,11 @@ Rails.application.routes.draw do
         get :refresh_form
       end
     end
+
+    resources :work_packages, only: [] do
+      resources :resource_allocations,
+                controller: "resource_management/work_package_resource_allocations",
+                only: :index
+    end
   end
 end

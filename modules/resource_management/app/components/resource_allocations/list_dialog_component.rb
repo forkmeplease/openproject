@@ -28,39 +28,35 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews
-  class ContentComponent < ApplicationComponent
+module ResourceAllocations
+  # The dialog shell around a work package's allocation list, with a footer to
+  # allocate another resource.
+  class ListDialogComponent < ApplicationComponent
     include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-    def initialize(view:, project:, resource_planner:, work_packages: [], allocations: {}, visible_principal_ids: nil)
+    DIALOG_ID = "work-package-allocations-dialog"
+
+    def initialize(project:, work_package:, allocations:, visible_principal_ids:, overbooked_ids: Set.new)
       super
 
-      @view = view
       @project = project
-      @resource_planner = resource_planner
-      @work_packages = work_packages
+      @work_package = work_package
       @allocations = allocations
       @visible_principal_ids = visible_principal_ids
+      @overbooked_ids = overbooked_ids
     end
 
     private
 
-    def inner_component
-      case @view
-      when ResourceWorkPackageList
-        ResourcePlannerViews::WorkPackageList::ContentComponent.new(
-          view: @view,
-          project: @project,
-          resource_planner: @resource_planner,
-          work_packages: @work_packages,
-          allocations: @allocations,
-          visible_principal_ids: @visible_principal_ids
-        )
-      end
+    attr_reader :project, :work_package, :allocations, :visible_principal_ids, :overbooked_ids
+
+    def title
+      I18n.t("resource_management.work_package_allocations_dialog.title")
     end
 
-    def placeholder_heading
-      @view&.name || @resource_planner.name
+    def allocate_resource_path
+      new_project_resource_allocation_path(project, work_package_id: work_package.id)
     end
   end
 end

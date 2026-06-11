@@ -99,11 +99,13 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     def allocation
-      render(Primer::Beta::Text.new(color: :muted)) { allocation_placeholder }
+      render(ResourceAllocations::ProgressComponent.new(work_package:, allocations:))
     end
 
     def allocated_members
-      render(Primer::Beta::Text.new(color: :muted)) { allocation_placeholder }
+      return render(Primer::Beta::Text.new(color: :muted)) { allocation_placeholder } if allocations.empty?
+
+      render(AllocatedMembersComponent.new(allocations:, visible_principal_ids: table.visible_principal_ids))
     end
 
     def button_links
@@ -111,6 +113,10 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     private
+
+    def allocations
+      @allocations ||= table.allocations_for(work_package)
+    end
 
     def allocation_placeholder
       I18n.t("resource_management.work_package_list.allocation_placeholder")
@@ -136,8 +142,12 @@ module ResourcePlannerViews::WorkPackageList
     end
 
     def see_allocation_item(menu)
-      menu.with_item(label: t("resource_management.work_package_list.context_menu.see_allocation"),
-                     disabled: true) do |item|
+      menu.with_item(
+        label: t("resource_management.work_package_list.context_menu.see_allocation"),
+        tag: :a,
+        href: helpers.project_work_package_resource_allocations_path(table.project, work_package),
+        content_arguments: { data: { controller: "async-dialog" } }
+      ) do |item|
         item.with_leading_visual_icon(icon: :hourglass)
       end
     end

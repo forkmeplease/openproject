@@ -28,39 +28,32 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews
-  class ContentComponent < ApplicationComponent
+module ResourceAllocations
+  # A single-step dialog to edit a persisted allocation, reusing the create
+  # wizard's allocation form (which submits an update for persisted records).
+  class EditDialogComponent < ApplicationComponent
     include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-    def initialize(view:, project:, resource_planner:, work_packages: [], allocations: {}, visible_principal_ids: nil)
+    DIALOG_ID = "edit-resource-allocation-dialog"
+
+    def initialize(project:, allocation:)
       super
 
-      @view = view
       @project = project
-      @resource_planner = resource_planner
-      @work_packages = work_packages
-      @allocations = allocations
-      @visible_principal_ids = visible_principal_ids
+      @allocation = allocation
     end
 
     private
 
-    def inner_component
-      case @view
-      when ResourceWorkPackageList
-        ResourcePlannerViews::WorkPackageList::ContentComponent.new(
-          view: @view,
-          project: @project,
-          resource_planner: @resource_planner,
-          work_packages: @work_packages,
-          allocations: @allocations,
-          visible_principal_ids: @visible_principal_ids
-        )
-      end
+    attr_reader :project, :allocation
+
+    def allocation_kind
+      allocation.principal_explicit? ? "principal" : "filter"
     end
 
-    def placeholder_heading
-      @view&.name || @resource_planner.name
+    def title
+      I18n.t("resource_management.edit_allocation_dialog.title")
     end
   end
 end
