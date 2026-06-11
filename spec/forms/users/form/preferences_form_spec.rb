@@ -28,41 +28,16 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Form
-    class CustomFieldFieldComponent < ApplicationComponent
-      include ApplicationHelper
+require "spec_helper"
 
-      def initialize(custom_field:, form:)
-        super()
-        @custom_field = custom_field
-        @form = form
-      end
+RSpec.describe Users::Form::PreferencesForm, type: :forms do
+  include_context "with rendered form"
 
-      def field_options
-        {
-          custom_value: @form.object.custom_value_for(@custom_field),
-          custom_field: @custom_field
-        }
-      end
+  let(:model) { build_stubbed(:user_preference) }
 
-      def css_classes
-        ["form--field", @custom_field.attribute_name, required_class].compact
-      end
-
-      def container_class
-        case @custom_field.field_format
-        when "text" then "-xxwide"
-        when "date" then "-xslim"
-        else "-middle"
-        end
-      end
-
-      private
-
-      def required_class
-        "-required" if @custom_field.is_required? && !@custom_field.boolean?
-      end
-    end
+  it "renders the time zone, color mode and keyboard shortcuts fields" do
+    expect(page).to have_select("Time zone")
+    expect(page).to have_select("Color mode")
+    expect(page).to have_field("Disable keyboard shortcuts")
   end
 end

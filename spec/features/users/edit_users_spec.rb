@@ -59,7 +59,7 @@ RSpec.describe "edit users", :js do
     before { visit edit_user_path(user) }
 
     it "saves a custom field value" do
-      within "fieldset", text: "Professional info".upcase do
+      within "fieldset", text: "Professional info" do
         fill_in "Job title", with: "Software Engineer"
         fill_in "Internal code", with: "SE"
       end

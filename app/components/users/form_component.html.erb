@@ -1,0 +1,33 @@
+<% if editing? %>
+  <%= render(Primer::Box.new(mb: 3)) do %>
+    <%= render(Primer::Beta::Text.new(tag: :div, font_weight: :bold)) { I18n.t("attributes.status") } %>
+    <%= render(Primer::Beta::Text.new(tag: :div)) { helpers.full_user_status(@user, true) } %>
+  <% end %>
+<% end %>
+
+<%= render(form_list) %>
+
+<% if show_no_login_message? %>
+  <%= render(Primer::Beta::Text.new(tag: :p, color: :muted)) { I18n.t("user.no_login") } %>
+<% end %>
+
+<% if show_external_auth? %>
+  <%= render("users/form/authentication/external", user: @user) %>
+<% end %>
+
+<%= helpers.render_user_form_hooks(user: @user, form: @builder) %>
+
+<% if show_consent? %>
+  <%= render("users/consent", user: @user) %>
+<% end %>
+
+<% if show_preferences? %>
+  <%= fields_for(:pref, @user.pref, builder: @builder.class) do |pref_f| %>
+    <%= render(Users::Form::PreferencesForm.new(pref_f)) %>
+  <% end %>
+<% end %>
+
+<%= render(Primer::Beta::Button.new(type: :submit, scheme: :primary, name: "submit")) { creating? ? I18n.t(:button_create) : I18n.t(:button_save) } %>
+<% if creating? %>
+  <%= render(Primer::Beta::Button.new(type: :submit, name: "continue")) { I18n.t(:button_create_and_continue) } %>
+<% end %>

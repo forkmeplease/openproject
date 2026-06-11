@@ -28,35 +28,36 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Form
-    class CustomFieldSectionComponent < ApplicationComponent
-      def initialize(section:, form:, contract:, user:)
-        super()
-        @section = section
-        @form = form
-        @contract = contract
-        @user = user
-        @visible_cfs_by_key = visible_cfs_by_key(section)
-      end
+require "spec_helper"
 
-      def title
-        @section.name.presence || I18n.t("settings.user_custom_fields.label_untitled_section")
-      end
+RSpec.describe Users::Form::AuthenticationSourceForm, type: :forms do
+  before do
+    User.current = build_stubbed(:admin)
+    create(:ldap_auth_source)
+  end
 
-      def built_in?(key)
-        UserCustomFieldSection::BUILT_IN_ATTRIBUTES.include?(key)
-      end
+  include_context "with rendered form"
 
-      def visible_custom_field(key)
-        @visible_cfs_by_key[key]
-      end
+  let(:params) { { user: model } }
 
-      private
+  context "for a new user" do
+    let(:model) { User.new }
 
-      def visible_cfs_by_key(section)
-        section.custom_fields.visible(User.current).index_by(&:column_name)
-      end
+    it "renders the auth source select with the toggle action and a hidden login group" do
+      expect(page).to have_select("user[ldap_auth_source_id]")
+      expect(page).to have_css("[data-action~='admin--users#toggleAuthenticationFields']")
+      expect(page).to have_css("[data-admin--users-target='authSourceFields'][hidden]", visible: :all)
+      expect(page).to have_field("user[login]", visible: :all)
+    end
+  end
+
+  context "for a persisted user" do
+    let(:model) { build_stubbed(:user) }
+
+    it "renders the select inside a titled Authentication fieldset and no hidden login" do
+      expect(page).to have_select("user[ldap_auth_source_id]")
+      expect(page).to have_css("fieldset", text: /#{I18n.t(:label_authentication)}/i)
+      expect(page).to have_no_css("[data-admin--users-target='authSourceFields']", visible: :all)
     end
   end
 end
