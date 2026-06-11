@@ -48,14 +48,18 @@ See COPYRIGHT and LICENSE files for more details.
   `src` at this same view and morphs it in when an allocation of any listed work
   package changes.
 %>
-<%= turbo_frame_tag(
-      "resource-planner-view-content",
-      refresh: :morph,
-      data: {
-        controller: "reload-frame-on-event",
-        "reload-frame-on-event-event-name-value": "resource-allocations:changed",
-        "reload-frame-on-event-url-value": project_resource_planner_view_path(@project, @resource_planner, @view)
-      }
-    ) do %>
+<%
+  # When the planner does not have a view yet, we cannot add frame data
+  frame_data = if @view
+                 {
+                   controller: "reload-frame-on-event",
+                   "reload-frame-on-event-event-name-value": "resource-allocations:changed",
+                   "reload-frame-on-event-url-value": project_resource_planner_view_path(@project, @resource_planner, @view)
+                 }
+               else
+                 {}
+               end
+%>
+<%= turbo_frame_tag("resource-planner-view-content", refresh: :morph, data: frame_data) do %>
   <%= render(@content_component) %>
 <% end %>
