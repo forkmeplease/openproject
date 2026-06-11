@@ -36,21 +36,14 @@ module Wikis
           module Internal
             # Fetch page information using a canonical XWiki identifier
             class CanonicalPageInfo < BaseQuery
-              include Concerns::XWikiQuery
+              include Concerns::XWikiRequest
 
               def call(input_data:, auth_strategy:)
                 ref = CanonicalPageReference.parse(input_data.identifier)
                 return failure(code: :not_found) unless ref
 
                 perform_request(ref, auth_strategy:) do |data|
-                  success(
-                    Results::PageInfo.new(
-                      identifier: StablePageReference.parse(fetch_json(data, "id")).to_s,
-                      title: data.fetch("title"),
-                      href: data.fetch("xwikiAbsoluteUrl"),
-                      provider:
-                    )
-                  )
+                  success(StablePageInfo.json_to_page_info(data, provider:))
                 end
               end
 
