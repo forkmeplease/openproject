@@ -2808,6 +2808,7 @@ ja:
   button_login: ログイン
   button_move: 移動
   button_move_and_follow: 移動後表示
+  button_next: Next
   button_print: 印刷
   button_quote: 引用
   button_remove: 削除
@@ -4467,6 +4468,8 @@ ja:
     other: "%{count} working days"
   label_x_working_days_time_off:
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: 昨日
   label_zen_mode: 禅モード
   label_role_type: 種別

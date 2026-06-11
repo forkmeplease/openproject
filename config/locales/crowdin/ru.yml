@@ -2931,6 +2931,7 @@ ru:
   button_login: Войти
   button_move: Переместить
   button_move_and_follow: Переместить и следовать
+  button_next: Next
   button_print: Печать
   button_quote: Цитата
   button_remove: Удалить
@@ -4668,6 +4669,11 @@ ru:
     few: 'Время отдыха: %{count} рабочих дней'
     many: 'Время отдыха: %{count} рабочих дней'
     other: 'Время отдыха: %{count} рабочих дней'
+  label_x_items_selected:
+    one: One item selected
+    few: "%{count} items selected"
+    many: "%{count} items selected"
+    other: "%{count} items selected"
   label_yesterday: вчера
   label_zen_mode: Режим «Дзен» (только доска и часы)
   label_role_type: Тип

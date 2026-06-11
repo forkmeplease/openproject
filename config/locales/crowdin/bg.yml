@@ -2844,6 +2844,7 @@ bg:
   button_login: Влизане
   button_move: Премести
   button_move_and_follow: Преместване и последване
+  button_next: Next
   button_print: Отпечатване
   button_quote: Цитат
   button_remove: Премахване
@@ -4529,6 +4530,9 @@ bg:
   label_x_working_days_time_off:
     one: 'Time off: 1 working day'
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    one: One item selected
+    other: "%{count} items selected"
   label_yesterday: вчера
   label_zen_mode: Режим Дзен
   label_role_type: Тип

@@ -2887,6 +2887,7 @@ sr:
   button_login: Sign in
   button_move: Move
   button_move_and_follow: Move and follow
+  button_next: Next
   button_print: Print
   button_quote: Quote
   button_remove: Remove
@@ -4598,6 +4599,10 @@ sr:
     one: 'Time off: 1 working day'
     few: 'Time off: %{count} working days'
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    one: One item selected
+    few: "%{count} items selected"
+    other: "%{count} items selected"
   label_yesterday: yesterday
   label_zen_mode: Zen mode
   label_role_type: Type

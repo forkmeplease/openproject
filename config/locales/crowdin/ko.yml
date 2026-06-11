@@ -2801,6 +2801,7 @@ ko:
   button_login: 로그인
   button_move: 이동
   button_move_and_follow: 이동하고 따라가기
+  button_next: 다음
   button_print: 인쇄
   button_quote: 인용
   button_remove: 제거
@@ -4480,6 +4481,8 @@ ko:
     other: 근무일 %{count}일
   label_x_working_days_time_off:
     other: '휴가: 근무일 %{count}일'
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: 어제
   label_zen_mode: 젠 모드
   label_role_type: 유형

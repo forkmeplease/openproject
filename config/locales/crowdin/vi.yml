@@ -2807,6 +2807,7 @@ vi:
   button_login: Đăng nhập
   button_move: Di chuyển
   button_move_and_follow: Di chuyển và thực hiện theo
+  button_next: Next
   button_print: In
   button_quote: Trích dẫn
   button_remove: Xoá
@@ -4466,6 +4467,8 @@ vi:
     other: "%{count} working days"
   label_x_working_days_time_off:
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: ngày hôm qua
   label_zen_mode: Chế độ Zen
   label_role_type: loại

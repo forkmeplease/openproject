@@ -2805,6 +2805,7 @@ zh-CN:
   button_login: 登录
   button_move: 移动
   button_move_and_follow: 移动和跟踪
+  button_next: 下一步
   button_print: 打印
   button_quote: 引用
   button_remove: 移除
@@ -4464,6 +4465,8 @@ zh-CN:
     other: "%{count} 个工作日"
   label_x_working_days_time_off:
     other: 休息时间：%{count} 个工作日
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: 昨天
   label_zen_mode: 极简模式
   label_role_type: 类型

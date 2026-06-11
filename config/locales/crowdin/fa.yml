@@ -2846,6 +2846,7 @@ fa:
   button_login: ورود
   button_move: انتقال
   button_move_and_follow: کپی و دنبال کردن
+  button_next: Next
   button_print: چاپ کردن
   button_quote: نقل قول
   button_remove: Remove
@@ -4531,6 +4532,9 @@ fa:
   label_x_working_days_time_off:
     one: 'Time off: 1 working day'
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    one: One item selected
+    other: "%{count} items selected"
   label_yesterday: yesterday
   label_zen_mode: Zen mode
   label_role_type: نوع

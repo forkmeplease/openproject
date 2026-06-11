@@ -2844,6 +2844,7 @@ pt-PT:
   button_login: Iniciar sessão
   button_move: Mover
   button_move_and_follow: Mover e seguir
+  button_next: Seguinte
   button_print: Imprimir
   button_quote: Citar
   button_remove: Remover
@@ -4529,6 +4530,9 @@ pt-PT:
   label_x_working_days_time_off:
     one: 'Ausência: 1 dia útil'
     other: 'Ausência: %{count} dias úteis'
+  label_x_items_selected:
+    one: One item selected
+    other: "%{count} items selected"
   label_yesterday: ontem
   label_zen_mode: Modo Zen
   label_role_type: Tipo

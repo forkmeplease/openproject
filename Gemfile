@@ -28,7 +28,7 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-source "https://rubygems.org"
+source "https://rubygems.org", cooldown: 7
 
 # TODO: Once packager.io and heroku buildpacks support bundler 2.4.22,
 # then we can use the new bundler syntax `ruby file: '.ruby-version'`.
@@ -50,7 +50,7 @@ gem "connection_pool", "~> 3.0.2"
 
 gem "rdoc", ">= 2.4.2"
 
-gem "doorkeeper", "~> 5.9.0"
+gem "doorkeeper", "~> 5.9.2"
 # Maintain our own omniauth due to relative URL root issues
 # see upstream PR: https://github.com/omniauth/omniauth/pull/903
 gem "omniauth", git: "https://github.com/opf/omniauth", ref: "7eb21563ba047ef86d71f099975587b5ec88f9c9"
@@ -125,10 +125,10 @@ gem "sys-filesystem", "~> 1.5.0", require: false
 gem "bcrypt", "~> 3.1.22"
 
 gem "multi_json", "~> 1.20.0"
-gem "oj", "~> 3.17.0"
+gem "oj", "~> 3.17.3"
 
 gem "daemons"
-gem "good_job", "~> 4.18.2" # update should be done manually in sync with saas-openproject version.
+gem "good_job", "~> 4.19.0" # update should be done manually in sync with saas-openproject version.
 
 gem "rack-protection", "~> 3.2.0"
 
@@ -276,7 +276,7 @@ group :test do
   gem "rspec-rails", "~> 8.0.4", group: :development
 
   # Retry failures within the same environment
-  gem "retriable", "~> 3.5.1"
+  gem "retriable", "~> 3.8.0"
   gem "rspec-retry", "~> 0.6.1"
 
   # Accessibility tests
@@ -429,6 +429,9 @@ gemfiles.each do |file|
   send(:eval_gemfile, file) if File.readable?(file)
 end
 
-gem "openproject-octicons", "~>19.35.0"
-gem "openproject-octicons_helper", "~>19.35.0"
-gem "openproject-primer_view_components", "~>0.86.2"
+# Set cooldown 0 for our own gems
+source "https://rubygems.org", cooldown: 0 do
+  gem "openproject-octicons", "~>19.35.0"
+  gem "openproject-octicons_helper", "~>19.35.0"
+  gem "openproject-primer_view_components", "~>0.86.2"
+end

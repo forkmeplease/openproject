@@ -2851,6 +2851,7 @@ tr:
   button_login: Oturum aç
   button_move: Taşı
   button_move_and_follow: Taşı ve takip et
+  button_next: Next
   button_print: Yazdır
   button_quote: Alıntı
   button_remove: Kaldır
@@ -4536,6 +4537,9 @@ tr:
   label_x_working_days_time_off:
     one: 'Time off: 1 working day'
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    one: One item selected
+    other: "%{count} items selected"
   label_yesterday: dün
   label_zen_mode: Zen modu
   label_role_type: Tür

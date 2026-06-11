@@ -2801,6 +2801,7 @@ zh-TW:
   button_login: 登入
   button_move: 移動
   button_move_and_follow: 移動並跟隨
+  button_next: Next
   button_print: 列印
   button_quote: 引言
   button_remove: 刪除
@@ -4458,6 +4459,8 @@ zh-TW:
     other: "%{count} working days"
   label_x_working_days_time_off:
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: 昨天
   label_zen_mode: 禪意模式
   label_role_type: 類型

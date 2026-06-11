@@ -2811,6 +2811,7 @@ ms:
   button_login: Daftar masuk
   button_move: Alih
   button_move_and_follow: Alih dan ikut
+  button_next: Next
   button_print: Cetak
   button_quote: Petikan
   button_remove: Keluarkan
@@ -4476,6 +4477,8 @@ ms:
     other: "%{count} working days"
   label_x_working_days_time_off:
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: semalam
   label_zen_mode: Mod Zen
   label_role_type: Jenis

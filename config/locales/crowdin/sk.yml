@@ -2926,6 +2926,7 @@ sk:
   button_login: Prihlásiť sa
   button_move: Presunúť
   button_move_and_follow: Presunúť a nasledovať
+  button_next: Next
   button_print: Tlač
   button_quote: Citovať
   button_remove: Vymazať
@@ -4663,6 +4664,11 @@ sk:
     few: 'Time off: %{count} working days'
     many: 'Time off: %{count} working days'
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    one: One item selected
+    few: "%{count} items selected"
+    many: "%{count} items selected"
+    other: "%{count} items selected"
   label_yesterday: včera
   label_zen_mode: Zen mode
   label_role_type: Typ

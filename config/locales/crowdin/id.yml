@@ -2814,6 +2814,7 @@ id:
   button_login: Login
   button_move: Pindahkan
   button_move_and_follow: Pindahkan dan amati
+  button_next: Next
   button_print: Cetak
   button_quote: Kutipan
   button_remove: Remove
@@ -4475,6 +4476,8 @@ id:
     other: "%{count} working days"
   label_x_working_days_time_off:
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    other: "%{count} items selected"
   label_yesterday: kemarin
   label_zen_mode: Zen mode
   label_role_type: Mengetik
