@@ -74,14 +74,12 @@ See COPYRIGHT and LICENSE files for more details.
   <% end %>
 
   <% buckets.each do |bucket| %>
-    <%=
-      render Backlogs::BucketComponent.new(
-        project:,
-        backlog_bucket: bucket,
-        work_packages: work_packages_for(bucket),
-        current_user:
-      )
-    %>
+    <%= render Backlogs::BucketComponent.new(
+          project:,
+          backlog_bucket: bucket,
+          work_packages: work_packages_for(bucket),
+          current_user:
+        ) %>
   <% end %>
 
   <% if backlog_filters.show_inbox? %>
@@ -89,7 +87,6 @@ See COPYRIGHT and LICENSE files for more details.
           work_packages: work_packages_for_inbox,
           project:,
           current_user:
-        )
-    %>
+        ) %>
   <% end %>
 <% end %>
