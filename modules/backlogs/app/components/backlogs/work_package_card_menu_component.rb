@@ -117,11 +117,11 @@ module Backlogs
 
     def move_target_id
       @move_target_id ||= if work_package.backlog_bucket_id?
-                            "backlog_bucket:#{work_package.backlog_bucket_id}"
+                            Target::BucketId[work_package.backlog_bucket_id]
                           elsif work_package.sprint_id?
-                            "sprint:#{work_package.sprint_id}"
+                            Target::SprintId[work_package.sprint_id]
                           else
-                            "inbox"
+                            Target::InboxId
                           end
     end
   end

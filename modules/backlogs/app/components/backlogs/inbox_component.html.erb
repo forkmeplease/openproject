@@ -41,7 +41,7 @@ See COPYRIGHT and LICENSE files for more details.
         data: {
           generic_drag_and_drop_target: "container",
           target_container_accessor: ":scope > ul",
-          target_id: "inbox",
+          target_id: Backlogs::Target::InboxId.to_s, # explicit to_s, as otherwise to_json is used
           target_allowed_drag_type: "story"
         }
       )
