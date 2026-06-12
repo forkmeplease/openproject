@@ -47,8 +47,13 @@ module Wikis
     end
 
     def inline_existing_page_dialog
-      params = inline_existing_params
-      form_model = Forms::InlineExistingWikiPageFormModel.new(provider_id: params[:provider_id])
+      provider_id = inline_existing_params[:provider_id]
+      if provider_id.blank? && Provider.visible.enabled.one?
+        # If no provider data was passed and there is only one enabled provider, use it by default
+        provider_id = Provider.visible.enabled.first.id
+      end
+
+      form_model = Forms::InlineExistingWikiPageFormModel.new(provider_id:)
       respond_with_dialog Wikis::InlineExistingWikiPageDialog.new(form_model)
     end
 
