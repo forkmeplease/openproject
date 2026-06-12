@@ -203,7 +203,7 @@ module Components
     end
 
     def insert_macro(label)
-      container.find(".ck-dropdown__button[data-cke-tooltip-text='Insert macro']", visible: :all, text: "Insert").click
+      container.find(".ck-dropdown__button", visible: :all, exact_text: "Insert").click
       container.find(".ck-button", visible: :all, text: label).click
     end
 
