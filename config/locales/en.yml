@@ -445,6 +445,20 @@ en:
           <p>Hello,</p>
           <p>A new project has been created: projectValue:name</p>
           <p>Thank you</p>
+      project_custom_field_sections:
+        destroy:
+          error: "The section could not be deleted."
+        drop:
+          error: "The section could not be reordered."
+        move:
+          error: "The section could not be reordered."
+      user_custom_field_sections:
+        destroy:
+          error: "The section could not be deleted."
+        drop:
+          error: "The section could not be reordered."
+        move:
+          error: "The section could not be reordered."
       work_packages_identifier:
         page_header:
           description: Choose between classic numerical work package IDs or semantic project-specific ones that prepend the project identifier to the work package ID.

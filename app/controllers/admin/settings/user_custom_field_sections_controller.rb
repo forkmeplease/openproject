@@ -72,7 +72,8 @@ module Admin::Settings
       if call.success?
         update_header_via_turbo_stream(allow_custom_field_creation: allow_custom_field_creation?)
         update_sections_via_turbo_stream(user_custom_field_sections: UserCustomFieldSection.all)
-        # TODO: show error message on failure
+      else
+        render_section_error_via_turbo_stream(call)
       end
 
       respond_with_turbo_streams
@@ -85,7 +86,8 @@ module Admin::Settings
 
       if call.success?
         update_sections_via_turbo_stream(user_custom_field_sections: UserCustomFieldSection.all)
-        # TODO: show error message on failure
+      else
+        render_section_error_via_turbo_stream(call)
       end
 
       respond_with_turbo_streams
@@ -99,7 +101,8 @@ module Admin::Settings
       if call.success?
         update_header_via_turbo_stream(allow_custom_field_creation: allow_custom_field_creation?)
         update_sections_via_turbo_stream(user_custom_field_sections: UserCustomFieldSection.all)
-        # TODO: show error message on failure
+      else
+        render_section_error_via_turbo_stream(call)
       end
 
       respond_with_turbo_streams
@@ -110,6 +113,14 @@ module Admin::Settings
     end
 
     private
+
+    # Show a danger toast with the action's hint (resolved relative to the
+    # controller/action), appending the service's error detail (e.g. why a
+    # non-empty section cannot be deleted) when present.
+    def render_section_error_via_turbo_stream(call)
+      message = [t(".error"), call.message].compact_blank.join(" ")
+      render_error_flash_message_via_turbo_stream(message:)
+    end
 
     def set_user_custom_field_section
       @user_custom_field_section = UserCustomFieldSection.find(params.expect(:id))
