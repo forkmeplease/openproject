@@ -31,9 +31,17 @@
 class ResourceAllocation < ApplicationRecord
   ALLOWED_ENTITY_TYPES = %w[WorkPackage].freeze
 
-  # `allocated_time` is stored in minutes in an integer column. Cap it at 5000
-  # hours so an absurdly large input is rejected with a validation error rather
-  # than overflowing the column and raising ActiveModel::RangeError on save.
+  # How to reach a project from each polymorphic entity type. Must have one entry for each ALLOWED_ENTITY_TYPES
+  ENTITY_PROJECT_JOINS = {
+    "WorkPackage" => {
+      join: <<~SQL.squish,
+        LEFT JOIN work_packages ON work_packages.id = resource_allocations.entity_id AND resource_allocations.entity_type = 'WorkPackage'
+      SQL
+      project_id: "work_packages.project_id"
+    }
+  }.freeze
+
+  # Cap to avoid integer overflows.
   MAX_ALLOCATED_TIME = (5000.hours / 1.minute).to_i
 
   belongs_to :entity, polymorphic: true, optional: false
@@ -53,6 +61,7 @@ class ResourceAllocation < ApplicationRecord
   register_journal_formatted_fields "entity_gid", formatter_key: :polymorphic_association
   register_journal_formatted_fields "filter_name", formatter_key: :plaintext
 
+  # State machine is ignored for the current implementation. All allocations go directly to the `allocated` state
   enum :state, {
     requested: "requested",
     allocated: "allocated",
@@ -62,6 +71,13 @@ class ResourceAllocation < ApplicationRecord
 
   scope :needs_principal_assignment, -> { where(principal_explicit: false, principal_id: nil) }
   scope :for_principal, ->(principal) { where(principal:) }
+  scope :for_project, ->(project_or_project_id) {
+    project_id = project_or_project_id.is_a?(Project) ? project_or_project_id.id : project_or_project_id
+    joins = ENTITY_PROJECT_JOINS.values.pluck(:join)
+    conditions = ENTITY_PROJECT_JOINS.values.map { |source| "#{source[:project_id]} = :project_id" }
+
+    joins(joins.join(" ")).where(conditions.join(" OR "), project_id: project_id)
+  }
 
   # The `allocated` allocations for the given work packages, grouped by work
   # package id and with principals eager-loaded. Loaded once per page so the
