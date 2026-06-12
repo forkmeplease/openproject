@@ -28,32 +28,26 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Wikis
-  class LinkExistingWikiPageForm < ApplicationForm
-    form do |f|
-      f.hidden(name: :provider_id)
-      f.hidden(name: :linkable_type)
-      f.hidden(name: :linkable_id)
+require "spec_helper"
 
-      f.filterable_tree_view(
-        name: "wiki_page_selection",
-        label: I18n.t("wikis.link_existing_wiki_page_form.label"),
-        src: helpers.search_wiki_pages_path(provider_id: model.provider_id, name: "wiki_page_selection"),
-        filter_mode_control_arguments: { hidden: true },
-        filter_input_arguments: {
-          placeholder: I18n.t("wikis.link_existing_wiki_page_form.placeholder"),
-          # every other property is just refilling the default values,
-          # as those are not merged into custom arguments
-          name: :filter,
-          label: I18n.t(:button_filter),
-          type: :search,
-          leading_visual: { icon: :search },
-          visually_hide_label: true,
-          show_clear_button: true
-        },
-        include_sub_items_check_box_arguments: { hidden: true },
-        no_results_node_arguments: { label: I18n.t("wikis.link_existing_wiki_page_form.no_results") }
-      )
-    end
+RSpec.describe Wikis::LinkExistingWikiPageForm, type: :forms do
+  include Rails.application.routes.url_helpers
+
+  include_context "with rendered form"
+
+  let(:model) { build_stubbed(:relation_wiki_page_link) }
+
+  it "renders the link attributes as hidden fields", :aggregate_failures do
+    expect(page).to have_field("wikis_relation_page_link[provider_id]", type: :hidden, with: model.provider_id)
+    expect(page).to have_field("wikis_relation_page_link[linkable_type]", type: :hidden, with: model.linkable_type)
+    expect(page).to have_field("wikis_relation_page_link[linkable_id]", type: :hidden, with: model.linkable_id)
+  end
+
+  it "renders the wiki page selection", :aggregate_failures do
+    expect(page).to have_selector :fieldset, "Wiki page"
+    expect(page).to have_element :"filterable-tree-view",
+                                 src: search_wiki_pages_path(provider_id: model.provider_id,
+                                                             name: "wiki_page_selection")
+    expect(page).to have_field "Filter", type: :search, placeholder: "Search for a wiki page"
   end
 end
