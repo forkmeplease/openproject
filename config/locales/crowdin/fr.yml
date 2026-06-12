@@ -3983,7 +3983,7 @@ fr:
   label_enumerations: Énumérations
   label_enterprise: Entreprise
   label_enterprise_active_users: "%{current}/%{limit} utilisateurs actifs inscrits"
-  label_enterprise_edition: édition Enterprise
+  label_enterprise_edition: Édition Enterprise
   label_enterprise_support: Support Enterprise
   label_environment: Environnement
   label_estimates_and_progress: Estimations et progression
