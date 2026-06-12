@@ -40,6 +40,25 @@ module Users
 
         @user = user
       end
+
+      # Each entry becomes its own SidePanel section, so headings and separators
+      # are provided consistently by the panel rather than drawn by hand.
+      def sections
+        [
+          Users::Profile::AttributesComponent.new(user: @user),
+          *custom_field_section_components,
+          Users::Profile::GroupsComponent.new(user: @user),
+          Users::Profile::ProjectsComponent.new(user: @user)
+        ]
+      end
+
+      private
+
+      def custom_field_section_components
+        UserCustomFieldSection.with_filled_fields_for(@user).map do |section, fields|
+          Users::Profile::CustomFieldSectionComponent.new(section:, fields:, user: @user)
+        end
+      end
     end
   end
 end

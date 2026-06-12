@@ -68,14 +68,23 @@ class Users::HoverCardComponent < ApplicationComponent
 
   private
 
-  def format_multi_values(value)
+  # Renders the values of a multi-value field as a row of Primer labels,
+  # capped at MULTI_VALUE_DISPLAY_LIMIT with an "and N more" overflow hint.
+  def render_value_labels(value)
     values = Array(value)
-    visible = safe_join(values.first(MULTI_VALUE_DISPLAY_LIMIT), ", ")
     remaining = values.size - MULTI_VALUE_DISPLAY_LIMIT
 
-    return visible if remaining <= 0
+    labels = values.first(MULTI_VALUE_DISPLAY_LIMIT).map do |item|
+      render(Primer::Beta::Label.new(scheme: :accent, mr: 1)) { item }
+    end
 
-    safe_join([visible, t("custom_fields.multi_value_more", count: remaining)], " ")
+    if remaining > 0
+      labels << render(Primer::Beta::Text.new) do
+        t("custom_fields.multi_value_more", count: remaining)
+      end
+    end
+
+    safe_join(labels, " ")
   end
 
   def linked_group_names(groups)

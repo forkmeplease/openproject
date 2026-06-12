@@ -35,7 +35,8 @@ class UserCustomFieldSections::NameForm < ApplicationForm
       placeholder: UserCustomFieldSection.human_attribute_name(:name),
       label: UserCustomFieldSection.human_attribute_name(:name),
       required: true,
-      autofocus: true
+      autofocus: true,
+      autocomplete: "off"
     )
   end
 end

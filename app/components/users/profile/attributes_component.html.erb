@@ -4,35 +4,12 @@
 
     component_wrapper do
       flex_layout do |details_container|
-        if user_is_allowed_to_see_email
-          details_container.with_row(font_weight: :bold) do
-            User.human_attribute_name(:mail)
-          end
-
-          details_container.with_row do
-            mail_to(escape_javascript(@user.mail), nil, encode: "javascript")
-          end
+        details_container.with_row(font_weight: :bold) do
+          User.human_attribute_name(:mail)
         end
 
-        sections_with_fields.each do |custom_field_section, fields|
-          details_container.with_row(mt: 3, font_weight: :bold, color: :subtle) do
-            custom_field_section.name.presence || t("settings.user_custom_fields.label_untitled_section")
-          end
-
-          fields.each do |custom_field|
-            details_container.with_row(mt: 2, font_weight: :bold, test_selector: "user-custom-field") do
-              custom_field.name
-            end
-
-            details_container.with_row do
-              value = @user.formatted_custom_value_for(custom_field)
-              if value.is_a?(Array)
-                safe_join(value, ", ")
-              else
-                value
-              end
-            end
-          end
+        details_container.with_row do
+          mail_to(escape_javascript(@user.mail), nil, encode: "javascript")
         end
       end
     end

@@ -195,9 +195,14 @@ RSpec.describe Users::HoverCardComponent, type: :component do
                custom_values: multi_cf.possible_values.map { |opt| build(:custom_value, custom_field: multi_cf, value: opt) })
       end
 
-      it "shows the first 3 values and a count of the rest" do
-        expect(page).to have_test_selector("user-hover-card-custom-field", text: "Ruby, Rails, React")
-        expect(page).to have_test_selector("user-hover-card-custom-field", text: "and 2 more")
+      it "shows the first 3 values as labels and a count of the rest" do
+        field = find_test_selector("user-hover-card-custom-field")
+
+        expect(field).to have_css("span.Label", text: "Ruby")
+        expect(field).to have_css("span.Label", text: "Rails")
+        expect(field).to have_css("span.Label", text: "React")
+        expect(field).to have_no_css("span.Label", text: "Vue")
+        expect(field).to have_text("and 2 more")
       end
     end
   end

@@ -52,56 +52,8 @@ RSpec.describe Users::Profile::AttributesComponent, type: :component do
       it { is_expected.to be(true) }
     end
 
-    context "when user has no view_user_email permission and no filled custom fields" do
+    context "when user cannot see the email" do
       it { is_expected.to be(false) }
-    end
-  end
-
-  describe "rendering custom fields" do
-    let(:section) { create(:user_custom_field_section, name: "Profile info") }
-    let(:custom_field) { create(:user_custom_field, :string, user_custom_field_section: section) }
-    let(:user) { create(:user, custom_values: [build(:custom_value, custom_field:, value: "Hello custom field")]) }
-
-    current_user { build(:admin) }
-
-    before { render_inline(component) }
-
-    it "renders the field value" do
-      expect(page).to have_text("Hello custom field")
-    end
-
-    it "renders the section name as a heading" do
-      expect(page).to have_text("Profile info")
-    end
-
-    context "with an untitled section" do
-      let(:section) { create(:user_custom_field_section).tap { |s| s.update_column(:name, nil) } }
-
-      it "renders the I18n fallback label" do
-        expect(page).to have_text(I18n.t("settings.user_custom_fields.label_untitled_section"))
-      end
-    end
-
-    context "with a multi-select field" do
-      let(:custom_field) { create(:user_custom_field, :multi_list, user_custom_field_section: section) }
-      let(:user) do
-        create(:user, custom_values: custom_field.possible_values.first(3).map do |v|
-          build(:custom_value, custom_field:, value: v)
-        end)
-      end
-
-      it "renders values as a comma-separated list" do
-        expect(page).to have_text("A, B, C")
-      end
-    end
-
-    context "with a formattable text field" do
-      let(:custom_field) { create(:user_custom_field, :text, user_custom_field_section: section) }
-      let(:user) { create(:user, custom_values: [build(:custom_value, custom_field:, value: "This is **formatted** text.")]) }
-
-      it "renders the value as HTML" do
-        expect(page).to have_css("strong", text: "formatted")
-      end
     end
   end
 end

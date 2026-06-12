@@ -1,0 +1,22 @@
+<%=
+  render(Primer::OpenProject::SidePanel::Section.new) do |section|
+    section.with_title { section_title }
+
+    flex_layout do |fields_container|
+      @fields.each do |custom_field|
+        fields_container.with_row(mt: 2, font_weight: :bold, test_selector: "user-custom-field") do
+          custom_field.name
+        end
+
+        fields_container.with_row do
+          value = @user.formatted_custom_value_for(custom_field)
+          if value.is_a?(Array)
+            safe_join(value.map { |item| render(Primer::Beta::Label.new(scheme: :accent, mr: 1)) { item } }, " ")
+          else
+            value
+          end
+        end
+      end
+    end
+  end
+%>

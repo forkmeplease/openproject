@@ -30,19 +30,22 @@
 
 module Users
   module Profile
-    class AttributesComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpTurbo::Streamable
+    # Renders a single user custom field section as a side panel section,
+    # so each section gets its own heading and separator (provided by the
+    # surrounding SidePanel) consistently with the other profile sections.
+    class CustomFieldSectionComponent < ApplicationComponent
       include OpPrimer::ComponentHelpers
 
-      def initialize(user:)
+      def initialize(section:, fields:, user:)
         super()
 
+        @section = section
+        @fields = fields
         @user = user
       end
 
-      def render?
-        User.current == @user || User.current.allowed_globally?(:view_user_email)
+      def section_title
+        @section.name.presence || t("settings.user_custom_fields.label_untitled_section")
       end
     end
   end
