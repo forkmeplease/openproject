@@ -401,7 +401,7 @@ Rails.application.routes.draw do
 
       get "export_project_initiation", to: "projects#export_project_initiation_pdf"
 
-      get :menu
+      get :list_row_menu
 
       get :copy, to: "projects#copy_form"
       post :copy

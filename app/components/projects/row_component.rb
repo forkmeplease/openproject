@@ -289,7 +289,7 @@ module Projects
     # Subclasses can override inline `menu_items` or `menu_href` in order to control
     # what is displayed in the action menu.
     def menu_items = nil
-    def menu_href = menu_project_path(project, status: params[:status])
+    def menu_href = list_row_menu_project_path(project, status: params[:status])
 
     def action_menu(src: nil, items: nil)
       raise ArgumentError, "provide either src: or items:, not both" if src && items

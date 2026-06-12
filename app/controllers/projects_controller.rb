@@ -34,19 +34,19 @@ class ProjectsController < ApplicationController
   menu_item :overview
   menu_item :roadmap, only: :roadmap
 
-  before_action :find_project, except: %i[index new create menu destroy destroy_info]
-  before_action :find_project_including_archived, only: %i[menu destroy destroy_info]
+  before_action :find_project, except: %i[index new create list_row_menu destroy destroy_info]
+  before_action :find_project_including_archived, only: %i[list_row_menu destroy destroy_info]
   before_action :load_query_or_deny_access, only: %i[index]
   before_action :authorize,
                 only: %i[copy_form copy deactivate_work_package_attachments export_project_initiation_pdf]
   before_action :authorize_global, only: %i[new create]
   before_action :require_admin, only: %i[destroy destroy_info]
-  before_action :require_admin_or_active_project, only: :menu
+  before_action :require_admin_or_active_project, only: :list_row_menu
   before_action :find_optional_parent, only: :new
   before_action :find_optional_template, only: %i[new create]
 
   no_authorization_required! :index
-  authorization_checked! :menu
+  authorization_checked! :list_row_menu
 
   include SortHelper
   include PaginationHelper
@@ -97,7 +97,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def menu
+  def list_row_menu
     render Projects::RowActionsComponent.new(project: @project, params:), layout: false
   end
 
