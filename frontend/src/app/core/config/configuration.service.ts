@@ -79,7 +79,7 @@ export class ConfigurationService {
   }
 
   public get prepareAttachmentURL():string {
-    return _.get(this.configuration, ['prepareAttachment', 'href']) as string;
+    return this.configuration?.prepareAttachment?.href as string;
   }
 
   public get maximumAttachmentFileSize():number {
@@ -177,10 +177,10 @@ export class ConfigurationService {
   }
 
   private userPreference<T>(pref:string):T {
-    return _.get(this.configuration, ['userPreferences', pref]) as T;
+    return this.configuration?.userPreferences?.[pref] as T;
   }
 
   private systemPreference<T>(pref:string):T {
-    return _.get(this.configuration, pref) as T;
+    return this.configuration?.[pref] as T;
   }
 }

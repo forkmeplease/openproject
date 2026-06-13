@@ -279,7 +279,7 @@ export class WorkPackageBaseResource extends HalResource {
     this.attachments = new AttachmentCollectionResource(
       this.injector,
       // Attachments MAY be an array if we're building from a form
-      _.get(attachments, '$source', attachments),
+      (attachments as { $source?:unknown }).$source ?? attachments,
       false,
       this.halInitializer,
       'HalResource',
