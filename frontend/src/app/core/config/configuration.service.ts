@@ -47,19 +47,19 @@ export class ConfigurationService {
   }
 
   public commentsSortedInDescendingOrder():boolean {
-    return this.userPreference('commentSortDescending');
+    return this.configuration.userPreferences.commentSortDescending;
   }
 
   public disableKeyboardShortcuts():boolean {
-    return this.userPreference('disableKeyboardShortcuts');
+    return this.configuration.userPreferences.disableKeyboardShortcuts;
   }
 
   public warnOnLeavingUnsaved():boolean {
-    return this.userPreference('warnOnLeavingUnsaved');
+    return this.configuration.userPreferences.warnOnLeavingUnsaved;
   }
 
   public autoHidePopups():boolean {
-    return this.userPreference('autoHidePopups');
+    return this.configuration.userPreferences.autoHidePopups;
   }
 
   public isTimezoneSet():boolean {
@@ -71,98 +71,91 @@ export class ConfigurationService {
   }
 
   public timezone():string {
-    return this.userPreference('timeZone');
+    return this.configuration.userPreferences.timeZone;
   }
 
   public isDirectUploads():boolean {
     return !!this.prepareAttachmentURL;
   }
 
-  public get prepareAttachmentURL():string {
-    return this.configuration?.prepareAttachment?.href as string;
+  public get prepareAttachmentURL():string|undefined {
+    return this.configuration.prepareAttachment?.href;
   }
 
   public get maximumAttachmentFileSize():number {
-    return this.systemPreference('maximumAttachmentFileSize');
+    return this.configuration.maximumAttachmentFileSize;
   }
 
   public get maximumApiV3PageSize():number {
-    return this.systemPreference('maximumAPIV3PageSize');
+    return this.configuration.maximumAPIV3PageSize;
   }
 
   public get perPageOptions():number[] {
-    return this.systemPreference('perPageOptions');
+    return this.configuration.perPageOptions;
   }
 
   public get allowedLinkProtocols():string[]|null {
-    return this.systemPreference('allowedLinkProtocols') || null;
+    return this.configuration.allowedLinkProtocols ?? null;
   }
 
   public dateFormatPresent():boolean {
-    return !!this.systemPreference('dateFormat');
+    return !!this.dateFormat();
   }
 
   public dateFormat():string {
-    return this.systemPreference('dateFormat');
+    return this.configuration.dateFormat ?? '';
   }
 
   public durationFormat():DurationFormat {
-    return this.systemPreference('durationFormat');
+    return this.configuration.durationFormat;
   }
 
   public hoursPerDay():number {
-    return this.systemPreference('hoursPerDay');
-  }
-
-  public hoursPerWeek():number {
-    return this.systemPreference('hoursPerWeek');
+    return this.configuration.hoursPerDay;
   }
 
   public daysPerMonth():number {
-    return this.systemPreference('daysPerMonth');
+    return this.configuration.daysPerMonth;
   }
 
   public timeFormatPresent():boolean {
-    return !!this.systemPreference('timeFormat');
+    return !!this.timeFormat();
   }
 
   public timeFormat():string {
-    return this.systemPreference('timeFormat');
+    return this.configuration.timeFormat ?? '';
   }
 
   public defaultTimezone():string {
-    return this.systemPreference('userDefaultTimezone');
-  }
-
-  public startOfWeekPresent():boolean {
-    return !!this.systemPreference('startOfWeek');
+    return this.configuration.userDefaultTimezone ?? '';
   }
 
   public startOfWeek():number {
-    if (this.startOfWeekPresent()) {
-      return this.systemPreference('startOfWeek');
+    const startOfWeek = this.configuration.startOfWeek;
+    if (startOfWeek !== null) {
+      return startOfWeek;
     }
     return moment.localeData(I18n.locale).firstDayOfWeek();
   }
 
   public get wikisAvailable():boolean {
-    return this.systemPreference('wikisAvailable');
+    return this.configuration.wikisAvailable;
   }
 
   public get hostName():string {
-    return this.systemPreference('hostName');
+    return this.configuration.hostName;
   }
 
   public get activeFeatureFlags():string[] {
-    return this.systemPreference<string[]>('activeFeatureFlags');
+    return this.configuration.activeFeatureFlags;
   }
 
   public get availableFeatures():string[] {
-    return this.systemPreference<string[]>('availableFeatures');
+    return this.configuration.availableFeatures;
   }
 
   public get triallingFeatures():string[] {
-    return this.systemPreference<string[]>('triallingFeatures');
+    return this.configuration.triallingFeatures;
   }
 
   private loadConfiguration() {
@@ -174,13 +167,5 @@ export class ConfigurationService {
       .then((configuration:ConfigurationResource) => {
         this.configuration = configuration;
       });
-  }
-
-  private userPreference<T>(pref:string):T {
-    return this.configuration?.userPreferences?.[pref] as T;
-  }
-
-  private systemPreference<T>(pref:string):T {
-    return this.configuration?.[pref] as T;
   }
 }
