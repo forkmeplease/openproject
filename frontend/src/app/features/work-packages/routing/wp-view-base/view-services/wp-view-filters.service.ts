@@ -313,7 +313,7 @@ export class WorkPackageViewFiltersService extends WorkPackageQueryStateService<
    * Get all filters that are not in the current active set
    */
   private remainingFilters(filters = this.rawFilters) {
-    return _.differenceBy(this.availableFilters, filters, (filter) => filter.id);
+    return this.availableFilters.filter((available) => !filters.some((filter) => filter.id === available.id));
   }
 
   isAvailable(el:QueryFilterInstanceResource):boolean {

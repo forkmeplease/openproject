@@ -72,7 +72,7 @@ export class ChildRelationsRenderPass extends RelationsRenderPass {
   }
 
   private loadMissingTargets(ids:string[]) {
-    const uniqueIds = _.uniq(ids);
+    const uniqueIds = Array.from(new Set(ids));
 
     if (uniqueIds.length === 0 || this.loadingMissingTargets) {
       return;

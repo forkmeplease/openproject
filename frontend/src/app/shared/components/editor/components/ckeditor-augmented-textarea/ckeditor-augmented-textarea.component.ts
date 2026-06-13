@@ -307,11 +307,8 @@ export class CkeditorAugmentedTextareaComponent extends UntilDestroyedMixin impl
         filter((resource) => !!resource),
       )
       .subscribe((resource:HalResource&{ attachments:AttachmentCollectionResource }) => {
-        const missingAttachments = _.differenceBy(
-          this.attachments,
-          resource.attachments.elements,
-          (attachment:HalResource) => attachment.id,
-        );
+        const presentIds = new Set<string|null>(resource.attachments.elements.map((other:HalResource) => other.id));
+        const missingAttachments = this.attachments.filter((attachment:HalResource) => !presentIds.has(attachment.id));
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
         const removedUrls = missingAttachments.map((attachment) => attachment.downloadLocation.href);

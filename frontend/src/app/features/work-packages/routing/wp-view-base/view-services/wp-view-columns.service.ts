@@ -65,7 +65,7 @@ export class WorkPackageViewColumnsService extends WorkPackageQueryStateService<
     query.columns = cloneHalResourceCollection<QueryColumn>(toApply);
 
     // We can avoid reloading even with relation columns if we only removed columns
-    const onlyRemoved = _.difference(newColumns, oldColumns).length === 0;
+    const onlyRemoved = newColumns.filter((column) => !oldColumns.includes(column)).length === 0;
 
     // Reload the table visibly if adding relation or share columns.
     return !onlyRemoved && (this.hasRelationColumns() || this.hasShareColumn());
@@ -283,7 +283,8 @@ export class WorkPackageViewColumnsService extends WorkPackageQueryStateService<
    * Get columns not yet selected
    */
   public get unused():QueryColumn[] {
-    return _.differenceBy(this.all, this.getColumns(), '$href');
+    const columns = this.getColumns();
+    return this.all.filter((column) => !columns.some((other) => other.$href === column.$href));
   }
 
   /**

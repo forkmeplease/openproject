@@ -287,7 +287,7 @@ export class HalResource {
    */
   public $embeddableKeys():string[] {
     const properties = Object.keys(this.$source);
-    return _.without(properties, '_links', '_embedded', 'id');
+    return properties.filter((property) => !['_links', '_embedded', 'id'].includes(property));
   }
 
   /**
@@ -296,6 +296,6 @@ export class HalResource {
    */
   public $linkableKeys():string[] {
     const properties = Object.keys(this.$links);
-    return _.without(properties, 'self');
+    return properties.filter((property) => property !== 'self');
   }
 }
