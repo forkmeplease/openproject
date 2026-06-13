@@ -28,8 +28,8 @@ nl:
     attributes:
       project:
         sprint_sharing: Sprint delen
-        backlog_excluded_types: Excluded work package types
-        statuses_considered_closed: Statuses considered closed
+        backlog_excluded_types: Uitgesloten werkpakket types
+        statuses_considered_closed: Statussen die als gesloten worden beschouwd
       sprint:
         duration: Sprintduur
         finish_date: Einddatum
@@ -48,7 +48,7 @@ nl:
         story_points: Verhaal punten
     errors:
       messages:
-        must_be_in_planning: must be in planning to start.
+        must_be_in_planning: moet in de planning staan om te beginnen.
         only_one_active_sprint_allowed: only one active sprint is allowed per project.
         dates_required: Start and finish dates are required in order to start the sprint.
       models:
