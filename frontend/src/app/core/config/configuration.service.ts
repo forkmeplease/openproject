@@ -27,6 +27,7 @@
 //++
 
 import { Injectable, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import moment from 'moment';
 
 import { ConfigurationResource } from 'core-app/features/hal/resources/configuration-resource';
@@ -158,14 +159,7 @@ export class ConfigurationService {
     return this.configuration.triallingFeatures;
   }
 
-  private loadConfiguration() {
-    return this
-      .apiV3Service
-      .configuration
-      .get()
-      .toPromise()
-      .then((configuration:ConfigurationResource) => {
-        this.configuration = configuration;
-      });
+  private async loadConfiguration():Promise<void> {
+    this.configuration = await firstValueFrom(this.apiV3Service.configuration.get());
   }
 }
