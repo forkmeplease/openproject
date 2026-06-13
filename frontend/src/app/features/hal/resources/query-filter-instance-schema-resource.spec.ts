@@ -26,23 +26,38 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { Injectable } from '@angular/core';
+import { QueryFilterInstanceSchemaResource } from 'core-app/features/hal/resources/query-filter-instance-schema-resource';
 
-interface SelectAutocompleterAssignment {
-  attribute:string;
-  component:string;
+interface SchemaWithAllowedValuesCheck {
+  _dependencies:{ dependencies:Record<string, { values?:{ _links?:{ allowedValues?:unknown } } }> }[];
+  definesAllowedValues():boolean;
 }
 
-@Injectable({ providedIn: 'root' })
-export class SelectAutocompleterRegisterService {
-  private _fields:SelectAutocompleterAssignment[] = [];
+describe('QueryFilterInstanceSchemaResource', () => {
+  describe('definesAllowedValues', () => {
+    it('checks object-shaped dependency maps', () => {
+      const schema = Object.create(QueryFilterInstanceSchemaResource.prototype) as SchemaWithAllowedValuesCheck;
 
-  public register(component:any, attribute:string) {
-    this._fields.push({ attribute, component });
-  }
+      Object.defineProperty(schema, '_dependencies', {
+        value: [
+          {
+            dependencies: {
+              '/api/v3/queries/operators/=': {},
+              '/api/v3/queries/operators/!*': {
+                values: {
+                  _links: {
+                    allowedValues: {
+                      href: '/api/v3/example',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      });
 
-  public getAutocompleterOfAttribute(attribute:string) {
-    const assignment = this._fields.find((field) => field.attribute === attribute);
-    return assignment ? assignment.component : undefined;
-  }
-}
+      expect(schema.definesAllowedValues()).toBe(true);
+    });
+  });
+});

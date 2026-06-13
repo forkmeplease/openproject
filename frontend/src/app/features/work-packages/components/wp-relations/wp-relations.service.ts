@@ -112,7 +112,7 @@ export class WorkPackageRelationsService extends StateCacheService<RelationsStat
       return;
     }
 
-    return _.find(relations, (relation:RelationResource) => {
+    return Object.values(relations).find((relation:RelationResource) => {
       const denormalized = relation.denormalized(from);
       // Check that
       // 1. the denormalized relation points at "to"
@@ -187,7 +187,7 @@ export class WorkPackageRelationsService extends StateCacheService<RelationsStat
    * @param relation
    */
   private insertIntoStates(relation:RelationResource) {
-    _.values(relation.ids).forEach((wpId) => {
+    Object.values(relation.ids).forEach((wpId) => {
       this.multiState.get(wpId).doModify((value:RelationsStateValue) => {
         value[relation.id!] = relation;
         return value;
@@ -204,7 +204,7 @@ export class WorkPackageRelationsService extends StateCacheService<RelationsStat
    * @param relation
    */
   private removeFromStates(relation:RelationResource) {
-    _.values(relation.ids).forEach((wpId) => {
+    Object.values(relation.ids).forEach((wpId) => {
       this.multiState.get(wpId).doModify((value:RelationsStateValue) => {
         delete value[relation.id!];
         return value;
