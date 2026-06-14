@@ -16,8 +16,6 @@ This is also what happens in production mode.
 
 To learn more about how this behavior works in detail, see the asset helper at `app/helpers/frontend_asset_helper.rb`.
 
-The proxy definition can be found at `frontend/cli_to_rails_proxy.js`.
-
 ### Ahead-of-Time compilation (AOT)
 
 In development, by default AOT is disabled. You can force it in by running `npm run serve --aot`.
