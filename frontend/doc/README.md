@@ -1,15 +1,10 @@
 # Developing OpenProject Frontend
 
-The OpenProject frontend is split into two parts:
-
-- **The legacy webpack bundle** is located at `frontend/legacy` and contains AngularJS
-from the previous frontend that cannot be converted to Angular. (Mainly because they're used in Rails partials with content within)
-- **The Angular frontend** is located at `frontend/src` and uses the Angular CLI to compile and serve locally.
-
+The OpenProject frontend is located at `frontend/src` and uses the Angular CLI (which itself uses Vite in dev and esbuild in production) to compile and serve locally.
 
 ## Angular frontend
 
-When developing, `npm run serve` will open a proxy server (webpack-dev-server) that will serve assets from memory.
+When developing, `npm run serve` will open the Angular CLI dev server (Vite) as a proxy that serves assets from memory.
 That server is running on `http://localhost:4200` by default and will forward all requests it cannot handle to the Rails server
 which it expects to run at `http://localhost:3000`.
 
