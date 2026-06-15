@@ -42,18 +42,32 @@ module Wikis
     def search_pages(query)
       return Success([]) if query.blank?
 
-      search_by_url(query).or do |error|
-        return Failure(error) if error.code != :not_found
-
+      if url?(query)
+        search_by_url_and_on_miss(query) { search_by_query(query) }
+      else
         search_by_query(query)
       end
     end
 
     private
 
-    def search_by_url(query)
-      return Failure(Adapters::Results::Error.new(source: self.class, code: :not_found)) unless url?(query)
+    def url?(string)
+      uri = URI.parse(string)
 
+      %w[http https].include?(uri.scheme)
+    rescue URI::InvalidURIError
+      false
+    end
+
+    def search_by_url_and_on_miss(query)
+      search_by_url(query).or do |error|
+        return Failure(error) if error.code != :not_found
+
+        yield
+      end
+    end
+
+    def search_by_url(query)
       Adapters::Input::PageInfoForUrl.build(url: query).bind do |input_data|
         provider.auth_strategy_for(user).bind do |auth_strategy|
           provider.resolve("queries.page_info_for_url").call(input_data:, auth_strategy:).fmap { [it] }
@@ -67,14 +81,6 @@ module Wikis
           provider.resolve("queries.search_pages").call(input_data:, auth_strategy:)
         end
       end
-    end
-
-    def url?(string)
-      uri = URI.parse(string)
-
-      %w[http https].include?(uri.scheme)
-    rescue URI::InvalidURIError
-      false
     end
   end
 end
