@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,15 +26,44 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module OpenProject
-  module Common
-    # @logical_path OpenProject/Common
-    # @display min_height 250px
-    class QuickFilterPreview < Lookbook::Preview
-      def default
-        render_with_template
+module Primer
+  module OpenProject
+    module Forms
+      module Dsl
+        # :nodoc:
+        class FilterableTreeViewInput < Primer::Forms::Dsl::Input
+          attr_reader :name, :label, :block
+
+          def initialize(name:, label: nil, **system_arguments, &block)
+            @name = name
+            @label = label
+            @block = block
+
+            super(**system_arguments)
+          end
+
+          def to_component
+            FilterableTreeView.new(input: self)
+          end
+
+          # :nocov:
+          def type
+            :filterable_tree_view
+          end
+          # :nocov:
+
+          # :nocov:
+          def focusable?
+            true
+          end
+          # :nocov:
+
+          def supports_validation?
+            false
+          end
+        end
       end
     end
   end
