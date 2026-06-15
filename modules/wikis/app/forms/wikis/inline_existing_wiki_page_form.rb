@@ -31,13 +31,7 @@
 module Wikis
   class InlineExistingWikiPageForm < ApplicationForm
     form do |f|
-      if model.provider_selection_step?
-        f.select_list(name: :provider_id, label: PageLink.human_attribute_name(:provider), required: true) do |list|
-          Provider.visible.enabled.each do |provider|
-            list.option(label: provider.name, value: provider.id)
-          end
-        end
-      else
+      if model.final_step?
         f.hidden(name: :provider_id)
 
         f.filterable_tree_view(
@@ -49,6 +43,12 @@ module Wikis
           include_sub_items_check_box_arguments: { hidden: true },
           no_results_node_arguments: { label: I18n.t("wikis.page_link_forms.search.no_results") }
         )
+      else
+        f.select_list(name: :provider_id, label: PageLink.human_attribute_name(:provider), required: true) do |list|
+          Provider.visible.enabled.each do |provider|
+            list.option(label: provider.name, value: provider.id)
+          end
+        end
       end
     end
   end

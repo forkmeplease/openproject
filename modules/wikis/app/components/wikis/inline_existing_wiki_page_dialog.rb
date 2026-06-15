@@ -37,7 +37,14 @@ module Wikis
     def form_id = "#{DIALOG_ID}-form"
 
     def form_options
-      if model.provider_selection_step?
+      if model.final_step?
+        {
+          id: form_id,
+          model:,
+          url: close_dialog_and_inline_wiki_page_link_macro_path,
+          data: { turbo_stream: true }
+        }
+      else
         {
           id: form_id,
           model:,
@@ -45,18 +52,11 @@ module Wikis
           method: :get,
           data: { turbo_stream: true }
         }
-      else
-        {
-          id: form_id,
-          model:,
-          url: close_dialog_and_inline_wiki_page_link_macro_path,
-          data: { turbo_stream: true }
-        }
       end
     end
 
     def keep_dialog_open?
-      !model.provider_selection_step?
+      model.final_step?
     end
 
     def system_arguments

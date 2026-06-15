@@ -23,24 +23,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
 module Wikis
-  module Forms
-    class InlineExistingWikiPageFormModel
-      extend ActiveModel::Naming
-
-      attr_reader :provider_id
-
-      def initialize(provider_id:)
-        @provider_id = provider_id
-      end
-
-      def final_step?
-        provider_id.present?
+  module PageSelectionFormInput
+    def parse_identifier(wiki_page_selection)
+      case wiki_page_selection
+      in [selected_page]
+        MultiJson.load(selected_page, symbolize_keys: true)[:value]
+      else
+        nil
       end
     end
   end

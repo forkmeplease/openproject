@@ -50,7 +50,7 @@ See COPYRIGHT and LICENSE files for more details.
     <%= render(Primer::Beta::Button.new(data: { "close-dialog-id": DIALOG_ID })) { t("button_cancel") } %>
     <%=
       render(Primer::Beta::Button.new(scheme: :primary, form: form_id, type: :submit)) do
-        model.provider_selection_step? ? t(:button_next) : t(:button_add)
+        model.final_step? ? t(:button_add) : t(:button_next)
       end
     %>
   <% end %>

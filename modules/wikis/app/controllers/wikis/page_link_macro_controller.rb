@@ -31,11 +31,13 @@
 module Wikis
   class PageLinkMacroController < ApplicationController
     include OpTurbo::ComponentStream
+    include PageSelectionFormInput
     include Dry::Monads[:result]
 
     # The view component shown in `load` will be rendered regardless of the current user's authorization status.
     # The component itself handles the states of "unauthorized", "forbidden", and "not_found".
-    # TODO: consider permission checks
+    # The dialogs rendered here will perform global wiki page searches and will result in inserting a link view
+    # component rendered with `load`.
     authorization_checked! :load, :inline_existing_page_dialog, :close_dialog_and_inline
 
     def load
@@ -94,15 +96,6 @@ module Wikis
               .merge(page_identifier: parse_identifier(params[:wiki_page_selection]))
       else
         params
-      end
-    end
-
-    def parse_identifier(wiki_page_selection)
-      case wiki_page_selection
-      in [selected_page]
-        MultiJson.load(selected_page, symbolize_keys: true)[:value]
-      else
-        nil
       end
     end
   end
