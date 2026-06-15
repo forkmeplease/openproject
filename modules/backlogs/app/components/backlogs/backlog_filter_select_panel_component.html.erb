@@ -5,7 +5,7 @@
       data: { turbo_frame: "backlogs_container", turbo_action: "advance" }
     ) do %>
   <% filter_fields_for.each do |input| %>
-    <%= hidden_field_tag input[:name], input[:value] %>
+    <%= hidden_field_tag *input %>
   <% end %>
 <% end %>
 
@@ -14,7 +14,7 @@
       data: { turbo_frame: "backlogs_container", turbo_action: "advance" }
     ) do |f| %>
   <% filter_fields_for.each do |input| %>
-    <%= hidden_field_tag input[:name], input[:value] %>
+    <%= hidden_field_tag *input %>
   <% end %>
   <%= render(
         Primer::Alpha::SelectPanel.new(
