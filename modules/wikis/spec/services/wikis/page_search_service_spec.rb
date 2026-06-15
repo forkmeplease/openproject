@@ -101,9 +101,8 @@ RSpec.describe Wikis::PageSearchService do
     context "and when no page with the URL can be found" do
       let(:page_info_result) { Failure(Wikis::Adapters::Results::Error.new(code: :not_found, source: self)) }
 
-      it "returns the result of search pages" do
-        expect(subject).to be_success
-        expect(subject.value!).to eq(["a lot of page infos"])
+      it "returns the :not_found result (no attempt to perform a full text search)" do
+        expect(subject).to eq(page_info_result)
       end
     end
 

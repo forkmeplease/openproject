@@ -43,7 +43,7 @@ module Wikis
       return Success([]) if query.blank?
 
       if url?(query)
-        search_by_url_and_on_miss(query) { search_by_query(query) }
+        search_by_url(query)
       else
         search_by_query(query)
       end
@@ -57,14 +57,6 @@ module Wikis
       %w[http https].include?(uri.scheme)
     rescue URI::InvalidURIError
       false
-    end
-
-    def search_by_url_and_on_miss(query)
-      search_by_url(query).or do |error|
-        return Failure(error) if error.code != :not_found
-
-        yield
-      end
     end
 
     def search_by_url(query)
