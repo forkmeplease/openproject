@@ -59,8 +59,8 @@ See COPYRIGHT and LICENSE files for more details.
       <% flex.with_column do %>
         <%= render Primer::Beta::Button.new(
               tag: :a,
-              label: BacklogBucket.human_model_name,
               href: new_dialog_project_backlogs_buckets_path(project, backlog_filter_params),
+              aria: { label: t(".new_backlog_bucket") },
               data: {
                 controller: "async-dialog",
                 test_selector: "op-backlog-buckets--new-backlog-bucket-button"

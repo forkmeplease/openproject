@@ -69,7 +69,10 @@ module Backlogs
     end
 
     def counter
-      render Primer::Beta::Counter.new(count: selected_ids&.size, hide_if_zero: true, ml: 2)
+      count = selected_ids&.size || 0
+      aria = { label: I18n.t(:label_x_items, count:), live: "polite" }
+
+      render Primer::Beta::Counter.new(count:, hide_if_zero: true, ml: 2, aria:)
     end
 
     def selector_label
