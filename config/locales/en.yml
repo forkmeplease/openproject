@@ -1388,9 +1388,6 @@ en:
       priority_color_text: |
         Click to assign or change the color of this priority.
         It can be used for highlighting work packages in the table.
-    admin:
-      default:
-        caption: Making this priority default will override the previous default priority.
 
   reactions:
     action_title: "React"
@@ -3375,10 +3372,11 @@ en:
       enabled: "Disable"
 
   enumeration_activities: "Time tracking activities"
-  enumeration_work_package_priorities: "Work package priorities"
-  enumeration_reported_project_statuses: "Reported status"
   enumeration_caption_order_changed: "Order successfully changed."
   enumeration_could_not_be_moved: "Enumeration could not be moved."
+  enumeration_default_value_caption: "Making this %{model} the default will override the previous default %{model}."
+  enumeration_reported_project_statuses: "Reported status"
+  enumeration_work_package_priorities: "Work package priorities"
 
   enterprise_trials:
     dialog_component:
