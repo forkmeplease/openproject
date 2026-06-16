@@ -33,6 +33,8 @@
     "@blocknote/core": "^0.51.3",
     "@eslint/js": "^9.35.0",
     "@eslint/json": "^1.2.0",
+    "@hocuspocus/provider": "^4.2.0",
+    "@hocuspocus/provider-prev-test-only": "npm:@hocuspocus/provider@^3",
     "@stylistic/eslint-plugin": "^5.3.1",
     "@types/node": "^25.0.2",
     "eslint": "^9.35.0",
