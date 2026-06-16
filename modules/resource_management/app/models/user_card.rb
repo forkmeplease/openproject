@@ -44,6 +44,10 @@ class UserCard < PersistedView
   store_attribute :options, :card_size,         :string,  default: "default"
   store_attribute :options, :columns_per_row,   :integer, default: 3
 
+  # Manual views draw their cards from the query's `ordered_entities` instead of
+  # its filters.
+  store_attribute :options, :manual, :boolean, default: false
+
   validates :secondary_info, inclusion: { in: SECONDARY_INFO }
   validates :tag_source,     inclusion: { in: TAG_SOURCES }
   validates :card_size,      inclusion: { in: CARD_SIZES }
@@ -53,7 +57,18 @@ class UserCard < PersistedView
   validate :query_must_be_user_query
 
   def results
-    effective_query&.results
+    query = effective_query
+    return if query.nil?
+
+    # A manual view shows exactly its `ordered_entities`. When none have
+    # been added yet, show an empty set instead.
+    return User.none if manually_picked? && query.ordered_entities.empty?
+
+    query.results
+  end
+
+  def manually_picked?
+    !!manual
   end
 
   def build_default_query
@@ -66,11 +81,13 @@ class UserCard < PersistedView
 
     query.filters.clear
 
-    # TODO - manual mode
-    return if manual_mode?(filter_mode)
+    if manual_mode?(filter_mode)
+      set_manual(true)
+    else
+      set_manual(false)
 
-    parse_filters(filters_json).each do |filter|
-      query.where(filter[:attribute], filter[:operator], filter[:values])
+      query.ordered_entities.destroy_all
+      configure_automatic(query, filters_json)
     end
   end
 
@@ -78,6 +95,16 @@ class UserCard < PersistedView
 
   def manual_mode?(filter_mode)
     filter_mode.to_s == "manual"
+  end
+
+  def set_manual(value)
+    change_by_system { self.manual = value }
+  end
+
+  def configure_automatic(query, filters_json)
+    parse_filters(filters_json).each do |filter|
+      query.where(filter[:attribute], filter[:operator], filter[:values])
+    end
   end
 
   def parse_filters(filters_json)

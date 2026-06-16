@@ -29,7 +29,13 @@
 #++
 
 module ResourcePlannerViews::UserCardList
-  class ContentComponent < ApplicationComponent
+  class AddUserDialogComponent < ApplicationComponent
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
+
+    DIALOG_ID = "rm-add-user-dialog"
+    FORM_ID = "rm-add-user-form"
+
     def initialize(view:, project:, resource_planner:)
       super
 
@@ -40,21 +46,19 @@ module ResourcePlannerViews::UserCardList
 
     private
 
-    def users
-      @users ||= @view.results.to_a
+    def title
+      I18n.t("resource_management.user_card_list.add_user_dialog.title")
     end
 
-    def remove_path_for(user)
-      return nil unless @view.manually_picked?
-
-      helpers.remove_user_project_resource_planner_view_path(
-        @project, @resource_planner, @view, user_id: user.id
-      )
+    def form_url
+      users_project_resource_planner_view_path(@project, @resource_planner, @view)
     end
 
-    def blank_description
-      key = @view.manually_picked? ? "manual_description" : "description"
-      t("resource_management.user_card_list.blank.#{key}")
+    def already_added_user_ids
+      query = @view.effective_query
+      return [] if query.nil?
+
+      query.ordered_entities.where(entity_type: "User").pluck(:entity_id)
     end
   end
 end

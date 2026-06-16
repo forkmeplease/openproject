@@ -34,10 +34,11 @@ module ResourcePlannerViews::UserCardList
   class CardComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
-    def initialize(user:)
+    def initialize(user:, remove_path: nil)
       super
 
       @user = user
+      @remove_path = remove_path
     end
 
     def render?

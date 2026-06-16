@@ -28,33 +28,45 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews::UserCardList
-  class ContentComponent < ApplicationComponent
-    def initialize(view:, project:, resource_planner:)
-      super
+module ResourcePlannerViews
+  module UserCardList
+    class AddUserForm < ApplicationForm
+      form do |f|
+        f.autocompleter(
+          name: :user_id,
+          label: User.model_name.human,
+          required: true,
+          autocomplete_options: {
+            component: "opce-user-autocompleter",
+            url: ::API::V3::Utilities::PathHelper::ApiV3Path.principals,
+            resource: "principals",
+            searchKey: "any_name_attribute",
+            focusDirectly: true,
+            multiple: false,
+            appendTo: "##{@append_to}",
+            filters: autocomplete_filters
+          }
+        )
+      end
 
-      @view = view
-      @project = project
-      @resource_planner = resource_planner
-    end
+      def initialize(project:, append_to:, excluded_ids: [])
+        super()
+        @project = project
+        @append_to = append_to
+        @excluded_ids = excluded_ids
+      end
 
-    private
+      private
 
-    def users
-      @users ||= @view.results.to_a
-    end
+      def autocomplete_filters
+        filters = [{ name: "type", operator: "=", values: %w[User] }]
 
-    def remove_path_for(user)
-      return nil unless @view.manually_picked?
+        if @excluded_ids.present?
+          filters << { name: "id", operator: "!", values: @excluded_ids.map(&:to_s) }
+        end
 
-      helpers.remove_user_project_resource_planner_view_path(
-        @project, @resource_planner, @view, user_id: user.id
-      )
-    end
-
-    def blank_description
-      key = @view.manually_picked? ? "manual_description" : "description"
-      t("resource_management.user_card_list.blank.#{key}")
+        filters
+      end
     end
   end
 end

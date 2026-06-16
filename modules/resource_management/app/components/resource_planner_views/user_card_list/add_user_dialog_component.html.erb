@@ -27,24 +27,37 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%= render(
-      ResourcePlannerViews::UserCardList::SubHeaderComponent.new(
-        project: @project,
-        resource_planner: @resource_planner,
-        view: @view
-      )
-    ) %>
+<%=
+  render(
+    Primer::Alpha::Dialog.new(
+      id: DIALOG_ID,
+      title:,
+      size: :medium_portrait
+    )
+  ) do |dialog|
+    dialog.with_header(variant: :large)
 
-<% if users.empty? %>
-  <%= render(Primer::Beta::Blankslate.new) do |blankslate|
-        blankslate.with_visual_icon(icon: :people)
-        blankslate.with_heading(tag: :h2) { t("resource_management.user_card_list.blank.title") }
-        blankslate.with_description { blank_description }
-      end %>
-<% else %>
-  <div class="op-user-card-list">
-    <% users.each do |user| %>
-      <%= render(ResourcePlannerViews::UserCardList::CardComponent.new(user:, remove_path: remove_path_for(user))) %>
-    <% end %>
-  </div>
-<% end %>
+    dialog.with_body(classes: "Overlay-body_autocomplete_height") do
+      primer_form_with(
+        url: form_url,
+        method: :post,
+        html: { id: FORM_ID }
+      ) do |f|
+        render(
+          ResourcePlannerViews::UserCardList::AddUserForm.new(
+            f,
+            project: @project,
+            append_to: DIALOG_ID,
+            excluded_ids: already_added_user_ids
+          )
+        )
+      end
+    end
+
+    dialog.with_footer do
+      render(
+        Primer::Beta::Button.new(type: :submit, form: FORM_ID, scheme: :primary)
+      ) { I18n.t(:button_add) }
+    end
+  end
+%>

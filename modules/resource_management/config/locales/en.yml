@@ -129,9 +129,15 @@ en:
       public: Public
     sub_views: Views in this resource planner
     user_card_list:
+      add_user_dialog:
+        title: Add user
       blank:
         description: There are no users matching this view's filters yet.
+        manual_description: No users have been added to this view yet.
         title: No users to display
+      card:
+        remove: Remove user
+        remove_confirmation: Remove this user from the view?
       subheader:
         resource: Resource
         settings: Configure view

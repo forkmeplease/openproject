@@ -38,8 +38,19 @@ See COPYRIGHT and LICENSE files for more details.
       data: { controller: "async-dialog" }
     )
 
-    # TODO
-    if allowed_to_allocate?
+    if @view.manually_picked?
+      subheader.with_action_button(
+        leading_icon: :plus,
+        scheme: :primary,
+        label: t("resource_management.user_card_list.subheader.resource"),
+        tag: :a,
+        href: new_user_project_resource_planner_view_path(@project, @resource_planner, @view),
+        data: { controller: "async-dialog" }
+      ) do
+        t("resource_management.user_card_list.subheader.resource")
+      end
+    elsif allowed_to_allocate?
+      # TODO
       subheader.with_action_button(
         leading_icon: :plus,
         scheme: :primary,

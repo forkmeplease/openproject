@@ -58,6 +58,26 @@ See COPYRIGHT and LICENSE files for more details.
             end
           end
         end
+
+        if @remove_path
+          header.with_column do
+            render(
+              Primer::Beta::IconButton.new(
+                icon: :trash,
+                scheme: :danger,
+                tag: :a,
+                href: @remove_path,
+                label: t("resource_management.user_card_list.card.remove"),
+                aria: { label: t("resource_management.user_card_list.card.remove") },
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: t("resource_management.user_card_list.card.remove_confirmation"),
+                  test_selector: "user-card-remove-#{@user.id}"
+                }
+              )
+            )
+          end
+        end
       end
     end
 

@@ -53,6 +53,10 @@ Rails.application.routes.draw do
           put "work_packages/:work_package_id/reorder", action: :reorder_work_package, as: :reorder_work_package
 
           delete "work_packages/:work_package_id", action: :remove_work_package, as: :remove_work_package
+
+          get :new_user
+          post :users, action: :add_user
+          delete "users/:user_id", action: :remove_user, as: :remove_user
         end
 
         resources :work_packages, only: [] do
