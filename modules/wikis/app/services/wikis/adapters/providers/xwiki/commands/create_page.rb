@@ -39,7 +39,7 @@ module Wikis
             class << self
               # We have to manually derive a useful ID from the title that's both valid, but also makes for a nice XWiki URL
               def derive_page_id(title)
-                title.gsub(/[\\.:]/, { "\\" => "\\\\", ":" => "\\:", "." => "\\." })
+                title.tr("\\", "").gsub(/[.:]/, { ":" => "\\:", "." => "\\." })
               end
             end
 

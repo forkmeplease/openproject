@@ -114,8 +114,8 @@ RSpec.describe Wikis::Adapters::Providers::XWiki::Commands::CreatePage, :disable
     context "when the title contains backslashes" do
       let(:title) { "C:\\Windows\\System32 is a windows-style path" }
 
-      it "escapes backslashes" do
-        expect(subject).to eq("C\\:\\\\Windows\\\\System32 is a windows-style path")
+      it "removes backslashes" do
+        expect(subject).to eq("C\\:WindowsSystem32 is a windows-style path")
       end
     end
   end
