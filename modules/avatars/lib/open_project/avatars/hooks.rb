@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # OpenProject Avatars plugin
 #
 # Copyright (C) the OpenProject GmbH
@@ -23,6 +25,11 @@ module OpenProject
       # administration "Details" tab, where it used to live in its own tab.
       render_on :view_users_general_top,
                 partial: "avatars/users/avatar_section"
+
+      # Renders the avatar management section at the top of the my/account page,
+      # where it replaces the former standalone "Avatar" my-menu page.
+      render_on :view_my_account_top,
+                partial: "avatars/my/avatar_section"
     end
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe "My avatar management", :js do
 
   let(:image_base_path) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/") }
   let(:user) { create(:user) }
-  let(:avatar_management_path) { edit_my_avatar_path }
+  let(:avatar_management_path) { my_account_path }
 
   let(:enable_gravatars) { false }
   let(:enable_local_avatars) { false }
@@ -99,13 +99,11 @@ RSpec.describe "My avatar management", :js do
         .and_return({})
     end
 
-    it "renders 404 when visiting and does not render the menu item" do
-      visit edit_my_avatar_path
-      expect(page).to have_text "[Error 404]"
-
+    it "does not render the avatar section on the account page" do
       visit my_account_path
+
       expect(page).to have_text(I18n.t(:label_my_account))
-      expect(page).to have_no_css ".avatar-menu-item"
+      expect(page).to have_no_css(".avatars--current-avatar")
     end
   end
 end

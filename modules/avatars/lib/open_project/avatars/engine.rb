@@ -33,13 +33,7 @@ module OpenProject::Avatars
                breadcrumb_elements: -> { [{ href: admin_settings_users_path, text: I18n.t(:label_user_and_permission) }] },
                menu_item: :user_avatars
              },
-             bundled: true do
-      add_menu_item :my_menu, :avatar,
-                    { controller: "/avatars/my_avatar", action: "show" },
-                    caption: ->(*) { I18n.t("avatars.label_avatar") },
-                    if: ->(*) { ::OpenProject::Avatars::AvatarManager::avatars_enabled? },
-                    icon: "image"
-    end
+             bundled: true
 
     add_api_endpoint "API::V3::Users::UsersAPI", :id do
       mount ::API::V3::Users::UserAvatarAPI

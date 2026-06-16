@@ -13,17 +13,6 @@ RSpec.describe Avatars::MyAvatarController do
     allow(OpenProject::Avatars::AvatarManager).to receive(:avatars_enabled?).and_return enabled
   end
 
-  describe "#show" do
-    before do
-      get :show
-    end
-
-    it "renders the edit action" do
-      expect(response).to be_successful
-      expect(response).to render_template "avatars/my/avatar"
-    end
-  end
-
   describe "#update" do
     context "when not logged in" do
       let(:user) { User.anonymous }

@@ -105,22 +105,22 @@ module Users
         section.name.presence || I18n.t("settings.user_custom_fields.label_untitled_section")
       end
 
-      def render_built_in(group, key) # rubocop:disable Metrics/AbcSize
+      def render_built_in(group, key)
         case key
         when "firstname", "lastname", "mail"
           group.text_field(name: key.to_sym,
                            label: User.human_attribute_name(key),
                            required: true,
-                           disabled: !@contract.writable?(key.to_sym),
-                           input_width: :medium)
+                           input_width: :medium,
+                           **editability(key))
         when "login"
           return if @user.new_record?
 
           group.text_field(name: :login,
                            label: User.human_attribute_name(:login),
                            required: true,
-                           disabled: !@contract.writable?(:login),
-                           input_width: :medium)
+                           input_width: :medium,
+                           **editability(:login))
         when "language"
           group.select_list(name: :language,
                             label: User.human_attribute_name(:language),
@@ -129,6 +129,13 @@ module Users
             helpers.lang_options_for_select.each { |label, value| list.option(label:, value:) }
           end
         end
+      end
+
+      # Editability options for a built-in text field. Administration disables
+      # non-writable attributes; self-service overrides this to render them
+      # read-only with an explanatory caption instead.
+      def editability(key)
+        { disabled: !@contract.writable?(key.to_sym) }
       end
     end
   end

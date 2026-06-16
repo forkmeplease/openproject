@@ -62,4 +62,16 @@ RSpec.describe Users::Form::AttributesForm, type: :forms do
       expect(page).to have_no_field("user[login]")
     end
   end
+
+  context "with a section that has no visible content" do
+    let(:model) { build_stubbed(:user) }
+
+    before do
+      create(:user_custom_field_section, name: "Empty", attribute_order: [])
+    end
+
+    it "does not render an empty section fieldset" do
+      expect(page).to have_no_css("fieldset", text: "Empty")
+    end
+  end
 end
