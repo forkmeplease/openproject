@@ -120,8 +120,8 @@ RSpec.describe "BlockNote editor rendering", :js, :selenium, with_settings: { re
         editor.search_and_select_work_package("tiger", "pet a tiger")
 
         expect(editor.element).to have_no_text("Link existing work package") # search dialog is closed
-        expect(editor.element).to have_no_text("…") # work package is loaded
-        expect(editor.element.text).to match(/##{work_package.display_id}\sLIFE GOALS\sOpen\spet a tiger/)
+        expect(editor.element).to have_no_text("Loading")
+        expect(editor.element.text).to match(/LIFE GOALS\s##{work_package.display_id}\sOpen\spet a tiger/)
 
         # Capybara's have_link seems not to work in a shadow dom, so it's tested via the property
         expect(editor.element.find_link(text: "pet a tiger").native.property("href")).to end_with("/wp/#{work_package.id}")
