@@ -122,6 +122,12 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
       expect(page).to have_css("button[data-show-dialog-id='my-dialog']", visible: :all)
     end
 
+    it "exposes the dialog to assistive technology on the expander button" do
+      render_with_dialog(dialog_id: "my-dialog")
+
+      expect(page).to have_button(aria: { haspopup: "dialog", controls: "my-dialog" }, visible: :all)
+    end
+
     it "generates a dialog id when none is given" do
       render_with_dialog
 

@@ -420,6 +420,28 @@ describe('ExpandableTextController', () => {
   });
 
   describe('dialog mode (inline: false)', () => {
+    it('removes the aria-expanded attribute from the expander button', async () => {
+      // HellipButton always renders aria-expanded="false"; a modal-dialog trigger
+      // should not advertise a disclosure state, so the controller strips it.
+      const dialogWithAriaTemplate = `
+        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+          <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
+            <p>Content that opens in a dialog.</p>
+          </div>
+          <div data-expandable-text-target="expander">
+            <button type="button" data-show-dialog-id="my-dialog" aria-haspopup="dialog" aria-controls="my-dialog" aria-expanded="false">Toggle</button>
+          </div>
+        </div>
+      `;
+
+      await ctx.mount(dialogWithAriaTemplate);
+
+      const button = ctx.container.querySelector<HTMLButtonElement>('[data-expandable-text-target="expander"] button')!;
+
+      expect(button).not.toHaveAttribute('aria-expanded');
+      expect(button).toHaveAttribute('aria-haspopup', 'dialog');
+    });
+
     it('does not attach click handler to expander', async () => {
       await ctx.mount(dialogTemplate);
 

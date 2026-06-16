@@ -72,6 +72,10 @@ export default class ExpandableTextController extends Controller<HTMLElement> {
       this.abortController = new AbortController();
       const { signal } = this.abortController;
       this.expanderButton.addEventListener('click', () => this.expanderClicked(), { signal });
+    } else {
+      // The button opens a modal dialog (aria-haspopup="dialog"), so the
+      // disclosure-style aria-expanded that HellipButton hardcodes does not apply.
+      this.expanderButton.removeAttribute('aria-expanded');
     }
   }
 

@@ -137,12 +137,17 @@ module OpPrimer
     end
 
     # In dialog mode the expander button opens the component-owned dialog, so the
-    # caller never sets `show_dialog_id` themselves.
+    # caller never sets `show_dialog_id` themselves. The button also advertises
+    # the dialog it controls to assistive technology.
     def wire_expander_to_dialog!
       button_arguments = (@expander_arguments[:button_arguments] ||= {})
       button_arguments[:data] = merge_data(
         button_arguments,
         data: { show_dialog_id: @dialog_id }
+      )
+      button_arguments[:aria] = merge_aria(
+        button_arguments,
+        aria: { haspopup: "dialog", controls: @dialog_id }
       )
     end
   end
