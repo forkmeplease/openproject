@@ -59,7 +59,10 @@ module ResourcePlannerViews
       private
 
       def autocomplete_filters
-        filters = [{ name: "type", operator: "=", values: %w[User] }]
+        filters = [
+          { name: "type", operator: "=", values: %w[User] },
+          { name: "member", operator: "=", values: [@project.id.to_s] }
+        ]
 
         if @excluded_ids.present?
           filters << { name: "id", operator: "!", values: @excluded_ids.map(&:to_s) }

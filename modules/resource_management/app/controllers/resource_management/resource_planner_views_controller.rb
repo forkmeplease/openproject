@@ -171,7 +171,7 @@ module ::ResourceManagement
     end
 
     def add_user
-      user = User.user.visible(current_user).find_by(id: params[:user_id])
+      user = User.user.visible(current_user).in_project(@project).find_by(id: params[:user_id])
 
       return render_400(message: I18n.t(:notice_file_not_found)) if user.nil?
 

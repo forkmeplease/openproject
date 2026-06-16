@@ -60,11 +60,15 @@ class UserCard < PersistedView
     query = effective_query
     return if query.nil?
 
-    # A manual view shows exactly its `ordered_entities`. When none have
-    # been added yet, show an empty set instead.
-    return User.none if manually_picked? && query.ordered_entities.empty?
+    if manually_picked?
+      # A manual view shows exactly its `ordered_entities`. When none have
+      # been added yet, show an empty set instead.
+      return User.none if query.ordered_entities.empty?
 
-    query.results
+      query.results
+    else
+      query.results.in_project(project)
+    end
   end
 
   def manually_picked?
