@@ -31,13 +31,28 @@
 module OpPrimer
   # @logical_path OpenProject/Primer
   class ExpandableTextComponentPreview < ViewComponent::Preview
+    # Interactive playground for all modes. Switch `direction` to `vertical` to
+    # see line-clamping, and `expansion` to `dialog` to reveal the full text in a
+    # dialog.
+    # @param text "The text content to display" text
+    # @param width "Container width in pixels" range { min: 100, max: 600, step: 10 }
+    # @param direction "Truncation direction" select { choices: [horizontal, vertical] }
+    # @param lines "Lines (vertical mode only)" range { min: 1, max: 6, step: 1 }
+    # @param expansion "Reveal text in place or in a dialog" select { choices: [inline, dialog] }
+    def playground(text: "OpenProject is an open source project management software that supports " \
+                         "classic, agile, and hybrid approaches.",
+                   width: 200, direction: :horizontal, lines: 3, expansion: :inline)
+      render_with_template(locals: { text:, width:, direction: direction.to_sym, lines:, expansion: expansion.to_sym })
+    end
+
     # Horizontal truncation with inline expansion (default)
     def default
       render_with_template
     end
 
-    # Text that fits without truncation (expander stays hidden)
-    def short_text
+    # Text that fits its container — the expander stays hidden until the content
+    # overflows. (An empty-looking preview is expected here.)
+    def hidden_for_short_texts
       render(OpPrimer::ExpandableTextComponent.new) { "Short text" }
     end
 
@@ -57,17 +72,6 @@ module OpPrimer
     # @display min_height 300px
     def dialog
       render_with_template
-    end
-
-    # Interactive playground for all modes
-    # @param text "The text content to display" text
-    # @param width "Container width in pixels" range { min: 100, max: 600, step: 10 }
-    # @param direction "Truncation direction" select { choices: [horizontal, vertical] }
-    # @param lines "Lines (vertical mode only)" range { min: 1, max: 6, step: 1 }
-    # @param expansion "Expand inline or via external action" select { choices: [inline, external] }
-    def playground(text: "Automatically managed project folders: Share files and manage permissions",
-                   width: 200, direction: :horizontal, lines: 3, expansion: :inline)
-      render_with_template(locals: { text:, width:, direction: direction.to_sym, lines:, expansion: expansion.to_sym })
     end
   end
 end

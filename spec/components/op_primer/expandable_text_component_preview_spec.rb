@@ -57,8 +57,8 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
     expect(page).to have_css(".Truncate[data-expandable-text-target='truncate']")
   end
 
-  it "renders the short_text preview" do
-    render_preview(:short_text, from: described_class)
+  it "renders the hidden_for_short_texts preview" do
+    render_preview(:hidden_for_short_texts, from: described_class)
 
     expect(page).to have_css("[data-controller='expandable-text']", text: "Short text")
   end
