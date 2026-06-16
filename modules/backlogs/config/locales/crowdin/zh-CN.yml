@@ -42,7 +42,7 @@ zh-CN:
           completed: 已完成
         work_packages: 工作包
       work_package:
-        backlog_bucket: 积压工作存储桶
+        backlog_bucket: Backlog bucket
         backlogs_work_package_type: 待办清单类型
         position: 位置
         sprint: 冲刺

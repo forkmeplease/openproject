@@ -155,7 +155,7 @@ zh-CN:
     link_existing_wiki_page_form:
       label: Wiki page
       no_results: 未找到wiki页面
-      placeholder: 搜索wiki页面
+      placeholder: Search for a wiki page (or enter its URL)
     oauth_login_component:
       connect_button: 连接 %{provider} 账户
       description: 登录 %{provider} ，查看和管理此 OpenProject 实例的相关Wiki页面。

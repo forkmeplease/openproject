@@ -3835,6 +3835,7 @@ zh-CN:
   label_send_invitation: 发送邀请
   label_calculated_value: 计算值
   label_change_parent: 更改父级
+  label_change_password: Change password
   label_change_plural: 更改
   label_change_properties: 更改属性
   label_change_status: 更改状态
@@ -4121,6 +4122,7 @@ zh-CN:
   label_my_account_data: 我的账户数据
   label_my_avatar: 我的头像
   label_my_queries: 我的自定义查询
+  label_my_security: Security
   label_name: 名称
   label_never: 永不
   label_new: 新增

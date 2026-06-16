@@ -30,6 +30,7 @@
 
 module Wikis
   class PagesController < ApplicationController
+    include PageSelectionFormInput
     include OpTurbo::ComponentStream
 
     before_action :authorize, except: %i[search]
@@ -74,15 +75,6 @@ module Wikis
     def create_new_page_params
       params.expect(wikis_forms_create_new_wiki_page_form_model: %i[provider_id linkable_type linkable_id page_title])
             .merge(parent_page_identifier: parse_identifier(params[:wiki_page_selection]))
-    end
-
-    def parse_identifier(wiki_page_selection)
-      case wiki_page_selection
-      in [selected_page]
-        MultiJson.load(selected_page, symbolize_keys: true)[:value]
-      else
-        nil
-      end
     end
   end
 end
