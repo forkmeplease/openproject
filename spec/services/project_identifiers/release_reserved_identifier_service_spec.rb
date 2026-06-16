@@ -32,43 +32,39 @@ require "spec_helper"
 
 RSpec.describe ProjectIdentifiers::ReleaseReservedIdentifierService do
   let!(:project) { create(:project) }
+  # All fixtures share one project graph — deliberately NOT the slug-owning
+  # project: creating work packages there would auto-seed "old-id-*" aliases
+  # in semantic mode and collide with the explicit ones below.
+  let(:alias_work_package) { create(:work_package) }
+  let!(:matching_aliases) do
+    [create(:work_package_semantic_alias, identifier: "old-id-1", work_package: alias_work_package),
+     create(:work_package_semantic_alias, identifier: "old-id-2", work_package: alias_work_package)]
+  end
+  let!(:other_prefix_alias) do
+    create(:work_package_semantic_alias, identifier: "old-id-extra-7", work_package: alias_work_package)
+  end
+  let!(:case_differing_alias) do
+    create(:work_package_semantic_alias, identifier: "OLD-ID-3", work_package: alias_work_package)
+  end
+  let!(:stale_wp) do
+    create(:work_package, project: alias_work_package.project)
+      .tap { |wp| wp.update_columns(identifier: "old-id-9", sequence_number: 9) }
+  end
+  let!(:decoy_wp) do
+    create(:work_package, project: alias_work_package.project)
+      .tap { |wp| wp.update_columns(identifier: "old-id-extra-9", sequence_number: 8) }
+  end
   let!(:slug) { FriendlyId::Slug.create!(sluggable: project, slug: "old-id") }
 
   subject(:service_call) { described_class.new(slug).call }
 
+  # Releasing a slug and removing its aliases happens regardless of the current
+  # identifier mode — leftover semantic aliases would otherwise shadow the alias
+  # rows of a new project claiming the identifier after a later re-conversion.
   shared_examples "releases the slug and its aliases" do
-    # All fixtures share one project graph — deliberately NOT the slug-owning
-    # project: creating work packages there would auto-seed "old-id-*" aliases
-    # in semantic mode and collide with the explicit ones below.
-    let(:alias_work_package) { create(:work_package) }
-    let!(:matching_aliases) do
-      [create(:work_package_semantic_alias, identifier: "old-id-1", work_package: alias_work_package),
-       create(:work_package_semantic_alias, identifier: "old-id-2", work_package: alias_work_package)]
-    end
-    let!(:other_prefix_alias) do
-      create(:work_package_semantic_alias, identifier: "old-id-extra-7", work_package: alias_work_package)
-    end
-    let!(:case_differing_alias) do
-      create(:work_package_semantic_alias, identifier: "OLD-ID-3", work_package: alias_work_package)
-    end
-    let!(:stale_wp) do
-      create(:work_package, project: alias_work_package.project)
-        .tap { |wp| wp.update_columns(identifier: "old-id-9", sequence_number: 9) }
-    end
-    let!(:decoy_wp) do
-      create(:work_package, project: alias_work_package.project)
-        .tap { |wp| wp.update_columns(identifier: "old-id-extra-9", sequence_number: 8) }
-    end
-
     it "destroys the slug and returns a successful ServiceResult" do
       expect(service_call).to be_success
       expect(FriendlyId::Slug.exists?(slug.id)).to be(false)
-    end
-
-    it "clears stale identifiers only from work packages carrying the released prefix" do
-      service_call
-      expect(stale_wp.reload).to have_attributes(identifier: nil, sequence_number: nil)
-      expect(decoy_wp.reload).to have_attributes(identifier: "old-id-extra-9", sequence_number: 8)
     end
 
     it "deletes only the exact-prefix aliases" do
@@ -84,22 +80,43 @@ RSpec.describe ProjectIdentifiers::ReleaseReservedIdentifierService do
         allow(slug).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed)
       end
 
-      it "rolls back the alias deletion and the work package identifier clearing" do
+      it "rolls back the alias deletion" do
         expect { service_call }.to raise_error(ActiveRecord::RecordNotDestroyed)
         expect(WorkPackageSemanticAlias.where(identifier: %w[old-id-1 old-id-2]).count).to eq(2)
-        expect(stale_wp.reload).to have_attributes(identifier: "old-id-9", sequence_number: 9)
       end
     end
   end
 
   context "in semantic mode", with_settings: { work_packages_identifier: "semantic" } do
     it_behaves_like "releases the slug and its aliases"
+
+    # In semantic mode the identifier column carries the live semantic
+    # identifiers of the projects currently using the mode, so it must be left
+    # untouched even when it matches the released prefix.
+    it "does not clear work package identifiers" do
+      service_call
+      expect(stale_wp.reload).to have_attributes(identifier: "old-id-9", sequence_number: 9)
+    end
   end
 
-  # Aliases left over from a previous semantic phase are cleaned up in classic
-  # mode too — otherwise they would shadow the alias rows of a new project
-  # claiming the identifier after a later re-conversion.
   context "in classic mode", with_settings: { work_packages_identifier: "classic" } do
     it_behaves_like "releases the slug and its aliases"
+
+    it "clears stale identifiers only from work packages carrying the released prefix" do
+      service_call
+      expect(stale_wp.reload).to have_attributes(identifier: nil, sequence_number: nil)
+      expect(decoy_wp.reload).to have_attributes(identifier: "old-id-extra-9", sequence_number: 8)
+    end
+
+    context "when destroying the slug fails" do
+      before do
+        allow(slug).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed)
+      end
+
+      it "rolls back the work package identifier clearing" do
+        expect { service_call }.to raise_error(ActiveRecord::RecordNotDestroyed)
+        expect(stale_wp.reload).to have_attributes(identifier: "old-id-9", sequence_number: 9)
+      end
+    end
   end
 end

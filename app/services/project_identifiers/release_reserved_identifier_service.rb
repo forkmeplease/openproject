@@ -31,13 +31,12 @@
 module ProjectIdentifiers
   # Releases a historically reserved project identifier slug.
   # Additionally removes the WorkPackageSemanticAlias rows created for that
-  # slug prefix ("<slug>-<digits>") and clears stale work package identifier
-  # columns carrying it, atomically with the slug destroy, so the released
-  # prefix no longer resolves work packages. This happens regardless of the
-  # current identifier mode: leftovers from a previous semantic phase must not
-  # survive a release, or they would keep old links resolving and shadow the
-  # alias rows of a new project claiming the identifier after a later
-  # re-conversion.
+  # slug prefix ("<slug>-<digits>") atomically with the slug destroy, so the
+  # released prefix no longer resolves work packages. In classic mode it also
+  # clears stale work package identifier columns carrying the prefix
+  # (leftovers from a previous semantic phase), which would otherwise keep old
+  # links resolving and shadow the alias rows of a new project claiming the
+  # identifier after a later re-conversion.
   class ReleaseReservedIdentifierService
     def initialize(slug)
       @slug = slug
@@ -65,7 +64,13 @@ module ProjectIdentifiers
     # semantic identifiers against this column as well as the alias table, so
     # clearing it severs resolution immediately instead of waiting for the next
     # semantic conversion's reset_stale_identifiers to do the same.
+    #
+    # Only relevant in classic mode: in semantic mode the identifier column
+    # carries the live semantic identifiers of the projects currently using
+    # the mode, which must not be cleared.
     def clear_stale_work_package_identifiers
+      return unless Setting::WorkPackageIdentifier.classic?
+
       WorkPackage.for_slug_prefix(@slug.slug).update_all(identifier: nil, sequence_number: nil)
     end
   end
