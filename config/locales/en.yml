@@ -137,8 +137,8 @@ en:
         trial: "Trial"
     jemalloc_allocator: Jemalloc memory allocator
     journal_aggregation:
-      caption: >
-        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays.
+      caption_with_maximum: >
+        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays. The maximum is %{max} minutes.
     import:
       title: "Import"
     jira:
@@ -2471,11 +2471,12 @@ en:
         setting:
           attributes:
             base:
-              working_days_are_missing: "At least one day of the week must be defined as a working day."
-              previous_working_day_changes_unprocessed: "The previous changes to the working days configuration have not been applied yet."
-              hours_per_day_are_missing: "The number of hours per day must be defined."
               durations_are_not_positive_numbers: "The durations must be positive numbers."
+              hours_per_day_are_missing: "The number of hours per day must be defined."
               hours_per_day_is_out_of_bounds: "Hours per day can't be more than 24"
+              journal_aggregation_time_minutes_is_out_of_bounds: "Aggregation period must be between %{min} and %{max} minutes."
+              previous_working_day_changes_unprocessed: "The previous changes to the working days configuration have not been applied yet."
+              working_days_are_missing: "At least one day of the week must be defined as a working day."
         status:
           attributes:
             default_done_ratio:

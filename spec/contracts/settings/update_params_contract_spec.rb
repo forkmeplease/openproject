@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,51 +26,43 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
-#
+#++
 
 require "spec_helper"
+require "contracts/shared/model_contract_shared_context"
 
-RSpec.shared_context "with update service setup" do
-  let(:instance) do
-    described_class.new(user:)
-  end
-  let(:user) { build_stubbed(:admin) }
+RSpec.describe Settings::UpdateParamsContract do
+  include_context "ModelContract shared context"
+
+  let(:current_user) { build_stubbed(:admin) }
+  let(:params) { { journal_aggregation_time_minutes: "5" } }
   let(:contract) do
-    instance_double(Settings::UpdateContract,
-                    validate: contract_success,
-                    errors: instance_double(ActiveModel::Error))
+    described_class.new(nil, current_user, params:)
   end
-  let(:contract_success) { true }
-  let(:setting_definition) do
-    instance_double(Settings::Definition)
-  end
-  let(:setting_name) { :a_setting_name }
-  let(:new_setting_value) { "a_new_setting_value" }
-  let(:previous_setting_value) { "the_previous_setting_value" }
-  let(:params) { { setting_name => new_setting_value } }
 
-  before do
-    # stub a setting definition
-    allow(Settings::Definition)
-      .to receive(:[])
-            .and_call_original
-    allow(Settings::Definition)
-      .to receive(:[])
-            .with(setting_name)
-            .and_return(setting_definition)
-    allow(Setting)
-      .to receive(:[])
-            .and_call_original
-    allow(Setting)
-      .to receive(:[]).with(setting_name)
-                      .and_return(previous_setting_value)
-    allow(Setting)
-      .to receive(:[]=)
+  it_behaves_like "contract is valid for active admins and invalid for regular users"
 
-    # stub contract
-    allow(Settings::UpdateContract)
-      .to receive(:new)
-            .and_return(contract)
+  describe "journal_aggregation_time_minutes validation" do
+    [0, 5, 120].each do |valid_value|
+      context "with value #{valid_value}" do
+        let(:params) { { journal_aggregation_time_minutes: valid_value.to_s } }
+
+        it_behaves_like "contract is valid"
+      end
+    end
+
+    [121, 9_999_999, -1].each do |invalid_value|
+      context "with value #{invalid_value}" do
+        let(:params) { { journal_aggregation_time_minutes: invalid_value.to_s } }
+
+        it_behaves_like "contract is invalid", base: :journal_aggregation_time_minutes_is_out_of_bounds
+      end
+    end
+
+    context "when not present in params" do
+      let(:params) { {} }
+
+      it_behaves_like "contract is valid"
+    end
   end
 end
