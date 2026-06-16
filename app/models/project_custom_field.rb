@@ -126,8 +126,8 @@ class ProjectCustomField < CustomField
     end
   end
 
-  def visible?(usr = User.current, project: nil)
-    self.class.visible(usr, project:).exists?(id: id)
+  def visible?(user = User.current, project: nil)
+    user.admin? || (!admin_only && user.allowed_in_project?(:view_project_attributes, project))
   end
 
   def type_name
@@ -156,9 +156,5 @@ class ProjectCustomField < CustomField
       Project.pluck(:id).map { |project_id| { project_id:, custom_field_id: id } },
       unique_by: %i[custom_field_id project_id]
     )
-  end
-
-  def visible?(project:, user: User.current)
-    user.admin? || (!admin_only && user.allowed_in_project?(:view_project_attributes, project))
   end
 end

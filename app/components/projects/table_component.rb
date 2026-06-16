@@ -225,7 +225,7 @@ module Projects
     end
 
     def has_custom_field_column?
-      query.selects.any? { it.is_a?(Queries::Projects::Selects::CustomField) }
+      query.selects.any? { it.is_a?(Queries::Projects::Selects::CustomField) } # rubocop:disable Style/PredicateWithKind
     end
   end
 end
