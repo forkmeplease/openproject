@@ -31,28 +31,9 @@
 class UserCard < PersistedView
   include ResourceManagement::Categorized
 
-  # TODO - review and remove
-  SECONDARY_INFO = %w[role email login none].freeze
-  TAG_SOURCES    = %w[groups roles none].freeze
-  CARD_SIZES     = %w[compact default expanded].freeze
-
-  store_attribute :options, :secondary_info,    :string,  default: "role"
-  store_attribute :options, :show_status_badge, :boolean, default: true
-  store_attribute :options, :show_email,        :boolean, default: false
-  store_attribute :options, :tag_source,        :string,  default: "groups"
-  store_attribute :options, :tag_limit,         :integer, default: 3
-  store_attribute :options, :card_size,         :string,  default: "default"
-  store_attribute :options, :columns_per_row,   :integer, default: 3
-
   # Manual views draw their cards from the query's `ordered_entities` instead of
   # its filters.
   store_attribute :options, :manual, :boolean, default: false
-
-  validates :secondary_info, inclusion: { in: SECONDARY_INFO }
-  validates :tag_source,     inclusion: { in: TAG_SOURCES }
-  validates :card_size,      inclusion: { in: CARD_SIZES }
-  validates :tag_limit,       numericality: { only_integer: true, in: 0..10 }
-  validates :columns_per_row, numericality: { only_integer: true, in: 1..4 }
 
   validate :query_must_be_user_query
 
