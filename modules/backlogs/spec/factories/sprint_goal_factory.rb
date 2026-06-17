@@ -23,37 +23,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Backlogs
-  module CommonHelper
-    def user_allowed?(permission, project: nil)
-      current_user.allowed_in_project?(permission, project || self.project)
-    end
-
-    def backlog_bucket_creation_allowed?
-      user_allowed?(:create_sprints)
-    end
-
-    def sprint_creation_allowed?
-      user_allowed?(:create_sprints) &&
-        !project.receive_shared_sprints?
-    end
-
-    def sprint_management_allowed?
-      user_allowed?(:share_sprint)
-    end
-
-    def show_all_backlog
-      ActiveRecord::Type::Boolean.new.cast(params[:all]) || false
-    end
-
-    # Optional query params for backlog URLs when showing all items (`?all=1`).
-    def all_backlogs_params
-      show_all_backlog ? { all: 1 } : {}
-    end
+FactoryBot.define do
+  factory :sprint_goal do
+    sprint
+    project { sprint.project }
+    text { "Sprint goal" }
   end
 end
