@@ -100,7 +100,7 @@ en:
       text: "We are currently redesigning the Backlogs module. Admin settings for sprints and backlogs will be visible here in the near future. Project-level settings remain available."
 
     backlog_component:
-      new_backlog_bucket: "New Backlog bucket"
+      button_new_backlog_bucket: "New backlog bucket"
 
     bucket_destroy_modal_component:
       title: "Delete backlog bucket?"
@@ -187,7 +187,7 @@ en:
         create_description_text: "To start planning your sprint, create one here."
         manage_description_html: "To start planning your sprint, go to the %{settings_link} to receive sprints from a different project."
         no_actions_description_text: "No sprints are available for this project yet."
-      new_sprint: "New Sprint"
+      button_new_sprint: "New sprint"
 
     story_points:
       one: "%{count} story point"
