@@ -28,15 +28,17 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 module Wikis
-  module ErrorHandling
-    def humanize_error_message(error)
-      case error
-      in Dry::Validation::Result => failure
-        failure.errors(full: true).to_h.values.flatten.join(" ")
-      in Adapters::Results::Error => err
-        "An error occurred: #{err.code}, #{err.source}"
-      else
-        error.to_s
+  module Concerns
+    module ErrorHandling
+      def humanize_error_message(error)
+        case error
+        in Dry::Validation::Result => failure
+          failure.errors(full: true).to_h.values.flatten.join(" ")
+        in Adapters::Results::Error => err
+          "An error occurred: #{err.code}, #{err.source}"
+        else
+          error.to_s
+        end
       end
     end
   end
