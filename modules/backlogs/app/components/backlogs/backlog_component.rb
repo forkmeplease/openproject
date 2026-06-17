@@ -55,9 +55,10 @@ module Backlogs
     private
 
     def total
-      @total ||= work_packages_by_backlog_id.sum do |backlog_id, wps|
-        # Do not count the inbox if show_inbox? is false
-        backlog_id.present? || backlog_filters.show_inbox? ? wps.count : 0
+      @total ||= begin
+        count = buckets.sum { |bucket| work_packages_for(bucket).count }
+        count += work_packages_for_inbox.count if backlog_filters.show_inbox?
+        count
       end
     end
 
