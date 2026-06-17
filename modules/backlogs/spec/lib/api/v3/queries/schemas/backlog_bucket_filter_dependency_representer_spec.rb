@@ -30,12 +30,12 @@
 
 require "spec_helper"
 
-RSpec.describe API::V3::Queries::Schemas::SprintFilterDependencyRepresenter do
+RSpec.describe API::V3::Queries::Schemas::BacklogBucketFilterDependencyRepresenter do
   include API::V3::Utilities::PathHelper
 
   let(:project) { build_stubbed(:project) }
   let(:query) { build_stubbed(:query, project:) }
-  let(:filter) { Queries::WorkPackages::Filter::SprintFilter.create!(context: query) }
+  let(:filter) { Queries::WorkPackages::Filter::BacklogBucketFilter.create!(context: query) }
   let(:form_embedded) { false }
 
   let(:instance) do
@@ -48,7 +48,7 @@ RSpec.describe API::V3::Queries::Schemas::SprintFilterDependencyRepresenter do
 
   describe "rendering" do
     let(:path) { "values" }
-    let(:type) { "[]Sprint" }
+    let(:type) { "[]BacklogBucket" }
     let(:order) { "sortBy=#{CGI.escape(JSON.dump([%i(name asc)]))}&pageSize=-1" }
 
     context "for operator 'Queries::Operators::All'" do
@@ -65,7 +65,7 @@ RSpec.describe API::V3::Queries::Schemas::SprintFilterDependencyRepresenter do
 
     context "within a project context" do
       let(:href) do
-        "#{api_v3_paths.project_sprints(project.id)}?#{order}"
+        "#{api_v3_paths.project_backlog_buckets(project.id)}?#{order}"
       end
 
       context "for operator 'Queries::Operators::Equals'" do
@@ -84,7 +84,7 @@ RSpec.describe API::V3::Queries::Schemas::SprintFilterDependencyRepresenter do
     context "within a global context" do
       let(:project) { nil }
       let(:href) do
-        "#{api_v3_paths.sprints}?#{order}"
+        "#{api_v3_paths.backlog_buckets}?#{order}"
       end
 
       context "for operator 'Queries::Operators::Equals'" do

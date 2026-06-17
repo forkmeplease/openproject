@@ -30,73 +30,65 @@
 
 require "spec_helper"
 
-RSpec.describe Queries::WorkPackages::Filter::SprintFilter do
-  let(:scope_class) do
-    Class.new do
-      def for_project(_project); end
-
-      def pluck(*_args); end
-    end
-  end
-  let(:sprint) { build_stubbed(:sprint) }
+RSpec.describe Queries::WorkPackages::Filter::BacklogBucketFilter do
+  let(:bucket) { build_stubbed(:backlog_bucket) }
 
   it_behaves_like "basic query filter" do
     let(:type) { :list_optional }
-    let(:class_key) { :sprint_id }
-    let(:values) { [sprint.id.to_s] }
+    let(:class_key) { :backlog_bucket_id }
+    let(:values) { [bucket.id.to_s] }
     let(:model) { WorkPackage }
 
-    let(:visible_scope) { instance_double(scope_class) }
-    let(:scope) { instance_double(scope_class) }
+    let(:visible_scope) { instance_double(ActiveRecord::Relation) }
+    let(:scoped_to_project) { instance_double(ActiveRecord::Relation) }
     let(:project_permissions) { [:view_sprints] }
 
     current_user { build_stubbed(:user) }
 
     before do
-      allow(Sprint)
+      allow(BacklogBucket)
         .to receive(:visible)
         .and_return(visible_scope)
 
       if project
         allow(visible_scope)
-          .to receive(:for_project)
-          .with(project)
-          .and_return(scope)
+          .to receive(:where)
+          .with(project:)
+          .and_return(scoped_to_project)
 
-        allow(scope).to receive(:pluck).with(:id).and_return([sprint.id])
+        allow(scoped_to_project).to receive(:pluck).with(:id).and_return([bucket.id])
       else
-        allow(visible_scope).to receive(:pluck).with(:id).and_return([sprint.id])
+        allow(visible_scope).to receive(:pluck).with(:id).and_return([bucket.id])
       end
 
       mock_permissions_for current_user do |mock|
         if project
           mock.allow_in_project(*project_permissions, project:)
         else
-          # To mock having permissions for the `allowed_in_any_project?` check
           mock.allow_in_project(*project_permissions, project: build_stubbed(:project))
         end
       end
     end
 
     describe "#allowed_values" do
-      let(:sprint2) { build_stubbed(:sprint) }
+      let(:bucket2) { build_stubbed(:backlog_bucket) }
 
       before do
-        allow(scope).to receive(:pluck).with(:id).and_return([sprint.id, sprint2.id])
+        allow(scoped_to_project).to receive(:pluck).with(:id).and_return([bucket.id, bucket2.id])
       end
 
-      it "returns id pairs for sprints visible in the project" do
+      it "returns id pairs for buckets visible in the project" do
         expect(instance.allowed_values).to contain_exactly(
-          [sprint.id.to_s, sprint.id.to_s],
-          [sprint2.id.to_s, sprint2.id.to_s]
+          [bucket.id.to_s, bucket.id.to_s],
+          [bucket2.id.to_s, bucket2.id.to_s]
         )
       end
 
       context "when outside a project" do
         let(:project) { nil }
 
-        it "returns id pairs for all visible sprints" do
-          expect(instance.allowed_values).to contain_exactly([sprint.id.to_s, sprint.id.to_s])
+        it "returns id pairs for all visible buckets" do
+          expect(instance.allowed_values).to contain_exactly([bucket.id.to_s, bucket.id.to_s])
         end
       end
     end
@@ -141,29 +133,29 @@ RSpec.describe Queries::WorkPackages::Filter::SprintFilter do
     end
 
     describe "dependency representer" do
-      it "maps to the sprint dependency representer" do
+      it "maps to the backlog bucket dependency representer" do
         dependency = API::V3::Queries::Schemas::FilterDependencyRepresenterFactory
           .create(instance, Queries::Operators::Equals)
 
-        expect(dependency).to be_a(API::V3::Queries::Schemas::SprintFilterDependencyRepresenter)
+        expect(dependency).to be_a(API::V3::Queries::Schemas::BacklogBucketFilterDependencyRepresenter)
       end
     end
 
     describe "#value_objects" do
-      let(:sprint1) { build_stubbed(:sprint) }
-      let(:sprint2) { build_stubbed(:sprint) }
+      let(:bucket1) { build_stubbed(:backlog_bucket) }
+      let(:bucket2) { build_stubbed(:backlog_bucket) }
 
       before do
         allow(visible_scope)
-          .to receive(:for_project)
-          .with(project)
-          .and_return([sprint1, sprint2])
+          .to receive(:where)
+          .with(project:)
+          .and_return([bucket1, bucket2])
 
-        instance.values = [sprint1.id.to_s]
+        instance.values = [bucket1.id.to_s]
       end
 
-      it "returns an array of sprints" do
-        expect(instance.value_objects).to contain_exactly(sprint1)
+      it "returns an array of backlog buckets matching the set values" do
+        expect(instance.value_objects).to contain_exactly(bucket1)
       end
     end
   end

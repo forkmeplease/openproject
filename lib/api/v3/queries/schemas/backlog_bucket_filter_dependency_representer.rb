@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# -- copyright
+#-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,51 +26,37 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-# ++
+#++
 
-module Queries::WorkPackages::Filter
-  class SprintFilter < ::Queries::WorkPackages::Filter::WorkPackageFilter
-    def allowed_values
-      @allowed_values ||= sprints.pluck(:id).map { |id| [id.to_s] * 2 }
-    end
+module API
+  module V3
+    module Queries
+      module Schemas
+        class BacklogBucketFilterDependencyRepresenter < FilterDependencyRepresenter
+          def json_cache_key
+            super + [filter.project&.id].compact
+          end
 
-    def available?
-      allowed?
-    end
+          def href_callback
+            query_params = "sortBy=#{to_query [%i(name asc)]}&pageSize=-1"
 
-    def type
-      :list_optional
-    end
+            if filter.project.nil?
+              "#{api_v3_paths.backlog_buckets}?#{query_params}"
+            else
+              "#{api_v3_paths.project_backlog_buckets(filter.project.id)}?#{query_params}"
+            end
+          end
 
-    def self.key
-      :sprint_id
-    end
+          private
 
-    def ar_object_filter?
-      true
-    end
+          def type
+            "[]BacklogBucket"
+          end
 
-    def value_objects
-      available_sprints = sprints.index_by(&:id)
-
-      values
-        .filter_map { |sprint_id| available_sprints[sprint_id.to_i] }
-    end
-
-    private
-
-    def allowed?
-      if project.present?
-        User.current.allowed_in_project?(:view_sprints, project)
-      else
-        User.current.allowed_in_any_project?(:view_sprints)
-      end
-    end
-
-    def sprints
-      @sprints ||= begin
-        scope = Sprint.visible
-        project ? scope.for_project(project) : scope
+          def to_query(param)
+            CGI.escape(::JSON.dump(param))
+          end
+        end
       end
     end
   end

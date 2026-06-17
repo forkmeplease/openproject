@@ -29,9 +29,9 @@
 # ++
 
 module Queries::WorkPackages::Filter
-  class SprintFilter < ::Queries::WorkPackages::Filter::WorkPackageFilter
+  class BacklogBucketFilter < ::Queries::WorkPackages::Filter::WorkPackageFilter
     def allowed_values
-      @allowed_values ||= sprints.pluck(:id).map { |id| [id.to_s] * 2 }
+      @allowed_values ||= backlog_buckets.pluck(:id).map { |id| [id.to_s] * 2 }
     end
 
     def available?
@@ -43,7 +43,7 @@ module Queries::WorkPackages::Filter
     end
 
     def self.key
-      :sprint_id
+      :backlog_bucket_id
     end
 
     def ar_object_filter?
@@ -51,10 +51,9 @@ module Queries::WorkPackages::Filter
     end
 
     def value_objects
-      available_sprints = sprints.index_by(&:id)
+      available_buckets = backlog_buckets.index_by(&:id)
 
-      values
-        .filter_map { |sprint_id| available_sprints[sprint_id.to_i] }
+      values.filter_map { |id| available_buckets[id.to_i] }
     end
 
     private
@@ -67,10 +66,10 @@ module Queries::WorkPackages::Filter
       end
     end
 
-    def sprints
-      @sprints ||= begin
-        scope = Sprint.visible
-        project ? scope.for_project(project) : scope
+    def backlog_buckets
+      @backlog_buckets ||= begin
+        scope = BacklogBucket.visible
+        project ? scope.where(project:) : scope
       end
     end
   end
