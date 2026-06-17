@@ -21,10 +21,10 @@
           select_variant: :multiple,
           fetch_strategy: :local,
           form_arguments: { builder: f, name: filter_field },
-          data: { test_selector: select_panel_id }
+          title: t(".select_panel_title")
         )
       ) do |panel| %>
-        <% panel.with_show_button(scheme: :secondary, color: selector_color) do |button| %>
+        <% panel.with_show_button(**show_button_arguments) do |button| %>
           <% button.with_trailing_visual_icon(icon: :"triangle-down", color: :default) %>
           <%= t(".label_#{filter_field_name}_filter", count:) %>
           <%= render Primer::Beta::Counter.new(**counter_arguments) %>

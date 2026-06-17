@@ -78,6 +78,14 @@ module Backlogs
       { count:, hide_if_zero: true, ml: 2, aria: }
     end
 
+    def show_button_arguments
+      {
+        scheme: :secondary,
+        color: selector_color,
+        data: { test_selector: "#{filter_field_name}_filter_button" }
+      }
+    end
+
     def selector_color
       selected_ids ? :default : :muted
     end
@@ -86,12 +94,8 @@ module Backlogs
       filter_field == :sprint_ids ? "sprint" : "backlog_bucket"
     end
 
-    def select_panel_id
-      "#{filter_field_name}-filter-select-panel"
-    end
-
     def clear_form_id
-      "#{select_panel_id}-clear-form"
+      "#{filter_field_name}-clear-form"
     end
   end
 end

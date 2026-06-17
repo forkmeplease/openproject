@@ -373,7 +373,7 @@ module Pages
 
     def open_create_bucket_dialog
       within_owner_backlogs do
-        find_test_selector("op-backlog-buckets--new-backlog-bucket-button").click
+        click_on accessible_name: "New backlog bucket"
       end
     end
 
@@ -415,8 +415,10 @@ module Pages
     end
 
     def apply_sprint_filter(*sprints)
-      within_sprint_backlogs { click_button "Sprints" }
-      within_test_selector("sprint-filter-select-panel") do
+      within_sprint_backlogs do
+        find_test_selector("sprint_filter_button").click
+      end
+      within_dialog "Select items" do
         sprints.each { |sprint| click_on sprint.name }
         click_on "Apply"
       end
@@ -424,8 +426,10 @@ module Pages
     end
 
     def apply_bucket_filter(*buckets, include_inbox: false)
-      within_owner_backlogs { click_button "Backlog buckets" }
-      within_test_selector("bucket-filter-select-panel") do
+      within_owner_backlogs do
+        find_test_selector("backlog_bucket_filter_button").click
+      end
+      within_dialog "Select items" do
         buckets.each { |bucket| click_on bucket.name }
         click_on I18n.t(:label_inbox) if include_inbox
         click_on "Apply"
@@ -442,8 +446,10 @@ module Pages
     end
 
     def within_filter_panel(type, &)
-      within_filter_container(type) { click_button filter_button_label(type) }
-      within_test_selector("#{type}-filter-select-panel", &)
+      within_filter_container(type) do
+        find_test_selector(filter_button_label(type)).click
+      end
+      within_dialog("Select items", &)
     end
 
     def clear_filter(type)
@@ -453,7 +459,7 @@ module Pages
 
     def expect_filter_count(type, count)
       within_filter_container(type) do
-        within_test_selector("#{type}-filter-select-panel") do
+        within_test_selector(filter_button_label(type)) do
           expect(page).to have_css(".Counter", text: count)
         end
       end
@@ -461,7 +467,7 @@ module Pages
 
     def expect_no_filter_count(type)
       within_filter_container(type) do
-        within_test_selector("#{type}-filter-select-panel") do
+        within_test_selector(filter_button_label(type)) do
           expect(page).to have_no_css(".Counter")
         end
       end
@@ -612,7 +618,7 @@ module Pages
     end
 
     def filter_button_label(type)
-      type == :sprint ? "Sprints" : "Backlog buckets"
+      type == :sprint ? "sprint_filter_button" : "backlog_bucket_filter_button"
     end
 
     def sprint_selector(sprint)

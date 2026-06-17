@@ -103,6 +103,7 @@ en:
       button_new_backlog_bucket: "New backlog bucket"
 
     backlog_filter_select_panel_component:
+      select_panel_title: "Select items"
       label_sprint_filter:
         zero: "All sprints"
         one: "Sprint"

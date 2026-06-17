@@ -107,7 +107,7 @@ RSpec.describe "Backlog filter panel", :js do
     end
 
     it "lists inbox at the bottom of the bucket filter panel" do
-      backlogs_page.within_filter_panel(:bucket) do
+      backlogs_page.within_filter_panel(:backlog_bucket) do
         item_labels = page.all("[role='option']").map { |el| el.text.strip }
         expect(item_labels.last).to eq(I18n.t(:label_inbox))
       end
@@ -147,7 +147,7 @@ RSpec.describe "Backlog filter panel", :js do
       backlogs_page.apply_bucket_filter(bucket_a)
       backlogs_page.expect_no_inbox
 
-      backlogs_page.clear_filter(:bucket)
+      backlogs_page.clear_filter(:backlog_bucket)
 
       backlogs_page.expect_sprint(sprint_a)
       backlogs_page.expect_no_sprint(sprint_b)
@@ -160,7 +160,7 @@ RSpec.describe "Backlog filter panel", :js do
   describe "filter counter" do
     it "shows no counter when no filter is active and the count when items are selected" do
       backlogs_page.expect_no_filter_count(:sprint)
-      backlogs_page.expect_no_filter_count(:bucket)
+      backlogs_page.expect_no_filter_count(:backlog_bucket)
 
       backlogs_page.apply_sprint_filter(sprint_a)
       backlogs_page.expect_filter_count(:sprint, 1)
@@ -169,7 +169,7 @@ RSpec.describe "Backlog filter panel", :js do
       backlogs_page.expect_filter_count(:sprint, 2)
 
       backlogs_page.apply_bucket_filter(bucket_a)
-      backlogs_page.expect_filter_count(:bucket, 1)
+      backlogs_page.expect_filter_count(:backlog_bucket, 1)
     end
   end
 
