@@ -68,23 +68,26 @@ module Backlogs
       backlog_filters.public_send(filter_field)
     end
 
+    def count
+      @count ||= selected_ids&.size || 0
+    end
+
     def counter_arguments
-      count = selected_ids&.size || 0
       aria = { label: I18n.t(:label_x_items, count:), live: "polite" }
 
       { count:, hide_if_zero: true, ml: 2, aria: }
-    end
-
-    def selector_label
-      filter_field == :sprint_ids ? Sprint.human_model_name.pluralize : BacklogBucket.human_model_name.pluralize
     end
 
     def selector_color
       selected_ids ? :default : :muted
     end
 
+    def filter_field_name
+      filter_field == :sprint_ids ? "sprint" : "backlog_bucket"
+    end
+
     def select_panel_id
-      "#{filter_field.to_s.delete_suffix('_ids')}-filter-select-panel"
+      "#{filter_field_name}-filter-select-panel"
     end
 
     def clear_form_id
