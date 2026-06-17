@@ -31,6 +31,7 @@
 module Wikis
   class PagesController < ApplicationController
     include PageSelectionFormInput
+    include Concerns::ErrorHandling
     include Concerns::LinkableRedirect
     include OpTurbo::ComponentStream
 
@@ -41,35 +42,37 @@ module Wikis
     no_authorization_required! :search
 
     def create_and_link # rubocop:disable Metrics/AbcSize
-      provider = Provider.visible.find(create_new_page_params[:provider_id])
-      result = CreateLinkedPageService.new(provider:, user: current_user)
-                                      .call(
-                                        title: create_new_page_params[:page_title],
-                                        parent_identifier: create_new_page_params[:parent_page_identifier],
-                                        linkable_type: create_new_page_params[:linkable_type],
-                                        linkable_id: create_new_page_params[:linkable_id]
-                                      )
+      parameters = create_new_page_params
+      provider = Provider.visible.enabled.find(parameters[:provider_id])
 
-      if result.success?
-        turbo_redirect_for_linkable(result.result.linkable)
-      else
-        message = result.errors.full_messages.join(" ")
-        render_error_flash_message_via_turbo_stream(message:)
-        respond_to_with_turbo_streams
-      end
+      CreatePageService
+        .new(provider:, user: current_user)
+        .create_page_and_link(
+          title: parameters[:page_title],
+          parent_identifier: parameters[:parent_page_identifier],
+          linkable_type: parameters[:linkable_type],
+          linkable_id: parameters[:linkable_id]
+        )
+        .either(
+          ->(page_link) { turbo_redirect_for_linkable(page_link.linkable) },
+          ->(error) do
+            render_error_flash_message_via_turbo_stream(message: humanize_error_message(error))
+            respond_to_with_turbo_streams
+          end
+        )
     end
 
     def create_new_page_dialog
-      params = create_new_page_params
-      form_object = Forms::CreateNewWikiPageFormModel.new(linkable_id: params[:linkable_id],
-                                                          linkable_type: params[:linkable_type],
-                                                          provider_id: params[:provider_id],
-                                                          page_title: params[:page_title])
+      parameters = create_new_page_params
+      form_object = Forms::CreateNewWikiPageFormModel.new(linkable_id: parameters[:linkable_id],
+                                                          linkable_type: parameters[:linkable_type],
+                                                          provider_id: parameters[:provider_id],
+                                                          page_title: parameters[:page_title])
       respond_with_dialog Wikis::CreateNewWikiPageDialog.new(form_object)
     end
 
     def search
-      provider = Provider.visible.find(params.expect(:provider_id))
+      provider = Provider.visible.enabled.find(params.expect(:provider_id))
       query = params[:query]
       form_name = params[:name]
       builder = ActionView::Helpers::FormBuilder.new("", nil, view_context, {})

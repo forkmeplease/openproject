@@ -31,6 +31,7 @@
 module Wikis
   class PageLinkMacroController < ApplicationController
     include OpTurbo::ComponentStream
+    include Concerns::ErrorHandling
     include PageSelectionFormInput
     include Dry::Monads[:result]
 
@@ -38,17 +39,21 @@ module Wikis
     # The component itself handles the states of "unauthorized", "forbidden", and "not_found".
     # The dialogs rendered here will perform global wiki page searches and will result in inserting a link view
     # component rendered with `load`.
-    authorization_checked! :load, :inline_existing_page_dialog, :close_dialog_and_inline
+    authorization_checked! :load,
+                           :existing_page_dialog,
+                           :new_page_dialog,
+                           :close_existing_page_dialog,
+                           :close_new_page_dialog
 
     def load
-      provider = Provider.visible.find_by(id: params[:provider_id])
+      provider = Provider.visible.enabled.find_by(id: params[:provider_id])
       @page_info_result = page_info_result(provider)
       @turbo_frame_id = turbo_frame_id
 
       render layout: false
     end
 
-    def inline_existing_page_dialog
+    def existing_page_dialog
       provider_id = inline_existing_params[:provider_id]
       if provider_id.blank? && Provider.visible.enabled.one?
         # If no provider data was passed and there is only one enabled provider, use it by default
@@ -56,17 +61,47 @@ module Wikis
       end
 
       form_model = Forms::InlineExistingWikiPageFormModel.new(provider_id:)
-      respond_with_dialog Wikis::InlineExistingWikiPageDialog.new(form_model)
+      respond_with_dialog Wikis::InlineWikiPageDialog.new(form_model)
     end
 
-    def close_dialog_and_inline
+    def new_page_dialog
+      parameters = inline_new_params
+      form_model = Forms::InlineNewWikiPageFormModel.new(provider_id: parameters[:provider_id],
+                                                         page_title: parameters[:page_title])
+      respond_with_dialog Wikis::InlineWikiPageDialog.new(form_model)
+    end
+
+    def close_existing_page_dialog
       params = inline_existing_params
-      close_dialog_via_turbo_stream("##{InlineExistingWikiPageDialog::DIALOG_ID}",
+      close_dialog_via_turbo_stream("##{InlineWikiPageDialog::DIALOG_ID}",
                                     additional: {
-                                      action: "close_dialog_and_inline",
+                                      action: "close_existing_page_dialog",
                                       providerId: params[:provider_id],
                                       pageIdentifier: params[:page_identifier]
                                     })
+      respond_with_turbo_streams
+    end
+
+    def close_new_page_dialog # rubocop:disable Metrics/AbcSize
+      parameters = inline_new_params
+
+      provider = Provider.visible.enabled.find(parameters[:provider_id])
+      result = CreatePageService.new(provider:, user: current_user)
+                                .create_page(title: parameters[:page_title],
+                                             parent_identifier: parameters[:parent_page_identifier])
+
+      result.either(
+        ->(info) do
+          close_dialog_via_turbo_stream("##{InlineWikiPageDialog::DIALOG_ID}",
+                                        additional: {
+                                          action: "close_new_page_dialog",
+                                          providerId: provider.id,
+                                          pageIdentifier: info.identifier
+                                        })
+        end,
+        ->(error) { render_error_flash_message_via_turbo_stream(message: humanize_error_message(error)) }
+      )
+
       respond_with_turbo_streams
     end
 
@@ -94,6 +129,15 @@ module Wikis
       if params.key?(:wikis_forms_inline_existing_wiki_page_form_model)
         params.expect(wikis_forms_inline_existing_wiki_page_form_model: %i[provider_id])
               .merge(page_identifier: parse_identifier(params[:wiki_page_selection]))
+      else
+        params
+      end
+    end
+
+    def inline_new_params
+      if params.key?(:wikis_forms_inline_new_wiki_page_form_model)
+        params.expect(wikis_forms_inline_new_wiki_page_form_model: %i[provider_id page_title])
+              .merge(parent_page_identifier: parse_identifier(params[:wiki_page_selection]))
       else
         params
       end

@@ -241,7 +241,8 @@ export class WorkPackageBaseResource extends HalResource {
   }
 
   public getEditorContext(fieldName:string):ICKEditorContext {
-    const macros:boolean|string[] = this.configService.wikisAvailable ? ['OpMacroWikiPageLinkAddExisting'] : false;
+    const wikiPageMacros = ['OpMacroWikiPageLinkAddExisting', 'OpMacroWikiPageLinkCreateNew'];
+    const macros:boolean|string[] = this.configService.wikisAvailable ? wikiPageMacros : false;
 
     return {
       type: fieldName === 'description' ? 'full' : 'constrained',

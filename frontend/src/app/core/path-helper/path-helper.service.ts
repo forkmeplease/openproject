@@ -480,7 +480,11 @@ export class PathHelperService {
     return `${this.staticBase}/wiki_page_link_macro/load?${providerIdQuery}&${pageIdentifierQuery}&${frameIdQuery}`;
   }
 
-  public inlineExistingWikiPageDialog() {
-    return `${this.staticBase}/wiki_page_link_macro/inline_existing_page_dialog`;
+  public openExistingWikiPageDialog() {
+    return `${this.staticBase}/wiki_page_link_macro/existing_page_dialog`;
+  }
+
+  public openNewWikiPageDialog() {
+    return `${this.staticBase}/wiki_page_link_macro/new_page_dialog`;
   }
 }

@@ -31,6 +31,8 @@
 module Wikis
   module Forms
     class InlineExistingWikiPageFormModel
+      include OpenProject::PageHierarchyHelper
+
       extend ActiveModel::Naming
 
       attr_reader :provider_id
@@ -41,6 +43,18 @@ module Wikis
 
       def final_step?
         provider_id.present?
+      end
+
+      def continue_form_url
+        url_helpers.existing_page_dialog_wiki_page_link_macro_path
+      end
+
+      def close_form_url
+        url_helpers.close_existing_page_dialog_wiki_page_link_macro_path
+      end
+
+      def new_form(form)
+        InlineExistingWikiPageForm.new(form)
       end
     end
   end
