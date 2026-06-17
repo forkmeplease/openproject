@@ -43,7 +43,7 @@ RSpec.describe OpPrimer::VerticalTruncateComponent, type: :component do
 
   it "clamps the line count to the supported range" do
     render_component(lines: 99) { "Content" }
-    expect(page).to have_css("div.op-vertical-truncate--lines-6")
+    expect(page).to have_css("div.op-vertical-truncate--lines-8")
 
     render_component(lines: 0) { "Content" }
     expect(page).to have_css("div.op-vertical-truncate--lines-1")

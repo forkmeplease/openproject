@@ -94,7 +94,7 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
 
     it "clamps the line count to the supported range" do
       render_component(truncate: :multi_line, lines: 99) { "Content" }
-      expect(page).to have_css("div.op-vertical-truncate--lines-6[data-expandable-text-target='truncate']")
+      expect(page).to have_css("div.op-vertical-truncate--lines-8[data-expandable-text-target='truncate']")
 
       render_component(truncate: :multi_line, lines: 0) { "Content" }
       expect(page).to have_css("div.op-vertical-truncate--lines-1[data-expandable-text-target='truncate']")
