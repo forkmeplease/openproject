@@ -64,6 +64,7 @@ module OpPrimer
 
     # Vertical truncation with inline expansion using line-clamp
     # @param lines "Number of visible lines" range { min: 1, max: 6, step: 1 }
+    # @display min_height 300px
     def vertical(lines: 3)
       render_with_template(locals: { lines: })
     end
