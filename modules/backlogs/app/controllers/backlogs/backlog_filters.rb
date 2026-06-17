@@ -40,8 +40,6 @@ module Backlogs
       )
     end
 
-    def show_all? = show_all
-
     def show_inbox?
       bucket_ids.nil? || bucket_ids.include?("inbox")
     end
@@ -54,5 +52,6 @@ module Backlogs
     end
 
     alias to_hash to_h
+    alias show_all? show_all
   end
 end
