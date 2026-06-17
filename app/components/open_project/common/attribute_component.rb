@@ -50,10 +50,10 @@ module OpenProject
         @format = format
       end
 
-      # `lines` only constrains height in vertical mode; a single line is best
-      # served by horizontal (single-line ellipsis) truncation.
-      def truncation_direction
-        lines > 1 ? :vertical : :horizontal
+      # `lines` only constrains height in multi-line mode; a single line is best
+      # served by single-line ellipsis truncation.
+      def truncation_style
+        lines > 1 ? :multi_line : :single_line
       end
 
       def short_text

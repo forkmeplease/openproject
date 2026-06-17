@@ -31,25 +31,25 @@
 module OpPrimer
   # Truncates block content and exposes an expander to reveal the full text.
   #
-  # Two truncation directions are supported:
+  # Two truncation styles are supported:
   #
-  # - `:horizontal` clips a single line with `Primer::Beta::Truncate`.
-  # - `:vertical` clamps to `lines` rows with `OpPrimer::VerticalTruncateComponent`.
+  # - `:single_line` clips a single line with `Primer::Beta::Truncate`.
+  # - `:multi_line` clamps to `lines` rows with `OpPrimer::VerticalTruncateComponent`.
   #
   # The companion `expandable-text` Stimulus controller toggles the expanded state.
   # With `expansion: :inline` the expander reveals the text in place; with
   # `expansion: :dialog` the expander opens the component's `dialog` slot and the
   # controller only manages the expander's visibility.
   class ExpandableTextComponent < Primer::Component
-    DIRECTION_OPTIONS = %i[horizontal vertical].freeze
-    DIRECTION_DEFAULT = :horizontal
+    TRUNCATE_OPTIONS = %i[single_line multi_line].freeze
+    TRUNCATE_DEFAULT = :single_line
 
     EXPANSION_OPTIONS = %i[inline dialog].freeze
     EXPANSION_DEFAULT = :inline
 
     LINES_DEFAULT = 3
 
-    attr_reader :direction, :expansion
+    attr_reader :truncate, :expansion
 
     # The dialog revealed when `expansion: :dialog`. The component owns the
     # dialog's `id` and wires the expander button to open it, so callers only
@@ -60,9 +60,9 @@ module OpPrimer
       Primer::Alpha::Dialog.new(**system_arguments, id: @dialog_id)
     }
 
-    # @param direction [Symbol] truncation direction. `:horizontal` clips a
-    #   single line; `:vertical` clamps to `lines` rows.
-    # @param lines [Integer] number of visible rows in `:vertical` mode, clamped to `1..6`.
+    # @param truncate [Symbol] truncation style. `:single_line` clips a
+    #   single line; `:multi_line` clamps to `lines` rows.
+    # @param lines [Integer] number of visible rows in `:multi_line` mode, clamped to `1..6`.
     # @param expansion [Symbol] `:inline` reveals the text in place; `:dialog`
     #   opens the component's `dialog` slot (the expander button is wired to it
     #   automatically) and the controller only manages the expander's visibility.
@@ -74,7 +74,7 @@ module OpPrimer
     #   `Primer::BaseComponent`.
     # rubocop:disable Metrics/AbcSize
     def initialize(
-      direction: DIRECTION_DEFAULT,
+      truncate: TRUNCATE_DEFAULT,
       lines: LINES_DEFAULT,
       expansion: EXPANSION_DEFAULT,
       dialog_id: "expandable-text-dialog-#{SecureRandom.hex(4)}",
@@ -83,8 +83,8 @@ module OpPrimer
     )
       super()
 
-      @direction = ActiveSupport::StringInquirer.new(
-        fetch_or_fallback(DIRECTION_OPTIONS, direction, DIRECTION_DEFAULT).to_s
+      @truncate = ActiveSupport::StringInquirer.new(
+        fetch_or_fallback(TRUNCATE_OPTIONS, truncate, TRUNCATE_DEFAULT).to_s
       )
       @expansion = ActiveSupport::StringInquirer.new(
         fetch_or_fallback(EXPANSION_OPTIONS, expansion, EXPANSION_DEFAULT).to_s
@@ -94,12 +94,12 @@ module OpPrimer
       @system_arguments = deny_tag_argument(**system_arguments)
       @system_arguments[:tag] = :div
       @system_arguments[:display] = :flex
-      @system_arguments[:align_items] = @direction.vertical? ? :flex_end : :baseline
+      @system_arguments[:align_items] = @truncate.multi_line? ? :flex_end : :baseline
       @system_arguments[:data] = merge_data(
         @system_arguments,
         data: {
           controller: "expandable-text",
-          expandable_text_mode_value: @direction,
+          expandable_text_mode_value: @truncate,
           expandable_text_inline_value: @expansion.inline?
         }
       )
@@ -110,7 +110,7 @@ module OpPrimer
 
       truncate_arguments = { flex: 1, data: { expandable_text_target: "truncate" } }
       @truncate_component =
-        if @direction.vertical?
+        if @truncate.multi_line?
           OpPrimer::VerticalTruncateComponent.new(lines:, **truncate_arguments)
         else
           Primer::Beta::Truncate.new(**truncate_arguments)

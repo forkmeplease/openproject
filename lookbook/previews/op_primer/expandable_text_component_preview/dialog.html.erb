@@ -1,7 +1,7 @@
 <div style="max-width: 300px;">
   <%= render(
         OpPrimer::ExpandableTextComponent.new(
-          direction: :vertical,
+          truncate: :multi_line,
           lines: 2,
           expansion: :dialog,
           dialog_id: "expandable-text-dialog"

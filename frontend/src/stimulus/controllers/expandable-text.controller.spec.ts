@@ -32,8 +32,8 @@
 import ExpandableTextController from './expandable-text.controller';
 import { setupStimulusTest, type StimulusTestContext } from 'core-stimulus/test-helpers';
 
-const horizontalTemplate = `
-  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="horizontal" data-expandable-text-inline-value="true">
+const singleLineTemplate = `
+  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="single_line" data-expandable-text-inline-value="true">
     <div data-expandable-text-target="truncate" style="width: 200px; overflow: hidden;">
       <span class="Truncate-text" style="display: inline-block; white-space: nowrap;">
         This is a very long text that should be truncated when it exceeds the container width
@@ -45,8 +45,8 @@ const horizontalTemplate = `
   </div>
 `;
 
-const verticalTemplate = `
-  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="true">
+const multiLineTemplate = `
+  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="multi_line" data-expandable-text-inline-value="true">
     <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
       <p>Line one of a multi-line block of text.</p>
       <p>Line two with more content.</p>
@@ -60,7 +60,7 @@ const verticalTemplate = `
 `;
 
 const dialogTemplate = `
-  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+  <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="multi_line" data-expandable-text-inline-value="false">
     <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
       <p>Content that opens in a dialog.</p>
     </div>
@@ -104,10 +104,10 @@ describe('ExpandableTextController', () => {
     }
   });
 
-  describe('horizontal mode', () => {
+  describe('single-line mode', () => {
     describe('initialization', () => {
       beforeEach(async () => {
-        await ctx.mount(horizontalTemplate);
+        await ctx.mount(singleLineTemplate);
       });
 
       it('connects successfully', () => {
@@ -138,7 +138,7 @@ describe('ExpandableTextController', () => {
 
     describe('expander button click', () => {
       beforeEach(async () => {
-        await ctx.mount(horizontalTemplate);
+        await ctx.mount(singleLineTemplate);
       });
 
       it('toggles expanded state', async () => {
@@ -166,7 +166,7 @@ describe('ExpandableTextController', () => {
 
     describe('expandedValue changes', () => {
       beforeEach(async () => {
-        await ctx.mount(horizontalTemplate);
+        await ctx.mount(singleLineTemplate);
       });
 
       it('updates aria-label when expanded', async () => {
@@ -270,7 +270,7 @@ describe('ExpandableTextController', () => {
 
     describe('resize() method', () => {
       it('calls update() when resize is triggered', async () => {
-        await ctx.mount(horizontalTemplate);
+        await ctx.mount(singleLineTemplate);
 
         const controller = ctx.getController<ExpandableTextController>('expandable-text');
 
@@ -283,7 +283,7 @@ describe('ExpandableTextController', () => {
       });
 
       it('updates expander visibility when content dimensions change', async () => {
-        await ctx.mount(horizontalTemplate);
+        await ctx.mount(singleLineTemplate);
 
         const controller = ctx.getController<ExpandableTextController>('expandable-text');
         const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -322,7 +322,7 @@ describe('ExpandableTextController', () => {
       });
 
       it('keeps expander visible when expanded even if not truncated', async () => {
-        await ctx.mount(horizontalTemplate);
+        await ctx.mount(singleLineTemplate);
 
         const controller = ctx.getController<ExpandableTextController>('expandable-text');
         const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -342,9 +342,9 @@ describe('ExpandableTextController', () => {
     });
   });
 
-  describe('vertical mode', () => {
+  describe('multi-line mode', () => {
     it('connects successfully', async () => {
-      await ctx.mount(verticalTemplate);
+      await ctx.mount(multiLineTemplate);
 
       const controller = ctx.getController('expandable-text');
 
@@ -352,7 +352,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('detects vertical truncation via scrollHeight > clientHeight', async () => {
-      await ctx.mount(verticalTemplate);
+      await ctx.mount(multiLineTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -367,7 +367,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('hides expander when content fits within line-clamp', async () => {
-      await ctx.mount(verticalTemplate);
+      await ctx.mount(multiLineTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const expander = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="expander"]')!;
@@ -382,7 +382,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('toggles op-vertical-truncate--expanded class instead of Truncate--expanded', async () => {
-      await ctx.mount(verticalTemplate);
+      await ctx.mount(multiLineTemplate);
 
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
       const controller = ctx.getController<ExpandableTextController>('expandable-text');
@@ -400,7 +400,7 @@ describe('ExpandableTextController', () => {
     });
 
     it('handles click to toggle expansion', async () => {
-      await ctx.mount(verticalTemplate);
+      await ctx.mount(multiLineTemplate);
 
       const button = ctx.screen.getByRole('button', { name: 'Expand text', hidden: true });
       const truncateEl = ctx.container.querySelector<HTMLElement>('[data-expandable-text-target="truncate"]')!;
@@ -424,7 +424,7 @@ describe('ExpandableTextController', () => {
       // HellipButton always renders aria-expanded="false"; a modal-dialog trigger
       // should not advertise a disclosure state, so the controller strips it.
       const dialogWithAriaTemplate = `
-        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="multi_line" data-expandable-text-inline-value="false">
           <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <p>Content that opens in a dialog.</p>
           </div>
@@ -471,7 +471,7 @@ describe('ExpandableTextController', () => {
 
     it('preserves server-rendered expander when content fits but has omitted paragraphs', async () => {
       const serverVisibleTemplate = `
-        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="multi_line" data-expandable-text-inline-value="false">
           <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <span>Short first paragraph that fits.</span>
           </div>
@@ -499,7 +499,7 @@ describe('ExpandableTextController', () => {
 
     it('toggles a server-hidden expander based on truncation', async () => {
       const serverHiddenTemplate = `
-        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="vertical" data-expandable-text-inline-value="false">
+        <div data-controller="expandable-text" data-expandable-text-expanded-value="false" data-expandable-text-mode-value="multi_line" data-expandable-text-inline-value="false">
           <div data-expandable-text-target="truncate" class="op-vertical-truncate op-vertical-truncate--lines-3" style="overflow: hidden;">
             <span>Single paragraph.</span>
           </div>

@@ -50,10 +50,10 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
     end
   end
 
-  it "renders the default (horizontal) preview" do
+  it "renders the default (single-line) preview" do
     render_preview(:default, from: described_class)
 
-    expect(page).to have_css("[data-controller='expandable-text'][data-expandable-text-mode-value='horizontal']")
+    expect(page).to have_css("[data-controller='expandable-text'][data-expandable-text-mode-value='single_line']")
     expect(page).to have_css(".Truncate[data-expandable-text-target='truncate']")
   end
 
@@ -70,10 +70,10 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
     expect(page).to have_text("Automatically managed project folders")
   end
 
-  it "renders the vertical preview with a configurable line count" do
-    render_preview(:vertical, from: described_class, params: { lines: 4 })
+  it "renders the multi_line preview with a configurable line count" do
+    render_preview(:multi_line, from: described_class, params: { lines: 4 })
 
-    expect(page).to have_css("[data-expandable-text-mode-value='vertical']")
+    expect(page).to have_css("[data-expandable-text-mode-value='multi_line']")
     expect(page).to have_css(".op-vertical-truncate--lines-4[data-expandable-text-target='truncate']")
   end
 
@@ -85,9 +85,9 @@ RSpec.describe OpPrimer::ExpandableTextComponentPreview, type: :component do
   end
 
   it "renders the playground preview" do
-    render_preview(:playground, from: described_class, params: { direction: "vertical", lines: 2 })
+    render_preview(:playground, from: described_class, params: { truncate: "multi_line", lines: 2 })
 
-    expect(page).to have_css("[data-controller='expandable-text'][data-expandable-text-mode-value='vertical']")
+    expect(page).to have_css("[data-controller='expandable-text'][data-expandable-text-mode-value='multi_line']")
     expect(page).to have_css(".op-vertical-truncate--lines-2[data-expandable-text-target='truncate']")
   end
 end

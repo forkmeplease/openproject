@@ -33,13 +33,13 @@ import { useResize } from 'stimulus-use';
 
 // Private controller for `OpPrimer::ExpandableTextComponent`. It operates on the
 // DOM that component renders — including `Primer::Beta::Truncate`'s internal
-// `.Truncate-text` element for horizontal measurement — and is not meant for
+// `.Truncate-text` element for single-line measurement — and is not meant for
 // standalone use.
 export default class ExpandableTextController extends Controller<HTMLElement> {
   static targets = ['truncate', 'expander'];
   static values = {
     expanded: Boolean,
-    mode: { type: String, default: 'horizontal' },
+    mode: { type: String, default: 'single_line' },
     inline: { type: Boolean, default: true },
   };
 
@@ -88,7 +88,7 @@ export default class ExpandableTextController extends Controller<HTMLElement> {
       this.expanderButton.setAttribute('aria-label', value ? I18n.t('js.label_collapse_text') : I18n.t('js.label_expand_text'));
       this.expanderButton.setAttribute('aria-expanded', String(value));
 
-      if (this.modeValue === 'vertical') {
+      if (this.modeValue === 'multi_line') {
         this.truncateTarget.classList.toggle('op-vertical-truncate--expanded', value);
       } else {
         this.truncateTarget.classList.toggle('Truncate--expanded', value);
@@ -107,7 +107,7 @@ export default class ExpandableTextController extends Controller<HTMLElement> {
     this.serverExpanderVisible ??= !this.expanderTarget.hidden;
 
     let truncated:boolean;
-    if (this.modeValue === 'vertical') {
+    if (this.modeValue === 'multi_line') {
       truncated = this.truncateTarget.scrollHeight > this.truncateTarget.clientHeight;
     } else {
       const truncateText = this.truncateTarget.querySelector<HTMLElement>('.Truncate-text')!;

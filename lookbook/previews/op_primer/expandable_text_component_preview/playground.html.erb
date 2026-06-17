@@ -1,5 +1,5 @@
 <div style="max-width: <%= width %>px;">
-  <%= render(OpPrimer::ExpandableTextComponent.new(direction:, lines:, expansion:)) do |component| %>
+  <%= render(OpPrimer::ExpandableTextComponent.new(truncate:, lines:, expansion:)) do |component| %>
     <% if expansion == :dialog %>
       <% component.with_dialog(title: "Full text", size: :large) do |dialog| %>
         <% dialog.with_header(variant: :large) %>

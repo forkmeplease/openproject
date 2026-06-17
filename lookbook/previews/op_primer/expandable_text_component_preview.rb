@@ -31,21 +31,21 @@
 module OpPrimer
   # @logical_path OpenProject/Primer
   class ExpandableTextComponentPreview < ViewComponent::Preview
-    # Interactive playground for all modes. Switch `direction` to `vertical` to
+    # Interactive playground for all modes. Switch `truncate` to `multi_line` to
     # see line-clamping, and `expansion` to `dialog` to reveal the full text in a
     # dialog.
     # @param text "The text content to display" text
     # @param width "Container width in pixels" range { min: 100, max: 600, step: 10 }
-    # @param direction "Truncation direction" select { choices: [horizontal, vertical] }
-    # @param lines "Lines (vertical mode only)" range { min: 1, max: 6, step: 1 }
+    # @param truncate "Truncation style" select { choices: [single_line, multi_line] }
+    # @param lines "Lines (multi_line mode only)" range { min: 1, max: 6, step: 1 }
     # @param expansion "Reveal text in place or in a dialog" select { choices: [inline, dialog] }
     def playground(text: "OpenProject is an open source project management software that supports " \
                          "classic, agile, and hybrid approaches.",
-                   width: 200, direction: :horizontal, lines: 3, expansion: :inline)
-      render_with_template(locals: { text:, width:, direction: direction.to_sym, lines:, expansion: expansion.to_sym })
+                   width: 200, truncate: :single_line, lines: 3, expansion: :inline)
+      render_with_template(locals: { text:, width:, truncate: truncate.to_sym, lines:, expansion: expansion.to_sym })
     end
 
-    # Horizontal truncation with inline expansion (default)
+    # Single-line truncation with inline expansion (default)
     def default
       render_with_template
     end
@@ -56,20 +56,20 @@ module OpPrimer
       render(OpPrimer::ExpandableTextComponent.new) { "Short text" }
     end
 
-    # Horizontal truncation inside a table, mimicking the Permissions Report layout
+    # Single-line truncation inside a table, mimicking the Permissions Report layout
     # @display min_height 300px
     def in_table
       render_with_template
     end
 
-    # Vertical truncation with inline expansion using line-clamp
+    # Multi-line truncation with inline expansion using line-clamp
     # @param lines "Number of visible lines" range { min: 1, max: 6, step: 1 }
     # @display min_height 300px
-    def vertical(lines: 3)
+    def multi_line(lines: 3)
       render_with_template(locals: { lines: })
     end
 
-    # Vertical truncation where the expander opens a dialog instead of expanding inline
+    # Multi-line truncation where the expander opens a dialog instead of expanding inline
     # @display min_height 300px
     def dialog
       render_with_template

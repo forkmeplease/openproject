@@ -35,14 +35,14 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
     render_inline(described_class.new(**), &)
   end
 
-  describe "horizontal mode (default)" do
+  describe "single-line mode (default)" do
     it "renders expandable truncated text" do
       render_component { "Long permission label" }
 
       expect(page).to have_css(
         "div.d-flex.flex-items-baseline.gap-1.min-width-0" \
         "[data-controller='expandable-text']" \
-        "[data-expandable-text-mode-value='horizontal']" \
+        "[data-expandable-text-mode-value='single_line']" \
         "[data-expandable-text-inline-value='true']"
       )
       expect(page).to have_css(".Truncate.flex-1[data-expandable-text-target='truncate']", text: "Long permission label")
@@ -65,12 +65,12 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
     end
   end
 
-  describe "vertical mode" do
+  describe "multi-line mode" do
     it "renders an op-vertical-truncate instead of a Truncate" do
-      render_component(direction: :vertical, lines: 3) { "Multi-line content" }
+      render_component(truncate: :multi_line, lines: 3) { "Multi-line content" }
 
       expect(page).to have_css(
-        "div.d-flex[data-expandable-text-mode-value='vertical']"
+        "div.d-flex[data-expandable-text-mode-value='multi_line']"
       )
       expect(page).to have_css(
         "div.op-vertical-truncate.op-vertical-truncate--lines-3[data-expandable-text-target='truncate']",
@@ -79,24 +79,24 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
       expect(page).to have_no_css(".Truncate")
     end
 
-    it "uses flex-end alignment for vertical mode" do
-      render_component(direction: :vertical) { "Content" }
+    it "uses flex-end alignment for multi-line mode" do
+      render_component(truncate: :multi_line) { "Content" }
 
       expect(page).to have_css("div.flex-items-end")
       expect(page).to have_no_css("div.flex-items-baseline")
     end
 
     it "supports configurable line count" do
-      render_component(direction: :vertical, lines: 5) { "Content" }
+      render_component(truncate: :multi_line, lines: 5) { "Content" }
 
       expect(page).to have_css("div.op-vertical-truncate--lines-5[data-expandable-text-target='truncate']")
     end
 
     it "clamps the line count to the supported range" do
-      render_component(direction: :vertical, lines: 99) { "Content" }
+      render_component(truncate: :multi_line, lines: 99) { "Content" }
       expect(page).to have_css("div.op-vertical-truncate--lines-6[data-expandable-text-target='truncate']")
 
-      render_component(direction: :vertical, lines: 0) { "Content" }
+      render_component(truncate: :multi_line, lines: 0) { "Content" }
       expect(page).to have_css("div.op-vertical-truncate--lines-1[data-expandable-text-target='truncate']")
     end
   end
@@ -165,8 +165,8 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
   end
 
   describe "validation" do
-    it "raises for an invalid direction in development and test" do
-      expect { render_component(direction: :diagonal) { "Content" } }
+    it "raises for an invalid truncate value in development and test" do
+      expect { render_component(truncate: :diagonal) { "Content" } }
         .to raise_error(Primer::FetchOrFallbackHelper::InvalidValueError)
     end
 
