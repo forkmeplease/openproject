@@ -80,12 +80,16 @@ module Backlogs
       sprint.goals.find_or_initialize_by(project:)
     end
 
-    def goal_form_class
+    def goal_label
       if shared_sprint?
-        Backlogs::Sprints::SharedGoalForm
+        I18n.t("backlogs.sprint_form.goal_for_this_project_label", attribute: Sprint.human_attribute_name(:goal))
       else
-        Backlogs::Sprints::OwnedGoalForm
+        Sprint.human_attribute_name(:goal)
       end
+    end
+
+    def goal_caption
+      I18n.t("backlogs.sprint_form.goal_caption") if shared_sprint?
     end
 
     private

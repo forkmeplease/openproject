@@ -30,23 +30,21 @@
 
 module Backlogs
   module Sprints
-    class SharedGoalForm < ApplicationForm
+    class GoalForm < ApplicationForm
       extend Dry::Initializer
 
+      option :label
+      option :caption, optional: true
       option :disabled, default: -> { false }
 
       form do |f|
         f.text_field(
           name: :text,
-          label: goal_label,
-          caption: I18n.t("backlogs.sprint_form.goal_caption"),
+          label:,
+          caption:,
           disabled:,
           maxlength: SprintGoal::TEXT_MAX_LENGTH
         )
-      end
-
-      def goal_label
-        I18n.t("backlogs.sprint_form.goal_for_this_project_label", attribute: Sprint.human_attribute_name(:goal))
       end
     end
   end

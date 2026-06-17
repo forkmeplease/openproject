@@ -62,7 +62,12 @@ See COPYRIGHT and LICENSE files for more details.
         end
         flex.with_row do
           f.fields_for(:goal, goal) do |goal_fields|
-            render goal_form_class.new(goal_fields, disabled: !can_edit_goal?)
+            render Backlogs::Sprints::GoalForm.new(
+              goal_fields,
+              label: goal_label,
+              caption: goal_caption,
+              disabled: !can_edit_goal?
+            )
           end
         end
       end

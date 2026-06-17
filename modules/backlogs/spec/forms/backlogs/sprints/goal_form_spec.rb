@@ -30,13 +30,15 @@
 
 require "rails_helper"
 
-RSpec.describe Backlogs::Sprints::OwnedGoalForm, type: :forms do
+RSpec.describe Backlogs::Sprints::GoalForm, type: :forms do
   include ViewComponent::TestHelpers
 
   let(:project) { create(:project) }
   let(:sprint) { create(:sprint, project:) }
-  let(:disabled) { false }
   let(:goal) { sprint.goals.find_or_initialize_by(project:) }
+  let(:label) { Sprint.human_attribute_name(:goal) }
+  let(:caption) { nil }
+  let(:disabled) { false }
   let(:form_arguments) { { url: "/foo", model: sprint, scope: :sprint } }
 
   def render_form
@@ -44,11 +46,13 @@ RSpec.describe Backlogs::Sprints::OwnedGoalForm, type: :forms do
       described_class,
       form_arguments,
       goal,
+      label,
+      caption,
       disabled
-    ) do |described_class, form_arguments, goal, disabled|
+    ) do |described_class, form_arguments, goal, label, caption, disabled|
       primer_form_with(**form_arguments) do |f|
         f.fields_for(:goal, goal) do |goal_fields|
-          render(described_class.new(goal_fields, disabled:))
+          render(described_class.new(goal_fields, label:, caption:, disabled:))
         end
       end
     end
@@ -59,8 +63,8 @@ RSpec.describe Backlogs::Sprints::OwnedGoalForm, type: :forms do
     page
   end
 
-  it "renders the goal field" do
-    expect(rendered_form).to have_field(Sprint.human_attribute_name(:goal), disabled: false)
+  it "renders the goal field with the provided label" do
+    expect(rendered_form).to have_field(label, disabled: false)
   end
 
   it "renders the goal text field under the goal command param" do
@@ -73,15 +77,27 @@ RSpec.describe Backlogs::Sprints::OwnedGoalForm, type: :forms do
     )
   end
 
-  it "does not render the shared sprint caption" do
+  it "does not render a blank caption" do
     expect(rendered_form).to have_no_text(I18n.t("backlogs.sprint_form.goal_caption"))
+  end
+
+  context "with a caption" do
+    let(:label) do
+      I18n.t("backlogs.sprint_form.goal_for_this_project_label", attribute: Sprint.human_attribute_name(:goal))
+    end
+    let(:caption) { I18n.t("backlogs.sprint_form.goal_caption") }
+
+    it "renders the project-specific label and caption" do
+      expect(rendered_form).to have_field(label, disabled: false)
+      expect(rendered_form).to have_text(caption)
+    end
   end
 
   context "when a goal exists for the project" do
     let!(:goal) { create(:sprint_goal, sprint:, project:, text: "Ship dashboard") }
 
     it "renders the goal value" do
-      expect(rendered_form).to have_field(Sprint.human_attribute_name(:goal), with: "Ship dashboard")
+      expect(rendered_form).to have_field(label, with: "Ship dashboard")
     end
   end
 
@@ -89,7 +105,7 @@ RSpec.describe Backlogs::Sprints::OwnedGoalForm, type: :forms do
     let(:disabled) { true }
 
     it "renders the goal field as disabled" do
-      expect(rendered_form).to have_field(Sprint.human_attribute_name(:goal), disabled: true)
+      expect(rendered_form).to have_field(label, disabled: true)
     end
   end
 end
