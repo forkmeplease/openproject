@@ -42,7 +42,7 @@ module Wikis
         page_link = service_result.result
         turbo_redirect_for_linkable(page_link.linkable)
       else
-        message = service_result.errors.full_messages.join(" ")
+        message = service_result.message
         render_error_flash_message_via_turbo_stream(message:)
         respond_to_with_turbo_streams
       end
@@ -67,7 +67,7 @@ module Wikis
 
     def link_existing_dialog
       linkable = WorkPackage.visible.find(params.expect(:work_package))
-      provider = Provider.visible.find(params.expect(:provider))
+      provider = Provider.visible.enabled.find(params.expect(:provider))
       respond_with_dialog Wikis::LinkExistingWikiPageDialog.new(linkable:, provider:)
     end
 

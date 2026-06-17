@@ -43,7 +43,7 @@ module Wikis
 
     def create_and_link # rubocop:disable Metrics/AbcSize
       parameters = create_new_page_params
-      provider = Provider.visible.find(parameters[:provider_id])
+      provider = Provider.visible.enabled.find(parameters[:provider_id])
 
       CreatePageService
         .new(provider:, user: current_user)
@@ -72,7 +72,7 @@ module Wikis
     end
 
     def search
-      provider = Provider.visible.find(params.expect(:provider_id))
+      provider = Provider.visible.enabled.find(params.expect(:provider_id))
       query = params[:query]
       form_name = params[:name]
       builder = ActionView::Helpers::FormBuilder.new("", nil, view_context, {})

@@ -46,7 +46,7 @@ module Wikis
                            :close_new_page_dialog
 
     def load
-      provider = Provider.visible.find_by(id: params[:provider_id])
+      provider = Provider.visible.enabled.find_by(id: params[:provider_id])
       @page_info_result = page_info_result(provider)
       @turbo_frame_id = turbo_frame_id
 
@@ -85,7 +85,7 @@ module Wikis
     def close_new_page_dialog # rubocop:disable Metrics/AbcSize
       parameters = inline_new_params
 
-      provider = Provider.visible.find(parameters[:provider_id])
+      provider = Provider.visible.enabled.find(parameters[:provider_id])
       result = CreatePageService.new(provider:, user: current_user)
                                 .create_page(title: parameters[:page_title],
                                              parent_identifier: parameters[:parent_page_identifier])
