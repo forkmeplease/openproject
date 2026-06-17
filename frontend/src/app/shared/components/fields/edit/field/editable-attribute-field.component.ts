@@ -57,7 +57,7 @@ import { SchemaResource } from 'core-app/features/hal/resources/schema-resource'
 export class EditableAttributeFieldComponent extends UntilDestroyedMixin implements OnInit, OnDestroy {
   protected states = inject(States);
   protected injector = inject(Injector);
-  protected elementRef = inject(ElementRef);
+  protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected opContextMenu = inject(OPContextMenuService);
   protected halEditing = inject(HalResourceEditingService);
   protected schemaCache = inject(SchemaCacheService);

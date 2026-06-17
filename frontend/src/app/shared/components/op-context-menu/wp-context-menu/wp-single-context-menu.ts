@@ -40,7 +40,7 @@ export class WorkPackageSingleContextMenuDirective extends OpContextMenuTrigger 
   readonly $state = inject(StateService);
   readonly injector = inject(Injector);
   readonly PathHelper = inject(PathHelperService);
-  readonly elementRef = inject(ElementRef);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly turboRequests = inject(TurboRequestsService);
   readonly apiV3Service = inject(ApiV3Service);
   readonly authorisationService = inject(AuthorisationService);
