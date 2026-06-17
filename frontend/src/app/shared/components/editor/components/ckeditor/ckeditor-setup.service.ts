@@ -58,8 +58,11 @@ export class CKEditorSetupService {
     const editorClass = type === 'constrained' ? window.OPConstrainedEditor : window.OPClassicEditor;
     wrapper.classList.add(`ckeditor-type-${type}`);
 
-    const toolbarWrapper = wrapper.querySelector('.document-editor__toolbar')!;
-    const contentWrapper = wrapper.querySelector('.document-editor__editable') as HTMLElement;
+    const toolbarWrapper = wrapper.querySelector<HTMLElement>('.document-editor__toolbar');
+    const contentWrapper = wrapper.querySelector<HTMLElement>('.document-editor__editable');
+    if (!toolbarWrapper || !contentWrapper) {
+      throw new Error('Missing CKEditor wrapper elements.');
+    }
     const config = this.createConfig(context, initialData);
 
     return this
@@ -156,7 +159,7 @@ export class CKEditorSetupService {
     // untyped modules cannot be dynamically imported
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const loadEditorScript = import(/* webpackChunkName: "ckeditor" */ 'core-vendor/ckeditor/ckeditor');
+    const loadEditorScript = import('core-vendor/ckeditor/ckeditor');
 
     const promises = [loadEditorScript];
 
@@ -169,9 +172,7 @@ export class CKEditorSetupService {
 
   private async loadLocale():Promise<void> {
     try {
-      await import(
-        /* webpackPrefetch: true; webpackChunkName: "ckeditor-translation" */ `../../../../../../vendor/ckeditor/translations/${I18n.locale}.js`
-      );
+      await import(`../../../../../../vendor/ckeditor/translations/${I18n.locale}.js`);
       this.loadedLocale = I18n.locale;
     } catch (e:unknown) {
       console.warn(`Failed to load translation for CKEditor: ${e as string}`);

@@ -20,6 +20,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   all:
@@ -38,7 +39,7 @@ jobs:
         persist-credentials: false
     - name: Cache DOCKER
       id: cache_docker
-      uses: runs-on/cache@bd330c5a5f6cbb837823ee25864f3c71a211c2e3 # v5
+      uses: runs-on/cache@88d90644011a3a9957fd141a106f5a94f9794203 # v5
       with:
         path: cache/docker
         # Note: no restore keys since whenever the files below change, we want to rebuild the full image from scratch
@@ -47,28 +48,28 @@ jobs:
       if: steps.cache_docker.outputs.cache-hit == 'true'
       run: docker load -i cache/docker/image.tar
     - name: Cache GEM
-      uses: runs-on/cache@bd330c5a5f6cbb837823ee25864f3c71a211c2e3 # v5
+      uses: runs-on/cache@88d90644011a3a9957fd141a106f5a94f9794203 # v5
       with:
         path: cache/bundle
         key: gem-trixie-${{ hashFiles('.ruby-version') }}-${{ hashFiles('Gemfile.lock') }}
         restore-keys: |
           gem-trixie-${{ hashFiles('.ruby-version') }}-
     - name: Cache NPM
-      uses: runs-on/cache@bd330c5a5f6cbb837823ee25864f3c71a211c2e3 # v5
+      uses: runs-on/cache@88d90644011a3a9957fd141a106f5a94f9794203 # v5
       with:
         path: cache/node
         key: node-${{ hashFiles('package.json', 'frontend/package-lock.json') }}
         restore-keys: |
           node-
     - name: Cache ANGULAR
-      uses: runs-on/cache@bd330c5a5f6cbb837823ee25864f3c71a211c2e3 # v5
+      uses: runs-on/cache@88d90644011a3a9957fd141a106f5a94f9794203 # v5
       with:
         path: cache/angular
         key: angular-${{ hashFiles('package.json', 'frontend/package-lock.json') }}
         restore-keys: |
           angular-
     - name: Cache TEST RUNTIME
-      uses: runs-on/cache@bd330c5a5f6cbb837823ee25864f3c71a211c2e3 # v5
+      uses: runs-on/cache@88d90644011a3a9957fd141a106f5a94f9794203 # v5
       with:
         path: cache/runtime-logs
         key: runtime-logs-${{ github.head_ref || github.ref }}-${{ github.sha }}
@@ -87,6 +88,36 @@ jobs:
         CAPYBARA_AWS_ACCESS_KEY_ID: "${{ secrets.CAPYBARA_AWS_ACCESS_KEY_ID }}"
         CAPYBARA_AWS_SECRET_ACCESS_KEY: "${{ secrets.CAPYBARA_AWS_SECRET_ACCESS_KEY }}"
       run: bin/ci run-features
+    - name: Report flaky specs
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+      run: |
+        if [ -f tmp/retried_specs.txt ]; then
+          echo "## Flaky specs" >> "$GITHUB_STEP_SUMMARY"
+          cat tmp/retried_specs.txt >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$PR_NUMBER" ]; then
+            specs="$(cat tmp/retried_specs.txt)"
+            {
+              printf '> [!WARNING]\n> Flaky specs\n\n'
+              printf '%s\n\n' "$specs"
+              printf '<details>\n<summary>🤖 Ask Copilot to investigate</summary>\n\n'
+              printf 'Copy the prompt below into a new comment on this PR to delegate the investigation to GitHub Copilot. It will look into the flakiness and open a separate pull request with you as reviewer.\n\n'
+              printf '```\n'
+              printf '@copilot The following spec(s) are flaky in CI (first seen on PR #%s, linked for reference only):\n\n' "$PR_NUMBER"
+              printf '%s\n\n' "$specs"
+              printf 'Treat this as a standalone task, unrelated to PR #%s. Create a new branch from origin/dev and open a new pull request targeting dev — do not stack it on PR #%s or reuse that branch.\n\n' "$PR_NUMBER" "$PR_NUMBER"
+              printf 'Follow the playbook in docs/development/testing/handling-flaky-tests/README.md to find the root cause and fix the underlying race — do not skip, delete, or weaken the spec to make it pass; disabling is a last resort per the playbook, and only with a bug ticket. Verify the fix by running the spec(s) repeatedly (e.g. `script/bulk_run_rspec --run-count 10`).\n\n'
+              printf 'If you cannot reproduce the flake or are not confident in a fix after reasonable investigation, do not fabricate a change or skip the spec to force CI green. Instead, leave the pull request in draft and document what you tried, the suspected cause, and any leads in its description, then assign @%s to take over.\n\n' "$PR_AUTHOR"
+              printf 'Once the fix is verified, title the PR after the spec(s) it fixes, and use the PR description to explain the root cause, how the change resolves it, and the before/after results. Label the PR `flaky-spec`, assign @%s, and request a review from @%s.\n' "$PR_AUTHOR" "$PR_AUTHOR"
+              printf 'On every commit, set @%s as the sole co-author with a `Co-authored-by:` trailer (use their GitHub no-reply email so it links to their account), so it is traceable who dispatched the fix.\n' "$PR_AUTHOR"
+              printf '```\n\n'
+              printf '</details>\n'
+            } > tmp/flaky_comment.md
+            gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file tmp/flaky_comment.md
+          fi
+        fi
     - name: Save CI image to cache
       if: steps.cache_docker.outputs.cache-hit != 'true'
       run: mkdir -p cache/docker && docker save openproject/ci:v1 -o cache/docker/image.tar

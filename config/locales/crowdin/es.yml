@@ -32,6 +32,7 @@ es:
         label_activity_show_all: Mostrar todo
         label_activity_show_only_comments: Mostrar solo los comentarios
         label_activity_show_only_changes: Mostrar solo los cambios
+        label_dismiss_comment: Dismiss
         label_sort_asc: Lo más reciente en la parte inferior
         label_sort_desc: Lo más reciente en la parte superior
         label_type_to_comment: Añada un comentario. Escriba @ para notificar a personas.
@@ -44,7 +45,7 @@ es:
         commented: comentado
         internal_comment: Comentario interno
         internal_journal: Los comentarios internos son visibles para un grupo limitado de miembros.
-        unsaved_changes_confirmation_message: Tiene cambios sin guardar. ¿Seguro que desea cerrar el editor?
+        unsaved_changes_confirmation_message: Are you sure you want to dismiss your comment? The content that you have written will be lost.
         internal_comment_confirmation:
           title: "¿Hacer público este comentario?"
           heading: "¿Hacer público este comentario?"
@@ -52,25 +53,27 @@ es:
           confirm_button_text: Hacer pública
   admin:
     reserved_identifiers:
-      title: Identificadores de proyecto reservados
-      lede_html: Cuando se cambia el nombre del identificador de un proyecto, el identificador anterior se mantiene reservado para que los enlaces y las integraciones existentes sigan funcionando.<br>Aquí puedes liberar los identificadores reservados para que puedan ser utilizados por otros proyectos.
+      btn_release: Unreserve
       col_identifier: Identificador
       col_project: Proyecto
       col_reserved: Reservado
-      not_available_in_semantic_mode: Los identificadores de proyecto reservados solo están disponibles en el modo de identificadores numéricos.
-      filter_label: Identificadores de búsqueda
-      btn_release: Lanzamiento
-      released_notice: El identificador "%{identifier}" ha sido liberado.
-      identifier_not_found: No se ha encontrado el identificador reservado. Es posible que ya se haya liberado o que se haya eliminado el proyecto. Actualiza la página.
       dialog:
-        title: Liberar identificador
-        heading: "¿Liberar «%{identifier}»?"
-        description: Una vez liberado este identificador, no se puede revertir la acción. Los enlaces externos y las integraciones que lo utilicen dejarán de funcionar, y el nombre quedará disponible para que lo reclame cualquier proyecto nuevo.
         checkbox_label: Entiendo que esta acción no se puede deshacer.
-        confirm_button: Liberar identificador
+        confirm_button: Unreserve identifier
+        description: Unreserving this project identifier cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+        description_with_work_packages:
+          one: Unreserving this project identifier (and its 1 work package identifier) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+          other: Unreserving this project identifier (and its %{count} work package identifiers) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+        heading: Unreserve "%{identifier}"?
+        title: Unreserve identifier
+      empty_body: When a project's identifier changes, the previous one will appear here so you can unreserve it once it's safe to do so.
       empty_heading: No hay identificadores reservados
+      filter_label: Identificadores de búsqueda
+      identifier_not_found: The reserved identifier could not be found. It may have already been unreserved or the project may have been deleted. Please refresh the page.
+      lede_html: When a project's identifier is renamed, the previous identifier is kept reserved so that existing links and integrations keep working.<br>Here you can unreserve identifiers so that they may be used by other projects.
+      released_notice: Identifier "%{identifier}" has been unreserved.
       reserved_ago: Hace %{time}
-      empty_body: Cuando cambie el identificador de un proyecto, el anterior aparecerá aquí para que puedas liberarlo en cuanto sea seguro hacerlo.
+      title: Identificadores de proyecto reservados
     plugins:
       no_results_title_text: Actualmente no hay ningún plugin instalado.
       no_results_content_text: Consulte nuestra página de integraciones y plugins para obtener más información.
@@ -128,7 +131,7 @@ es:
         trial: Prueba
     jemalloc_allocator: Asignador de memoria Jemalloc
     journal_aggregation:
-      caption: 'Las acciones del usuario en un paquete de trabajo (cambiar la descripción, el estado, los valores o escribir comentarios) se agrupan si se realizan dentro de este periodo. También controla los plazos de notificación y de [webhook](webhook_link).
+      caption_with_maximum: 'User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays. The maximum is %{max} minutes.
 
         '
     import:
@@ -1316,9 +1319,6 @@ es:
       priority_color_text: |
         Haga clic para asignar o cambiar el color de esta prioridad.
         Puede usarse para resaltar paquetes de trabajo en la tabla.
-    admin:
-      default:
-        caption: Si establece esta prioridad como predeterminada, anulará la prioridad predeterminada anterior.
   reactions:
     action_title: Reaccionar
     add_reaction: Añadir reacción
@@ -1520,7 +1520,7 @@ es:
           automatic_with_children: Fechas determinadas por paquetes de trabajo secundarios.
           automatic_with_predecessor: La fecha de inicio la fija un predecesor.
           manual_mobile: Programado manualmente.
-          manually_scheduled: Programado manualmente. No afectadas por relaciones.
+          manually_scheduled: Programado manualmente. Fechas no afectadas por relaciones.
       blankslate:
         title: Sin predecesores
         description: Para activar la programación automática, este paquete de trabajo debe tener al menos un predecesor. Entonces se programará automáticamente para que comience después del predecesor más cercano.
@@ -1716,6 +1716,7 @@ es:
       attachment:
         attachment_content: Contenido del archivo adjunto
         attachment_file_name: Nombre de archivo adjunto
+        charset: Juego de caracteres
         content_type: Tipo de contenido
         downloads: Descargas
         file: Archivo
@@ -1810,6 +1811,7 @@ es:
         title: Título
         description: Descripción
       member:
+        blocked: Bloqueado
         roles: Perfiles
       notification:
         read_ian: Leer dentro de la aplicación
@@ -2055,6 +2057,7 @@ es:
         priority: Prioridad
         progress: "% Completado"
         readonly: Solo lectura
+        relatable: Relacionado con
         remaining_hours: Trabajo restante
         remaining_time: Trabajo restante
         sequence_number: Número de secuencia
@@ -2099,17 +2102,14 @@ es:
         before: debe ser antes de %{date}.
         before_or_equal_to: debe ser antes o igual a %{date}.
         blank: no puede estar en blanco.
-        not_before_start_date: no debe ser anterior a la fecha de inicio.
-        overlapping_range: se solapa con un intervalo de días no laborables ya existente.
         blank_nested: necesita tener la propiedad '%{property}' definida.
         cannot_delete_mapping: es obligatorio. No se puede eliminar.
-        is_for_all_cannot_modify: es para todos los proyectos y, por tanto, no puede modificarse.
         cant_link_a_work_package_with_a_descendant: Un paquete de trabajo no puede ser vinculado a una de sus subtareas.
         circular_dependency: Esta relación podría crear una dependencia circular.
         confirmation: no coincide con %{attribute}.
         could_not_be_copied: "%{dependency} no se pudo copiar (en su totalidad)."
+        datetime_must_be_in_future: debe ser en el futuro.
         does_not_exist: no existe.
-        user_already_in_department: El usuario %{user_id} ya es miembro del departamento %{department_id}.
         error_enterprise_only: "%{action} solo está disponible en OpenProject Enterprise."
         error_unauthorized: no se puede acceder.
         error_readonly: se intentó escribir pero no se puede escribir.
@@ -2130,36 +2130,38 @@ es:
         greater_than_or_equal_to: debe ser mayor o igual a %{count}.
         greater_than_or_equal_to_start_date: debe ser mayor o igual a la fecha de inicio.
         greater_than_start_date: debe ser mayor que la fecha de inicio.
+        hexcode_invalid: no es un código de color hexadecimal válido de 6 dígitos.
         inclusion: no está establecido a uno de los valores permitidos.
         inclusion_nested: no está establecido en uno de los valores permitidos en la ruta '%{path}'.
         invalid: no es válido.
         invalid_uri: debe ser un URI válido.
         invalid_url: no es una URL válida.
         invalid_url_scheme: 'no es un protocolo admitido (permitidos: %{allowed_schemes}).'
+        is_for_all_cannot_modify: es para todos los proyectos y, por tanto, no puede modificarse.
         less_than_or_equal_to: debe ser menor o igual a %{count}.
         not_available: no está disponible debido a una configuración del sistema.
+        not_before_start_date: no debe ser anterior a la fecha de inicio.
         not_deletable: no se puede eliminar.
         not_editable: no se puede editar porque ya está en vigor.
         not_current_user: no es el usuario actual.
-        system_wide_non_working_day_exists: entra en conflicto con un día no laborable ya establecido para todo el sistema en esta fecha.
         not_found: no encontrado.
         not_a_date: no es una fecha válida.
         not_a_datetime: no es una fecha/hora válida.
         not_a_number: No es un número.
         not_allowed: no es válido porque faltan permisos.
-        host_not_allowed: no es un host permitido.
         not_json: no se puede analizar como JSON.
         not_json_object: no es un objeto JSON.
         not_an_integer: No es un entero.
         not_an_iso_date: 'no es una fecha válida. Requiere formato: AAAA-MM-DD.'
         not_same_project: no pertenecen a un mismo proyecto.
-        datetime_must_be_in_future: debe ser en el futuro.
         odd: debe ser impar.
+        overlapping_range: se solapa con un intervalo de días no laborables ya existente.
         regex_match_failed: no coincide con la expresión regular %{expression}.
         regex_invalid: no se pudo validar con la expresión regular asociada.
         regex_list_invalid: Las líneas %{invalid_lines} no se pudieron analizar como expresión regular.
-        hexcode_invalid: no es un código de color hexadecimal válido de 6 dígitos.
         smaller_than_or_equal_to_max_length: Debe ser menor o igual que el tamaño maximo.
+        ssrf_filtered: viola la política SSRF de esta instancia de OpenProject.
+        system_wide_non_working_day_exists: entra en conflicto con un día no laborable ya establecido para todo el sistema en esta fecha.
         taken: Ya se ha tomado.
         too_long: es demasiado largo (el máximo de caracteres es %{count}).
         too_short: es demasiado corto (el mínimo de caracteres es %{count}).
@@ -2172,6 +2174,7 @@ es:
         url_not_secure_context: 'no está proveyendo un "Contexto Seguro". Utiliza HTTPS o una dirección loopack, como un localhost.
 
           '
+        user_already_in_department: El usuario %{user_id} ya es miembro del departamento %{department_id}.
         wrong_length: la longitud es incorrecta (debe ser %{count} caracteres).
       models:
         group:
@@ -2374,11 +2377,12 @@ es:
         setting:
           attributes:
             base:
-              working_days_are_missing: Al menos un día de la semana debe definirse como laboral.
-              previous_working_day_changes_unprocessed: Los cambios anteriores en la configuración de días laborables no se han aplicado aún.
-              hours_per_day_are_missing: Debe definirse el número de horas diarias.
               durations_are_not_positive_numbers: Las duraciones deben ser números positivos.
+              hours_per_day_are_missing: Debe definirse el número de horas diarias.
               hours_per_day_is_out_of_bounds: Las horas al día no pueden ser más de 24
+              journal_aggregation_time_minutes_is_out_of_bounds: Aggregation period must be between %{min} and %{max} minutes.
+              previous_working_day_changes_unprocessed: Los cambios anteriores en la configuración de días laborables no se han aplicado aún.
+              working_days_are_missing: Al menos un día de la semana debe definirse como laboral.
         status:
           attributes:
             default_done_ratio:
@@ -2836,6 +2840,7 @@ es:
   button_login: Iniciar sesión
   button_move: Mover
   button_move_and_follow: Mover y seguir
+  button_next: Siguiente
   button_print: Imprimir
   button_quote: Comentario
   button_remove: Eliminar
@@ -3240,10 +3245,11 @@ es:
       disabled: Habilitar
       enabled: Deshabilitar
   enumeration_activities: Actividades de seguimiento del tiempo
-  enumeration_work_package_priorities: Prioridades del paquete de trabajo
-  enumeration_reported_project_statuses: Estado notificado
   enumeration_caption_order_changed: Orden cambiado con éxito.
   enumeration_could_not_be_moved: No se ha podido mover la enumeración.
+  enumeration_default_value_caption: Making this %{model} the default will override the previous default %{model}.
+  enumeration_reported_project_statuses: Estado notificado
+  enumeration_work_package_priorities: Prioridades del paquete de trabajo
   enterprise_trials:
     dialog_component:
       title: Prueba Enterprise
@@ -3463,6 +3469,12 @@ es:
       selected: Seleccionado
     include_sub_items: Incluir subelementos
     no_results_text: No hay resultados
+  header:
+    project_select_component:
+      all_projects: Todos los proyectos
+      favorites: Favoritos
+      leave_project: Leave project
+      title: Proyectos
   toggle_switch:
     label_on: Encendido
     label_off: Apagado
@@ -3503,6 +3515,9 @@ es:
     additional:
       projects: Projectos visibles mas recientes en esta instancia.
       no_visible_projects: No hay ningún proyecto visible en esta instancia.
+      favorite_projects:
+        no_results: No tiene proyectos favoritos
+        no_results_subtext: Añada uno o varios proyectos como favoritos a través del resumen del proyecto o en una lista de proyectos.
       users: Usuarios registrados mas recientes en esta instancia.
     blocks:
       community: OpenProject Community
@@ -3709,8 +3724,8 @@ es:
         submit_button: Actualizar alertas
     notifications:
       participating:
+        description: You will always receive a notification whenever you are mentioned, and for changes to work packages you are watching. These cannot be disabled. However, you can choose to enable or disable receiving notifications for changes to work packages that concern you (where you are assignee, accountable or are shared with you).
         title: Participando
-        description: Notificaciones para todas las actividades en paquetes de trabajo en los que estás involucrado (asignado, responsable u observador).
         submit_button: Actualizar preferencias
         mentioned: Mencionado
         watched: Observando
@@ -3718,8 +3733,8 @@ es:
         responsible: Responsable
         shared: Compartido conmigo
       date_alerts:
+        description: You can configure date alerts for work packages where you are assignee, accountable and/or watcher to be automatically notified a few days prior to approaching or overdue deadlines.
         title: Alertas de fecha
-        description: Notificaciones automáticas cuando se acercan fechas importantes para paquetes de trabajo abiertos en los que está involucrado (asignado, responsable u observador).
         submit_button: Alertas de fecha de actualización
         start_date: Fecha de inicio
         due_date: Fecha de finalización
@@ -3733,8 +3748,8 @@ es:
           three_days_after: 3 días después
           seven_days_after: 7 días después
       non_participating:
+        description: You can additionally choose to be notified of any of the following activities for all projects.
         title: No participando
-        description: Notificaciones adicionales para actividades en todos los proyectos.
         submit_button: Actualizar preferencias
         work_package_created: Nuevos paquetes de trabajo
         work_package_commented: Todos los nuevos comentarios
@@ -3742,8 +3757,8 @@ es:
         work_package_prioritized: Todos los cambios de prioridad
         work_package_scheduled: Todos los cambios de fecha
       project_specific_settings:
-        title: Configuración de notificaciones específicas de proyectos
-        description: Esta configuración específica de proyectos reemplaza los ajustes predeterminados anteriores.
+        description: You can fine-tune your notification settings to only be notified of certain events in specific projects. Add a project below and choose which events should trigger a notification for you. These project-specific settings override default settings above.
+        title: Project-specific notifications
         add_button: Añadir notificaciones específicas del proyecto
         dialog_title: Añadir notificaciones específicas del proyecto
         list_header: Proyectos con notificaciones específicas
@@ -3877,6 +3892,7 @@ es:
   label_send_invitation: Enviar invitación
   label_calculated_value: Valor calculado
   label_change_parent: Cambiar principal
+  label_change_password: Change password
   label_change_plural: Cambios
   label_change_properties: Cambiar propiedades
   label_change_status: Cambiar estado
@@ -4071,6 +4087,7 @@ es:
   label_journal_diff: Comparación de la descripción
   label_language: Idioma
   label_languages: Idiomas
+  label_export_plural: Exportaciones
   label_external_links: Enlaces externos
   label_locale: Idioma y región
   label_jump_to_a_project: Saltar a un proyecto...
@@ -4162,6 +4179,7 @@ es:
   label_my_account_data: Mis datos de cuenta
   label_my_avatar: Mi avatar
   label_my_queries: Mis consultas personalizadas
+  label_my_security: Security
   label_name: Nombre
   label_never: Nunca
   label_new: Nuevo
@@ -4509,6 +4527,9 @@ es:
   label_x_working_days_time_off:
     one: 'Tiempo libre: 1 día laborable'
     other: 'Tiempo libre: %{count} días laborables'
+  label_x_items_selected:
+    one: Un elemento seleccionado
+    other: "%{count} elementos seleccionados"
   label_yesterday: ayer
   label_zen_mode: Modo zen
   label_role_type: Tipo
@@ -4701,9 +4722,9 @@ es:
       Un nuevo usuario (%{email}) intento crear una cuenta en el ambiente de Proyecto Abierto que usted administra (%{host}).
       El usuario no puede activar su cuenta debido a que el límite del usuario ha sido alcanzado.
     steps:
-      label: 'Para permitir al usuario ingresar, usted puede: '
       a: Mejore su plan de pago ([here](upgrade_url))
       b: Bloquear o eliminar un usuario existente ([here](users_url))
+      label: 'Para permitir al usuario ingresar, usted puede: '
   more_actions: Más funciones
   noscript_description: Necesita activar JavaScript para poder usar OpenProject!
   noscript_heading: JavaScript desactivado
@@ -5217,6 +5238,10 @@ es:
   setting_consent_required: Se requiere consentimiento
   setting_consent_decline_mail: Consentimiento de la dirección de correo electrónico
   setting_cross_project_work_package_relations: Permitir relaciones cruzadas en paquetes de trabajo de proyecto
+  setting_csv_escape_formulas: Fórmulas de escape en las exportaciones CSV
+  setting_csv_escape_formulas_text: 'Para evitar que las fórmulas de las hojas de cálculo se incluyan en las exportaciones CSV, añade una comilla simple delante de las celdas que empiecen con caracteres como =, +, - o @. Esto evita la inserción de fórmulas en el CSV cuando los archivos exportados se abren en aplicaciones de hojas de cálculo como Excel. La desventaja es que se modifican los valores de las cadenas dentro del CSV, así que quizá quieras desactivar esta opción si las herramientas posteriores necesitan los valores exactos de las celdas, sin escapar.
+
+    '
   setting_first_week_of_year: La primera semana del año contiene
   setting_date_format: Fecha
   setting_default_language: Idioma predeterminado
@@ -5257,6 +5282,9 @@ es:
   setting_work_package_properties: Propiedades de paquete de trabajo
   setting_work_package_startdate_is_adddate: Usar fecha actual como fecha de inicio para nuevos paquetes de trabajo
   setting_work_packages_projects_export_limit: Fecha límite para exportar paquete de trabajo o proyectos
+  setting_work_packages_projects_export_limit_text: 'Número máximo de paquetes de trabajo o proyectos que se pueden incluir en una sola exportación. Las exportaciones más grandes se truncan hasta este límite.
+
+    '
   setting_journal_aggregation_time_minutes: Período de agregación
   setting_log_requesting_user: Registrar inicio de sesión de usuario, nombre, y dirección de correo para todas las solicitudes
   setting_login_required: Autentificación requerida
@@ -5954,6 +5982,17 @@ es:
     warning: 'Cambiar qué días de la semana se consideran laborables y cuáles no, puede afectar a las fechas de inicio y fin de todos los paquetes de trabajo y ciclos de vida en todos los proyectos de esta instancia.
 
       '
+    dialog:
+      title: Cambiar los días laborables
+      description: 'Cambiar qué días de la semana se consideran laborables y cuáles no, puede afectar a las fechas de inicio y fin de todos los paquetes de trabajo y ciclos de vida en todos los proyectos de esta instancia.
+
+        '
+      removed_title: 'Eliminará los siguientes días de la lista de días no laborables:'
+      warning: 'Los cambios pueden tardar algún tiempo en surtir efecto. Se le notificará cuando todos los paquetes de trabajo pertinentes se hayan actualizado.
+
+        '
+      heading: "¿Cambiar los días laborables?"
+      confirm_button: Guardar y reprogramar
     journal_note:
       changed: _**Días laborales** cambiados (%{changes})._
       days:

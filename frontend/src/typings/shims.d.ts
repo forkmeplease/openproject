@@ -5,12 +5,9 @@
 // Active issue
 // https://github.com/Microsoft/TypeScript/issues/10178
 
-/// <reference path="../../node_modules/@types/jquery/index.d.ts" />
-/// <reference path="../../node_modules/@types/jqueryui/index.d.ts" />
 /// <reference path="../../node_modules/@types/mousetrap/index.d.ts" />
 /// <reference path="../../node_modules/@types/moment-timezone/index.d.ts" />
 /// <reference path="../../node_modules/@types/urijs/index.d.ts" />
-/// <reference path="../../node_modules/@types/webpack-env/index.d.ts" />
 /// <reference path="../../node_modules/@types/resize-observer-browser/index.d.ts" />
 
 import { Injector } from '@angular/core';
@@ -25,36 +22,13 @@ declare module 'observable-array';
 declare module 'dom-autoscroller';
 declare module 'core-vendor/enjoyhint';
 
-declare module '@hotwired/turbo' {
-  interface BrowserAdapter {
-    formSubmissionStarted:() => void;
-    formSubmissionFinished:() => void;
-  }
-
-  export const session:{
-    drive:boolean;
-    adapter:BrowserAdapter;
-  };
-
-  export const config:{
-    drive:{ progressBarDelay:number }
-  };
-
-  export const navigator:{
-    submitForm:(form:HTMLFormElement, submitter?:HTMLElement) => void;
-  };
-
-  export interface StreamElement {
-    templateElement:HTMLTemplateElement;
-    templateContent:DocumentFragment;
-  }
-
-  export function start():void;
-}
-
 declare global {
   const _:typeof TLodash;
   const I18n:I18n;
+
+  // Public path prefix used to build absolute asset URLs at runtime.
+  // Set once in main.ts; read by the image/video path helpers.
+  var publicAssetPath:string;
 }
 
 declare global {

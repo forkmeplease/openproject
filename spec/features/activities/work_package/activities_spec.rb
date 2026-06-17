@@ -1073,6 +1073,15 @@ RSpec.describe "Work package activity", :js, :with_cuprite, with_ee: %i[internal
             page.find(:xpath, "//*[text()='created this on']").click
             expect(page).to have_no_css(".--anchor-highlighted")
           end
+
+          it "rewrites the legacy activity anchor to the resolved comment in the URL" do
+            wait_for_auto_scrolling_to_finish
+
+            initial_journal = work_package.journals.order(:version).first
+            expect(page.evaluate_script("window.location.hash")).to eq("#comment-#{initial_journal.id}")
+            # The rewrite must keep the work package path, not collapse it to "/".
+            expect(page.evaluate_script("window.location.pathname")).to include("/work_packages/#{work_package.id}")
+          end
         end
 
         context "with #comment- anchor" do
@@ -1551,8 +1560,8 @@ RSpec.describe "Work package activity", :js, :with_cuprite, with_ee: %i[internal
     context "when adding a comment" do
       context "when the creation call raises an unknown server error" do
         before do
-          allow_any_instance_of(WorkPackages::ActivitiesTabController) # rubocop:disable RSpec/AnyInstance
-            .to receive(:create_journal_service_call)
+          allow_any_instance_of(WorkPackages::ActivitiesTab::CommentService) # rubocop:disable RSpec/AnyInstance
+            .to receive(:add)
                   .and_raise(StandardError.new("Test error"))
         end
 
@@ -1627,8 +1636,8 @@ RSpec.describe "Work package activity", :js, :with_cuprite, with_ee: %i[internal
 
       context "when the update call raises an unknown server error" do
         before do
-          allow_any_instance_of(WorkPackages::ActivitiesTabController) # rubocop:disable RSpec/AnyInstance
-            .to receive(:update_journal_service_call)
+          allow_any_instance_of(WorkPackages::ActivitiesTab::CommentService) # rubocop:disable RSpec/AnyInstance
+            .to receive(:update)
                   .and_raise(StandardError.new("Test error"))
         end
 

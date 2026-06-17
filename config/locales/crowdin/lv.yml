@@ -32,6 +32,7 @@ lv:
         label_activity_show_all: Show everything
         label_activity_show_only_comments: Show comments only
         label_activity_show_only_changes: Show changes only
+        label_dismiss_comment: Dismiss
         label_sort_asc: Newest at the bottom
         label_sort_desc: Newest on top
         label_type_to_comment: Add a comment. Type @ to notify people.
@@ -44,7 +45,7 @@ lv:
         commented: commented
         internal_comment: Internal comment
         internal_journal: Internal comments are visible to a limited group of members.
-        unsaved_changes_confirmation_message: You have unsaved changes. Are you sure you want to close the editor?
+        unsaved_changes_confirmation_message: Are you sure you want to dismiss your comment? The content that you have written will be lost.
         internal_comment_confirmation:
           title: Make this comment public?
           heading: Make this comment public?
@@ -52,25 +53,28 @@ lv:
           confirm_button_text: Make public
   admin:
     reserved_identifiers:
-      title: Reserved project identifiers
-      lede_html: When a project's identifier is renamed, the previous identifier is kept reserved so that existing links and integrations keep working.<br>Here you can release reserved identifiers so that they may be used by other projects.
+      btn_release: Unreserve
       col_identifier: Identifier
       col_project: Project
       col_reserved: Reserved
-      not_available_in_semantic_mode: Reserved project identifiers are only available in numeric identifier mode.
-      filter_label: Search identifiers
-      btn_release: Release
-      released_notice: Identifier "%{identifier}" has been released.
-      identifier_not_found: The reserved identifier could not be found. It may have already been released or the project may have been deleted. Please refresh the page.
       dialog:
-        title: Release identifier
-        heading: Release "%{identifier}"?
-        description: Releasing this identifier cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
         checkbox_label: I understand that this cannot be undone.
-        confirm_button: Release identifier
+        confirm_button: Unreserve identifier
+        description: Unreserving this project identifier cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+        description_with_work_packages:
+          zero: Unreserving this project identifier (and its %{count} work package identifiers) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+          one: Unreserving this project identifier (and its 1 work package identifier) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+          other: Unreserving this project identifier (and its %{count} work package identifiers) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim.
+        heading: Unreserve "%{identifier}"?
+        title: Unreserve identifier
+      empty_body: When a project's identifier changes, the previous one will appear here so you can unreserve it once it's safe to do so.
       empty_heading: No reserved identifiers
+      filter_label: Search identifiers
+      identifier_not_found: The reserved identifier could not be found. It may have already been unreserved or the project may have been deleted. Please refresh the page.
+      lede_html: When a project's identifier is renamed, the previous identifier is kept reserved so that existing links and integrations keep working.<br>Here you can unreserve identifiers so that they may be used by other projects.
+      released_notice: Identifier "%{identifier}" has been unreserved.
       reserved_ago: "%{time} ago"
-      empty_body: When a project's identifier changes, the previous one will appear here so you can release it once it's safe to do so.
+      title: Reserved project identifiers
     plugins:
       no_results_title_text: There are currently no plugins installed.
       no_results_content_text: See our integrations and plugins page for more information.
@@ -128,7 +132,7 @@ lv:
         trial: Trial
     jemalloc_allocator: Jemalloc memory allocator
     journal_aggregation:
-      caption: 'User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays.
+      caption_with_maximum: 'User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays. The maximum is %{max} minutes.
 
         '
     import:
@@ -1336,9 +1340,6 @@ lv:
       priority_color_text: |
         Click to assign or change the color of this priority.
         It can be used for highlighting work packages in the table.
-    admin:
-      default:
-        caption: Making this priority default will override the previous default priority.
   reactions:
     action_title: React
     add_reaction: Add reaction
@@ -1742,6 +1743,7 @@ lv:
       attachment:
         attachment_content: Attachment content
         attachment_file_name: Attachment file name
+        charset: Character set
         content_type: Content-type
         downloads: Lejupielādes
         file: Fails
@@ -1836,6 +1838,7 @@ lv:
         title: Title
         description: Description
       member:
+        blocked: Blocked
         roles: Lomas
       notification:
         read_ian: Read in-app
@@ -2081,6 +2084,7 @@ lv:
         priority: Prioritāte
         progress: "% Complete"
         readonly: Read only
+        relatable: Relatable to
         remaining_hours: Atlikušie darbi
         remaining_time: Atlikušie darbi
         sequence_number: Sequence number
@@ -2125,17 +2129,14 @@ lv:
         before: jābūt pirms %{date}.
         before_or_equal_to: jābūt pirms vai vienādam ar %{date}.
         blank: nevar būt tukšs.
-        not_before_start_date: must not be before the start date.
-        overlapping_range: overlaps with an existing non-working day range.
         blank_nested: needs to have the property '%{property}' set.
         cannot_delete_mapping: is required. Cannot be deleted.
-        is_for_all_cannot_modify: is for all projects and can therefore not be modified.
         cant_link_a_work_package_with_a_descendant: Darbu kompleksu nevar saistīt vienu no tā apakšuzdevumiem.
         circular_dependency: Šī attiecība radītu riņķveida saistību.
         confirmation: neatbilst %{attribute}.
         could_not_be_copied: "%{dependency} could not be (fully) copied."
+        datetime_must_be_in_future: must be in the future.
         does_not_exist: nepastāv.
-        user_already_in_department: User %{user_id} is already a member of department %{department_id}.
         error_enterprise_only: "%{action} is only available in the OpenProject Enterprise edition."
         error_unauthorized: may not be accessed.
         error_readonly: was attempted to be written but is not writable.
@@ -2156,36 +2157,38 @@ lv:
         greater_than_or_equal_to: jābūt lielākam vai vienādam ar %{count}.
         greater_than_or_equal_to_start_date: must be greater than or equal to the start date.
         greater_than_start_date: must be greater than the start date.
+        hexcode_invalid: is not a valid 6-digit hexadecimal color code.
         inclusion: nav iestatīts uz vienu no atļautajām vērtībām.
         inclusion_nested: is not set to one of the allowed values at path '%{path}'.
         invalid: nav derīgs.
         invalid_uri: must be a valid URI.
         invalid_url: nederīgs URL vietrādis.
         invalid_url_scheme: 'is not a supported protocol (allowed: %{allowed_schemes}).'
+        is_for_all_cannot_modify: is for all projects and can therefore not be modified.
         less_than_or_equal_to: jābūt mazākam vai vienādam ar %{count}.
         not_available: is not available due to a system configuration.
+        not_before_start_date: must not be before the start date.
         not_deletable: cannot be deleted.
         not_editable: cannot be edited because it is already in effect.
         not_current_user: is not the current user.
-        system_wide_non_working_day_exists: conflicts with an existing system-wide non-working day for this date.
         not_found: not found.
         not_a_date: is not a valid date.
         not_a_datetime: is not a valid date time.
         not_a_number: nav skaitlis.
         not_allowed: is invalid because of missing permissions.
-        host_not_allowed: is not an allowed host.
         not_json: is not parseable as JSON.
         not_json_object: is not a JSON object.
         not_an_integer: nav vesels skaitlis.
         not_an_iso_date: 'is not a valid date. Required format: YYYY-MM-DD.'
         not_same_project: neietilpst vienā un tai pašā projektā.
-        datetime_must_be_in_future: must be in the future.
         odd: jābūt nepāra.
+        overlapping_range: overlaps with an existing non-working day range.
         regex_match_failed: does not match the regular expression %{expression}.
         regex_invalid: could not be validated with the associated regular expression.
         regex_list_invalid: Lines %{invalid_lines} could not be parsed as regular expression.
-        hexcode_invalid: is not a valid 6-digit hexadecimal color code.
         smaller_than_or_equal_to_max_length: jābūt mazākam vai vienādam ar maksimālo garumu.
+        ssrf_filtered: violates the SSRF policy of this OpenProject instance.
+        system_wide_non_working_day_exists: conflicts with an existing system-wide non-working day for this date.
         taken: jau tika aizņemts.
         too_long: ir pārāk garš (maksimums ir %{count} rakstzīmes).
         too_short: ir pārāk īss (minimums ir %{count} rakstzīmes).
@@ -2198,6 +2201,7 @@ lv:
         url_not_secure_context: 'is not providing a "Secure Context". Either use HTTPS or a loopback address, such as localhost.
 
           '
+        user_already_in_department: User %{user_id} is already a member of department %{department_id}.
         wrong_length: ir nepareizs garums (vajadzētu būt %{count} rakstzīmes).
       models:
         group:
@@ -2401,11 +2405,12 @@ lv:
         setting:
           attributes:
             base:
-              working_days_are_missing: At least one day of the week must be defined as a working day.
-              previous_working_day_changes_unprocessed: The previous changes to the working days configuration have not been applied yet.
-              hours_per_day_are_missing: The number of hours per day must be defined.
               durations_are_not_positive_numbers: The durations must be positive numbers.
+              hours_per_day_are_missing: The number of hours per day must be defined.
               hours_per_day_is_out_of_bounds: Hours per day can't be more than 24
+              journal_aggregation_time_minutes_is_out_of_bounds: Aggregation period must be between %{min} and %{max} minutes.
+              previous_working_day_changes_unprocessed: The previous changes to the working days configuration have not been applied yet.
+              working_days_are_missing: At least one day of the week must be defined as a working day.
         status:
           attributes:
             default_done_ratio:
@@ -2884,6 +2889,7 @@ lv:
   button_login: Ienākt
   button_move: Move
   button_move_and_follow: Move and follow
+  button_next: Next
   button_print: Drukāt
   button_quote: Citēt
   button_remove: Noņemt
@@ -3311,10 +3317,11 @@ lv:
       disabled: Enable
       enabled: Disable
   enumeration_activities: Time tracking activities
-  enumeration_work_package_priorities: Pieteikumu prioritātes
-  enumeration_reported_project_statuses: Reported status
   enumeration_caption_order_changed: Order successfully changed.
   enumeration_could_not_be_moved: Enumeration could not be moved.
+  enumeration_default_value_caption: Making this %{model} the default will override the previous default %{model}.
+  enumeration_reported_project_statuses: Reported status
+  enumeration_work_package_priorities: Pieteikumu prioritātes
   enterprise_trials:
     dialog_component:
       title: Enterprise Trial
@@ -3534,6 +3541,12 @@ lv:
       selected: Selected
     include_sub_items: Include sub-items
     no_results_text: No results
+  header:
+    project_select_component:
+      all_projects: All projects
+      favorites: Favorites
+      leave_project: Leave project
+      title: Projects
   toggle_switch:
     label_on: 'On'
     label_off: 'Off'
@@ -3576,6 +3589,9 @@ lv:
     additional:
       projects: Jaunākie redzamie projekti šajā instancē.
       no_visible_projects: There are no visible projects in this instance.
+      favorite_projects:
+        no_results: You have no favorite projects
+        no_results_subtext: Add one or multiple projects as favorite through their overview or in a project list.
       users: Jaunākās reģistrētie lietotāji šajā instancē.
     blocks:
       community: OpenProject community
@@ -3782,8 +3798,8 @@ lv:
         submit_button: Update alerts
     notifications:
       participating:
+        description: You will always receive a notification whenever you are mentioned, and for changes to work packages you are watching. These cannot be disabled. However, you can choose to enable or disable receiving notifications for changes to work packages that concern you (where you are assignee, accountable or are shared with you).
         title: Participating
-        description: Notifications for all activities in work packages you are involved in (assignee, accountable or watcher).
         submit_button: Update preferences
         mentioned: Mentioned
         watched: Watching
@@ -3791,8 +3807,8 @@ lv:
         responsible: Accountable
         shared: Shared with me
       date_alerts:
+        description: You can configure date alerts for work packages where you are assignee, accountable and/or watcher to be automatically notified a few days prior to approaching or overdue deadlines.
         title: Date alerts
-        description: Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher).
         submit_button: Update date alerts
         start_date: Start date
         due_date: Finish date
@@ -3806,8 +3822,8 @@ lv:
           three_days_after: 3 days after
           seven_days_after: 7 days after
       non_participating:
+        description: You can additionally choose to be notified of any of the following activities for all projects.
         title: Non-participating
-        description: Additional notifications for activities in all projects.
         submit_button: Update preferences
         work_package_created: New work packages
         work_package_commented: All new comments
@@ -3815,8 +3831,8 @@ lv:
         work_package_prioritized: All priority changes
         work_package_scheduled: All date changes
       project_specific_settings:
-        title: Project-specific notification settings
-        description: These project-specific settings override default settings above.
+        description: You can fine-tune your notification settings to only be notified of certain events in specific projects. Add a project below and choose which events should trigger a notification for you. These project-specific settings override default settings above.
+        title: Project-specific notifications
         add_button: Add project-specific notifications
         dialog_title: Add project-specific notifications
         list_header: Projects with specific notifications
@@ -3950,6 +3966,7 @@ lv:
   label_send_invitation: Nosūtīt ielūgumu
   label_calculated_value: Calculated value
   label_change_parent: Mainīt vecāku
+  label_change_password: Change password
   label_change_plural: Changes
   label_change_properties: Change properties
   label_change_status: Change status
@@ -4144,6 +4161,7 @@ lv:
   label_journal_diff: Description Comparison
   label_language: Valoda
   label_languages: Languages
+  label_export_plural: Exports
   label_external_links: External links
   label_locale: Language and region
   label_jump_to_a_project: Jump to a project...
@@ -4235,6 +4253,7 @@ lv:
   label_my_account_data: Mana konta dati
   label_my_avatar: My avatar
   label_my_queries: My custom queries
+  label_my_security: Security
   label_name: Nosaukums
   label_never: Nekad
   label_new: Jauns
@@ -4585,6 +4604,10 @@ lv:
     zero: 'Time off: %{count} working days'
     one: 'Time off: 1 working day'
     other: 'Time off: %{count} working days'
+  label_x_items_selected:
+    zero: "%{count} items selected"
+    one: One item selected
+    other: "%{count} items selected"
   label_yesterday: yesterday
   label_zen_mode: Zen mode
   label_role_type: Veids
@@ -4778,9 +4801,9 @@ lv:
       A new user (%{email}) tried to create an account on an OpenProject environment that you manage (%{host}).
       The user cannot activate their account since the user limit has been reached.
     steps:
-      label: 'To allow the user to sign in you can either: '
       a: Upgrade your payment plan ([here](upgrade_url))
       b: Lock or delete an existing user ([here](users_url))
+      label: 'To allow the user to sign in you can either: '
   more_actions: Vairāk funkcijas
   noscript_description: Nepieciešams aktivizēt JavaScript, lai izmantotu OpenProject!
   noscript_heading: Atspējots JavaScripts
@@ -5301,6 +5324,10 @@ lv:
   setting_consent_required: Consent required
   setting_consent_decline_mail: Consent contact mail address
   setting_cross_project_work_package_relations: Allow cross-project work package relations
+  setting_csv_escape_formulas: Escape formulas in CSV exports
+  setting_csv_escape_formulas_text: 'Escape spreadsheet formulas in CSV exports by prefixing cells that begin with characters such as =, +, -, or @ with a single quote. This mitigates CSV formula injection when exported files are opened in spreadsheet applications such as Excel. This comes at the downside of modifying the string values inside the CSV, so you may want to disable this if downstream tools require the exact, unescaped cell values.
+
+    '
   setting_first_week_of_year: First week in year contains
   setting_date_format: Datums
   setting_default_language: Default language
@@ -5341,6 +5368,9 @@ lv:
   setting_work_package_properties: Work package properties
   setting_work_package_startdate_is_adddate: Use current date as start date for new work packages
   setting_work_packages_projects_export_limit: Work packages / Projects export limit
+  setting_work_packages_projects_export_limit_text: 'Maximum number of work packages or projects that can be included in a single export. Larger exports are truncated to this limit.
+
+    '
   setting_journal_aggregation_time_minutes: Aggregation period
   setting_log_requesting_user: Log user login, name, and mail address for all requests
   setting_login_required: Authentication required
@@ -6043,6 +6073,17 @@ lv:
     warning: 'Changing which days of the week are considered working days or non-working days can affect the start and finish days of all work packages and life cycles in all projects in this instance.
 
       '
+    dialog:
+      title: Change working days
+      description: 'Changing which days of the week are considered working days or non-working days can affect the start and finish days of all work packages and life cycles in all projects in this instance.
+
+        '
+      removed_title: 'You will remove the following days from the non-working days list:'
+      warning: 'The changes might take some time to take effect. You will be notified when all relevant work packages and project life cycles have been updated.
+
+        '
+      heading: Change the working days?
+      confirm_button: Save and reschedule
     journal_note:
       changed: _**Working days** changed (%{changes})._
       days:
