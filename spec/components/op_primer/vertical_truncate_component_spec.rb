@@ -45,8 +45,8 @@ RSpec.describe OpPrimer::VerticalTruncateComponent, type: :component do
     render_component(lines: 99) { "Content" }
     expect(page).to have_css("div.op-vertical-truncate--lines-8")
 
-    render_component(lines: 0) { "Content" }
-    expect(page).to have_css("div.op-vertical-truncate--lines-1")
+    render_component(lines: 1) { "Content" }
+    expect(page).to have_css("div.op-vertical-truncate--lines-2")
   end
 
   it "forwards system arguments to the wrapper" do

@@ -96,8 +96,8 @@ RSpec.describe OpPrimer::ExpandableTextComponent, type: :component do
       render_component(truncate: :multi_line, lines: 99) { "Content" }
       expect(page).to have_css("div.op-vertical-truncate--lines-8[data-expandable-text-target='truncate']")
 
-      render_component(truncate: :multi_line, lines: 0) { "Content" }
-      expect(page).to have_css("div.op-vertical-truncate--lines-1[data-expandable-text-target='truncate']")
+      render_component(truncate: :multi_line, lines: 1) { "Content" }
+      expect(page).to have_css("div.op-vertical-truncate--lines-2[data-expandable-text-target='truncate']")
     end
   end
 

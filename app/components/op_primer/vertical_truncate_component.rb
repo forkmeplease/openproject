@@ -36,10 +36,11 @@ module OpPrimer
   # line horizontally). Like `Truncate`, it wraps whatever block content it is
   # given; callers pass system arguments (e.g. `flex:`, `data:`) through.
   class VerticalTruncateComponent < Primer::Component # rubocop:disable OpenProject/AddPreviewForViewComponent
-    LINES_RANGE = (1..8)
+    LINES_RANGE = (2..8)
     LINES_DEFAULT = 3
 
-    # @param lines [Integer] number of visible rows, clamped to `1..8`.
+    # @param lines [Integer] number of visible rows, clamped to `2..8` (a single
+    #   line is `Primer::Beta::Truncate`'s job).
     # @param tag [Symbol] wrapping element; defaults to `:div` (safe for block
     #   content). Overridable, mirroring `Primer::Beta::Truncate`.
     # @param system_arguments [Hash] forwarded to the wrapping `Primer::BaseComponent`.
