@@ -28,7 +28,7 @@ See COPYRIGHT and LICENSE files for more details.
 ++#%>
 
 <%=
-  flex_layout(classes: "op-user-card", data: { test_selector: "user-card-#{@user.id}" }) do |card|
+  flex_layout(**card_options) do |card|
     card.with_row do
       flex_layout(classes: "op-user-card--header", align_items: :center) do |header|
         header.with_column do
@@ -38,32 +38,14 @@ See COPYRIGHT and LICENSE files for more details.
         header.with_column(classes: "op-user-card--identity") do
           flex_layout do |identity|
             identity.with_row(classes: "op-user-card--name") do
-              # TODO - make the whole card clickable to open the dialog?
-              if @details_path
-                render(
-                  Primer::Beta::Link.new(
-                    href: @details_path,
-                    font_weight: :semibold,
-                    underline: false,
-                    data: { controller: "async-dialog", test_selector: "user-card-name" }
-                  )
-                ) { @user.name }
-              else
-                render(Primer::Beta::Text.new(font_weight: :semibold, data: { test_selector: "user-card-name" })) do
-                  @user.name
-                end
+              render(Primer::Beta::Text.new(font_weight: :semibold)) do
+                @user.name
               end
             end
 
             if show_email?
               identity.with_row(classes: "op-user-card--email") do
-                render(
-                  Primer::Beta::Text.new(
-                    font_size: :small,
-                    color: :muted,
-                    data: { test_selector: "user-card-email" }
-                  )
-                ) do
+                render(Primer::Beta::Text.new(font_size: :small, color: :muted)) do
                   @user.mail
                 end
               end
@@ -83,8 +65,7 @@ See COPYRIGHT and LICENSE files for more details.
                 aria: { label: t("resource_management.user_card_list.card.remove") },
                 data: {
                   turbo_method: :delete,
-                  turbo_confirm: t("resource_management.user_card_list.card.remove_confirmation"),
-                  test_selector: "user-card-remove-#{@user.id}"
+                  turbo_confirm: t("resource_management.user_card_list.card.remove_confirmation")
                 }
               )
             )
@@ -100,7 +81,7 @@ See COPYRIGHT and LICENSE files for more details.
         end
 
         f.with_column do
-          render(Primer::Beta::Text.new(color: :muted, data: { test_selector: "user-card-groups" })) do
+          render(Primer::Beta::Text.new(color: :muted)) do
             group_membership_summary
           end
         end
@@ -118,13 +99,7 @@ See COPYRIGHT and LICENSE files for more details.
                 end
               end
               line.with_column do
-                render(
-                  Primer::Beta::Text.new(
-                    font_size: :small,
-                    color: :muted,
-                    data: { test_selector: "user-card-utilization" }
-                  )
-                ) do
+                render(Primer::Beta::Text.new(font_size: :small, color: :muted)) do
                   utilization_label
                 end
               end
@@ -142,8 +117,7 @@ See COPYRIGHT and LICENSE files for more details.
       render(
         Primer::Beta::Button.new(
           tag: :a,
-          href: helpers.allowed_management_user_profile_path(@user),
-          data: { test_selector: "user-card-profile-btn" }
+          href: helpers.allowed_management_user_profile_path(@user)
         )
       ) do
         I18n.t("users.open_profile")

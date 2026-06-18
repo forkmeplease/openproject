@@ -34,13 +34,13 @@ module ResourcePlannerViews::UserCardList
   class CardComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
-    def initialize(user:, remove_path: nil, utilization: nil, details_path: nil)
+    def initialize(user:, details_path:, remove_path: nil, utilization: nil)
       super
 
       @user = user
+      @details_path = details_path
       @remove_path = remove_path
       @utilization = utilization
-      @details_path = details_path
     end
 
     def render?
@@ -108,6 +108,16 @@ module ResourcePlannerViews::UserCardList
       else
         t("users.groups.summary_html", names: summary_links)
       end
+    end
+
+    def card_options
+      {
+        classes: "op-user-card",
+        data: {
+          controller: "resource-management--user-card",
+          "resource-management--user-card-url-value": @details_path
+        }
+      }
     end
   end
 end
