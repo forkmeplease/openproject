@@ -116,8 +116,8 @@ cs:
       select_sprint_label: Vyberte sprint
       button_complete_sprint: Dokončit sprint
     inbox_component:
-      title: Příchozí
-      blankslate_title: Žádné příchozí položky
+      title: Nevyřízené
+      blankslate_title: Žádné nevyřízené položky
       blankslate_description: Zde se automaticky zobrazí všechny otevřené pracovní balíčky tohoto projektu.
       show_more:
         one: Zobrazit ještě 1 položku
