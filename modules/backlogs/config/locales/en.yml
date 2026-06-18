@@ -107,15 +107,15 @@ en:
       button_new_backlog_bucket: "New backlog bucket"
 
     backlog_filter_select_panel_component:
-      select_panel_title: "Select items"
-      label_sprint_filter:
-        zero: "All sprints"
-        one: "Sprint"
-        other: "Sprints"
       label_backlog_bucket_filter:
-        zero: "All backlog buckets"
         one: "Backlog bucket"
         other: "Backlog buckets"
+        zero: "All backlog buckets"
+      label_sprint_filter:
+        one: "Sprint"
+        other: "Sprints"
+        zero: "All sprints"
+      select_panel_title: "Select items"
     bucket_destroy_modal_component:
       title: "Delete backlog bucket?"
       details: "The backlog bucket '%{name}' will be deleted and all work packages will be moved to the backlog inbox. No work package will be deleted."
