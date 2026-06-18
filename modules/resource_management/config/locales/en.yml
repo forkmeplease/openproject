@@ -130,6 +130,7 @@ en:
     sub_views: Views in this resource planner
     user_allocations_dialog:
       allocate_work_package: Allocate work package
+      blank: This user has no allocated work packages.
       other_work_packages:
         one: "1 other work package"
         other: "%{count} other work packages"

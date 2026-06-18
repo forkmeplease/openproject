@@ -183,6 +183,16 @@ See COPYRIGHT and LICENSE files for more details.
               end
             end
           end
+        else
+          body.with_row do
+            render(Primer::Beta::BorderBox.new) do |box|
+              box.with_row do
+                render(Primer::Beta::Text.new(color: :subtle)) do
+                  t("resource_management.user_allocations_dialog.blank")
+                end
+              end
+            end
+          end
         end
       end
     end
