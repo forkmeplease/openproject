@@ -1,8 +1,9 @@
 <%# locals: (user:) -%>
-<section class="form--section">
-  <h3 class="form--section-title"><%= t("consent.title") %></h3>
-  <% consent_link = admin_settings_users_path(anchor: "consent_settings") %>
-
+<% consent_link = admin_settings_users_path(anchor: "consent_settings") %>
+<%= render(Primer::Box.new(tag: :section, mb: 4)) do %>
+  <%= render(Primer::Beta::Subhead.new) do |subhead| %>
+    <% subhead.with_heading(tag: :h3, size: :medium).with_content(t("consent.title")) %>
+  <% end %>
   <%= render ::Components::OnOffStatusComponent.new(
         {
           is_on: user.consented_at.present?,
@@ -12,4 +13,4 @@
           off_description: link_translate("consent.not_yet_consented", links: { consent_settings: consent_link })
         }
       ) %>
-</section>
+<% end %>

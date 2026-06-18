@@ -1,7 +1,7 @@
 <%# locals: (user:, target_avatar_path:) -%>
 <% manager = ::OpenProject::Avatars::AvatarManager %>
 
-<div class="avatars--layout mb-4">
+<div class="avatars--layout">
   <div class="avatars--media">
     <% if manager.local_avatars_enabled? %>
       <%# Clicking the avatar activates the hidden file input rendered by the
