@@ -296,6 +296,28 @@ module OpenProject::Storages
           filter ::Queries::Storages::ProjectStorages::Filter::ProjectIdFilter
         end
       end
+
+      API::V3::WorkPackages::WorkPackageRepresenter.include ::API::V3::FileLinks::FileLinkRelationRepresenter
+
+      API::V3::WorkPackages::WorkPackagePayloadRepresenter
+        .property :file_links,
+                  exec_context: :decorator,
+                  getter: ->(*) {},
+                  setter: ->(fragment:, **) do
+                    next unless fragment.is_a?(Array)
+
+                    ids = fragment.map do |link|
+                      ::API::Utilities::ResourceLinkParser.parse_id link["href"],
+                                                                    property: :file_link,
+                                                                    expected_version: "3",
+                                                                    expected_namespace: :file_links
+                    end
+
+                    represented.file_links_ids = ids
+                  end,
+                  skip_render: ->(*) { true },
+                  linked_resource: true,
+                  uncacheable: true
     end
 
     # This helper methods adds a method on the `api_v3_paths` helper. It is created with one parameter (storage_id)
