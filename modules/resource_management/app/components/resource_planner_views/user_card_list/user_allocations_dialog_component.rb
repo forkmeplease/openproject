@@ -126,9 +126,8 @@ module ResourcePlannerViews::UserCardList
       "user-allocation-overbooked-#{allocation.id}"
     end
 
-    # TODO - prefill with user info on open
     def allocate_work_package_path
-      new_project_resource_allocation_path(project)
+      new_project_resource_allocation_path(project, principal_id: user.id, resource_planner_id: resource_planner.id)
     end
 
     def edit_allocation_path(allocation)
