@@ -31,7 +31,12 @@
 require "spec_helper"
 
 RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivity", type: :model do
-  let(:project) { create(:project, enabled_module_names: %i[backlogs work_package_tracking]) }
+  shared_let(:project) { create(:project, enabled_module_names: %i[backlogs work_package_tracking]) }
+
+  shared_let(:sprint) { create(:sprint, project:) }
+  shared_let(:other_sprint) { create(:sprint, project:) }
+  shared_let(:bucket) { create(:backlog_bucket, project:) }
+  shared_let(:other_bucket) { create(:backlog_bucket, project:) }
 
   let(:permissions) do
     %i[
@@ -43,9 +48,6 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
   end
 
   let(:user) { create(:user, member_with_permissions: { project => permissions }) }
-
-  let(:sprint) { create(:sprint, project:) }
-  let(:bucket) { create(:backlog_bucket, project:) }
 
   let(:instance) { described_class.new(user:, model: work_package) }
 
@@ -60,6 +62,20 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
       expect(result).to be_success
       expect(work_package.reload).to have_attributes(sprint: nil, backlog_bucket: bucket)
     end
+
+    it "keeps sprint unchanged when no bucket is passed" do
+      result = instance.call(sprint:)
+
+      expect(result).to be_success
+      expect(work_package.reload).to have_attributes(sprint:, backlog_bucket: nil)
+    end
+
+    it "allows explicitly clearing sprint while setting bucket in the same call" do
+      result = instance.call(sprint: nil, backlog_bucket: bucket)
+
+      expect(result).to be_success
+      expect(work_package.reload).to have_attributes(sprint: nil, backlog_bucket: bucket)
+    end
   end
 
   context "when the work package has a bucket assigned" do
@@ -67,6 +83,20 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
 
     it "clears the bucket when a sprint is assigned" do
       result = instance.call(sprint:)
+
+      expect(result).to be_success
+      expect(work_package.reload).to have_attributes(sprint:, backlog_bucket: nil)
+    end
+
+    it "keeps backlog bucket unchanged when no sprint is passed" do
+      result = instance.call(backlog_bucket: bucket)
+
+      expect(result).to be_success
+      expect(work_package.reload).to have_attributes(sprint: nil, backlog_bucket: bucket)
+    end
+
+    it "allows explicitly clearing bucket while setting sprint in the same call" do
+      result = instance.call(sprint:, backlog_bucket: nil)
 
       expect(result).to be_success
       expect(work_package.reload).to have_attributes(sprint:, backlog_bucket: nil)
@@ -85,11 +115,35 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
     end
   end
 
+  context "when sprint is set and bucket is changed in the same call" do
+    let(:work_package) { create(:work_package, project:, backlog_bucket: bucket) }
+
+    it "returns a validation error" do
+      result = instance.call(sprint:, backlog_bucket: other_bucket)
+
+      expect(result).to be_failure
+      expect(result.errors.symbols_for(:base)).to include(:backlog_bucket_xor_sprint)
+      expect(work_package.reload).to have_attributes(sprint: nil, backlog_bucket: bucket)
+    end
+  end
+
+  context "when sprint is changed and bucket is set in the same call" do
+    let(:work_package) { create(:work_package, project:, sprint:) }
+
+    it "returns a validation error" do
+      result = instance.call(sprint: other_sprint, backlog_bucket: bucket)
+
+      expect(result).to be_failure
+      expect(result.errors.symbols_for(:base)).to include(:backlog_bucket_xor_sprint)
+      expect(work_package.reload).to have_attributes(sprint:, backlog_bucket: nil)
+    end
+  end
+
   context "when only sprint changes (no bucket involved)" do
     context "when the work package has no sprint" do
       let(:work_package) { create(:work_package, project:) }
 
-      it "sets the sprint without clearing the bucket" do
+      it "sets the sprint" do
         result = instance.call(sprint:)
 
         expect(result).to be_success
@@ -98,17 +152,16 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
     end
 
     context "when the work package already has a sprint" do
-      let(:other_sprint) { create(:sprint, project:) }
       let(:work_package) { create(:work_package, project:, sprint:) }
 
-      it "changes the sprint without clearing the bucket" do
+      it "changes the sprint" do
         result = instance.call(sprint: other_sprint)
 
         expect(result).to be_success
         expect(work_package.reload).to have_attributes(sprint: other_sprint, backlog_bucket: nil)
       end
 
-      it "clears the sprint without clearing the bucket" do
+      it "clears the sprint" do
         result = instance.call(sprint: nil)
 
         expect(result).to be_success
@@ -121,7 +174,7 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
     context "when the work package has no bucket" do
       let(:work_package) { create(:work_package, project:) }
 
-      it "sets the bucket without clearing the sprint" do
+      it "sets the bucket" do
         result = instance.call(backlog_bucket: bucket)
 
         expect(result).to be_success
@@ -130,17 +183,16 @@ RSpec.describe WorkPackages::UpdateService, "sprint and bucket mutual exclusivit
     end
 
     context "when the work package already has a bucket" do
-      let(:other_bucket) { create(:backlog_bucket, project:) }
       let(:work_package) { create(:work_package, project:, backlog_bucket: bucket) }
 
-      it "changes the bucket without clearing the sprint" do
+      it "changes the bucket" do
         result = instance.call(backlog_bucket: other_bucket)
 
         expect(result).to be_success
         expect(work_package.reload).to have_attributes(sprint: nil, backlog_bucket: other_bucket)
       end
 
-      it "clears the bucket without clearing the sprint" do
+      it "clears the bucket" do
         result = instance.call(backlog_bucket: nil)
 
         expect(result).to be_success
