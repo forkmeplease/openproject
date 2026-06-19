@@ -297,6 +297,14 @@ module OpenProject::Storages
         end
       end
 
+      WorkPackages::SetAttributesService.include Storages::FileLinks::SetReplacements
+
+      WorkPackages::CreateService.include Storages::FileLinks::ReplaceFileLinks
+      WorkPackages::UpdateService.include Storages::FileLinks::ReplaceFileLinks
+
+      WorkPackages::CreateContract.include Storages::FileLinks::ValidateReplacements
+      WorkPackages::UpdateContract.include Storages::FileLinks::ValidateReplacements
+
       API::V3::WorkPackages::WorkPackageRepresenter.include ::API::V3::FileLinks::FileLinkRelationRepresenter
 
       API::V3::WorkPackages::WorkPackagePayloadRepresenter

@@ -66,6 +66,8 @@ class WorkPackage < ApplicationRecord
   has_many :file_links, dependent: :delete_all, class_name: "Storages::FileLink", as: :container
   has_many :storages, through: :project
 
+  attr_accessor :file_links_replacements
+
   has_and_belongs_to_many :changesets, -> { # rubocop:disable Rails/HasAndBelongsToMany
     order("#{Changeset.table_name}.committed_on ASC, #{Changeset.table_name}.id ASC")
   }

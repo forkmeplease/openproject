@@ -23,35 +23,34 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# A FileLink represents a relation to a single file stored in some cloud file storage.
-# Additional attributes and constraints are defined in db/migrate/20220113144759_create_file_links.rb
-# FileLinks are attached to a "container", which currently has to be a WorkPackage.
-class Storages::FileLink < ApplicationRecord
-  belongs_to :storage
-  belongs_to :creator, class_name: "User"
-  belongs_to :container, polymorphic: true
+module Storages
+  module FileLinks
+    module SetReplacements
+      def self.included(base)
+        base.prepend Prepends
+      end
 
-  validates :container_type, inclusion: { in: ["WorkPackage", nil] }
-  validates :origin_id, presence: true
+      module Prepends
+        private
 
-  attribute :origin_status
+        def set_attributes(attributes)
+          set_file_links_attributes(attributes)
 
-  delegate :project, to: :container
+          super
+        end
 
-  def name
-    origin_name
-  end
+        def set_file_links_attributes(attributes)
+          file_links_ids = attributes.delete(:file_links_ids)
+          return unless file_links_ids
 
-  def user_allowed_to_manage?(user)
-    if container.present?
-      user.allowed_in_project?(:manage_file_links, container.project)
-    else
-      user == creator
+          model.file_links_replacements = FileLink.where(id: file_links_ids)
+        end
+      end
     end
   end
 end
