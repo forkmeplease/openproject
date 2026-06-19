@@ -29,12 +29,9 @@
 #++
 
 module ResourcePlannerViews
-  class UpdateService < ::BaseServices::Update
-    protected
-
-    # View types share this service, so resolve a per type contract when one exists
-    def default_contract_class
-      "ResourcePlannerViews::#{model.class}::UpdateContract".safe_constantize || super
+  module UserCard
+    class UpdateContract < ResourcePlannerViews::UpdateContract
+      stored_attribute :manual, store: :options
     end
   end
 end

@@ -35,7 +35,6 @@ module ResourcePlannerViews
     end
 
     attribute :name
-    stored_attribute :manual, store: :options
 
     validate :user_allowed_to_manage_parent
 
