@@ -191,4 +191,8 @@ en:
         day: Day
         month: Month
         week: Calendar week
+      navigation:
+        next: Next period
+        previous: Previous period
+        today: Today
       query_name: "Resource management work package timeline: %{name}"

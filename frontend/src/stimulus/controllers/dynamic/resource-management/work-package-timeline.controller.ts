@@ -28,7 +28,7 @@
  * ++
  */
 
-import { Controller } from '@hotwired/stimulus';
+import { Controller, ActionEvent } from '@hotwired/stimulus';
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -81,9 +81,9 @@ export default class WorkPackageTimelineController extends Controller {
 
   today() { this.calendar?.today(); }
 
-  changeGranularity(event:Event) {
-    const view = (event.target as HTMLSelectElement).value;
-    this.calendar?.changeView(view);
+  // The granularity menu items carry a `view` action param (e.g. resourceTimelineWeek).
+  setView(event:ActionEvent) {
+    this.calendar?.changeView(event.params.view as string);
   }
 
   private initializeCalendar() {
