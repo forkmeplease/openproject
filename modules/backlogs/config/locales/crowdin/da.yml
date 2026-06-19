@@ -40,9 +40,9 @@ da:
           in_planning: Under planlægning
           active: Aktiv
           completed: Færdiggjort
-        work_packages: Work packages
+        work_packages: Arbejdspakker
       sprint_goal:
-        text: Sprint goal
+        text: Sprint mål
       work_package:
         backlog_bucket: Backlog bucket
         backlogs_work_package_type: Backlog-type
@@ -62,7 +62,7 @@ da:
               share_all_projects_already_taken: kan ikke indstilles, da projektet "%{name}" allerede deler med alle projekter.
               share_all_projects_already_taken_anonymous: kan ikke indstilles, da et andet projekt allerede deler med alle projekter.
         sprint_goal:
-          project_already_has_goal: already has a goal for this sprint.
+          project_already_has_goal: Har allerede et mål for dette sprint.
         sprint:
           attributes:
             base:
@@ -176,7 +176,7 @@ da:
     statuses_considered_closed_caption: 'Choose the statuses that represent a closed or finished state in your workflow. These will be treated as the "Closed" state across reporting (e.g. burndown) and sprint planning. For example, statuses like Done, Resolved, or Won''t Fix may all represent a closed work item in your process.
 
       '
-    types_and_statuses: Types and statuses
+    types_and_statuses: Typer og statusser
     unassigned: Utildelt
     user_preference:
       header_backlogs: Backlog-modul
