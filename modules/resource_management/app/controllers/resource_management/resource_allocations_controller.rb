@@ -71,9 +71,14 @@ module ::ResourceManagement
     end
 
     def edit
+      if reopen_planner
+        close_dialog_via_turbo_stream("##{ResourcePlannerViews::UserCardList::UserAllocationsDialogComponent::DIALOG_ID}")
+      end
+
       respond_with_dialog ResourceAllocations::EditDialogComponent.new(
         project: @project,
-        allocation: @resource_allocation
+        allocation: @resource_allocation,
+        resource_planner_id: params[:resource_planner_id]
       )
     end
 
@@ -287,7 +292,8 @@ module ::ResourceManagement
           allocation:,
           project: @project,
           allocation_kind:,
-          dialog_id: ResourceAllocations::EditDialogComponent::DIALOG_ID
+          dialog_id: ResourceAllocations::EditDialogComponent::DIALOG_ID,
+          resource_planner_id: params[:resource_planner_id]
         ),
         status:
       )
@@ -307,6 +313,7 @@ module ::ResourceManagement
       close_dialog_via_turbo_stream("##{ResourceAllocations::EditDialogComponent::DIALOG_ID}")
       refresh_allocations_list(allocation.entity)
       notify_allocation_change(allocation.entity)
+      reopen_user_dialog(allocation)
       respond_with_turbo_streams
     end
 

@@ -131,7 +131,7 @@ module ResourcePlannerViews::UserCardList
     end
 
     def edit_allocation_path(allocation)
-      edit_project_resource_allocation_path(project, allocation)
+      edit_project_resource_allocation_path(project, allocation, resource_planner_id: resource_planner.id)
     end
 
     def delete_allocation_path(allocation)
