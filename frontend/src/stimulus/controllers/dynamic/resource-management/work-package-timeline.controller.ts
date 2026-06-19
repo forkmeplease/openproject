@@ -35,9 +35,10 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import allLocales from '@fullcalendar/core/locales-all';
 import { renderStreamMessage } from '@hotwired/turbo';
 import { TurboHelpers } from 'core-turbo/helpers';
+import moment from 'moment';
 
 export default class WorkPackageTimelineController extends Controller {
-  static targets = ['calendar'];
+  static targets = ['calendar', 'granularityButton'];
 
   static values = {
     resourcesUrl: String,
@@ -52,6 +53,8 @@ export default class WorkPackageTimelineController extends Controller {
   };
 
   declare readonly calendarTarget:HTMLElement;
+  declare readonly hasGranularityButtonTarget:boolean;
+  declare readonly granularityButtonTarget:HTMLElement;
   declare readonly resourcesUrlValue:string;
   declare readonly eventsUrlValue:string;
   declare readonly localeValue:string;
@@ -79,38 +82,53 @@ export default class WorkPackageTimelineController extends Controller {
 
   next() { this.calendar?.next(); }
 
-  today() { this.calendar?.today(); }
+  today() { this.centerOnToday(); }
 
-  // The granularity menu items carry a `view` action param (e.g. resourceTimelineWeek).
+  // The granularity menu items carry `view` (e.g. resourceTimelineWeeks) and
+  // `label` (e.g. "Calendar week") action params.
   setView(event:ActionEvent) {
-    this.calendar?.changeView(event.params.view as string);
+    if (!this.calendar) { return; }
+
+    this.calendar.changeView(event.params.view as string);
+    this.centerOnToday();
+    this.updateGranularityLabel(event.params.label as string);
   }
 
   private initializeCalendar() {
+    // Computed up front so the first render is already centered on today, with no
+    // post-render gotoDate that would trigger a second feed fetch.
+    const initialDate = moment(this.initialDateValue)
+      .subtract(3, this.unitForViewName(this.initialViewValue))
+      .format('YYYY-MM-DD');
+
     this.calendar = new Calendar(this.calendarTarget, {
       schedulerLicenseKey: this.licenseKeyValue,
       plugins: [resourceTimelinePlugin, interactionPlugin],
       initialView: this.initialViewValue,
-      initialDate: this.initialDateValue,
+      initialDate,
       // Custom views: a fixed span of equal-width day/week/month columns, rather
       // than FullCalendar's built-in views that zoom into hour or day slots.
+      // dateIncrement is half a view's span, so prev/next page by 5 columns.
       views: {
         resourceTimelineDays: {
           type: 'resourceTimeline',
           duration: { days: 10 },
           slotDuration: { days: 1 },
+          dateIncrement: { days: 5 },
           slotLabelFormat: { weekday: 'short', month: 'numeric', day: 'numeric' },
         },
         resourceTimelineWeeks: {
           type: 'resourceTimeline',
           duration: { weeks: 10 },
           slotDuration: { weeks: 1 },
+          dateIncrement: { weeks: 5 },
           slotLabelFormat: { week: 'long' },
         },
         resourceTimelineMonths: {
           type: 'resourceTimeline',
           duration: { months: 10 },
           slotDuration: { months: 1 },
+          dateIncrement: { months: 5 },
           slotLabelFormat: { month: 'short' },
         },
       },
@@ -152,6 +170,33 @@ export default class WorkPackageTimelineController extends Controller {
     });
 
     this.calendar.render();
+  }
+
+  private centerOnToday():void {
+    if (!this.calendar) { return; }
+
+    const start = moment(this.initialDateValue)
+      .subtract(3, this.unitForViewName(this.calendar.view.type))
+      .format('YYYY-MM-DD');
+    this.calendar.gotoDate(start);
+  }
+
+  private unitForViewName(view:string):moment.unitOfTime.DurationConstructor {
+    switch (view) {
+      case 'resourceTimelineDays':
+        return 'days';
+      case 'resourceTimelineMonths':
+        return 'months';
+      default:
+        return 'weeks';
+    }
+  }
+
+  private updateGranularityLabel(label:string):void {
+    if (!label || !this.hasGranularityButtonTarget) { return; }
+
+    const labelElement = this.granularityButtonTarget.querySelector('.Button-label');
+    if (labelElement) { labelElement.textContent = label; }
   }
 
   private openDialog(url:string):void {

@@ -55,8 +55,15 @@ module ResourcePlannerViews::WorkPackageTimeline
       { action: "#{STIMULUS}##{method}" }
     end
 
-    def granularity_action(view_name)
-      { action: "#{STIMULUS}#setView", "#{STIMULUS}-view-param": view_name }
+    def granularity_action(key, view_name)
+      { action: "#{STIMULUS}#setView",
+        "#{STIMULUS}-view-param": view_name,
+        "#{STIMULUS}-label-param": granularity_label(key) }
+    end
+
+    # Target the controller uses to update the button label on granularity change.
+    def granularity_button_data
+      { "#{STIMULUS}-target": "granularityButton" }
     end
 
     def granularity_label(key)

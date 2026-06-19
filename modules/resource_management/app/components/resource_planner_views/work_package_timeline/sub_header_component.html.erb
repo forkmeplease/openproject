@@ -27,13 +27,13 @@
       leading_icon: :clock,
       trailing_icon: :"triangle-down",
       label: granularity_label(:week),
-      button_arguments: { "aria-label": granularity_label(:week) }
+      button_arguments: { "aria-label": granularity_label(:week), data: granularity_button_data }
     ) do |menu|
       GRANULARITIES.each do |key, view_name|
         menu.with_item(
           label: granularity_label(key),
           tag: :button,
-          content_arguments: { data: granularity_action(view_name) }
+          content_arguments: { data: granularity_action(key, view_name) }
         ) { granularity_label(key) }
       end
     end
