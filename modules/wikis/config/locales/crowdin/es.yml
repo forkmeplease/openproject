@@ -21,8 +21,8 @@ es:
         wikis/provider:
           attributes:
             url:
-              already_taken: belongs to the wiki provider that's already known as "%{name}".
-              wiki_provider_unreachable: could not be reached.
+              already_taken: pertenece al proveedor de wiki que ya se conoce como «%{name}».
+              wiki_provider_unreachable: no pudo ser encontrado.
     models:
       wikis/inline_page_link:
         one: Enlace a la página integrada
@@ -147,7 +147,7 @@ es:
         xwiki_oauth_token_missing: OpenProject no puede comprobar la comunicación a nivel de usuario con XWiki, ya que aún no has vinculado tu cuenta de XWiki.
         xwiki_oauth_unauthorized: XWiki no ha reconocido el token de usuario.
     inline_existing_wiki_page_dialog:
-      title: Add existing wiki page
+      title: Añadir página wiki existente
     instructions:
       xwiki:
         integration: Administración de XWiki
@@ -162,12 +162,12 @@ es:
       remove: Eliminar enlace de página
     page_link_forms:
       labels:
-        page_title: Title
-        parent: Parent wiki page
-        wiki_page: Wiki page
+        page_title: Título
+        parent: Página wiki padre
+        wiki_page: Página wiki
       search:
-        no_results: No wiki pages found
-        placeholder: Search for a wiki page (or enter its URL)
+        no_results: No se han encontrado páginas wiki
+        placeholder: Busque una página wiki (o introduzca su URL)
     page_links:
       errors:
         page_access_forbidden: No tienes permiso para acceder a esta página wiki
@@ -178,13 +178,13 @@ es:
         name: XWiki
     relation_page_links_component:
       empty_heading: No hay páginas relacionadas
-      empty_text: Add wiki pages that are relevant to this work package.
+      empty_text: Añadir páginas wiki que sean relevantes para este paquete de trabajo.
       link_existing: Página wiki ya existente
       link_new: Nueva página wiki
     upsell:
       xwiki:
-        description: Connect XWiki with OpenProject and keep documentation and work in sync, link pages, track references and manage everything in one place.
-        title: XWiki Integration
+        description: Conectar XWiki con OpenProject para mantener la documentación y el trabajo en sincronización, enlazar páginas, rastrear referencias y gestionar todo en un solo lugar.
+        title: Integración con XWiki
     work_package_wikis_tab_component:
-      inline_page_links: Mentioned in description
+      inline_page_links: Mencionado en la descripción
       referencing_pages: Se hace referencia en
