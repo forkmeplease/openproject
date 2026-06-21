@@ -3733,7 +3733,7 @@ es:
         responsible: Responsable
         shared: Compartido conmigo
       date_alerts:
-        description: You can configure date alerts for work packages where you are assignee, accountable and/or watcher to be automatically notified a few days prior to approaching or overdue deadlines.
+        description: Puedes configurar alertas de fecha para los paquetes de trabajo en los que seas responsable, encargado y/o observador, y serás notificado automáticamente unos días antes de su vencimiento así como luego del mismo.
         title: Alertas de fecha
         submit_button: Alertas de fecha de actualización
         start_date: Fecha de inicio
@@ -3748,7 +3748,7 @@ es:
           three_days_after: 3 días después
           seven_days_after: 7 días después
       non_participating:
-        description: You can additionally choose to be notified of any of the following activities for all projects.
+        description: Puedes adicionalmente elegir ser notificado de cualquiera de las siguientes actividades para todos los proyectos.
         title: No participando
         submit_button: Actualizar preferencias
         work_package_created: Nuevos paquetes de trabajo
@@ -3757,8 +3757,8 @@ es:
         work_package_prioritized: Todos los cambios de prioridad
         work_package_scheduled: Todos los cambios de fecha
       project_specific_settings:
-        description: You can fine-tune your notification settings to only be notified of certain events in specific projects. Add a project below and choose which events should trigger a notification for you. These project-specific settings override default settings above.
-        title: Project-specific notifications
+        description: Puedes ajustar tu configuración para solo ser notificado de ciertos eventos en proyectos específicos. Añade un proyecto debajo y elige cuáles eventos deberían disparar una notificación. Estos ajustes específicos de proyecto es priorizada sobre la configuración por defecto de más arriba.
+        title: Notificaciones específicas del proyecto
         add_button: Añadir notificaciones específicas del proyecto
         dialog_title: Añadir notificaciones específicas del proyecto
         list_header: Proyectos con notificaciones específicas
@@ -3892,7 +3892,7 @@ es:
   label_send_invitation: Enviar invitación
   label_calculated_value: Valor calculado
   label_change_parent: Cambiar principal
-  label_change_password: Change password
+  label_change_password: Cambiar contraseña
   label_change_plural: Cambios
   label_change_properties: Cambiar propiedades
   label_change_status: Cambiar estado
@@ -4179,7 +4179,7 @@ es:
   label_my_account_data: Mis datos de cuenta
   label_my_avatar: Mi avatar
   label_my_queries: Mis consultas personalizadas
-  label_my_security: Security
+  label_my_security: Seguridad
   label_name: Nombre
   label_never: Nunca
   label_new: Nuevo
