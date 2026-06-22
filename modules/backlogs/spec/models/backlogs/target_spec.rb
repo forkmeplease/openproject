@@ -34,19 +34,33 @@ RSpec.describe Backlogs::Target do
   describe "SprintId" do
     subject { described_class::SprintId[42] }
 
-    it { is_expected.to have_attributes(id: 42, to_s: "sprint:42") }
+    it do
+      expect(subject).to have_attributes(
+        id: 42,
+        type: :sprint,
+        to_s: "sprint:42",
+        to_h: { type: :sprint, id: 42 }
+      )
+    end
   end
 
   describe "BucketId" do
     subject { described_class::BucketId[13] }
 
-    it { is_expected.to have_attributes(id: 13, to_s: "backlog_bucket:13") }
+    it do
+      expect(subject).to have_attributes(
+        id: 13,
+        type: :backlog_bucket,
+        to_s: "backlog_bucket:13",
+        to_h: { type: :backlog_bucket, id: 13 }
+      )
+    end
   end
 
   describe "InboxId" do
     subject { described_class::InboxId }
 
-    it { is_expected.to have_attributes(to_s: "inbox") }
+    it { is_expected.to have_attributes(type: :inbox, to_s: "inbox", to_h: { type: :inbox }) }
   end
 
   describe ".for" do

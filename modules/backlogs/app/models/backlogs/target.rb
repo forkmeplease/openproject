@@ -33,14 +33,28 @@ module Backlogs
   # Serialized format: "sprint:{id}", "backlog_bucket:{id}", or "inbox".
   module Target
     SprintId = Data.define(:id) do
-      def to_s = "sprint:#{id}"
+      def type = :sprint
+
+      def to_s = "#{type}:#{id}"
+
+      def to_h = { type:, id: }
     end
 
     BucketId = Data.define(:id) do
-      def to_s = "backlog_bucket:#{id}"
+      def type = :backlog_bucket
+
+      def to_s = "#{type}:#{id}"
+
+      def to_h = { type:, id: }
     end
 
-    InboxId = Data.define { def to_s = "inbox" }.new
+    InboxId = Data.define do
+      def type = :inbox
+
+      delegate :to_s, to: :type
+
+      def to_h = { type: }
+    end.new
 
     def self.for(container)
       case container
