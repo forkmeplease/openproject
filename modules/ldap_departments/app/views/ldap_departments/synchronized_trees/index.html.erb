@@ -64,6 +64,15 @@
   </table>
 <% else %>
   <%= render Primer::Beta::Blankslate.new(border: true) do |blankslate|
-        blankslate.with_heading(tag: :h2) { t("ldap_departments.synchronized_trees.no_results") }
+        blankslate.with_visual_icon(icon: :organization)
+        blankslate.with_heading(tag: :h2) { t("ldap_departments.synchronized_trees.blankslate.heading") }
+        blankslate.with_description { t("ldap_departments.synchronized_trees.blankslate.description") }
+        blankslate.with_primary_action(
+          href: new_ldap_departments_synchronized_tree_path,
+          disabled: !EnterpriseToken.allows_to?(:ldap_groups)
+        ) do |button|
+          button.with_leading_visual_icon(icon: :plus)
+          t("ldap_departments.synchronized_trees.add_new")
+        end
       end %>
 <% end %>

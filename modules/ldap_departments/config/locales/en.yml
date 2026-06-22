@@ -39,6 +39,9 @@ en:
       singular: 'LDAP department synchronization'
       plural: 'LDAP department synchronizations'
       no_results: 'No LDAP department synchronizations configured yet.'
+      blankslate:
+        heading: 'No LDAP department synchronizations'
+        description: 'Set up a synchronization to mirror your LDAP organizational unit structure into the OpenProject department hierarchy.'
       help_text: >
         This module mirrors the organizational unit (OU) structure of your LDAP directory into the
         OpenProject department hierarchy. Each OU below the configured base DN becomes a department,
