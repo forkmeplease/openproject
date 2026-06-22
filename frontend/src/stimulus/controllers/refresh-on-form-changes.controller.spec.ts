@@ -31,6 +31,7 @@ import { vi, type Mock } from 'vitest';
 
 import { setupStimulusTest, type StimulusTestContext } from 'core-stimulus/test-helpers';
 import type RefreshOnFormChangesControllerType from './refresh-on-form-changes.controller';
+import { serializeFormQuery } from './refresh-on-form-changes.controller';
 
 describe('Refresh on form changes controller', () => {
   let ctx:StimulusTestContext;
@@ -187,6 +188,42 @@ describe('Refresh on form changes controller', () => {
     const parsedUrl = new URL(url, window.location.origin);
 
     expect(parsedUrl.searchParams.get('sprint[goal][text]')).toBe('Updated goal');
+  });
+
+  describe('serializeFormQuery', () => {
+    function buildForm(innerHtml:string):HTMLFormElement {
+      const form = document.createElement('form');
+      form.innerHTML = innerHtml;
+      return form;
+    }
+
+    it('serializes string form fields into a query string', () => {
+      const form = buildForm(`
+        <input name="sprint[name]" value="Created sprint">
+        <textarea name="sprint[goal][text]">Deliver the first MVP scope.</textarea>
+      `);
+
+      const params = new URLSearchParams(serializeFormQuery(form));
+
+      expect(params.get('sprint[name]')).toBe('Created sprint');
+      expect(params.get('sprint[goal][text]')).toBe('Deliver the first MVP scope.');
+    });
+
+    it('omits file inputs so File values never reach the query string', () => {
+      const form = buildForm(`
+        <input name="sprint[name]" value="Created sprint">
+        <input type="file" name="sprint[attachment]">
+      `);
+      const fileInput = form.querySelector<HTMLInputElement>('[name="sprint[attachment]"]')!;
+      const transfer = new DataTransfer();
+      transfer.items.add(new File(['data'], 'report.pdf', { type: 'application/pdf' }));
+      fileInput.files = transfer.files;
+
+      const params = new URLSearchParams(serializeFormQuery(form));
+
+      expect(params.has('sprint[attachment]')).toBe(false);
+      expect(params.get('sprint[name]')).toBe('Created sprint');
+    });
   });
 
   it('swallows abort errors but logs other request errors', async () => {

@@ -33,6 +33,19 @@ import { FetchRequest } from '@rails/request.js';
 
 const TURBO_STREAM_REFRESH_DELAY = 50;
 
+// Serialize a form's fields into a query string. URLSearchParams does not accept
+// a FormData object whose entries may hold File values, so copy the string
+// entries across explicitly, dropping any file inputs.
+export function serializeFormQuery(form:HTMLFormElement):string {
+  const params = new URLSearchParams();
+  new FormData(form).forEach((value, key) => {
+    if (typeof value === 'string') {
+      params.append(key, value);
+    }
+  });
+  return params.toString();
+}
+
 export default class RefreshOnFormChangesController extends ApplicationController {
   static debounces = [
     { name: 'performTurboStreamRefresh', wait: TURBO_STREAM_REFRESH_DELAY },
@@ -64,7 +77,7 @@ export default class RefreshOnFormChangesController extends ApplicationControlle
   }
 
   triggerReload():void {
-    window.location.href = `${this.refreshUrlValue}?${this.getSerializedFormData()}`;
+    window.location.replace(`${this.refreshUrlValue}?${serializeFormQuery(this.formTarget)}`);
   }
 
   triggerTurboStream():void {
@@ -95,12 +108,5 @@ export default class RefreshOnFormChangesController extends ApplicationControlle
         this.abortController = null;
       }
     }
-  }
-
-  private getSerializedFormData():string {
-    // without the cast to undefined, the URLSearchParams constructor will
-    // not accept the FormData object.
-    const formData = new FormData(this.formTarget) as unknown as undefined;
-    return new URLSearchParams(formData).toString();
   }
 }
