@@ -33,7 +33,8 @@
   </div>
 </div>
 
-<% if @trees.any? %>
+<%= render(Primer::Box.new(mt: 3)) do %>
+  <% if @trees.any? %>
   <table class="generic-table">
     <thead>
       <tr>
@@ -75,4 +76,5 @@
           t("ldap_departments.synchronized_trees.add_new")
         end
       end %>
+  <% end %>
 <% end %>
