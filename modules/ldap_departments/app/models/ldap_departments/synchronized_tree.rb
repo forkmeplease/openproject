@@ -44,11 +44,6 @@ module LdapDepartments
       guid_attribute.present?
     end
 
-    # Normalized form of a DN for case/spacing-insensitive comparison.
-    def self.normalize_dn(value)
-      value.to_s.split(",").map(&:strip).join(",").downcase
-    end
-
     private
 
     def validate_structure_filter_syntax
@@ -68,8 +63,8 @@ module LdapDepartments
     def validate_base_dn
       return if base_dn.blank? || ldap_auth_source.blank?
 
-      base = self.class.normalize_dn(base_dn)
-      source_base = self.class.normalize_dn(ldap_auth_source.base_dn)
+      base = Dn.normalize(base_dn)
+      source_base = Dn.normalize(ldap_auth_source.base_dn)
 
       unless base == source_base || base.end_with?(",#{source_base}")
         errors.add :base_dn, :must_contain_base_dn
@@ -85,12 +80,12 @@ module LdapDepartments
     end
 
     def overlapping_sibling?
-      mine = self.class.normalize_dn(base_dn)
+      mine = Dn.normalize(base_dn)
 
       SynchronizedTree
         .where(ldap_auth_source_id:)
         .where.not(id: id || 0)
-        .any? { |other| dn_overlaps?(mine, self.class.normalize_dn(other.base_dn)) }
+        .any? { |other| dn_overlaps?(mine, Dn.normalize(other.base_dn)) }
     end
 
     def dn_overlaps?(one, other)
