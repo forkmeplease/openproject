@@ -27,8 +27,6 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%# helpers.content_controller "admin--departments-page" %>
-
 <%=
   component_wrapper(tag: "turbo-frame", class: "admin-groups-tree-page--wrapper", refresh: :morph, data: { turbo_action: :advance }) do
     render(Primer::Alpha::Layout.new(stacking_breakpoint: :md, overflow: :hidden, h: :full, classes: "admin-groups-tree-page")) do |content|
