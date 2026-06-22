@@ -69,10 +69,71 @@ module ::ResourceManagement
         }
       end
 
+      events.concat(active_span_events)
+
       render json: { events: }
     end
 
     private
+
+    # One background event per work package spanning the days it is active,
+    # snapped to whole columns of the requested granularity and clamped to the view.
+    def active_span_events # rubocop:disable Metrics/AbcSize
+      return [] if params[:start].blank? || params[:end].blank?
+
+      view_first = Date.iso8601(params[:start])
+      view_last = Date.iso8601(params[:end]) - 1 # the view range end is exclusive
+      granularity = params[:granularity].presence || "day"
+
+      @view.work_packages.filter_map do |work_package|
+        band = active_span_band(work_package, view_first:, view_last:, granularity:)
+        next unless band
+
+        {
+          resourceId: work_package.id,
+          start: band.first.iso8601,
+          end: band.last.iso8601,
+          display: "background",
+          classNames: ["op-rm-timeline-active"]
+        }
+      end
+    end
+
+    # Returns [band_start, exclusive_band_end] snapped to whole columns, or nil
+    # when the work package's interval lies entirely outside the visible range.
+    def active_span_band(work_package, view_first:, view_last:, granularity:)
+      first = work_package.start_date || view_first
+      last = work_package.due_date || view_last
+      return nil if last < view_first || first > view_last
+
+      first = [first, view_first].max
+      last = [last, view_last].min
+
+      [snap_down(first, granularity), snap_up(last, granularity) + 1]
+    end
+
+    def snap_down(date, granularity)
+      case granularity
+      when "week" then date.beginning_of_week(start_of_week_day)
+      when "month" then date.beginning_of_month
+      else date
+      end
+    end
+
+    def snap_up(date, granularity)
+      case granularity
+      when "week" then date.end_of_week(start_of_week_day)
+      when "month" then date.end_of_month
+      else date
+      end
+    end
+
+    # Mirrors the `first-day` value handed to FullCalendar (see the content
+    # component) so week columns snap to the same boundaries the calendar renders.
+    def start_of_week_day
+      first_day = (Setting.start_of_week.presence || 1).to_i
+      Date::DAYNAMES.fetch(first_day % 7).downcase.to_sym
+    end
 
     def render_bar(allocation, visible_principal_ids)
       ResourcePlannerViews::WorkPackageTimeline::AllocationBarComponent

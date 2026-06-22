@@ -51,4 +51,11 @@ RSpec.describe "Work package timeline view", :js do
     expect(page).to have_css("[data-test-selector='resource-work-package-timeline']")
     expect(page).to have_text("Develop route optimization", wait: 15)
   end
+
+  it "shades each work package's active span" do
+    visit project_resource_planner_view_path(project, planner, view)
+
+    expect(page).to have_css("[data-test-selector='resource-work-package-timeline']")
+    expect(page).to have_css(".op-rm-timeline-view .fc-bg-event.op-rm-timeline-active", wait: 15)
+  end
 end

@@ -21,6 +21,22 @@
 .op-rm-timeline
   flex-grow: 1
 
+// Grey base for every column, at all granularities. The `#content-wrapper` prefix
+// outranks the global vendor grey (`.fc-day`, id-level) so it applies in Day view too.
+#content-wrapper .op-rm-timeline-view
+  .fc-timeline-body .fc-timeline-slot-lane
+    background: rgb(205 205 205 / 60%)
+
+  // Re-assert today's highlight, which the grey rule above would otherwise outrank.
+  .fc-timeline-body .fc-timeline-slot-lane.fc-day-today
+    background: rgb(255 255 120 / 20%)
+
+  // FullCalendar background events are translucent by default; set the active
+  // span's background explicitly over the grey base.
+  .fc-bg-event.op-rm-timeline-active
+    background: var(--bgColor-default, #ffffff)
+    opacity: 0.5
+
 // Our own card class, not FullCalendar's `.fc-timeline-event`: the vendor styles
 // force that transparent and borderless with `!important`, so it can't be
 // restyled by specificity.

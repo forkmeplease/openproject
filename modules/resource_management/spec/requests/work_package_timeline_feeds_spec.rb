@@ -87,10 +87,76 @@ RSpec.describe "Work package timeline feeds", type: :rails_request do
                                                              start: "2026-05-25", end: "2026-07-01", format: :json)
 
       expect(response).to have_http_status(:ok)
-      events = response.parsed_body["events"]
-      expect(events.map { |e| e["resourceId"].to_i }).to all(eq(wp.id))
-      expect(events).to all(include("start", "end"))
-      expect(events.map { |e| e.dig("extendedProps", "overbooked") }).to include(true)
+      block_events = response.parsed_body["events"].reject { |e| e["display"] == "background" }
+      expect(block_events.map { |e| e["resourceId"].to_i }).to all(eq(wp.id))
+      expect(block_events).to all(include("start", "end"))
+      expect(block_events.map { |e| e.dig("extendedProps", "overbooked") }).to include(true)
+    end
+  end
+
+  describe "active-span background events" do
+    shared_let(:dated_wp) do
+      create(:work_package, project:, subject: "Dated",
+                            start_date: Date.new(2026, 6, 10), due_date: Date.new(2026, 6, 12))
+    end
+    shared_let(:open_start_wp) do
+      create(:work_package, project:, subject: "Open start", start_date: nil, due_date: Date.new(2026, 6, 12))
+    end
+    shared_let(:open_due_wp) do
+      create(:work_package, project:, subject: "Open due", start_date: Date.new(2026, 6, 10), due_date: nil)
+    end
+    shared_let(:undated_wp) do
+      create(:work_package, project:, subject: "Undated", start_date: nil, due_date: nil)
+    end
+    shared_let(:outside_wp) do
+      create(:work_package, project:, subject: "Outside",
+                            start_date: Date.new(2026, 8, 1), due_date: Date.new(2026, 8, 5))
+    end
+
+    def background_event_for(work_package, granularity:)
+      get timeline_events_project_resource_planner_view_path(
+        project, planner, view,
+        start: "2026-06-01", end: "2026-07-01", granularity:, format: :json
+      )
+      expect(response).to have_http_status(:ok)
+      response.parsed_body["events"]
+        .select { |e| e["display"] == "background" }
+        .find { |e| e["resourceId"].to_i == work_package.id }
+    end
+
+    it "snaps a dated work package to the exact days at day granularity" do
+      event = background_event_for(dated_wp, granularity: "day")
+      expect(event).to include("start" => "2026-06-10", "end" => "2026-06-13",
+                               "display" => "background", "classNames" => ["op-rm-timeline-active"])
+    end
+
+    it "expands to whole weeks at week granularity" do
+      event = background_event_for(dated_wp, granularity: "week")
+      expect(event).to include("start" => "2026-06-08", "end" => "2026-06-15")
+    end
+
+    it "expands to the whole month at month granularity" do
+      event = background_event_for(dated_wp, granularity: "month")
+      expect(event).to include("start" => "2026-06-01", "end" => "2026-07-01")
+    end
+
+    it "extends a missing start to the visible range start" do
+      event = background_event_for(open_start_wp, granularity: "day")
+      expect(event).to include("start" => "2026-06-01", "end" => "2026-06-13")
+    end
+
+    it "extends a missing due to the visible range end" do
+      event = background_event_for(open_due_wp, granularity: "day")
+      expect(event).to include("start" => "2026-06-10", "end" => "2026-07-01")
+    end
+
+    it "spans the whole visible row when both dates are missing" do
+      event = background_event_for(undated_wp, granularity: "day")
+      expect(event).to include("start" => "2026-06-01", "end" => "2026-07-01")
+    end
+
+    it "omits a band for a work package entirely outside the visible range" do
+      expect(background_event_for(outside_wp, granularity: "day")).to be_nil
     end
   end
 end

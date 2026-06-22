@@ -67,6 +67,10 @@ export default class WorkPackageTimelineController extends Controller {
 
   private calendar:Calendar;
 
+  // Sent to the events feed. Updated before changeView because FullCalendar fires
+  // the fetch mid-transition, while `calendar.view` still reports the old view.
+  private currentGranularity:string;
+
   connect() {
     // Defer so the container has its final size before FullCalendar measures it.
     setTimeout(() => this.initializeCalendar(), 5);
@@ -89,6 +93,7 @@ export default class WorkPackageTimelineController extends Controller {
   setView(event:ActionEvent) {
     if (!this.calendar) { return; }
 
+    this.currentGranularity = this.granularityKeyFor(event.params.view as string);
     this.calendar.changeView(event.params.view as string);
     this.centerOnToday();
     this.updateGranularityLabel(event.params.label as string);
@@ -100,6 +105,8 @@ export default class WorkPackageTimelineController extends Controller {
     const initialDate = moment(this.initialDateValue)
       .subtract(3, this.unitForViewName(this.initialViewValue))
       .format('YYYY-MM-DD');
+
+    this.currentGranularity = this.granularityKeyFor(this.initialViewValue);
 
     this.calendar = new Calendar(this.calendarTarget, {
       schedulerLicenseKey: this.licenseKeyValue,
@@ -138,6 +145,9 @@ export default class WorkPackageTimelineController extends Controller {
       headerToolbar: false,
       nowIndicator: true,
       height: '100%',
+      // The feed's output depends on the granularity, not just the date range, so
+      // refetch on every navigation instead of reusing FullCalendar's cache.
+      lazyFetching: false,
       resourceAreaColumns: [{
         headerContent: '',
         cellContent: (arg) => ({ html: (arg.resource?.extendedProps?.html as string) || '' }),
@@ -152,6 +162,7 @@ export default class WorkPackageTimelineController extends Controller {
         const url = new URL(this.eventsUrlValue, window.location.origin);
         url.searchParams.set('start', info.startStr);
         url.searchParams.set('end', info.endStr);
+        url.searchParams.set('granularity', this.currentGranularity);
         fetch(url.toString(), { headers: { Accept: 'application/json' } })
           .then((response) => response.json())
           .then((data:{ events:unknown[] }) => success(data.events as never))
@@ -179,6 +190,17 @@ export default class WorkPackageTimelineController extends Controller {
       .subtract(3, this.unitForViewName(this.calendar.view.type))
       .format('YYYY-MM-DD');
     this.calendar.gotoDate(start);
+  }
+
+  private granularityKeyFor(viewType:string):string {
+    switch (viewType) {
+      case 'resourceTimelineWeeks':
+        return 'week';
+      case 'resourceTimelineMonths':
+        return 'month';
+      default:
+        return 'day';
+    }
   }
 
   private unitForViewName(view:string):moment.unitOfTime.DurationConstructor {
