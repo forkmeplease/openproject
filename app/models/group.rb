@@ -156,10 +156,18 @@ class Group < Principal
   private
 
   def uniqueness_of_name
-    groups_with_name = Group.where("lastname = ? AND id <> ?", name, id || 0).count
-    if groups_with_name > 0
-      errors.add :name, :taken
-    end
+    scope = Group.where("lastname = ? AND id <> ?", name, id || 0)
+
+    # Regular groups must be globally unique. Organizational units (departments) only need to be
+    # unique among their siblings: LDAP directories routinely repeat the same OU name on different
+    # branches (e.g. OU=Support under both IT and HR), so we scope uniqueness to the parent.
+    scope = if organizational_unit?
+              scope.where_detail(organizational_unit: true, parent_id:)
+            else
+              scope.where_detail(organizational_unit: false)
+            end
+
+    errors.add(:name, :taken) if scope.exists?
   end
 
   def fail_add
