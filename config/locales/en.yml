@@ -4048,6 +4048,7 @@ en:
   label_calculated_value: "Calculated value"
   label_change_parent: "Change parent"
   label_change_password: "Change password"
+  label_managed_by_ldap: "Managed by LDAP synchronization"
   label_change_plural: "Changes"
   label_change_properties: "Change properties"
   label_change_status: "Change status"

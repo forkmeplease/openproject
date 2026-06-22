@@ -40,7 +40,11 @@ See COPYRIGHT and LICENSE files for more details.
             end
           end
 
-          if group
+          if group&.ldap_managed?
+            header.with_column do
+              render(Primer::Beta::Label.new(scheme: :accent)) { I18n.t(:label_managed_by_ldap) }
+            end
+          elsif group
             header.with_column do
               render(
                 Primer::Beta::IconButton.new(
