@@ -188,8 +188,8 @@ RSpec.describe "External links in BlockNote editor",
         plain: "hello world"
       )
 
-      link = editor.shadow_root.find("a[target='_blank']", text: /hello\s*world/, wait: 5)
-      hints = link.all("span.sr-only", visible: :all)
+      editor.wait_for_shadow_content("hello world")
+      hints = editor.shadow_root.all("span.sr-only", visible: :all)
       expect(hints.size).to eq(1)
       expect(hints.first.text(:all)).to include(I18n.t(:open_link_in_a_new_tab))
     end
