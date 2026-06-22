@@ -130,8 +130,8 @@ RSpec.describe "User card view", :js do
     end
 
     it "discards the manually selected cards and shows the filtered list" do
-      view = UserCard.create!(name: "People", parent: resource_planner, project:, principal: user,
-                              manual: true, query:)
+      query.update!(manual_elements: true)
+      view = UserCard.create!(name: "People", parent: resource_planner, project:, principal: user, query:)
       view.query.ordered_entities.create!(entity: member, position: 1)
       visit project_resource_planner_view_path(project, resource_planner, view)
       expect(page).to have_test_selector("op-user-card", text: member.name)
@@ -152,8 +152,8 @@ RSpec.describe "User card view", :js do
     include Components::Autocompleter::NgSelectAutocompleteHelpers
 
     let(:view) do
-      UserCard.create!(name: "Special picks", parent: resource_planner, project:, principal: user,
-                       manual: true, query:)
+      query.update!(manual_elements: true)
+      UserCard.create!(name: "Special picks", parent: resource_planner, project:, principal: user, query:)
     end
 
     it "starts empty and adds a user through the autocompleter" do

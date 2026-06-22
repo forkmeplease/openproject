@@ -32,25 +32,17 @@
 class UserCard < PersistedView
   include ResourceManagement::Categorized
 
-  # Manual views draw their cards from the query's `ordered_entities` instead of
-  # its filters.
-  store_attribute :options, :manual, :boolean, default: false
-
   validate :query_must_be_user_query
 
   def results
     query = effective_query
     return if query.nil?
 
-    # A manual view shows exactly its `ordered_entities`. When none have
-    # been added yet, show an empty set instead.
-    return User.none if manually_picked? && query.ordered_entities.empty?
-
     query.results.in_project(project)
   end
 
   def manually_picked?
-    !!manual
+    effective_query&.manual_elements? || false
   end
 
   def build_default_query
@@ -64,9 +56,9 @@ class UserCard < PersistedView
     query.filters.clear
 
     if manual_mode?(filter_mode)
-      self.manual = true
+      query.manual_elements = true
     else
-      self.manual = false
+      query.manual_elements = false
 
       query.ordered_entities.destroy_all
       configure_automatic(query, filters_json)

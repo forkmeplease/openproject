@@ -28,10 +28,8 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourcePlannerViews
-  module UserCard
-    class UpdateContract < ResourcePlannerViews::UpdateContract
-      stored_attribute :manual, store: :options
-    end
+class AddManualElementsToPersistedQueries < ActiveRecord::Migration[8.1]
+  def change
+    add_column :persisted_queries, :manual_elements, :boolean, default: false, null: false
   end
 end

@@ -40,7 +40,10 @@ RSpec.describe ResourcePlannerViews::UserCardList::SubHeaderComponent, type: :co
   shared_let(:resource_planner) { create(:resource_planner, project:, principal: user) }
 
   let(:manual) { false }
-  let(:view) { create(:user_card, parent: resource_planner, project:, principal: user, manual:) }
+  let(:view) do
+    create(:user_card, parent: resource_planner, project:, principal: user,
+                       query: create(:user_query, project:, principal: user, manual_elements: manual))
+  end
 
   subject(:rendered) do
     render_inline(described_class.new(project:, resource_planner:, view:))
