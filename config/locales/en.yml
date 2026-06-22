@@ -4290,7 +4290,7 @@ en:
   label_departments_description_html: >
     Define your company’s structure by creating departments and sub-departments in a hierarchical way. This allows you
     to reflect reporting lines and maintain a clear, structured overview of your organization within OpenProject. You
-    can also import an existing organization structure through [LDAP group synchronisation](ldap_docs_article).
+    can also import an existing organization structure through [LDAP department synchronization](ldap_docs_article).
   label_logout: "Sign out"
   label_mapping_for: "Mapping for: %{attribute}"
   label_main_menu: "Side Menu"
