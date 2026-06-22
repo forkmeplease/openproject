@@ -15,14 +15,4 @@
   end
 %>
 
-<%= labelled_tabular_form_for @tree,
-                              as: :synchronized_tree,
-                              url: { action: :update } do |f| %>
-
-  <%= render partial: "form", locals: { f: } %>
-
-  <p>
-    <%= styled_button_tag t(:button_save), class: "-primary -with-icon icon-checkmark" %>
-    <%= link_to t(:button_cancel), { action: :show }, class: "button -with-icon icon-cancel" %>
-  </p>
-<% end %>
+<%= render(LdapDepartments::SynchronizedTrees::FormComponent.new(@tree)) %>
