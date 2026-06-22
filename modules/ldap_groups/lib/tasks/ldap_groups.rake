@@ -88,7 +88,9 @@ namespace :ldap_groups do
 
       filter.save!
 
+      puts "Set up group synchronization filter 'All groups' and synchronizing LDAP groups..."
       LdapGroups::SynchronizationJob.perform_now
+      puts "  → Synchronized #{LdapGroups::SynchronizedGroup.count} group(s)."
 
       # The fixture also ships a nested organizational unit tree below ou=org. When the LDAP
       # department synchronization module is available, set it up and sync it as well so the
@@ -101,11 +103,21 @@ namespace :ldap_groups do
         tree.sync_users = true
         tree.save!
 
+        puts "Set up department synchronization 'Organization' and synchronizing organizational units..."
         LdapDepartments::SynchronizationService.synchronize!
+        puts "  → Synchronized #{LdapDepartments::SynchronizedDepartment.count} department(s)."
+      else
+        puts "Department synchronization module not available, skipping department setup."
       end
 
       puts <<~INFO
         LDAP server ready at localhost:12389
+
+        Synchronizations configured:
+          - Group synchronization via filter "All groups" (base ou=groups)
+          - Department synchronization via tree "Organization" (base ou=org)
+
+        --------------------------------------------------------
 
         Connection details
 
