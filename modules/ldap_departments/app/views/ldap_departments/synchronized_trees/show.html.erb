@@ -37,21 +37,18 @@
 
 <%= render EnterpriseEdition::BannerComponent.new(:ldap_groups, variant: :inline) %>
 
-<section class="admin--edit-section">
-  <ul class="attributes-key-value">
-    <li class="attributes-key-value--key"><%= LdapDepartments::SynchronizedTree.human_attribute_name(:ldap_auth_source) %></li>
-    <li class="attributes-key-value--value-container"><%= @tree.ldap_auth_source&.name %></li>
-    <li class="attributes-key-value--key"><%= LdapDepartments::SynchronizedTree.human_attribute_name(:base_dn) %></li>
-    <li class="attributes-key-value--value-container"><%= @tree.base_dn %></li>
-    <li class="attributes-key-value--key"><%= LdapDepartments::SynchronizedTree.human_attribute_name(:structure_filter_string) %></li>
-    <li class="attributes-key-value--value-container"><%= @tree.structure_filter_string %></li>
-    <li class="attributes-key-value--key"><%= LdapDepartments::SynchronizedTree.human_attribute_name(:sync_users) %></li>
-    <li class="attributes-key-value--value-container"><%= @tree.sync_users ? t(:general_text_Yes) : t(:general_text_No) %></li>
-  </ul>
-</section>
+<%= render(Primer::Alpha::Layout.new(stacking_breakpoint: :md)) do |layout| %>
+  <% layout.with_main do %>
+    <section class="admin--edit-section">
+      <%= render(Primer::Beta::Heading.new(tag: :h3, pb: 3)) do
+            t("ldap_departments.synchronized_departments.plural")
+          end %>
 
-<section class="admin--edit-section">
-  <h3 class="form--section-title"><%= t("ldap_departments.synchronized_departments.plural") %></h3>
+      <%= render(LdapDepartments::SynchronizedDepartments::TableComponent.new(rows: @departments)) %>
+    </section>
+  <% end %>
 
-  <%= render(LdapDepartments::SynchronizedDepartments::TableComponent.new(rows: @departments)) %>
-</section>
+  <% layout.with_sidebar(row_placement: :start, col_placement: :end) do %>
+    <%= render(LdapDepartments::SynchronizedTrees::SidePanelComponent.new(tree: @tree)) %>
+  <% end %>
+<% end %>
