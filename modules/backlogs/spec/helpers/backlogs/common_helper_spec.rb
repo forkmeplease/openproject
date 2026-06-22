@@ -31,15 +31,12 @@
 require "rails_helper"
 
 RSpec.describe Backlogs::CommonHelper do
-  let(:user) { build_stubbed(:user) }
+  current_user { build_stubbed(:user) }
+
   let(:params) { {} }
-  let(:permitted_params) { PermittedParams.new(ActionController::Parameters.new(params), user) }
 
   before do
-    RequestStore.clear!
-    without_partial_double_verification do
-      allow(helper).to receive(:permitted_params).and_return(permitted_params)
-    end
+    allow(helper).to receive(:params).and_return(ActionController::Parameters.new(params))
   end
 
   describe "#user_allowed?" do
@@ -48,10 +45,10 @@ RSpec.describe Backlogs::CommonHelper do
 
     before do
       without_partial_double_verification do
-        allow(helper).to receive_messages(current_user: user, project: default_project)
+        allow(helper).to receive_messages(current_user:, project: default_project)
       end
 
-      mock_permissions_for(user) do |mock|
+      mock_permissions_for(current_user) do |mock|
         mock.allow_in_project(:create_sprints, project: explicit_project)
       end
     end
@@ -67,6 +64,8 @@ RSpec.describe Backlogs::CommonHelper do
 
   describe "#backlog_filters" do
     context "with no params" do
+      let(:params) { {} }
+
       it "returns filters with empty to_h" do
         expect(helper.backlog_filters.to_h).to eq({})
       end
@@ -111,6 +110,8 @@ RSpec.describe Backlogs::CommonHelper do
     let!(:bucket_b) { create(:backlog_bucket, project:) }
 
     context "with no bucket_ids filter" do
+      let(:params) { {} }
+
       it "returns all buckets for the project" do
         expect(helper.filtered_buckets_for(project)).to contain_exactly(bucket_a, bucket_b)
       end
