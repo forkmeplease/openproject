@@ -53,33 +53,5 @@
 <section class="admin--edit-section">
   <h3 class="form--section-title"><%= t("ldap_departments.synchronized_departments.plural") %></h3>
 
-  <% if @departments.any? %>
-    <table class="generic-table">
-      <thead>
-        <tr>
-          <th><%= LdapDepartments::SynchronizedDepartment.human_attribute_name(:group) %></th>
-          <th><%= LdapDepartments::SynchronizedDepartment.human_attribute_name(:dn) %></th>
-          <th><%= LdapDepartments::SynchronizedDepartment.human_attribute_name(:users_count) %></th>
-          <th><div class="generic-table--empty-header"></div></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @departments.each do |department| %>
-          <tr>
-            <td><%= department.group&.name %></td>
-            <td><%= department.dn %></td>
-            <td><%= department.users_count %></td>
-            <td class="buttons">
-              <%= link_to op_icon("icon-delete"),
-                          ldap_departments_synchronized_department_path(department_id: department.id),
-                          data: { turbo_method: :delete, turbo_confirm: t(:text_are_you_sure) },
-                          title: t(:button_delete) %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p><%= t("ldap_departments.synchronized_departments.no_results") %></p>
-  <% end %>
+  <%= render(LdapDepartments::SynchronizedDepartments::TableComponent.new(rows: @departments)) %>
 </section>

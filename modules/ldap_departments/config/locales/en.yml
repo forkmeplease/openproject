@@ -74,6 +74,9 @@ en:
       plural: 'Synchronized departments'
       no_results: 'No departments have been synchronized yet.'
       managed_notice: 'Managed by LDAP synchronization'
+      blankslate:
+        heading: 'No departments synchronized yet'
+        description: 'Run the synchronization to import the organizational units of this base DN as departments.'
       destroy:
         title: 'Remove synchronized department %{name}'
         heading: 'Remove synchronized department %{name}?'
