@@ -240,6 +240,8 @@ sn: Doe
 givenName: John
 mail: john.doe@example.org
 uid: jdoe
+# Password is "john"
+userpassword:: e1NIQX1wUjNhZkgvMUMySHE2Z1JFTng5S2FwTUI1UUU9
 
 dn: ou=Backend,ou=Development,ou=IT,ou=org,dc=example,dc=com
 objectClass: organizationalUnit
@@ -256,6 +258,8 @@ sn: Smith
 givenName: Bob
 mail: bob.smith@example.org
 uid: bsmith
+# Password is "bob"
+userpassword:: e1NIQX1TQmdhelNLejdhNjhpa1I0YUtmZmZPWXBrZ289
 
 dn: ou=Support,ou=IT,ou=org,dc=example,dc=com
 objectClass: organizationalUnit
@@ -282,6 +286,8 @@ sn: West
 givenName: Helen
 mail: helen.west@example.org
 uid: hwest
+# Password is "helen"
+userpassword:: e1NIQX1aR25LNHZWVDB3UzUvZnhjQ1A1b2o0T2c3WGs9
 
 dn: ou=Support,ou=Human Resources,ou=org,dc=example,dc=com
 objectClass: organizationalUnit
