@@ -49,6 +49,7 @@ module ResourcePlannerViews
 
       def container_attributes
         attributes = {
+          "class" => "op-rm-timeline-view",
           "data-controller" => STIMULUS,
           "data-test-selector" => "resource-work-package-timeline"
         }

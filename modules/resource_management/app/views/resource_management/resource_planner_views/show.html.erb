@@ -29,18 +29,22 @@ See COPYRIGHT and LICENSE files for more details.
 
 <% html_title @resource_planner.name, t(:label_resource_management) %>
 
-<%= render(Primer::OpenProject::PageHeader.new) do |header|
-      header.with_title { @resource_planner.name }
-      header.with_breadcrumbs(
-        [
-          { href: project_overview_path(@project.id), text: @project.name },
-          { href: project_resource_planners_path(@project), text: t(:label_resource_management) },
-          @resource_planner.name
-        ]
-      )
-    end %>
+<%# The timeline fills the remaining viewport height; other views keep their
+    natural page-scrolling flow. %>
+<% fill_height = @view.is_a?(ResourceWorkPackageTimeline) %>
+<div class="op-rm-planner-page <%= "op-rm-planner-page--fill" if fill_height %>">
+  <%= render(Primer::OpenProject::PageHeader.new) do |header|
+        header.with_title { @resource_planner.name }
+        header.with_breadcrumbs(
+          [
+            { href: project_overview_path(@project.id), text: @project.name },
+            { href: project_resource_planners_path(@project), text: t(:label_resource_management) },
+            @resource_planner.name
+          ]
+        )
+      end %>
 
-<%= render(ResourcePlanners::SubViewsComponent.new(resource_planner: @resource_planner, selected_view: @view)) %>
+  <%= render(ResourcePlanners::SubViewsComponent.new(resource_planner: @resource_planner, selected_view: @view)) %>
 <%#
   Reloadable frame so allocation changes made in the dialogs refresh the table
   in place. The frame has no `src`, so it is not fetched on load — it just holds
@@ -60,6 +64,7 @@ See COPYRIGHT and LICENSE files for more details.
                  {}
                end
 %>
-<%= turbo_frame_tag("resource-planner-view-content", refresh: :morph, data: frame_data) do %>
-  <%= render(@content_component) %>
-<% end %>
+  <%= turbo_frame_tag("resource-planner-view-content", refresh: :morph, data: frame_data) do %>
+    <%= render(@content_component) %>
+  <% end %>
+</div>

@@ -1,6 +1,25 @@
-.op-rm-timeline
+// Height chain so the calendar fills the remaining viewport: `#content-body`
+// already has a resolved height, so a `height: 100%` flex column off it reaches
+// FullCalendar (which runs with `height: '100%'`).
+.op-rm-planner-page--fill
   block-size: 100%
-  min-block-size: 400px
+  display: flex
+  flex-direction: column
+
+  // The content frame and the OpTurbo::Streamable wrapper each hold a single
+  // child, so a flex-grow chain through them passes the height down.
+  turbo-frame#resource-planner-view-content,
+  turbo-frame#resource-planner-view-content > div
+    display: flex
+    flex-grow: 1
+
+.op-rm-timeline-view
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+
+.op-rm-timeline
+  flex-grow: 1
 
 // Our own card class, not FullCalendar's `.fc-timeline-event`: the vendor styles
 // force that transparent and borderless with `!important`, so it can't be
