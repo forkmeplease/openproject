@@ -800,6 +800,9 @@ en:
       heading: "Move user to this department?"
       description: "%{user} is currently a member of %{from_department}. Moving them will remove them from that department."
       confirm: "Move user"
+      managed_title: "User managed by LDAP"
+      managed_heading: "This user cannot be moved"
+      managed_description: "%{user} belongs to %{from_department}, which is managed by LDAP synchronization. Their department membership is controlled by LDAP and cannot be changed here."
     context_menu:
       add_sub_department: "Add sub-department"
       add_user: "Add user"
@@ -2272,6 +2275,7 @@ en:
         url_not_secure_context: >
           is not providing a "Secure Context". Either use HTTPS or a loopback address, such as localhost.
         user_already_in_department: "User %{user_id} is already a member of department %{department_id}."
+        user_in_ldap_managed_department: "This user belongs to a department managed by LDAP synchronization and cannot be moved."
         wrong_length: "is the wrong length (should be %{count} characters)."
       models:
         group:

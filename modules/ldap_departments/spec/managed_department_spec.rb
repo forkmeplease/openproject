@@ -91,6 +91,26 @@ RSpec.describe "LDAP-managed department locking", :aggregate_failures do # ruboc
     end
   end
 
+  describe "moving a user out of a managed department" do
+    let(:managed) { create(:department, lastname: "Managed dept") }
+    let(:manual) { create(:department, lastname: "Manual dept") }
+    let(:user) { create(:user) }
+    let(:synced) { create(:ldap_synchronized_department, group: managed) }
+
+    before { synced.add_members!([user]) }
+
+    it "is rejected with a dedicated error and leaves the user in the managed department" do
+      call = Departments::AddUserService
+        .new(manual, user: admin)
+        .call(user_id: user.id, remove_from_previous_department: true)
+
+      expect(call).to be_failure
+      expect(call.errors.symbols_for(:base)).to include(:user_in_ldap_managed_department)
+      expect(managed.reload.users).to include(user)
+      expect(manual.reload.users).not_to include(user)
+    end
+  end
+
   describe "sibling-scoped name uniqueness" do
     let(:it_dep) { create(:department, lastname: "IT") }
     let(:hr_dep) { create(:department, lastname: "HR") }
