@@ -44,7 +44,7 @@ module Users
     # - a notice that the user cannot log in when password login is disabled.
     class AuthenticationForm < ApplicationForm
       form do |f|
-        f.fieldset_group(title: I18n.t(:label_authentication)) do |group|
+        f.fieldset_group(title: I18n.t(:label_authentication), mb: 3) do |group|
           if @render_external_auth
             external_authentication(group)
           else

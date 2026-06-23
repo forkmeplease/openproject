@@ -38,7 +38,7 @@ module Users
     # option building mirrors My::TimeZoneForm.
     class PreferencesForm < ApplicationForm
       form do |f|
-        f.fieldset_group(title: I18n.t(:label_preferences)) do |group|
+        f.fieldset_group(title: I18n.t(:label_preferences), mb: 3) do |group|
           group.select_list(
             name: :time_zone,
             label: UserPreference.human_attribute_name(:time_zone),

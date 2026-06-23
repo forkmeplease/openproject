@@ -34,7 +34,7 @@ module Users
     # fieldset heading and spacing of the surrounding administration user form.
     class ConsentForm < ApplicationForm
       form do |f|
-        f.fieldset_group(title: I18n.t("consent.title")) do |group|
+        f.fieldset_group(title: I18n.t("consent.title"), mb: 3) do |group|
           group.html_content do
             render(consent_status_component)
           end
