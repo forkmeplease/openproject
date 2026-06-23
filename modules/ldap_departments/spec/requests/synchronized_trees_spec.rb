@@ -105,13 +105,31 @@ RSpec.describe "LDAP department synchronized trees", :aggregate_failures, :skip_
   end
 
   context "without the enterprise feature" do
-    it "redirects away from the new form" do
+    before do
       allow(EnterpriseToken).to receive(:allows_to?).and_call_original
       allow(EnterpriseToken).to receive(:allows_to?).with(:ldap_groups).and_return(false)
+    end
 
+    it "redirects away from the new form" do
       get new_ldap_departments_synchronized_tree_path
 
       expect(response).to have_http_status(:see_other)
+    end
+
+    # An instance that lost its enterprise token must still be able to clean up trees it set up.
+    it "still allows deleting a tree" do
+      tree = create(:ldap_synchronized_tree, ldap_auth_source:)
+
+      expect { delete ldap_departments_synchronized_tree_path(tree_id: tree.id) }
+        .to change(LdapDepartments::SynchronizedTree, :count).by(-1)
+    end
+
+    it "still renders the deletion dialog" do
+      tree = create(:ldap_synchronized_tree, ldap_auth_source:)
+
+      get deletion_dialog_ldap_departments_synchronized_tree_path(tree_id: tree.id), as: :turbo_stream
+
+      expect(response).to have_http_status(:ok)
     end
   end
 end
