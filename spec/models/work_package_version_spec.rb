@@ -50,14 +50,10 @@ RSpec.describe WorkPackageVersion do
       expect(record.errors[:kind]).to be_present
     end
 
-    it "is valid with kind 'target'" do
-      record.kind = "target"
-      expect(record).to be_valid
-    end
-
-    it "is valid with kind 'observed_in'" do
-      record.kind = "observed_in"
-      expect(record).to be_valid
+    it do
+      expect(subject).to define_enum_for(:kind)
+        .with_values(target: "target", observed_in: "observed_in")
+        .backed_by_column_of_type(:enum)
     end
   end
 

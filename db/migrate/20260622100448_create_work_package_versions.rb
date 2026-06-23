@@ -30,10 +30,12 @@
 
 class CreateWorkPackageVersions < ActiveRecord::Migration[8.1]
   def change
+    create_enum :work_package_version_kind, ["target", "observed_in"]
+
     create_table :work_package_versions do |t|
       t.references :work_package, null: false, foreign_key: { on_delete: :cascade }, index: false
       t.references :version,      null: false, foreign_key: { on_delete: :cascade }, index: false
-      t.integer :kind, null: false
+      t.enum :kind, enum_type: :work_package_version_kind, null: false
       t.timestamps
     end
 

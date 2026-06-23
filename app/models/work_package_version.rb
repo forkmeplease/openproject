@@ -29,7 +29,7 @@
 #++
 
 class WorkPackageVersion < ApplicationRecord
-  enum :kind, { target: 0, observed_in: 1 }, validate: true
+  enum :kind, { target: "target", observed_in: "observed_in" }, validate: true
 
   belongs_to :work_package
   belongs_to :version
