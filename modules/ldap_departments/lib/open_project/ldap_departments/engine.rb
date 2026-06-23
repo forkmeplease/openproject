@@ -18,8 +18,7 @@ module OpenProject::LdapDepartments
            parent: :authentication,
            after: :plugin_ldap_groups,
            caption: ->(*) { I18n.t("ldap_departments.label_menu_item") },
-           enterprise_feature: "ldap_groups",
-           if: ->(*) { OpenProject::FeatureDecisions.departments_active? }
+           enterprise_feature: "ldap_groups"
     end
 
     add_cron_jobs do
