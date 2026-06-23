@@ -1,88 +1,88 @@
 ---
 en:
-  plugin_openproject_ldap_departments:
-    name: "OpenProject LDAP departments"
-    description: "Synchronization of LDAP organizational units into OpenProject departments."
   activerecord:
     attributes:
-      ldap_departments/synchronized_tree:
-        name: 'Name'
-        base_dn: 'Base DN'
-        ldap_auth_source: 'LDAP connection'
-        structure_filter_string: 'Organizational unit filter'
-        ou_name_attribute: 'OU name attribute'
-        guid_attribute: 'Unique identifier attribute'
-        user_filter_string: 'User filter'
-        sync_users: 'Sync users'
       ldap_departments/synchronized_department:
         dn: 'DN'
-        ldap_auth_source: 'LDAP connection'
         group: 'Department'
+        ldap_auth_source: 'LDAP connection'
         users_count: 'Members'
-    models:
-      ldap_departments/synchronized_tree: 'LDAP department synchronization'
-      ldap_departments/synchronized_department: 'Synchronized department'
+      ldap_departments/synchronized_tree:
+        base_dn: 'Base DN'
+        guid_attribute: 'Unique identifier attribute'
+        ldap_auth_source: 'LDAP connection'
+        name: 'Name'
+        ou_name_attribute: 'OU name attribute'
+        structure_filter_string: 'Organizational unit filter'
+        sync_users: 'Sync users'
+        user_filter_string: 'User filter'
     errors:
       models:
         ldap_departments/synchronized_tree:
           must_contain_base_dn: "The base DN must be contained within the LDAP connection's base DN."
           overlaps_other_tree: "Overlaps the base DN of another synchronization on the same LDAP connection."
+    models:
+      ldap_departments/synchronized_department: 'Synchronized department'
+      ldap_departments/synchronized_tree: 'LDAP department synchronization'
   ldap_departments:
     label_menu_item: 'LDAP department synchronization'
-    label_synchronize: 'Synchronize organizational units'
     label_n_departments_found:
       one: "1 department synchronized"
       other: "%{count} departments synchronized"
       zero: "No departments were synchronized"
+    label_synchronize: 'Synchronize organizational units'
+    synchronized_departments:
+      blankslate:
+        description: 'Run the synchronization to import the organizational units of this base DN as departments.'
+        heading: 'No departments synchronized yet'
+      destroy:
+        confirmation: "If you continue, the mapping for %{name} and the %{users_count} memberships synchronized through it will be removed."
+        heading: 'Remove synchronized department %{name}?'
+        info: "The department itself and members added outside this synchronization will not be removed."
+        title: 'Remove synchronized department %{name}'
+      managed_notice: 'Managed by LDAP synchronization'
+      no_results: 'No departments have been synchronized yet.'
+      plural: 'Synchronized departments'
+      singular: 'Synchronized department'
     synchronized_trees:
       add_new: 'Add LDAP department synchronization'
-      singular: 'LDAP department synchronization'
-      plural: 'LDAP department synchronizations'
-      no_results: 'No LDAP department synchronizations configured yet.'
       blankslate:
-        heading: 'No LDAP department synchronizations'
         description: 'Set up a synchronization to mirror your LDAP organizational unit structure into the OpenProject department hierarchy.'
+        heading: 'No LDAP department synchronizations'
+      destroy:
+        confirmation: "If you continue, the synchronization %{name} and the mapping of all %{departments_count} departments created through it will be removed."
+        heading: 'Remove synchronization %{name}?'
+        info: "The departments themselves and members added outside this synchronization will not be removed."
+        title: 'Remove synchronization %{name}'
+        verification_html: "Enter the synchronization name %{name} to verify the deletion."
+      form:
+        auth_source_text: 'Select which LDAP connection should be used.'
+        base_dn_text: >
+          Enter the base DN whose organizational units should be synchronized. Its direct child OUs
+          become top-level departments. It must be below the base DN of the selected LDAP connection.
+        guid_attribute_text: >
+          Optional. The LDAP attribute holding a stable unique identifier (e.g. "objectGUID" or
+          "entryUUID"). When set, departments survive OU renames and moves. Leave empty to match by DN.
+        ou_name_attribute_text: 'The LDAP attribute used to name the department (e.g. "ou").'
+        sections:
+          connection: 'LDAP connection'
+          structure: 'Organizational units'
+          users: 'Users'
+        structure_filter_string_text: 'RFC4515 LDAP filter identifying organizational unit entries.'
+        sync_users_text: >
+          If enabled, users found below the base DN are also created in OpenProject. Without it, only
+          existing accounts are assigned to departments.
+        user_filter_string_text: >
+          Optional RFC4515 LDAP filter identifying user entries. Leave empty to use the connection
+          filter, or a generic person filter when none is set.
       help_text: >
         This module mirrors the organizational unit (OU) structure of your LDAP directory into the
         OpenProject department hierarchy. Each OU below the configured base DN becomes a department,
         and users are assigned to the department of the OU they reside in. Departments are
         synchronized regularly through a cron job.
-      destroy:
-        title: 'Remove synchronization %{name}'
-        heading: 'Remove synchronization %{name}?'
-        confirmation: "If you continue, the synchronization %{name} and the mapping of all %{departments_count} departments created through it will be removed."
-        info: "The departments themselves and members added outside this synchronization will not be removed."
-        verification_html: "Enter the synchronization name %{name} to verify the deletion."
-      form:
-        sections:
-          connection: 'LDAP connection'
-          structure: 'Organizational units'
-          users: 'Users'
-        auth_source_text: 'Select which LDAP connection should be used.'
-        base_dn_text: >
-          Enter the base DN whose organizational units should be synchronized. Its direct child OUs
-          become top-level departments. It must be below the base DN of the selected LDAP connection.
-        structure_filter_string_text: 'RFC4515 LDAP filter identifying organizational unit entries.'
-        ou_name_attribute_text: 'The LDAP attribute used to name the department (e.g. "ou").'
-        guid_attribute_text: >
-          Optional. The LDAP attribute holding a stable unique identifier (e.g. "objectGUID" or
-          "entryUUID"). When set, departments survive OU renames and moves. Leave empty to match by DN.
-        user_filter_string_text: >
-          Optional RFC4515 LDAP filter identifying user entries. Leave empty to use the connection
-          filter, or a generic person filter when none is set.
-        sync_users_text: >
-          If enabled, users found below the base DN are also created in OpenProject. Without it, only
-          existing accounts are assigned to departments.
-    synchronized_departments:
-      singular: 'Synchronized department'
-      plural: 'Synchronized departments'
-      no_results: 'No departments have been synchronized yet.'
-      managed_notice: 'Managed by LDAP synchronization'
-      blankslate:
-        heading: 'No departments synchronized yet'
-        description: 'Run the synchronization to import the organizational units of this base DN as departments.'
-      destroy:
-        title: 'Remove synchronized department %{name}'
-        heading: 'Remove synchronized department %{name}?'
-        confirmation: "If you continue, the mapping for %{name} and the %{users_count} memberships synchronized through it will be removed."
-        info: "The department itself and members added outside this synchronization will not be removed."
+      no_results: 'No LDAP department synchronizations configured yet.'
+      plural: 'LDAP department synchronizations'
+      singular: 'LDAP department synchronization'
+  plugin_openproject_ldap_departments:
+    description: "Synchronization of LDAP organizational units into OpenProject departments."
+    name: "OpenProject LDAP departments"
