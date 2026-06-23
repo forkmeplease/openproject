@@ -92,23 +92,18 @@ namespace :ldap_groups do
       LdapGroups::SynchronizationJob.perform_now
       puts "  → Synchronized #{LdapGroups::SynchronizedGroup.count} group(s)."
 
-      # The fixture also ships a nested organizational unit tree below ou=org. When the LDAP
-      # department synchronization module is available, set it up and sync it as well so the
-      # development server demonstrates department synchronization out of the box.
-      if defined?(LdapDepartments::SynchronizedTree)
-        tree = LdapDepartments::SynchronizedTree.find_or_initialize_by(ldap_auth_source: source, name: "Organization")
-        tree.base_dn = "ou=org,dc=example,dc=com"
-        tree.structure_filter_string = "(objectClass=organizationalUnit)"
-        tree.ou_name_attribute = "ou"
-        tree.sync_users = true
-        tree.save!
+      # The fixture also ships a nested organizational unit tree below ou=org, which is mirrored
+      # into departments so the development server demonstrates department synchronization too.
+      tree = LdapDepartments::SynchronizedTree.find_or_initialize_by(ldap_auth_source: source, name: "Organization")
+      tree.base_dn = "ou=org,dc=example,dc=com"
+      tree.structure_filter_string = "(objectClass=organizationalUnit)"
+      tree.ou_name_attribute = "ou"
+      tree.sync_users = true
+      tree.save!
 
-        puts "Set up department synchronization 'Organization' and synchronizing organizational units..."
-        LdapDepartments::SynchronizationService.synchronize!
-        puts "  → Synchronized #{LdapDepartments::SynchronizedDepartment.count} department(s)."
-      else
-        puts "Department synchronization module not available, skipping department setup."
-      end
+      puts "Set up department synchronization 'Organization' and synchronizing organizational units..."
+      LdapDepartments::SynchronizationService.synchronize!
+      puts "  → Synchronized #{LdapDepartments::SynchronizedDepartment.count} department(s)."
 
       puts <<~INFO
         LDAP server ready at localhost:12389
