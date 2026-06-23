@@ -36,8 +36,8 @@ en:
     models:
       resource_allocation: Resource Allocation
       resource_planner: Resource Planner
-      resource_work_package_list: Work packages list
       resource_user_card: User cards
+      resource_work_package_list: Work packages list
   button_next: Next
   label_resource_management: Resource planning
   permission_allocate_user_resources: Allocate user resources
@@ -151,14 +151,14 @@ en:
       utilization:
         label: Utilization
     view_types:
-      resource_work_package_list:
-        caption: >-
-          Create a view based on work packages and see its details and allocation in a list
-        label: Work packages list
       resource_user_card:
         caption: >-
           Create a view based on users and see their details and allocation in a list of user cards
         label: Users card list
+      resource_work_package_list:
+        caption: >-
+          Create a view based on work packages and see its details and allocation in a list
+        label: Work packages list
     work_package_allocations_dialog:
       allocate_resource: Allocate resource
       context_menu_label: Allocation actions
