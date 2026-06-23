@@ -10,13 +10,18 @@ module LdapDepartments
       end
     end
 
+    # Synchronize a single tree (used by the per-tree background job).
+    def self.synchronize_tree!(tree)
+      User.system.run_given do
+        new.synchronize_tree(tree)
+      end
+    end
+
     def call
       SynchronizedTree.includes(:ldap_auth_source).find_each do |tree|
         synchronize_tree(tree)
       end
     end
-
-    private
 
     def synchronize_tree(tree)
       Rails.logger.info { "[LDAP departments] Synchronizing structure for tree '#{tree.name}'" }

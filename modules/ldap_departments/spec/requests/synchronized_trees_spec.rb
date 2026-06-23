@@ -51,13 +51,16 @@ RSpec.describe "LDAP department synchronized trees", :aggregate_failures, :skip_
       }
     end
 
-    it "creates a synchronized tree" do
+    it "creates a synchronized tree and starts the background synchronization" do
+      allow(LdapDepartments::SynchronizeTreeJob).to receive(:perform_later)
+
       expect { post ldap_departments_synchronized_trees_path, params: }
         .to change(LdapDepartments::SynchronizedTree, :count).by(1)
 
       tree = LdapDepartments::SynchronizedTree.last
       expect(response).to redirect_to(ldap_departments_synchronized_tree_path(tree_id: tree.id))
       expect(tree.base_dn).to eq("ou=IT,dc=example,dc=com")
+      expect(LdapDepartments::SynchronizeTreeJob).to have_received(:perform_later).with(tree)
     end
 
     it "rejects an out-of-base DN" do
@@ -92,14 +95,12 @@ RSpec.describe "LDAP department synchronized trees", :aggregate_failures, :skip_
   describe "POST /ldap_departments/synchronized_trees/:id/synchronize" do
     let!(:tree) { create(:ldap_synchronized_tree, ldap_auth_source:) }
 
-    it "runs the synchronization and redirects" do
-      allow(LdapDepartments::SynchronizeTreeService).to receive(:new)
-        .and_return(instance_double(LdapDepartments::SynchronizeTreeService, call: ServiceResult.success(result: 2)))
-      allow(LdapDepartments::SynchronizeMembersService).to receive(:new)
-        .and_return(instance_double(LdapDepartments::SynchronizeMembersService, call: ServiceResult.success))
+    it "enqueues a background synchronization and redirects" do
+      allow(LdapDepartments::SynchronizeTreeJob).to receive(:perform_later)
 
       post synchronize_ldap_departments_synchronized_tree_path(tree_id: tree.id)
 
+      expect(LdapDepartments::SynchronizeTreeJob).to have_received(:perform_later).with(tree)
       expect(response).to redirect_to(ldap_departments_synchronized_tree_path(tree_id: tree.id))
     end
   end

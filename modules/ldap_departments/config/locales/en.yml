@@ -31,10 +31,6 @@ en:
         description: "Mirror your LDAP organizational unit structure into the OpenProject department hierarchy and keep department members in sync automatically."
   ldap_departments:
     label_menu_item: "LDAP department synchronization"
-    label_n_departments_found:
-      one: "1 department synchronized"
-      other: "%{count} departments synchronized"
-      zero: "No departments were synchronized"
     label_synchronize: "Synchronize organizational units"
     synchronized_departments:
       blankslate:
@@ -51,6 +47,7 @@ en:
       singular: "Synchronized department"
     synchronized_trees:
       add_new: "Add LDAP department synchronization"
+      synchronization_started: "Synchronization started in the background. Departments will appear once it completes."
       blankslate:
         description: "Set up a synchronization to mirror your LDAP organizational unit structure into the OpenProject department hierarchy."
         heading: "No LDAP department synchronizations"

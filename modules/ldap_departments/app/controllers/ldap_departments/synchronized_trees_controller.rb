@@ -33,7 +33,8 @@ module LdapDepartments
       @tree = SynchronizedTree.new(permitted_params)
 
       if @tree.save
-        flash[:notice] = I18n.t(:notice_successful_create)
+        SynchronizeTreeJob.perform_later(@tree)
+        flash[:notice] = I18n.t("ldap_departments.synchronized_trees.synchronization_started")
         redirect_to action: :show, tree_id: @tree.id
       else
         render action: :new, status: :unprocessable_entity
@@ -68,22 +69,12 @@ module LdapDepartments
     end
 
     def synchronize
-      structure = SynchronizeTreeService.new(@tree).call
-      members = SynchronizeMembersService.new(@tree).call
-
-      set_synchronize_flash(structure, members)
+      SynchronizeTreeJob.perform_later(@tree)
+      flash[:notice] = I18n.t("ldap_departments.synchronized_trees.synchronization_started")
       redirect_to action: :show
     end
 
     private
-
-    def set_synchronize_flash(structure, members)
-      if structure.success? && members.success?
-        flash[:notice] = I18n.t("ldap_departments.label_n_departments_found", count: structure.result.to_i)
-      else
-        flash[:error] = [structure.message, members.message].compact.join(", ")
-      end
-    end
 
     def find_tree
       @tree = SynchronizedTree.find(params.expect(:tree_id))
