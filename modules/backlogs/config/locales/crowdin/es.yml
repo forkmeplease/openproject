@@ -41,8 +41,10 @@ es:
           active: Activo
           completed: Completado
         work_packages: Paquetes de trabajo
+      sprint_goal:
+        text: Meta del sprint
       work_package:
-        backlog_bucket: Buckets de backlog
+        backlog_bucket: Backlog bucket
         backlogs_work_package_type: Tipo de Backlog
         position: Posición
         sprint: Sprint
@@ -59,6 +61,8 @@ es:
             sprint_sharing:
               share_all_projects_already_taken: no se puede configurar porque el proyecto «%{name}» ya se comparte con todos los proyectos.
               share_all_projects_already_taken_anonymous: no se puede configurar porque otro proyecto ya lo está compartiendo con todos los proyectos.
+        sprint_goal:
+          project_already_has_goal: ya existe una meta para este sprint.
         sprint:
           attributes:
             base:
@@ -87,6 +91,18 @@ es:
     administration_blankslate:
       title: Las opciones de configuración de Backlog están cambiando
       text: Ahora mismo estamos rediseñando el módulo «Backlogs». La configuración de administración para los sprints y los backlogs estará disponible aquí en breve. La configuración a nivel de proyecto sigue estando disponible.
+    backlog_component:
+      button_new_backlog_bucket: New backlog bucket
+    backlog_filter_select_panel_component:
+      label_backlog_bucket_filter:
+        one: Backlog bucket
+        other: Backlog buckets
+        zero: All backlog buckets
+      label_sprint_filter:
+        one: Sprint
+        other: Sprints
+        zero: All sprints
+      select_panel_title: Select items
     bucket_destroy_modal_component:
       title: "¿Eliminar bucket de backlog?"
       details: Se eliminará el bucket de backlog «%{name}» y todos los paquetes de trabajo se trasladarán a la bandeja de entrada de tareas pendientes. No se eliminará ningún paquete de trabajo.
@@ -150,6 +166,12 @@ es:
       action_menu:
         edit_sprint: Editar sprint
         add_work_package: Añadir paquete de trabajo
+    sprint_form:
+      goal_caption: La meta del sprint es exclusiva de este proyecto y no se comparte con otros proyectos que también estén usando este sprint.
+      goal_for_this_project_label: "%{attribute} (para este proyecto)"
+    sprint_form_component:
+      shared_sprint_info_banner: Este es un sprint compartido. Las modificaciones serán reflejadas en todos los proyectos que lo usen.
+      shared_sprint_warning_banner: Este es un sprint compartido. Usted no tiene los permisos necesarios para editarlo.
     sprints_component:
       blankslate:
         title: Todavía no hay sprints
@@ -160,6 +182,7 @@ es:
         create_description_text: Para empezar a planificar tu sprint, crea uno aquí.
         manage_description_html: Para empezar a planificar tu sprint, ve a %{settings_link} para recibir sprints de otro proyecto.
         no_actions_description_text: Todavía no hay sprints disponibles para este proyecto.
+      button_new_sprint: New sprint
     story_points:
       one: "%{count} punto de historia"
       other: "%{count} puntos de historia"

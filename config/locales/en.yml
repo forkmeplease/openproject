@@ -41,6 +41,7 @@ en:
         label_activity_show_all: "Show everything"
         label_activity_show_only_comments: "Show comments only"
         label_activity_show_only_changes: "Show changes only"
+        label_dismiss_comment: "Dismiss"
         label_sort_asc: "Newest at the bottom"
         label_sort_desc: "Newest on top"
         label_type_to_comment: "Add a comment. Type @ to notify people."
@@ -53,7 +54,7 @@ en:
         commented: "commented"
         internal_comment: Internal comment
         internal_journal: Internal comments are visible to a limited group of members.
-        unsaved_changes_confirmation_message: You have unsaved changes. Are you sure you want to close the editor?
+        unsaved_changes_confirmation_message: "Are you sure you want to dismiss your comment? The content that you have written will be lost."
         internal_comment_confirmation:
           title: "Make this comment public?"
           heading: "Make this comment public?"
@@ -62,25 +63,27 @@ en:
 
   admin:
     reserved_identifiers:
-      title: "Reserved project identifiers"
-      lede_html: "When a project's identifier is renamed, the previous identifier is kept reserved so that existing links and integrations keep working.<br>Here you can release reserved identifiers so that they may be used by other projects."
+      btn_release: "Unreserve"
       col_identifier: "Identifier"
       col_project: "Project"
       col_reserved: "Reserved"
-      not_available_in_semantic_mode: "Reserved project identifiers are only available in numeric identifier mode."
-      filter_label: "Search identifiers"
-      btn_release: "Release"
-      released_notice: 'Identifier "%{identifier}" has been released.'
-      identifier_not_found: "The reserved identifier could not be found. It may have already been released or the project may have been deleted. Please refresh the page."
       dialog:
-        title: "Release identifier"
-        heading: 'Release "%{identifier}"?'
-        description: "Releasing this identifier cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim."
         checkbox_label: "I understand that this cannot be undone."
-        confirm_button: "Release identifier"
+        confirm_button: "Unreserve identifier"
+        description: "Unreserving this project identifier cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim."
+        description_with_work_packages:
+          one: "Unreserving this project identifier (and its 1 work package identifier) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim."
+          other: "Unreserving this project identifier (and its %{count} work package identifiers) cannot be undone. External links and integrations using it will stop resolving, and the name becomes available for any new project to claim."
+        heading: 'Unreserve "%{identifier}"?'
+        title: "Unreserve identifier"
+      empty_body: "When a project's identifier changes, the previous one will appear here so you can unreserve it once it's safe to do so."
       empty_heading: "No reserved identifiers"
+      filter_label: "Search identifiers"
+      identifier_not_found: "The reserved identifier could not be found. It may have already been unreserved or the project may have been deleted. Please refresh the page."
+      lede_html: "When a project's identifier is renamed, the previous identifier is kept reserved so that existing links and integrations keep working.<br>Here you can unreserve identifiers so that they may be used by other projects."
+      released_notice: 'Identifier "%{identifier}" has been unreserved.'
       reserved_ago: "%{time} ago"
-      empty_body: "When a project's identifier changes, the previous one will appear here so you can release it once it's safe to do so."
+      title: "Reserved project identifiers"
     plugins:
       no_results_title_text: There are currently no plugins installed.
       no_results_content_text: See our integrations and plugins page for more information.
@@ -138,8 +141,8 @@ en:
         trial: "Trial"
     jemalloc_allocator: Jemalloc memory allocator
     journal_aggregation:
-      caption: >
-        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays.
+      caption_with_maximum: >
+        User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays. The maximum is %{max} minutes.
     import:
       title: "Import"
     jira:
@@ -803,9 +806,11 @@ en:
         a hierarchy below it, to navigate and create sub-department inside a hierarchy click on the created item.
       add_button: "Add"
     detail_blankslate:
-      heading: "This department doesn’t have any hierarchy level below"
-      description: "Add departments or users to create sub-items inside another one."
       add_button: "Add"
+      description: "Add departments or users to create sub-items inside another one."
+      heading: "This department doesn’t have any hierarchy level below"
+      managed_description: "Its sub-departments and members are kept in sync with LDAP and cannot be added manually."
+      managed_heading: "This department is managed by LDAP synchronization"
     add_department_form:
       name_label: "Department name"
       name_placeholder: "Enter department name"
@@ -814,6 +819,9 @@ en:
       heading: "Move user to this department?"
       description: "%{user} is currently a member of %{from_department}. Moving them will remove them from that department."
       confirm: "Move user"
+      managed_title: "User managed by LDAP"
+      managed_heading: "This user cannot be moved"
+      managed_description: "%{user} belongs to %{from_department}, which is managed by LDAP synchronization. Their department membership is controlled by LDAP and cannot be changed here."
     context_menu:
       add_sub_department: "Add sub-department"
       add_user: "Add user"
@@ -1404,9 +1412,6 @@ en:
       priority_color_text: |
         Click to assign or change the color of this priority.
         It can be used for highlighting work packages in the table.
-    admin:
-      default:
-        caption: Making this priority default will override the previous default priority.
 
   reactions:
     action_title: "React"
@@ -2198,9 +2203,6 @@ en:
         type: "Type"
         version: "Version"
         watcher: "Watcher"
-      work_package_semantic_alias:
-        identifier: "Identifier"
-        work_package: "Work package"
       user_card_view:
         secondary_info: "Secondary info"
         show_status_badge: "Show status badge"
@@ -2209,7 +2211,24 @@ en:
         tag_limit: "Tag limit"
         card_size: "Card size"
         columns_per_row: "Columns per row"
-
+      ordered_persisted_query_entity:
+        persisted_query: "Persisted query"
+        entity: "Entity"
+        position: "Position"
+      persisted_query:
+        name: "Name"
+        views: "Views"
+        filters: "Filters"
+        orders: "Orders"
+        selects: "Selects"
+      persisted_view:
+        name: "Name"
+        query: "Query"
+        parent: "Parent view"
+        public: "Public"
+      work_package_semantic_alias:
+        identifier: "Identifier"
+        work_package: "Work package"
     errors:
       messages:
         accepted: "must be accepted."
@@ -2255,6 +2274,7 @@ en:
         invalid_url: "is not a valid URL."
         invalid_url_scheme: "is not a supported protocol (allowed: %{allowed_schemes})."
         is_for_all_cannot_modify: "is for all projects and can therefore not be modified."
+        ldap_managed: "This department is managed by LDAP synchronization and cannot be changed manually."
         less_than_or_equal_to: "must be less than or equal to %{count}."
         not_available: "is not available due to a system configuration."
         not_before_start_date: "must not be before the start date."
@@ -2291,6 +2311,7 @@ en:
         url_not_secure_context: >
           is not providing a "Secure Context". Either use HTTPS or a loopback address, such as localhost.
         user_already_in_department: "User %{user_id} is already a member of department %{department_id}."
+        user_in_ldap_managed_department: "This user belongs to a department managed by LDAP synchronization and cannot be moved."
         wrong_length: "is the wrong length (should be %{count} characters)."
       models:
         group:
@@ -2298,6 +2319,7 @@ en:
             parent_id:
               circular_dependency: "would create a circular group hierarchy."
               organizational_unit_mismatch: "must have the same organizational unit setting as the group."
+              parent_ldap_managed: "is managed by LDAP synchronization and cannot have departments added manually."
         ldap_auth_source:
           attributes:
             tls_certificate_string:
@@ -2493,11 +2515,12 @@ en:
         setting:
           attributes:
             base:
-              working_days_are_missing: "At least one day of the week must be defined as a working day."
-              previous_working_day_changes_unprocessed: "The previous changes to the working days configuration have not been applied yet."
-              hours_per_day_are_missing: "The number of hours per day must be defined."
               durations_are_not_positive_numbers: "The durations must be positive numbers."
+              hours_per_day_are_missing: "The number of hours per day must be defined."
               hours_per_day_is_out_of_bounds: "Hours per day can't be more than 24"
+              journal_aggregation_time_minutes_is_out_of_bounds: "Aggregation period must be between %{min} and %{max} minutes."
+              previous_working_day_changes_unprocessed: "The previous changes to the working days configuration have not been applied yet."
+              working_days_are_missing: "At least one day of the week must be defined as a working day."
         status:
           attributes:
             default_done_ratio:
@@ -3393,10 +3416,11 @@ en:
       enabled: "Disable"
 
   enumeration_activities: "Time tracking activities"
-  enumeration_work_package_priorities: "Work package priorities"
-  enumeration_reported_project_statuses: "Reported status"
   enumeration_caption_order_changed: "Order successfully changed."
   enumeration_could_not_be_moved: "Enumeration could not be moved."
+  enumeration_default_value_caption: "Making this %{model} the default will override the previous default %{model}."
+  enumeration_reported_project_statuses: "Reported status"
+  enumeration_work_package_priorities: "Work package priorities"
 
   enterprise_trials:
     dialog_component:
@@ -3628,6 +3652,7 @@ en:
       all_projects: "All projects"
       favorites: "Favorites"
       leave_project: "Leave project"
+      no_favorite_projects: "You have no favorite projects."
       title: "Projects"
 
   toggle_switch:
@@ -3896,8 +3921,8 @@ en:
         submit_button: "Update alerts"
     notifications:
       participating:
+        description: "You will always receive a notification whenever you are mentioned, and for changes to work packages you are watching. These cannot be disabled. However, you can choose to enable or disable receiving notifications for changes to work packages that concern you (where you are assignee, accountable or are shared with you)."
         title: "Participating"
-        description: "Notifications for all activities in work packages you are involved in (assignee, accountable or watcher)."
         submit_button: "Update preferences"
         mentioned: "Mentioned"
         watched: "Watching"
@@ -3905,8 +3930,8 @@ en:
         responsible: "Accountable"
         shared: "Shared with me"
       date_alerts:
+        description: "You can configure date alerts for work packages where you are assignee, accountable and/or watcher to be automatically notified a few days prior to approaching or overdue deadlines."
         title: "Date alerts"
-        description: "Automatic notifications when important dates are approaching for open work packages you are involved in (assignee, accountable or watcher)."
         submit_button: "Update date alerts"
         start_date: "Start date"
         due_date: "Finish date"
@@ -3920,8 +3945,8 @@ en:
           three_days_after: "3 days after"
           seven_days_after: "7 days after"
       non_participating:
+        description: "You can additionally choose to be notified of any of the following activities for all projects."
         title: "Non-participating"
-        description: "Additional notifications for activities in all projects."
         submit_button: "Update preferences"
         work_package_created: "New work packages"
         work_package_commented: "All new comments"
@@ -3929,8 +3954,8 @@ en:
         work_package_prioritized: "All priority changes"
         work_package_scheduled: "All date changes"
       project_specific_settings:
-        title: "Project-specific notification settings"
-        description: "These project-specific settings override default settings above."
+        description: "You can fine-tune your notification settings to only be notified of certain events in specific projects. Add a project below and choose which events should trigger a notification for you. These project-specific settings override default settings above."
+        title: "Project-specific notifications"
         add_button: "Add project-specific notifications"
         dialog_title: "Add project-specific notifications"
         list_header: "Projects with specific notifications"
@@ -4066,6 +4091,7 @@ en:
   label_send_invitation: Send invitation
   label_calculated_value: "Calculated value"
   label_change_parent: "Change parent"
+  label_change_password: "Change password"
   label_change_plural: "Changes"
   label_change_properties: "Change properties"
   label_change_status: "Change status"
@@ -4306,12 +4332,13 @@ en:
   label_departments_description_html: >
     Define your company’s structure by creating departments and sub-departments in a hierarchical way. This allows you
     to reflect reporting lines and maintain a clear, structured overview of your organization within OpenProject. You
-    can also import an existing organization structure through [LDAP group synchronisation](ldap_docs_article).
+    can also import an existing organization structure through [LDAP department synchronization](ldap_docs_article).
   label_logout: "Sign out"
   label_mapping_for: "Mapping for: %{attribute}"
   label_main_menu: "Side Menu"
   label_manage: "Manage"
   label_manage_groups: "Manage groups"
+  label_managed_by_ldap: "Managed by LDAP synchronization"
   label_managed_repositories_vendor: "Managed %{vendor} repositories"
   label_mathematical_operators: "Mathematical operators"
   label_max_size: "Maximum size"
@@ -4353,6 +4380,7 @@ en:
   label_my_account_data: "My account data"
   label_my_avatar: "My avatar"
   label_my_queries: "My custom queries"
+  label_my_security: "Security"
   label_name: "Name"
   label_never: "Never"
   label_new: "New"

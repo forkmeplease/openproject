@@ -60,7 +60,7 @@ module OpTurbo
     alias_method :respond_with_turbo_streams, :respond_to_with_turbo_streams
 
     def respond_with_dialog(dialog_component, status: :ok, &format_block)
-      modify_via_turbo_stream(component: dialog_component, action: :dialog, status:)
+      dialog_via_turbo_stream(component: dialog_component, status:)
 
       respond_to_with_turbo_streams(&format_block)
     end
@@ -75,6 +75,10 @@ module OpTurbo
 
     def remove_via_turbo_stream(component:, status: :ok, **)
       modify_via_turbo_stream(component:, action: :remove, status:, **)
+    end
+
+    def dialog_via_turbo_stream(component:, status: :ok, **)
+      modify_via_turbo_stream(component:, action: :dialog, status:, **)
     end
 
     def modify_via_turbo_stream(component:, action:, status:, **)
@@ -107,12 +111,12 @@ module OpTurbo
       turbo_streams << target_component.insert_as_turbo_stream(component:, view_context:, action: :before)
     end
 
-    def render_success_flash_message_via_turbo_stream(**)
-      render_flash_message_via_turbo_stream(**, scheme: :success)
+    def render_success_flash_message_via_turbo_stream(message:, **)
+      render_flash_message_via_turbo_stream(message:, scheme: :success, **)
     end
 
-    def render_error_flash_message_via_turbo_stream(**)
-      render_flash_message_via_turbo_stream(**, scheme: :danger, icon: :stop)
+    def render_error_flash_message_via_turbo_stream(message:, **)
+      render_flash_message_via_turbo_stream(message:, scheme: :danger, icon: :stop, **)
     end
 
     def render_live_region_update_message(message:, politeness: "polite", delay: nil)

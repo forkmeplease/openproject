@@ -34,7 +34,7 @@ RSpec.describe Backlogs::WorkPackagesController do
   # Gets the html content of the template of the first turbo-stream with the
   # given action.
   def turbo_stream_template(action:)
-    Nokogiri("<response>#{response.body}</response>").css("turbo-stream[action=#{action}] template").first.inner_html
+    assert_select("turbo-stream[action=#{action}] template").first.inner_html
   end
 
   shared_let(:type_feature) { create(:type_feature) }
@@ -68,8 +68,8 @@ RSpec.describe Backlogs::WorkPackagesController do
         end
       end
 
-      context "when all=1" do
-        let(:all) { "1" }
+      context "when all=true" do
+        let(:all) { "true" }
 
         it "replaces the inbox without a show-more row in the stream" do
           subject
@@ -215,7 +215,7 @@ RSpec.describe Backlogs::WorkPackagesController do
         include_examples "respecting the all param for inbox pagination"
       end
 
-      context "with a Backlog Bucket as target" do
+      context "with a Backlog bucket as target" do
         let(:bucket) { create(:backlog_bucket, name: "My Bucket", project:) }
         let!(:bucket_items) { create_list(:work_package, 2, project:, status:, backlog_bucket: bucket) }
         let(:target_id) { "backlog_bucket:#{bucket.id}" }
@@ -345,7 +345,7 @@ RSpec.describe Backlogs::WorkPackagesController do
         include_examples "respecting the all param for inbox pagination"
       end
 
-      context "with a Backlog Bucket as target" do
+      context "with a Backlog bucket as target" do
         let(:bucket) { create(:backlog_bucket, project:) }
         let!(:bucket_items) { create_list(:work_package, 2, project:, status:, backlog_bucket: bucket) }
         let(:target_id) { "backlog_bucket:#{bucket.id}" }
@@ -443,7 +443,7 @@ RSpec.describe Backlogs::WorkPackagesController do
         include_examples "respecting the all param for inbox pagination"
       end
 
-      context "with the same Backlog Bucket as target" do
+      context "with the same Backlog bucket as target" do
         let(:target_id) { "backlog_bucket:#{bucket.id}" }
         let(:prev_id) { bucket_items.first.id }
 
@@ -465,7 +465,7 @@ RSpec.describe Backlogs::WorkPackagesController do
         include_examples "respecting the all param for inbox pagination"
       end
 
-      context "with another Backlog Bucket as target" do
+      context "with another Backlog bucket as target" do
         let(:other_bucket) { create(:backlog_bucket, project:) }
         let!(:other_bucket_items) { create_list(:work_package, 2, project:, status:, backlog_bucket: other_bucket) }
         let(:target_id) { "backlog_bucket:#{other_bucket.id}" }
@@ -558,13 +558,13 @@ RSpec.describe Backlogs::WorkPackagesController do
       expect(response.body).to include(I18n.t(:"js.button_open_details"))
     end
 
-    context "when all=1 is in params" do
-      let(:params) { { project_id: project.id, id: work_package_id, all: "1" } }
+    context "when all=true is in params" do
+      let(:params) { { project_id: project.id, id: work_package_id, all: "true" } }
 
       it "embeds the all query in deferred action URLs" do
         subject
 
-        expect(response.body).to match(/all=1/)
+        expect(response.body).to match(/all=true/)
       end
     end
 
@@ -863,13 +863,13 @@ RSpec.describe Backlogs::WorkPackagesController do
       end
     end
 
-    context "when all=1 is in params" do
-      let(:params) { { project_id: project.id, id: work_package.id, all: "1" } }
+    context "when all=true is in params" do
+      let(:params) { { project_id: project.id, id: work_package.id, all: "true" } }
 
       it "embeds the all query in the dialog form action URL" do
         subject
 
-        expect(response.body).to match(/all=1/)
+        expect(response.body).to match(/all=true/)
       end
     end
 
@@ -950,13 +950,13 @@ RSpec.describe Backlogs::WorkPackagesController do
       end
     end
 
-    context "when all=1 is in params" do
-      let(:params) { { project_id: project.id, id: work_package.id, all: "1" } }
+    context "when all=true is in params" do
+      let(:params) { { project_id: project.id, id: work_package.id, all: "true" } }
 
       it "embeds the all query in the dialog form action URL" do
         subject
 
-        expect(response.body).to match(/all=1/)
+        expect(response.body).to match(/all=true/)
       end
     end
 

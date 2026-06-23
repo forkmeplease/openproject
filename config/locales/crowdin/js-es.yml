@@ -75,8 +75,9 @@ es:
     button_confirm: Confirmar
     button_continue: Continuar
     button_copy: Copiar
-    button_copy_to_clipboard: Copiar en el portapapeles
+    button_copy_numeric_id_to_clipboard: Copiar ID numérico al portapapeles
     button_copy_link_to_clipboard: Copiar enlace al portapapeles
+    button_copy_to_clipboard: Copiar en el portapapeles
     button_copy_to_other_project: Duplicar en otro proyecto
     button_custom-fields: Campos personalizados
     button_delete: Eliminar
@@ -365,7 +366,7 @@ es:
     label_in_more_than: en más de
     label_incoming_emails: Correos electrónicos entrantes
     label_information_plural: Información
-    label_infinity: Infinity
+    label_infinity: Infinito
     label_invalid: Inválido
     label_import: Importar
     label_latest_activity: Actividad reciente
@@ -390,7 +391,7 @@ es:
     label_no_value: Sin valor
     label_none: ninguno
     label_not_contains: no contiene
-    label_not_available: Not available
+    label_not_available: No disponible
     label_not_equals: no es
     label_on: en
     label_open_menu: Abrir menú

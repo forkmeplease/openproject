@@ -443,13 +443,11 @@ class UsersController < ApplicationController
   def prepare_views_for_tab # rubocop:disable Metrics/AbcSize
     if params[:tab] == "non_working_times"
       authorize_manage_working_times
-      check_working_times_feature_flag_is_active
 
       @year = (params[:year].presence || Date.current.year).to_i
       @non_working_times = @user.non_working_time_entities_for_year(@year)
     elsif params[:tab] == "working_hours"
       authorize_manage_working_times
-      check_working_times_feature_flag_is_active
 
       @current_working_hours = @user.working_hours.current
 

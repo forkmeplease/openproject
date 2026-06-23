@@ -16,7 +16,13 @@ pt-BR:
         token_exchange_scope: XWiki Scope
         url: URL da Instância
         wiki_audience: Audiência XWiki
-    errors: {}
+    errors:
+      models:
+        wikis/provider:
+          attributes:
+            url:
+              already_taken: belongs to the wiki provider that's already known as "%{name}".
+              wiki_provider_unreachable: could not be reached.
     models:
       wikis/inline_page_link:
         one: Link de página em linha
@@ -122,8 +128,6 @@ pt-BR:
       save_and_continue: Salvar e continuar
       wiki_page: Página wiki
     create_new_wiki_page_dialog:
-      page_title: Title
-      parent_help_text: Select a parent for this new wiki page.
       title: Create new wiki page
     delete_relation_page_link_confirmation_dialog:
       heading: Excluir link da página wiki relacionada?
@@ -142,22 +146,28 @@ pt-BR:
         xwiki_oauth_request_error: Ocorreu um erro inesperado ao tentar comunicar com a instância do XWiki.
         xwiki_oauth_token_missing: O OpenProject não pode testar a comunicação ao nível do utilizador com o XWiki, pois o utilizador ainda não conectou a sua conta XWiki.
         xwiki_oauth_unauthorized: O token do utilizador não foi reconhecido pelo XWiki.
+    inline_existing_wiki_page_dialog:
+      title: Add existing wiki page
     instructions:
       xwiki:
         integration: Administração do XWiki
         oauth_application_details_html: O valor do segredo do cliente não poderá ser acessado novamente depois que você fechar esta janela. Copie esses valores para as [configurações de integração XWiki OpenProject](xwiki_admin_link).
     link_existing_wiki_page_dialog:
       title: Adicionar página wiki existente
-    link_existing_wiki_page_form:
-      label: Wiki page
-      no_results: No wiki pages found
-      placeholder: Search for a wiki page
     oauth_login_component:
       connect_button: Conectar conta %{provider}
       description: Faça login em %{provider} para visualizar e gerenciar páginas wiki relacionadas nesta instância do OpenProject.
       heading: Não conectado a %{provider}
     page_link_component:
       remove: Remover link de página
+    page_link_forms:
+      labels:
+        page_title: Title
+        parent: Parent wiki page
+        wiki_page: Wiki page
+      search:
+        no_results: No wiki pages found
+        placeholder: Search for a wiki page (or enter its URL)
     page_links:
       errors:
         page_access_forbidden: Você não tem permissão para acessar esta página wiki
@@ -168,9 +178,13 @@ pt-BR:
         name: XWiki
     relation_page_links_component:
       empty_heading: Nenhuma página relacionada
-      empty_text: Adicionar manualmente links para outras páginas wiki relacionadas.
+      empty_text: Add wiki pages that are relevant to this work package.
       link_existing: Página wiki existente
       link_new: Nova página da wiki
+    upsell:
+      xwiki:
+        description: Connect XWiki with OpenProject and keep documentation and work in sync, link pages, track references and manage everything in one place.
+        title: XWiki Integration
     work_package_wikis_tab_component:
-      inline_page_links: Links de página embutidos
+      inline_page_links: Mentioned in description
       referencing_pages: Referenciado em

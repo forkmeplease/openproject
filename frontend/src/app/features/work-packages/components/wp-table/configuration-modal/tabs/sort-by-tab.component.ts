@@ -1,3 +1,4 @@
+import { sortBy } from 'lodash-es';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit, inject } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
@@ -75,7 +76,7 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
     }
 
     sortElements = sortElements.map((object) => this.getMatchingSort(object.column.href!, object.direction));
-    this.wpTableSortBy.update(_.compact(sortElements));
+    this.wpTableSortBy.update(sortElements.filter((x):x is NonNullable<typeof x> => Boolean(x)));
   }
 
   ngOnInit() {
@@ -94,7 +95,7 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
 
         this.getManualSortingOption();
 
-        _.each(this.wpTableSortBy.current, (sort) => {
+        this.wpTableSortBy.current.forEach((sort) => {
           if (!sort.column.href!.endsWith('/parent')) {
             this.sortationObjects.push(
               new SortModalObject({ name: sort.column.name, href: sort.column.href },
@@ -113,7 +114,7 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
   }
 
   public updateSelection(sort:SortModalObject, selected:string | null) {
-    sort.column = _.find(this.allColumns, (column) => column.href === selected) || this.emptyColumn;
+    sort.column = this.allColumns.find((column) => column.href === selected) ?? this.emptyColumn;
     this.updateUsedColumns();
   }
 
@@ -122,7 +123,7 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
       .filter((o) => o.column !== null)
       .map((object:SortModalObject) => object.column);
 
-    this.availableColumns = _.sortBy(_.differenceBy(this.allColumns, usedColumns, 'href'), 'name');
+    this.availableColumns = sortBy(_.differenceBy(this.allColumns, usedColumns, 'href'), 'name');
   }
 
   public updateSortingMode(mode:SortingMode) {
@@ -130,7 +131,7 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
   }
 
   private getMatchingSort(column:string, direction:string) {
-    return _.find(this.wpTableSortBy.available, (sort) => sort.column.href === column && sort.direction.href === direction);
+    return this.wpTableSortBy.available.find((sort) => sort.column.href === column && sort.direction.href === direction);
   }
 
   private fillUpSortElements() {

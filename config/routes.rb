@@ -896,8 +896,7 @@ Rails.application.routes.draw do
     end
 
     resources :departments,
-              only: %i[index show edit update destroy],
-              constraints: lambda { |_request| OpenProject::FeatureDecisions.departments_active? } do
+              only: %i[index show edit update destroy] do
       member do
         get :new_user
         post :add_user
@@ -1175,6 +1174,7 @@ Rails.application.routes.draw do
   end
 
   scope controller: "my" do
+    get "/my/security", action: "security", as: "my_security"
     get "/my/password", action: "password"
     get "/my/password_confirmation_dialog", action: "password_confirmation_dialog"
     post "/my/change_password", action: "change_password"

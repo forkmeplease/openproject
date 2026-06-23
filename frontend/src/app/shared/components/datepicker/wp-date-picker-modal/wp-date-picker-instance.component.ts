@@ -26,6 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+import { omitBy } from 'lodash-es';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Injector, Input, ViewChild, inject } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { TimezoneService } from 'core-app/core/datetime/timezone.service';
@@ -63,7 +64,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   readonly timezoneService = inject(TimezoneService);
   readonly deviceService = inject(DeviceService);
   readonly pathHelper = inject(PathHelperService);
-  readonly elementRef = inject(ElementRef);
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   @Input() public ignoreNonWorkingDays:boolean;
   @Input() public scheduleManually:boolean;
@@ -81,7 +82,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
 
   @Input() isMilestone = false;
 
-  @ViewChild('flatpickrTarget') flatpickrTarget:ElementRef;
+  @ViewChild('flatpickrTarget') flatpickrTarget:ElementRef<HTMLInputElement>;
 
   private datePickerInstance:DatePicker;
   private startDateValue:Date|null;
@@ -206,7 +207,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
   }
 
   private currentDates():string[] {
-    const compactedDates = _.compact([this.startDateValue, this.dueDateValue]);
+    const compactedDates = [this.startDateValue, this.dueDateValue].filter((x):x is NonNullable<typeof x> => Boolean(x));
     return this.timezoneService.utcDatesToISODateStrings(compactedDates);
   }
 
@@ -218,7 +219,6 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
       '#flatpickr-input',
       this.currentDates(),
       this.datePickerOptions(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.flatpickrTarget.nativeElement,
     );
   }
@@ -246,7 +246,7 @@ export class OpWpDatePickerInstanceComponent extends UntilDestroyedMixin impleme
       minDate: this.minDate,
     } as flatpickr.Options.Options;
 
-    return _.omitBy(options, (v) => _.isNil(v));
+    return omitBy(options, (v) => v == null);
   }
 
   private onFlatpickrChange(dates:Date[], _datestr:string, _instance:flatpickr.Instance) {

@@ -358,9 +358,13 @@ module Import
                  .call(container: work_package, filename:, file: tempfile)
 
         call.on_failure do
-          raise call.message
+          OpenProject.logger.error("#{work_package}: Attachment creation failed for #{filename}: #{call.message}")
         end
       end
+    rescue JiraClient::SsrfError,
+           JiraClient::ConnectionError,
+           JiraClient::ApiError => e
+      OpenProject.logger.error("#{work_package}: Download attachment failed for #{filename}: #{e.message}")
     end
 
     def import_member(project, member)

@@ -16,7 +16,13 @@ uk:
         token_exchange_scope: Область XWiki
         url: URL-адреса екземпляра
         wiki_audience: Аудиторія XWiki
-    errors: {}
+    errors:
+      models:
+        wikis/provider:
+          attributes:
+            url:
+              already_taken: belongs to the wiki provider that's already known as "%{name}".
+              wiki_provider_unreachable: could not be reached.
     models:
       wikis/inline_page_link:
         one: Вставлене посилання на сторінку
@@ -130,8 +136,6 @@ uk:
       save_and_continue: Зберегти та продовжити
       wiki_page: Сторінка Wiki
     create_new_wiki_page_dialog:
-      page_title: Title
-      parent_help_text: Select a parent for this new wiki page.
       title: Create new wiki page
     delete_relation_page_link_confirmation_dialog:
       heading: Видалити посилання на пов’язану сторінку Wiki?
@@ -150,22 +154,28 @@ uk:
         xwiki_oauth_request_error: Під час спроби зв’язатися з екземпляром XWiki сталася несподівана помилка.
         xwiki_oauth_token_missing: OpenProject не може перевірити з’єднання на рівні користувача з XWiki, оскільки користувач досі не підключив свій обліковий запис XWiki.
         xwiki_oauth_unauthorized: Платформа XWiki не розпізнала маркер користувача.
+    inline_existing_wiki_page_dialog:
+      title: Add existing wiki page
     instructions:
       xwiki:
         integration: Адміністрування XWiki
         oauth_application_details_html: Секретний ключ клієнта знову стане недоступним, коли ви закриєте це вікно. Скопіюйте ці значення в [налаштування інтеграції XWiki з OpenProject](xwiki_admin_link).
     link_existing_wiki_page_dialog:
       title: Додати наявну сторінку Wiki
-    link_existing_wiki_page_form:
-      label: Wiki page
-      no_results: Не знайдено сторінок Wiki
-      placeholder: Шукати сторінку Wiki
     oauth_login_component:
       connect_button: Підключити обліковий запис %{provider}
       description: Увійдіть у сервіс %{provider}, щоб переглядати пов’язані сторінки Wiki й керувати ними із цього екземпляра OpenProject.
       heading: Немає підключення до сервісу %{provider}
     page_link_component:
       remove: Видалити посилання на сторінку
+    page_link_forms:
+      labels:
+        page_title: Title
+        parent: Parent wiki page
+        wiki_page: Wiki page
+      search:
+        no_results: No wiki pages found
+        placeholder: Search for a wiki page (or enter its URL)
     page_links:
       errors:
         page_access_forbidden: У вас немає дозволу на доступ до цієї сторінки Wiki
@@ -176,9 +186,13 @@ uk:
         name: XWiki
     relation_page_links_component:
       empty_heading: Немає пов’язаних сторінок
-      empty_text: Додайте посилання на інші пов’язані сторінки Wiki вручну.
+      empty_text: Add wiki pages that are relevant to this work package.
       link_existing: Наявна сторінка Wiki
       link_new: Нова сторінка Wiki
+    upsell:
+      xwiki:
+        description: Connect XWiki with OpenProject and keep documentation and work in sync, link pages, track references and manage everything in one place.
+        title: XWiki Integration
     work_package_wikis_tab_component:
-      inline_page_links: Вставлені посилання на сторінку
+      inline_page_links: Mentioned in description
       referencing_pages: Додано посилання в

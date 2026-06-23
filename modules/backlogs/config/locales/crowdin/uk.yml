@@ -41,8 +41,10 @@ uk:
           active: Активний
           completed: Завершений
         work_packages: Пакети робіт
+      sprint_goal:
+        text: Sprint goal
       work_package:
-        backlog_bucket: Сегмент беклогу
+        backlog_bucket: Backlog bucket
         backlogs_work_package_type: Тип Backlog-у
         position: Позиція
         sprint: Спринт
@@ -59,6 +61,8 @@ uk:
             sprint_sharing:
               share_all_projects_already_taken: не можна налаштувати, оскільки проєкт «%{name}» уже надає спільний доступ усім проєктам.
               share_all_projects_already_taken_anonymous: не можна налаштувати, оскільки інший проєкт вже надає спільний доступ усім проєктам.
+        sprint_goal:
+          project_already_has_goal: already has a goal for this sprint.
         sprint:
           attributes:
             base:
@@ -89,6 +93,18 @@ uk:
     administration_blankslate:
       title: Ми змінюємо налаштування адміністратора в модулі беклогів
       text: Зараз ми переробляємо модуль невиконаних завдань (беклогів). Налаштування адміністратора для спринтів і беклогів з’являться тут найближчим часом. Налаштування на рівні проєктів залишаються доступними.
+    backlog_component:
+      button_new_backlog_bucket: New backlog bucket
+    backlog_filter_select_panel_component:
+      label_backlog_bucket_filter:
+        one: Backlog bucket
+        other: Backlog buckets
+        zero: All backlog buckets
+      label_sprint_filter:
+        one: Sprint
+        other: Sprints
+        zero: All sprints
+      select_panel_title: Select items
     bucket_destroy_modal_component:
       title: Видалити сегмент беклогу?
       details: Сегмент беклогу «%{name}» буде видалено, а всі пакети робіт — переміщено у вхідні завдання беклогу. Пакети робіт не видаляться.
@@ -156,6 +172,12 @@ uk:
       action_menu:
         edit_sprint: Змінити спринт
         add_work_package: Додати пакет робіт
+    sprint_form:
+      goal_caption: The sprint goal is unique to this project and is not shared with other projects also using this sprint.
+      goal_for_this_project_label: "%{attribute} (for this project)"
+    sprint_form_component:
+      shared_sprint_info_banner: This is a shared sprint. Modifications will be reflected in all projects using it.
+      shared_sprint_warning_banner: This is a shared sprint. You do not have the necessary permissions to edit it.
     sprints_component:
       blankslate:
         title: Спринтів ще немає
@@ -166,6 +188,7 @@ uk:
         create_description_text: Щоб почати планувати спринт, створіть його тут.
         manage_description_html: Щоб почати планувати спринт, перейдіть у %{settings_link}, щоб отримати спринти з інших проєктів.
         no_actions_description_text: Ще немає спринтів, доступних для цього проєкту.
+      button_new_sprint: New sprint
     story_points:
       one: "%{count} cторі-поінт"
       few: "%{count} сторі-поінти"

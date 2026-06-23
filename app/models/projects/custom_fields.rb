@@ -60,9 +60,11 @@ module Projects::CustomFields
     # modification happens via the api, then set the available_custom_fields accordingly. This allows
     # the extension to be completely removed from the acts_as_customizable plugin.
     def all_available_custom_fields
-      ProjectCustomField
-        .includes(:project_custom_field_section)
-        .order("custom_field_sections.position")
+      RequestStore.fetch("#{self.class}#all_available_custom_fields") do
+        ProjectCustomField
+          .includes(:project_custom_field_section)
+          .order("custom_field_sections.position")
+      end
     end
 
     def all_visible_custom_fields
