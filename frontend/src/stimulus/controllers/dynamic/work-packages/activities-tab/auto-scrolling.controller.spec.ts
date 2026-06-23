@@ -112,6 +112,31 @@ describe('Activities tab auto-scrolling controller', () => {
     window.dispatchEvent(new HashChangeEvent('hashchange'));
   }
 
+  // Appends a link inside the controller element, the way a comment body would
+  // render one, and returns it for dispatching clicks at.
+  function addCommentBodyLink(href:string) {
+    const root = ctx.container.querySelector('[data-controller~="work-packages--activities-tab--auto-scrolling"]')!;
+    const link = document.createElement('a');
+    link.href = href;
+    link.textContent = 'see that comment';
+    root.appendChild(link);
+    return link;
+  }
+
+  function clickLink(link:HTMLAnchorElement, init:MouseEventInit = {}) {
+    // A click the controller leaves alone would otherwise drive a real navigation
+    // and tear down the test page; cancel the native default after the controller
+    // (on this.element) has already had its turn in the bubble phase.
+    const blockNavigation = (event:Event) => event.preventDefault();
+    window.addEventListener('click', blockNavigation, { once: true });
+
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true, ...init });
+    link.dispatchEvent(event);
+
+    window.removeEventListener('click', blockNavigation);
+    return event;
+  }
+
   it('highlights and scrolls to the comment when the hash changes after load', async () => {
     const { el139 } = await renderActivities();
 
@@ -223,5 +248,56 @@ describe('Activities tab auto-scrolling controller', () => {
     // The listener was bound to the controller's AbortController, so it no longer
     // mutates the URL after disconnect.
     expect(window.location.hash).toBe('#comment-139');
+  });
+
+  // The controller sets the hash only when it decides to handle a link, so the
+  // hash is the clean signal of whether a click was intercepted.
+  describe('in-content comment links', () => {
+    it('intercepts a same-page comment link and drives it through the hash', async () => {
+      await renderActivities();
+      const link = addCommentBodyLink(`${window.location.origin}${window.location.pathname}#comment-139`);
+
+      clickLink(link);
+
+      expect(window.location.hash).toBe('#comment-139');
+    });
+
+    it('leaves a link to a different page for normal navigation', async () => {
+      await renderActivities();
+      const link = addCommentBodyLink(`${window.location.origin}/another/page#comment-139`);
+
+      clickLink(link);
+
+      expect(window.location.hash).toBe('');
+    });
+
+    it('leaves an external link untouched', async () => {
+      await renderActivities();
+      const link = addCommentBodyLink('https://example.test/work_packages/1/activity#comment-139');
+
+      clickLink(link);
+
+      expect(window.location.hash).toBe('');
+    });
+
+    it('does not hijack a modifier click meant to open a new tab', async () => {
+      await renderActivities();
+      const link = addCommentBodyLink(`${window.location.origin}${window.location.pathname}#comment-139`);
+
+      clickLink(link, { metaKey: true });
+
+      expect(window.location.hash).toBe('');
+    });
+
+    it('defers to a handler that already acted on the click', async () => {
+      await renderActivities();
+      const link = addCommentBodyLink(`${window.location.origin}${window.location.pathname}#comment-139`);
+      // Mimics the timestamp link, whose own action preventDefaults first.
+      link.addEventListener('click', (event) => event.preventDefault());
+
+      clickLink(link);
+
+      expect(window.location.hash).toBe('');
+    });
   });
 });

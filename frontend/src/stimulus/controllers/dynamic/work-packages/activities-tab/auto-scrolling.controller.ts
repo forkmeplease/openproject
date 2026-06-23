@@ -56,6 +56,7 @@ export default class AutoScrollingController extends BaseController {
     super.connect();
 
     window.addEventListener('hashchange', this.scrollToHashAnchor, { signal: this.abortController.signal });
+    this.element.addEventListener('click', this.handleCommentReferenceClick, { signal: this.abortController.signal });
     this.handleInitialScroll();
   }
 
@@ -162,6 +163,35 @@ export default class AutoScrollingController extends BaseController {
       behavior: 'smooth',
     });
   };
+
+  // In-content comment references are plain links inside the activities frame, so
+  // Turbo would treat a click as a frame/page visit and drop the fragment. When a
+  // link points to a comment on this very page, drive it through the hash instead
+  // and let scrollToHashAnchor take over; anything else navigates as usual.
+  private handleCommentReferenceClick = (event:MouseEvent) => {
+    // Respect already-handled clicks (e.g. the timestamp link) and new-tab intents.
+    if (event.defaultPrevented || event.button !== 0
+      || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) { return; }
+
+    const link = (event.target as HTMLElement).closest('a[href]');
+    if (!link) { return; }
+
+    const anchor = this.sameActivityPageCommentAnchor(link as HTMLAnchorElement);
+    if (!anchor) { return; }
+
+    event.preventDefault();
+    window.location.hash = `#${anchor.type}-${anchor.id}`;
+  };
+
+  private sameActivityPageCommentAnchor(link:HTMLAnchorElement):ActivityAnchor | null {
+    const target = new URL(link.href, window.location.href);
+    if (target.origin !== window.location.origin || target.pathname !== window.location.pathname) {
+      return null;
+    }
+
+    const anchor = UrlHelpers.extractActivityAnchor(target.hash);
+    return anchor?.type === ActivityAnchorType.Comment ? anchor : null;
+  }
 
   private canonicalizeActivityAnchor(anchorInfo:ActivityAnchor):ActivityAnchor {
     const resolvedCommentId = this.hasResolvedCommentIdValue ? this.resolvedCommentIdValue : null;
