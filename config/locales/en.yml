@@ -787,9 +787,9 @@ en:
         a hierarchy below it, to navigate and create sub-department inside a hierarchy click on the created item.
       add_button: "Add"
     detail_blankslate:
-      heading: "This department doesn’t have any hierarchy level below"
-      description: "Add departments or users to create sub-items inside another one."
       add_button: "Add"
+      description: "Add departments or users to create sub-items inside another one."
+      heading: "This department doesn’t have any hierarchy level below"
       managed_heading: "This department is managed by LDAP synchronization"
       managed_description: "Its sub-departments and members are kept in sync with LDAP and cannot be added manually."
     add_department_form:
@@ -2235,6 +2235,7 @@ en:
         invalid_url: "is not a valid URL."
         invalid_url_scheme: "is not a supported protocol (allowed: %{allowed_schemes})."
         is_for_all_cannot_modify: "is for all projects and can therefore not be modified."
+        ldap_managed: "This department is managed by LDAP synchronization and cannot be changed manually."
         less_than_or_equal_to: "must be less than or equal to %{count}."
         not_available: "is not available due to a system configuration."
         not_before_start_date: "must not be before the start date."
@@ -2271,7 +2272,6 @@ en:
         url_not_secure_context: >
           is not providing a "Secure Context". Either use HTTPS or a loopback address, such as localhost.
         user_already_in_department: "User %{user_id} is already a member of department %{department_id}."
-        ldap_managed: "This department is managed by LDAP synchronization and cannot be changed manually."
         wrong_length: "is the wrong length (should be %{count} characters)."
       models:
         group:
