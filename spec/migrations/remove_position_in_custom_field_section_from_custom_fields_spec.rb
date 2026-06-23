@@ -60,6 +60,10 @@ RSpec.describe RemovePositionInCustomFieldSectionFromCustomFields, type: :model 
         conn.remove_column :custom_fields, :position_in_custom_field_section if
           conn.column_exists?(:custom_fields, :position_in_custom_field_section)
       end
+
+      # The raw column changes above don't refresh ActiveRecord's cached column
+      # lists; reset them so later specs build SQL against the restored schema.
+      [CustomField, CustomFieldSection].each(&:reset_column_information)
     end
 
     it "seeds attribute_order from position_in_custom_field_section" do
@@ -100,6 +104,10 @@ RSpec.describe RemovePositionInCustomFieldSectionFromCustomFields, type: :model 
         conn.remove_column :custom_fields, :position_in_custom_field_section if
           conn.column_exists?(:custom_fields, :position_in_custom_field_section)
       end
+
+      # The raw column changes above don't refresh ActiveRecord's cached column
+      # lists; reset them so later specs build SQL against the restored schema.
+      [CustomField, CustomFieldSection].each(&:reset_column_information)
     end
 
     it "adds position_in_custom_field_section back" do

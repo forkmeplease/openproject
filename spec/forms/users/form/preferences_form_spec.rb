@@ -28,35 +28,16 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Form
-    class CustomFieldSectionComponent < ApplicationComponent
-      def initialize(section:, form:, contract:, user:)
-        super()
-        @section = section
-        @form = form
-        @contract = contract
-        @user = user
-        @visible_cfs_by_key = visible_cfs_by_key(section)
-      end
+require "spec_helper"
 
-      def title
-        @section.name.presence || I18n.t("settings.user_custom_fields.label_untitled_section")
-      end
+RSpec.describe Users::Form::PreferencesForm, type: :forms do
+  include_context "with rendered form"
 
-      def built_in?(key)
-        UserCustomFieldSection::BUILT_IN_ATTRIBUTES.include?(key)
-      end
+  let(:model) { build_stubbed(:user_preference) }
 
-      def visible_custom_field(key)
-        @visible_cfs_by_key[key]
-      end
-
-      private
-
-      def visible_cfs_by_key(section)
-        section.custom_fields.visible(User.current).index_by(&:column_name)
-      end
-    end
+  it "renders the time zone, color mode and keyboard shortcuts fields" do
+    expect(page).to have_select("Time zone")
+    expect(page).to have_select("Color mode")
+    expect(page).to have_field("Disable keyboard shortcuts")
   end
 end

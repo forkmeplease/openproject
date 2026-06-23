@@ -192,7 +192,20 @@ class MyController < ApplicationController
     # The Users::UpdateService updates the user's pref using the UserPreferences::UpdateService
     # which has a contract/schema applied to the values which is why it is ok
     # to blindly allow all scalar values in pref.
-    permitted_params.user.to_h.merge(params.permit(pref: {}))
+    attributes = permitted_params.user.to_h.merge(params.permit(pref: {}))
+    drop_non_editable_custom_field_values(attributes)
+  end
+
+  # On the self-service account page only custom fields the user is allowed to
+  # edit themselves (editable: true) may be changed. Drop the rest so a crafted
+  # request cannot persist values the UI renders read-only.
+  def drop_non_editable_custom_field_values(attributes)
+    values = attributes["custom_field_values"]
+    return attributes if values.blank?
+
+    editable_ids = current_user.available_custom_fields.select(&:editable?).map { |cf| cf.id.to_s }
+    attributes["custom_field_values"] = values.slice(*editable_ids)
+    attributes
   end
 
   def update_global_notification_setting(update_params)

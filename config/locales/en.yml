@@ -5831,7 +5831,7 @@ en:
       heading: "User attributes"
       label_new_attribute: "User attribute"
       label_new_section: "Section"
-      label_untitled_section: "Untitled section"
+      label_untitled_section: "User attributes"
       new:
         heading: "New attribute"
     working_days:

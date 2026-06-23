@@ -28,18 +28,38 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module My
-  class CustomFieldsForm < ApplicationForm
-    include CustomFields::CustomFieldRendering
+module Users
+  module Form
+    # The read-only consent status as a regular form section, so it shares the
+    # fieldset heading and spacing of the surrounding administration user form.
+    class ConsentForm < ApplicationForm
+      form do |f|
+        f.fieldset_group(title: I18n.t("consent.title"), mb: 3) do |group|
+          group.html_content do
+            render(consent_status_component)
+          end
+        end
+      end
 
-    form do |f|
-      render_custom_fields(form: f)
-    end
+      def initialize(user:)
+        super()
+        @user = user
+      end
 
-    private
+      private
 
-    def custom_fields
-      @custom_fields ||= model.available_custom_fields
+      def consent_status_component
+        consent_link = helpers.admin_settings_users_path(anchor: "consent_settings")
+        Components::OnOffStatusComponent.new(
+          {
+            is_on: @user.consented_at.present?,
+            on_text: helpers.format_time(@user.consented_at),
+            on_description: helpers.link_translate("consent.user_has_consented", links: { consent_settings: consent_link }),
+            off_text: I18n.t(:label_never),
+            off_description: helpers.link_translate("consent.not_yet_consented", links: { consent_settings: consent_link })
+          }
+        )
+      end
     end
   end
 end

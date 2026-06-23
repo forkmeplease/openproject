@@ -28,41 +28,34 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Form
-    class CustomFieldFieldComponent < ApplicationComponent
-      include ApplicationHelper
+module Avatars
+  class FormSectionComponent < ApplicationComponent
+    def initialize(user:, target_avatar_path:)
+      super()
+      @user = user
+      @target_avatar_path = target_avatar_path
+    end
 
-      def initialize(custom_field:, form:)
-        super()
-        @custom_field = custom_field
-        @form = form
+    def render?
+      manager.avatars_enabled?
+    end
+
+    def description
+      parts = []
+      if manager.gravatar_enabled?
+        gravatar_link = link_to("gravatar.com", "https://gravatar.com")
+        parts << t("avatars.text_avatar_gravatar_html", gravatar_url: gravatar_link)
       end
-
-      def field_options
-        {
-          custom_value: @form.object.custom_value_for(@custom_field),
-          custom_field: @custom_field
-        }
+      if manager.local_avatars_enabled?
+        parts << (manager.gravatar_enabled? ? t("avatars.text_avatar_local") : t("avatars.text_avatar_local_only"))
       end
+      helpers.safe_join(parts, " ")
+    end
 
-      def css_classes
-        ["form--field", @custom_field.attribute_name, required_class].compact
-      end
+    private
 
-      def container_class
-        case @custom_field.field_format
-        when "text" then "-xxwide"
-        when "date" then "-xslim"
-        else "-middle"
-        end
-      end
-
-      private
-
-      def required_class
-        "-required" if @custom_field.is_required? && !@custom_field.boolean?
-      end
+    def manager
+      ::OpenProject::Avatars::AvatarManager
     end
   end
 end

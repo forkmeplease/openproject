@@ -305,6 +305,23 @@ RSpec.describe MyController do
     end
   end
 
+  describe "updating custom field values" do
+    let!(:editable_cf) { create(:user_custom_field, :string, editable: true) }
+    let!(:readonly_cf) { create(:user_custom_field, :string, editable: false) }
+
+    it "persists editable custom fields but ignores non-editable ones" do
+      as_logged_in_user user do
+        patch :update_settings, params: {
+          user: { custom_field_values: { editable_cf.id.to_s => "ok",
+                                         readonly_cf.id.to_s => "tampered" } }
+        }
+      end
+
+      expect(user.reload.custom_value_for(editable_cf)&.value).to eq "ok"
+      expect(user.custom_value_for(readonly_cf)&.value).to be_blank
+    end
+  end
+
   describe "changing changing mail" do
     let!(:recovery_token) { create(:recovery_token, user:) }
     let!(:plain_session) { create(:user_session, user:, session_id: "internal_foobar") }

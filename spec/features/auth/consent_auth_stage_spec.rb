@@ -31,14 +31,6 @@
 require "spec_helper"
 
 RSpec.describe "Authentication Stages" do
-  # The new-user form renders the built-in attributes (login, mail, …) through
-  # the user attribute sections, so at least one section must list them.
-  shared_let(:default_section) do
-    create(:user_custom_field_section).tap do |s|
-      s.update_column(:attribute_order, UserCustomFieldSection::BUILT_IN_ATTRIBUTES)
-    end
-  end
-
   let(:language) { "en" }
   let(:user_password) { "bob" * 4 }
   let(:user) do
@@ -63,7 +55,7 @@ RSpec.describe "Authentication Stages" do
     wait_for_network_idle
 
     within_test_selector "my-account-form" do
-      expect(page).to have_field "user_username", with: user.login
+      expect(page).to have_field "user_login", with: user.login
     end
   end
 

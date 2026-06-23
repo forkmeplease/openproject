@@ -81,6 +81,11 @@ RSpec.describe AddAttributeOrderToCustomFieldSections, type: :model do
       conn.remove_column :custom_fields, :position_in_custom_field_section if
         conn.column_exists?(:custom_fields, :position_in_custom_field_section)
     end
+
+    # The raw add/remove above changes columns without refreshing ActiveRecord's
+    # cached column lists, leaving the models out of sync with the restored
+    # schema. Reset them so later specs build SQL against the real columns.
+    [CustomField, CustomFieldSection].each(&:reset_column_information)
   end
 
   describe "up migration" do
