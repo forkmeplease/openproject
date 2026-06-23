@@ -38,6 +38,10 @@ interface CustomEventWithIdParam extends Event {
   };
 }
 
+// Clearance kept above a comment scrolled into view, so it settles below the
+// activities header rather than flush against the top of the scroll container.
+const ANCHOR_SCROLL_TOP_OFFSET = 70;
+
 export default class AutoScrollingController extends BaseController {
   static values = {
     resolvedCommentId: Number,
@@ -46,33 +50,24 @@ export default class AutoScrollingController extends BaseController {
   declare readonly resolvedCommentIdValue:number;
   declare readonly hasResolvedCommentIdValue:boolean;
 
+  private abortController = new AbortController();
+
   connect() {
     super.connect();
 
+    window.addEventListener('hashchange', this.scrollToHashAnchor, { signal: this.abortController.signal });
     this.handleInitialScroll();
   }
 
+  disconnect() {
+    this.abortController.abort();
+  }
+
   setAnchor(event:CustomEventWithIdParam) {
-    // native anchor scroll is causing positioning issues
+    // Suppress the link's native jump and let the resulting hash change drive the
+    // scroll and highlight, so a click here behaves like any other anchor change.
     event.preventDefault();
-
-    const activityId = event.params.id;
-    const anchorName = event.params.anchorName;
-
-    // not using the scrollToActivity method here as it is causing flickering issues
-    // in case of a setAnchor click, we can go for a direct scroll approach
-    const scrollableContainer = this.scrollableContainer;
-    const activityElement = this.getActivityAnchorElement({ type: anchorName, id: activityId });
-    const locationHash = `#${anchorName}-${activityId}`;
-
-    if (scrollableContainer && activityElement) {
-      this.brieflyHighlightAndResetUrl(activityElement, locationHash);
-      scrollableContainer.scrollTo({
-        top: activityElement.offsetTop - 90,
-        behavior: 'smooth',
-      });
-    }
-    window.location.hash = locationHash;
+    window.location.hash = `#${event.params.anchorName}-${event.params.id}`;
   }
 
   performAutoScrollingOnStreamsUpdate(journalsContainerAtBottom = false) {
@@ -139,6 +134,35 @@ export default class AutoScrollingController extends BaseController {
     }
   }
 
+  // Reacts to any hash change without a fresh render: a comment timestamp click,
+  // an in-page comment link, or editing the comment id in the URL. Initial-load
+  // scrolling stays in handleInitialScroll, which waits for not-yet-rendered content.
+  private scrollToHashAnchor = () => {
+    const anchorInfo = UrlHelpers.extractActivityAnchor(window.location.hash);
+    // Only a comment anchor maps to a rendered element. A legacy activity-N anchor
+    // is resolved to its comment by the server when the page loads with ?anchor;
+    // a hash change makes no such request, so there is nothing to scroll to.
+    if (anchorInfo?.type !== ActivityAnchorType.Comment) { return; }
+
+    const activityElement = this.getActivityAnchorElement(anchorInfo);
+    const scrollableContainer = this.scrollableContainer;
+    if (!activityElement || !scrollableContainer) { return; }
+
+    // Successive hash changes happen without a reload, so drop a previous
+    // highlight before applying the new one instead of stacking them.
+    this.clearAnchorHighlight();
+    this.brieflyHighlightAndResetUrl(activityElement, window.location.hash);
+
+    // offsetTop is relative to the element's offsetParent, which is not the
+    // scroll container, so measure the gap between the two directly.
+    const relativeTop = activityElement.getBoundingClientRect().top
+      - scrollableContainer.getBoundingClientRect().top;
+    scrollableContainer.scrollTo({
+      top: scrollableContainer.scrollTop + relativeTop - ANCHOR_SCROLL_TOP_OFFSET,
+      behavior: 'smooth',
+    });
+  };
+
   private canonicalizeActivityAnchor(anchorInfo:ActivityAnchor):ActivityAnchor {
     const resolvedCommentId = this.hasResolvedCommentIdValue ? this.resolvedCommentIdValue : null;
     const canonical = UrlHelpers.canonicalActivityAnchor(anchorInfo, resolvedCommentId);
@@ -165,7 +189,7 @@ export default class AutoScrollingController extends BaseController {
 
   private tryScroll(activityElement:HTMLElement|null, attempts:number, maxAttempts:number) {
     const scrollableContainer = this.scrollableContainer;
-    const topPadding = 70;
+    const topPadding = ANCHOR_SCROLL_TOP_OFFSET;
 
     if (activityElement && scrollableContainer) {
       scrollableContainer.scrollTop = 0;
@@ -219,6 +243,12 @@ export default class AutoScrollingController extends BaseController {
     });
   }
 
+  private clearAnchorHighlight() {
+    this.element
+      .querySelectorAll('.--anchor-highlighted')
+      .forEach((highlighted) => highlighted.classList.remove('--anchor-highlighted'));
+  }
+
   private brieflyHighlightAndResetUrl(activityElement:HTMLElement|null, locationHash:string) {
     if (activityElement) {
       activityElement.classList.add('--anchor-highlighted');
@@ -227,7 +257,7 @@ export default class AutoScrollingController extends BaseController {
           activityElement.classList.remove('--anchor-highlighted');
           const newLocation = window.location.href.replace(locationHash, '');
           window.history.replaceState(null, 'Remove anchor', newLocation);
-        }, {once: true});
+        }, { once: true, signal: this.abortController.signal });
       });
     }
   }

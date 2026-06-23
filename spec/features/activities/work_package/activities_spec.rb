@@ -1166,6 +1166,27 @@ RSpec.describe "Work package activity", :js, :with_cuprite, with_ee: %i[internal
       def wait_for_auto_scrolling_to_finish = sleep(1)
     end
 
+    describe "when the comment anchor changes without reloading the page" do
+      let!(:admin_preferences) { create(:user_preference, user: admin, others: { comments_sorting: :asc }) }
+
+      before do
+        visit project_work_package_path(project, work_package.id, "activity", anchor: "comment-#{comment_1.id}")
+        wp_page.wait_for_activity_tab
+        sleep 1 # let the initial auto-scroll settle
+      end
+
+      it "moves the highlight to the comment newly referenced in the URL hash" do
+        expect(page).to have_css(".Box.--anchor-highlighted", text: "Comment 1")
+
+        # As clicking an in-page comment link or editing the comment id by hand would:
+        # the URL hash changes but the page is not reloaded.
+        page.execute_script("window.location.hash = '#comment-#{comment_2.id}'")
+
+        expect(page).to have_css(".Box.--anchor-highlighted", text: "Comment 2")
+        expect(page).to have_no_css(".Box.--anchor-highlighted", text: "Comment 1")
+      end
+    end
+
     context "when sorting set to asc" do
       let!(:admin_preferences) { create(:user_preference, user: admin, others: { comments_sorting: :asc }) }
 
