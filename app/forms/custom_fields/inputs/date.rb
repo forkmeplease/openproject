@@ -30,10 +30,14 @@
 
 class CustomFields::Inputs::Date < CustomFields::Inputs::Base::Input
   form do |custom_value_form|
-    custom_value_form.text_field(**input_attributes)
+    custom_value_form.single_date_picker(**input_attributes)
   end
 
   def input_attributes
-    super.merge({ input_width: :xsmall, type: "date" })
+    super.merge({ input_width: :medium, leading_visual: { icon: :calendar } })
+  end
+
+  def value
+    custom_value.typed_value&.iso8601
   end
 end
