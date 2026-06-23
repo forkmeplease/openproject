@@ -11,6 +11,5 @@ Gem::Specification.new do |s|
   s.license     = "GPL-3"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + %w(README.md)
-  s.add_development_dependency "ladle"
   s.metadata["rubygems_mfa_required"] = "true"
 end
