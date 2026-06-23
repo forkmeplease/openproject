@@ -28,35 +28,28 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Profile
-    class AttributesComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpTurbo::Streamable
-      include OpPrimer::ComponentHelpers
+RSpec.shared_context "with seeded user custom fields" do
+  shared_let(:admin) { create(:admin) }
+  shared_let(:non_admin) { create(:user) }
 
-      def initialize(user:)
-        super()
+  shared_let(:section_for_input_fields, refind: true) do
+    create(:user_custom_field_section, name: "Input fields")
+  end
+  shared_let(:section_for_select_fields, refind: true) do
+    create(:user_custom_field_section, name: "Select fields")
+  end
 
-        @user = user
-      end
-
-      def render?
-        user_is_allowed_to_see_email || @user.visible_custom_field_values.any? { it.value.present? }
-      end
-
-      def visible_custom_fields
-        @user
-          .visible_custom_field_values
-          .select { |cv| cv.value.present? }
-          .group_by(&:custom_field)
-          .keys
-          .sort_by(&:name)
-      end
-
-      def user_is_allowed_to_see_email
-        User.current == @user || User.current.allowed_globally?(:view_user_email)
-      end
-    end
+  shared_let(:boolean_user_custom_field, refind: true) do
+    create(:user_custom_field, name: "Boolean field", field_format: "bool",
+                               user_custom_field_section: section_for_input_fields)
+  end
+  shared_let(:string_user_custom_field, refind: true) do
+    create(:user_custom_field, name: "String field", field_format: "string",
+                               user_custom_field_section: section_for_input_fields)
+  end
+  shared_let(:list_user_custom_field, refind: true) do
+    create(:user_custom_field, name: "List field", field_format: "list",
+                               possible_values: ["Option 1", "Option 2", "Option 3"],
+                               user_custom_field_section: section_for_select_fields)
   end
 end
