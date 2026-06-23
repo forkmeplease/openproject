@@ -2,13 +2,15 @@
 
 module LdapDepartments
   class SynchronizedTreesController < ::ApplicationController
+    include OpTurbo::ComponentStream
+
     before_action :require_admin
 
-    guard_enterprise_feature(:ldap_groups, except: %i[index show]) do
+    guard_enterprise_feature(:ldap_groups, except: %i[index show deletion_dialog destroy]) do
       redirect_to action: :index, status: :see_other
     end
 
-    before_action :find_tree, only: %i[show edit update destroy synchronize]
+    before_action :find_tree, only: %i[show edit update destroy deletion_dialog synchronize]
 
     layout "admin"
     menu_item :plugin_ldap_departments
@@ -49,6 +51,10 @@ module LdapDepartments
       end
     rescue ActionController::ParameterMissing
       render_400
+    end
+
+    def deletion_dialog
+      respond_with_dialog SynchronizedTrees::DeleteDialogComponent.new(tree: @tree)
     end
 
     def destroy

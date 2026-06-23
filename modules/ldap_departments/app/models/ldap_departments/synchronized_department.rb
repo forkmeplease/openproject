@@ -14,6 +14,7 @@ module LdapDepartments
 
     belongs_to :group
 
+    # Dropping the mapping only removes the tracking records, not the actual group memberships.
     has_many :users,
              class_name: "::LdapDepartments::Membership",
              inverse_of: :synchronized_department,
@@ -22,10 +23,6 @@ module LdapDepartments
     validates :dn, presence: true
     validates :group, presence: true
     validates :ldap_auth_source, presence: true
-
-    # Removing the mapping (because the OU vanished or the tree config was deleted) only clears the
-    # sync-managed memberships. The department itself is kept and simply becomes manually managed.
-    before_destroy :remove_all_members
 
     ##
     # Add a set of users to this department, recording the sync membership and moving them into the
@@ -69,10 +66,6 @@ module LdapDepartments
       else
         raise ArgumentError, "Expected User or User ID (Integer) but got #{user}"
       end
-    end
-
-    def remove_all_members
-      remove_members! users.pluck(:user_id)
     end
 
     # rubocop:disable Metrics/AbcSize

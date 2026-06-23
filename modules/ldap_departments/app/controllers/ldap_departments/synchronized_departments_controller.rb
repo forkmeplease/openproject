@@ -2,16 +2,22 @@
 
 module LdapDepartments
   class SynchronizedDepartmentsController < ::ApplicationController
+    include OpTurbo::ComponentStream
+
     before_action :require_admin
 
-    guard_enterprise_feature(:ldap_groups) do
+    guard_enterprise_feature(:ldap_groups, except: %i[deletion_dialog destroy]) do
       redirect_to ldap_departments_synchronized_trees_path, status: :see_other
     end
 
-    before_action :find_department, only: %i[destroy]
+    before_action :find_department, only: %i[deletion_dialog destroy]
 
     layout "admin"
     menu_item :plugin_ldap_departments
+
+    def deletion_dialog
+      respond_with_dialog SynchronizedDepartments::DeleteDialogComponent.new(department: @department)
+    end
 
     # Removing the mapping unmanages the department (it and externally-added members are kept).
     def destroy

@@ -69,6 +69,17 @@ RSpec.describe "LDAP department synchronized trees", :aggregate_failures, :skip_
     end
   end
 
+  describe "GET /ldap_departments/synchronized_trees/:id/deletion_dialog" do
+    let!(:tree) { create(:ldap_synchronized_tree, ldap_auth_source:, name: "IT directory") }
+
+    it "renders the danger confirmation dialog explaining departments are kept" do
+      get deletion_dialog_ldap_departments_synchronized_tree_path(tree_id: tree.id), as: :turbo_stream
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("ldap_departments.synchronized_trees.destroy.info"))
+    end
+  end
+
   describe "DELETE /ldap_departments/synchronized_trees/:id" do
     let!(:tree) { create(:ldap_synchronized_tree, ldap_auth_source:) }
 

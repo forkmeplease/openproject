@@ -29,8 +29,8 @@ module LdapDepartments
             label: I18n.t(:button_delete),
             scheme: :danger,
             tag: :a,
-            href: ldap_departments_synchronized_department_path(department_id: model.id),
-            content_arguments: { data: { turbo_method: :delete, turbo_confirm: I18n.t(:text_are_you_sure) } }
+            href: deletion_dialog_ldap_departments_synchronized_department_path(department_id: model.id),
+            content_arguments: { data: { controller: "async-dialog" } }
           ) { it.with_leading_visual_icon(icon: :trash) }
         end
       end
