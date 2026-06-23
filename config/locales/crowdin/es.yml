@@ -3474,6 +3474,7 @@ es:
       all_projects: Todos los proyectos
       favorites: Favoritos
       leave_project: Leave project
+      no_favorite_projects: You have no favorite projects.
       title: Proyectos
   toggle_switch:
     label_on: Encendido

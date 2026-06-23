@@ -46,7 +46,7 @@ de:
     text_otp_delivery_message_sms: Ihr %{app_title} Einmalkennwort lautet %{token}
     text_otp_delivery_message_voice: 'Ihr %{app_title} Einmalkennwort lautet: %{pause} %{token}. %{pause} I repeat: %{pause} %{token}'
     text_2fa_enabled: Bei jedem Login werden Sie aufgefordert, ein Einmalpasswort aus Ihrem Standardgerät für 2FA einzugeben.
-    text_2fa_disabled: Um die Zwei-Faktor-Authentifizierung zu aktivieren, registrieren Sie ein 2FA-Gerät über die obige Schaltfläche. Wenn Sie bereits ein Gerät registriert haben, müssen Sie es noch als Standardgerät festlegen.
+    text_2fa_disabled: To enable two-factor authentication, use the button below to register a new 2FA device. If you already have a device, you need to make it a default.
     login:
       enter_backup_code_title: 2FA Backup-Code eingeben
       enter_backup_code_text: Bitte geben Sie einen 2FA Backup-Code von der zuvor gespeicherten Liste ein, falls Sie keinen Zugang zu Ihrem 2FA-Geräten mehr haben.

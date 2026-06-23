@@ -3420,6 +3420,7 @@ zh-CN:
       all_projects: 所有项目
       favorites: 收藏夹
       leave_project: 退出项目
+      no_favorite_projects: You have no favorite projects.
       title: 项目
   toggle_switch:
     label_on: 开启
