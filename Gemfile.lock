@@ -156,6 +156,11 @@ PATH
     openproject-job_status (1.0.0)
 
 PATH
+  remote: modules/ldap_departments
+  specs:
+    openproject-ldap_departments (1.0.0)
+
+PATH
   remote: modules/ldap_groups
   specs:
     openproject-ldap_groups (1.0.0)
@@ -1683,6 +1688,7 @@ DEPENDENCIES
   openproject-github_integration!
   openproject-gitlab_integration!
   openproject-job_status!
+  openproject-ldap_departments!
   openproject-ldap_groups!
   openproject-meeting!
   openproject-octicons (~> 19.35.0)!
@@ -1849,7 +1855,6 @@ CHECKSUMS
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
   budgets (1.0.0)
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
-  bundler (4.0.14) sha256=d09a0a965cf772266a7e49e83610be7c2f4e49e61134c42a56804bb383cc24b8
   byebug (13.0.0) sha256=d2263efe751941ca520fa29744b71972d39cbc41839496706f5d9b22e92ae05d
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-screenshot (1.0.27) sha256=afa1896cc23df77be1774e8d3b3ce3953bf060aeaa04ff87607b5daf689174f2
@@ -2065,6 +2070,7 @@ CHECKSUMS
   openproject-github_integration (1.0.0)
   openproject-gitlab_integration (3.0.0)
   openproject-job_status (1.0.0)
+  openproject-ldap_departments (1.0.0)
   openproject-ldap_groups (1.0.0)
   openproject-meeting (1.0.0)
   openproject-octicons (19.35.0) sha256=a5033550d0961b4a8cb0993512a899716d633e17c2b5147bc6a9ed74f3952b38

@@ -787,9 +787,11 @@ en:
         a hierarchy below it, to navigate and create sub-department inside a hierarchy click on the created item.
       add_button: "Add"
     detail_blankslate:
-      heading: "This department doesn’t have any hierarchy level below"
-      description: "Add departments or users to create sub-items inside another one."
       add_button: "Add"
+      description: "Add departments or users to create sub-items inside another one."
+      heading: "This department doesn’t have any hierarchy level below"
+      managed_description: "Its sub-departments and members are kept in sync with LDAP and cannot be added manually."
+      managed_heading: "This department is managed by LDAP synchronization"
     add_department_form:
       name_label: "Department name"
       name_placeholder: "Enter department name"
@@ -798,6 +800,9 @@ en:
       heading: "Move user to this department?"
       description: "%{user} is currently a member of %{from_department}. Moving them will remove them from that department."
       confirm: "Move user"
+      managed_title: "User managed by LDAP"
+      managed_heading: "This user cannot be moved"
+      managed_description: "%{user} belongs to %{from_department}, which is managed by LDAP synchronization. Their department membership is controlled by LDAP and cannot be changed here."
     context_menu:
       add_sub_department: "Add sub-department"
       add_user: "Add user"
@@ -2225,6 +2230,7 @@ en:
         invalid_url: "is not a valid URL."
         invalid_url_scheme: "is not a supported protocol (allowed: %{allowed_schemes})."
         is_for_all_cannot_modify: "is for all projects and can therefore not be modified."
+        ldap_managed: "This department is managed by LDAP synchronization and cannot be changed manually."
         less_than_or_equal_to: "must be less than or equal to %{count}."
         not_available: "is not available due to a system configuration."
         not_before_start_date: "must not be before the start date."
@@ -2261,6 +2267,7 @@ en:
         url_not_secure_context: >
           is not providing a "Secure Context". Either use HTTPS or a loopback address, such as localhost.
         user_already_in_department: "User %{user_id} is already a member of department %{department_id}."
+        user_in_ldap_managed_department: "This user belongs to a department managed by LDAP synchronization and cannot be moved."
         wrong_length: "is the wrong length (should be %{count} characters)."
       models:
         group:
@@ -2268,6 +2275,7 @@ en:
             parent_id:
               circular_dependency: "would create a circular group hierarchy."
               organizational_unit_mismatch: "must have the same organizational unit setting as the group."
+              parent_ldap_managed: "is managed by LDAP synchronization and cannot have departments added manually."
         ldap_auth_source:
           attributes:
             tls_certificate_string:
@@ -4280,12 +4288,13 @@ en:
   label_departments_description_html: >
     Define your company’s structure by creating departments and sub-departments in a hierarchical way. This allows you
     to reflect reporting lines and maintain a clear, structured overview of your organization within OpenProject. You
-    can also import an existing organization structure through [LDAP group synchronisation](ldap_docs_article).
+    can also import an existing organization structure through [LDAP department synchronization](ldap_docs_article).
   label_logout: "Sign out"
   label_mapping_for: "Mapping for: %{attribute}"
   label_main_menu: "Side Menu"
   label_manage: "Manage"
   label_manage_groups: "Manage groups"
+  label_managed_by_ldap: "Managed by LDAP synchronization"
   label_managed_repositories_vendor: "Managed %{vendor} repositories"
   label_mathematical_operators: "Mathematical operators"
   label_max_size: "Maximum size"
