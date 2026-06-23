@@ -849,8 +849,7 @@ Rails.application.routes.draw do
     end
 
     resources :departments,
-              only: %i[index show edit update destroy],
-              constraints: lambda { |_request| OpenProject::FeatureDecisions.departments_active? } do
+              only: %i[index show edit update destroy] do
       member do
         get :new_user
         post :add_user
