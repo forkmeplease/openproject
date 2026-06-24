@@ -23,35 +23,41 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# A FileLink represents a relation to a single file stored in some cloud file storage.
-# Additional attributes and constraints are defined in db/migrate/20220113144759_create_file_links.rb
-# FileLinks are attached to a "container", which currently has to be a WorkPackage.
-class Storages::FileLink < ApplicationRecord
-  belongs_to :storage
-  belongs_to :creator, class_name: "User"
-  belongs_to :container, polymorphic: true
+module OpenProject::Storages::Patches::API::V3::WorkPackages::WorkPackagePayloadRepresenterPatch
+  def self.included(base) # :nodoc:
+    base.extend(ClassMethods)
+    base.include(InstanceMethods)
 
-  validates :container_type, inclusion: { in: ["WorkPackage", nil] }
-  validates :origin_id, presence: true
+    base.class_eval do
+      property :file_links,
+               exec_context: :decorator,
+               getter: ->(*) {},
+               setter: ->(fragment:, **) do
+                 next unless fragment.is_a?(Array)
 
-  attribute :origin_status
+                 ids = fragment.map do |link|
+                   ::API::Utilities::ResourceLinkParser.parse_id link["href"],
+                                                                 property: :file_link,
+                                                                 expected_version: "3",
+                                                                 expected_namespace: :file_links
+                 end
 
-  delegate :project, to: :container
-
-  def name
-    origin_name
+                 represented.file_links_ids = ids
+               end,
+               skip_render: ->(*) { true },
+               linked_resource: true,
+               uncacheable: true
+    end
   end
 
-  def user_allowed_to_manage?(user)
-    if container.present?
-      user.allowed_in_project?(:manage_file_links, container.project)
-    else
-      user == creator
-    end
+  module ClassMethods
+  end
+
+  module InstanceMethods
   end
 end

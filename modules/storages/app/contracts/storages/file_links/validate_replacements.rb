@@ -23,35 +23,48 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-# A FileLink represents a relation to a single file stored in some cloud file storage.
-# Additional attributes and constraints are defined in db/migrate/20220113144759_create_file_links.rb
-# FileLinks are attached to a "container", which currently has to be a WorkPackage.
-class Storages::FileLink < ApplicationRecord
-  belongs_to :storage
-  belongs_to :creator, class_name: "User"
-  belongs_to :container, polymorphic: true
+module Storages
+  module FileLinks
+    module ValidateReplacements
+      extend ActiveSupport::Concern
 
-  validates :container_type, inclusion: { in: ["WorkPackage", nil] }
-  validates :origin_id, presence: true
+      included do
+        validate :user_allowed_to_manage_file_links
+        validate :validate_file_links_replacements
+      end
 
-  attribute :origin_status
+      private
 
-  delegate :project, to: :container
+      def user_allowed_to_manage_file_links
+        return if model.file_links_replacements.nil?
+        return if user.allowed_in_project?(:manage_file_links, model.project)
 
-  def name
-    origin_name
-  end
+        errors.add(:base, :error_unauthorized)
+      end
 
-  def user_allowed_to_manage?(user)
-    if container.present?
-      user.allowed_in_project?(:manage_file_links, container.project)
-    else
-      user == creator
+      def validate_file_links_replacements
+        model.file_links_replacements&.each do |file_link|
+          error_if_wrong_storage(file_link)
+          error_if_not_allowed_to_manage(file_link)
+        end
+      end
+
+      def error_if_wrong_storage(file_link)
+        return if model.project.storages.include?(file_link.storage)
+
+        errors.add :file_links, :invalid
+      end
+
+      def error_if_not_allowed_to_manage(file_link)
+        return if file_link.user_allowed_to_manage?(user)
+
+        errors.add(:base, :error_unauthorized)
+      end
     end
   end
 end
