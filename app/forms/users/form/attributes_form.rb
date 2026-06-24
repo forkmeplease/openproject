@@ -151,9 +151,12 @@ module Users
                           **department_editability) do |list|
           department_options.each do |department|
             prefix = "  " * (department.hierarchy_depth || 0)
+            # LDAP-managed departments own their membership; assigning into them
+            # would fail validation, so they cannot be chosen as a target.
             list.option(label: "#{prefix}#{department.name}",
                         value: department.id,
-                        selected: @user.department&.id == department.id)
+                        selected: @user.department&.id == department.id,
+                        disabled: department.ldap_managed?)
           end
         end
       end
