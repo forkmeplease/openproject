@@ -426,7 +426,7 @@ export class ResourceChangeset<T extends HalResource = HalResource> {
       // to let all default values be transmitted (type, status, etc.)
       // We clone the object to avoid later manipulations to affect the original resource.
       if (this.form$.value) {
-        payload = cloneDeep((this.form$.value.payload as HalResource).$source) as typeof payload;
+        payload = cloneDeep((this.form$.value.payload as { $source:unknown }).$source) as typeof payload;
       } else {
         payload = cloneDeep(this.pristineResource.$source) as typeof payload;
       }
