@@ -93,7 +93,7 @@ describe('autocompleter', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(OpAutocompleterComponent);
-    getOptionsFnSpy = vi.fn().mockImplementation((searchTerm:string) => { // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+    getOptionsFnSpy = vi.fn().mockImplementation((searchTerm:string) => {
       return of(workPackagesStub).pipe(map((wps) => wps.filter((wp) => searchTerm !== '' && wp.subject.includes(searchTerm))));
     });
 

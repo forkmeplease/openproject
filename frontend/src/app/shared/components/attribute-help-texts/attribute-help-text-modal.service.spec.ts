@@ -12,7 +12,7 @@ describe('AttributeHelpTextModalService', () => {
   let dialog:HTMLDialogElement|null;
 
   beforeEach(() => {
-    fetchSpy = vi.spyOn(window, 'fetch'); // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+    fetchSpy = vi.spyOn(window, 'fetch');
   });
 
   beforeEach(async () => {
