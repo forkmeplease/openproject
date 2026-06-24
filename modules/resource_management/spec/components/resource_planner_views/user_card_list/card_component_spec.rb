@@ -68,20 +68,95 @@ RSpec.describe ResourcePlannerViews::UserCardList::CardComponent, type: :compone
     end
   end
 
-  describe "the email" do
-    it "is hidden for another user without the view-user-email permission" do
-      expect(rendered).to have_no_text(card_user.mail)
+  describe "the status badge" do
+    it "renders an active user's status as a success label" do
+      expect(rendered).to have_css("span.Label--success", text: I18n.t(:status_active))
     end
 
-    context "when the current user may view emails" do
-      shared_let(:current_user) do
-        create(:user,
-               global_permissions: %i[view_user_email],
-               member_with_permissions: { project => %i[view_resource_planners] })
+    context "for an inactive user" do
+      before { card_user.update_column(:status, Principal.statuses[:locked]) }
+
+      it "renders the status as an attention label" do
+        expect(rendered).to have_css("span.Label--attention", text: I18n.t("user.locked"))
+        expect(rendered).to have_no_css("span.Label--success")
+      end
+    end
+  end
+
+  describe "the user attribute rows" do
+    let(:section) { create(:user_custom_field_section) }
+
+    context "with a multi value field exceeding the 3 value limit" do
+      let!(:skills) do
+        create(:user_custom_field, :multi_list, name: "Skills",
+                                                user_custom_field_section: section, visible_on_user_card: true,
+                                                possible_values: %w[React Rails Node HTML CSS])
+      end
+      let(:card_user) do
+        create(:user, firstname: "Carl", lastname: "Cardman",
+                      member_with_permissions: { project => %i[view_resource_planners] },
+                      custom_values: skills.possible_values.map do |opt|
+                        build(:custom_value, custom_field: skills, value: opt)
+                      end)
       end
 
-      it "is shown" do
-        expect(rendered).to have_text(card_user.mail)
+      it "renders the first 3 values and an overflow counter for the rest" do
+        expect(rendered).to have_text("Skills")
+        expect(rendered).to have_css("span.Label", text: "React")
+        expect(rendered).to have_css("span.Label", text: "Rails")
+        expect(rendered).to have_css("span.Label", text: "Node")
+        expect(rendered).to have_no_css("span.Label", text: "HTML")
+        expect(rendered).to have_no_css("span.Label", text: "CSS")
+        expect(rendered).to have_text(I18n.t("resource_management.user_card_list.card.multi_value_more", count: 2))
+      end
+    end
+
+    context "with a single value field" do
+      let!(:location) do
+        create(:user_custom_field, :string, name: "Location",
+                                            user_custom_field_section: section, visible_on_user_card: true)
+      end
+      let(:card_user) do
+        create(:user, firstname: "Carl", lastname: "Cardman",
+                      member_with_permissions: { project => %i[view_resource_planners] },
+                      custom_values: [build(:custom_value, custom_field: location, value: "Berlin")])
+      end
+
+      it "renders the value" do
+        expect(rendered).to have_text("Location")
+        expect(rendered).to have_text("Berlin")
+      end
+    end
+  end
+
+  describe "the working hours row" do
+    context "with a uniform schedule" do
+      before do
+        create(:user_working_hours, user: card_user, valid_from: 1.year.ago.to_date,
+                                    monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 480,
+                                    saturday: 0, sunday: 0)
+      end
+
+      it "renders the compact summary" do
+        expect(rendered).to have_text("8h/day - 5 days/week (Mon-Fri)")
+      end
+    end
+
+    context "with a non uniform schedule" do
+      before do
+        create(:user_working_hours, user: card_user, valid_from: 1.year.ago.to_date,
+                                    monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 360,
+                                    saturday: 0, sunday: 0)
+      end
+
+      it "renders the per day breakdown" do
+        expect(rendered).to have_text("Mon-Thu 8h, Fri 6h")
+      end
+    end
+
+    context "without a configured schedule" do
+      it "renders the placeholder" do
+        expect(rendered).to have_text(I18n.t("resource_management.user_card_list.working_hours.blank"))
       end
     end
   end

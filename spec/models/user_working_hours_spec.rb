@@ -392,4 +392,50 @@ RSpec.describe UserWorkingHours do
       end
     end
   end
+
+  describe "#working_day_ranges with abbreviated: true" do
+    def build_hours(**day_minutes)
+      attrs = { monday: 0, tuesday: 0, wednesday: 0, thursday: 0, friday: 0, saturday: 0, sunday: 0 }
+      build(:user_working_hours, **attrs, **day_minutes)
+    end
+
+    it "uses abbreviated day names" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 480, thursday: 480, friday: 480)
+      expect(wh.working_day_ranges(abbreviated: true)).to eq("Mon-Fri")
+    end
+
+    it "splits abbreviated ranges at non-working days" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 0, thursday: 480, friday: 480)
+      expect(wh.working_day_ranges(abbreviated: true)).to eq("Mon-Tue, Thu-Fri")
+    end
+  end
+
+  describe "#working_days_count" do
+    def build_hours(**day_minutes)
+      attrs = { monday: 0, tuesday: 0, wednesday: 0, thursday: 0, friday: 0, saturday: 0, sunday: 0 }
+      build(:user_working_hours, **attrs, **day_minutes)
+    end
+
+    it "counts the weekdays with positive minutes" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 480, thursday: 240)
+      expect(wh.working_days_count).to eq(4)
+    end
+  end
+
+  describe "#uniform_daily_hours_label" do
+    def build_hours(**day_minutes)
+      attrs = { monday: 0, tuesday: 0, wednesday: 0, thursday: 0, friday: 0, saturday: 0, sunday: 0 }
+      build(:user_working_hours, **attrs, **day_minutes)
+    end
+
+    it "returns the hours when every working day is equal" do
+      wh = build_hours(monday: 480, tuesday: 480, wednesday: 480)
+      expect(wh.uniform_daily_hours_label).to eq("8h")
+    end
+
+    it "returns nil when working days have differing hours" do
+      wh = build_hours(monday: 480, tuesday: 360)
+      expect(wh.uniform_daily_hours_label).to be_nil
+    end
+  end
 end
