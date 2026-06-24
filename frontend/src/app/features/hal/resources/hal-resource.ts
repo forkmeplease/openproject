@@ -35,6 +35,7 @@ import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorato
 import { HalLinkInterface } from 'core-app/features/hal/hal-link/hal-link';
 import { ICKEditorContext } from 'core-app/shared/components/editor/components/ckeditor/ckeditor.types';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
+import { cloneDeep } from 'lodash-es';
 import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
 
 export type HalResourceClass<T extends HalResource = HalResource> = new(
@@ -176,7 +177,10 @@ export class HalResource {
   }
 
   public $plain():any {
-    return _.cloneDeep(this.$source);
+    // Use a deep clone (not structuredClone) because $source may contain
+    // HalResource instances (e.g. filter values), which carry functions and
+    // injector state that structuredClone cannot clone (DataCloneError).
+    return cloneDeep(this.$source);
   }
 
   public get $isHal():boolean {

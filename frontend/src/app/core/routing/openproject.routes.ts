@@ -26,6 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+import { isEqual } from 'lodash-es';
 import { StateDeclaration, StateService, Transition, TransitionService, UIRouter } from '@uirouter/core';
 import { IToast, ToastService } from 'core-app/shared/components/toaster/toast.service';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
@@ -129,7 +130,7 @@ export function uiRouterConfiguration(uiRouter:UIRouter, injector:Injector, modu
       raw: true,
       dynamic: true,
       is: (val:unknown) => typeof (val) === 'string',
-      equals: (a:any, b:any) => _.isEqual(a, b),
+      equals: (a:unknown, b:unknown) => isEqual(a, b),
     },
   );
 
@@ -142,7 +143,7 @@ export function uiRouterConfiguration(uiRouter:UIRouter, injector:Injector, modu
       raw: true,
       dynamic: true,
       is: (val:unknown) => typeof (val) === 'string',
-      equals: (a:unknown, b:unknown) => _.isEqual(a, b),
+      equals: (a:unknown, b:unknown) => isEqual(a, b),
     },
   );
 }
@@ -228,7 +229,7 @@ export function initializeUiRouterListeners(injector:Injector) {
     const hasProjectRoutes = toStateObject?.includes?.root;
     const projectIdentifier = toParams.projectPath as string || currentProject.identifier;
     if (hasProjectRoutes && !toParams.projects && projectIdentifier) {
-      const newParams = _.clone(toParams);
+      const newParams = { ...toParams };
       Object.assign(newParams, { projectPath: projectIdentifier, projects: 'projects' });
       return $state.target(toState, newParams, { location: 'replace' });
     }

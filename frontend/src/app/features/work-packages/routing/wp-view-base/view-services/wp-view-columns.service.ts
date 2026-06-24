@@ -26,6 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+import { isEqual } from 'lodash-es';
 import { QueryResource } from 'core-app/features/hal/resources/query-resource';
 import { States } from 'core-app/core/states/states.service';
 import { Injectable, inject } from '@angular/core';
@@ -51,7 +52,7 @@ export class WorkPackageViewColumnsService extends WorkPackageQueryStateService<
   public isCurrentlyEqualTo(a:QueryColumn[]) {
     const comparer = (columns:QueryColumn[]) => columns.map((c) => c.href);
 
-    return _.isEqual(
+    return isEqual(
       comparer(a),
       comparer(this.getColumns()),
     );

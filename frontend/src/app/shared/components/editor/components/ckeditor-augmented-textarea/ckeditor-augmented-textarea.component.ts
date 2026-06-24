@@ -296,7 +296,7 @@ export class CkeditorAugmentedTextareaComponent extends UntilDestroyedMixin impl
 
   private setupAttachmentRemovalSignal(editor:ICKEditorInstance) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    this.attachments = _.clone((this.halResource as HalResource).attachments.elements);
+    this.attachments = [...(this.halResource as HalResource).attachments.elements];
 
     this
       .states
@@ -317,7 +317,7 @@ export class CkeditorAugmentedTextareaComponent extends UntilDestroyedMixin impl
           editor.model.fire('op:attachment-removed', removedUrls);
         }
 
-        this.attachments = _.clone(resource.attachments.elements);
+        this.attachments = [...resource.attachments.elements];
       });
   }
 

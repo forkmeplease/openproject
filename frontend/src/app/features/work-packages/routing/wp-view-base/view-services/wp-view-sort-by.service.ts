@@ -26,6 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+import { isEqual } from 'lodash-es';
 import { combine } from '@openproject/reactivestates';
 import { mapTo } from 'rxjs/operators';
 import { Injectable, inject } from '@angular/core';
@@ -57,7 +58,7 @@ export class WorkPackageViewSortByService extends WorkPackageQueryStateService<Q
   public hasChanged(query:QueryResource) {
     const comparer = (sortBy:QuerySortByResource[]) => sortBy.map((el) => el.href);
 
-    return !_.isEqual(
+    return !isEqual(
       comparer(query.sortBy),
       comparer(this.current),
     );

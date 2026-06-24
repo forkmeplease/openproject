@@ -26,6 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+import { isEqual } from 'lodash-es';
 import { Injectable, inject } from '@angular/core';
 import { combine, input, InputState } from '@openproject/reactivestates';
 import { States } from 'core-app/core/states/states.service';
@@ -208,7 +209,7 @@ export class WorkPackageViewFiltersService extends WorkPackageQueryStateService<
   public hasChanged(query:QueryResource) {
     const comparer = (filter:HalResource[]) => filter.map((el) => el.$source);
 
-    return !_.isEqual(
+    return !isEqual(
       comparer(query.filters),
       comparer(this.rawFilters),
     );

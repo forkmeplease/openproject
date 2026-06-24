@@ -21,7 +21,7 @@ export class ChildRelationsRenderPass extends RelationsRenderPass {
     }
 
     // Render for each original row, clone it since we're modifying the tablepass
-    const rendered = _.clone(this.tablePass.renderedOrder);
+    const rendered = [...this.tablePass.renderedOrder];
     const missingChildIds:string[] = [];
 
     rendered.forEach((row:RowRenderInfo) => {
