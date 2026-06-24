@@ -81,11 +81,42 @@ describe('ViewPortService#anchorScrollOffset', () => {
     expect(serviceForViewport(true).anchorScrollOffset()).toBe(16);
   });
 
+  it('ignores an unpinned element sitting at the container top', () => {
+    // The layout reads as mobile well above the breakpoint where the toolbar
+    // turns sticky, so in that window the toolbar is still static and scrolls
+    // away. Reading the live position keeps it from reserving space it won't hold.
+    contentBody.getBoundingClientRect = () => ({ top: 0, left: 0 }) as DOMRect;
+    const staticHeader = document.createElement('div');
+    staticHeader.style.position = 'static';
+    staticHeader.getBoundingClientRect = () => ({ bottom: 185 }) as DOMRect;
+    contentBody.appendChild(staticHeader);
+    vi.spyOn(document, 'elementsFromPoint').mockReturnValue([staticHeader]);
+
+    expect(serviceForViewport(true).anchorScrollOffset()).toBe(16);
+  });
+
   it('seats the comment a small gap below the top on desktop, showing only the stem', () => {
     vi.spyOn(document, 'elementsFromPoint').mockReturnValue([]);
 
     // .tabcontent has nothing pinned over it, so the offset is just the gap; a
     // large offset here exposed the bottom of the preceding comment.
     expect(serviceForViewport(false).anchorScrollOffset()).toBe(16);
+  });
+
+  it('ignores a pinned element that sits outside the scroll container', () => {
+    // The desktop toolbar is sticky but lives above .tabcontent, not within it,
+    // so it must not count toward the offset even while it overlaps the probe.
+    tabContent.getBoundingClientRect = () => ({ top: 0, left: 0 }) as DOMRect;
+    const outsideHeader = document.createElement('div');
+    outsideHeader.style.position = 'sticky';
+    outsideHeader.getBoundingClientRect = () => ({ bottom: 185 }) as DOMRect;
+    document.body.appendChild(outsideHeader);
+    vi.spyOn(document, 'elementsFromPoint').mockReturnValue([outsideHeader]);
+
+    try {
+      expect(serviceForViewport(false).anchorScrollOffset()).toBe(16);
+    } finally {
+      outsideHeader.remove();
+    }
   });
 });

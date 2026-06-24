@@ -129,8 +129,11 @@ export class ViewPortService implements ViewPortServiceInterface {
     for (const node of stack) {
       if (node === container || !container.contains(node)) { continue; }
 
+      // Only a sticky header is pinned relative to this container. A fixed
+      // element is positioned against the viewport, so its position over the
+      // container top is incidental and must not reserve space here.
       const { position } = window.getComputedStyle(node);
-      if (position === 'sticky' || position === 'fixed') {
+      if (position === 'sticky') {
         height = Math.max(height, node.getBoundingClientRect().bottom - containerRect.top);
       }
     }
