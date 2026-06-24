@@ -31,6 +31,7 @@ import { Controller } from '@hotwired/stimulus';
 
 import { setupStimulusTest, type StimulusTestContext } from 'core-stimulus/test-helpers';
 import type AutoScrollingControllerType from './auto-scrolling.controller';
+import { ViewPortServiceInterface } from './services/view-port-service';
 
 const HIGHLIGHTED_CLASS = '--anchor-highlighted';
 
@@ -40,8 +41,8 @@ const HIGHLIGHTED_CLASS = '--anchor-highlighted';
 class StubIndexController extends Controller {
   sortingAscending = false;
 
-  viewPortService = {
-    scrollableContainer: undefined as HTMLElement | undefined,
+  viewPortService:ViewPortServiceInterface = {
+    scrollableContainer: null,
     isMobile: () => false,
     isWithinNotificationCenter: () => false,
     isWithinSplitScreen: () => false,
@@ -77,9 +78,10 @@ describe('Activities tab auto-scrolling controller', () => {
   });
 
   async function renderActivities(resolvedCommentId?:number) {
-    const resolvedAttr = resolvedCommentId === undefined
-      ? ''
-      : `data-work-packages--activities-tab--auto-scrolling-resolved-comment-id-value="${resolvedCommentId}"`;
+    const resolvedAttr =
+      resolvedCommentId === undefined
+        ? ''
+        : `data-work-packages--activities-tab--auto-scrolling-resolved-comment-id-value="${resolvedCommentId}"`;
 
     await ctx.mount(`
       <div id="work-packages--activities-tab--index"
@@ -152,8 +154,8 @@ describe('Activities tab auto-scrolling controller', () => {
     // The scroll container is offset from the viewport and already scrolled; the
     // comment's offsetParent is some other positioned ancestor, so the target must
     // be derived from the rect delta, not offsetTop.
-    scroller.getBoundingClientRect = () => ({ top: 100 } as DOMRect);
-    el139.getBoundingClientRect = () => ({ top: 400 } as DOMRect);
+    scroller.getBoundingClientRect = () => ({ top: 100 }) as DOMRect;
+    el139.getBoundingClientRect = () => ({ top: 400 }) as DOMRect;
     Object.defineProperty(scroller, 'scrollTop', { value: 50, configurable: true });
 
     changeHash('#comment-139');
