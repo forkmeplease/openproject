@@ -528,6 +528,12 @@ class User < Principal
     !logged?
   end
 
+  # The organizational unit (department) the user belongs to, if any.
+  # A user can be a member of at most one department.
+  def department
+    @department ||= groups.merge(Group.organizational_units).first
+  end
+
   def active_admin?
     admin? && active?
   end

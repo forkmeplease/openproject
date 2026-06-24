@@ -80,16 +80,22 @@ module Users
       end
 
       def built_in_value(key)
-        if key == "language"
+        case key
+        when "language"
           @user.language.presence && translate_language(@user.language).first
+        when "department"
+          @user.department&.name
         else
           @user.public_send(key)
         end
       end
 
       def built_in_visible?(key)
-        if key == "mail"
+        case key
+        when "mail"
           can_view_email? || can_manage?
+        when "department"
+          true
         else
           can_manage?
         end
