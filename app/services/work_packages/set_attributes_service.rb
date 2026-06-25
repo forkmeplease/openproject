@@ -272,6 +272,10 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     end
   end
 
+  # The identifier belongs to the source project; a fresh one is allocated
+  # after the move (WorkPackages::UpdateService#update_semantic_ids). The
+  # fields must be cleared in the same UPDATE that changes project_id because
+  # of the unique index on (project_id, sequence_number).
   def clear_semantic_identifier
     work_package.sequence_number = nil
     work_package.identifier = nil

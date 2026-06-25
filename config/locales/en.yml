@@ -2549,11 +2549,14 @@ en:
           is_not_a_valid_target_for_time_entries: "Work package #%{id} is not a valid target for reassigning the time entries."
           attributes:
             id:
-              format: "%{message}"
-              cannot_add_child_because_of_lack_of_permission: "Cannot add child because you don't have permissions to edit the selected work package."
               blank: "ID can't be blank."
+              cannot_add_child_because_of_lack_of_permission: "Cannot add child because you don't have permissions to edit the selected work package."
+              format: "%{message}"
             identifier:
+              must_not_be_changed: "must not be changed manually. Work package identifiers are allocated automatically and resolved through the alias table, so changing them by hand breaks links and identifier history. If this change is deliberate, save with `save(context: :%{context})` and keep the work_package_semantic_aliases table consistent."
               semantic_identifier_incomplete: "and sequence_number must both be set at the same time."
+            sequence_number:
+              must_not_be_changed: "must not be changed manually. It is allocated automatically together with the identifier. If this change is deliberate, save with `save(context: :%{context})`."
             assigned_to:
               format: "%{message}"
             done_ratio:
