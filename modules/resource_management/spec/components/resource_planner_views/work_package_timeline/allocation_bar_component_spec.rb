@@ -33,13 +33,16 @@ require "spec_helper"
 RSpec.describe ResourcePlannerViews::WorkPackageTimeline::AllocationBarComponent, type: :component do
   shared_let(:principal) { create(:user, firstname: "Lisa", lastname: "Anderson") }
 
-  it "shows hours and the name for a visible assigned principal" do
+  it "shows hours and the principal avatar for a visible assigned principal" do
     allocation = build_stubbed(:resource_allocation, principal:, allocated_time: 60 * 60, principal_explicit: true)
 
     render_inline(described_class.new(allocation:, visible_principal_ids: Set[principal.id]))
 
     expect(page).to have_text("60h")
-    expect(page).to have_text("Lisa Anderson")
+    # The name is rendered client-side by the opce-principal element; assert it
+    # carries the principal rather than the (absent) server-rendered text.
+    expect(page).to have_css("opce-principal")
+    expect(page.find("opce-principal")["data-principal"]).to include("Lisa Anderson")
   end
 
   it "anonymises an assigned principal the current user may not see" do
