@@ -332,6 +332,7 @@ projects:
       - start: 0
         t_subject: Organize open source conference
         reference: :organize_open_source_conference
+        assigned_to: :department__events_operations
         description: ''
         status: :default_status_in_progress
         type: :default_type_summary_task
@@ -341,6 +342,7 @@ projects:
           - start: 0
             t_subject: Set date and location of conference
             reference: :set_date_and_location_of_conference
+            assigned_to: :user__olga_ops
             description: ''
             status: :default_status_in_progress
             type: :default_type_task
@@ -349,18 +351,21 @@ projects:
             children:
               - start: 0
                 t_subject: Send invitation to speakers
+                assigned_to: :user__marko_marketing
                 description: ''
                 status: :default_status_in_progress
                 type: :default_type_task
                 duration: 1
               - start: 0
                 t_subject: Contact sponsoring partners
+                assigned_to: :department__finance_administration
                 description: ''
                 status: :default_status_new
                 type: :default_type_task
                 duration: 2
               - start: 0
                 t_subject: Create sponsorship brochure and hand-outs
+                assigned_to: :user__marko_marketing
                 description: ''
                 status: :default_status_new
                 type: :default_type_task
@@ -368,6 +373,7 @@ projects:
           - start: 4
             t_subject: Invite attendees to conference
             reference: :invite_attendees_to_conference
+            assigned_to: :user__evan_events
             description: ''
             status: :default_status_new
             type: :default_type_task
@@ -379,6 +385,7 @@ projects:
           - start: 4
             t_subject: Setup conference website
             reference: :setup_conference_website
+            assigned_to: :user__wanda_web
             description: ''
             status: :default_status_new
             type: :default_type_task
@@ -400,6 +407,7 @@ projects:
       - start: 21
         t_subject: Follow-up tasks
         reference: :follow_up_tasks
+        assigned_to: :user__adam_admin
         description: ''
         status: :default_status_to_be_scheduled
         type: :default_type_summary_task
@@ -409,12 +417,14 @@ projects:
           - start: 21
             t_subject: Upload presentations to website
             reference: :upload_presentations_to_website
+            assigned_to: :user__wanda_web
             description: ''
             status: :default_status_new
             type: :default_type_task
             duration: 10
           - start: 31
             t_subject: Party for conference supporters :-)
+            assigned_to: :user__olga_ops
             t_description: |-
               *   [ ] Beer
               *   [ ] Snacks

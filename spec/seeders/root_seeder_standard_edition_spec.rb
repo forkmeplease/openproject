@@ -109,6 +109,18 @@ RSpec.describe RootSeeder,
       expect(fritz_member.member_roles.map(&:inherited_from)).to all(be_present)
     end
 
+    it "assigns demo work packages to individual users and to whole departments" do
+      data = root_seeder.seed_data
+
+      # Assigned to an individual user (direct project member).
+      expect(data.find_reference(:setup_conference_website).assigned_to)
+        .to eq(data.find_reference(:user__wanda_web))
+
+      # Assigned to a whole department (group member of the project).
+      expect(data.find_reference(:organize_open_source_conference).assigned_to)
+        .to eq(data.find_reference(:department__events_operations))
+    end
+
     it "links work packages to their version" do
       count_by_version = WorkPackage.joins(:version).group("versions.name").count
       # testing with strings would fail for the German language test
