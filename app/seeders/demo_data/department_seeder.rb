@@ -26,19 +26,42 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-class DemoDataSeeder < CompositeSeeder
-  def data_seeder_classes
-    [
-      DemoData::GroupSeeder,
-      DemoData::UserCustomFieldsSeeder,
-      DemoData::DepartmentSeeder,
-      DemoData::GlobalQuerySeeder,
-      DemoData::ProjectsSeeder,
-      DemoData::OverviewSeeder
-    ]
-  end
+#++
 
-  def namespace
-    "DemoData"
+module DemoData
+  class DepartmentSeeder < Seeder
+    def seed_data!
+      print_status "    ↳ Creating departments" do
+        seed_departments
+      end
+    end
+
+    def applicable?
+      Group.organizational_units.none?
+    end
+
+    private
+
+    def seed_departments
+      seed_data.each("departments") do |department_data|
+        department = create_department(department_data)
+        seed_data.store_reference(department_data["reference"], department)
+      end
+    end
+
+    def create_department(department_data)
+      Group.create!(
+        lastname: department_data["name"],
+        organizational_unit: true,
+        parent_id: parent_id_for(department_data)
+      )
+    end
+
+    def parent_id_for(department_data)
+      reference = department_data["parent"]
+      return if reference.blank?
+
+      seed_data.find_reference(reference).id
+    end
   end
 end

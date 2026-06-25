@@ -26,19 +26,48 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-class DemoDataSeeder < CompositeSeeder
-  def data_seeder_classes
-    [
-      DemoData::GroupSeeder,
-      DemoData::UserCustomFieldsSeeder,
-      DemoData::DepartmentSeeder,
-      DemoData::GlobalQuerySeeder,
-      DemoData::ProjectsSeeder,
-      DemoData::OverviewSeeder
-    ]
+#++
+
+require "spec_helper"
+
+RSpec.describe DemoData::DepartmentSeeder do
+  subject(:seeder) { described_class.new(seed_data) }
+
+  let(:seed_data) { Source::SeedData.new(data_hash) }
+
+  let(:data_hash) do
+    YAML.load <<~SEEDING_DATA_YAML
+      departments:
+      - name: Marketing & Communications
+        reference: :marketing
+      - name: Public Relations
+        reference: :public_relations
+        parent: :marketing
+    SEEDING_DATA_YAML
   end
 
-  def namespace
-    "DemoData"
+  it "creates a root department as an organizational unit with the given name" do
+    seeder.seed!
+
+    root = seed_data.find_reference(:marketing)
+    expect(root).to have_attributes(lastname: "Marketing & Communications", organizational_unit: true)
+    expect(root.parent).to be_nil
+  end
+
+  it "creates a child department nested under its parent" do
+    seeder.seed!
+
+    root = seed_data.find_reference(:marketing)
+    child = seed_data.find_reference(:public_relations)
+
+    expect(child).to have_attributes(lastname: "Public Relations", organizational_unit: true)
+    expect(child.parent).to eq(root)
+    expect(root.children).to include(child)
+  end
+
+  it "is not applicable once an organizational unit already exists" do
+    create(:department)
+
+    expect(seeder).not_to be_applicable
   end
 end

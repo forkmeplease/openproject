@@ -62,6 +62,22 @@ priorities:
     color_name: grape-5
     position: 4
 
+departments:
+  - reference: :department__marketing_communications
+    t_name: Marketing & Communications
+  - reference: :department__public_relations
+    t_name: Public Relations
+    parent: :department__marketing_communications
+  - reference: :department__design_content
+    t_name: Design & Content
+    parent: :department__marketing_communications
+  - reference: :department__events_operations
+    t_name: Events & Operations
+  - reference: :department__web_it
+    t_name: Web & IT
+  - reference: :department__finance_administration
+    t_name: Finance & Administration
+
 project_custom_field_sections:
   - reference: :default_project_attributes
     name: Project attributes
