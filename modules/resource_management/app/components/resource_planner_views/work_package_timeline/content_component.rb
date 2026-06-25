@@ -33,6 +33,8 @@ module ResourcePlannerViews
     # The container the FullCalendar resource-timeline controller mounts into.
     # Bulk data comes from the feed endpoints; only small config travels inline.
     class ContentComponent < ApplicationComponent
+      # This component mounts the Stimulus controller; other timeline components
+      # reference this identifier to dispatch actions to it.
       STIMULUS = "resource-management--work-package-timeline"
 
       def initialize(view:, project:, resource_planner:, work_packages: [], allocations: {}, visible_principal_ids: nil)
@@ -59,10 +61,10 @@ module ResourcePlannerViews
 
       def stimulus_values
         {
-          "resources-url" => helpers.timeline_resources_project_resource_planner_view_path(
+          "resources-url" => helpers.project_resource_planner_view_work_package_timeline_resources_path(
             @project, @resource_planner, @view, format: :json
           ),
-          "events-url" => helpers.timeline_events_project_resource_planner_view_path(
+          "events-url" => helpers.project_resource_planner_view_work_package_timeline_events_path(
             @project, @resource_planner, @view, format: :json
           ),
           "locale" => I18n.locale.to_s,

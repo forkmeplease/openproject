@@ -47,7 +47,7 @@ RSpec.describe "Work package timeline feeds", type: :rails_request do
 
   describe "resources" do
     it "returns the view's work packages as FullCalendar resources with rendered html" do
-      get timeline_resources_project_resource_planner_view_path(project, planner, view, format: :json)
+      get project_resource_planner_view_work_package_timeline_resources_path(project, planner, view, format: :json)
 
       expect(response).to have_http_status(:ok)
       body = response.parsed_body
@@ -59,7 +59,7 @@ RSpec.describe "Work package timeline feeds", type: :rails_request do
 
     it "denies users without access" do
       login_as create(:user)
-      get timeline_resources_project_resource_planner_view_path(project, planner, view, format: :json)
+      get project_resource_planner_view_work_package_timeline_resources_path(project, planner, view, format: :json)
 
       expect(response).to have_http_status(:not_found).or have_http_status(:forbidden)
     end
@@ -83,7 +83,7 @@ RSpec.describe "Work package timeline feeds", type: :rails_request do
     end
 
     it "returns allocations as FullCalendar events flagged overbooked" do
-      get timeline_events_project_resource_planner_view_path(project, planner, view,
+      get project_resource_planner_view_work_package_timeline_events_path(project, planner, view,
                                                              start: "2026-05-25", end: "2026-07-01", format: :json)
 
       expect(response).to have_http_status(:ok)
@@ -114,7 +114,7 @@ RSpec.describe "Work package timeline feeds", type: :rails_request do
     end
 
     def background_event_for(work_package, granularity:)
-      get timeline_events_project_resource_planner_view_path(
+      get project_resource_planner_view_work_package_timeline_events_path(
         project, planner, view,
         start: "2026-06-01", end: "2026-07-01", granularity:, format: :json
       )

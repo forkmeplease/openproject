@@ -62,7 +62,8 @@ module OpenProject::ResourceManagement
                                                                       reorder_work_package
                                                                       new_user add_user remove_user],
                      "resource_management/work_package_resource_allocations": %i[index],
-                     "resource_management/work_package_timeline_feeds": %i[timeline_resources timeline_events],
+                     "resource_management/work_package_timeline/resources": %i[index],
+                     "resource_management/work_package_timeline/events": %i[index],
                      "resource_management/user_resource_allocations": %i[index],
                      "resource_management/menus": %i[show]
                    },
