@@ -46,24 +46,22 @@ module ResourcePlannerViews
 
       private
 
-      attr_reader :work_package, :allocations, :project, :resource_planner, :view
-
       def info_line
-        render(WorkPackages::InfoLineComponent.new(work_package:, show_status: true))
+        render(WorkPackages::InfoLineComponent.new(work_package: @work_package, show_status: true))
       end
 
       def subject_link
         render(
           Primer::Beta::Link.new(
-            href: helpers.url_for(controller: "/work_packages", action: "show", id: work_package),
+            href: helpers.url_for(controller: "/work_packages", action: "show", id: @work_package),
             font_weight: :bold,
             underline: false
           )
-        ) { work_package.subject }
+        ) { @work_package.subject }
       end
 
       def progress
-        render(ResourceAllocations::ProgressComponent.new(work_package:, allocations:))
+        render(ResourceAllocations::ProgressComponent.new(work_package: @work_package, allocations: @allocations))
       end
 
       def context_menu
@@ -81,7 +79,7 @@ module ResourcePlannerViews
         menu.with_item(
           label: t("resource_management.work_package_list.context_menu.see_allocation"),
           tag: :a,
-          href: helpers.project_work_package_resource_allocations_path(project, work_package),
+          href: helpers.project_work_package_resource_allocations_path(@project, @work_package),
           content_arguments: { data: { controller: "async-dialog" } }
         ) do |item|
           item.with_leading_visual_icon(icon: :hourglass)
@@ -93,7 +91,7 @@ module ResourcePlannerViews
           label: t("resource_management.work_package_list.context_menu.edit_total_work"),
           tag: :a,
           href: helpers.edit_project_resource_planner_view_work_package_progress_path(
-            project, resource_planner, view, work_package
+            @project, @resource_planner, @view, @work_package
           ),
           content_arguments: { data: { controller: "async-dialog" } }
         ) do |item|
@@ -102,9 +100,9 @@ module ResourcePlannerViews
       end
 
       def allowed_to_edit_work?
-        return false if project.nil?
+        return false if @project.nil?
 
-        User.current.allowed_in_project?(:edit_work_packages, project)
+        User.current.allowed_in_project?(:edit_work_packages, @project)
       end
     end
   end

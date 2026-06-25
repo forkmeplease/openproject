@@ -33,6 +33,9 @@ module ResourceManagement
     # Feeds the FullCalendar events (allocation bars) plus one active-span
     # background band per work package.
     class EventsController < FeedsController
+      # The granularity keys live with the view definitions they label.
+      Granularity = ResourcePlannerViews::WorkPackageTimeline::Granularity
+
       def index # rubocop:disable Metrics/AbcSize
         allocations = allocations_by_work_package.values.flatten
         overbooked = ResourceAllocation.overbooked_ids(allocations)
@@ -65,7 +68,7 @@ module ResourceManagement
 
         view_first = Date.iso8601(params[:start])
         view_last = Date.iso8601(params[:end]) - 1 # the view range end is exclusive
-        granularity = params[:granularity].presence || "day"
+        granularity = params[:granularity].presence&.to_sym || Granularity::DEFAULT
 
         @view.work_packages.filter_map do |work_package|
           band = active_span_band(work_package, view_first:, view_last:, granularity:)
@@ -96,16 +99,16 @@ module ResourceManagement
 
       def snap_down(date, granularity)
         case granularity
-        when "week" then date.beginning_of_week(start_of_week_day)
-        when "month" then date.beginning_of_month
+        when Granularity::WEEK then date.beginning_of_week(start_of_week_day)
+        when Granularity::MONTH then date.beginning_of_month
         else date
         end
       end
 
       def snap_up(date, granularity)
         case granularity
-        when "week" then date.end_of_week(start_of_week_day)
-        when "month" then date.end_of_month
+        when Granularity::WEEK then date.end_of_week(start_of_week_day)
+        when Granularity::MONTH then date.end_of_month
         else date
         end
       end

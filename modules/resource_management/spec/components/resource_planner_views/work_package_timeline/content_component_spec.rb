@@ -38,12 +38,11 @@ RSpec.describe ResourcePlannerViews::WorkPackageTimeline::ContentComponent, type
 
   before { login_as(user) }
 
-  it "renders the calendar container with feed urls and the GPL license key" do
+  it "renders the calendar container with feed urls and the initial view" do
     render_inline(described_class.new(view:, project:, resource_planner: planner))
 
     el = page.find("[data-controller='resource-management--work-package-timeline']")
     prefix = "data-resource-management--work-package-timeline"
-    expect(el["#{prefix}-license-key-value"]).to eq("GPL-My-Project-Is-Open-Source")
     expect(el["#{prefix}-resources-url-value"]).to be_present
     expect(el["#{prefix}-events-url-value"]).to be_present
     expect(el["#{prefix}-initial-view-value"]).to eq("resourceTimelineDays")

@@ -84,7 +84,7 @@ RSpec.describe "Work package timeline feeds", type: :rails_request do
 
     it "returns allocations as FullCalendar events flagged overbooked" do
       get project_resource_planner_view_work_package_timeline_events_path(project, planner, view,
-                                                             start: "2026-05-25", end: "2026-07-01", format: :json)
+                                                                          start: "2026-05-25", end: "2026-07-01", format: :json)
 
       expect(response).to have_http_status(:ok)
       block_events = response.parsed_body["events"].reject { |e| e["display"] == "background" }

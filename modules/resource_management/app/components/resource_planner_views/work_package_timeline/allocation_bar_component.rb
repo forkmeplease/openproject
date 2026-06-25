@@ -76,7 +76,8 @@ module ResourcePlannerViews
         return 0 unless filter_based?
 
         allocation.candidate_query.results.count
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.warn("Resource timeline candidate_count failed: #{e.class}: #{e.message}")
         0
       end
 

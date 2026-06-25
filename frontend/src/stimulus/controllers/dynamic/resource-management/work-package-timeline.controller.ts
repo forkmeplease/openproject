@@ -29,13 +29,35 @@
  */
 
 import { Controller, ActionEvent } from '@hotwired/stimulus';
-import { Calendar } from '@fullcalendar/core';
+import { Calendar, EventInput } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import { ResourceInput } from '@fullcalendar/resource';
 import allLocales from '@fullcalendar/core/locales-all';
 import { renderStreamMessage } from '@hotwired/turbo';
 import { TurboHelpers } from 'core-turbo/helpers';
 import moment from 'moment';
+
+// Every granularity view shares the same shape, only the unit changes: a fixed
+// span of equal-width columns, one calendar unit per column, paging by half the
+// span so consecutive pages overlap and keep context.
+const COLUMNS_PER_VIEW = 10;
+const UNITS_PER_COLUMN = 1;
+const COLUMNS_PER_PAGE = COLUMNS_PER_VIEW / 2;
+
+// When centering on today, keep a few columns of past in view so today sits near
+// the start of the span and most of the width shows upcoming work.
+const COLUMNS_BEFORE_TODAY = 3;
+
+// Per FullCalendar view: the granularity key sent to the feed and the moment unit
+// of one column. The only view names in play are the three registered below; the
+// day view doubles as the fallback (matching the server's default granularity).
+const GRANULARITY_VIEWS:Record<string, { granularity:string, unit:moment.unitOfTime.DurationConstructor }> = {
+  resourceTimelineDays: { granularity: 'day', unit: 'days' },
+  resourceTimelineWeeks: { granularity: 'week', unit: 'weeks' },
+  resourceTimelineMonths: { granularity: 'month', unit: 'months' },
+};
+const DEFAULT_GRANULARITY_VIEW = GRANULARITY_VIEWS.resourceTimelineDays;
 
 export default class WorkPackageTimelineController extends Controller {
   static targets = ['calendar', 'granularityButton'];
@@ -47,8 +69,6 @@ export default class WorkPackageTimelineController extends Controller {
     firstDay: Number,
     initialDate: String,
     initialView: String,
-    licenseKey: String,
-    canAllocate: Boolean,
     newAllocationUrl: String,
   };
 
@@ -61,24 +81,24 @@ export default class WorkPackageTimelineController extends Controller {
   declare readonly firstDayValue:number;
   declare readonly initialDateValue:string;
   declare readonly initialViewValue:string;
-  declare readonly licenseKeyValue:string;
-  declare readonly canAllocateValue:boolean;
   declare readonly newAllocationUrlValue:string;
 
-  private calendar:Calendar;
+  private calendar?:Calendar;
 
   // Sent to the events feed. Updated before changeView because FullCalendar fires
   // the fetch mid-transition, while `calendar.view` still reports the old view.
   private currentGranularity:string;
 
   connect() {
-    // Defer so the container has its final size before FullCalendar measures it.
-    setTimeout(() => this.initializeCalendar(), 5);
+    // Defer to the next frame so the container has its final size before
+    // FullCalendar measures it.
+    requestAnimationFrame(() => this.initializeCalendar());
   }
 
   disconnect() {
     if (this.calendar) {
       this.calendar.destroy();
+      this.calendar = undefined;
     }
   }
 
@@ -102,40 +122,37 @@ export default class WorkPackageTimelineController extends Controller {
   private initializeCalendar() {
     // Computed up front so the first render is already centered on today, with no
     // post-render gotoDate that would trigger a second feed fetch.
-    const initialDate = moment(this.initialDateValue)
-      .subtract(3, this.unitForViewName(this.initialViewValue))
-      .format('YYYY-MM-DD');
+    const initialDate = this.startCenteredOnToday(this.initialViewValue);
 
     this.currentGranularity = this.granularityKeyFor(this.initialViewValue);
 
     this.calendar = new Calendar(this.calendarTarget, {
-      schedulerLicenseKey: this.licenseKeyValue,
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       plugins: [resourceTimelinePlugin, interactionPlugin],
       initialView: this.initialViewValue,
       initialDate,
-      // Custom views: a fixed span of equal-width day/week/month columns, rather
-      // than FullCalendar's built-in views that zoom into hour or day slots.
-      // dateIncrement is half a view's span, so prev/next page by 5 columns.
+      // Custom views, rather than FullCalendar's built-in ones that zoom into
+      // hour or day slots (see the column constants above).
       views: {
         resourceTimelineDays: {
           type: 'resourceTimeline',
-          duration: { days: 10 },
-          slotDuration: { days: 1 },
-          dateIncrement: { days: 5 },
+          duration: { days: COLUMNS_PER_VIEW },
+          slotDuration: { days: UNITS_PER_COLUMN },
+          dateIncrement: { days: COLUMNS_PER_PAGE },
           slotLabelFormat: { weekday: 'short', month: 'numeric', day: 'numeric' },
         },
         resourceTimelineWeeks: {
           type: 'resourceTimeline',
-          duration: { weeks: 10 },
-          slotDuration: { weeks: 1 },
-          dateIncrement: { weeks: 5 },
+          duration: { weeks: COLUMNS_PER_VIEW },
+          slotDuration: { weeks: UNITS_PER_COLUMN },
+          dateIncrement: { weeks: COLUMNS_PER_PAGE },
           slotLabelFormat: { week: 'long' },
         },
         resourceTimelineMonths: {
           type: 'resourceTimeline',
-          duration: { months: 10 },
-          slotDuration: { months: 1 },
-          dateIncrement: { months: 5 },
+          duration: { months: COLUMNS_PER_VIEW },
+          slotDuration: { months: UNITS_PER_COLUMN },
+          dateIncrement: { months: COLUMNS_PER_PAGE },
           slotLabelFormat: { month: 'short' },
         },
       },
@@ -155,7 +172,7 @@ export default class WorkPackageTimelineController extends Controller {
       resources: (_info, success, failure) => {
         fetch(this.resourcesUrlValue, { headers: { Accept: 'application/json' } })
           .then((response) => response.json())
-          .then((data:{ resources:unknown[] }) => success(data.resources as never))
+          .then((data:{ resources:ResourceInput[] }) => success(data.resources))
           .catch(failure);
       },
       events: (info, success, failure) => {
@@ -165,19 +182,23 @@ export default class WorkPackageTimelineController extends Controller {
         url.searchParams.set('granularity', this.currentGranularity);
         fetch(url.toString(), { headers: { Accept: 'application/json' } })
           .then((response) => response.json())
-          .then((data:{ events:unknown[] }) => success(data.events as never))
+          .then((data:{ events:EventInput[] }) => success(data.events))
           .catch(failure);
       },
       eventContent: (arg) => ({ html: (arg.event.extendedProps.html as string) || '' }),
       eventClassNames: (arg) => (arg.event.extendedProps.overbooked ? ['resource-allocation--overbooked'] : []),
       eventsSet: () => { this.markActiveColumns(); },
-      selectable: this.canAllocateValue && this.newAllocationUrlValue.length > 0,
+      // Blank when the user may not allocate (the server omits the URL), so a
+      // present URL is also the permission signal.
+      selectable: this.newAllocationUrlValue.length > 0,
       select: (info) => {
-        const resourceId = info.resource?.id ?? '';
         const inclusiveEnd = new Date(info.end.getTime() - 86400000).toISOString().slice(0, 10);
-        const url = `${this.newAllocationUrlValue}?work_package_id=${resourceId}&start_date=${info.startStr}&end_date=${inclusiveEnd}`;
-        this.openDialog(url);
-        this.calendar.unselect();
+        const url = new URL(this.newAllocationUrlValue, window.location.origin);
+        url.searchParams.set('work_package_id', info.resource?.id ?? '');
+        url.searchParams.set('start_date', info.startStr);
+        url.searchParams.set('end_date', inclusiveEnd);
+        this.openDialog(url.toString());
+        this.calendar?.unselect();
       },
     });
 
@@ -187,10 +208,16 @@ export default class WorkPackageTimelineController extends Controller {
   private centerOnToday():void {
     if (!this.calendar) { return; }
 
-    const start = moment(this.initialDateValue)
-      .subtract(3, this.unitForViewName(this.calendar.view.type))
+    this.calendar.gotoDate(this.startCenteredOnToday(this.calendar.view.type));
+  }
+
+  // The start date that places today COLUMNS_BEFORE_TODAY columns into the span.
+  // Takes the view type explicitly because the initial render computes this
+  // before `this.calendar` exists.
+  private startCenteredOnToday(viewType:string):string {
+    return moment(this.initialDateValue)
+      .subtract(COLUMNS_BEFORE_TODAY, this.unitForViewName(viewType))
       .format('YYYY-MM-DD');
-    this.calendar.gotoDate(start);
   }
 
   // Mark each header column active when an active-span band covers it.
@@ -213,25 +240,11 @@ export default class WorkPackageTimelineController extends Controller {
   }
 
   private granularityKeyFor(viewType:string):string {
-    switch (viewType) {
-      case 'resourceTimelineWeeks':
-        return 'week';
-      case 'resourceTimelineMonths':
-        return 'month';
-      default:
-        return 'day';
-    }
+    return (GRANULARITY_VIEWS[viewType] ?? DEFAULT_GRANULARITY_VIEW).granularity;
   }
 
   private unitForViewName(view:string):moment.unitOfTime.DurationConstructor {
-    switch (view) {
-      case 'resourceTimelineDays':
-        return 'days';
-      case 'resourceTimelineMonths':
-        return 'months';
-      default:
-        return 'weeks';
-    }
+    return (GRANULARITY_VIEWS[view] ?? DEFAULT_GRANULARITY_VIEW).unit;
   }
 
   private updateGranularityLabel(label:string):void {

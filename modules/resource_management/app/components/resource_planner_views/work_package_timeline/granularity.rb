@@ -35,12 +35,12 @@ module ResourcePlannerViews
     module Granularity
       # Ordered — drives the granularity menu order.
       VIEWS = {
-        day: "resourceTimelineDays",
-        week: "resourceTimelineWeeks",
-        month: "resourceTimelineMonths"
+        (DAY = :day) => "resourceTimelineDays",
+        (WEEK = :week) => "resourceTimelineWeeks",
+        (MONTH = :month) => "resourceTimelineMonths"
       }.freeze
 
-      DEFAULT = :day
+      DEFAULT = DAY
 
       def self.default_view
         VIEWS.fetch(DEFAULT)

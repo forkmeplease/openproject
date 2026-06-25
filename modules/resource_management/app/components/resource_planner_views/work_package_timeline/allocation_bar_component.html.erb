@@ -17,7 +17,7 @@
 
   <% if candidate_badge? %>
     <span class="op-rm-timeline-bar--badge">
-      <%= render(Primer::Beta::Label.new(scheme: :secondary)) { candidate_label } %>
+      <%= render(Primer::Beta::Label.new) { candidate_label } %>
     </span>
   <% end %>
 </div>

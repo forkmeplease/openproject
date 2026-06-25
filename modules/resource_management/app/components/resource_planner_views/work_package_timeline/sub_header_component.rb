@@ -34,8 +34,6 @@ module ResourcePlannerViews::WorkPackageTimeline
   class SubHeaderComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
-    STIMULUS = "resource-management--work-package-timeline"
-
     def initialize(project:, resource_planner:, view:)
       super
       @project = project
@@ -53,19 +51,20 @@ module ResourcePlannerViews::WorkPackageTimeline
       Granularity::DEFAULT
     end
 
+    # The Stimulus controller is owned by ContentComponent, which mounts it.
     def nav_action(method)
-      { action: "#{STIMULUS}##{method}" }
+      { action: "#{ContentComponent::STIMULUS}##{method}" }
     end
 
     def granularity_action(key, view_name)
-      { action: "#{STIMULUS}#setView",
-        "#{STIMULUS}-view-param": view_name,
-        "#{STIMULUS}-label-param": granularity_label(key) }
+      { action: "#{ContentComponent::STIMULUS}#setView",
+        "#{ContentComponent::STIMULUS}-view-param": view_name,
+        "#{ContentComponent::STIMULUS}-label-param": granularity_label(key) }
     end
 
     # Target the controller uses to update the button label on granularity change.
     def granularity_button_data
-      { "#{STIMULUS}-target": "granularityButton" }
+      { "#{ContentComponent::STIMULUS}-target": "granularityButton" }
     end
 
     def granularity_label(key)

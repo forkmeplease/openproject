@@ -78,26 +78,13 @@
     flex: 0 0 auto
 
   &--label
-    flex: 1 1 auto
+    flex: 0 1 auto
     min-inline-size: 0
     overflow: hidden
     text-overflow: ellipsis
 
   &--badge
     flex: 0 0 auto
-
-  &--initials
-    flex: 0 0 auto
-    display: inline-flex
-    align-items: center
-    justify-content: center
-    inline-size: 16px
-    block-size: 16px
-    border-radius: 50%
-    background: var(--bgColor-accent-muted, #ddf4ff)
-    color: var(--fgColor-accent, #0969da)
-    font-size: 9px
-    font-weight: 600
 
 // Overbooking cue, keyed off the class we add via `eventClassNames`.
 .resource-allocation--overbooked .op-rm-timeline-bar

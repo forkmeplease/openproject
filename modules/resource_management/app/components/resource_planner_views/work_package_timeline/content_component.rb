@@ -71,8 +71,6 @@ module ResourcePlannerViews
           "first-day" => (Setting.start_of_week.presence || 1).to_i,
           "initial-date" => Date.current.iso8601,
           "initial-view" => Granularity.default_view,
-          "license-key" => "GPL-My-Project-Is-Open-Source",
-          "can-allocate" => can_allocate?,
           "new-allocation-url" => new_allocation_url
         }
       end
@@ -81,8 +79,7 @@ module ResourcePlannerViews
         helpers.current_user.allowed_in_project?(:allocate_user_resources, @project)
       end
 
-      # The timeline appends the work package and date range as query params,
-      # consumed by #74141.
+      # The timeline appends the work package and date range as query params.
       def new_allocation_url
         return "" unless can_allocate?
 
