@@ -28,21 +28,39 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Profile
-    # A single renderable profile attribute (built-in or custom field).
-    # `value` is a scalar for single values, or an Array for multi-value custom fields.
-    class SectionAttribute
-      attr_reader :label, :value, :icon
+require "spec_helper"
 
-      def initialize(label:, value:, icon: nil)
-        @label = label
-        @value = value
-        @icon = icon
+RSpec.describe Departments::RemoveUserService do
+  let(:admin) { create(:admin) }
+  let(:member) { create(:user) }
+
+  before do
+    allow(Notifications::GroupMemberAlteredJob).to receive(:perform_later)
+  end
+
+  describe "#call" do
+    context "when the user is a member of the department" do
+      let!(:department) { create(:department, members: [member]) }
+
+      it "removes the user from the department" do
+        result = described_class.new(department, user: admin).call(user_id: member.id)
+
+        expect(result).to be_success
+        expect(department.reload.users).not_to include(member)
       end
+    end
 
-      def multi_value?
-        value.is_a?(Array)
+    context "when the department is managed by LDAP" do
+      let!(:department) { create(:department, members: [member]) }
+
+      before { allow(department).to receive(:ldap_managed?).and_return(true) }
+
+      it "rejects the removal" do
+        result = described_class.new(department, user: admin).call(user_id: member.id)
+
+        expect(result).to be_failure
+        expect(result.errors.symbols_for(:base)).to include(:user_in_ldap_managed_department)
+        expect(department.reload.users).to include(member)
       end
     end
   end

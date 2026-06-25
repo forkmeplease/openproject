@@ -28,22 +28,29 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module Users
-  module Profile
-    # A single renderable profile attribute (built-in or custom field).
-    # `value` is a scalar for single values, or an Array for multi-value custom fields.
-    class SectionAttribute
-      attr_reader :label, :value, :icon
+module Departments
+  class RemoveUserService < ::BaseServices::BaseContracted
+    def initialize(department, user:, contract_class: AdminOnlyContract)
+      self.model = department
+      super(user:, contract_class:)
+    end
 
-      def initialize(label:, value:, icon: nil)
-        @label = label
-        @value = value
-        @icon = icon
+    private
+
+    def persist(call)
+      if model.ldap_managed?
+        # The membership of an LDAP-managed department is owned by LDAP and cannot be changed manually.
+        call.success = false
+        call.errors.add(:base, :user_in_ldap_managed_department)
+        return call
       end
 
-      def multi_value?
-        value.is_a?(Array)
-      end
+      result = Groups::UpdateService
+        .new(user:, model:)
+        .call(remove_user_ids: [params[:user_id].to_i])
+
+      call.add_dependent!(result)
+      call
     end
   end
 end
