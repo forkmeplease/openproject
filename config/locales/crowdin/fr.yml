@@ -66,12 +66,12 @@ fr:
           other: La libération de cet identifiant de projet (ainsi que de ses identifiants de lots de travail %{count} ) est irréversible. Les liens externes et les intégrations qui l'utilisent ne fonctionneront plus, et le nom deviendra disponible pour tout nouveau projet souhaitant le revendiquer.
         heading: Libérer «%{identifier} » ?
         title: Libérer l'identifiant
-      empty_body: When a project's identifier changes, the previous one will appear here so you can unreserve it once it's safe to do so.
+      empty_body: Lorsqu'l'identifiant d'un projet change, l'ancien identifiant s'affiche ici afin que vous puissiez le désenregistrer dès que vous pouvez le faire en toute sécurité.
       empty_heading: Aucun identifiant réservé
       filter_label: Rechercher des identifiants
-      identifier_not_found: The reserved identifier could not be found. It may have already been unreserved or the project may have been deleted. Please refresh the page.
-      lede_html: When a project's identifier is renamed, the previous identifier is kept reserved so that existing links and integrations keep working.<br>Here you can unreserve identifiers so that they may be used by other projects.
-      released_notice: Identifier "%{identifier}" has been unreserved.
+      identifier_not_found: L'identifiant réservé est introuvable. Il se peut qu'il ait déjà été débloqué ou que le projet ait été supprimé. Veuillez actualiser la page.
+      lede_html: Lorsqu'un identifiant de projet est renommé, l'ancien identifiant reste réservé afin que les liens et intégrations existants continuent de fonctionner.<br>Vous pouvez ici libérer des identifiants afin qu'ils puissent être utilisés par d'autres projets.
+      released_notice: L'identifiant «%{identifier}» n'est plus réservé.
       reserved_ago: il y a %{time}
       title: Identifiants de projet réservés
     plugins:
@@ -131,7 +131,7 @@ fr:
         trial: Essai
     jemalloc_allocator: Allocateur de mémoire Jemalloc
     journal_aggregation:
-      caption_with_maximum: 'User actions on a work package (changing description, status, values, or writing comments) are grouped if performed within this period. It also controls notification and [webhook](webhook_link) delays. The maximum is %{max} minutes.
+      caption_with_maximum: 'Les actions effectuées par les utilisateurs sur un lot de travail (modification de la description, du statut, des valeurs ou ajout de commentaires) sont regroupées si elles sont effectuées au cours de cette période. Ce paramètre permet également de contrôler les délais de notification et de [webhook](webhook_link). La durée maximale est de %{max} minutes.
 
         '
     import:
@@ -3159,8 +3159,8 @@ fr:
       edit_attribute_groups:
         description: 'Personnalisez la configuration du formulaire avec ces add-ons supplémentaires :'
         features:
-          groups: Add new attribute sections
-          rename: Rename attribute sections
+          groups: Ajouter de nouvelles sections d'attributs
+          rename: Renommer les sections d'attributs
           related: Ajouter un tableau des lots de travaux associés
       readonly_work_packages:
         description: Marquer les lots de travaux comme étant en lecture seule pour des statuts spécifiques.
@@ -6160,6 +6160,8 @@ fr:
     scopes:
       api_v3: Accès complet à l'API v3
       api_v3_text: L'application recevra un accès complet en lecture et écriture à l'API v3 d'OpenProject pour effectuer des actions en votre nom.
+      mcp: Access to MCP
+      mcp_text: Application will receive access to the OpenProject MCP endpoints. They are a limited subset of APIv3, that's tailored for usage with AI agents.
     grants:
       created_date: Approuvée le
       scopes: Autorisations
