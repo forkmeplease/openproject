@@ -205,4 +205,16 @@ RSpec.describe OpPrimer::QuickFilter::SelectPanelComponent, type: :component do
       expect(time_filter["time"]["values"]).to eq(original.values)
     end
   end
+
+  context "when no other filters are active" do
+    before { render_with_items }
+
+    it "still carries an explicit (empty) filter scope so the endpoint keeps the current scope" do
+      base_url = page.find("[data-controller='quick-filter--select-panel']")[
+        "data-quick-filter--select-panel-base-url-value"
+      ]
+
+      expect(filters_from_base_url(base_url)).to eq([])
+    end
+  end
 end
