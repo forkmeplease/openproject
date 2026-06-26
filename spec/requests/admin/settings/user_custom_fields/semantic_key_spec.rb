@@ -49,7 +49,8 @@ RSpec.describe "Admin user custom field semantic keys",
       get admin_settings_user_custom_fields_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Semantic meaning")
+      # The semantic-keys tab is linked from the nav, but its form is not on the attributes tab.
+      expect(response.body).to include("tab=semantic_keys")
       expect(response.body).not_to include('name="semantic_keys[job_title]"')
     end
 

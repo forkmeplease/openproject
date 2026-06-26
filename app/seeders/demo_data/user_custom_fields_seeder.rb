@@ -127,8 +127,18 @@ module DemoData
       ]
     end
 
+    # The default user custom field section is normally created as basic data, but
+    # not every edition seeds it (e.g. BIM), so fall back to creating one. Mirrors
+    # BasicData::UserCustomFieldSectionSeeder (blank name, built-in attribute order).
     def section
-      @section ||= UserCustomFieldSection.order(:position).first
+      @section ||= UserCustomFieldSection.order(:position).first || create_default_section
+    end
+
+    def create_default_section
+      UserCustomFieldSection.new(
+        position: 1,
+        attribute_order: UserCustomFieldSection::BUILT_IN_ATTRIBUTES
+      ).tap { |section| section.save!(validate: false) }
     end
   end
 end

@@ -79,6 +79,15 @@ RSpec.describe DemoData::UserCustomFieldsSeeder do
     expect(UserCustomField.where(admin_only: true)).to be_empty
   end
 
+  context "when no user custom field section exists yet (e.g. BIM edition)" do
+    before { UserCustomFieldSection.delete_all }
+
+    it "creates a default section so the fields can be persisted" do
+      expect { seeder.seed! }.to change(UserCustomFieldSection, :count).from(0).to(1)
+      expect(UserCustomField.where(custom_field_section_id: nil)).to be_empty
+    end
+  end
+
   it "is idempotent" do
     seeder.seed!
 
