@@ -382,9 +382,7 @@ class MeetingsController < ApplicationController
   end
 
   def project_items
-    @query = load_query
-    # Scope to projects that have meetings visible to the current user
-    projects = Project.where(id: @query.results.select(:project_id)).order(:name)
+    projects = Project.visible(User.current).active.order(:name)
     # The component appends ?selected=id1,id2 so we know which items to mark as selected.
     # Standard filters can't be passed to the query because then the projects from @query.results
     # would be *only* the already selected list
