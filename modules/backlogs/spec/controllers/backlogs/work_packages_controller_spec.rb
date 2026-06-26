@@ -719,7 +719,7 @@ RSpec.describe Backlogs::WorkPackagesController do
       let(:params) { { project_id: project.id, id: work_package.id, all: "true" } }
 
       it "embeds the all query in the dialog form action URL" do
-        expect(body).to match(/all=true/)
+        expect(body).to include("all=true")
       end
     end
 
@@ -790,7 +790,7 @@ RSpec.describe Backlogs::WorkPackagesController do
       let(:params) { { project_id: project.id, id: work_package.id, all: "true" } }
 
       it "embeds the all query in the dialog form action URL" do
-        expect(body).to match(/all=true/)
+        expect(body).to include("all=true")
       end
     end
 
