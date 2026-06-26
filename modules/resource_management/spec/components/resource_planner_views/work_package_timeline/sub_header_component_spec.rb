@@ -52,6 +52,15 @@ RSpec.describe ResourcePlannerViews::WorkPackageTimeline::SubHeaderComponent, ty
     expect(html).to include("resourceTimelineMonths")
   end
 
+  it "offers a configure-view button opening the edit dialog" do
+    render_inline(described_class.new(project:, resource_planner: planner, view:))
+
+    expect(page).to have_css(
+      "a[data-controller='async-dialog']" \
+      "[href='#{edit_project_resource_planner_view_path(project, planner, view)}']"
+    )
+  end
+
   context "with an automatically filtered view" do
     it "shows no add-work-package option" do
       render_inline(described_class.new(project:, resource_planner: planner, view:))

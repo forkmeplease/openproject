@@ -38,6 +38,15 @@
       end
     end
 
+    subheader.with_action_button(
+      icon_only: true,
+      leading_icon: :gear,
+      label: t("resource_management.work_package_list.subheader.settings"),
+      tag: :a,
+      href: edit_project_resource_planner_view_path(@project, @resource_planner, @view),
+      data: { controller: "async-dialog" }
+    )
+
     if @view.manually_picked?
       subheader.with_action_menu(
         leading_icon: :plus,
