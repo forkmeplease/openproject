@@ -3537,19 +3537,18 @@ it:
         header: Informati sulle nuove funzionalità e sugli aggiornamenti dei prodotti.
         learn_about: Scopri di più su tutte le nuove funzionalità
         missing: Non ci sono ancora caratteristiche evidenziate.
-        '17_5':
-          new_features_title: 'Questa versione contiene diverse nuove funzionalità e miglioramenti, come ad esempio:
+        '17_6':
+          new_features_title: 'The release contains various new features and improvements, such as:
 
             '
           new_features_list:
-            line_0: Identificatori delle macro-attività basati su progetto per riferimenti più chiari.
-            line_1: Supporto del migratore Jira per identificativi Jira, date di scadenza e altro ancora.
-            line_2: Possibilità di escludere tipi di macro-attività dai backlog.
-            line_3: Vista sprint riprogettata.
-            line_4: Collegamento migliorato delle macro-attività nei documenti e negli editor di testo.
-            line_5: Orari delle riunioni più flessibili e meno notifiche e-mail superflue.
-            line_6: Gruppi nidificati per strutture organizzative e autorizzazioni ereditate.
-            line_7: Interfacce di amministrazione migliorate per flussi di lavoro, utenti e configurazione dei tipi.
+            line_0: XWiki integration (Corporate plan).
+            line_1: Sprint goals.
+            line_2: "'All sprints' overview page."
+            line_3: Display backlog buckets in work packages and work package tables.
+            line_4: Improved support for project-based (semantic) identifiers.
+            line_5: Convert meeting agenda items into work packages.
+            line_6: Configure cost types per project.
     links:
       upgrade_enterprise_edition: Aggiorna ad Enterprise edition
       postgres_migration: Migrazione dell'installazione su PostgreSQL

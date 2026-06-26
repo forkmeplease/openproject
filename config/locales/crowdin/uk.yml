@@ -3666,19 +3666,18 @@ uk:
         header: Читайте про нові функції і оновлення продуктів.
         learn_about: Дізнайтеся більше про всі нові функції
         missing: Ще немає виділених функцій.
-        '17_5':
-          new_features_title: 'Цей випуск включає різноманітні нові функції і покращення, зокрема:
+        '17_6':
+          new_features_title: 'The release contains various new features and improvements, such as:
 
             '
           new_features_list:
-            line_0: ідентифікатори пакетів робіт із зазначенням проєктів для ясності;
-            line_1: підтримку Jira Migrator для термінів виконання, ідентифікаторів Jira тощо;
-            line_2: можливість виключити типи пакетів робіт із беклогу;
-            line_3: оновлений дизайн подань спринту;
-            line_4: покращене зв’язування робочих пакетів у документах і текстових редакторах;
-            line_5: більш гнучкі графіки нарад і надсилання меншої кількості неважливих сповіщень електронною поштою;
-            line_6: вкладені групи для організаційних структур і успадкування дозволів;
-            line_7: покращені інтерфейси адміністрування для робочих процесів, користувачів і конфігурації типів.
+            line_0: XWiki integration (Corporate plan).
+            line_1: Sprint goals.
+            line_2: "'All sprints' overview page."
+            line_3: Display backlog buckets in work packages and work package tables.
+            line_4: Improved support for project-based (semantic) identifiers.
+            line_5: Convert meeting agenda items into work packages.
+            line_6: Configure cost types per project.
     links:
       upgrade_enterprise_edition: Оновлення до версії Enterprise
       postgres_migration: Міграція інсталяції в PostgreSQL

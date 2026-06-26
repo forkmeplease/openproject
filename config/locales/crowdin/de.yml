@@ -3531,19 +3531,18 @@ de:
         header: Lesen Sie über neue Funktionen und Updates.
         learn_about: Erfahren Sie mehr über die neuen Funktionen
         missing: Es gibt noch keine hervorgehobenen Funktionen.
-        '17_5':
-          new_features_title: 'Dieses Release enthält verschiedene neue Funktionen und Verbesserungen, wie z. B:
+        '17_6':
+          new_features_title: 'The release contains various new features and improvements, such as:
 
             '
           new_features_list:
-            line_0: Projektbasierte Arbeitspaket-Kennungen für klarere Referenzen.
-            line_1: Jira Migrator unterstützt Jira-Kennungen, Fälligkeitsdaten und mehr.
-            line_2: Option Arbeitspakettypen und -status in Backlogs auszuschließen.
-            line_3: Neu gestaltete Sprint-Ansichten.
-            line_4: Verbesserte Verknüpfung von Arbeitspaketen zwischen dem Dokumenten-Modul und Texteditoren.
-            line_5: Flexiblere Besprechungspläne und weniger E-Mail-Benachrichtigungen.
-            line_6: Verschachtelte Gruppen für Organisationsstrukturen und vererbte Berechtigungen.
-            line_7: Verbesserte Verwaltungsoberflächen für Workflows, Benutzer und Typkonfiguration.
+            line_0: XWiki integration (Corporate plan).
+            line_1: Sprint goals.
+            line_2: "'All sprints' overview page."
+            line_3: Display backlog buckets in work packages and work package tables.
+            line_4: Improved support for project-based (semantic) identifiers.
+            line_5: Convert meeting agenda items into work packages.
+            line_6: Configure cost types per project.
     links:
       upgrade_enterprise_edition: Auf Enterprise Edition upgraden
       postgres_migration: Migration Ihrer Installation zu PostgreSQL
