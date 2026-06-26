@@ -29,44 +29,14 @@
 #++
 
 module ResourcePlannerViews
-  class ContentComponent < ApplicationComponent
-    include OpTurbo::Streamable
-
-    def initialize(view:, project:, resource_planner:, work_packages: [], allocations: {}, visible_principal_ids: nil)
-      super
-
-      @view = view
-      @project = project
-      @resource_planner = resource_planner
-      @work_packages = work_packages
-      @allocations = allocations
-      @visible_principal_ids = visible_principal_ids
-    end
-
-    private
-
-    def inner_component
-      case @view
-      when ResourceWorkPackageList
-        ResourcePlannerViews::WorkPackageList::ContentComponent.new(
-          view: @view,
-          project: @project,
-          resource_planner: @resource_planner,
-          work_packages: @work_packages,
-          allocations: @allocations,
-          visible_principal_ids: @visible_principal_ids
-        )
-      when ::ResourceUserCard # disambiguate from the ResourcePlannerViews::ResourceUserCard contracts namespace
-        ResourcePlannerViews::UserCardList::ContentComponent.new(
-          view: @view,
-          project: @project,
-          resource_planner: @resource_planner
-        )
-      end
-    end
-
-    def placeholder_heading
-      @view&.name || @resource_planner.name
+  # NOTE: this module shadows the top-level ResourceUserCard model within the
+  # ResourcePlannerViews namespace; reference the model as ::ResourceUserCard there.
+  module ResourceUserCard
+    class UpdateContract < ResourcePlannerViews::UpdateContract
+      # `card_fields` is stored in the `options` JSONB column. The store DSL marks
+      # both the virtual attribute and the column writable so the readonly guard
+      # does not flag the selection change.
+      stored_attribute :card_fields, store: :options
     end
   end
 end

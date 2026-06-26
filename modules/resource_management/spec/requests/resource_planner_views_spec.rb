@@ -408,6 +408,10 @@ RSpec.describe "ResourcePlannerViews requests",
     shared_let(:member) do
       create(:user, member_with_permissions: { project => %i[view_resource_planners] })
     end
+    shared_let(:cf_section) { create(:user_custom_field_section) }
+    shared_let(:skills_cf) do
+      create(:user_custom_field, name: "Skills", field_format: "string", user_custom_field_section: cf_section)
+    end
 
     let(:resource_user_card) do
       ResourceUserCard.create!(name: "People", parent: resource_planner, project:, principal: user,
@@ -454,6 +458,55 @@ RSpec.describe "ResourcePlannerViews requests",
               as: :turbo_stream
 
         expect(resource_user_card.reload.query.filters.map(&:name)).to contain_exactly(:status)
+      end
+    end
+
+    describe "card field selection" do
+      it "persists the ordered card_fields on create, dropping unknown ids" do
+        post project_resource_planner_views_path(project, resource_planner),
+             params: {
+               view_class_name: "ResourceUserCard",
+               view: { name: "People", filter_mode: "automatic" },
+               card_fields: "working_times #{skills_cf.column_name} bogus department"
+             },
+             as: :turbo_stream
+
+        expect(ResourceUserCard.last.card_fields).to eq(["working_times", skills_cf.column_name, "department"])
+      end
+
+      it "updates the card_fields on an existing view" do
+        patch project_resource_planner_view_path(project, resource_planner, resource_user_card),
+              params: {
+                view: { name: "People", filter_mode: "automatic" },
+                card_fields: "department"
+              },
+              as: :turbo_stream
+
+        expect(resource_user_card.reload.card_fields).to eq(["department"])
+      end
+
+      it "renders the draggable field selector in the configure dialog" do
+        get edit_project_resource_planner_view_path(project, resource_planner, resource_user_card),
+            as: :turbo_stream
+
+        expect(response.body).to include("opce-draggable-autocompleter")
+      end
+    end
+
+    describe "work package list views ignore card fields" do
+      it "does not render the field selector" do
+        get edit_project_resource_planner_view_path(project, resource_planner, view), as: :turbo_stream
+
+        expect(response.body).not_to include("opce-draggable-autocompleter")
+      end
+
+      it "ignores a submitted card_fields param" do
+        patch project_resource_planner_view_path(project, resource_planner, view),
+              params: { view: { name: "Original" }, card_fields: "department" },
+              as: :turbo_stream
+
+        expect(response).to have_http_status(:ok)
+        expect(view.reload.options).not_to have_key("card_fields")
       end
     end
 
