@@ -186,13 +186,17 @@ export default class WorkPackageTimelineController extends Controller {
           .catch(failure);
       },
       eventContent: (arg) => ({ html: (arg.event.extendedProps.html as string) || '' }),
-      eventClassNames: (arg) => (arg.event.extendedProps.overbooked ? ['resource-allocation--overbooked'] : []),
+      eventClassNames: (arg) => [
+        arg.event.extendedProps.overbooked ? 'resource-allocation--overbooked' : '',
+        arg.event.extendedProps.editUrl ? 'resource-allocation--editable' : '',
+      ].filter(Boolean),
       eventsSet: () => { this.markActiveColumns(); },
       // Blank when the user may not allocate (the server omits the URL), so a
       // present URL is also the permission signal.
       selectable: this.newAllocationUrlValue.length > 0,
       select: (info) => {
-        const inclusiveEnd = new Date(info.end.getTime() - 86400000).toISOString().slice(0, 10);
+        // FullCalendar's end is exclusive; step back one day for the inclusive end.
+        const inclusiveEnd = moment(info.endStr).subtract(1, 'day').format('YYYY-MM-DD');
         const url = new URL(this.newAllocationUrlValue, window.location.origin);
         url.searchParams.set('work_package_id', info.resource?.id ?? '');
         url.searchParams.set('start_date', info.startStr);

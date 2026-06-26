@@ -86,6 +86,11 @@
   &--badge
     flex: 0 0 auto
 
+// Only bars the user may edit are clickable (open the edit dialog), so only
+// they get the pointer; keyed off the class we add via `eventClassNames`.
+.resource-allocation--editable .op-rm-timeline-bar
+  cursor: pointer
+
 // Overbooking cue, keyed off the class we add via `eventClassNames`.
 .resource-allocation--overbooked .op-rm-timeline-bar
   border-top: 3px solid var(--borderColor-danger-emphasis, #cf222e)
