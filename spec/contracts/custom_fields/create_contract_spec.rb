@@ -57,4 +57,34 @@ RSpec.describe CustomFields::CreateContract do
 
     subject(:contract) { described_class.new(custom_field, current_user) }
   end
+
+  describe "semantic_key guard" do
+    let(:current_user) { build_stubbed(:admin) }
+    let(:section) { build_stubbed(:user_custom_field_section) }
+
+    subject(:contract) { described_class.new(custom_field, current_user) }
+
+    before { contract.validate }
+
+    context "when set on a user custom field" do
+      let(:custom_field) do
+        UserCustomField.new(name: "Job title", field_format: "string",
+                            custom_field_section_id: section.id, semantic_key: "job_title")
+      end
+
+      it "does not add a semantic_key error" do
+        expect(contract.errors.symbols_for(:semantic_key)).to be_empty
+      end
+    end
+
+    context "when set on a non-user custom field" do
+      let(:custom_field) do
+        WorkPackageCustomField.new(name: "Job title", field_format: "string", semantic_key: "job_title")
+      end
+
+      it "rejects the semantic_key as invalid" do
+        expect(contract.errors.symbols_for(:semantic_key)).to include(:invalid)
+      end
+    end
+  end
 end

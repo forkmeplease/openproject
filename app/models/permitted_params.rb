@@ -533,6 +533,7 @@ class PermittedParams
           :allow_non_open_versions,
           :has_comment,
           :visible_on_user_card,
+          :semantic_key,
           { custom_options_attributes: %i(id value default_value position) },
           { type_ids: [] }
         ],

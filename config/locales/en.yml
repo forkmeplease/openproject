@@ -774,6 +774,11 @@ en:
         project: "Allows the user to add a comment related to the project attribute when selecting the value in the project overview."
       visible_on_user_card:
         all: "When checked, this field's value is shown in the user information card when hovering over a user across the application."
+      semantic_key:
+        all: "Give this custom field a special meaning. For example the \"Job Title\" is shown along the user name in several places"
+    semantic_keys:
+      none: "None"
+      job_title: "Job title"
 
     tab:
       no_results_title_text: There are currently no custom fields.
@@ -1863,6 +1868,7 @@ en:
         regexp: "Regular expression"
         searchable: "Searchable"
         visible_on_user_card: "Show on user card"
+        semantic_key: "Semantic meaning"
         admin_only: "Admin-only"
         has_comment: "Add a comment text field"
       custom_value:

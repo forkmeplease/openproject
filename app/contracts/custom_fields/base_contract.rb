@@ -54,12 +54,19 @@ module CustomFields
     attribute :regexp
     attribute :searchable
     attribute :visible_on_user_card
+    attribute :semantic_key do
+      validate_semantic_key_only_for_user_custom_field
+    end
     attribute :type
 
     def validate_non_true_for_some_formats
       return unless %w[bool calculated_value].include?(field_format)
 
       errors.add(:is_required, :cannot_be_true) if is_required == true
+    end
+
+    def validate_semantic_key_only_for_user_custom_field
+      errors.add(:semantic_key, :invalid) if model.semantic_key.present? && !model.is_a?(UserCustomField)
     end
   end
 end

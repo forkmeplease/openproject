@@ -207,6 +207,23 @@ module CustomFields
         )
       end
 
+      if show_semantic_key_field?
+        details_form.select_list(
+          name: :semantic_key,
+          label: label(:semantic_key),
+          caption: instructions(:semantic_key),
+          include_blank: I18n.t("custom_fields.semantic_keys.none")
+        ) do |list|
+          UserCustomField.semantic_keys.each_key do |key|
+            list.option(
+              value: key,
+              label: I18n.t("custom_fields.semantic_keys.#{key}"),
+              disabled: semantic_keys_taken_by_others.include?(key)
+            )
+          end
+        end
+      end
+
       details_form.submit(name: :submit, label: I18n.t(:button_save), scheme: :default)
     end
 
@@ -299,6 +316,15 @@ module CustomFields
 
     def show_on_user_card_field?
       model.is_a?(UserCustomField)
+    end
+
+    def show_semantic_key_field?
+      model.is_a?(UserCustomField)
+    end
+
+    def semantic_keys_taken_by_others
+      @semantic_keys_taken_by_others ||=
+        UserCustomField.where.not(id: model.id).where.not(semantic_key: nil).pluck(:semantic_key)
     end
 
     def formula_suggestions
