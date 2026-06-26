@@ -215,6 +215,12 @@ en:
         allocate: Allocate
         settings: Configure view
     work_package_timeline:
+      blank:
+        add_work_package: Add work package
+        configure_view: Configure view
+        description: There are no work packages matching this view's filters yet.
+        manual_description: Add work packages to this view to plan their allocation over time.
+        title: No work packages to display
       granularity:
         day: Day
         month: Month

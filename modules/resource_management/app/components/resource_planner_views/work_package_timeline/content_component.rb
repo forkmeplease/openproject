@@ -49,14 +49,32 @@ module ResourcePlannerViews
 
       private
 
+      # The Stimulus controller eagerly reads its calendar target on connect, so
+      # it is only mounted when there is something to draw; an empty view shows a
+      # blankslate instead.
       def container_attributes
         attributes = {
           "class" => "op-rm-timeline-view",
-          "data-controller" => STIMULUS,
           "data-test-selector" => "resource-work-package-timeline"
         }
+        return attributes if @work_packages.empty?
+
+        attributes["data-controller"] = STIMULUS
         stimulus_values.each { |key, value| attributes["data-#{STIMULUS}-#{key}-value"] = value }
         attributes
+      end
+
+      def blank_description
+        key = @view.manually_picked? ? "manual_description" : "description"
+        t("resource_management.work_package_timeline.blank.#{key}")
+      end
+
+      def add_work_package_path
+        helpers.new_work_package_project_resource_planner_view_path(@project, @resource_planner, @view)
+      end
+
+      def configure_view_path
+        helpers.edit_project_resource_planner_view_path(@project, @resource_planner, @view)
       end
 
       def stimulus_values
