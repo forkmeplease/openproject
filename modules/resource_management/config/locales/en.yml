@@ -150,8 +150,9 @@ en:
       fields:
         working_times: Working times
         input_label: Fields
+        input_caption: Select the fields that will be displayed in the user card for this view
         input_placeholder: Add a field
-        drag_area_label: Selected fields
+        drag_area_label: Displayed fields
       subheader:
         resource: Resource
         settings: Configure view
