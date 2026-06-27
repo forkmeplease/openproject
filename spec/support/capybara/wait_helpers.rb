@@ -65,11 +65,11 @@ module WaitHelpers
   #   wait_for_turbo_stream { click_on "Save" }
   #   expect(page).to have_text("Saved")
   #
-  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
-  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses
+  #   Capybara's default wait time, a falsey value skips the wait and just runs the block
   # @yield the actions that trigger the Turbo Stream
   # @return [Object] the block's return value
-  def wait_for_turbo_stream(wait: 10, &)
+  def wait_for_turbo_stream(wait: Capybara.default_max_wait_time, &)
     wait_for_browser_event("op:turbo-stream-rendered", wait:, &)
   end
 
@@ -83,11 +83,11 @@ module WaitHelpers
   #   wait_for_turbo { click_on "Save" }
   #   expect(page).to have_text("Saved")
   #
-  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
-  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses
+  #   Capybara's default wait time, a falsey value skips the wait and just runs the block
   # @yield the actions that trigger the navigation
   # @return [Object] the block's return value
-  def wait_for_turbo(wait: 10, &)
+  def wait_for_turbo(wait: Capybara.default_max_wait_time, &)
     wait_for_browser_event("turbo:load", wait:, &)
   end
 
@@ -104,11 +104,11 @@ module WaitHelpers
   # @param frame [String, Symbol, nil] when given, only a turbo:frame-load whose
   #   target element has this id satisfies the wait; otherwise the first frame
   #   load of any frame satisfies it
-  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
-  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses
+  #   Capybara's default wait time, a falsey value skips the wait and just runs the block
   # @yield the actions that trigger the frame load
   # @return [Object] the block's return value
-  def wait_for_turbo_frame(frame: nil, wait: 10, &)
+  def wait_for_turbo_frame(frame: nil, wait: Capybara.default_max_wait_time, &)
     wait_for_browser_event("turbo:frame-load", target_id: frame&.to_s, wait:, &)
   end
 
@@ -121,16 +121,16 @@ module WaitHelpers
   # works under both Cuprite and Selenium.
   #
   # @param event_name [String] the DOM event to wait for
-  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
-  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses
+  #   Capybara's default wait time, a falsey value skips the wait and just runs the block
   # @param target_id [String, nil] when set, only an event whose target element
   #   has this id satisfies the wait
   # @yield the actions that trigger the event
   # @return [Object] the block's return value
-  def wait_for_browser_event(event_name, wait: 10, target_id: nil, &block)
+  def wait_for_browser_event(event_name, wait: Capybara.default_max_wait_time, target_id: nil, &block)
     return block ? yield : nil unless wait
 
-    timeout = wait == true ? 10 : wait
+    timeout = wait == true ? Capybara.default_max_wait_time : wait
     description = target_id ? "'#{event_name}' on frame '#{target_id}'" : "'#{event_name}'"
     timeout_message = "Timed out after #{timeout}s waiting for #{description}"
     # A unique key per call keeps nested wait_for_turbo* calls from clobbering
