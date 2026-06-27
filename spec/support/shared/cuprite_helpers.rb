@@ -87,10 +87,7 @@ end
 #   expect(page).to have_text("Saved")
 #
 def wait_for_turbo_stream(wait: 10, &block)
-  unless wait
-    yield if block
-    return
-  end
+  return block ? yield : nil unless wait
 
   timeout = wait == true ? 10 : wait
   timeout_ms = timeout * 1000
@@ -102,7 +99,7 @@ def wait_for_turbo_stream(wait: 10, &block)
     });
   JS
 
-  yield
+  block_result = yield
 
   result = page.evaluate_async_script(<<~JS)
     window.__opTurboStreamRendered.then(() => {
@@ -115,6 +112,8 @@ def wait_for_turbo_stream(wait: 10, &block)
   JS
 
   raise result["error"] if result.is_a?(Hash) && !result["success"]
+
+  block_result
 end
 
 # Executes the given block and waits for a Turbo Drive navigation to complete.
@@ -127,10 +126,7 @@ end
 #   expect(page).to have_text("Saved")
 #
 def wait_for_turbo(wait: 10, &block)
-  unless wait
-    yield if block
-    return
-  end
+  return block ? yield : nil unless wait
 
   timeout = wait == true ? 10 : wait
   timeout_ms = timeout * 1000
@@ -142,7 +138,7 @@ def wait_for_turbo(wait: 10, &block)
     });
   JS
 
-  yield
+  block_result = yield
 
   result = page.evaluate_async_script(<<~JS)
     window.__opTurboLoaded.then(() => {
@@ -155,6 +151,8 @@ def wait_for_turbo(wait: 10, &block)
   JS
 
   raise result["error"] if result.is_a?(Hash) && !result["success"]
+
+  block_result
 end
 
 # Executes the given block and waits for a Turbo frame navigation to complete.
@@ -171,10 +169,7 @@ end
 #   wait_for_turbo_frame(frame: "backlogs_container") { drop_card }
 #
 def wait_for_turbo_frame(frame: nil, wait: 10, &block)
-  unless wait
-    yield if block
-    return
-  end
+  return block ? yield : nil unless wait
 
   timeout = wait == true ? 10 : wait
   timeout_ms = timeout * 1000
@@ -194,7 +189,7 @@ def wait_for_turbo_frame(frame: nil, wait: 10, &block)
     });
   JS
 
-  yield
+  block_result = yield
 
   result = page.evaluate_async_script(<<~JS)
     window.__opTurboFrameLoaded.then(() => {
@@ -207,6 +202,8 @@ def wait_for_turbo_frame(frame: nil, wait: 10, &block)
   JS
 
   raise result["error"] if result.is_a?(Hash) && !result["success"]
+
+  block_result
 end
 
 # Waits for CKEditor to be fully initialized.
