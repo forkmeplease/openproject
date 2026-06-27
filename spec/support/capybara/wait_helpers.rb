@@ -55,127 +55,119 @@ module WaitHelpers
     end
   end
 
-  # Executes the given block and waits for a Turbo stream to be rendered.
+  # Executes the given block and waits for a Turbo Stream to be rendered.
   #
-  # Sets up a JS event listener BEFORE yielding, avoiding the race condition
-  # where the stream renders before the listener is registered.
+  # Registers a listener for `op:turbo-stream-rendered` BEFORE the block runs,
+  # avoiding the race where the stream renders before the listener is attached.
+  # Trigger the stream from inside the block.
   #
   # @example
-  #   wait_for_turbo_stream { click_button "Save" }
+  #   wait_for_turbo_stream { click_on "Save" }
   #   expect(page).to have_text("Saved")
   #
-  def wait_for_turbo_stream(wait: 10, &block)
-    return block ? yield : nil unless wait
-
-    timeout = wait == true ? 10 : wait
-    timeout_ms = timeout * 1000
-    page.execute_script(<<~JS, timeout_ms)
-      window.__opTurboStreamRendered = new Promise((resolve, reject) => {
-        const handler = () => { clearTimeout(timer); document.removeEventListener('op:turbo-stream-rendered', handler); resolve(true); };
-        const timer = setTimeout(() => { document.removeEventListener('op:turbo-stream-rendered', handler); reject(new Error('wait_for_turbo_stream: no turbo stream rendered within #{timeout}s')); }, arguments[0]);
-        document.addEventListener('op:turbo-stream-rendered', handler);
-      });
-    JS
-
-    block_result = yield
-
-    result = page.evaluate_async_script(<<~JS)
-      window.__opTurboStreamRendered.then(() => {
-        delete window.__opTurboStreamRendered;
-        arguments[0]({ success: true });
-      }).catch((e) => {
-        delete window.__opTurboStreamRendered;
-        arguments[0]({ success: false, error: e.message });
-      });
-    JS
-
-    raise result["error"] if result.is_a?(Hash) && !result["success"]
-
-    block_result
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
+  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @yield the actions that trigger the Turbo Stream
+  # @return [Object] the block's return value
+  def wait_for_turbo_stream(wait: 10, &)
+    wait_for_browser_event("op:turbo-stream-rendered", wait:, &)
   end
 
   # Executes the given block and waits for a Turbo Drive navigation to complete.
   #
-  # Sets up a listener for turbo:load BEFORE yielding, avoiding the race
-  # condition where the navigation completes before the listener is registered.
+  # Registers a listener for `turbo:load` BEFORE the block runs, avoiding the
+  # race where the navigation completes before the listener is attached.
+  # Trigger the navigation from inside the block.
   #
   # @example
-  #   wait_for_turbo { click_link_or_button "Save" }
+  #   wait_for_turbo { click_on "Save" }
   #   expect(page).to have_text("Saved")
   #
-  def wait_for_turbo(wait: 10, &block)
-    return block ? yield : nil unless wait
-
-    timeout = wait == true ? 10 : wait
-    timeout_ms = timeout * 1000
-    page.execute_script(<<~JS, timeout_ms)
-      window.__opTurboLoaded = new Promise((resolve, reject) => {
-        const handler = () => { clearTimeout(timer); document.removeEventListener('turbo:load', handler); resolve(true); };
-        const timer = setTimeout(() => { document.removeEventListener('turbo:load', handler); reject(new Error('wait_for_turbo: no turbo:load event within #{timeout}s')); }, arguments[0]);
-        document.addEventListener('turbo:load', handler);
-      });
-    JS
-
-    block_result = yield
-
-    result = page.evaluate_async_script(<<~JS)
-      window.__opTurboLoaded.then(() => {
-        delete window.__opTurboLoaded;
-        arguments[0]({ success: true });
-      }).catch((e) => {
-        delete window.__opTurboLoaded;
-        arguments[0]({ success: false, error: e.message });
-      });
-    JS
-
-    raise result["error"] if result.is_a?(Hash) && !result["success"]
-
-    block_result
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
+  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @yield the actions that trigger the navigation
+  # @return [Object] the block's return value
+  def wait_for_turbo(wait: 10, &)
+    wait_for_browser_event("turbo:load", wait:, &)
   end
 
-  # Executes the given block and waits for a Turbo frame navigation to complete.
+  # Executes the given block and waits for a Turbo Frame navigation to complete.
   #
-  # Sets up a listener for turbo:frame-load BEFORE yielding, avoiding the race
-  # condition where the frame loads before the listener is registered.
-  #
-  # Pass `frame:` to wait for a specific frame by id; only a turbo:frame-load
-  # whose target element has that id satisfies the wait. With no `frame:` the
-  # first frame load of any frame satisfies it.
+  # Registers a listener for `turbo:frame-load` BEFORE the block runs, avoiding
+  # the race where the frame loads before the listener is attached. Trigger the
+  # frame load from inside the block.
   #
   # @example
-  #   wait_for_turbo_frame { click_link "Remove column" }
+  #   wait_for_turbo_frame { click_on "Remove column" }
   #   wait_for_turbo_frame(frame: "backlogs_container") { drop_card }
   #
-  def wait_for_turbo_frame(frame: nil, wait: 10, &block)
+  # @param frame [String, Symbol, nil] when given, only a turbo:frame-load whose
+  #   target element has this id satisfies the wait; otherwise the first frame
+  #   load of any frame satisfies it
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
+  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @yield the actions that trigger the frame load
+  # @return [Object] the block's return value
+  def wait_for_turbo_frame(frame: nil, wait: 10, &)
+    wait_for_browser_event("turbo:frame-load", target_id: frame&.to_s, wait:, &)
+  end
+
+  private
+
+  # Shared implementation for the +wait_for_turbo*+ helpers.
+  #
+  # Registers a one-shot listener for +event_name+ before running the block,
+  # then blocks until the event fires or raises on timeout. Driver-agnostic:
+  # works under both Cuprite and Selenium.
+  #
+  # @param event_name [String] the DOM event to wait for
+  # @param wait [Integer, true, false, nil] seconds to wait; +true+ uses the
+  #   default of 10s, a falsey value skips the wait and just runs the block
+  # @param target_id [String, nil] when set, only an event whose target element
+  #   has this id satisfies the wait
+  # @yield the actions that trigger the event
+  # @return [Object] the block's return value
+  def wait_for_browser_event(event_name, wait: 10, target_id: nil, &block)
     return block ? yield : nil unless wait
 
     timeout = wait == true ? 10 : wait
-    timeout_ms = timeout * 1000
-    frame_id = frame&.to_s
-    page.execute_script(<<~JS, timeout_ms, frame_id)
-      const timeoutMs = arguments[0];
-      const frameId = arguments[1];
-      window.__opTurboFrameLoaded = new Promise((resolve, reject) => {
+    description = target_id ? "'#{event_name}' on frame '#{target_id}'" : "'#{event_name}'"
+    timeout_message = "Timed out after #{timeout}s waiting for #{description}"
+    # A unique key per call keeps nested wait_for_turbo* calls from clobbering
+    # each other's pending promise on the shared window registry.
+    key = SecureRandom.hex(8)
+
+    page.execute_script(<<~JS, key, event_name, timeout * 1000, target_id)
+      const [key, eventName, timeoutMs, targetId] = arguments;
+      (window.__opAwaitedBrowserEvents ||= {})[key] = new Promise((resolve, reject) => {
         const handler = (event) => {
-          if (frameId && !(event.target instanceof Element && event.target.id === frameId)) { return; }
+          if (targetId && !(event.target instanceof Element && event.target.id === targetId)) { return; }
           clearTimeout(timer);
-          document.removeEventListener('turbo:frame-load', handler);
+          document.removeEventListener(eventName, handler);
           resolve(true);
         };
-        const timer = setTimeout(() => { document.removeEventListener('turbo:frame-load', handler); reject(new Error('wait_for_turbo_frame: no turbo:frame-load event within #{timeout}s')); }, timeoutMs);
-        document.addEventListener('turbo:frame-load', handler);
+        const timer = setTimeout(() => {
+          document.removeEventListener(eventName, handler);
+          reject(new Error(#{timeout_message.to_json}));
+        }, timeoutMs);
+        document.addEventListener(eventName, handler);
       });
+      // Mark the promise handled so that, if the block raises before we await
+      // it below, the eventual timeout rejection is not an unhandled rejection.
+      window.__opAwaitedBrowserEvents[key].catch(() => {});
     JS
 
     block_result = yield
 
-    result = page.evaluate_async_script(<<~JS)
-      window.__opTurboFrameLoaded.then(() => {
-        delete window.__opTurboFrameLoaded;
-        arguments[0]({ success: true });
+    result = page.evaluate_async_script(<<~JS, key)
+      const key = arguments[0];
+      const done = arguments[arguments.length - 1];
+      window.__opAwaitedBrowserEvents[key].then(() => {
+        delete window.__opAwaitedBrowserEvents[key];
+        done({ success: true });
       }).catch((e) => {
-        delete window.__opTurboFrameLoaded;
-        arguments[0]({ success: false, error: e.message });
+        delete window.__opAwaitedBrowserEvents[key];
+        done({ success: false, error: e.message });
       });
     JS
 

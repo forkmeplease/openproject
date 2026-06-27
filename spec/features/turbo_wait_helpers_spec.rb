@@ -109,6 +109,26 @@ RSpec.describe "Turbo wait helpers", :js do
       end
       expect(page.evaluate_script("window.__turboWaitFlag")).to be(true)
     end
+
+    it "supports nested waits without clobbering the outer wait" do
+      page.execute_script("window.__turboWaitFlag = false;")
+      wait_for_turbo_stream do
+        # An inner wait for a different event must not delete the outer's
+        # pending promise; the outer stream wait still has to resolve.
+        wait_for_turbo do
+          page.execute_script(<<~JS)
+            setTimeout(() => { document.dispatchEvent(new CustomEvent('turbo:load')); }, 150);
+          JS
+        end
+        page.execute_script(<<~JS)
+          setTimeout(() => {
+            window.__turboWaitFlag = true;
+            document.dispatchEvent(new CustomEvent('op:turbo-stream-rendered'));
+          }, 150);
+        JS
+      end
+      expect(page.evaluate_script("window.__turboWaitFlag")).to be(true)
+    end
   end
 
   context "when running under cuprite" do
