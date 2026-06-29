@@ -202,6 +202,6 @@
     "msgpackr-extract@3.0.4": true,
     "core-js": false,
     "core-js-pure": false,
-    "es5-ext": false
+    "es5-ext@0.10.64": true
   }
 }
