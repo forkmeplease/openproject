@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) the OpenProject GmbH
 #
@@ -26,29 +26,24 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module Users
+module PlaceholderUsers
   class DeleteDialogComponent < ApplicationComponent
     include ApplicationHelper
     include OpPrimer::ComponentHelpers
     include OpTurbo::Streamable
-    include PasswordHelper
 
-    def initialize(user:, **options)
+    def initialize(placeholder_user:, **options)
       super
 
-      @user = user
+      @placeholder_user = placeholder_user
     end
 
     private
 
-    def id = "delete-user-dialog"
-    def title = I18n.t("account.deletion_info.title", name: @user.name)
-    def heading = I18n.t("account.deletion_info.heading", name: @user.name)
-
-    def user_scope
-      User.current == @user ? "self" : "other"
-    end
+    def id = "delete-placeholder-user-dialog"
+    def title = I18n.t("placeholder_users.deletion_info.title", name: @placeholder_user.name)
+    def heading = I18n.t("placeholder_users.deletion_info.heading", name: @placeholder_user.name)
   end
 end
