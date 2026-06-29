@@ -721,7 +721,7 @@ RSpec.describe "ResourceAllocations requests",
     event = Nokogiri::HTML5.fragment(response.body).at_css('turbo-stream[action="dispatchEvent"]')
 
     expect(event).to be_present
-    expect(event["event-name"]).to eq("resource-allocations:changed")
+    expect(event["event-name"]).to eq("op-dispatched:resource-allocations:changed")
     expect(JSON.parse(event["detail"])).to eq("work_package_id" => work_package.id)
   end
 end

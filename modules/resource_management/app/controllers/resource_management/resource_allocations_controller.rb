@@ -350,7 +350,7 @@ module ::ResourceManagement
     def notify_allocation_change(entity)
       return unless entity.is_a?(WorkPackage)
 
-      dispatch_event_via_turbo_stream("resource-allocations:changed", detail: { work_package_id: entity.id })
+      dispatch_event_via_turbo_stream("op-dispatched:resource-allocations:changed", detail: { work_package_id: entity.id })
     end
 
     def allocation_kind

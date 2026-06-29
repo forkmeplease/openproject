@@ -44,7 +44,7 @@ See COPYRIGHT and LICENSE files for more details.
   frame_data = if @view
                  {
                    controller: "reload-frame-on-event",
-                   "reload-frame-on-event-event-name-value": "resource-allocations:changed",
+                   "reload-frame-on-event-event-name-value": "op-dispatched:resource-allocations:changed",
                    "reload-frame-on-event-url-value": project_resource_planner_view_path(@project, @resource_planner, @view)
                  }
                else
