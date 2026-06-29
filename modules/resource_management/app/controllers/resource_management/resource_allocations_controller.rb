@@ -306,7 +306,8 @@ module ::ResourceManagement
       replace_via_turbo_stream(
         component: ResourceAllocations::AllocationStep::FooterComponent.new(
           dialog_id: ResourceAllocations::EditDialogComponent::DIALOG_ID,
-          submit_label: I18n.t("resource_management.edit_allocation_dialog.submit")
+          submit_label: I18n.t("resource_management.edit_allocation_dialog.submit"),
+          allocation:
         )
       )
       respond_with_turbo_streams(status:)
@@ -327,6 +328,9 @@ module ::ResourceManagement
       render_success_flash_message_via_turbo_stream(
         message: I18n.t("resource_management.work_package_allocations_dialog.delete_success")
       )
+      # Closes the edit dialog when the delete was triggered from it; a harmless
+      # no-op when deleting from a list row, where the dialog is not open.
+      close_dialog_via_turbo_stream("##{ResourceAllocations::EditDialogComponent::DIALOG_ID}")
       refresh_allocations_list(entity)
       notify_allocation_change(entity)
       respond_with_turbo_streams

@@ -495,6 +495,15 @@ RSpec.describe "ResourceAllocations requests",
       expect(response.body).to include("resource_allocation[allocated_hours]")
     end
 
+    it "offers a Delete button targeting the destroy path" do
+      get edit_project_resource_allocation_path(project, allocation), as: :turbo_stream
+
+      button = Nokogiri::HTML5.fragment(response.body)
+        .at_css("a[data-turbo-method='delete'][href$='/resource_allocations/#{allocation.id}']")
+      expect(button).to be_present
+      expect(button.text).to include(I18n.t(:button_delete))
+    end
+
     context "for an allocation of another project's work package" do
       let(:other_allocation) { create(:resource_allocation) }
 
@@ -647,6 +656,12 @@ RSpec.describe "ResourceAllocations requests",
 
       expect(response.body).to include('target="resource-allocations-list-component"')
       expect_allocation_change_announced_for(work_package)
+    end
+
+    it "closes the edit dialog, so deleting from within it dismisses the dialog" do
+      delete project_resource_allocation_path(project, allocation), as: :turbo_stream
+
+      expect(response.body).to include(ResourceAllocations::EditDialogComponent::DIALOG_ID)
     end
   end
 
