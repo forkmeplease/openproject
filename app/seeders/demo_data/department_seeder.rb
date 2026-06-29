@@ -30,6 +30,15 @@
 
 module DemoData
   class DepartmentSeeder < Seeder
+    # Maps the member attributes in the seeding data to the user custom fields
+    # created by UserCustomFieldsSeeder, which runs earlier in the demo data.
+    CUSTOM_FIELD_BY_MEMBER_KEY = {
+      "job_title" => "Job title",
+      "spoken_languages" => "Spoken languages",
+      "key_skills" => "Key skills",
+      "job_start_date" => "Job start date"
+    }.freeze
+
     def seed_data!
       print_status "    ↳ Creating departments" do
         seed_departments
@@ -96,8 +105,36 @@ module DemoData
         force_password_change: false
       ).tap do |user|
         user.notification_settings.build(assignee: true, responsible: true, mentioned: true, watched: true)
+        user.custom_field_values = custom_field_values_for(member_data)
         user.save!(validate: false)
       end
+    end
+
+    def custom_field_values_for(member_data)
+      CUSTOM_FIELD_BY_MEMBER_KEY.each_with_object({}) do |(member_key, field_name), values|
+        next unless member_data.key?(member_key)
+
+        field = user_custom_field(field_name)
+        values[field.id] = custom_value_for(field, member_data[member_key])
+      end
+    end
+
+    def custom_value_for(field, raw_value)
+      return raw_value unless field.list?
+
+      Array(raw_value).map { |label| custom_option_id(field, label) }
+    end
+
+    def custom_option_id(field, label)
+      option = field.custom_options.find { |o| o.value == label }
+      raise "Unknown option #{label.inspect} for user custom field #{field.name.inspect}" if option.nil?
+
+      option.id
+    end
+
+    def user_custom_field(name)
+      @user_custom_fields ||= {}
+      @user_custom_fields[name] ||= UserCustomField.find_by!(name:)
     end
   end
 end

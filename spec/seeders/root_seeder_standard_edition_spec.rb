@@ -91,6 +91,19 @@ RSpec.describe RootSeeder,
         .to include(fritz)
     end
 
+    it "assigns job title, languages, skills and a job start date to the member users" do
+      fritz = root_seeder.seed_data.find_reference(:user__fritz_finance)
+      job_title = UserCustomField.find_by!(name: "Job title")
+      languages = UserCustomField.find_by!(name: "Spoken languages")
+      skills = UserCustomField.find_by!(name: "Key skills")
+      job_start_date = UserCustomField.find_by!(name: "Job start date")
+
+      expect(fritz.typed_custom_value_for(job_title)).to eq("Project Manager")
+      expect(fritz.typed_custom_value_for(languages)).to contain_exactly("English", "German")
+      expect(fritz.typed_custom_value_for(skills)).to contain_exactly("Budgeting", "Stakeholder Management")
+      expect(fritz.typed_custom_value_for(job_start_date)).to eq(Date.new(2017, 7, 3))
+    end
+
     it "adds members to the demo project directly and through their department" do
       demo_project = Project.find_by(identifier: "demo-project")
 
@@ -285,7 +298,7 @@ RSpec.describe RootSeeder,
         end
       end
 
-      it "does not create additional data and does not raise any errors" do # rubocop:disable RSpec/MultipleExpectations
+      it "does not create additional data and does not raise any errors" do
         expect(Project.count).to eq 2
         expect(WorkPackage.count).to eq 37
         expect(Wiki.count).to eq 2

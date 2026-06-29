@@ -69,9 +69,17 @@ departments:
       - reference: :user__marko_marketing
         firstname: Marko
         lastname: Marketing
+        job_title: Marketing Manager
+        spoken_languages: [English, German]
+        key_skills: [Marketing & Communications, Public Speaking]
+        job_start_date: "2021-03-01"
       - reference: :user__connie_comms
         firstname: Connie
         lastname: Comms
+        job_title: Technical Writer
+        spoken_languages: [English, French]
+        key_skills: [Copywriting, Marketing & Communications]
+        job_start_date: "2022-06-15"
   - reference: :department__public_relations
     t_name: Public Relations
     parent: :department__marketing_communications
@@ -79,9 +87,17 @@ departments:
       - reference: :user__petra_press
         firstname: Petra
         lastname: Press
+        job_title: Marketing Manager
+        spoken_languages: [English, German]
+        key_skills: [Public Speaking, Stakeholder Management]
+        job_start_date: "2020-09-01"
       - reference: :user__polly_pr
         firstname: Polly
         lastname: PR
+        job_title: Marketing Manager
+        spoken_languages: [English, Spanish]
+        key_skills: [Marketing & Communications, Stakeholder Management]
+        job_start_date: "2023-01-10"
   - reference: :department__design_content
     t_name: Design & Content
     parent: :department__marketing_communications
@@ -89,42 +105,78 @@ departments:
       - reference: :user__dora_design
         firstname: Dora
         lastname: Design
+        job_title: UX/UI Designer
+        spoken_languages: [English, Dutch]
+        key_skills: [UX/UI Design, Public Speaking]
+        job_start_date: "2021-11-02"
       - reference: :user__carl_content
         firstname: Carl
         lastname: Content
+        job_title: Technical Writer
+        spoken_languages: [English, German]
+        key_skills: [Copywriting, Marketing & Communications]
+        job_start_date: "2022-02-14"
   - reference: :department__events_operations
     t_name: Events & Operations
     members:
       - reference: :user__evan_events
         firstname: Evan
         lastname: Events
+        job_title: Event Coordinator
+        spoken_languages: [English, French]
+        key_skills: [Event Planning, Public Speaking]
+        job_start_date: "2019-05-20"
       - reference: :user__olga_ops
         firstname: Olga
         lastname: Ops
+        job_title: Event Coordinator
+        spoken_languages: [English, Polish]
+        key_skills: [Event Planning, Budgeting]
+        job_start_date: "2020-08-17"
   - reference: :department__web_it
     t_name: Web & IT
     members:
       - reference: :user__wanda_web
         firstname: Wanda
         lastname: Web
+        job_title: Software Developer
+        spoken_languages: [English, German]
+        key_skills: [Software Development, DevOps]
+        job_start_date: "2021-04-12"
       - reference: :user__ivan_it
         firstname: Ivan
         lastname: IT
+        job_title: Software Developer
+        spoken_languages: [English, Italian]
+        key_skills: [Software Development, DevOps]
+        job_start_date: "2018-10-01"
   - reference: :department__finance_administration
     t_name: Finance & Administration
     members:
       - reference: :user__fritz_finance
         firstname: Fritz
         lastname: Finance
+        job_title: Project Manager
+        spoken_languages: [English, German]
+        key_skills: [Budgeting, Stakeholder Management]
+        job_start_date: "2017-07-03"
       - reference: :user__adam_admin
         firstname: Adam
         lastname: Admin
+        job_title: Project Manager
+        spoken_languages: [English, German]
+        key_skills: [Project Management, Budgeting]
+        job_start_date: "2019-01-15"
   - reference: :department__quality_assurance
     t_name: Quality Assurance
     members:
       - reference: :user__tessa_tester
         firstname: Tessa
         lastname: Tester
+        job_title: QA Engineer
+        spoken_languages: [English, Portuguese]
+        key_skills: [Quality Assurance, Agile & Scrum]
+        job_start_date: "2022-09-05"
 
 project_custom_field_sections:
   - reference: :default_project_attributes

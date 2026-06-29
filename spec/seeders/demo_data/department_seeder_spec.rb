@@ -44,6 +44,10 @@ RSpec.describe DemoData::DepartmentSeeder do
           - reference: :marko_marketing
             firstname: Marko
             lastname: Marketing
+            job_title: Marketing Manager
+            spoken_languages: [English, German]
+            key_skills: [Public Speaking]
+            job_start_date: "2021-03-01"
       - name: Public Relations
         reference: :public_relations
         parent: :marketing
@@ -53,6 +57,18 @@ RSpec.describe DemoData::DepartmentSeeder do
             lastname: Press
     SEEDING_DATA_YAML
   end
+
+  # UserCustomFieldsSeeder runs earlier in the demo data and creates these.
+  shared_let(:job_title_field) do
+    create(:user_custom_field, :list, name: "Job title", possible_values: ["Marketing Manager", "Software Developer"])
+  end
+  shared_let(:languages_field) do
+    create(:user_custom_field, :multi_list, name: "Spoken languages", possible_values: %w[English German French])
+  end
+  shared_let(:skills_field) do
+    create(:user_custom_field, :multi_list, name: "Key skills", possible_values: ["Public Speaking", "DevOps"])
+  end
+  shared_let(:start_date_field) { create(:user_custom_field, :date, name: "Job start date") }
 
   # `Groups::AddUsersService` runs under an admin (`Seeder#admin_user`).
   before { create(:admin) }
@@ -91,6 +107,25 @@ RSpec.describe DemoData::DepartmentSeeder do
     expect(seed_data.find_reference(:marketing).users).to include(marko)
     expect(seed_data.find_reference(:public_relations).users)
       .to include(seed_data.find_reference(:petra_press))
+  end
+
+  it "assigns the curated user custom field values to the member" do
+    seeder.seed!
+
+    marko = seed_data.find_reference(:marko_marketing).reload
+
+    expect(marko.typed_custom_value_for(job_title_field)).to eq("Marketing Manager")
+    expect(marko.typed_custom_value_for(languages_field)).to contain_exactly("English", "German")
+    expect(marko.typed_custom_value_for(skills_field)).to contain_exactly("Public Speaking")
+    expect(marko.typed_custom_value_for(start_date_field)).to eq(Date.new(2021, 3, 1))
+  end
+
+  it "persists no custom values for members without curated values" do
+    seeder.seed!
+
+    petra = seed_data.find_reference(:petra_press).reload
+
+    expect(petra.custom_values).to be_empty
   end
 
   it "is not applicable once an organizational unit already exists" do
