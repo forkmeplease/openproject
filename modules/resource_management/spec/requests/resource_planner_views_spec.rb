@@ -167,12 +167,9 @@ RSpec.describe "ResourcePlannerViews requests",
     it "closes the dialog and replaces the tab nav and content in place" do
       perform
 
-      expect(response.body).to include('action="closeDialog"')
-      expect(response.body).to include('target="#edit-resource-planner-view-dialog"')
-
-      expect(response.body).to include('action="replace"')
-      expect(response.body).to include('target="resource-planners-sub-views-component"')
-      expect(response.body).to include('target="resource-planner-views-content-component"')
+      expect(response.body).to have_turbo_stream(action: "closeDialog", target: "#edit-resource-planner-view-dialog")
+      expect(response.body).to have_turbo_stream(action: "replace", target: "resource-planners-sub-views-component")
+      expect(response.body).to have_turbo_stream(action: "replace", target: "resource-planner-views-content-component")
 
       expect(response.body).to include("Renamed view")
     end
@@ -231,7 +228,7 @@ RSpec.describe "ResourcePlannerViews requests",
 
         expect(response).to have_http_status(:ok)
         expect(manual_view.query.ordered_work_packages.map(&:work_package)).to include(work_package)
-        expect(response.body).to include('target="resource-planner-views-content-component"')
+        expect(response.body).to have_turbo_stream(action: "replace", target: "resource-planner-views-content-component")
       end
 
       it "does not add the same work package twice" do
@@ -323,7 +320,7 @@ RSpec.describe "ResourcePlannerViews requests",
         expect { perform }.to change { manual_view.query.ordered_work_packages.count }.by(-1)
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('target="resource-planner-views-content-component"')
+        expect(response.body).to have_turbo_stream(action: "replace", target: "resource-planner-views-content-component")
       end
     end
 

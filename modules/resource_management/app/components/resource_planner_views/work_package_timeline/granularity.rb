@@ -28,24 +28,23 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourceManagement
-  # Builds the content component for a resource planner view. Loads the view's
-  # work packages and their allocations in one place so the allocation columns
-  # (progress bar and members) share a single query rather than each issuing
-  # their own. Requires @project and @resource_planner to be set.
-  module PlannerViewContent
-    def work_package_list_content(view)
-      work_packages = view.is_a?(ResourceManagement::WorkPackageSelection) ? view.work_packages.to_a : []
-      allocations = ResourceAllocation.allocated_for_work_packages(work_packages)
+module ResourcePlannerViews
+  module WorkPackageTimeline
+    # The timeline's granularity options, shared by the menu and the controller:
+    # each key (also an i18n label) maps to its FullCalendar view name.
+    module Granularity
+      # Ordered — drives the granularity menu order.
+      VIEWS = {
+        (DAY = :day) => "resourceTimelineDays",
+        (WEEK = :week) => "resourceTimelineWeeks",
+        (MONTH = :month) => "resourceTimelineMonths"
+      }.freeze
 
-      ResourcePlannerViews::ContentComponent.new(
-        view:,
-        project: @project,
-        resource_planner: @resource_planner,
-        work_packages:,
-        allocations:,
-        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations.values.flatten, current_user)
-      )
+      DEFAULT = DAY
+
+      def self.default_view
+        VIEWS.fetch(DEFAULT)
+      end
     end
   end
 end

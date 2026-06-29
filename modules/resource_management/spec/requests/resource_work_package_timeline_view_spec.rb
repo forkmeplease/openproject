@@ -28,24 +28,30 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourceManagement
-  # Builds the content component for a resource planner view. Loads the view's
-  # work packages and their allocations in one place so the allocation columns
-  # (progress bar and members) share a single query rather than each issuing
-  # their own. Requires @project and @resource_planner to be set.
-  module PlannerViewContent
-    def work_package_list_content(view)
-      work_packages = view.is_a?(ResourceManagement::WorkPackageSelection) ? view.work_packages.to_a : []
-      allocations = ResourceAllocation.allocated_for_work_packages(work_packages)
+require "spec_helper"
 
-      ResourcePlannerViews::ContentComponent.new(
-        view:,
-        project: @project,
-        resource_planner: @resource_planner,
-        work_packages:,
-        allocations:,
-        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations.values.flatten, current_user)
-      )
-    end
+RSpec.describe "Resource work package timeline view", :skip_csrf, type: :rails_request do
+  shared_let(:project) { create(:project, enabled_module_names: %w[resource_management work_package_tracking]) }
+  shared_let(:user) do
+    create(:user, member_with_permissions: { project => %i[view_resource_planners view_work_packages] })
+  end
+  shared_let(:planner) { create(:resource_planner, project:, principal: user) }
+
+  before { login_as user }
+
+  it "creates a timeline view and renders its container on show" do
+    post project_resource_planner_views_path(project, planner),
+         params: { view_class_name: "ResourceWorkPackageTimeline",
+                   view: { name: "Epic Planning", filter_mode: "automatic" },
+                   filters: [{ status_id: { operator: "o", values: [] } }].to_json },
+         as: :turbo_stream
+    expect(response).to have_http_status(:ok)
+
+    view = ResourceWorkPackageTimeline.last
+    expect(view.name).to eq("Epic Planning")
+
+    get project_resource_planner_view_path(project, planner, view)
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("resource-work-package-timeline")
   end
 end

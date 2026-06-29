@@ -29,23 +29,39 @@
 #++
 
 module ResourceManagement
-  # Builds the content component for a resource planner view. Loads the view's
-  # work packages and their allocations in one place so the allocation columns
-  # (progress bar and members) share a single query rather than each issuing
-  # their own. Requires @project and @resource_planner to be set.
-  module PlannerViewContent
-    def work_package_list_content(view)
-      work_packages = view.is_a?(ResourceManagement::WorkPackageSelection) ? view.work_packages.to_a : []
-      allocations = ResourceAllocation.allocated_for_work_packages(work_packages)
+  module WorkPackageTimeline
+    # Feeds the FullCalendar resources (rows): one per work package in the view.
+    class ResourcesController < FeedsController
+      def index
+        work_packages = @view.work_packages.to_a
+        last_index = work_packages.size - 1
+        resources = work_packages.map.with_index do |work_package, index|
+          {
+            id: work_package.id,
+            title: work_package.subject,
+            order: index, # used by FullCalendar’s resourceOrder config, for hand-picked WPs
+            extendedProps: {
+              html: render_cell(work_package, first: index.zero?, last: index == last_index)
+            }
+          }
+        end
 
-      ResourcePlannerViews::ContentComponent.new(
-        view:,
-        project: @project,
-        resource_planner: @resource_planner,
-        work_packages:,
-        allocations:,
-        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations.values.flatten, current_user)
-      )
+        render json: { resources: }
+      end
+
+      private
+
+      def render_cell(work_package, first:, last:)
+        ResourcePlannerViews::WorkPackageTimeline::ResourceCellComponent
+          .new(work_package:, allocations: allocations_for(work_package),
+               project: @project, resource_planner: @resource_planner, view: @view,
+               first:, last:)
+          .render_in(view_context)
+      end
+
+      def allocations_for(work_package)
+        allocations_by_work_package.fetch(work_package.id, [])
+      end
     end
   end
 end

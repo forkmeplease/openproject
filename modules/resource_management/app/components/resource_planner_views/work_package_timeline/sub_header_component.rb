@@ -28,37 +28,51 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourceAllocations
-  class NewDialogComponent < ApplicationComponent
-    include OpTurbo::Streamable
+module ResourcePlannerViews::WorkPackageTimeline
+  # The timeline toolbar. FullCalendar runs headless (`headerToolbar: false`),
+  # so these controls drive it from outside via the Stimulus controller.
+  class SubHeaderComponent < ApplicationComponent
     include OpPrimer::ComponentHelpers
 
-    DIALOG_ID = "allocate-resource-dialog"
-    FORM_ID = "allocate-resource-form"
-    FOOTER_ID = "allocate-resource-footer"
-    # Shared by both step forms so swapping step 1 for step 2 targets the same
-    # Turbo stream wrapper.
-    BODY_ID = "allocate-resource-dialog-body"
-
-    def initialize(project:, work_package: nil, allocation: nil, start_date: nil, end_date: nil, resource_planner_id: nil)
+    def initialize(project:, resource_planner:, view:)
       super
-
       @project = project
-      @work_package = work_package
-      @allocation = allocation
-      @start_date = start_date
-      @end_date = end_date
-      @resource_planner_id = resource_planner_id
+      @resource_planner = resource_planner
+      @view = view
     end
 
     private
 
-    def title
-      I18n.t("resource_management.allocate_resource_dialog.title")
+    def granularities
+      Granularity::VIEWS
     end
 
-    def allocation_kind
-      @allocation.filter_based? ? "filter" : "principal"
+    def default_granularity_key
+      Granularity::DEFAULT
+    end
+
+    # The Stimulus controller is owned by ContentComponent, which mounts it.
+    def nav_action(method)
+      { action: "#{ContentComponent::STIMULUS}##{method}" }
+    end
+
+    def granularity_action(key, view_name)
+      { action: "#{ContentComponent::STIMULUS}#setView",
+        "#{ContentComponent::STIMULUS}-view-param": view_name,
+        "#{ContentComponent::STIMULUS}-label-param": granularity_label(key) }
+    end
+
+    # Target the controller uses to update the button label on granularity change.
+    def granularity_button_data
+      { "#{ContentComponent::STIMULUS}-target": "granularityButton" }
+    end
+
+    def granularity_label(key)
+      t("resource_management.work_package_timeline.granularity.#{key}")
+    end
+
+    def allowed_to_allocate?
+      User.current.allowed_in_project?(:allocate_user_resources, @project)
     end
   end
 end

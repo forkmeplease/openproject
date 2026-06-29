@@ -29,23 +29,36 @@
 #++
 
 module ResourceManagement
-  # Builds the content component for a resource planner view. Loads the view's
-  # work packages and their allocations in one place so the allocation columns
-  # (progress bar and members) share a single query rather than each issuing
-  # their own. Requires @project and @resource_planner to be set.
-  module PlannerViewContent
-    def work_package_list_content(view)
-      work_packages = view.is_a?(ResourceManagement::WorkPackageSelection) ? view.work_packages.to_a : []
-      allocations = ResourceAllocation.allocated_for_work_packages(work_packages)
+  module WorkPackageTimeline
+    # Shared setup for the timeline's JSON feeds: locates the planner and view and
+    # loads its allocations. Subclasses render the FullCalendar resources and events.
+    class FeedsController < BaseController
+      menu_item :resource_management
 
-      ResourcePlannerViews::ContentComponent.new(
-        view:,
-        project: @project,
-        resource_planner: @resource_planner,
-        work_packages:,
-        allocations:,
-        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations.values.flatten, current_user)
-      )
+      before_action :find_project_by_project_id
+      before_action :authorize
+      before_action :find_resource_planner
+      before_action :find_view
+
+      private
+
+      def find_resource_planner
+        @resource_planner = ResourcePlanner
+                              .visible(current_user)
+                              .where(project: @project)
+                              .with_children
+                              .find(params.expect(:resource_planner_id))
+      end
+
+      def find_view
+        @view = @resource_planner.children.find(params.expect(:view_id))
+        render_404 unless @view.is_a?(ResourceWorkPackageTimeline)
+      end
+
+      def allocations_by_work_package
+        @allocations_by_work_package ||=
+          ResourceAllocation.allocated_for_work_packages(@view.work_packages.to_a)
+      end
     end
   end
 end

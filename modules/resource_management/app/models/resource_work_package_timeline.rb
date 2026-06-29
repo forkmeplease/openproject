@@ -28,24 +28,15 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module ResourceManagement
-  # Builds the content component for a resource planner view. Loads the view's
-  # work packages and their allocations in one place so the allocation columns
-  # (progress bar and members) share a single query rather than each issuing
-  # their own. Requires @project and @resource_planner to be set.
-  module PlannerViewContent
-    def work_package_list_content(view)
-      work_packages = view.is_a?(ResourceManagement::WorkPackageSelection) ? view.work_packages.to_a : []
-      allocations = ResourceAllocation.allocated_for_work_packages(work_packages)
+# A planner view that renders its selected work packages on a timeline, one row
+# per work package with the allocations shown as bars.
+class ResourceWorkPackageTimeline < PersistedView
+  include ResourceManagement::Categorized
+  include ResourceManagement::WorkPackageSelection
 
-      ResourcePlannerViews::ContentComponent.new(
-        view:,
-        project: @project,
-        resource_planner: @resource_planner,
-        work_packages:,
-        allocations:,
-        visible_principal_ids: ResourceAllocation.visible_principal_ids(allocations.values.flatten, current_user)
-      )
-    end
+  private
+
+  def query_name_i18n_key
+    "resource_management.work_package_timeline.query_name"
   end
 end
