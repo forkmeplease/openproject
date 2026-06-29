@@ -178,7 +178,7 @@ export default class WorkPackageTimelineController extends Controller {
       firstDay: this.firstDayValue,
       headerToolbar: false,
       nowIndicator: true,
-      height: 'auto',
+      height: '100%',
       // The feed's output depends on the granularity, not just the date range, so
       // refetch on every navigation instead of reusing FullCalendar's cache.
       lazyFetching: false,
