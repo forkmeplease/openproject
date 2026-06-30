@@ -29,21 +29,19 @@
 #++
 
 module Wikis
-  class InternalProvider < Provider
-    class << self
-      def registry_prefix = "internal"
-    end
+  module InternalProviders
+    class UpdateContract < BaseContract
+      include RequiresAdminGuard
 
-    def user_connected?(_user) = true
+      attribute :enabled
 
-    def configured? = true
+      validate :not_configured_from_env
 
-    def configured_from_env?
-      Setting.internal_wiki_provider.present?
-    end
-
-    def name
-      model_name.human
+      def not_configured_from_env
+        if model.configured_from_env?
+          errors.add :base, :configured_via_env
+        end
+      end
     end
   end
 end

@@ -62,6 +62,8 @@ en:
           confirm_button_text: "Make public"
 
   admin:
+    banners:
+      environment_configured_readonly: "These values are configured via environment variables and cannot be edited here."
     reserved_identifiers:
       btn_release: "Unreserve"
       col_identifier: "Identifier"
@@ -2241,6 +2243,7 @@ en:
         cannot_delete_mapping: "is required. Cannot be deleted."
         cant_link_a_work_package_with_a_descendant: "A work package cannot be linked to one of its subtasks."
         circular_dependency: "This relation would create a circular dependency."
+        configured_via_env: "The configuration of this object is managed through environment variables and can't be changed at runtime."
         confirmation: "doesn't match %{attribute}."
         could_not_be_copied: "%{dependency} could not be (fully) copied."
         datetime_must_be_in_future: "must be in the future."
