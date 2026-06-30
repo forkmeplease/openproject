@@ -2902,6 +2902,7 @@ en:
   button_add_sub_item: "Add sub-item"
   button_add_member: Add member
   button_add_watcher: "Add watcher"
+  button_all_filters: "All filters"
   button_annotate: "Annotate"
   button_apply: "Apply"
   button_apply_changes: "Apply changes"
