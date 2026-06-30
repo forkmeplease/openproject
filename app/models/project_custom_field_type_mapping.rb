@@ -28,25 +28,10 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpenProject
-  module InplaceEdit
-    module Handlers
-      class ProjectUpdate
-        def self.call(model:, params:, user:)
-          contract_options = project_attributes_only?(params) ? { project_attributes_only: true } : {}
+class ProjectCustomFieldTypeMapping < ApplicationRecord
+  belongs_to :type
+  belongs_to :project_custom_field, class_name: "ProjectCustomField", foreign_key: "custom_field_id",
+                                    inverse_of: :project_custom_field_type_mappings
 
-          call = ::Projects::UpdateService
-                   .new(model:, user:, contract_options:)
-                   .call(params)
-
-          call.success?
-        end
-
-        def self.project_attributes_only?(params)
-          params.keys.all? { |k| k.to_s.start_with?("custom_field_", "custom_comment") }
-        end
-        private_class_method :project_attributes_only?
-      end
-    end
-  end
+  validates :custom_field_id, uniqueness: { scope: :type_id }
 end

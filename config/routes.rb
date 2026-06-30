@@ -179,6 +179,11 @@ Rails.application.routes.draw do
         post :enable_all, to: "projects_tab#enable_all_projects"
       end
     end
+    resource :project_attributes, controller: "project_attributes_tab", only: %i[edit] do
+      post :toggle
+      put :enable_all_of_section
+      put :disable_all_of_section
+    end
     resource :settings, controller: "settings_tab", only: %i[update edit]
     resource :subject_configuration, controller: "subject_configuration_tab", only: %i[update edit]
 
@@ -961,6 +966,7 @@ Rails.application.routes.draw do
     concerns :shareable
 
     get "hover_card" => "work_packages/hover_card#show", on: :member
+    get "project_attributes" => "work_packages/project_attributes_tab#index", on: :member
 
     get "generate_pdf_dialog" => "work_packages#generate_pdf_dialog", on: :member
     post "generate_pdf" => "work_packages#generate_pdf", on: :member

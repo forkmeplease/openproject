@@ -28,25 +28,24 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OpenProject
-  module InplaceEdit
-    module Handlers
-      class ProjectUpdate
-        def self.call(model:, params:, user:)
-          contract_options = project_attributes_only?(params) ? { project_attributes_only: true } : {}
+module ProjectCustomFieldTypeMappings
+  class BaseContract < ::ModelContract
+    attribute :type_id
+    attribute :custom_field_id
 
-          call = ::Projects::UpdateService
-                   .new(model:, user:, contract_options:)
-                   .call(params)
+    validate :admin_permission
+    validate :project_custom_field
 
-          call.success?
-        end
+    private
 
-        def self.project_attributes_only?(params)
-          params.keys.all? { |k| k.to_s.start_with?("custom_field_", "custom_comment") }
-        end
-        private_class_method :project_attributes_only?
-      end
+    def admin_permission
+      errors.add :base, :error_unauthorized unless user.admin?
+    end
+
+    def project_custom_field
+      return if model.project_custom_field.is_a?(ProjectCustomField)
+
+      errors.add :custom_field_id, :invalid
     end
   end
 end
