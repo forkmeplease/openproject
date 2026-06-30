@@ -87,7 +87,7 @@ class OpenProject::XlsExport::XlsViews
 
   def work_package_representation(value)
     ar_presentation(WorkPackage, value) do |work_package|
-      "#{work_package.type} ##{work_package.id}: #{work_package.subject}"
+      "#{work_package.type} #{work_package.formatted_id}: #{work_package.subject}"
     end
   end
 

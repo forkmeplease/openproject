@@ -35,4 +35,22 @@ RSpec.describe OpenProject::XlsExport::XlsViews do
       end
     end
   end
+
+  # The :work_package_id column renderer is fed the numeric id directly and
+  # formats "<type> <id>: <subject>"; it must honour the same display identifier.
+  describe "#work_package_representation" do
+    context "with semantic mode", with_settings: { work_packages_identifier: "semantic" } do
+      it "renders the semantic identifier, not the numeric id" do
+        expect(view.work_package_representation(work_package.id))
+          .to eq("Task PROJ-42: Fix the thing")
+      end
+    end
+
+    context "with classic mode", with_settings: { work_packages_identifier: "classic" } do
+      it "renders the numeric id with a # prefix (no regression)" do
+        expect(view.work_package_representation(work_package.id))
+          .to eq("Task ##{work_package.id}: Fix the thing")
+      end
+    end
+  end
 end
