@@ -113,6 +113,8 @@ OpenProject 17.6 improves CSV export security by escaping control characters in 
 
 If you need to escape unmodified machine-readable CSV exports, you can disable this flag on the new Exports page Administration → System settings → Exports
 
+This change was originally reported as [a security advisory on GitHub](https://github.com/opf/openproject/security/advisories/GHSA-fv8m-h8hc-57gq) and we'd like to thank these contributors specifically: @QwQP0, @dkstjwls06, and @minnnjuuu - Thank you for your responsibly disclosure!
+
 ### Configure LDAP group synchronization using group member attributes (Enterprise add-on)
 
 [feature: ldap_groups ]
